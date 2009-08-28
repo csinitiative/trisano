@@ -26,11 +26,11 @@ home_page = trisano_agent.home
 
 # Goto the "staged messages" page pointed to by the link with a 'rel' attribute of: http://trisano.org/relation/staged_messages
 # That attribute name will never change and is formally part of the API.
-message_page = trisano_agent.get(home_page.at("//a[@rel='http://trisano.org/relation/staged_messages']")['href'])
+message_page = trisano_agent.get(home_page.at("//a[@rel='http://trisano.org/relation/staged_messages']")['href'], false)
 
 # Goto the "new staged message" page by following the link with the 'rel' attribute: http://trisano.org/relation/staged_messages_new
 # That attribute name will never change and is formally part of the API.
-new_message_page = trisano_agent.get(new_staged_messages_link = message_page.at("//a[@rel='http://trisano.org/relation/staged_messages_new']")['href'])
+new_message_page = trisano_agent.get(new_staged_messages_link = message_page.at("//a[@rel='http://trisano.org/relation/staged_messages_new']")['href'], false)
 
 # Note, form names and field names are subject to change.  Always work with IDs.
 
@@ -47,7 +47,7 @@ ARGF.readlines.each_with_index do |msg, i|
   j = i + 1
   puts "Processing message #{j}"
   begin
-    trisano_agent.post(form_action, {field_name => msg})
+    trisano_agent.post(form_action, {field_name => msg}, false)
   rescue TrisanoWebError => e
     puts "Message number #{j} could not be processed due to the following errors:"
     e.errors.each {|e| puts "\t* #{e}"}

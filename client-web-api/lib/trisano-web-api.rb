@@ -17,6 +17,8 @@ class TriSanoWebApi
     }
 
     @base_url = ENV['TRISANO_BASE_URL'] || raise('Missing TRISANO_BASE_URL environment variable')
+    url_comps = URI.parse(@base_url)
+    @base_url_no_path = URI::Generic.new(url_comps.scheme, nil, url_comps.host, url_comps.port, nil, nil, nil, nil, nil).to_s
 
     if !ENV['TRISANO_API_AUTH'].nil? and ENV['TRISANO_API_AUTH'].downcase != 'none'
       username = ENV['TRISANO_API_USER'] || raise('Missing TRISANO_API_USER environment variable')
@@ -40,20 +42,20 @@ class TriSanoWebApi
     @agent.get(@base_url)
   end
 
-  def get(uri)
-    @agent.get(@base_url + uri)
+  def get(uri, leading_path=true)
+    @agent.get(base_uri(leading_path) + uri)
   end
 
-  def post(uri, query)
-    http_action { @agent.post(@base_url + uri, query) }
+  def post(uri, query, leading_path=true)
+    http_action { @agent.post(base_uri(leading_path) + uri, query) }
   end
 
-  def delete(uri)
-    http_action { @agent.delete(@base_url + uri) }
+  def delete(uri, leading_path=true)
+    http_action { @agent.delete(base_uri(leading_path) + uri) }
   end
 
-  def put(uri, query)
-    http_action { @agent.put(@base_url + uri, query) }
+  def put(uri, query, leading_path=true)
+    http_action { @agent.put(base_uri(leading_path) + uri, query) }
   end
 
   def submit(form, button)
@@ -78,5 +80,9 @@ class TriSanoWebApi
       e.response_code = response_error.response_code
       raise e
     end
+  end
+
+  def base_uri(leading_path)
+    leading_path ? @base_url : @base_url_no_path
   end
 end
