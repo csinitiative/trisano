@@ -20,7 +20,7 @@
 # Starts TriSano - simple config - not intended for production use.
 
 . setenv.sh
-export TRISANO_UID=utah
+export TRISANO_UID=trisano_admin
 
 cd ../webapp
 touch ./log/development.log
