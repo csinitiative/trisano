@@ -47,7 +47,7 @@ module LayoutHelper
     result << "</div>"
     result << "<div class='foottext'>"
     result << "<div class='top'>"
-    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+2.0+RC1+Release+Notes'>TriSano™ 2.0 RC1</a>"
+    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+2.0+FINAL+Release+Notes'>TriSano™ 2.0 FINAL</a>"
     result << "</div>"
     result << "<div class='bottom'>"
     result << "<a href='http://www.trisano.org/collaborate/'>Collaborate</a>"
