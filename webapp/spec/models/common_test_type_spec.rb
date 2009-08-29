@@ -31,6 +31,27 @@ describe CommonTestType do
     @common_test_type = CommonTestType.create!(:common_name => 'Culture')
   end
 
+  it "should be able to bulk load from a csv format" do
+    lambda do
+      CommonTestType.load_from_csv <<CSV
+"Aztreonam susceptibility"
+"Beta lactamase extended spectrum susceptibility"
+"Beta lactamase susceptibility"
+CSV
+    end.should change(CommonTestType, :count).by(3)
+  end
+
+  it "should raise an error during bulk load if name is invalid" do
+    lambda do
+      CommonTestType.load_from_csv <<CSV
+"Aztreonam susceptibility"
+"Beta lactamase extended spectrum susceptibility"
+"Beta lactamase susceptibility"
+"Aztreonam susceptibility"
+CSV
+    end.should raise_error(ActiveRecord::RecordInvalid)
+  end
+
   describe 'updating loinc codes' do
 
     before do

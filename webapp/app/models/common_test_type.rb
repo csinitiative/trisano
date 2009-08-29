@@ -26,6 +26,17 @@ class CommonTestType < ActiveRecord::Base
   has_many :diseases, :through => :disease_common_test_types
   has_many :lab_results, :foreign_key => :test_type_id
 
+  class << self
+    def load_from_csv(str_or_readable)
+      require 'csv'
+      transaction do
+        CSV.parse str_or_readable do |row|
+          CommonTestType.create! :common_name => row.first
+        end
+      end
+    end
+  end
+
   def update_loinc_code_ids(options={})
     options = {:add => [], :remove => []}.merge(options)
     added   = options[:add]
