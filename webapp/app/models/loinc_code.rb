@@ -63,13 +63,15 @@ class LoincCode < ActiveRecord::Base
   def self.load_from_loinctab(str_or_readable)
     require 'csv'
     transaction do
+      i = 0
       CSV.parse str_or_readable, "\t" do |row|
         scale = ExternalCode.loinc_scale_by_the_code row[scale_type_index]
         if scale
-          LoincCode.create! :loinc_code => row.first, :scale => scale
+          loinc = LoincCode.create! :loinc_code => row.first, :scale => scale
         else
-          puts "Rejected row: #{row.join("\t")}"
+          logger.debug "Rejected row: #{row.join("\t")}"
         end
+        yield row, i += 1 if block_given?
       end
     end
   end
