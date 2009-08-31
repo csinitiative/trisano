@@ -26,4 +26,5 @@ begin
   task :specs_and_features => ['spec', 'trisano:dev:feature_prep', 'features']
 
 rescue MissingSourceFile
+  puts $!.message
 end

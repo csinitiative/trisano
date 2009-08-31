@@ -121,5 +121,16 @@ describe ExternalCode do
       codes.each {|code| code.code_name.should == 'case'}
     end
   end
-      
+
+  describe 'find loinc scales' do
+    fixtures :external_codes
+
+    it 'should find loinc scales by the code' do
+      ExternalCode.loinc_scale_by_the_code('Ord').should == external_codes(:loinc_scale_ord)
+    end
+
+    it 'should return nil if loinc scale not in the db' do
+      ExternalCode.loinc_scale_by_the_code('Doc').should be_nil
+    end
+  end
 end

@@ -56,6 +56,24 @@ class LoincCode < ActiveRecord::Base
     end
   end
 
+  @@scale_type_index = 5
+  cattr_accessor :scale_type_index
+
+  # explicitly for loading from loincdb.txt in the LOINCTAB.zip
+  def self.load_from_loinctab(str_or_readable)
+    require 'csv'
+    transaction do
+      CSV.parse str_or_readable, "\t" do |row|
+        scale = ExternalCode.loinc_scale_by_the_code row[scale_type_index]
+        if scale
+          LoincCode.create! :loinc_code => row.first, :scale => scale
+        else
+          puts "Rejected row: #{row.join("\t")}"
+        end
+      end
+    end
+  end
+
   private
 
   def strip_loinc

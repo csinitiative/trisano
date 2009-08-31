@@ -25,7 +25,11 @@ require 'webrat'
 
 # Comment out the next two lines if you're not using RSpec's matchers (should / should_not) in your steps.
 require 'cucumber/rails/rspec'
-require 'webrat/rspec-rails'
+begin
+  require 'webrat/rspec-rails'
+rescue
+  require 'webrat/core/matchers'
+end
 
 # Selenium helpers required for all feature runs because shared helpers rely on helper methods like get_random_disease
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_helper')
@@ -42,3 +46,8 @@ include TrisanoContactsHelper
 
 # Load up factories
 Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'spec', 'factories', '*.rb')) {|f| require f}
+
+# explicitly load support files
+require File.join(File.dirname(__FILE__), 'trisano')
+require File.join(File.dirname(__FILE__), 'trisano_form_builder')
+require File.join(File.dirname(__FILE__), 'hl7_messages')

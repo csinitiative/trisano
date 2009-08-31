@@ -103,4 +103,21 @@ describe LoincCode do
     it { should have_many(:diseases) }
 
   end
+
+  describe "loading from csv" do
+    fixtures :external_codes
+
+    it 'should bulk load from loinctab data' do
+      lambda do
+        LoincCode.load_from_loinctab <<LOINCTAB
+"LOINC_NUM"	"COMPONENT"	"PROPERTY"	"TIME_ASPCT"	"SYSTEM"	"SCALE_TYP"	"METHOD_TYP"	"RELAT_NMS"	"CLASS"	"SOURCE"	"DT_LAST_CH"	"CHNG_TYPE"	"COMMENTS"	"ANSWERLIST"	"STATUS"	"MAP_TO"	"SCOPE"	"CONSUMER_NAME"	"IPCC_UNITS"	"REFERENCE"	"EXACT_CMP_SY"	"MOLAR_MASS"	"CLASSTYPE"	"FORMULA"	"SPECIES"	"EXMPL_ANSWERS"	"ACSSYM"	"BASE_NAME"	"FINAL"	"NAACCR_ID"	"CODE_TABLE"	"SETROOT"	"PANELELEMENTS"	"SURVEY_QUEST_TEXT"	"SURVEY_QUEST_SRC"	"UNITSREQUIRED"	"SUBMITTED_UNITS"	"RELATEDNAMES2"	"SHORTNAME"	"ORDER_OBS"	"CDISC_COMMON_TESTS"	"HL7_FIELD_SUBFIELD_ID"	"EXTERNAL_COPYRIGHT_NOTICE"	"EXAMPLE_UNITS"	"INPC_PERCENTAGE"	"LONG_COMMON_NAME"	"HL7_V2_DATATYPE"	"HL7_V3_DATATYPE"	"CURATED_RANGE_AND_UNITS"	"DEFINITION_DESCRIPTION_HELP"
+"10674-0"	"Hepatitis B virus surface Ag"	"ACnc"	"Pt"	"Tiss"	"Ord"	"Immune stain"	"HEP B;HEPATITIS TYPE B;HBV"	"MICRO"	"DL-R"	"19980318"	"NAM"											1						"Y"			0						"Australia antigen; HBsAG; HBV surface; Hep Bs; HBs; HepB; Hep B; Arbitrary concentration; Point in time; Random; Tissue; Ql; Ordinal; QL; Qualitative; Qual; Screen; ImStn; Immunostain; Immunohistochemical stain; IHC; Antigen; Antigens; Imun; Imune; Imm; Surf; Hepatit; Hepatis; Microbiology"	"HBV surface Ag Tiss Ql ImStn"	"Both"					0	"Hepatitis B virus surface Ag [Presence] in Tissue by Immune stain"				
+"11486-8"	"Chemotherapy records"	"Find"	"-"	"^Patient"	"Doc"			"ATTACH.CLINRPT"	"CJM"	"20080404"	"MIN"											3						"Y"			0						"Finding; Findings"							0	"Chemotherapy records"	"TX/ED"			
+"10675-7"	"Hepatitis B virus surface Ag"	"Prid"	"Pt"	"Tiss"	"Nom"	"Orcein stain"	"HEP B;HEPATITIS TYPE B;HBV;SHIKATA"	"MICRO"	"DL-R"	"19980318"	"NAM"											1						"Y"			0						"Australia antigen; HBsAG; HBV surface; Hep Bs; HBs; HepB; Hep B; Identity or presence; Point in time; Random; Tissue; Nominal; Orcein Stn; Shikata technique; Antigen; Antigens; Surf; Hepatit; Hepatis; Microbiology"	"HBV surface Ag Tiss Orcein Stn"	"Both"					0	"Hepatitis B virus surface Ag [Identifier] in Tissue by Orcein stain"				
+"10676-5"	"Hepatitis C virus RNA"	"ACnc"	"Pt"	"Ser/Plas"	"Qn"	"Probe.amp"	"HEP C;HEPATITIS TYPE C;HCV"	"MICRO"	"OMH"	"20040316"	"MAJ"											1						"Y"			0				"Y"		"Ribonucleic acid; HCV; Hep C; Arbitrary concentration; Point in time; Random; SerPl; SerPlas; SerP; Serum; SR; Plasma; Pl; Plsm; Quantitative; QNT; Quant; Quan; Amp Prb; Probe with ampification; DNA probe; Amplif; Amplification; Amplified; Hepatit; Hepatis; Microbiology"	"HCV RNA SerPl Amp Prb-aCnc"	"Both"					0	"Hepatitis C virus RNA [Units/volume] (viral load) in Serum or Plasma by Probe with amplification"				
+"101-6"	"Cefoperazone"	"Susc"	"Pt"	"Isolate"	"OrdQn"	"Agar diffusion"	"CEFOBID;KIRBY-BAUER"	"ABXBACT"	"SH"	"20061026"	"MAJ"											1						"Y"			0						"Cefobid; Susceptibility; Susceptibilty; Sus; Suscept; Susceptibilities; Point in time; Random; Islt; Isol; KB; Kirby-bauer; Disk diffusion; ANTIBIOTIC SUSCEPTIBILITIES"	"Cefoperazone Islt KB"	"Observation"					0	"Cefoperazone [Susceptibility] by Disk diffusion (KB)"				
+LOINCTAB
+      end.should change(LoincCode, :count).by(4)
+    end
+  end
 end

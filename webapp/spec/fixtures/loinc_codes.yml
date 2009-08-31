@@ -1,16 +1,16 @@
 13954-3:
   id: 1
   loinc_code: 13954-3
-  scale_id: 2500
+  scale_id: 2600
   common_test_type_id: 2
 
 5221-7:
   id: 2
   loinc_code: 5221-7
-  scale_id: 2500
+  scale_id: 2600
   common_test_type_id: 3
 
 unlinked:
   id: 3
-  scale_id: 2500
+  scale_id: 2600
   loinc_code: 10000-1

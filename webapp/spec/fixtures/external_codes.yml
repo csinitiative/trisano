@@ -409,8 +409,25 @@ test_status_prelim:
   code_description: "Preliminary result"
 
 loinc_scale_ord:
-  id: 2500
+  id: 2600
   code_name: "loinc_scale"
   the_code: "Ord"
   code_description: "Ordinal"
 
+loinc_scale_nom:
+  id: 2601
+  code_name: "loinc_scale"
+  the_code: "Nom"
+  code_description: "Nominal"
+
+loinc_scale_qn:
+  id: 2602
+  code_name: "loinc_scale"
+  the_code: "Qn"
+  code_description: "Quantitative"
+
+loinc_scale_ordqn:
+  id: 2603
+  code_name: "loinc_scale"
+  the_code: "OrdQn"
+  code_description: "Ordinal or Quantitative"
