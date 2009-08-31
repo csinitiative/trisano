@@ -57,7 +57,8 @@ class LoincCode < ActiveRecord::Base
   end
 
   @@scale_type_index = 5
-  cattr_accessor :scale_type_index
+  @@short_name_index  = 38
+  cattr_accessor :scale_type_index, :short_name_index
 
   # explicitly for loading from loincdb.txt in the LOINCTAB.zip
   def self.load_from_loinctab(str_or_readable)
@@ -67,7 +68,7 @@ class LoincCode < ActiveRecord::Base
       CSV.parse str_or_readable, "\t" do |row|
         scale = ExternalCode.loinc_scale_by_the_code row[scale_type_index]
         if scale
-          loinc = LoincCode.create! :loinc_code => row.first, :scale => scale
+          loinc = LoincCode.create! :loinc_code => row.first, :scale => scale, :test_name => row[short_name_index]
         else
           logger.debug "Rejected row: #{row.join("\t")}"
         end
