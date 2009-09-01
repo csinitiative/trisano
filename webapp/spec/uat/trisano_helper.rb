@@ -262,6 +262,10 @@ module TrisanoHelper
     else
       browser.click "link=Print"
     end
+    
+    wait_for_element_present("//div[contains(@id, 'printing_controls')]")
+    browser.click "print_all"
+    browser.click "print_btn"
     browser.wait_for_pop_up '_blank', $load_time
     browser.select_window '_blank'
     return(browser.is_text_present('Utah Public Health'))

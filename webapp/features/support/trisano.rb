@@ -73,6 +73,14 @@ def create_place_entity(place_name, place_type)
   @place_entity = Factory.create(:place_entity, :place => place)
 end
 
+# Core field keys do not have the _attributes in them that Rails throws
+# in for nested forms. This method takes a core field key and converts it
+# to a key that can be used to identify form elements in the browser.
+def railsify_core_field_key(key)
+  key.chop!.gsub("]", "_attributes]") << "]"
+end
+
+# Debt: Replace these with factory-based setup
 def place_child_events_attributes(values)
   { "5"=>{
       "interested_place_attributes"=>{

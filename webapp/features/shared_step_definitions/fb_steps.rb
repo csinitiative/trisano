@@ -107,8 +107,6 @@ end
 #
 
 Given /^that form has core follow ups configured for all core fields$/ do
-  p @form
-  
   @default_view = @form.investigator_view_elements_container.children[0]
 
   # Create a core follow up for every core field that can be followed up on
@@ -121,7 +119,7 @@ Given /^that form has core follow ups configured for all core fields$/ do
       # If the core field has a code name, then its potential answers are one of that code_name's codes
       if core_field.code_name
         # Get the code and do the magic incantation to make the follow up be considered a 'Code condition'
-        code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.first : core_field.code_name.codes.first
+        code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.all(:order => "code_description ASC").first : core_field.code_name.codes.all(:order => "code_description ASC").first
         follow_up_element.condition = code.id
         follow_up_element.condition_id = code.id
       else
@@ -131,7 +129,15 @@ Given /^that form has core follow ups configured for all core fields$/ do
         # to set postal code to YES is the future.) Smarts could be added by making the core_field table's
         # field_type a bit more specific. Currently there is just 'single_line_text' for text input form
         # fields, but types like 'numeric' and 'postal_code' could be added.
-        follow_up_element.condition = "YES"
+        #
+        # Update: Fields are incrementally getting smarter. Age fields are now type numeric. The rest of
+        # the text inputs are still single_line_text
+        if core_field.field_type == "single_line_text"
+          follow_up_element.condition = "YES"
+        elsif core_field.field_type == "numeric"
+          follow_up_element.condition = "1"
+        end
+        
       end
     
       follow_up_element.parent_element_id = @default_view.id

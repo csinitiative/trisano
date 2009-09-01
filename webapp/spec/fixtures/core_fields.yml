@@ -757,7 +757,7 @@ core_field_00037:
   fb_accessible: true
 core_field_00013: 
   key: morbidity_event[active_patient][active_primary_entity][person][age_at_onset]
-  can_follow_up: true
+  can_follow_up: false
   name: Age at onset
   id: 13
   field_type: single_line_text

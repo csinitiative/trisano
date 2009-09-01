@@ -125,7 +125,7 @@ core_field_00075:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
-  field_type: single_line_text
+  field_type: numeric
   key: contact_event[interested_party][person_entity][person][approximate_age_no_birthday]
 core_field_00047: 
   name: Disease
@@ -141,7 +141,7 @@ core_field_00076:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
-  field_type: single_line_text
+  field_type: numeric
   key: contact_event[interested_party][person_entity][person][age_at_onset]
 core_field_contact_lab_result_reference_range: 
   name: Lab results | Reference range
@@ -901,7 +901,7 @@ core_field_00012:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
-  field_type: single_line_text
+  field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][approximate_age_no_birthday]
 core_field_00041: 
   name: Reporter first name
@@ -915,9 +915,9 @@ core_field_00013:
   name: Age at onset
   help_text: 
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   event_type: morbidity_event
-  field_type: single_line_text
+  field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][age_at_onset]
 core_field_00042: 
   name: Reporter last name

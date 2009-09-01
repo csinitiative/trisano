@@ -18,6 +18,15 @@ Feature: Morbidity event form core follow ups
 
     When I answer all core follow up questions
     And I save the event
-    Then I should see all follow up questions and their answers
+    Then I should see all of the core follow up questions
+    And I should see all follow up answers
 
+    When I am on the event edit page
+    And I answer all of the core follow ups with a non-matching condition
+    Then I should not see any of the core follow up questions
+    And I should not see any follow up answers
+
+    When I save the event
+    Then I should not see any of the core follow up questions
+    And I should not see any follow up answers
 

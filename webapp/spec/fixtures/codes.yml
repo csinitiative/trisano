@@ -61,32 +61,6 @@ event_type_un:
   the_code: "UN"
   code_description: "RS"
 
-# <<<
-
-imported_from_unknown:
-  id: 2101
-  code_name: "imported"
-  the_code: "U"
-  code_description: "Unknown"
-
-imported_from_utah:
-  id: 2102
-  code_name: "imported"
-  the_code: "UT"
-  code_description: "Utah"
-
-imported_from_other_country:
-  id: 2103
-  code_name: "imported"
-  the_code: "F"
-  code_description: "Outside U.S."
-
-imported_from_other_state:
-  id: 2104
-  code_name: "imported"
-  the_code: "US"
-  code_description: "Other U.S. State"
-
 place_type_hospital:
   id: 2201
   code_name: "placetype"

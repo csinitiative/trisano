@@ -266,7 +266,7 @@ imported_from_utah:
   id: 2102
   code_name: "imported"
   the_code: "UT"
-  code_description: "Utah"
+  code_description: "Acquired in-state"
 
 imported_from_other_country:
   id: 2103
