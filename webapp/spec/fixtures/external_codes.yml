@@ -3,7 +3,7 @@
 case_status_unknown:
   id: 1801
   code_name: "case"
-  the_code: "U"
+  the_code: "UNK"
   code_description: "Unknown"
 
 case_status_confirmed:
@@ -65,7 +65,7 @@ gender_female:
 gender_unknown:
   id: 3
   code_name: "gender"
-  the_code:  "U"
+  the_code:  "UNK"
   code_description: "Unknown"
 
 ethnicity_hispanic:
@@ -89,7 +89,7 @@ ethnicity_other:
 ethnicity_unknown:
   id: 104
   code_name: "ethnicity"
-  the_code:  "U"
+  the_code:  "UNK"
   code_description: "Unknown"
 
 race_white:
@@ -137,13 +137,13 @@ race_unknown:
 language_english:
   id: 301
   code_name: "language"
-  the_code:  "EN"
+  the_code:  "en"
   code_description: "English"
 
 language_spanish:
   id: 302
   code_name: "language"
-  the_code:  "ES"
+  the_code:  "es"
   code_description: "Spanish"
 
 state_utah:
@@ -186,7 +186,7 @@ county_salt_lake:
 county_summit:
   id: 1102
   code_name: "county"
-  the_code:  "SU"
+  the_code:  "SM"
   code_description: "Summit"
   jurisdiction_id: 103
 
@@ -211,7 +211,7 @@ district_beaver:
 yesno_unknown:
   id: 1401
   code_name: "yesno"
-  the_code: "U"
+  the_code: "UNK"
   code_description: "Unknown"
 
 yesno_yes:
@@ -259,7 +259,7 @@ specimen_tissue:
 imported_from_unknown:
   id: 2101
   code_name: "imported"
-  the_code: "U"
+  the_code: "UNK"
   code_description: "Unknown"
 
 imported_from_utah:

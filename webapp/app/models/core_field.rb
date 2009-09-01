@@ -16,7 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class CoreField < ActiveRecord::Base
- 
+
+  belongs_to :code_name
+  
   validates_length_of :help_text, :maximum => 1000, :allow_blank => true 
   after_save :flush_caches
   

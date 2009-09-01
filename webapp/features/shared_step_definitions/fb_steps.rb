@@ -102,3 +102,51 @@ Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
 end
 
 
+#
+# Core config helpers
+#
+
+Given /^that form has core follow ups configured for all core fields$/ do
+  p @form
+  
+  @default_view = @form.investigator_view_elements_container.children[0]
+
+  # Create a core follow up for every core field that can be followed up on
+  CoreField.find_all_by_event_type("morbidity_event").each do |core_field|
+    if core_field.can_follow_up
+      follow_up_element = FollowUpElement.new
+      follow_up_element.form_id = @form.id
+      follow_up_element.core_path = core_field.key
+
+      # If the core field has a code name, then its potential answers are one of that code_name's codes
+      if core_field.code_name
+        # Get the code and do the magic incantation to make the follow up be considered a 'Code condition'
+        code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.first : core_field.code_name.codes.first
+        follow_up_element.condition = code.id
+        follow_up_element.condition_id = code.id
+      else
+
+        # Setting all conditions to YES if they aren't code conditions. This will probably have to get
+        # smarter as validations are added to fields (like postal code, for example, as you may not be able
+        # to set postal code to YES is the future.) Smarts could be added by making the core_field table's
+        # field_type a bit more specific. Currently there is just 'single_line_text' for text input form
+        # fields, but types like 'numeric' and 'postal_code' could be added.
+        follow_up_element.condition = "YES"
+      end
+    
+      follow_up_element.parent_element_id = @default_view.id
+      follow_up_element.save_and_add_to_form
+
+      # Add question to follow up container
+      question_element = QuestionElement.new({
+          :parent_element_id => follow_up_element.id,
+          :question_attributes => {
+            :question_text => "#{core_field.name} follow up?",
+            :data_type => "single_line_text",
+            :short_name => Digest::MD5::hexdigest(core_field.name)
+          }
+        })
+      question_element.save_and_add_to_form
+    end
+  end
+end

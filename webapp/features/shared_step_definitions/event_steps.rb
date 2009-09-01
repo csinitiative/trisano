@@ -37,6 +37,10 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
   @event = create_basic_event(event_type, get_unique_name(1), disease, jurisdiction)
 end
 
+Given(/^a (.+) event exists with a disease that matches the form$/) do |event_type|
+  @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name, get_random_jurisdiction_by_short_name)
+end
+
 Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
   @m = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
