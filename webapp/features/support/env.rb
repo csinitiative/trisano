@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Sets up the Rails environment for Cucumber
+
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 
