@@ -108,7 +108,7 @@ class HumanEvent < Event
       order_by_clause << "people.last_name" unless last_name.blank?
       order_by_clause << "people.first_name" unless first_name.blank?
       order_by_clause << "people.birth_date" if bdate
-      order_by_clause << "events.id DESC"
+      order_by_clause << "events.event_id DESC"
 
       select = name_and_bdate_sql(where_clause.join(" AND "), order_by_clause.join(", "))
 
@@ -146,7 +146,8 @@ class HumanEvent < Event
       order_by_clause = ""
       order_by_clause << "people.birth_date, " if bdate
       order_by_clause << "ts_rank(people.vector, to_tsquery(#{sql_terms})) DESC," if sql_terms
-      order_by_clause << " events.id DESC"
+      order_by_clause << "people.entity_id, "
+      order_by_clause << " events.event_id DESC"
 
       select = name_and_bdate_sql(where_clause, order_by_clause)
 
@@ -342,47 +343,64 @@ class HumanEvent < Event
 
     def name_and_bdate_sql(where_clause, order_by_clause)
       select = <<-SQL
-        SELECT events.id AS id,
-               events.event_onset_date AS event_onset_date,
-               events."type" AS event_type,
-               events.deleted_at AS deleted_at,
-               entities.id AS entity_id,
-               people.first_name AS first_name,
-               people.last_name AS last_name,
-               people.birth_date AS birth_date,
-               external_codes.code_description AS birth_gender,
-               diseases.disease_name AS disease_name,
-               jurisdiction_entities.id AS jurisdiction_entity_id,
-               jurisdiction_places.short_name AS jurisdiction_short_name,
-               sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
-        FROM events
-             INNER JOIN participations ON participations.event_id = events.id
-                  AND (participations."type" = 'InterestedParty' )
-             LEFT OUTER JOIN entities ON entities.id = participations.primary_entity_id
-                  AND (entities.entity_type = 'PersonEntity' )
-             LEFT OUTER JOIN people ON people.entity_id = entities.id
-             LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id
-                  AND (external_codes.code_name = 'gender')
-             LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
-             LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
-             INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id
-                  AND (jurisdictions.type = 'Jurisdiction')
-             INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id
-                  AND (jurisdiction_entities.entity_type = 'PlaceEntity')
-             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
-             LEFT JOIN (
-                SELECT
-                    events.id AS event_id,
-                    ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
-                FROM
-                    events
-                    LEFT JOIN participations p
-                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-                GROUP BY events.id
-            ) sec_juris
-                ON (sec_juris.event_id = events.id)
+        SELECT
+          people.entity_id,
+          people.last_name,
+          people.first_name,
+          people.birth_date,
+          people.birth_gender,
+          events.event_id,
+          events.event_type,
+          events.event_onset_date,
+          events.disease_name,
+          events.jurisdiction_short_name,
+          events.jurisdiction_entity_id,
+          events.secondary_jurisdictions,
+          events.deleted_at
+        FROM (
+          SELECT
+            entities.id AS entity_id,
+            people.first_name AS first_name,
+            people.last_name AS last_name,
+            people.birth_date AS birth_date,
+            people.vector AS vector,
+            external_codes.code_description AS birth_gender
+          FROM entities
+          INNER JOIN people ON people.entity_id = entities.id AND (entities.entity_type = 'PersonEntity') AND (entities.deleted_at IS NULL)
+          LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id AND (external_codes.code_name = 'gender')
+        ) as people
+        LEFT OUTER JOIN (
+          SELECT
+            events.id AS event_id,
+            events.type AS type,
+            events.event_onset_date AS event_onset_date,
+            events."type" AS event_type,
+            events.deleted_at AS deleted_at,
+            participations.primary_entity_ID as entity_id,
+            diseases.disease_name AS disease_name,
+            jurisdiction_entities.id AS jurisdiction_entity_id,
+            jurisdiction_places.short_name AS jurisdiction_short_name,
+            sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
+          FROM events
+          INNER JOIN participations ON participations.event_id = events.id AND (participations."type" = 'InterestedParty' )
+          LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
+          LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
+          INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id AND (jurisdictions.type = 'Jurisdiction')
+          INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id AND (jurisdiction_entities.entity_type = 'PlaceEntity')
+          INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
+          LEFT JOIN (
+            SELECT
+              events.id AS event_id,
+              ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
+            FROM
+              events
+            LEFT JOIN participations p ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+            GROUP BY events.id
+          ) sec_juris ON (sec_juris.event_id = events.id)
+        ) as events
+        ON people.entity_id = events.entity_id
         WHERE (#{where_clause})
-              AND ( (events."type" = 'MorbidityEvent' OR events."type" = 'ContactEvent') )
+        AND ( (events."type" != 'EncounterEvent' OR events."type" IS NULL) )
         ORDER BY #{order_by_clause}
       SQL
     end

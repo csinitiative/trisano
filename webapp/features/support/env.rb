@@ -18,18 +18,17 @@
 # Sets up the Rails environment for Cucumber
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
-require 'cucumber/rails/world'
-require 'cucumber/formatters/unicode' # Comment out this line if you don't want Cucumber Unicode support
 
-require 'webrat'
+#rspec
+require 'spec/expectations'
+require 'spec/matchers'
 
-# Comment out the next two lines if you're not using RSpec's matchers (should / should_not) in your steps.
 require 'cucumber/rails/rspec'
-begin
-  require 'webrat/rspec-rails'
-rescue
-  require 'webrat/core/matchers'
-end
+require 'cucumber/rails/world'
+require 'cucumber/formatter/unicode' # Comment out this line if you don't want Cucumber Unicode support
+
+require 'webrat/core/matchers'
+require 'webrat'
 
 # Selenium helpers required for all feature runs because shared helpers rely on helper methods like get_random_disease
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_helper')

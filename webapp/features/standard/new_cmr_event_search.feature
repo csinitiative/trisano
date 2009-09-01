@@ -27,6 +27,29 @@ Feature: Searching for existing people or events before adding a CMR
 
     When I search for last_name = "Jones"
     Then I should see results for both records
+    
+  Scenario: Searches should not include encounter events
+    Given a simple morbidity event for last name Jones
+    And there is an associated encounter event
+    And I am logged in as a super user
+
+    When I search for last_name = "Jones"
+    Then I should see results for just the morbidity event
+
+  Scenario: Searches include people without events
+    Given a simple morbidity event for last name Jones
+    And a person with the last name "Jones"
+    And I am logged in as a super user
+
+    When I search for last_name = "Jones"
+    Then I should see both the CMR and the entity
+
+Scenario: Searches do not include delete people
+    Given a deleted person with the last name "Jones"
+    And I am logged in as a super user
+
+    When I search for last_name = "Jones"
+    Then I should see no results
 
   Scenario: Searching with a name and birthdate works properly
     Given the following morbidity events:
@@ -39,16 +62,16 @@ Feature: Searching for existing people or events before adding a CMR
     When I search for last_name = "Jones"
     Then I should see the following results:
       |last_name|first_name|
-      |Jones    |Steve     |
-      |Jones    |David     |
       |Jones    |Mick      |
+      |Jones    |David     |
+      |Jones    |Steve     |
 
     When I search for last_name "Jones" and first_name = "David"
     Then I should see the following results:
       |last_name|first_name|
       |Jones    |David     |
-      |Jones    |Steve     |
       |Jones    |Mick      |
+      |Jones    |Steve     |
 
     When I search for last name = "Jones" and birth date = "1955-06-26"
     Then I should see the following results:
@@ -128,17 +151,3 @@ Feature: Searching for existing people or events before adding a CMR
     And I create a new morbidity event from the contact named Smith
     Then I should be in edit mode for a new copy of Smith
 
-  Scenario: Clicking search_people_entities searches people entities
-    Given I have a known person entity
-
-    And I search for last_name = "Smith-Johnson" for people entities
-
-    Then I should find the value "Smith-Johnson" in "data_last_name"
-
-Scenario: Clicking search_people_entities searches people entities does not include deleted people
-    Given I have a known person entity
-    And that known person entity has been deleted
-
-    And I search for last_name = "Smith-Johnson" for people entities
-
-    Then I should not find the value "Smith-Johnson" in "data_last_name"

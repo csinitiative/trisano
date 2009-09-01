@@ -42,12 +42,24 @@ Given /^the following morbidity events:$/ do |morbs|
   end
 end
 
+Given /^there is an associated encounter event$/ do
+  @encounter = add_encounter_to_event(@m)
+end
+
+Given /^a person with the last name "(.+)"$/ do |last_name|
+  PersonEntity.create(:person_attributes => { :last_name => last_name } )
+end
+
+Given /^a deleted person with the last name "(.+)"$/ do |last_name|
+  PersonEntity.create(:deleted_at => Date.today, :person_attributes => { :last_name => last_name } )
+end
+
 When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_name |
-  click_link_within "#event_#{@m.id}", "Create and edit CMR using this person"
+  click_link_within "#entity_#{@m.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
 When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
-  click_link_within "#event_#{@child.id}", "Create and edit CMR using this person"
+  click_link_within "#entity_#{@child.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
 When /^I search for last_name = "([^\"]*)"$/ do |last_name|
@@ -115,8 +127,14 @@ Then /^I should not see a link to enter a new CMR$/ do
 end
 
 Then /^I should see results for Jones and Joans$/ do
-  response.should contain("Jones")
-  response.should contain("Joans")
+  response.should have_selector("table.list") do |table|
+    table.should contain("Jones")
+    table.should contain("Joans")
+  end
+end
+
+Then /^I should see no results$/ do
+  response.should contain("No results")
 end
 
 Then /^the search field should contain Jones$/ do
@@ -134,6 +152,29 @@ Then /^I should see results for both records$/ do
       tr.should contain("Contact event")
     end
   end
+end
+
+Then /^I should see both the CMR and the entity/ do
+  response.should have_selector("table.list") do |table|
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Morbidity event")
+    end
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("None")
+    end
+  end
+end
+
+
+Then /^I should see results for just the morbidity event$/ do
+  response.should have_selector("table.list") do |table|
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Morbidity event")
+    end
+  end
+  response.should_not contain("Encounter event")
 end
 
 Then /^the disease should show as 'private'$/ do

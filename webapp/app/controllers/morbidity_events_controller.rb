@@ -156,9 +156,7 @@ class MorbidityEventsController < EventsController
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
     end
 
-    if params[:search_people_entities]
-      people_search
-    elsif params[:last_name] || params[:first_name] || params[:birth_date] # Tests to see if any params are supplied in query string.
+    if params[:last_name] || params[:first_name] || params[:birth_date] # Tests to see if any params are supplied in query string.
 
       # For passing on to new_cmr
       @last_name = params[:last_name]
@@ -167,15 +165,15 @@ class MorbidityEventsController < EventsController
 
       # Tests to see if params are supplied but empty
       if @last_name.blank? && @first_name.blank? && @birth_date.blank?
-        @events = []
+        @results = []
       else
         @birth_date.blank? ? birth_date = nil : birth_date = @birth_date
         params[:page].blank? ? page = 1 : page = params[:page]
         begin
           if params[:use_starts_with_search]
-            @events = HumanEvent.search_by_name_and_birth_date_using_starts_with(params[:last_name], params[:first_name], birth_date, {:page_size => 50, :page => page})
+            @results = HumanEvent.search_by_name_and_birth_date_using_starts_with(params[:last_name], params[:first_name], birth_date, {:page_size => 50, :page => page})
           else
-            @events = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
+            @results = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
           end
         rescue
           logger.error $!.message
@@ -237,39 +235,6 @@ class MorbidityEventsController < EventsController
       )
     rescue
       render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 
-      return false
-    end
-    return true
-  end
-
-  def people_search
-    if params[:per_page].to_i > 100
-      render :text => 'TriSano cannot process more then 100 people per page', :layout => 'application', :status => 400
-      return false
-    end
-
-    if params[:last_name] || params[:first_name] || params[:birth_date] # Tests to see if any params are supplied in query string.
-      # For passing on to new_cmr
-      @last_name = params[:last_name]
-      @first_name = params[:first_name]
-      @birth_date = params[:birth_date]
-    end
-
-    begin
-      @export_options = params[:export_options]
-
-      @people = Person.find_all_for_filtered_view(
-        :first_name => params[:first_name],
-        :last_name => params[:last_name],
-        :birth_date => params[:birth_date],
-        :order_by => params[:sort_order],
-        :use_starts_with_search => params[:use_starts_with_search],
-        :page => params[:page],
-        :include => [:person_entity],
-        :per_page => params[:per_page]
-      )
-    rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404
       return false
     end
     return true

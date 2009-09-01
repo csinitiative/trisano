@@ -49,6 +49,18 @@ def add_child_to_event(event, child_last_name)
   end
 end
 
+def add_encounter_to_event(event, options={})
+  returning event.encounter_child_events.build do |child|
+    child.attributes = { :participations_encounter_attributes => {
+      :encounter_date => options[:encounter_date] || Date.today, 
+      :user_id => options[:user_id] || 1, 
+      :encounter_location_type => options[:location_id] || "clinic" }
+    }
+    event.save!
+    child.save
+  end
+end
+
 def jurisdiction_id_by_name(name)
   Place.all_by_name_and_types(name || "Unassigned", 'J', true).first.entity_id
 end
