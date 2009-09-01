@@ -56,24 +56,15 @@ class LoincCode < ActiveRecord::Base
     end
   end
 
-  @@scale_type_index = 5
-  @@short_name_index  = 38
-  cattr_accessor :scale_type_index, :short_name_index
-
-  # explicitly for loading from loincdb.txt in the LOINCTAB.zip
-  def self.load_from_loinctab(str_or_readable)
+  def self.load_from_csv(str_or_readable)
     require 'csv'
-    transaction do
-      i = 0
-      CSV.parse str_or_readable, "\t" do |row|
-        scale = ExternalCode.loinc_scale_by_the_code row[scale_type_index]
-        if scale
-          loinc = LoincCode.create! :loinc_code => row.first, :scale => scale, :test_name => row[short_name_index]
-        else
-          logger.debug "Rejected row: #{row.join("\t")}"
-        end
-        yield row, i += 1 if block_given?
-      end
+    CSV.parse str_or_readable do |row|
+      scale = ExternalCode.loinc_scale_by_the_code row.last
+      ctt   = CommonTestType.find_by_common_name row.second
+      LoincCode.create!(:loinc_code       => row.first,
+                        :test_name        => row.third,
+                        :scale            => scale,
+                        :common_test_type => ctt)
     end
   end
 
