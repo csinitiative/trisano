@@ -1,0 +1,16 @@
+.vert-break
+  -form_for @organism do |f|
+    =f.error_messages
+
+    %table.list
+      %tr
+        %th.forminformation
+          Edit Organism
+      %tr
+        %td
+          %span.vert
+            =f.label      :organism_name
+            =f.text_field :organism_name, :size => 60
+
+    %span.vert
+      =create_or_update_button @organism

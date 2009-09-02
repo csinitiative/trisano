@@ -85,6 +85,9 @@ def path_to(page_name)
   when /the "([^"]*)" organism page/
     organism_path Organism.find_by_organism_name($1)
 
+  when /the new organism page/
+    new_organism_path
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end
