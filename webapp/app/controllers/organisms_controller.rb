@@ -13,9 +13,10 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.save
+        flash[:notice] = 'Organism was successfully created'
         format.html { redirect_to @organism  }
       else
-        format.html { render :action => :new }
+        format.html { render :action => :new, :status => :bad_request }
       end
     end
   end

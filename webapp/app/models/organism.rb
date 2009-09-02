@@ -16,6 +16,18 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Organism < ActiveRecord::Base
+  before_validation :strip_organism_name
+
+  validates_presence_of   :organism_name
+  validates_uniqueness_of :organism_name, :case_sensitive => false
+
   has_many :loinc_codes_organisms
   has_many :loinc_codes, :through => :loinc_codes_organisms
+
+  private
+
+  def strip_organism_name
+    self.organism_name.strip! if attribute_present? :organism_name
+  end
+
 end

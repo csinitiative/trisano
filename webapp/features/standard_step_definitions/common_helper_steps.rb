@@ -64,15 +64,8 @@ end
 # HTTP helpers
 #
 
-Then /^I should get a 403 response$/ do
-  # Why can't I say: response.should be_forbidden
-  # Or repsonse.code.should == :forbidden
-  # Or, at the very least response.code.should == 403
-  response.code.should == "403"
-end
-
-Then /^I should get a 500 response$/ do
-  response.code.should == "500"
+Then /^I should get a (.+) response$/ do |code|
+  response.code.should == code.to_s
 end
 
 Then /^I follow "(.*)" expecting a failure$/ do |link|

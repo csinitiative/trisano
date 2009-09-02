@@ -1,3 +1,10 @@
+-content_for :title do
+  Create an Organism
+
+-content_for :tools do
+  =link_to h('< Back to Organisms'), organisms_path
+  %p
+
 .vert-break
   -form_for @organism do |f|
     =f.error_messages

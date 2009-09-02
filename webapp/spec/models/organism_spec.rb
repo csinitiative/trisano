@@ -22,4 +22,15 @@ describe Organism do
   it { should have_many(:loinc_codes_organisms) }
   it { should have_many(:loinc_codes) }
 
+  it 'has unique organism name (case insensitive)' do
+    Organism.create(:organism_name => 'Arbovirus').errors.on(:organism_name).should == nil
+    Organism.create(:organism_name => 'Arbovirus').errors.on(:organism_name).should == 'has already been taken'
+    Organism.create(:organism_name => 'arbovirus').errors.on(:organism_name).should == 'has already been taken'
+    Organism.create(:organism_name => ' Arbovirus ').errors.on(:organism_name).should == 'has already been taken'
+  end
+
+  it 'name cannot be blank' do
+    Organism.create(:organism_name => '').errors.on(:organism_name).should == "can't be blank"
+  end
+
 end
