@@ -52,7 +52,7 @@ class EventsController < ApplicationController
   end
 
   def contacts_search
-    @events = HumanEvent.search_by_name(params[:name])
+    @results = HumanEvent.search_by_name(params[:name])
     render :partial => "events/contacts_search", :layout => false
   end
 

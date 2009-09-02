@@ -16,8 +16,8 @@
 -# Display the search results of a contact live search
 
 %br
-- if defined? @events
-  -if @events.empty?
+- if defined? @results
+  -if @results.empty?
     %b No results
   -else
     %table.list
@@ -31,40 +31,55 @@
         %th Disease
         %th Actions
       - previous_entity_id = nil
-      - for event in @events do
-        - if (event['deleted_at'].nil?)
-          - result_class = 'search-active tabular'
-        - else
+      - for result in @results do
+        - includes_event = !result['event_id'].blank?
+
+        - result_class = 'search-active tabular'
+        - if (!includes_event && !result['deleted_at'].nil?)
           - result_class = 'search-inactive tabular'
-        - current_entity_id = event['entity_id']
+
+        - current_entity_id = result['entity_id']
         - if previous_entity_id != current_entity_id
           - output_name = true
           - previous_entity_id = current_entity_id
         - else
           - output_name = false
+        
+        - if includes_event
+          - jurisdictions = pg_array(result['secondary_jurisdictions']) << result['jurisdiction_entity_id']
+          - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
+          - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
 
-        - jurisdictions = pg_array(event['secondary_jurisdictions']) << event['jurisdiction_entity_id']
-        - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
-        - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
-        %tr{:class => result_class, :id => "event_#{event['id']}"}
+        %tr{:class => result_class, :id => "entity_#{result['entity_id']}"}
           %td 
-            = "#{h(event['last_name'])}, #{h(event['first_name'])}" if output_name
+            - if output_name
+              = "#{h(result['last_name'])}, #{h(result['first_name'])}"
+            - else
+              %i &nbsp;&nbsp;Same as above
           %td
-            = h(event['birth_date']) if output_name
+            = h(result['birth_date']) if output_name
           %td
-            = h(event['birth_gender']) if output_name
-          %td= h(event['event_type'].underscore.humanize)
-          %td= h(event['jurisdiction_short_name'])
-          %td= h(event['event_onset_date'])
-          - if can_update || can_view
-            %td= h(event['disease_name'])
-          - else
-            %td Private
+            = h(result['birth_gender']) if output_name
+          %td
+            - if includes_event
+              = h(result['event_type'].underscore.humanize)
+            - else
+              %i None
+          %td
+            = h(result['jurisdiction_short_name']) if includes_event
+          %td
+            = h(result['event_onset_date']) if includes_event
+          %td
+            - if includes_event
+              - if can_update || can_view
+                = h(result['disease_name'])
+              - else
+                Private
           %td
             - fields_for(:morbidity_event, MorbidityEvent.new, :builder => ExtendedFormBuilder) do |f|
               - contact_event = ContactEvent.new
-              - contact_event.build_interested_party(:primary_entity_id => event.interested_party.primary_entity_id)
+              - contact_event.build_interested_party(:primary_entity_id => result['entity_id'])
               - contact_event.build_participations_contact
-              - contact_event.interested_party.person_entity.telephones.build if contact_event.interested_party.person_entity.telephones.empty?
-              = add_record_link f, :contact_child_events, "Add contact", :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{event.id}"
+              - contact_event.interested_party.person_entity.telephones.build
+              = add_record_link f, :contact_child_events, "Add contact", :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}"
 %hr
