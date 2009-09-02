@@ -26,8 +26,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :export_columns, :has_many => :export_conversion_values
 
   map.resources :common_test_types, :member => { :loinc_codes => :get, :update_loincs => :post }
-
   map.resources :loinc_codes
+  map.resources :organisms
 
   # When we get to Rails 2.1 restrict here for GET only
   map.resources :cdc_events, :collection => { :current_week => :get, :current_ytd => :get, :by_range => :get }
