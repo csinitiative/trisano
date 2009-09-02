@@ -630,7 +630,7 @@ form.inplaceeditor-form a {
   .staged-message .header p + * {
     text-indent: 1em; }
 .staged-message .results {
-  width: 82%; }
+  width: 81%; }
   .staged-message .results table {
     table-layout: fixed; }
     .staged-message .results table th {
