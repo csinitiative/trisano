@@ -28,6 +28,10 @@ module PlacesHelper
     render_type_selector(form, 'agency_types')
   end
 
+  def exposed_type_selector(form)
+    render_type_selector(form, 'exposed_types')
+  end
+
   def render_type_selector(form, types)
     render :partial => 'events/place_types', :locals => { :f => form, :types => types}
   end

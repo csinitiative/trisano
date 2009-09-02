@@ -16,6 +16,9 @@
 - content_for :title do
   Place Management
 
+- content_for :tools_two do
+  = button_to("Create new place", {:action => "new"}, { :method => :get })
+
 - form_tag(places_path, :method => :get) do
 
   %div#name_criteria{:style => "margin-top: 5px"}
@@ -36,5 +39,3 @@
 
 = render_place_management_list
 
-
-  

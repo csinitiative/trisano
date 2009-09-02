@@ -29,13 +29,13 @@ When(/^I enter a canonical address$/) do
   @county = "Cache"
   @zip = "97232"
 
-  fill_in "place_canonical_address_attributes_street_number", :with => @street_number
-  fill_in "place_canonical_address_attributes_street_name", :with => @street_name
-  fill_in "place_canonical_address_attributes_unit_number", :with => @unit_number
-  fill_in "place_canonical_address_attributes_city", :with => @city
-  select @state, :from => "place_canonical_address_attributes_state_id"
-  select @county, :from => "place_canonical_address_attributes_county_id"
-  fill_in "place_canonical_address_attributes_postal_code", :with => @zip
+  fill_in "place_entity_canonical_address_attributes_street_number", :with => @street_number
+  fill_in "place_entity_canonical_address_attributes_street_name", :with => @street_name
+  fill_in "place_entity_canonical_address_attributes_unit_number", :with => @unit_number
+  fill_in "place_entity_canonical_address_attributes_city", :with => @city
+  select @state, :from => "place_entity_canonical_address_attributes_state_id"
+  select @county, :from => "place_entity_canonical_address_attributes_county_id"
+  fill_in "place_entity_canonical_address_attributes_postal_code", :with => @zip
 end
 
 When(/^I submit the place update form$/) do

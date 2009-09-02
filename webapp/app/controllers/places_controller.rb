@@ -33,7 +33,7 @@ class PlacesController < AdminController
   def update
     @place_entity = PlaceEntity.find(params[:id])
 
-    if @place_entity.update_attributes(params[:place])
+    if @place_entity.update_attributes(params[:place_entity])
       flash[:notice] = 'Place was successfully updated.'
       redirect_to(place_url(@place_entity))
     else
@@ -44,6 +44,26 @@ class PlacesController < AdminController
 
   def show
     @place_entity = PlaceEntity.find(params[:id])
+  end
+
+  def new
+    @place_entity = PlaceEntity.new
+    @place_entity.place = Place.new
+    @place_entity.canonical_address = Address.new
+  end
+
+  def create
+    @place_entity = PlaceEntity.new
+    @place_entity.place = Place.new
+    @place_entity.update_attributes(params[:place_entity])
+    
+    if @place_entity.save
+      flash[:notice] = 'Place was successfully created.'
+      redirect_to(place_url(@place_entity))
+    else
+      @place_entity.canonical_address = Address.new
+      render :action => "new"
+    end
   end
 
 end

@@ -107,6 +107,17 @@ describe Place do
       @jurisdiction_to_delete.entity.save!
     end
 
+    it "exposed_types should return all place type codes minus the juridsdiction type" do
+      # Ensure there's a jurisdiction type
+      Code.find_by_code_name_and_the_code("placetype", "J").should_not be_nil
+
+      types = Place.exposed_types
+      types.size.should > 0
+      types.each do |code|
+        code.the_code.should_not == "J"
+      end
+    end
+
   end
 
   describe 'multiple place types' do

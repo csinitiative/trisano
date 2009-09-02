@@ -41,8 +41,6 @@
 #rot
   = error_messages_for :place_entity
 
-  - form_for(:place, @place_entity, :url => place_path(@place_entity), :html => { :method => :put }) do |f|
-
+  - form_for(@place_entity, :url => place_path(@place_entity), :html => { :method => :put }) do |f|
     = render :partial => 'form', :locals => { :f => f, :place_entity => @place_entity }
-
     = f.submit "Update"

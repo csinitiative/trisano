@@ -23,7 +23,8 @@
         %span{ :class => "horiz" }
           = p.label(:name, "Name")
           = p.text_field(:name, :size => 25, :maxlength => 250)
-        %p
+        %span{ :class => "horiz" }
+          = exposed_type_selector(p)
 
 - f.fields_for(:canonical_address, :builder => ExtendedFormBuilder) do |ca|
 

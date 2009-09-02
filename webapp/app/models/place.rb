@@ -109,6 +109,12 @@ class Place < ActiveRecord::Base
       %w(S P FE DC RA E CF LCF GLE)
     end
 
+    # Includes a unique array of all of the above, which should not include
+    # jurisdictions.
+    def exposed_type_codes
+      (agency_type_codes + diagnostic_type_codes + epi_type_codes).uniq
+    end
+
     def agency_types
       place_types(agency_type_codes)
     end
@@ -120,7 +126,11 @@ class Place < ActiveRecord::Base
     def epi_types
       place_types(epi_type_codes)
     end
-    
+
+    def exposed_types
+      place_types(exposed_type_codes)
+    end
+
     def place_types(type_codes)
       Code.active.find(:all, 
         :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes])
