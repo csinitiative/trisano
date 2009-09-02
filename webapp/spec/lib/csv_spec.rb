@@ -458,6 +458,7 @@ def csv_mock_event(event_type)
   m.stub!(:outbreak_name).and_return("an outbreak")
 
   m.stub!(:disease_event).and_return(@disease)
+  m.stub!(:disease_id).and_return(nil)
   m.stub!(:event_name).and_return("an event")
   m.stub!(:workflow_state).and_return("new")
   m.stub!(:investigation_started_date).and_return("2008-01-06")

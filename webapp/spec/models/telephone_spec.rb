@@ -18,12 +18,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Telephone do
-  before(:each) do
-    @phone = Telephone.new
-  end
 
   it "should not be valid without some component of a phone number" do
-    @phone.should_not be_valid
+    Telephone.new.should_not be_valid
   end
 
   it "should produce a simple phone format" do

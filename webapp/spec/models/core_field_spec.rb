@@ -19,15 +19,18 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreField do
 
+  before :all do
+    CoreField.delete_all  # There's been fixutures spotted around these parts.
+  end
+
   before :each do
-    @core_field = CoreField.create(:key => 'morbidity_event[test_field]',
-                                   :event_type => 'morbidity_event')
+    @core_field = CoreField.create(:key => 'morbidity_event[test_field]', :event_type => 'morbidity_event')
   end
 
   it "should update help test" do
     @core_field.help_text = 'Here is some help text'
     @core_field.save.should be_true
-    CoreField.find(:first).help_text.should == 'Here is some help text'
+    CoreField.find_by_key(@core_field.key).help_text.should == 'Here is some help text'
   end
 
   it 'should provide hashes based on event type' do

@@ -42,8 +42,8 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/json_pure-1.1.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyzip-0.9.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-will_paginate-2.3.6.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.1.12.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.1.12.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.2.8.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.2.7.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.2.gem
