@@ -26,6 +26,7 @@
       %th.forminformation
         Place
       %th
+      %th
       %tr
         %td.forminformation
           .tools
@@ -43,7 +44,6 @@
               =h address.state.code_description unless address.state.nil?
               =h address.postal_code
         %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_place_path(@place_entity)
-            |
-            Show
+          =h(@place_entity.place.formatted_place_descriptions)
+        %td.tools
+          ="#{link_to 'Edit', edit_place_path(@place_entity)}&nbsp;|&nbsp;Show"

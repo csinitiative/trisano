@@ -8,7 +8,7 @@ Feature: Editing places
     Given a lab named Manzanita Health Facility exists
     And I am logged in as a super user
 
-    When I navigate to place edit
+    When I am on the place edit page
     And I change the place name to Manzanita Health Dot Com
     And I enter a canonical address
     And I submit the place update form
@@ -20,7 +20,7 @@ Feature: Editing places
     Given a lab named Manzanita Health Facility exists
     And I am logged in as a super user
 
-    When I navigate to place edit
+    When I am on the place edit page
     And I enter invalid place data
     And I submit the place update form
 

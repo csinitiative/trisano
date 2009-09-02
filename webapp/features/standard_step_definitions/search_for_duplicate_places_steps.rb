@@ -20,11 +20,6 @@ When(/^I navigate to the place management tool$/) do
   response.should contain("Place Management")
 end
 
-When(/^I navigate to place edit$/) do
-  visit(edit_place_path(@place_entity))
-  response.should contain("Edit Place")
-end
-
 Given(/^a lab named (.+) exists$/) do |place_name|
 
   # The lab needs to be created on an event so that it exists in the system

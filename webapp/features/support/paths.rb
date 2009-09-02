@@ -55,6 +55,18 @@ def path_to(page_name)
   when /the admin dashboard/
     admin_path
 
+  when /the places page/
+    places_path
+
+  when /the new place page/
+    new_place_path
+
+  when /the "([^"]*)" place show page/
+    place_path(PlaceEntity.find(:first, :conditions => ["places.name = ?", $1], :include => :place))
+
+  when /the place edit page/
+    edit_place_path(@place_entity)
+
   when /edit the disease/
     edit_disease_path(@disease)
 
