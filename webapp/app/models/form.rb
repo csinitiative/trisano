@@ -707,7 +707,7 @@ class Form < ActiveRecord::Base
 
   # Debt? Rails' sanitize method wants to put null values in quotes.
   def self.null_safe_sanitize(value)
-    value.blank? ? "null" :  "'#{sanitize_sql(["%s", value])}'"
+    value.blank? ? "null" :  "#{sanitize_sql_for_conditions(["'%s'", value]).untaint}"
   end
   
 end
