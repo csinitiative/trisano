@@ -103,7 +103,7 @@ juris_query = %{
 dbjurisdictions = conn.prepare_call(juris_query).execute_query
 dbjuris = {}
 
-while dbjurisdictions.next 
+while dbjurisdictions.next
     juris = dbjurisdictions.getString(1)
     dbjuris[juris] = 1
     puts "Found jurisdiction #{juris}"
