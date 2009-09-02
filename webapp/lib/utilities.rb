@@ -30,6 +30,10 @@ class Utilities
       end
       return area_code, number, extension
     end
+
+    def sanitize_for_tsquery(string)
+      string.gsub(/[\(\);]/, '')
+    end
   end
 end
 

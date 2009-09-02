@@ -137,7 +137,7 @@ class HumanEvent < Event
       end
 
       where_clause = ""
-      where_clause += "people.vector @@ to_tsquery(#{sql_terms})" if sql_terms
+      where_clause += "people.vector @@ to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})" if sql_terms
       if bdate
         where_clause += " AND" if sql_terms
         where_clause += bdate_where_clause(bdate, sql_terms)
@@ -145,7 +145,7 @@ class HumanEvent < Event
 
       order_by_clause = ""
       order_by_clause << "people.birth_date, " if bdate
-      order_by_clause << "ts_rank(people.vector, to_tsquery(#{sql_terms})) DESC," if sql_terms
+      order_by_clause << "ts_rank(people.vector, to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})) DESC," if sql_terms
       order_by_clause << "people.entity_id, "
       order_by_clause << " events.event_id DESC"
 

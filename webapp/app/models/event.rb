@@ -427,7 +427,7 @@ class Event < ActiveRecord::Base
         sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
 
         where_clause += " AND " unless where_clause.empty?
-        where_clause += "vector @@ to_tsquery(#{sql_terms})"
+        where_clause += "vector @@ to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})"
         order_by_clause = " ts_rank(vector, #{sql_terms}) DESC, last_name, first_name ASC;"
       end
       [where_clause, order_by_clause, issue_query]
