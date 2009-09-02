@@ -60,48 +60,65 @@ cwm = CWM.get_instance('TriSano')
 puts "Getting security constraint map"
 rbsm = meta.findModel('TriSano').rowLevelSecurity.getRoleBasedConstraintMap
 existing_rules = []
-rbsm.keySet.each do
+rbsm.keySet.each {
     |mykey|
     existing_rules.push(mykey) if mykey !~ /admin/i
-end
+}
 
-existing_rules.each do
+existing_rules.each {
     |rulename|
     rbsm.remove(rulename)
-end
+}
 
-puts "Getting defined roles"
+puts "Getting defined roles from Pentaho"
 secserv = meta.securityReference.securityService
 secserv.serviceURL = "#{ServerURL}/pentaho/ServiceAction?action=SecurityDetails&details=all"
-roles = secserv.getRoles
+pentaho_roles = secserv.getRoles
 
-puts "Modifying security constraints"
-roles.each do
-    |rolename|
-    if rolename !~ /admin/i
+puts "Getting jurisdictions from the database"
+dbinfo = nil
+meta.databases.each { |db|
+    if db.name =~ /TriSano/ then
+        dbinfo = db
+        break
+    end
+}
+
+dbconn = eval("#{dbinfo.driver_class}").new
+props = Java::JavaUtil::Properties.new
+props.setProperty "user", dbinfo.username
+props.setProperty "password", dbinfo.password
+
+# TODO: Exception handling
+conn = dbconn.connect dbinfo.getURL, props
+
+juris_query = %{
+    SELECT p.name
+    FROM trisano.places_view p
+    JOIN trisano.places_types_view pt
+        ON (p.id = pt.place_id)
+    JOIN trisano.codes_view c
+        ON (c.id = pt.type_id)
+    WHERE c.code_description = 'Jurisdiction'}
+dbjurisdictions = conn.prepare_call(juris_query).execute_query
+dbjuris = {}
+
+while dbjurisdictions.next 
+    juris = dbjurisdictions.getString(1)
+    dbjuris[juris] = 1
+    puts "Found jurisdiction #{juris}"
+end
+
+pentaho_roles.each { |rolename|
+    puts "Pentaho role: #{rolename}"
+    if dbjuris[rolename] == 1 then
+        puts "Found role matching jurisdiction: #{rolename}"
         rbsm.put(SecurityOwner.new(1, rolename), "OR([MorbidityEvents.BC_DW_MORBIDITY_EVENTS_VIEW_INVESTIGATING_JURISDICTION]=\"#{rolename}\" ;  [MorbiditySecondaryJurisdictions.BC_DW_MORBIDITY_SECONDARY_JURISDICTIONS_VIEW_NAME] = \"#{rolename}\")")
     end
-end
+}
 
 puts "Saving results to metadata.out"
 CwmSchemaFactory.new.store_schema_meta(cwm, meta, nil)
-File.open('metadata.out', 'w') do |io|
+File.open('metadata.out', 'w') { |io|
     io << cwm.getXMI
-end
-
-#files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
-#result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
-#if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
-#    result_hooks[:success].call(result) if result_hooks[:success]
-#else 
-#    result_hooks[:failure].call(result) if result_hooks[:failure]
-#end
-
-# get schema
-# get model
-# model.rowLevelSecurity.getRoleBasedConstraintMap
-#     This is a map. Add, remove stuff
-#     Map<Java::OrgPentahoPmsSchemaSecurity::SecurityOwner, String>
-# 
-# 
-# so = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, 'MyRole')
+}
