@@ -23,33 +23,34 @@
     - person = contact_entity.person
     - contact_phone = contact_entity.primary_phone
 
-    %span.horiz{:style => "clear: both;"}
-      = label_tag "Name"
-      = h(person.last_comma_first)
-    %span.horiz
-      = label_tag "Phone"
-      -unless contact_phone.nil?
-        %span.horiz= h(contact_phone.simple_format)
+    %div.horiz{:style => 'width: 15%'}
+      %span.horiz
+        = label_tag "Name"
+        = h(person.last_comma_first)
+      %span.horiz
+        = label_tag "Phone"
+        -unless contact_phone.nil?
+          %span= h(contact_phone.simple_format)
 
   - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
-    %span.vert
-      = pc_fields.label(:disposition_id)
-      = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
-    %span.horiz
-      = pc_fields.label(:contact_type_id)
-      = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
-    - if f.object.new_record?
-      -# This place was added via live search. Provide a mechanism for removing the place before saving.
+    %div{:style => 'width: 84%'}
       %span.horiz
-        &nbsp;
-        %br
-        = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
-    - else
+        = pc_fields.label(:disposition_id)
+        = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
       %span.horiz
-        = f.label :_delete, "Remove"
-        = f.check_box :_delete
+        = pc_fields.label(:contact_type_id)
+        = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+      - if f.object.new_record?
+        -# This place was added via live search. Provide a mechanism for removing the place before saving.
+        %span.horiz
+          &nbsp;
+          %br
+          = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
+      - else
+        %span.horiz
+          = f.label :_delete, "Remove"
+          = f.check_box :_delete
 
-  %span{:style => "position: absolute; right: 1em"}
-    = f.label('&nbsp;')
-    = show_and_edit_event_links(f.object)
-  %hr
+      = f.label('&nbsp;')
+      = show_and_edit_event_links(f.object)
+    %hr
