@@ -37,7 +37,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% content_for :tools do %>
   <%= link_to_function('Show', "send_url_with_tab_index('#{cmr_path(@event)}')") %> |
-  <%= link_to 'Back to list', cmrs_path %>
+  <%= link_to 'Events', cmrs_path_with_defaults %>
 <% end %>
 
 <% @form_index = 0 %>
