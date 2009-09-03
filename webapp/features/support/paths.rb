@@ -30,9 +30,11 @@ def path_to(page_name)
   when /the show jurisdiction page/i
     jurisdiction_path
 
-  # Add more page name => path mappings here
   when /the new CMR page/i
     new_cmr_path
+
+  when /the add and remove forms page/i
+    event_forms_path(@event)
 
   when /the investigator user edit page/i
     "/users/4/edit"

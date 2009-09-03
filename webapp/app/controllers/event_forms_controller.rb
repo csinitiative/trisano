@@ -31,12 +31,12 @@ class EventFormsController < ApplicationController
     event_type = @event.class.name.underscore
 
     @forms_in_use = @event.form_references.collect { |ref| ref.form }
-    form_ids_in_use = @forms_in_use.map { |form| form.id }
+    form_template_ids_in_use = @forms_in_use.map { |form| form.template_id }
 
-    if form_ids_in_use.empty?
+    if form_template_ids_in_use.empty?
       @forms_available = Form.find(:all, :conditions => ["status = ? AND event_type = ?", 'Live', event_type])
     else
-      @forms_available = Form.find(:all, :conditions => ["status = ? AND event_type = ? AND id NOT IN (?)", 'Live', event_type, form_ids_in_use])
+      @forms_available = Form.find(:all, :conditions => ["status = ? AND event_type = ? AND template_id NOT IN (?)", 'Live', event_type, form_template_ids_in_use])
     end
   end
 

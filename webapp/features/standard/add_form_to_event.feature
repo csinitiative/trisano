@@ -50,3 +50,15 @@ Feature: Adding forms to events
     And I click the "Add/Remove forms for this event" link
     Then I should see "You do not have rights to add/remove forms."
 
+  Scenario: Newer versions of forms already on the event should not be shown
+    Given I am logged in as a super user
+    And I am on the add and remove forms page
+
+    When I check the add form checkbox
+    And I click the "Add Forms" button
+    Then I should see "The list of forms in use was successfully updated"
+
+    When the form has been republished
+    And I am on the add and remove forms page
+    Then I should not see the "Add Forms" button
+
