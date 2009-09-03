@@ -21,6 +21,7 @@ class LabResult < ActiveRecord::Base
   belongs_to :test_result, :class_name => 'ExternalCode'
   belongs_to :participation
   belongs_to :staged_message
+  belongs_to :organism
   belongs_to :test_type, :class_name => 'CommonTestType'
   belongs_to :test_status, :class_name => 'ExternalCode'
 

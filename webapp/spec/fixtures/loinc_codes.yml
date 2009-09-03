@@ -14,3 +14,26 @@ unlinked:
   id: 3
   scale_id: 2600
   loinc_code: 10000-1
+
+ord_no_organism:
+  id: 4
+  scale_id: 2600
+  loinc_code: 10004-0
+
+ord_one_organism:
+  id: 5
+  scale_id: 2600
+  loinc_code: 10005-0
+  common_test_type_id: 2
+
+ord_two_organisms:
+  id: 6
+  scale_id: 2600
+  loinc_code: 10006-0
+  common_test_type_id: 2
+
+nominal:
+  id: 7
+  scale_id: 2601
+  loinc_code: 10007-0
+  common_test_type_id: 2

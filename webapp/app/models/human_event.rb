@@ -601,10 +601,31 @@ class HumanEvent < Event
   def add_labs_from_staged_message(staged_message)
     raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
 
-    # If the obx.result value matches a component in the test_result, map it there.
-    # Otherwise, map it to result_value. So, first extract the test_results.
-    # A single test_result has multiple synonyms, like this: "Positive", " Confirmed", " Detected", " Definitive"
-    # Bust those out into hash keys whose value is the test_result ID.
+    # All tests have a scale type.  The scale type is well known and is part of the standard LOINC code given in the SCALE_TYP field.
+    # TriSano keeps the scale type in the loinc_codes table scale column.
+    #
+    # There are three scale types that we care about: ordinal (Ord: one of X), nominal (Nom: a string), quantitative (Qn: a number).
+    #
+    # An ordinal test result has values such as Positive or Reactive.  E.g. the lab was positive for HIV
+    #
+    # A quantitative test result has a value such as 100 or .5, which when combined with the units field gives a meaningful result.
+    # E.g, the lab showed a hemoglobin count of 13.0 Gm/Dl.
+    #
+    # A nominal test result has a string.  In TriSano we are currently making the assumption that this is an organism name.
+    # E.g the blood culture showed the influenza virus.
+    #
+    # These three types of test results are mapped to three different fields:
+    #
+    # Ord -> test_result_id
+    # Qn  -> result_value
+    # Nom -> organism_id
+    #
+    # In addition to organisms specified directly for nominal tests, ordinal and quantitative tests can have organisms too.
+    # TriSano maintains a loinc code to organism relationship in the database
+
+    # For ordinal tests, a single result has multiple synonyms, such as: "Positive", " Confirmed", " Detected", " Definitive"
+    # So, first load the TriSano test_results, then bust out the slash-separated synonyms into hash keys whose value is the test_result ID.
+    # I.e: { "Positive" => 1, "Confirmed" => 1, "Negative" => 2, ... }
     test_results = ExternalCode.find_all_by_code_name("test_result")
     result_map = {}
     test_results.each do |result|
@@ -628,16 +649,44 @@ class HumanEvent < Event
       common_test_type = loinc_code.common_test_type
       raise StagedMessage::UnlinkedLoincCode, "LOINC code, #{obx.loinc_code}, is known but not linked to a common test type." if common_test_type.nil?
 
-      specimen_source = ExternalCode.find_by_sql(["SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ?", obr.specimen_source]).first
-      specimen_source_id = specimen_source ? specimen_source['id'] : nil
+      scale_type = loinc_code.scale.the_code
+      result_hash = {}
 
-      obx_result = obx.result.gsub(/\s/, '').downcase
-      if (loinc_code.scale.the_code == 'Ord') && (map_id = result_map[obx_result]) 
-        result_hash = {"test_result_id" => map_id}
-      else
-        result_hash = {"result_value" => obx.result}
+      if scale_type == "Ord" || scale_type == "Qn"
+        organisms = loinc_code.organisms
+        case organisms.size
+        when 0
+          result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
+        when 1
+          result_hash["organism_id"] = organisms.first.id
+        else
+          result_hash["comment"] = "ELR Message: Multiple organisms mapped to LOINC code."
+        end
       end
 
+      case scale_type
+      when "Ord"
+        obx_result = obx.result.gsub(/\s/, '').downcase
+        if map_id = result_map[obx_result]
+          result_hash["test_result_id"] = map_id
+        else
+          result_hash["result_value"] = obx.result
+        end
+      when "Qn"
+        result_hash["result_value"] = obx.result
+      when "Nom"
+        # Try and find OBX-5 in the organism list, otherwise map to result_value
+        # Eventually, we'll need to add more heuristics here for SNOMED etc.
+        organism = Organism.first(:conditions => [ "LOWER(organism_name) = ?", obx.result.downcase ])
+        if organism.blank?
+          result_hash["result_value"] = obx.result
+        else
+          result_hash["organism_id"] = organism.id
+        end
+      end
+
+      specimen_source = ExternalCode.find_by_sql(["SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ?", obr.specimen_source]).first
+      specimen_source_id = specimen_source ? specimen_source['id'] : nil
       begin
         lab_hash = {
           "test_type_id"       => common_test_type.id,

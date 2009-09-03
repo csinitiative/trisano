@@ -24,6 +24,13 @@ def with_human_event(event_hash=@event_hash, &block)
   event                        
 end
 
+def set_loinc_code(msg, loinc)
+  msg.gsub(/(OBX\|.\|..\|)\d+-\d/, '\1'+loinc)
+end
+
+def set_obx_5(msg, value)
+  msg.gsub(/(OBX\|.\|..\|.+?\|.\|).+?\|/, '\1'+value+'|')
+end
 describe HumanEvent, 'associations'  do
   it { should have_one(:interested_party) }
   it { should have_many(:labs) }
@@ -217,42 +224,158 @@ end
 describe HumanEvent, 'adding staged messages' do
   fixtures :loinc_codes, :common_test_types
 
-  before(:each) do
-    @event_hash = {
-      "interested_party_attributes" => {
-        "person_entity_attributes" => {
-          "person_attributes" => {
-            "last_name"=>"Green"
-          }
+  describe "basic processing" do
+    before(:each) do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Green"
+            }
+          },
         },
-      },
-      :created_at => DateTime.now,
-      :updated_at => DateTime.now
-    }
-  end
+        :created_at => DateTime.now,
+        :updated_at => DateTime.now
+      }
+    end
 
-  it 'should raise an exception when not passed a staged message' do
-    with_human_event do |event|
-      lambda{event.add_labs_from_staged_message("noise")}.should raise_error(ArgumentError)
+    it 'should raise an exception when not passed a staged message' do
+      with_human_event do |event|
+        lambda{event.add_labs_from_staged_message("noise")}.should raise_error(ArgumentError)
+      end
+    end
+
+    it 'should create a new lab and a single lab result when using the ARUP1 staged message' do
+      with_human_event do |event|
+        staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+        event.add_labs_from_staged_message(staged_message)
+        event.labs.size.should == 1
+        event.labs.first.place_entity.place.name.should == staged_message.message_header.sending_facility
+        event.labs.first.lab_results.size.should == 1
+        event.labs.first.lab_results.first.test_type.common_name.should == common_test_types(:hep_b_ag).common_name
+        event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
+        event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
+        event.labs.first.lab_results.first.units.should == staged_message.observation_request.tests.first.units
+        event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
+        event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+        event.labs.first.lab_results.first.result_value.should be_blank
+        event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
+        event.labs.first.lab_results.first.test_status.code_description.should == "Final"
+      end
     end
   end
 
-  it 'should create a new lab and a single lab result when using the ARUP1 staged message' do
-    with_human_event do |event|
-      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
-      event.add_labs_from_staged_message(staged_message)
-      event.labs.size.should == 1
-      event.labs.first.place_entity.place.name.should == staged_message.message_header.sending_facility
-      event.labs.first.lab_results.size.should == 1
-      event.labs.first.lab_results.first.test_type.common_name.should == common_test_types(:hep_b_ag).common_name
-      event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
-      event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
-      event.labs.first.lab_results.first.units.should == staged_message.observation_request.tests.first.units
-      event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
-      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
-      event.labs.first.lab_results.first.result_value.should be_blank
-      event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
-      event.labs.first.lab_results.first.test_status.code_description.should == "Final"
+  describe "mapping based on scale type" do
+    describe "Mapping organisms for Ord and Qn" do
+      describe "When no organism exists" do
+        before(:each) do
+          with_human_event do |event|
+            staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+            event.add_labs_from_staged_message(staged_message)
+            @event = event
+          end
+        end
+
+        it "should not set the organism_id" do
+          @event.labs.first.lab_results.first.organism_id.should be_nil
+        end
+
+        it "should make a note" do
+          @event.labs.first.lab_results.first.comment.should_not be_nil
+        end
+      end
+
+      describe "When one organism exists" do
+        before(:each) do
+          with_human_event do |event|
+            msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:ord_one_organism).loinc_code)
+            staged_message = StagedMessage.new(:hl7_message => msg)
+            event.add_labs_from_staged_message(staged_message)
+            @event = event
+          end
+        end
+
+        fixtures :organisms, :loinc_codes_organisms
+        it "should set the organism_id" do
+          @event.labs.first.lab_results.first.organism.should == loinc_codes(:ord_one_organism).organisms.first
+        end
+      end
+
+      describe "When multiple organisms exist" do
+        before(:each) do
+          with_human_event do |event|
+            msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:ord_two_organisms).loinc_code)
+            staged_message = StagedMessage.new(:hl7_message => msg)
+            event.add_labs_from_staged_message(staged_message)
+            @event = event
+          end
+        end
+
+        fixtures :organisms, :loinc_codes_organisms
+        it "should not set the organism_id" do
+          @event.labs.first.lab_results.first.organism_id.should be_nil
+        end
+
+        it "should make a note" do
+          @event.labs.first.lab_results.first.comment.should =~ /Multiple organisms/
+        end
+      end
+    end
+
+    describe "Mapping OBX-5" do
+      describe "When scale type is Ord" do
+        it "Should map matching values to test_result_id" do
+          with_human_event do |event|
+            staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+            event.add_labs_from_staged_message(staged_message)
+            event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+          end
+        end
+
+        it "Should place unmappable results in result_value" do
+          with_human_event do |event|
+            msg = set_obx_5(hl7_messages[:arup_1], "unmappable")
+            staged_message = StagedMessage.new(:hl7_message => msg)
+            event.add_labs_from_staged_message(staged_message)
+            event.labs.first.lab_results.first.result_value == "unmappable" 
+          end
+        end
+      end
+
+      describe "when scale type is Qn" do
+        it "should populate the test_result field" do
+          with_human_event do |event|
+            staged_message = StagedMessage.new(:hl7_message => hl7_messages[:unknown_observation_value])
+            event.add_labs_from_staged_message(staged_message)
+            event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
+            event.labs.first.lab_results[0].test_result.should be_nil
+          end
+        end
+      end
+
+      describe "when scale type is Nom" do
+        fixtures :organisms, :loinc_codes_organisms
+        it "should map matching organisms to organism_id" do
+          with_human_event do |event|
+            msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:nominal).loinc_code)
+            msg = set_obx_5(msg, organisms(:organism_1).organism_name)
+            staged_message = StagedMessage.new(:hl7_message => msg)
+            event.add_labs_from_staged_message(staged_message)
+            event.labs.first.lab_results[0].organism.should == organisms(:organism_1)
+          end
+        end
+
+        it "should map everything else to result_value" do
+          with_human_event do |event|
+            msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:nominal).loinc_code)
+            msg = set_obx_5(msg, "unknown")
+            staged_message = StagedMessage.new(:hl7_message => msg)
+            event.add_labs_from_staged_message(staged_message)
+            event.labs.first.lab_results[0].result_value.should == "unknown"
+            event.labs.first.lab_results[0].organism.should be_nil
+          end
+        end
+      end
     end
   end
 
@@ -270,19 +393,9 @@ describe HumanEvent, 'adding staged messages' do
       event.add_labs_from_staged_message(staged_message)
       event.labs.size.should == 1
       event.labs.first.lab_results.size.should == 2
-      event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
-      event.labs.first.lab_results[1].result_value.should == staged_message.observation_request.tests[1].result
     end
   end
 
-  it "should set the result_value if the staged message does not have a matching value" do
-    with_human_event do |event|
-      staged_message = StagedMessage.new(:hl7_message => hl7_messages[:unknown_observation_value])
-      event.add_labs_from_staged_message(staged_message)
-      event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
-      event.labs.first.lab_results[0].test_result.should be_nil
-    end
-  end
 end
 
 describe HumanEvent, 'validating out of state patients' do

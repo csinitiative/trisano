@@ -39,7 +39,7 @@ describe LoincCode do
   it 'by default, should return all lists in loinc code numerical order' do
     loinc = LoincCode.create! :loinc_code => '11234-1', :scale_id => @scale.id
     loinc.clone.update_attributes! :loinc_code => '114-9'
-    LoincCode.find(:all).collect(&:loinc_code).should == ["114-9", "5221-7", "10000-1", "11234-1", "13954-3"]
+    LoincCode.find(:all).collect(&:loinc_code).should == LoincCode.find(:all).collect { |lc| lc.loinc_code.rjust(10, "0") }.sort.collect { |lc| lc.gsub(/^0+/, '') }
   end
 
   describe 'loinc code' do
