@@ -14,12 +14,12 @@ Feature: Listing organisms
         | Legionella      |
     When I go to the organisms index page
     Then I should see the following organisms:
-        | Organism Name   |
-        | Arbobirus       |
-        | E. Coli         |
-        | Influenza A     |
-        | Influenza B     |
-        | Legionella      |
+        | Organism Name   | Actions      |
+        | Arbobirus       | Show         |
+        | E. Coli         | Show         |
+        | Influenza A     | Show         |
+        | Influenza B     | Show         |
+        | Legionella      | Show         |
 
   Scenario: An investigator tries to list organisms
     Given I am logged in as an investigator
@@ -31,3 +31,10 @@ Feature: Listing organisms
     When I go to the organisms index page
       And I press "Create New Organism"
     Then I should be on the new organism page
+
+  Scenario: An administrator navigates to an organism show page
+    Given I am logged in as a super user
+      And an organism named "Arbovirus"
+    When I go to the organisms index page
+      And I follow "Show"
+    Then I should be on the "Arbovirus" organism page
