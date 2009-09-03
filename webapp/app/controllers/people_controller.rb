@@ -91,7 +91,6 @@ class PeopleController < ApplicationController
     @person = PersonEntity.new
     @person.person = Person.new
     @person.update_attributes(params[:person_entity])
-    @person.save
 
     unless User.current_user.is_entitled_to?(:create_event)
       render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
