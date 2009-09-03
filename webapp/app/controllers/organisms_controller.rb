@@ -1,5 +1,9 @@
 class OrganismsController < AdminController
 
+  def index
+    @organisms = Organism.all :order => 'organism_name'
+  end
+
   def show
     @organism = Organism.find params[:id]
   end

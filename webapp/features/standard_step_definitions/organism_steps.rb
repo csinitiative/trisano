@@ -1,3 +1,17 @@
 Given /^an organism named "([^\"]*)"$/ do |name|
   Organism.create! :organism_name => name
 end
+
+Given /^the following organisms:$/ do |table|
+  table.hashes.each do |attributes|
+    Organism.create! attributes
+  end
+end
+
+Then /^I should see the following organisms:$/ do |expected_table|
+  t = table element_at('#organisms').to_table
+  t.map_column! 'Organism Name' do |names|
+    Nokogiri::HTML("<html>#{names}</html>").css('a').text()
+  end
+  expected_table.diff! t
+end

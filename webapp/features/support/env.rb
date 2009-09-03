@@ -30,6 +30,7 @@ require 'cucumber/formatter/unicode' # Comment out this line if you don't want C
 
 require 'webrat/core/matchers'
 require 'webrat'
+require 'cucumber/webrat/element_locator'
 
 # Selenium helpers required for all feature runs because shared helpers rely on helper methods like get_random_disease
 require File.expand_path(File.dirname(__FILE__) + '/../../spec/uat/trisano_helper')

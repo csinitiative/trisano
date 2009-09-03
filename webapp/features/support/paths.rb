@@ -100,6 +100,9 @@ def path_to(page_name)
   when /the new organism page/
     new_organism_path
 
+  when /the organisms index page/
+    organisms_path
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end
