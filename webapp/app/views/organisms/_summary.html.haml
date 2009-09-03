@@ -13,11 +13,17 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--content_for :title do
-  Show an Organism
-
--content_for :tools do
-  =link_to h('< Back to Organisms'), organisms_path
-  %p
-
-=render :partial => 'summary', :locals => {:organism => @organism}
+#rot
+  %table.list
+    %tr
+      %th.forminformation
+        Organism Name
+      %th
+        &nbsp;
+    %tr
+      %td.forminformation
+        .formname
+          %span.organism_name
+            =h organism.organism_name
+      %td
+        =organism_tools organism

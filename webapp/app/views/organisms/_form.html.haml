@@ -13,11 +13,19 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--content_for :title do
-  Create an Organism
+.vert-break
+  -form_for organism do |f|
+    =f.error_messages
 
--content_for :tools do
-  =link_to h('< Back to Organisms'), organisms_path
-  %p
+    %table.list
+      %tr
+        %th.forminformation
+          Edit Organism
+      %tr
+        %td
+          %span.vert
+            =f.label      :organism_name
+            =f.text_field :organism_name, :size => 60
 
-=render :partial => 'form',    :locals => {:organism => @organism}
+    %span.vert
+      =create_or_update_button organism

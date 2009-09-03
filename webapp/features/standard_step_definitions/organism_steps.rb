@@ -3,6 +3,7 @@ Given /^an organism named "([^\"]*)"$/ do |name|
 end
 
 Given /^the following organisms:$/ do |table|
+  table.map_headers! 'Organism Name' => :organism_name
   table.hashes.each do |attributes|
     Organism.create! attributes
   end
@@ -15,7 +16,7 @@ Then /^I should see the following organisms:$/ do |expected_table|
     Nokogiri::HTML("<html>#{names}</html>").css('a').text()
   end
   t.map_column! 'Actions' do |tools|
-    Nokogiri::HTML("<html>#{tools}</html>").css('a').text().strip
+    Nokogiri::HTML("<html>#{tools}</html>").css('a').collect{|a| a.text()}.join(',')
   end
   expected_table.diff! t
 end

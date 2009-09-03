@@ -99,6 +99,9 @@ def path_to(page_name)
   when /the "([^"]*)" organism page/
     organism_path Organism.find_by_organism_name($1)
 
+  when /the "([^"]*)" edit organism page/
+    edit_organism_path Organism.find_by_organism_name($1)
+
   when /the new organism page/
     new_organism_path
 

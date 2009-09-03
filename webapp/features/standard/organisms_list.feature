@@ -6,8 +6,8 @@ Feature: Listing organisms
   Scenario: An admin lists all organisms
     Given I am logged in as a super user
       And the following organisms:
-        | organism_name   |
-        | Arbobirus       |
+        | Organism Name   |
+        | Arbovirus       |
         | Influenza A     |
         | Influenza B     |
         | E. Coli         |
@@ -15,11 +15,11 @@ Feature: Listing organisms
     When I go to the organisms index page
     Then I should see the following organisms:
         | Organism Name   | Actions      |
-        | Arbobirus       | Show         |
-        | E. Coli         | Show         |
-        | Influenza A     | Show         |
-        | Influenza B     | Show         |
-        | Legionella      | Show         |
+        | Arbovirus       | Show,Edit    |
+        | E. Coli         | Show,Edit    |
+        | Influenza A     | Show,Edit    |
+        | Influenza B     | Show,Edit    |
+        | Legionella      | Show,Edit    |
 
   Scenario: An investigator tries to list organisms
     Given I am logged in as an investigator
@@ -38,3 +38,10 @@ Feature: Listing organisms
     When I go to the organisms index page
       And I follow "Show"
     Then I should be on the "Arbovirus" organism page
+
+  Scenario: An administrator navigates to an organism's edit page
+    Given I am logged in as a super user
+      And an organism named "Arbovirus"
+    When I go to the organisms index page
+      And I follow "Edit"
+    Then I should be on the "Arbovirus" edit organism page

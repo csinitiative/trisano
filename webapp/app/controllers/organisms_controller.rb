@@ -1,11 +1,14 @@
 class OrganismsController < AdminController
+  before_filter :find_organism, :only => [:edit, :show, :update]
 
   def index
     @organisms = Organism.all :order => 'organism_name'
   end
 
   def show
-    @organism = Organism.find params[:id]
+  end
+
+  def edit
   end
 
   def new
@@ -25,4 +28,20 @@ class OrganismsController < AdminController
     end
   end
 
+  def update
+    respond_to do |format|
+      if @organism.update_attributes params[:organism]
+        flash[:notice] = 'Organism was successfully updated.'
+        format.html { redirect_to @organism }
+      else
+        format.html { render :action => :edit, :status => :bad_request }
+      end
+    end
+  end
+
+  private
+
+  def find_organism
+    @organism = Organism.find params[:id]
+  end
 end
