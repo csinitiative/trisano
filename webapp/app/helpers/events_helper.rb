@@ -216,21 +216,21 @@ module EventsHelper
     event.allowed_transitions.each do |transition|
       case transition
       when :accept, :reject, :approve, :reopen, :close
-        action_controls += radio_button_tag(h(transition.to_s),
+        action_controls << radio_button_tag(h(transition.to_s),
           h(transition.to_s),
           false,
           :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
-        action_controls += h(transition.to_s.titleize)
+        action_controls << h(transition.to_s.titleize)
       when :assign_to_queue
         event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        routing_controls += "<div>Assign to queue:&nbsp;"
-        routing_controls += select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
+        routing_controls << "<div>Assign to queue:&nbsp;"
+        routing_controls << select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
       when :assign_to_investigator
         investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
-        routing_controls += "<div>Assign to investigator:&nbsp;"
-        routing_controls += select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
+        routing_controls << "<div>Assign to investigator:&nbsp;"
+        routing_controls << select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
       when :complete, :complete_and_close
-        action_controls += submit_tag(h(transition.to_s.titleize), :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
+        action_controls << submit_tag(h(transition.to_s.titleize), :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
       end
     end
 
@@ -242,9 +242,9 @@ module EventsHelper
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
         Brief note: #{text_field_tag("morbidity_event[note]", '')}
       ]
-      controls += "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
-      controls += routing_controls
-      controls += "</form>"
+      controls << "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
+      controls << routing_controls
+      controls << "</form>"
     end
     controls
   end
@@ -252,34 +252,34 @@ module EventsHelper
   def jurisdiction_routing_control(event)
     controls = ""
     if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
-      controls += link_to_function('Route to Local Health Depts.', nil) do |page|
+      controls << link_to_function('Route to Local Health Depts.', nil) do |page|
         page["routing_controls_#{h(event.id)}"].visual_effect :appear, :duration => 0.5
       end
-      controls += "<div id='routing_controls_#{h(event.id)}' style='display: none; position: relative'>"
-      controls += "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
+      controls << "<div id='routing_controls_#{h(event.id)}' style='display: none; position: relative'>"
+      controls << "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
       jurisdictions = Place.jurisdictions
-      controls += form_tag(jurisdiction_cmr_path(event))
-      controls += "<span>Investigating jurisdiction: &nbsp;</span>"
-      controls += select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
-      controls += "<br />Also grant access to:"
+      controls << form_tag(jurisdiction_cmr_path(event))
+      controls << "<span>Investigating jurisdiction: &nbsp;</span>"
+      controls << select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
+      controls << "<br />Also grant access to:"
 
-      controls += "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
-      controls += "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
+      controls << "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
+      controls << "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
 
       jurisdictions.each do | jurisdiction |
-        controls += "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
+        controls << "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
       end
 
-      controls += "</div></div>"
-      controls += "<div style='position: absolute; right: 15px'>Brief note: #{text_field_tag("note", '')}</div><br/>"
-      controls += submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
+      controls << "</div></div>"
+      controls << "<div style='position: absolute; right: 15px'>Brief note: #{text_field_tag("note", '')}</div><br/>"
+      controls << submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
 
-      controls += "</form>"
-      controls += link_to_function "Close", "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })"
-      controls += "</div>"
-      controls += "</div>"
+      controls << "</form>"
+      controls << link_to_function("Close", "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })")
+      controls << "</div>"
+      controls << "</div>"
     else
-      controls += "<span style='color: gray'>Routing disabled</span>"
+      controls << "<span style='color: gray'>Routing disabled</span>"
     end
     controls
   end

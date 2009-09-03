@@ -24,11 +24,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% place_name = @event.interested_place.place_entity.place.name %>
 
 <% content_for :title do %>
-  Edit Place Event: <%= place_name %>
+  Edit Place Event: <%=h(place_name) %>
 <% end %>
 
 <% content_for :name do %>
-  <%= place_name -%>
+  <%=h(place_name) -%>
 
   <%- original_patient = @event.parent_event %>
   <span style='position: absolute; right: 0;'>

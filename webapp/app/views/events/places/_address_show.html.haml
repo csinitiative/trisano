@@ -18,22 +18,22 @@
   -f.fields_for(:address, :builder => ExtendedFormBuilder) do |address_form|
     -core_element_show :street_number, address_form, :horiz do
       =address_form.label(:street_number)
-      =address_form.object.street_number 
+      =h(address_form.object.street_number)
     -core_element_show :street_name, address_form, :horiz do
       =address_form.label(:street_name)
-      =address_form.object.street_name 
+      =h(address_form.object.street_name)
     -core_element_show :unit_number, address_form, :horiz do
       =address_form.label(:unit_number)
-      =address_form.object.unit_number 
+      =h(address_form.object.unit_number)
     -core_element_show :city, address_form, :horiz do
       =address_form.label(:city)
-      =address_form.object.city 
+      =h(address_form.object.city)
     -core_element_show :state_id, address_form, :horiz do
       =address_form.label(:state)
       =l(address_form.object.state) 
     -core_element_show :postal_code, address_form, :horiz do
       =address_form.label(:postal_code, "Zip code")
-      =address_form.object.postal_code 
+      =h(address_form.object.postal_code)
     -core_element_show :county_id, address_form, :horiz do
       =address_form.label(:county)
       =l(address_form.object.county) 

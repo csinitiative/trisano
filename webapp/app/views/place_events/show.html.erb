@@ -20,7 +20,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% place_name = @event.interested_place.place_entity.place.name %>
 
 <% content_for :title do %>
-  View Place Event: <%= place_name %> 
+  View Place Event: <%=h(place_name) %>
 <% end %>
 
 <% content_for :name do %>
@@ -33,7 +33,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <tr>
       <td class='forminformation'>
         <% place_name(@event) do %>
-          <%= place_name %>
+          <%=h(place_name) %>
         <% end %>
         <small>Date: <%= @event.event_onset_date %></small>
         <div class='tools'>

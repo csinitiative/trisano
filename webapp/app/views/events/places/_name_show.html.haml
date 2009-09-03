@@ -18,7 +18,7 @@
   %legend Place Name
   -core_element_show :name, f, :horiz do
     =f.label(:name)
-    =f.object.name
+    =h(f.object.name)
   -core_element_show :place_type_id, f, :horiz do
     =f.label(:place_type_id, 'Types')
     =f.object.formatted_place_descriptions unless f.object.place_types.empty?
