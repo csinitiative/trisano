@@ -93,11 +93,15 @@ Feature: Managing Lab Results
       | disease_name | common_name |
       | AIDS         | Blood Test  |
       | AIDS         | Urine Test  |
+    And the following organisms exist
+      | Cooties     |
+      | Lurgy Virus |
     And I navigate to the new event page
     And I click on the lab tab
     And I enter a last name of Jones
     And I enter a lab name of 'Costello Labs'
     And I select a test type of 'Blood Test'
+    And I select an organism of 'Cooties'
     And I select a test result of 'Positive / Reactive'
     And I enter a result value of 100
     And I enter a units of Gallons

@@ -33,35 +33,48 @@
           -# Remember, show mode sets a blank instance of everything.  Do nothing if everything is blank
           - unless lab_result.attributes.values_blank?
             %tr
-              %td.forminformation
-                .formname
-                  = h(lab.place_entity.place.name)
+              %td
+                %b= h(lab.place_entity.place.name)
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
                 %b= h(lab_result.test_type.common_name)
                 %br
+                Organism: 
+                %b= h(lab_result.organism.try(:organism_name))
+                %br
+                %br
                 %b= h(lab_result.comment)
               %td
-                %b= h(l(lab_result.test_result))
-                %br
-                %small Result value:
-                %b= h(lab_result.result_value)
-                %small Units:
-                %b= h(lab_result.units)
-                %br
-                %small Reference range:
+                - no_result = true
+                - unless lab_result.test_result.blank?
+                  - no_result = false
+                  %b= h(l(lab_result.test_result))
+                  %br
+                - unless lab_result.result_value.blank?
+                  - no_result = false
+                  Result value:
+                  %b= h(lab_result.result_value)
+                - unless lab_result.units.blank?
+                  - no_result = false
+                  Units:
+                  %b= h(lab_result.units)
+                  %br
+                - if no_result
+                  %b No result
+                  %br
+                Reference range:
                 %b= h(lab_result.reference_range)
                 %br
-                %small Test status:
+                Test status:
                 %b= h(l(lab_result.test_status))
               %td
-                %small Source:
+                Source:
                 %b= h(l(lab_result.specimen_source))
                 %br
-                %small Collected on:
+                Collected on:
                 %b= h(lab_result.collection_date)
-                %small &nbsp;Tested on:
+                &nbsp;Tested on:
                 %b= h(lab_result.lab_test_date)
                 %br
-                %small Sent to state lab:
+                Sent to state lab:
                 %b= h(l(lab_result.specimen_sent_to_state))

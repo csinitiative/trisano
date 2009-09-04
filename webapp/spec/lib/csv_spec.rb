@@ -122,6 +122,7 @@ def lab_header
   %w(lab_record_id
   lab_name
   lab_test_type
+  lab_organism
   lab_test_result
   lab_result_value
   lab_units
@@ -368,6 +369,7 @@ def lab_output
   out << "#{@lab_result.id},"
   out << "#{@lab_result.lab_name},"
   out << "#{@lab_result.test_type.common_name},"
+  out << "#{@lab_result.organism.organism_name},"
   out << "#{@lab_result.test_result.code_description},"
   out << "#{@lab_result.result_value},"
   out << "#{@lab_result.units},"
@@ -492,9 +494,13 @@ def csv_mock_event(event_type)
   @common_test_type = mock_model(CommonTestType)
   @common_test_type.stub!(:common_name).and_return("Biopsy")
 
+  @organism = mock_model(Organism)
+  @organism.stub!(:organism_name).and_return("Cooties")
+
   @lab_result = mock_model(LabResult)
   @lab_result.stub!(:lab_name).and_return("LabName")
   @lab_result.stub!(:test_type).and_return(@common_test_type)
+  @lab_result.stub!(:organism).and_return(@organism)
   @lab_result.stub!(:test_result).and_return(simple_reference)
   @lab_result.stub!(:result_value).and_return("100")
   @lab_result.stub!(:units).and_return("Gallons")

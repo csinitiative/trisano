@@ -22,32 +22,37 @@
     - disease = @disease || @event.try(:disease_event).try(:disease)
     = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "get_test_type_options(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
 
+  - core_element("organism", lab_result_form, :horiz) do
+    = lab_result_form.label(:organism)
+    -# The Organism.all bit will have to change once we have either disease -> loinc mapping or disease -> organism mappin
+    -# in place.
+    = lab_result_form.collection_select(:organism_id, Organism.all, :id, :organism_name, {:include_blank => true})
+
   - core_element("test_result", lab_result_form, :horiz) do
     = lab_result_form.label(:test_result)
     = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
-    &nbsp;&nbsp;&nbsp;or
+    &nbsp;&nbsp;or
   - core_element("result_value", lab_result_form, :horiz) do
     = lab_result_form.label(:result_value)
     = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
   - core_element("units", lab_result_form, :horiz) do
     = lab_result_form.label(:units)
     = lab_result_form.text_field(:units, :size => 20, :maxlength => 50)
-  - core_element("reference_range", lab_result_form, :horiz) do
+  - core_element("reference_range", lab_result_form, :vert) do
     = lab_result_form.label(:reference_range)
     = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
   - core_element("test_status", lab_result_form, :horiz) do
     = lab_result_form.label(:test_status_id)
     = lab_result_form.dropdown_code_field(:test_status_id, "test_status", {})
-  %span.vert
   - core_element("specimen_source", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_source_id, "Specimen source")
     = lab_result_form.dropdown_code_field(:specimen_source_id, "specimen", {})
   - core_element("collection_date", lab_result_form, :horiz) do
     = lab_result_form.label(:collection_date)
-    = lab_result_form.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now)
+    = lab_result_form.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
   - core_element("lab_test_date", lab_result_form, :horiz) do
     = lab_result_form.label(:lab_test_date)
-    = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now)
+    = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
   - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
     = lab_result_form.label(:specimen_sent_to_state_id, "Specimen sent to state lab?")
     = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})

@@ -967,6 +967,14 @@ csv_field_00067:
   short_name: 
   use_code: 
   event_type: 
+csv_field_lab_result_organism: 
+  sort_order: 25
+  export_group: lab
+  long_name: lab_organism
+  use_description: organism.try(:organism_name)
+  short_name: 
+  use_code: 
+  event_type: 
 csv_field_00122: 
   sort_order: 460
   export_group: event

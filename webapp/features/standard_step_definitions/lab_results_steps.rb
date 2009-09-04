@@ -23,6 +23,13 @@ Given /^the following disease to common test types mapping exists$/ do |disease_
   end
 end
 
+Given /^the following organisms exist$/ do |organisms|
+  organisms.raw.each do |organism|
+    Organism.create(:organism_name => organism.first)
+  end
+end
+
+
 Given /^I have a lab result$/ do
   @lab_result = Factory.create(:lab_result)
 end
@@ -69,6 +76,11 @@ end
 Given /^I select a test type of '(.+)'$/ do |test_type|
   @lab_values << test_type
   select test_type, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][test_type_id]"
+end
+
+Given /^I select an organism of '(.+)'$/ do |organism|
+  @lab_values << organism
+  select organism, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][organism_id]"
 end
 
 Given /^I select a test result of '([^\"]*)'$/ do |test_result|
