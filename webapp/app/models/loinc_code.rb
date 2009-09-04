@@ -30,10 +30,7 @@ class LoincCode < ActiveRecord::Base
   validates_length_of :test_name, :maximum => 255, :allow_blank => true
 
   validates_each :organism_id, :allow_blank => true, :if => Proc.new {|loinc| loinc.scale_id} do |record, attr, value|
-    nominal = ExternalCode.loinc_scale_nominal
-    if record.scale_id == nominal.try(:id)
-      record.errors.add attr, "must be blank when Scale is set to '#{nominal.code_description}'"
-    end
+    record.errors.add attr, "must be blank when Scale is set to '#{record.scale.code_description}'" unless record.can_have_organism?
   end
 
   belongs_to :common_test_type
@@ -75,6 +72,10 @@ class LoincCode < ActiveRecord::Base
                         :scale            => scale,
                         :common_test_type => ctt)
     end
+  end
+
+  def can_have_organism?
+    self.scale.nil? || self.scale != ExternalCode.loinc_scale_nominal
   end
 
   private

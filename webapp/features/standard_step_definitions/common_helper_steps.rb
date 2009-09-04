@@ -102,3 +102,11 @@ When(/^I search for the person entity "([^\"]*)"$/) do |name|
 
   click_button "Search"
 end
+
+#
+# HTML widget helpers
+#
+Then /^selecting "([^\"]*)" is disabled$/ do |locator|
+  field = field_labeled locator
+  field.should be_disabled
+end

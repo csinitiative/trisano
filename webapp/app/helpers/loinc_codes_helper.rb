@@ -21,4 +21,5 @@ module LoincCodesHelper
       [organism.organism_name, organism.id]
     end
   end
+
 end

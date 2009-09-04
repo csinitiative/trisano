@@ -81,6 +81,9 @@ def path_to(page_name)
   when /edit the loinc code/
     edit_loinc_code_path @loinc_code
 
+  when /the "([^"]*)" edit loinc code page/
+    edit_loinc_code_path LoincCode.find_by_loinc_code($1)
+
   when /the loinc code show page/
     loinc_code_path @loinc_code
 
