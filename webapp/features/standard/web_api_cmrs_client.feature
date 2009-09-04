@@ -94,7 +94,7 @@ Feature: Web API Cmrs Client
     And I select "Unknown" from "morbidity_event[outbreak_associated_id]"
     And I fill out the form field "morbidity_event[outbreak_name]" with "outbreak name"
     And I fill out the form field "morbidity_event[event_name]" with "event name"
-    And I fill out the form field "morbidity_event[acuity]" with "acuity"
+    And I fill out the form field "morbidity_event[acuity]" with "1"
     And I press "Save & Exit"
 
     Then I should see "CMR was successfully created"

@@ -163,7 +163,7 @@ describe 'Print CMR page' do
     @browser.type "morbidity_event_investigation_completed_LHD_date", "12/7/2007"
     @browser.type "morbidity_event_event_name", "Y HELO THAR"
     @browser.type "morbidity_event_review_completed_by_state_date", "12/5/1963"
-    @browser.type "morbidity_event_acuity", "Extra Keen"
+    @browser.type "morbidity_event_acuity", "1"
     save_cmr(@browser).should be_true
   end
   

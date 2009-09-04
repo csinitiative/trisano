@@ -105,7 +105,7 @@ $dont_kill_browser = true
     edit_cmr(@browser).should be_true
     click_core_tab(@browser, "Administrative")
     @browser.type 'morbidity_event_event_name', 'Test Event'
-    @browser.type 'morbidity_event_acuity', 'Extra Keen'
+    @browser.type 'morbidity_event_acuity', '1'
     save_cmr(@browser).should be_true
   end
   

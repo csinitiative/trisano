@@ -152,8 +152,8 @@ class Event < ActiveRecord::Base
 
   validates_date :event_onset_date
   validates_existence_of :investigator, :allow_nil => true
+  validates_numericality_of :acuity, :only_integer => true, :less_than => 100, :allow_nil => true
   validates_length_of :event_name, :maximum => 100, :allow_blank => true
-  validates_length_of :acuity, :maximum => 255, :allow_blank => true
   validates_length_of :other_data_1, :maximum => 255, :allow_blank => true
   validates_length_of :other_data_2, :maximum => 255, :allow_blank => true
   validates_length_of :outbreak_name, :maximum => 255, :allow_blank => true
