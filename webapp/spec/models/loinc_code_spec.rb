@@ -22,6 +22,7 @@ describe LoincCode do
 
   before do
     @scale = external_codes :loinc_scale_ord
+    @arbovirus = Organism.create! :organism_name => 'Arbovirus'
   end
 
   it "should produce an error is a loinc code not in expected format" do
@@ -40,6 +41,20 @@ describe LoincCode do
     loinc = LoincCode.create! :loinc_code => '11234-1', :scale_id => @scale.id
     loinc.clone.update_attributes! :loinc_code => '114-9'
     LoincCode.find(:all).collect(&:loinc_code).should == LoincCode.find(:all).collect { |lc| lc.loinc_code.rjust(10, "0") }.sort.collect { |lc| lc.gsub(/^0+/, '') }
+  end
+
+  it "should not have an organism if the scale is 'Nominal'" do
+    loinc = LoincCode.create :loinc_code => '1-1', :scale => external_codes(:loinc_scale_nom), :organism => @arbovirus
+    loinc.errors.on(:organism_id).should == "must be blank when Scale is set to 'Nominal'"
+  end
+
+  it "should allow organism to be set for other scales" do
+    loinc = LoincCode.create :loinc_code => '1-1', :scale => external_codes(:loinc_scale_ord), :organism => @arbovirus
+    loinc.errors.on(:organism_id).should == nil
+    loinc.update_attribute(:scale_id, external_codes(:loinc_scale_qn).id)
+    loinc.errors.on(:organism_id).should == nil
+    loinc.update_attribute(:scale_id, external_codes(:loinc_scale_ordqn).id)
+    loinc.errors.on(:organism_id).should == nil
   end
 
   describe 'loinc code' do

@@ -23,10 +23,18 @@ class LoincCode < ActiveRecord::Base
   validates_uniqueness_of :loinc_code
   validates_presence_of   :loinc_code
   validates_format_of     :loinc_code, :with => /^\d+-\d$/, :allow_blank => true, :message => "is invalid (should be nnnnn-n)"
-  validates_length_of     :loinc_code, :maximum => 10,    :allow_blank => true
+  validates_length_of     :loinc_code, :maximum => 10, :allow_blank => true
 
-  validates_presence_of   :scale_id
-  validates_length_of     :test_name,  :maximum => 255,   :allow_blank => true
+  validates_presence_of :scale_id
+
+  validates_length_of :test_name, :maximum => 255, :allow_blank => true
+
+  validates_each :organism_id, :allow_blank => true, :if => Proc.new {|loinc| loinc.scale_id} do |record, attr, value|
+    nominal = ExternalCode.loinc_scale_nominal
+    if record.scale_id == nominal.try(:id)
+      record.errors.add attr, "must be blank when Scale is set to '#{nominal.code_description}'"
+    end
+  end
 
   belongs_to :common_test_type
   belongs_to :scale, :class_name => 'ExternalCode'

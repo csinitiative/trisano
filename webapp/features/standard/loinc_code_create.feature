@@ -40,3 +40,14 @@ Feature: Creating new loinc codes
     Then I should be on the "13954-3" loinc code page
       And I should see "LOINC code was successfully created"
       And I should see "Arbovirus"
+
+  Scenario: An administrator tries to create a loinc code with a nominal scale and an organism
+    Given I am logged in as a super user
+      And an organism named "Arbovirus"
+    When I go to the new loinc code page
+      And I fill in "Loinc code" with "13954-3"
+      And I select "Nominal" from "Scale"
+      And I select "Arbovirus" from "Organism"
+      And I press "Create"
+    Then I should get a 400 response
+      And I should see "must be blank when Scale is set to 'Nominal'"

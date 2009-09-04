@@ -115,6 +115,10 @@ class ExternalCode < ActiveRecord::Base
     loinc_scales.find :first, :conditions => {:the_code => a_code}
   end
 
+  def self.loinc_scale_nominal
+    loinc_scale_by_the_code('Nom')
+  end
+
   def deleted?
     not deleted_at.nil?
   end

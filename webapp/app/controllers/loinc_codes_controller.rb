@@ -35,7 +35,7 @@ class LoincCodesController < AdminController
         flash[:notice] = 'LOINC code was successfully created.'
         format.html { redirect_to(@loinc_code) }
       else
-        format.html { render :action => "new" }
+        format.html { render :action => "new", :status => :bad_request }
       end
     end
   end
@@ -46,7 +46,7 @@ class LoincCodesController < AdminController
         flash[:notice] = 'Loinc code was successfully updated.'
         format.html { redirect_to @loinc_code }
       else
-        format.html { render :action => :edit }
+        format.html { render :action => :edit, :status => :bad_request }
       end
     end
   end
