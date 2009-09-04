@@ -1,14 +1,9 @@
 class AddLoincCodesOrganisms < ActiveRecord::Migration
   def self.up
-    create_table :loinc_codes_organisms do |t|
-      t.column :loinc_code_id, :integer
-      t.column :organism_id,   :integer
-
-      t.timestamps
-    end
+    add_column :loinc_codes, :organism_id, :integer
   end
 
   def self.down
-    drop_table :loinc_codes_organisms
+    remove_column :loinc_codes, :organism_id
   end
 end

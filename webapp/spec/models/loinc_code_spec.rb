@@ -101,8 +101,7 @@ describe LoincCode do
     it { should belong_to(:common_test_type) }
     it { should have_many(:disease_common_test_types) }
     it { should have_many(:diseases) }
-    it { should have_many(:loinc_codes_organisms) }
-    it { should have_many(:organisms) }
+    it { should belong_to(:organism) }
 
   end
 

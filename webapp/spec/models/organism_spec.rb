@@ -19,7 +19,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Organism do
 
-  it { should have_many(:loinc_codes_organisms) }
   it { should have_many(:loinc_codes) }
 
   it 'has unique organism name (case insensitive)' do
