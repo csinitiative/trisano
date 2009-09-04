@@ -43,8 +43,9 @@
         .description  
           = h @form.description
         .tools
-          -if @form.is_template
-            = link_to 'Detail', builder_path(@form)
+          = link_to 'Builder', builder_path(@form)
+          |
+          = link_to 'Details', form_path(@form)
           |
           = link_to 'Edit', edit_form_path(@form)
           |

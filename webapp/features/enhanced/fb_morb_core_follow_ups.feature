@@ -3,7 +3,6 @@ Feature: Morbidity event form core follow ups
   To allow for a more relevant event form
   An investigator should see core follow ups configured on a moridity form
 
-  @in_progress
   Scenario: Morbidity event core follow ups
     Given I am logged in as a super user
     And a morbidity event form exists

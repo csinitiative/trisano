@@ -371,6 +371,7 @@
 
 #library-body {
   height: 175px;
+  width: 275px;
   overflow: auto;
   padding: 0px 0px 0px 0px;
   border: 1px solid;
