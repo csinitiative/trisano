@@ -15,4 +15,10 @@ module LoincCodesHelper
       [code.code_description, code.id]
     end
   end
+
+  def select_options_organisms
+    Organism.all.collect do |organism|
+      [organism.organism_name, organism.id]
+    end
+  end
 end

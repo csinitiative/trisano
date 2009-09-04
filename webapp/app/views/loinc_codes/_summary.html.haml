@@ -23,6 +23,8 @@
       %th
         Scale
       %th
+        Organism
+      %th
         &nbsp;
     %tr
       %td.forminformation
@@ -35,5 +37,8 @@
       %td
         %span.scale
           = h(loinc_code.scale.code_description)
+      %td
+        %span.organism
+          =h loinc_code.organism.try(:organism_name)
       %td
         = loinc_code_tools loinc_code

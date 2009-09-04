@@ -2,7 +2,7 @@ class OrganismsController < AdminController
   before_filter :find_organism, :only => [:edit, :show, :update]
 
   def index
-    @organisms = Organism.all :order => 'organism_name'
+    @organisms = Organism.all
   end
 
   def show

@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Organism < ActiveRecord::Base
+  default_scope :order => 'organism_name'
+
   before_validation :strip_organism_name
 
   validates_presence_of   :organism_name
