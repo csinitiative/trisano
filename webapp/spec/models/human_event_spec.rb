@@ -295,29 +295,9 @@ describe HumanEvent, 'adding staged messages' do
           end
         end
 
-        fixtures :organisms, :loinc_codes_organisms
+        fixtures :organisms
         it "should set the organism_id" do
-          @event.labs.first.lab_results.first.organism.should == loinc_codes(:ord_one_organism).organisms.first
-        end
-      end
-
-      describe "When multiple organisms exist" do
-        before(:each) do
-          with_human_event do |event|
-            msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:ord_two_organisms).loinc_code)
-            staged_message = StagedMessage.new(:hl7_message => msg)
-            event.add_labs_from_staged_message(staged_message)
-            @event = event
-          end
-        end
-
-        fixtures :organisms, :loinc_codes_organisms
-        it "should not set the organism_id" do
-          @event.labs.first.lab_results.first.organism_id.should be_nil
-        end
-
-        it "should make a note" do
-          @event.labs.first.lab_results.first.comment.should =~ /Multiple organisms/
+          @event.labs.first.lab_results.first.organism.should == loinc_codes(:ord_one_organism).organism
         end
       end
     end
@@ -354,7 +334,7 @@ describe HumanEvent, 'adding staged messages' do
       end
 
       describe "when scale type is Nom" do
-        fixtures :organisms, :loinc_codes_organisms
+        fixtures :organisms
         it "should map matching organisms to organism_id" do
           with_human_event do |event|
             msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:nominal).loinc_code)

@@ -601,10 +601,11 @@ class HumanEvent < Event
   def add_labs_from_staged_message(staged_message)
     raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
 
-    # All tests have a scale type.  The scale type is well known and is part of the standard LOINC code given in the SCALE_TYP field.
-    # TriSano keeps the scale type in the loinc_codes table scale column.
+    # All tests have a scale type.  The scale type is well known and is part of the standard LOINC code data given in the SCALE_TYP
+    # field. TriSano keeps the scale type in the loinc_codes table scale column.
     #
-    # There are three scale types that we care about: ordinal (Ord: one of X), nominal (Nom: a string), quantitative (Qn: a number).
+    # There are four scale types that we care about: ordinal (Ord: one of X), nominal (Nom: a string), quantitative (Qn: a number),
+    # and ordinal or quantitative (OrdQn).
     #
     # An ordinal test result has values such as Positive or Reactive.  E.g. the lab was positive for HIV
     #
@@ -614,11 +615,17 @@ class HumanEvent < Event
     # A nominal test result has a string.  In TriSano we are currently making the assumption that this is an organism name.
     # E.g the blood culture showed the influenza virus.
     #
-    # These three types of test results are mapped to three different fields:
+    # An ordinal/quantiative test is either an ordinal string or a number
+    #
+    # These three principal (not including OrdQn) types of test results are, ideally, mapped to three different fields:
     #
     # Ord -> test_result_id
     # Qn  -> result_value
     # Nom -> organism_id
+    #
+    # In the case or Ord and Nom, if the value can't be mapped because the provided value does not match TriSano values,
+    # e.g., the ordinal value is "Affirmative" instead of "Positive", then the result is placed in the result_value field,
+    # rather than not mapping it at all.  This has the side effect of making an OrdQn the same as an Ord.
     #
     # In addition to organisms specified directly for nominal tests, ordinal and quantitative tests can have organisms too.
     # TriSano maintains a loinc code to organism relationship in the database
@@ -652,20 +659,17 @@ class HumanEvent < Event
       scale_type = loinc_code.scale.the_code
       result_hash = {}
 
-      if scale_type == "Ord" || scale_type == "Qn"
-        organisms = loinc_code.organisms
-        case organisms.size
-        when 0
-          result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
-        when 1
-          result_hash["organism_id"] = organisms.first.id
+      if scale_type != "Nom"
+        organism = loinc_code.organism
+        if organism
+          result_hash["organism_id"] = organism.id
         else
-          result_hash["comment"] = "ELR Message: Multiple organisms mapped to LOINC code."
+          result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
         end
       end
 
       case scale_type
-      when "Ord"
+      when "Ord", "OrdQn"
         obx_result = obx.result.gsub(/\s/, '').downcase
         if map_id = result_map[obx_result]
           result_hash["test_result_id"] = map_id
