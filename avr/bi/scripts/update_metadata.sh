@@ -21,7 +21,8 @@
 export BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
 
 # URL that the BI server can is running on (needed to publish updates)
-export BI_PUBLISH_URL=http://localhost:8080/pentaho/RepositoryFilePublisher
+export BI_SERVER_URL="http://localhost:8080"
+export BI_PUBLISH_URL="${BI_SERVER_URL}/pentaho/RepositoryFilePublisher"
 
 # Publishing password. This is not tied to a user, but is configured
 # in $BI_SERVER_PATH/pentaho-solutions/system/publisher_config.xml

@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+# XXX Make sure we can set security, etc. even if no tables are modified
+
 require 'java'
 require 'benchmark'
 require 'fileutils'
@@ -41,8 +43,10 @@ BusinessCategory = Java::OrgPentahoPmsSchema::BusinessCategory
 PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
 PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
 PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
+SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
 
 def load_metadata_xmi(file_path)
+  puts "Loading metadata"
   Metadata.new(file_path)
 end
 
@@ -178,10 +182,43 @@ class Metadata
     end
   end
 
+  def pentaho_roles
+    puts "Getting Pentaho's roles"
+    secserv = @meta.securityReference.securityService
+    secserv.serviceURL = "#{server_url}/pentaho/ServiceAction?action=SecurityDetails&details=all"
+    return secserv.getRoles
+  end
+
+  def setup_role_security(model)
+    puts "Setting up role-based security"
+    rbsm = model.rowLevelSecurity.getRoleBasedConstraintMap
+
+    # Remove existing rule set
+    existing_rules = []
+    rbsm.keySet.each do |mykey|
+      existing_rules.push(mykey) if mykey !~ /admin/i
+    end
+    existing_rules.each do |rulename|
+      rbsm.remove(rulename)
+    end
+
+    ro_database.jurisdiction_hash.each do |k, v|
+      puts "Jurisdiction: #{k}"
+    end
+    pentaho_roles.each do |rolename|
+      puts "Checking out pentaho role #{rolename}"
+      if ro_database.jurisdiction_hash[rolename] == 1 then
+        puts "  Found role match on #{rolename}"
+        rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, rolename), "OR([MorbidityEvents.BC_DW_MORBIDITY_EVENTS_VIEW_INVESTIGATING_JURISDICTION]=\"#{rolename}\" ;  [MorbiditySecondaryJurisdictions.BC_DW_MORBIDITY_SECONDARY_JURISDICTIONS_VIEW_NAME] = \"#{rolename}\")")
+      end
+    end
+  end
+
   def publish(tables, result_hooks={})
     if tables.empty?
       result_hooks[:none].call if result_hooks[:none]
     else
+      puts "Creating business tables and relationships"
       tables.each do |short_name, table_name|
         update_physical_table table_name
         update_business_table table_name do |table|
@@ -193,14 +230,18 @@ class Metadata
           update_category category_name(short_name), table
         end
       end        
+      setup_role_security trisano_business_model
       CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
 
+      puts "Saving metadata to file"
       File.open('metadata.out', 'w') do |io|
         io << @cwm.getXMI
       end
       FileUtils.cp('metadata.out', 'metadata.xmi')
+
+      puts "Publishing metadata to server"
       files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
-      result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(server_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
+      result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(publish_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
       if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
         result_hooks[:success].call(result) if result_hooks[:success]
       else 
@@ -249,7 +290,11 @@ class Metadata
   end
 
   def server_url    
-    ENV['BI_PUBLISH_URL'] || 'http://localhost:8080/pentaho/RepositoryFilePublisher'
+    ENV['BI_SERVER_URL'] || 'http://localhost:8080'
+  end
+
+  def publish_url
+    ENV['BI_PUBLISH_URL'] || (server_url + '/pentaho/RepositoryFilePublisher')
   end
 
   def publisher_password
@@ -299,6 +344,24 @@ class Metadata
 
     def create
       eval("#{@database_info.driver_class}").new
+    end
+
+    def jurisdiction_hash
+      if ! @jurisdiction_hash
+        rs = query(%{
+          SELECT p.name
+          FROM trisano.places_view p
+          JOIN trisano.places_types_view pt
+              ON (p.id = pt.place_id)
+          JOIN trisano.codes_view c
+              ON (c.id = pt.type_id)
+          WHERE c.code_description = 'Jurisdiction'})
+        @jurisdiction_hash = {}
+        while rs.next
+          @jurisdiction_hash[rs.getString(1)] = 1
+        end
+      end
+      return @jurisdiction_hash
     end
 
     def modified_tables
