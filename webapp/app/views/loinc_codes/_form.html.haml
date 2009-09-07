@@ -1,5 +1,5 @@
 .vert-break
-  -form_for loinc_code do |f|
+  -observable_fields_form_for loinc_code do |f|
     =f.error_messages
 
     %table.list
@@ -21,6 +21,7 @@
           %span.horiz
             =f.label      :organism_id, "Organism"
             =f.select     :organism_id, select_options_organisms, {:include_blank => true}, :disabled => !loinc_code.can_have_organism?
+          =f.observe :scale_id, :function => update_organism_select(f)
 
     %span.vert
       =create_or_update_button loinc_code
