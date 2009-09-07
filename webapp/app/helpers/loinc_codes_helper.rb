@@ -26,16 +26,17 @@ module LoincCodesHelper
     organism_id   = form.field_id   :organism_id
     organism_name = form.field_name :organism_id
     scale_id      = form.field_id   :scale_id
+    organism_scales = LoincCode.scales_compatible_with_organisms.collect{|code| "'#{code.id}'"}.join(",")
     js = <<-"javascript:end"
-      if ($F('#{scale_id}') == "174") {
-        $('#{organism_id}').value = "";
-        $('#{organism_id}').insert({after: '#{hidden_field_tag(organism_id + "_hidden", Hash.new, :name => organism_name, :value => '')}'})
-        $('#{organism_id}').disable();
-      } else {
+      if ([#{organism_scales}].include($F('#{scale_id}'))) {
         if ($('#{organism_id}_hidden') != null) {
           $('#{organism_id}_hidden').remove();
         }
         $('#{organism_id}').enable();
+      } else {
+        $('#{organism_id}').value = "";
+        $('#{organism_id}').insert({after: '#{hidden_field_tag(organism_id + "_hidden", Hash.new, :name => organism_name, :value => '')}'})
+        $('#{organism_id}').disable();
       }
     javascript:end
   end

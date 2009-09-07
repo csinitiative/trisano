@@ -74,6 +74,10 @@ class LoincCode < ActiveRecord::Base
     end
   end
 
+  def self.scales_compatible_with_organisms
+    ExternalCode.loinc_scales.all(:conditions => ['the_code != ?', "Nom"])
+  end
+
   def can_have_organism?
     self.scale.nil? || self.scale != ExternalCode.loinc_scale_nominal
   end
