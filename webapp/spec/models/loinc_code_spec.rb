@@ -48,6 +48,13 @@ describe LoincCode do
     loinc.errors.on(:organism_id).should == "must be blank when Scale is set to 'Nominal'"
   end
 
+  it "should return a list of scales that make loincs compatible with organisms" do
+    LoincCode.scales_compatible_with_organisms.include?(external_codes(:loinc_scale_nom)).should   be_false
+    LoincCode.scales_compatible_with_organisms.include?(external_codes(:loinc_scale_ord)).should   be_true
+    LoincCode.scales_compatible_with_organisms.include?(external_codes(:loinc_scale_qn)).should    be_true
+    LoincCode.scales_compatible_with_organisms.include?(external_codes(:loinc_scale_ordqn)).should be_true
+  end
+
   it "should allow organism to be set for other scales" do
     loinc = LoincCode.create :loinc_code => '1-1', :scale => external_codes(:loinc_scale_ord), :organism => @arbovirus
     loinc.errors.on(:organism_id).should == nil
