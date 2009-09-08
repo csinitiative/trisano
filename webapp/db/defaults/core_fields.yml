@@ -453,7 +453,7 @@ core_field_acuity:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
-  field_type: single_line_text
+  field_type: numeric
   key: morbidity_event[acuity]
 core_field_00029: 
   name: LHD case status

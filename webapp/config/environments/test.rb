@@ -24,6 +24,3 @@ config.action_mailer.delivery_method = :test
 require 'logging'
 Logging.init :debug, :info, :warn, :error, :fatal
 DEFAULT_LOGGER = Logging::Logger['server']
-
-config.gem "rspec", :lib => false, :version => ">= 1.2.0"
-config.gem "rspec-rails", :lib => false, :version => ">= 1.2.0"

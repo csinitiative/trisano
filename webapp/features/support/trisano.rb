@@ -41,9 +41,9 @@ def create_event_with_attributes(event_type, last_name, attrs, disease=nil, juri
   e
 end
 
-def add_child_to_event(event, child_last_name)
+def add_contact_to_event(event, contact_last_name)
   returning event.contact_child_events.build do |child|
-    child.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => child_last_name } } } }
+    child.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => contact_last_name } } } }
     event.save!
     child.save
   end

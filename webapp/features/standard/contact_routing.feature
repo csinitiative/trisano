@@ -14,9 +14,9 @@ Feature: Routing contacts
   Scenario: Routing an inactive contact
     Given I am logged in as a super user
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
-    And there is a contact named Jones
+    And there is a contact on the event named Jones
 
-    When I visit contacts show page
+    When I am on the contact show page
     Then I should see "Not Participating in Workflow"
 
     When I route it to Bear River

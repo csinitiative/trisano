@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^a simple (.+) event for last name (.+)$/ do |event_type, last_name|
-  @m = create_basic_event(event_type, last_name)
+  @event = create_basic_event(event_type, last_name)
 end
 
 Given /^I am logged in as a user without view or update privileges in Davis County$/ do
@@ -43,7 +43,7 @@ Given /^the following morbidity events:$/ do |morbs|
 end
 
 Given /^there is an associated encounter event$/ do
-  @encounter = add_encounter_to_event(@m)
+  @encounter = add_encounter_to_event(@event)
 end
 
 Given /^a person with the last name "(.+)"$/ do |last_name|
@@ -55,11 +55,11 @@ Given /^a deleted person with the last name "(.+)"$/ do |last_name|
 end
 
 When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_name |
-  click_link_within "#entity_#{@m.interested_party.person_entity.id}", "Create and edit CMR using this person"
+  click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
 When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
-  click_link_within "#entity_#{@child.interested_party.person_entity.id}", "Create and edit CMR using this person"
+  click_link_within "#entity_#{@contact_event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
 When /^I search for last_name = "([^\"]*)"$/ do |last_name|
@@ -195,8 +195,8 @@ end
 
 Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
   current_url.should =~ /(\d?)\/edit/
-  $1.should_not == @m.id
-  $1.should_not == @child.id if @child
+  $1.should_not == @event.id
+  $1.should_not == @contact_event.id if @contact_event
   field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end
 

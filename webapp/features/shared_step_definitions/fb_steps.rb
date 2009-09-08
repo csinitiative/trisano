@@ -110,7 +110,7 @@ Given /^that form has core follow ups configured for all core fields$/ do
   @default_view = @form.investigator_view_elements_container.children[0]
 
   # Create a core follow up for every core field that can be followed up on
-  CoreField.find_all_by_event_type("morbidity_event").each do |core_field|
+  CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
     if core_field.can_follow_up
       follow_up_element = FollowUpElement.new
       follow_up_element.form_id = @form.id

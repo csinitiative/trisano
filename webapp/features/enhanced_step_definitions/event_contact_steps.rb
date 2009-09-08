@@ -17,13 +17,13 @@
 
 When(/^I add an existing contact$/) do
   @existing_contact_name = get_unique_name(2)
-  @event.interested_party.person_entity.person.last_name = @existing_contact_name
-  @event.interested_party.person_entity.person.save!
-  @browser.type("contact_search_name", @event.interested_party.person_entity.person.last_name)
+  @contact_event.interested_party.person_entity.person.last_name = @existing_contact_name
+  @contact_event.interested_party.person_entity.person.save!
+  @browser.type("contact_search_name", @contact_event.interested_party.person_entity.person.last_name)
   @browser.click("//input[@value='Search']")
 
   wait_for_element_present("//div[@id='contact_search_results']/table")
-  @browser.click "//div[@id='contact_search_results']//a[@id='add_contact_#{@event.id}']"
+  @browser.click "//div[@id='contact_search_results']//a[@id='add_contact_#{@contact_event.id}']"
   wait_for_element_present("//div[@class='contact_from_search']")
 end
 

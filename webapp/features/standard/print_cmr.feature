@@ -152,10 +152,10 @@ Feature: Printer friendly morbidity events
   Scenario: Printing contact events directly      
     Given I am logged in as a super user
     And a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
-    And there is a contact named Jones
+    And there is a contact on the event named Jones
     And I am logged in as a super user
 
-    When I visit contacts show page
+    When I am on the contact show page
     And I choose to print "All" data
     And I press "Print"
 

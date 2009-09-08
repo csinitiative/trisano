@@ -24,9 +24,9 @@ Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue
 end
 
 Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
-  @m = create_basic_event(event_type, last_name, nil, 'Unassigned')
-  @m.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")
-  @m.save!
+  @event = create_basic_event(event_type, last_name, nil, 'Unassigned')
+  @event.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")
+  @event.save!
 end
 
 When /^I visit the events index page$/ do
@@ -34,7 +34,7 @@ When /^I visit the events index page$/ do
 end
 
 When(/^I navigate to the event edit page$/) do
-  visit edit_cmr_path(@event || @m)
+  visit edit_cmr_path(@event)
 end
 
 When(/^I navigate to the event show page$/) do
@@ -46,7 +46,7 @@ When(/^I navigate to the new event page$/) do
 end
 
 When /^I navigate to the add attachments page$/ do
-  visit new_event_attachment_path(@event || @m)
+  visit new_event_attachment_path(@event)
 end
 
 When(/^I navigate to the contact event show page$/) do

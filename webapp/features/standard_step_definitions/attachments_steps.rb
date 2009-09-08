@@ -20,7 +20,7 @@ Given /^a file attachment named "([^\"]*)"$/ do |file_name|
                                  'size' => 23,                                 
                                  'filename' => 'test-attachment',
                                  'tempfile' => open(File.join(RAILS_ROOT, 'spec', 'fixtures', 'files', file_name))},
-                               :event_id => (@m || @event).id,
+                               :event_id => (@event).id,
                                :category => '')
   @attachment.save!
 end

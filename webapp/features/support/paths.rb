@@ -33,6 +33,12 @@ def path_to(page_name)
   when /the new CMR page/i
     new_cmr_path
 
+  when /the contact edit page/i
+    edit_contact_event_path(@contact_event)
+
+  when /the contact show page/i
+    contact_event_path(@contact_event)
+
   when /the add and remove forms page/i
     event_forms_path(@event)
 

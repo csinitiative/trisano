@@ -22,7 +22,7 @@ Feature: Searching for existing people or events before adding a CMR
 
   Scenario: Searches include contact and morbidity events
     Given a simple morbidity event for last name Jones
-    And there is a contact named Jones
+    And there is a contact on the event named Jones
     And I am logged in as a super user
 
     When I search for last_name = "Jones"
@@ -144,7 +144,7 @@ Scenario: Searches do not include delete people
     
   Scenario: Creating a new morb event from an existing contact event
     Given a simple morbidity event for last name Jones
-    And there is a contact named Smith
+    And there is a contact on the event named Smith
     And I am logged in as a super user
 
     When I search for last_name = "Smith"

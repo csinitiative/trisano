@@ -42,13 +42,17 @@ Given(/^a (.+) event exists with a disease that matches the form$/) do |event_ty
 end
 
 Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|
-  @m = create_basic_event(event_type, last_name, nil, jurisdiction)
+  @event = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
 
 Given(/^a contact event exists$/) do
-  @event = Factory.build(:contact_event)
-  @event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)
-  @event.save!
+  @contact_event = Factory.build(:contact_event)
+  @contact_event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)
+  @contact_event.save!
+end
+
+Given /^there is a contact on the event named (.+)$/ do |last_name|
+  @contact_event = add_contact_to_event(@event, last_name)
 end
 
 Given(/^the disease-specific questions for the event have been answered$/) do
