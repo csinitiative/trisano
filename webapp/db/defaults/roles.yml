@@ -4,6 +4,9 @@ Administrator:
   - remove_form_from_event
   - write_staged_message
   - manage_staged_message
+  - manage_entities
+  - merge_people
+  - merge_places
 Investigator:
   - create_event
   - view_event
@@ -14,11 +17,13 @@ Investigator:
   - add_form_to_event
   - remove_form_from_event
   - access_avr
+  - manage_entities
 Data Entry Technician:
   - create_event
   - view_event
   - update_event
   - route_event_to_any_lhd
+  - manage_entities
 Surveillance Manager:
   - create_event
   - view_event
@@ -31,6 +36,7 @@ Surveillance Manager:
   - remove_form_from_event
   - manage_staged_message
   - access_avr
+  - manage_entities
 LHD Manager:
   - create_event
   - view_event
@@ -41,6 +47,7 @@ LHD Manager:
   - add_form_to_event
   - remove_form_from_event
   - access_avr
+  - manage_entities
 State Manager:
   - create_event
   - view_event
@@ -51,5 +58,6 @@ State Manager:
   - add_form_to_event
   - remove_form_from_event
   - access_avr
+  - manage_entities
 Read-only:
   - view_event

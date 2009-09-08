@@ -20,8 +20,8 @@ class PeopleController < ApplicationController
   def index
     return unless index_processing
 
-    unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to view People" }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People" }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
@@ -34,8 +34,8 @@ class PeopleController < ApplicationController
   def show
     @person = PersonEntity.find(params[:id])
 
-    unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to view a Person", :person => @person }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
@@ -53,8 +53,8 @@ class PeopleController < ApplicationController
     @person.telephones << Telephone.new
     @person.email_addresses << EmailAddress.new
 
-    unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
@@ -78,8 +78,8 @@ class PeopleController < ApplicationController
       @person.email_addresses << EmailAddress.new
     end
 
-    unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to edit a Person", :person => @person }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
     end
   end
 
@@ -92,8 +92,8 @@ class PeopleController < ApplicationController
     @person.person = Person.new
     @person.update_attributes(params[:person_entity])
 
-    unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
@@ -124,8 +124,8 @@ class PeopleController < ApplicationController
 
     @person = PersonEntity.find(params[:id])
 
-    unless User.current_user.is_entitled_to?(:create_event)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to create a Person", :person => @person }, :layout => true, :status => 403 and return
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
