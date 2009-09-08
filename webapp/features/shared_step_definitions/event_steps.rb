@@ -63,3 +63,6 @@ Given(/^the disease-specific questions for the event have been answered$/) do
   end
 end
 
+Given /^there is a place on the event named (.+)$/ do |name|
+  @place_event = add_place_to_event(@event, name)
+end

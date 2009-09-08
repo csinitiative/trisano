@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-
 Given /^I don't see any of the core follow up questions$/ do
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
     raise "Should not not find #{core_field.name}" if @browser.get_html_source.include?("#{core_field.name} follow up?") == true
@@ -44,9 +43,6 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
       end
       
     end
-
-    # Just touching the email field after each answer so the process-condition request is sure to happen
-    #@browser.focus("morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][1][email_address]")
   end
 end
 
@@ -93,9 +89,6 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
       end
 
     end
-
-    # Just touching the email field after each answer so the process-condition request is sure to happen
-    #@browser.focus("morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][1][email_address]")
 
   end
 end

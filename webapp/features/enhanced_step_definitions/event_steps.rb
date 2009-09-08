@@ -44,6 +44,11 @@ When(/^I am on the contact event edit page$/) do
   @browser.wait_for_page_to_load
 end
 
+When(/^I am on the place event edit page$/) do
+  @browser.open "/trisano/place_events/#{(@place_event).id}/edit"
+  @browser.wait_for_page_to_load
+end
+
 When(/^I save the event$/) do
   save_cmr(@browser).should be_true
 

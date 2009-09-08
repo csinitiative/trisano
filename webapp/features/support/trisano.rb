@@ -49,6 +49,14 @@ def add_contact_to_event(event, contact_last_name)
   end
 end
 
+def add_place_to_event(event, name)
+  returning event.place_child_events.build do |child|
+    child.attributes = { :interested_place_attributes => { :place_entity_attributes => { :place_attributes => { :name => name } } } }
+    event.save!
+    child.save
+  end
+end
+
 def add_encounter_to_event(event, options={})
   returning event.encounter_child_events.build do |child|
     child.attributes = { :participations_encounter_attributes => {
