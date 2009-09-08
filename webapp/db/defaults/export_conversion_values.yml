@@ -435,7 +435,7 @@
    value_to: '3'
 
  - export_column_name: 'IMPORTED'
-   value_from: 'UT'
+   value_from: 'AIS'
    value_to: '1'
 
  - export_column_name: 'OUTBREAK'

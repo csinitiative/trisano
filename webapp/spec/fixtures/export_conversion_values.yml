@@ -36,7 +36,7 @@ imported_from_utah_value:
   id: 6
 #  export_column_id: 20
   export_column_id: 35
-  value_from: 'UT'
+  value_from: 'AIS'
   value_to:   '1'
   
 jaundiced_yes:

@@ -717,7 +717,7 @@
   sort_order: 1
 
 - code_name: "imported"
-  the_code: "UT"
+  the_code: "AIS"
   code_description: "Acquired in-state"
   sort_order: 5
 
