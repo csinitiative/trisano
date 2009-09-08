@@ -116,6 +116,8 @@ class HumanEvent < Event
     end
 
     def find_by_name_bdate(name, bdate=nil, options={})
+      return [] if name.blank? and bdate.blank?
+
       # Throw an exception early if birth date not parseable
       validate_bdate(bdate)
 
