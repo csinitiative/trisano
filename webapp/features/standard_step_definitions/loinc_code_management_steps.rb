@@ -15,11 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I have a loinc code "(.*)" with scale "(.*)"$/ do |loinc_code, scale|
-  @scale = CodeName.loinc_scale.external_codes.find_by_code_description(scale)
-  @loinc_code = LoincCode.create!(:loinc_code => loinc_code, :scale_id => @scale.id)
-end
-
 Given /^the loinc code has test name "(.*)"$/ do |test_name|
   @loinc_code.update_attributes! :test_name => test_name
 end
