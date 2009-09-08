@@ -47,7 +47,6 @@ ActionController::Routing::Routes.draw do |map|
   map.shortcuts 'users/shortcuts', :controller => 'users', :action => 'shortcuts_update', :conditions => { :method => :put }
   map.shortcuts_edit 'users/shortcuts/edit', :controller => 'users', :action => 'shortcuts_edit'
   map.admin 'admin', :controller => 'admin'
-  map.avr 'avr', :controller => 'avr'
   map.open_library 'forms/import', :controller => 'forms', :action => 'import'
   map.open_library 'forms/library_admin/:type', :controller => 'forms', :action => 'library_admin'
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
