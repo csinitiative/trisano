@@ -610,14 +610,14 @@ class Form < ActiveRecord::Base
       tree_id = FormElement.next_tree_id if (form_id.nil? && e["parent_id"].nil?)
       values = {}
       values[:form_id] = null_safe_sanitize(form_id)
-      values[:type] = "'#{sanitize_sql(["%s", e["type"]])}'"
+      values[:type] = "'#{sanitize_sql(["%s", e["type"]]).untaint}'"
       values[:name] = null_safe_sanitize(e["name"])
       values[:description] = null_safe_sanitize(e["description"])
       values[:parent_id] = parent_id_map[e["parent_id"].to_i].nil? ? "null" : parent_id_map[e["parent_id"].to_i]
-      values[:lft] = "'#{sanitize_sql(["%s", e["lft"]])}'"
-      values[:rgt] = "'#{sanitize_sql(["%s",  e["rgt"]])}'"
-      values[:is_active] = "#{sanitize_sql(["%s", e["is_active"]])}"
-      values[:tree_id] = "#{sanitize_sql(["%s", tree_id])}"
+      values[:lft] = "'#{sanitize_sql(["%s", e["lft"]]).untaint}'"
+      values[:rgt] = "'#{sanitize_sql(["%s",  e["rgt"]]).untaint}'"
+      values[:is_active] = "#{sanitize_sql(["%s", e["is_active"]]).untaint}"
+      values[:tree_id] = "#{sanitize_sql(["%s", tree_id]).untaint}"
       values[:core_path] = null_safe_sanitize(e["core_path"])
       values[:help_text] = null_safe_sanitize(e["help_text"])
       values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
@@ -646,7 +646,7 @@ class Form < ActiveRecord::Base
       else
         values[:export_column_id] =  null_safe_sanitize(e["export_column_id"])
       end
-      
+
       unless e["export_conversion_value_id"].nil?
         begin
           disease_group_name, export_column_name, value_from, value_to = e["cdc_export_conversion_value_lookup"].split(FormElement.export_lookup_separator)
@@ -709,5 +709,5 @@ class Form < ActiveRecord::Base
   def self.null_safe_sanitize(value)
     value.blank? ? "null" :  "#{sanitize_sql_for_conditions(["'%s'", value]).untaint}"
   end
-  
+
 end
