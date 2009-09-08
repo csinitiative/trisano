@@ -70,57 +70,57 @@ end
 
 Given /^I enter a lab name of '([^\"]*)'$/ do |lab_name|
   @lab_values << lab_name
-  fill_in "morbidity_event[labs_attributes][3][place_entity_attributes][place_attributes][name]", :with => lab_name
+  fill_in "morbidity_event[labs_attributes][0][place_entity_attributes][place_attributes][name]", :with => lab_name
 end
 
 Given /^I select a test type of '(.+)'$/ do |test_type|
   @lab_values << test_type
-  select test_type, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][test_type_id]"
+  select test_type, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][test_type_id]"
 end
 
 Given /^I select an organism of '(.+)'$/ do |organism|
   @lab_values << organism
-  select organism, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][organism_id]"
+  select organism, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][organism_id]"
 end
 
 Given /^I select a test result of '([^\"]*)'$/ do |test_result|
   @lab_values << test_result
-  select test_result, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][test_result_id]"
+  select test_result, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][test_result_id]"
 end
 
 Given /^I enter a result value of (.+)$/ do |result|
   @lab_values << result
-  fill_in "morbidity_event[labs_attributes][3][lab_results_attributes][0][result_value]", :with => result
+  fill_in "morbidity_event[labs_attributes][0][lab_results_attributes][0][result_value]", :with => result
 end
 
 Given /^I enter a units of (.+)$/ do |unit|
   @lab_values << unit
-  fill_in "morbidity_event[labs_attributes][3][lab_results_attributes][0][units]", :with => unit
+  fill_in "morbidity_event[labs_attributes][0][lab_results_attributes][0][units]", :with => unit
 end
 
 Given /^I enter a reference range of (.+)$/ do |range|
   @lab_values << range
-  fill_in "morbidity_event[labs_attributes][3][lab_results_attributes][0][reference_range]", :with => range
+  fill_in "morbidity_event[labs_attributes][0][lab_results_attributes][0][reference_range]", :with => range
 end
 
 Given /^I enter a test status of (.+)$/ do |test_status|
   @lab_values << test_status
-  select test_status, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][test_status_id]"
+  select test_status, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][test_status_id]"
 end
 
 Given /^I select a specimen source of '([^\"]*)'$/ do |specimen|
   @lab_values << specimen
-  select specimen, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_source_id]"
+  select specimen, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][specimen_source_id]"
 end
 
 Given /^I select a sent to state lab value of '([^\"]*)'$/ do |state|
   @lab_values << state
-  select state, :from => "morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_sent_to_state_id]"
+  select state, :from => "morbidity_event[labs_attributes][0][lab_results_attributes][0][specimen_sent_to_state_id]"
 end
 
 Given /^I enter a comment of "([^\"]*)"$/ do |comment|
   @lab_values << comment
-  fill_in "morbidity_event[labs_attributes][3][lab_results_attributes][0][comment]", :with => comment
+  fill_in "morbidity_event[labs_attributes][0][lab_results_attributes][0][comment]", :with => comment
 end
 
 When /^I save the new event form$/ do

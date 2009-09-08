@@ -632,10 +632,10 @@ class TriSanoWebApiCmr < TriSanoWebApi
       form['morbidity_event[interested_party_attributes][person_entity_attributes][telephones_attributes][0][_delete]'] = true
     end
     if !@options.email_address.nil?
-      form['morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][1][email_address]'] = @options.email_address
+      form['morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][0][email_address]'] = @options.email_address
     end
     if !@options.email_address_delete.nil?
-      form['morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][1][_delete]'] = true
+      form['morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][0][_delete]'] = true
     end
     if !@options.disease.nil?
       found = false
@@ -740,20 +740,20 @@ class TriSanoWebApiCmr < TriSanoWebApi
       form['morbidity_event[interested_party_attributes][treatments_attributes][0][stop_treatment_date]'] = @options.stop_treatment_date
     end
     if !@options.clinician_first_name.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][first_name]'] = @options.clinician_first_name
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][first_name]'] = @options.clinician_first_name
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
     end
     if !@options.clinician_middle_name.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][middle_name]'] = @options.clinician_middle_name
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][middle_name]'] = @options.clinician_middle_name
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
     end
     if !@options.clinician_last_name.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][last_name]'] = @options.clinician_last_name
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][last_name]'] = @options.clinician_last_name
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][person_type]'] = 'clinician'
     end
     if !@options.clinician_telephone_entity_location_type.nil?
       found = false
-      form.field('morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][entity_location_type_id]').options.each do |s|
+      form.field('morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][entity_location_type_id]').options.each do |s|
         if s.text == @options.clinician_telephone_entity_location_type
           found = true
           s.select
@@ -764,20 +764,20 @@ class TriSanoWebApiCmr < TriSanoWebApi
       raise 'Clinician telephone location type not found in form' if not found
     end
     if !@options.clinician_telephone_area_code.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][area_code]'] = @options.clinician_telephone_area_code
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][area_code]'] = @options.clinician_telephone_area_code
     end
     if !@options.clinician_telephone_number.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][phone_number]'] = @options.clinician_telephone_number
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][phone_number]'] = @options.clinician_telephone_number
     end
     if !@options.clinician_telephone_extension.nil?
-      form['morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][extension]'] = @options.clinician_telephone_extension
+      form['morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][extension]'] = @options.clinician_telephone_extension
     end
     if !@options.lab_name.nil?
-      form['morbidity_event[labs_attributes][3][place_entity_attributes][place_attributes][name]'] = @options.lab_name
+      form['morbidity_event[labs_attributes][0][place_entity_attributes][place_attributes][name]'] = @options.lab_name
     end
     if !@options.lab_test_type.nil?
       found = false
-      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_type_id]').options.each do |s|
+      form.field('morbidity_event[labs_attributes][0][lab_results_attributes][0][test_type_id]').options.each do |s|
         if s.text == @options.lab_test_type
           found = true
           s.select
@@ -789,7 +789,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
     end
     if !@options.lab_test_result.nil?
       found = false
-      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_result_id]').options.each do |s|
+      form.field('morbidity_event[labs_attributes][0][lab_results_attributes][0][test_result_id]').options.each do |s|
         if s.text == @options.lab_test_result
           found = true
           s.select
@@ -800,17 +800,17 @@ class TriSanoWebApiCmr < TriSanoWebApi
       raise 'Lab test result option not found in form' if not found
     end
     if !@options.lab_result_value.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][result_value]'] = @options.lab_result_value
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][result_value]'] = @options.lab_result_value
     end
     if !@options.lab_units.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][units]'] = @options.lab_units
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][units]'] = @options.lab_units
     end
     if !@options.lab_reference_range.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][reference_range]'] = @options.lab_reference_range
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][reference_range]'] = @options.lab_reference_range
     end
     if !@options.lab_test_status.nil?
       found = false
-      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][test_status_id]').options.each do |s|
+      form.field('morbidity_event[labs_attributes][0][lab_results_attributes][0][test_status_id]').options.each do |s|
         if s.text == @options.lab_test_status
           found = true
           s.select
@@ -822,7 +822,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
     end
     if !@options.lab_specimen_source.nil?
       found = false
-      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_source_id]').options.each do |s|
+      form.field('morbidity_event[labs_attributes][0][lab_results_attributes][0][specimen_source_id]').options.each do |s|
         if s.text == @options.lab_specimen_source
           found = true
           s.select
@@ -833,14 +833,14 @@ class TriSanoWebApiCmr < TriSanoWebApi
       raise 'Clinician telephone location type not found in form' if not found
     end
     if !@options.lab_specimen_collection_date.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][collection_date]'] = @options.lab_specimen_collection_date
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][collection_date]'] = @options.lab_specimen_collection_date
     end
     if !@options.lab_test_date.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][lab_test_date]'] = @options.lab_test_date
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][lab_test_date]'] = @options.lab_test_date
     end
     if !@options.lab_specimen_sent_to_state.nil?
       found = false
-      form.field('morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_sent_to_state_id]').options.each do |s|
+      form.field('morbidity_event[labs_attributes][0][lab_results_attributes][0][specimen_sent_to_state_id]').options.each do |s|
         if s.text == @options.lab_specimen_sent_to_state
           found = true
           s.select
@@ -851,7 +851,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
       raise 'Lab specimen sent to date option not found in form' if not found
     end
     if !@options.lab_comment.nil?
-      form['morbidity_event[labs_attributes][3][lab_results_attributes][0][comment]'] = @options.lab_comment
+      form['morbidity_event[labs_attributes][0][lab_results_attributes][0][comment]'] = @options.lab_comment
     end
     if !@options.contact_first_name.nil?
       form['morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][person_attributes][first_name]'] = @options.contact_first_name
