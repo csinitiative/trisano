@@ -647,7 +647,7 @@ module EventsHelper
       section_id = "section_investigate_#{h(element.id)}";
       hide_id = section_id + "_hide";
       show_id = section_id + "_show"
-      result <<  "<fieldset class='form_section'>"
+      result <<  "<fieldset class='form_section vert-break'>"
       result << "<legend>#{h(strip_tags(element.name))} "
 
       unless element.help_text.blank?
@@ -849,7 +849,7 @@ module EventsHelper
       section_id = "section_investigate_#{element.id}";
       hide_id = section_id + "_hide";
       show_id = section_id + "_show"
-      result <<  "<fieldset class='form_section'>"
+      result <<  "<fieldset class='form_section vert-break'>"
       result << "<legend>#{strip_tags(element.name)} "
 
       unless element.help_text.blank?
