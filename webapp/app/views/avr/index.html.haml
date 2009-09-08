@@ -20,7 +20,7 @@
   - res =  Net::HTTP.get_response(URI.parse(config_option(:bi_heartbeat_url)))
   - case res
     - when Net::HTTPSuccess ||Net::HTTPRedirection
-      %iframe{:src => config_option(:bi_server_url), :style => "width: 100%; height: 500px"}
+      %iframe{:src => config_option(:bi_server_url), :style => "width: 100%; height: 600px"}
   - else
     %div{:style => "font-size: 18px; text-align: center; color: red"}
       ="Reporting and analysis server is reporting failure: #{h(res.error)}.  Please contact your system administrator"
