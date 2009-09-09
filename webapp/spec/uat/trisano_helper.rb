@@ -346,8 +346,8 @@ module TrisanoHelper
     return save_cmr(browser)
   end
   
-  def answer_investigator_question(browser, question_text, answer)
-    answer_id = get_investigator_answer_id(browser, question_text)
+  def answer_investigator_question(browser, question_text, answer, html_source=nil)
+    answer_id = get_investigator_answer_id(browser, question_text, html_source)
     begin
       browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
     rescue
@@ -931,11 +931,15 @@ module TrisanoHelper
     html_source[id_start_position..id_end_position]
   end
   
-  def get_investigator_answer_id(browser, question_text)
-    html_source = browser.get_html_source
+  def get_investigator_answer_id(browser, question_text, html_source=nil)
+    html_source = browser.get_html_source if html_source.nil?
     question_position = html_source.index(question_text)
     id_start_position = html_source.index(INVESTIGATOR_ANSWER_ID_PREFIX, question_position) + 20
     id_end_position = html_source.index("\"", id_start_position) -1
+
+    # This is a kluge that will go hunting for quot; if the id looks too big. Needed for reporting agency at least.
+    id_end_position = html_source.index("quot;", id_start_position)-3 if (id_end_position-id_start_position > 10)
+
     html_source[id_start_position..id_end_position]
   end
  

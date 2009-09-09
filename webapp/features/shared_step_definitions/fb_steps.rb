@@ -156,3 +156,41 @@ Given /^that form has core follow ups configured for all core fields$/ do
     end
   end
 end
+
+Given /^that form has core field configs configured for all core fields$/ do
+  @core_field_container = @form.core_field_elements_container
+
+  # Create a core field config for every core field that can be followed up on
+  CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
+    if core_field.fb_accessible
+      core_field_config = CoreFieldElement.new
+
+      core_field_config.core_path = core_field.key
+      core_field_config.form_id = @form.id
+      core_field_config.parent_element_id = @core_field_container.id
+      core_field_config.save_and_add_to_form
+      
+      # Add question to before config
+      before_question_element = QuestionElement.new({
+          :parent_element_id => core_field_config.children[0].id,
+          :question_attributes => {
+            :question_text => "#{core_field.name} before?",
+            :data_type => "single_line_text",
+            :short_name => Digest::MD5::hexdigest(core_field.name + "before")
+          }
+        })
+      before_question_element.save_and_add_to_form
+
+      # Add question to after config
+      after_question_element = QuestionElement.new({
+          :parent_element_id => core_field_config.children[1].id,
+          :question_attributes => {
+            :question_text => "#{core_field.name} after?",
+            :data_type => "single_line_text",
+            :short_name => Digest::MD5::hexdigest(core_field.name + "after")
+          }
+        })
+      after_question_element.save_and_add_to_form
+    end
+  end
+end
