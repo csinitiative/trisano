@@ -98,7 +98,7 @@ module EventsHelper
 
     link_to_function(caption, link_to_function_options) do |page|
       form_builder.fields_for(method, options[:object], :child_index => 'NEW_RECORD', :builder => ExtendedFormBuilder) do |f|
-        html = render(:partial => options[:partial], :locals => { options[:form_builder_local] => f })
+        html = h render(:partial => options[:partial], :locals => { options[:form_builder_local] => f })
         page << %{
           $('#{options[:insert]}').insert({
             bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime())
