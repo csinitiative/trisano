@@ -212,7 +212,8 @@ module EventsHelper
   def state_controls(event)
     return "" if event.new? or (event.is_a?(ContactEvent) && event.not_routed?) or event.closed? or event.rejected_by_lhd?
 
-    routing_controls = action_controls = ""
+    routing_controls = ""
+    action_controls = ""
     event.allowed_transitions.each do |transition|
       case transition
       when :accept, :reject, :approve, :reopen, :close
@@ -237,6 +238,7 @@ module EventsHelper
     if action_controls.blank? && routing_controls.blank?
       controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
     else
+      p routing_controls
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
