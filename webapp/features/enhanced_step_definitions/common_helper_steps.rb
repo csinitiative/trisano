@@ -55,10 +55,28 @@ When /^I wait for the page to load$/ do
   @browser.wait_for_page_to_load
 end
 
+When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, select|
+  @browser.select "//label[text()='#{select}']/following::select", value
+end
+
+When /^the following values are selected from "([^\"]*)":$/ do |select, values|
+  values.raw.each do |value|
+    @browser.add_selection "//label[text()='#{select}']/following::select", value
+  end
+end
+
 Then(/^I should be presented with the error message \"(.+)\"$/) do |message|
   @browser.is_text_present(message).should be_true
 end
 
 Then(/^I should not be presented with an error message$/) do
   @browser.is_text_present("error prohibited").should be_false
+end
+
+Before('@clean') do
+  [CommonTestType, LabResult, Address, Event, Form, FormElement, LoincCode, Organism].each(&:delete_all)
+end
+
+After('@clean') do
+  [CommonTestType, LabResult, Address, Event, Form, FormElement, LoincCode, Organism].each(&:delete_all)
 end

@@ -620,7 +620,7 @@ module TrisanoHelper
   def change_cmr_view(browser, attributes)
     @browser.click "link=Change View"
     attributes[:diseases].each do |disease|
-      @browser.add_selection("//div[@id='change_view']//select[@id='diseases_']", "label=#{disease}")
+      @browser.add_selection("//div[@id='change_view']//select[@id='diseases_selector']", "label=#{disease}")
     end if attributes[:diseases]
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)

@@ -79,7 +79,7 @@ describe 'System functionality for routing and workflow' do
   it "should filter the CMR list by disease" do
     click_nav_cmrs(@browser)
     change_cmr_view(@browser, {:diseases => ["AIDS"]})
-    
+
     @browser.is_text_present(@aids_person_1).should be_true
     @browser.is_text_present(@aids_person_2).should be_true
     @browser.is_text_present(@anthrax_person_1).should be_false

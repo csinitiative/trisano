@@ -39,6 +39,12 @@ When(/^I navigate to the event show page$/) do
   @browser.wait_for_page_to_load
 end
 
+When /^I am on the events index page$/ do
+  @browser.open "/trisano/cmrs"
+  @browser.wait_for_page_to_load
+end
+
+
 When(/^I am on the contact event edit page$/) do
   @browser.open "/trisano/contact_events/#{(@contact_event).id}/edit"
   @browser.wait_for_page_to_load
@@ -64,7 +70,15 @@ When(/^I save the event$/) do
     rescue
       # Well, we tried. We'll end up in here if we used this step on a non-morb event.
     end
-    
+
   end
 end
 
+Then /^events list should show (\d+) events$/ do |expected_count|
+  @browser.get_xpath_count("//div[@class='patientname']").should == expected_count
+end
+
+After('@clean_events') do
+  Address.all.each(&:delete)
+  Event.all.each(&:delete)
+end

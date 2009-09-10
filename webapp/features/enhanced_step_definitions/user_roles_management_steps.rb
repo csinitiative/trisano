@@ -9,10 +9,6 @@ When /^I go to edit the user$/ do
   @browser.wait_for_page_to_load
 end
 
-When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, select|
-  @browser.select "//label[text()='#{select}']/following::select", value
-end
-
 When /^I remove the role$/ do
   @browser.click "link=Remove"
 end

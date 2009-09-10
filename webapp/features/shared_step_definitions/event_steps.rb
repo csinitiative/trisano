@@ -23,6 +23,13 @@ Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event = create_basic_event("morbidity", get_unique_name(1), disease, get_random_jurisdiction_by_short_name)
 end
 
+Given /^morbidity events with the following diseases:$/ do |table|
+  table.rows.each do |disease|
+    create_basic_event("morbidity", get_unique_name(1), disease.first, get_random_jurisdiction_by_short_name)
+  end
+end
+
+
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
   test_type_id = CommonTestType.find_by_common_name(test_type).id
   attrs = { "labs_attributes" =>
@@ -66,3 +73,4 @@ end
 Given /^there is a place on the event named (.+)$/ do |name|
   @place_event = add_place_to_event(@event, name)
 end
+

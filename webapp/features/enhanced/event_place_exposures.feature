@@ -3,6 +3,7 @@ Feature: Managing place exposures on events
   To enable users to add and remove place exposures
   I want to be able to add and remove place exposures
 
+  @clean
   Scenario: Adding and removing place exposures in new mode
     Given I am logged in as a super user
     And a place entity of type Food Establishment exists
@@ -22,6 +23,7 @@ Feature: Managing place exposures on events
     And I save the event
     Then I should see the removed place exposure as deleted
 
+  @clean
   Scenario: Adding and removing place exposures in edit mode
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
@@ -37,6 +39,7 @@ Feature: Managing place exposures on events
     And I save the event
     Then I should see all added place exposures
 
+  @clean
   Scenario: Adding two new place exposures at once
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
@@ -45,7 +48,8 @@ Feature: Managing place exposures on events
     And I save the event
     Then I should see both new place exposures
 
-Scenario: Editing a place exposure as a place event
+  @clean
+  Scenario: Editing a place exposure as a place event
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
