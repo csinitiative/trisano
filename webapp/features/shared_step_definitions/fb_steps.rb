@@ -113,7 +113,6 @@ Given /^that form has core follow ups configured for all core fields$/ do
   CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
     if core_field.can_follow_up
       follow_up_element = FollowUpElement.new
-      follow_up_element.form_id = @form.id
       follow_up_element.core_path = core_field.key
 
       # If the core field has a code name, then its potential answers are one of that code_name's codes
@@ -160,13 +159,12 @@ end
 Given /^that form has core field configs configured for all core fields$/ do
   @core_field_container = @form.core_field_elements_container
 
-  # Create a core field config for every core field that can be followed up on
+  # Create a core field config for every core field
   CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
     if core_field.fb_accessible
       core_field_config = CoreFieldElement.new
 
       core_field_config.core_path = core_field.key
-      core_field_config.form_id = @form.id
       core_field_config.parent_element_id = @core_field_container.id
       core_field_config.save_and_add_to_form
       
@@ -193,4 +191,27 @@ Given /^that form has core field configs configured for all core fields$/ do
       after_question_element.save_and_add_to_form
     end
   end
+end
+
+Given /^that form has core view configs configured for all core views$/ do
+  @core_view_container = @form.core_view_elements_container
+
+  # Create a core view config for each core view
+  eval(@form.event_type.camelcase).core_views.each do |core_view|
+    @core_view_element = CoreViewElement.new
+    @core_view_element.parent_element_id = @core_view_container.id
+    @core_view_element.name = core_view[0]
+    @core_view_element.save_and_add_to_form
+
+    question_element = QuestionElement.new({
+        :parent_element_id => @core_view_element.id,
+        :question_attributes => {
+          :question_text => "#{core_view[0]} question?",
+          :data_type => "single_line_text",
+          :short_name => Digest::MD5::hexdigest(core_view[0])
+        }
+      })
+    question_element.save_and_add_to_form    
+  end
+
 end

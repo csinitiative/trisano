@@ -451,8 +451,8 @@ module TrisanoHelper
     browser.get_body_text.scan(/#{text}/).size
   end
   
-  def assert_tab_contains_question(browser, tab_name, question_text)
-    html_source = browser.get_html_source
+  def assert_tab_contains_question(browser, tab_name, question_text, html_source=nil)
+    html_source = browser.get_html_source if html_source.nil?
     question_position = html_source.index(question_text)
     id_start_position = html_source.rindex(INVESTIGATOR_QUESTION_ID_PREFIX, question_position)
     id_end_position = html_source.index("\"", id_start_position) -1

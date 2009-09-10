@@ -95,7 +95,7 @@ class Form < ActiveRecord::Base
           return true
         end
       rescue Exception => ex
-        # TODO better logging
+        logger.error ex
         return nil
       end
     end
