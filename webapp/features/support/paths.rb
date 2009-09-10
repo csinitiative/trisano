@@ -33,6 +33,9 @@ def path_to(page_name)
   when /the new CMR page/i
     new_cmr_path
 
+  when /the show CMR page/i
+    cmr_path @event
+
   when /the contact edit page/i
     edit_contact_event_path(@contact_event)
 

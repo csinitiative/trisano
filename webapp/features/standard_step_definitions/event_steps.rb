@@ -29,6 +29,20 @@ Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
   @event.save!
 end
 
+Given /^the morbidity event has the following place exposures:$/ do |places|
+  places.hashes.each do |place|
+    hash = {
+      "interested_place_attributes" => {
+        "place_entity_attributes" => {
+          "place_attributes" => place
+        }
+      }
+    }
+    @event.place_child_events << PlaceEvent.create!(hash)
+  end
+  @event.save!
+end
+
 When /^I visit the events index page$/ do
   visit cmrs_path({})
 end
@@ -51,4 +65,16 @@ end
 
 When(/^I navigate to the contact event show page$/) do
   visit contact_event_path(@event)
+end
+
+Then /^the CMR should look deleted$/ do
+  response.should have_xpath("//div[@class='patientname-inactive']")
+end
+
+Then /^contact "([^\"]*)" should appear deleted$/ do |contact_name|
+  response.should have_xpath("//td[@class='struck-through' and text()='#{contact_name}']")
+end
+
+Then /^place exposure "([^\"]*)" should appear deleted$/ do |place_name|
+  response.should have_xpath("//td[@class='struck-through' and text()='#{place_name}']")
 end
