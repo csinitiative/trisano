@@ -196,11 +196,13 @@ class Metadata
     # Remove existing rule set
     existing_rules = []
     rbsm.keySet.each do |mykey|
-      existing_rules.push(mykey) if mykey !~ /admin/i
+      existing_rules.push(mykey)
     end
     existing_rules.each do |rulename|
       rbsm.remove(rulename)
     end
+
+    rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, 'Admin'), "1 = 1")
 
     ro_database.jurisdiction_hash.each do |k, v|
       puts "Jurisdiction: #{k}"
