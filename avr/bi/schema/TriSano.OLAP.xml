@@ -101,7 +101,11 @@
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Acuity" datatype="Integer" aggregator="sum" visible="true" column="acuity"></Measure>
+        <Measure name="Acuity" datatype="Integer" aggregator="sum" visible="true">
+            <MeasureExpression>
+                <SQL dialect="postgres">COALESCE(acuity, 0)</SQL>
+            </MeasureExpression>
+        </Measure>
         <!-- Days from Onset to Diagnosis -->
         <Measure name="Onset to Diagnosis (days), Min" aggregator="min" visible="true" datatype="Integer">
             <MeasureExpression>
