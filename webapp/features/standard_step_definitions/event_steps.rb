@@ -36,7 +36,8 @@ Given /^the morbidity event has the following place exposures:$/ do |places|
         "place_entity_attributes" => {
           "place_attributes" => place
         }
-      }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
     }
     @event.place_child_events << PlaceEvent.create!(hash)
   end
@@ -69,6 +70,14 @@ end
 
 Then /^the CMR should look deleted$/ do
   response.should have_xpath("//div[@class='patientname-inactive']")
+end
+
+Then /^the Contact event should look deleted$/ do
+  response.should have_xpath("//div[@class='patientname-inactive']")
+end
+
+Then /^the Place event should look deleted$/ do
+  response.should have_xpath("//div[@class='placename-inactive']")
 end
 
 Then /^contact "([^\"]*)" should appear deleted$/ do |contact_name|
