@@ -44,6 +44,21 @@ Given /^the morbidity event has the following place exposures:$/ do |places|
   @event.save!
 end
 
+Given /^the morbidity event state case status is "([^\"]*)"$/ do |description|
+  case_status = ExternalCode.case.find_by_code_description description
+  @event.state_case_status = case_status
+  @event.save!
+end
+
+Given /^the morbidity event was sent to the CDC$/ do
+  @event.sent_to_cdc = true
+  @event.save!
+end
+
+Given /^the morbidity event is deleted$/ do
+  @event.soft_delete
+end
+
 When /^I visit the events index page$/ do
   visit cmrs_path({})
 end

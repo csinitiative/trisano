@@ -58,7 +58,7 @@ class CdcExport < ActiveRecord::Base
         unless invalid_case_status.blank?
           where << "OR #{invalid_case_status}"
         end
-      end      
+      end
       where << ")"
       events = get_cdc_events(where.join(' '))
       events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
@@ -194,7 +194,7 @@ class CdcExport < ActiveRecord::Base
           ) race_conversions ON race_codes.the_code = race_conversions.value_from
           GROUP BY pr.entity_id
         ) praces ON praces.entity_id = p.entity_id
-        LEFT JOIN external_codes ethnic_codes ON p.ethnicity_id = ethnic_codes.id        
+        LEFT JOIN external_codes ethnic_codes ON p.ethnicity_id = ethnic_codes.id
         LEFT JOIN
         (
           SELECT zzz.value_from, zzz.value_to FROM export_columns ethnic_columns
@@ -256,6 +256,6 @@ class CdcExport < ActiveRecord::Base
         WHERE e.deleted_at IS NULL
          AND e.type='MorbidityEvent'
       SQL
-    end      
+    end
   end
 end

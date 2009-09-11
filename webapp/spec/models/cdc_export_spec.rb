@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 require File.dirname(__FILE__) + '/../spec_helper'
 
@@ -21,7 +21,7 @@ describe CdcExport do
   def with_cdc_records(event_hash = @event_hash)
     event = MorbidityEvent.new(event_hash)
     event.save!
-    event.reload    
+    event.reload
 
     start_mmwr = Mmwr.new(Date.today - 7)
     end_mmwr = Mmwr.new
@@ -49,7 +49,7 @@ describe CdcExport do
     with_sent_events do |events|
       event_hash['disease_event_attributes']['disease_id'] = diseases(:chicken_pox).id
       events[0].update_attributes(event_hash)
-    end    
+    end
   end
 
   def soft_delete_a_record(event_hash = @event_hash)
@@ -58,7 +58,7 @@ describe CdcExport do
       events[0].update_attributes(event_hash)
     end
   end
-    
+
   before :each do
     @event_hash = {
       "imported_from_id" => external_codes(:imported_from_utah).id,
@@ -75,7 +75,7 @@ describe CdcExport do
             "ethnicity_id" => external_codes(:ethnicity_non_hispanic).id,
             "birth_gender_id" => external_codes(:gender_female).id,
             "birth_date" => Date.parse('01/01/1975')
-          }      
+          }
         }
       },
       "jurisdiction_attributes" => {
@@ -86,13 +86,13 @@ describe CdcExport do
       }
     }
   end
-    
+
   describe 'running cdc export' do
     fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     it 'should produce core data records (no disease specific fields) that are 60 chars long' do
       with_cdc_records do |records|
-        records.collect {|record, event| record}.each do |record| 
+        records.collect {|record, event| record}.each do |record|
           record.to_cdc.length.should == 60
         end
       end
@@ -104,7 +104,7 @@ describe CdcExport do
         records.length.should == 1
       end
     end
-    
+
     it 'should use "M" to represent MMWR records' do
       with_cdc_records do |records|
         records[0].first.to_cdc[0...1].should == "M"
@@ -154,7 +154,7 @@ describe CdcExport do
         records[0].first.to_cdc[17..21].should == '10560'
       end
     end
-    
+
     it "should display '00001' since this is always a single record" do
       with_cdc_records do |records|
         records[0].first.to_cdc[22..26].should == '00001'
@@ -181,7 +181,7 @@ describe CdcExport do
     end
 
     it "should display an unknown birthday as 99999999" do
-      @event_hash['interested_party_attributes']['person_entity_attributes']['person_attributes']['birth_date'] = nil      
+      @event_hash['interested_party_attributes']['person_entity_attributes']['person_attributes']['birth_date'] = nil
       with_cdc_records do |records|
         records[0].first.to_cdc[30..37].should == '99999999'
       end
@@ -223,7 +223,7 @@ describe CdcExport do
       with_cdc_records do |records|
         records[0].first.to_cdc[43...44].should == '5'
       end
-    end        
+    end
 
     it "should display an unknown ethinicity as '9'" do
       @event_hash['interested_party_attributes']['person_entity_attributes']['person_attributes']['ethnicity_id'] = nil
@@ -307,7 +307,7 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
         end
       end
-          
+
       it 'should update when disease changes' do
         with_sent_events do |events|
           events[0].should be_sent_to_cdc
@@ -429,21 +429,21 @@ describe CdcExport do
       it 'should set cdc update at date when state status changes, even if not sent' do
         morb = Factory.create :morbidity_event
         morb.should_not be_sent_to_cdc
-        
+
         test_date = DateTime.new(2007, 8, 9)
         morb.cdc_updated_at = test_date
         morb.update_attribute(:state_case_status_id, external_codes(:case_status_confirmed).id)
         morb.cdc_updated_at.should_not == test_date
       end
-      
+
     end
   end
 
   describe 'finding deleted cdc records' do
     fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
-    
+
     before(:each)do
-      delete_a_record 
+      delete_a_record
       start_mmwr = Mmwr.new(Date.today - 7)
       end_mmwr = Mmwr.new
       @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
@@ -486,16 +486,16 @@ describe CdcExport do
     it 'should cut off the filler' do
       @deletes[0].to_cdc.length.should == 17
     end
-    
+
   end
 
   describe 'soft deleted records' do
     fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
-    
+
     describe 'that have already been sent' do
 
       it 'should appear in the cdc export as deleted records' do
-        soft_delete_a_record 
+        soft_delete_a_record
         start_mmwr = Mmwr.new(Date.today - 7)
         end_mmwr = Mmwr.new
         CdcExport.cdc_deletes(start_mmwr, end_mmwr).length.should == 1
@@ -511,9 +511,9 @@ describe CdcExport do
           records.size.should == 0
         end
       end
-    end            
+    end
 
-  end    
+  end
 
   describe "displaying summary records for AIDS" do
     fixtures :events, :disease_events, :diseases
@@ -565,7 +565,7 @@ describe CdcExport do
       with_sent_events
       with_sent_events
     end
-    
+
     it "should display two verification records" do
       CdcExport.verification_records(Mmwr.new.mmwr_year).length.should == 2
     end
@@ -581,11 +581,11 @@ describe CdcExport do
 
   describe "runnning export w/ no valid disease exports" do
     fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
-    
+
     before :all do
     end
 
-    it "should not blow up if there are no disease export statuses" do      
+    it "should not blow up if there are no disease export statuses" do
       ActiveRecord::Base.connection.execute('truncate table diseases_external_codes')
       CdcExport.verification_records(Mmwr.new.mmwr_year)
     end
@@ -623,14 +623,14 @@ describe CdcExport do
           @contact_event = Factory.build :contact_event
           @contact_event.build_disease_event(:disease_id => @morbidity_event.disease_event.disease_id)
           @contact_event.MMWR_year = Mmwr.new.mmwr_year
-          @contact_event.state_case_status_id = external_codes(:case_status_probable).id          
+          @contact_event.state_case_status_id = external_codes(:case_status_probable).id
           @contact_event.save!
         end
 
         it 'should show one verification record' do
           CdcExport.verification_records(Mmwr.new.mmwr_year).size.should == 1
         end
-        
+
         it 'should not count the Contact event' do
           CdcExport.verification_records(Mmwr.new.mmwr_year)[0].to_cdc[8..12].should == '00001'
         end
@@ -665,7 +665,7 @@ describe CdcExport do
       end
 
     end
-    
+
   end
 
   describe 'weekly cdc export' do
@@ -713,6 +713,6 @@ describe CdcExport do
       result = CdcExport.weekly_cdc_export Mmwr.week(7, :for_year => @mmwr_year), Mmwr.week(9, :for_year => @mmwr_year)
       result.should_not be_empty
     end
-  end 
+  end
 
 end

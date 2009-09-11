@@ -24,6 +24,7 @@ class ExternalCode < ActiveRecord::Base
   named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order, the_code'
   named_scope :case, :conditions => "code_name = 'case'"
   named_scope :loinc_scales, :conditions => {:code_name => 'loinc_scale'}, :order => 'sort_order, the_code'
+  named_scope :counties, :conditions => {:code_name => 'county'}, :order => 'sort_order, the_code'
 
   validates_presence_of :code_name
   validates_presence_of :the_code
