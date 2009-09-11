@@ -31,7 +31,7 @@
           .left
             %span.print-label Test type:
             %span.print-value
-              = h(lab_result.test_type.common_name)
+              = h(lab_result.test_type.try(:common_name))
           .left
             %span.print-label Test result:
             %span.print-value

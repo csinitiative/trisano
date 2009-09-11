@@ -30,6 +30,7 @@
 
       - for lab in labs
         - for lab_result in lab.lab_results
+          - next if lab_result.new_record?
           -# Remember, show mode sets a blank instance of everything.  Do nothing if everything is blank
           - unless lab_result.attributes.values_blank?
             %tr
@@ -37,7 +38,7 @@
                 %b= h(lab.place_entity.place.name)
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
-                %b= h(lab_result.test_type.common_name)
+                %b= h(lab_result.test_type.try(:common_name))
                 %br
                 Organism: 
                 %b= h(lab_result.organism.try(:organism_name))

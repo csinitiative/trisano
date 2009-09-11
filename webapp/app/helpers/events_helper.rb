@@ -238,7 +238,6 @@ module EventsHelper
     if action_controls.blank? && routing_controls.blank?
       controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
     else
-      p routing_controls
       controls = %Q[
         #{form_tag(state_cmr_path(event))}
         #{hidden_field_tag("morbidity_event[workflow_action]", '')}
