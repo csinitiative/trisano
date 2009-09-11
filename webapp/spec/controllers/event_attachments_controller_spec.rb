@@ -24,6 +24,7 @@ describe EventAttachmentsController do
     @user.stub!(:is_entitled_to_in?).and_return(true)
     @event = mock_event
     @event.stub!(:id).and_return(1)
+    @event.stub!(:save).and_return(true)
     Event.stub!(:find).and_return(@event)
     User.stub!(:current_user).and_return(@user)
   end

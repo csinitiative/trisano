@@ -18,6 +18,7 @@
 class EventFormsController < ApplicationController
 
   before_filter :find_event
+  after_filter TouchEventFilter, :only => [:create, :destroy]
 
   def index
 

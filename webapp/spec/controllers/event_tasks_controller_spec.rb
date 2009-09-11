@@ -23,6 +23,7 @@ describe EventTasksController do
     mock_user
     @event = mock_event
     @event.stub!(:id).and_return(1)
+    @event.stub!(:save).and_return(true)
     Event.stub!(:find).and_return(@event)
   end
 

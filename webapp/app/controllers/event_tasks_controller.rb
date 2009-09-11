@@ -22,6 +22,8 @@ class EventTasksController < ApplicationController
   # Note show and destroy are blocked is config/routes
   before_filter :can_update_event?, :only => [:new, :edit, :create, :update]
   before_filter :can_view_event?, :only => [:index]
+
+  after_filter TouchEventFilter, :only => [:create, :update]
   
   def index
     respond_to do |format|

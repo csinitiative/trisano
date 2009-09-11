@@ -22,7 +22,7 @@ class Event < ActiveRecord::Base
 
   before_create :set_record_number
   before_validation_on_create :set_event_onset_date
-  before_update :attempt_form_assignment_on_update
+  before_update :attempt_form_assignment_on_update, :force_save
   after_create :attempt_form_assignment_on_create
 
   if RAILS_ENV == "production"
@@ -829,6 +829,12 @@ SEARCH
 
   def set_event_onset_date
     self.event_onset_date = Date.today
+  end
+
+  # We're doing this to force the event model to be saved even if nothing has changed on the model.
+  # This allows for conditional GETs to work.
+  def force_save
+    self.updated_at = Time.new
   end
 
 end

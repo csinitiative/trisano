@@ -31,10 +31,8 @@ class MorbidityEventsController < EventsController
   end
 
   def show
-    @export_options = params[:export_options]
-    
     # @event initialized in can_view? filter
-
+    @export_options = params[:export_options]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @event }

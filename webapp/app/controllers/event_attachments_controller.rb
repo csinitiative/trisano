@@ -20,6 +20,7 @@ class EventAttachmentsController < ApplicationController
   before_filter :find_event
   before_filter :can_update_event?, :only => [:create, :new, :destroy]
   before_filter :can_view_event?, :only => [:index, :new, :show]
+  after_filter TouchEventFilter, :only => [:create, :destroy]
   
   def index
   end
