@@ -35,7 +35,7 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.3.3
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-0.9.2.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ci_reporter-1.5.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rest-open-uri-1.0.0.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.12.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.14.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
