@@ -73,6 +73,7 @@ Rails::Initializer.run do |config|
     ValidatesDateTime.us_date_format = true
     require "active_record/errors.rb"
     require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
+    require "active_record/postgres_adapter_quote_indent_patch.rb" unless RUBY_PLATFORM =~ /java/
     require "active_record/scopes.rb"
     require "attachment_fu/attachment_fu_validation_patch.rb"
     require "soundex/Soundex.rb"
