@@ -10,7 +10,7 @@
 -# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 -# See the GNU Affero General Public License for more details.
 -# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 #copy_cmr_options{:style => "display: none; width: 50%; position: relative"}
@@ -20,7 +20,7 @@
       %p
         = "Create a new event for #{h(@event.party.full_name)} that is "
         %em otherwise unrelated
-        to the current event. 
+        to the current event.
         %br
         %b Copies demographic information only.
       = button_to("Create and Edit Shallow Copy", cmrs_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
@@ -29,13 +29,13 @@
       %p
         = "Create a new event for #{h(@event.party.full_name)} that is"
         %em closely related
-        to the current event. 
+        to the current event.
 
       %b Along with demographic information also copy:
       - form_tag(cmrs_path(:return => true)) do
         = hidden_field_tag(:from_event, @event.id)
-        %label.horiz
-          = check_box_tag("event_components[]", "clinical")
+        %label.horiz{ :for => "event_components_clinical_info" }
+          = check_box_tag "event_components[]", "clinical", false, :id => 'event_components_clinical_info'
           Clinical information (without disease)
         %label.horiz
           = check_box_tag("event_components[]", "lab")

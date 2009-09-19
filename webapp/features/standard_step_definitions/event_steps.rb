@@ -23,6 +23,13 @@ Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue
   @event.save!
 end
 
+Given /^a ([^\"]*) event with record number "([^\"]*)"$/ do |type, record_number|
+  @event = create_basic_event(type, get_random_word, "African Tick Bite Fever", "Unassigned")
+  @event.save!
+  @event.record_number = record_number
+  @event.save!
+end
+
 Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
   @event = create_basic_event(event_type, last_name, nil, 'Unassigned')
   @event.assign_to_lhd(Place.jurisdiction_by_name("Bear River Health Department"), [], "")
@@ -101,4 +108,8 @@ end
 
 Then /^place exposure "([^\"]*)" should appear deleted$/ do |place_name|
   response.should have_xpath("//td[@class='struck-through' and text()='#{place_name}']")
+end
+
+Then /^I should have a note that says "([^\"]*)"$/ do |text|
+  response.should have_xpath("//div[@id='existing-notes']//p[contains(text(), '#{text}')]")
 end
