@@ -57,5 +57,6 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/thoughtbot-factory_girl-1.2.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.3.3-java.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-jars-1.3.1.gem
 
 
