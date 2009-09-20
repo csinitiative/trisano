@@ -12,6 +12,7 @@ Feature: Exporting reportable diseases for the CDC
     Then I should see "V491002000001"
      And I should see "M 4909000(.*)10020"
 
+  @pending
   Scenario: Exporting a deleted record that's already been sent to the CDC
     Given I am logged in as a super user
       And the disease "Brucellosis" exports to CDC when state is "Confirmed"
