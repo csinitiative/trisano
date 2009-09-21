@@ -273,7 +273,10 @@ class Metadata
   end
 
   def rights_mask
-    @rights_mask ||= @meta.get_security_reference.find_acl("All").mask
+    return @rights_mask if @rights_mask
+    secref = @meta.get_security_reference
+    secref.get_security_service.serviceURL = "#{server_url}/pentaho/ServiceAction?action=SecurityDetails&details=all"
+    @rights_mask = secref.find_acl("All").mask
   end
 
   def security
