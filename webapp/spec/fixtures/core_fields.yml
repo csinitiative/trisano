@@ -773,15 +773,6 @@ core_field_00035:
   event_type: morbidity_event
   help_text: 
   fb_accessible: true
-core_field_00043: 
-  key: morbidity_event[active_reporter][active_secondary_entity][telephone_entities_location][entity_location_type_id]
-  can_follow_up: true
-  name: Reporter phone type
-  id: 43
-  field_type: drop_down
-  event_type: morbidity_event
-  help_text: 
-  fb_accessible: true
 core_field_00059: 
   key: place_event[active_place][active_primary_entity][address][unit_number]
   can_follow_up: true

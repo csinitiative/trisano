@@ -36,9 +36,9 @@ end
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
   test_type_id = CommonTestType.find_by_common_name(test_type).id
   attrs = { "labs_attributes" =>
-    [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
+      [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
         "lab_results_attributes"  => [ { "test_type_id" => test_type_id } ]
-    } ]
+      } ]
   }
   @event = create_event_with_attributes(event_type, get_unique_name(1), attrs, nil, get_random_jurisdiction_by_short_name)
 end
@@ -75,5 +75,13 @@ end
 
 Given /^there is a place on the event named (.+)$/ do |name|
   @place_event = add_place_to_event(@event, name)
+end
+
+
+Given /^all core field configs for a (.+) have help text$/ do |event_type|
+  CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
+    core_field.help_text = core_field.name << " help text"
+    core_field.save!
+  end
 end
 

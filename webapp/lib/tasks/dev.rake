@@ -114,7 +114,7 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_disease_export_statuses.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_csv_defaults.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb #{RAILS_ROOT}/db/defaults/common_test_types.csv"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_loinc_codes.rb #{RAILS_ROOT}/db/defaults/loinc_codes_to_common_test_types.csv"
     end
 
@@ -130,6 +130,7 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/set_default_admin_uid.rb"
+      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_common_test_types.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
     end
 

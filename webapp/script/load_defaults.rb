@@ -61,7 +61,6 @@ end
   [CoreField.find_by_key("morbidity_event[outbreak_associated_id]"), CodeName.find_by_code_name("yesno")],
   [CoreField.find_by_key("morbidity_event[labs][lab_results][specimen_source]"), CodeName.find_by_code_name("specimen")],
   [CoreField.find_by_key("morbidity_event[labs][lab_results][test_result]"), CodeName.find_by_code_name("test_result")],
-  [CoreField.find_by_key("morbidity_event[reporter][person_entity][telephones][entity_location_type_id]"), CodeName.find_by_code_name("locationtype")],
   [CoreField.find_by_key("contact_event[address][state_id]"), CodeName.find_by_code_name("state")],
   [CoreField.find_by_key("contact_event[address][county_id]"), CodeName.find_by_code_name("county")],
   [CoreField.find_by_key("contact_event[imported_from_id]"), CodeName.find_by_code_name("imported")],

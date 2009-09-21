@@ -22,11 +22,11 @@ Feature: Common tests types for lab results
 
   Scenario: Listing common test types
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to the common test type index page
 
-    Then I should see a link to "Culture"
+    Then I should see a link to "Culture X"
     And I should see "List Common Test Types"
 
   Scenario: Non-administrators trying to modify common test types
@@ -43,49 +43,49 @@ Feature: Common tests types for lab results
     Then I should see "Create a Common Test Type"
     And I should see a link to "< Back to Common Test Types"
 
-    When I fill in "common_test_type_common_name" with "Culture"
+    When I fill in "common_test_type_common_name" with "Culture X"
     And I press "Create"
 
     Then I should see "Show a Common Test Type"
-    And I should see "Culture"
+    And I should see "Culture X"
 
   Scenario: Entering an invalid common name for common test type
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to the new common test type page
     And I press "Create"
     Then I should see "Common name is too short"
 
-    When I fill in "common_test_type_common_name" with "Culture"
+    When I fill in "common_test_type_common_name" with "Culture X"
     And I press "Create"
     Then I should see "Common name has already been taken"
 
   Scenario: Showing a common test type
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to the common test type show page
 
     Then I should see a link to "< Back to Common Test Types"
-    And I should see "Culture"
+    And I should see "Culture X"
 
   Scenario: Changing the common name of a common test type
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to the common test type show page
     And I follow "Edit"
     And I fill in "common_test_type_common_name" with "Lipid Panel"
     And I press "Update"
 
-    Then I should not see "Culture"
+    Then I should not see "Culture X"
     And I should see "Lipid Panel"
     And I should see "Common test type was successfully updated."
 
   Scenario: Changing common test type name to something invalid
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to edit the common test type
     And I fill in "common_test_type_common_name" with ""
@@ -94,19 +94,19 @@ Feature: Common tests types for lab results
 
   Scenario: Associating LOINC codes with a common test type by test name
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
-      | 11475-1    | Culture, Unspecified        |
-      | 636-1      | Culture, Sterile body fluid |
-      | 34166-9    | Microscopy.Electron         |
+      | 11475-1    | Culture X, Unspecified        |
+      | 636-1      | Culture X, Sterile body fluid |
+      | 34166-9    | Macroscopy.Electron         |
 
     When I go to edit the common test type
     And I follow "LOINC codes"
     Then I should see "Add LOINC Codes to Common Test Type"
     And I should see a link to "Edit"
     And I should see a link to "Show"
-    And I should see "Culture"
+    And I should see "Culture X"
     And I should not see "No records found"
 
     When I fill in "loinc_code_search_test_name" with "junk"
@@ -120,66 +120,66 @@ Feature: Common tests types for lab results
     When I check "11475-1"
     And I press "Add"
     Then I should see "Common test type was successfully updated."
-    And I should see "Culture, Unspecified"
+    And I should see "Culture X, Unspecified"
     And I should see a link to "11475-1"
 
   Scenario: Searching for LOINCs by code
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
-      | 11475-1    | Culture, Unspecified        |
-      | 636-1      | Culture, Sterile body fluid |
-      | 34166-9    | Microscopy.Electron         |
+      | 11475-1    | Culture X, Unspecified        |
+      | 636-1      | Culture X, Sterile body fluid |
+      | 34166-9    | Macroscopy.Electron         |
 
     When I go to manage the common test type's loinc codes
     And I fill in "loinc_code_search_loinc_code" with "114"
     And I press "Search"
 
     Then I should see a link to "11475-1"
-    And I should see "Culture, Unspecified"
+    And I should see "Culture X, Unspecified"
 
   Scenario: Searching for loincs will not return any already associated with this test type
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
-      | 11475-1    | Culture, Unspecified        |
-      | 636-1      | Culture, Sterile body fluid |
-      | 34166-9    | Microscopy.Electron         |
+      | 11475-1    | Culture X, Unspecified        |
+      | 636-1      | Culture X, Sterile body fluid |
+      | 34166-9    | Macroscopy.Electron         |
     And loinc code "11475-1" is associated with the common test type
 
     When I go to manage the common test type's loinc codes
     And I fill in "loinc_code_search_test_name" with "culture"
     And I press "Search"
 
-    Then I should see "Culture, Sterile body fluid"
-    And the search results should not have "Culture, Unspecified"
+    Then I should see "Culture X, Sterile body fluid"
+    And the search results should not have "Culture X, Unspecified"
 
   Scenario: Searching for loincs *will* loincs associated w/ other test types
     Given I am logged in as a super user
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |
-      | 11475-1    | Culture, Unspecified        |
-      | 636-1      | Culture, Sterile body fluid |
-      | 34166-9    | Microscopy.Electron         |
-    And I have a common test type named Culture
+      | 11475-1    | Culture X, Unspecified        |
+      | 636-1      | Culture X, Sterile body fluid |
+      | 34166-9    | Macroscopy.Electron         |
+    And I have a common test type named Culture X
     And loinc code "11475-1" is associated with the common test type
-    And I have another common test type named Microscopy
+    And I have another common test type named Macroscopy
 
     When I go to manage the common test type's loinc codes
     And I fill in "loinc_code_search_test_name" with "culture"
     And I press "Search"
 
-    Then the search results should have "Culture, Unspecified"
-    And the search results should show that "Culture" is already associated
+    Then the search results should have "Culture X, Unspecified"
+    And the search results should show that "Culture X" is already associated
 
   Scenario: An admin can delete a loinc code association
     Given I am logged in as a super user
     And I have the following LOINC codes in the system:
       |loinc_code | test_name                   |
-      |636-1      | Culture, Sterile body fluid |
-    And I have a common test type named Culture
+      |636-1      | Culture X, Sterile body fluid |
+    And I have a common test type named Culture X
     And loinc code "636-1" is associated with the common test type
 
     When I go to manage the common test type's loinc codes
@@ -187,21 +187,21 @@ Feature: Common tests types for lab results
     And I press "Remove"
 
     Then I should see "Common test type was successfully updated."
-    And I should not see "Culture, Sterile body fluid" associated with the test type
+    And I should not see "Culture X, Sterile body fluid" associated with the test type
 
   Scenario: Trying to delete a common test type
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
 
     When I go to the common test type show page
     And I follow "Delete"
 
     Then I should see "Common test type was successfully deleted"
-    And I should not see "Culture"
+    And I should not see "Culture X"
 
   Scenario: Trying to delete a common test type that's already associated w/ a lab result
     Given I am logged in as a super user
-    And I have a common test type named Culture
+    And I have a common test type named Culture X
     And I have a lab result
 
     When I go to the common test type show page
