@@ -49,7 +49,7 @@
           = note_fields.label(:note, "New note")
           ~ note_fields.text_area(:note, :size => "50x5")
         %span{:class => "vert"}
-          = note_fields.label(:is_admin)
+          = note_fields.label(:note_type, 'Is admin')
           = note_fields.check_box(:note_type, {}, "administrative", "clinical")
 
 - if @event.supports_tasks?

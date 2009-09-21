@@ -60,8 +60,13 @@ When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, select|
 end
 
 When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, text|
-  field_id = @browser.get_attribute "//label[text()='#{field}']@for"
+  field_id = @browser.get_attribute "//label[text()='#{field}']@for" || field
   @browser.type field_id, text
+end
+
+When /^I check "([^\"]*)"$/ do |field|
+  field_id = @browser.get_attribute "//label[text()='#{field}']@for" || field
+  @browser.check field_id
 end
 
 When /^I press "([^\"]*)"$/ do |button|
