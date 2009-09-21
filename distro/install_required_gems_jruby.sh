@@ -36,7 +36,7 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hoe-1.7.0.
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-0.7.6.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ci_reporter-1.5.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rest-open-uri-1.0.0.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.14.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.12.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
@@ -46,17 +46,15 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-wil
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.2.8.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.2.7.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-1.0.0.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.3.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.3.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.4.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.4.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.2.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/thoughtbot-factory_girl-1.2.1.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.3.3-java.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-jars-1.3.1.gem
 
 
