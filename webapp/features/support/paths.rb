@@ -36,6 +36,9 @@ def path_to(page_name)
   when /the show CMR page/i
     cmr_path @event
 
+  when /edit the CMR/i
+    edit_cmr_path @event
+
   when /show the CMR with record number "(\d*)"/
     cmr_path MorbidityEvent.find_by_record_number($1)
 

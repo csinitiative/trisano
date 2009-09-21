@@ -61,7 +61,7 @@ class MorbidityEventsController < EventsController
 
   def create
     go_back = params.delete(:return)
-    
+
     @event = MorbidityEvent.new
     if params[:from_event]
       org_event = Event.find(params[:from_event])
@@ -86,7 +86,7 @@ class MorbidityEventsController < EventsController
     unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have create priveleges in this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
     end
-    
+
     respond_to do |format|
       if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
@@ -97,7 +97,7 @@ class MorbidityEventsController < EventsController
         @event.reload
         @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = 'CMR was successfully created.'
-        format.html { 
+        format.html {
           query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
             redirect_to(edit_cmr_url(@event) + query_str)

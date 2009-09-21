@@ -20,6 +20,11 @@ When(/^I navigate to the new event page and start a simple event$/) do
   add_demographic_info(@browser, { :last_name => get_unique_name })
 end
 
+When /^I go to the new CMR page$/ do
+  @browser.open "/trisano/cmrs/new"
+  @browser.wait_for_page_to_load
+end
+
 When(/^I navigate to the event edit page$/) do
   @browser.click "link=EVENTS"
   @browser.wait_for_page_to_load $load_time

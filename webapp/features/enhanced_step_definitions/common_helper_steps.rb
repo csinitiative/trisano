@@ -59,6 +59,15 @@ When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, select|
   @browser.select "//label[text()='#{select}']/following::select", value
 end
 
+When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, text|
+  field_id = @browser.get_attribute "//label[text()='#{field}']@for"
+  @browser.type field_id, text
+end
+
+When /^I press "([^\"]*)"$/ do |button|
+  @browser.click "//input[@value='#{button}']"
+end
+
 When /^the following values are selected from "([^\"]*)":$/ do |select, values|
   values.raw.each do |value|
     @browser.add_selection "//label[text()='#{select}']/following::select", value
@@ -73,10 +82,22 @@ Then(/^I should not be presented with an error message$/) do
   @browser.is_text_present("error prohibited").should be_false
 end
 
+Then /^I should see "([^\"]*)"$/ do |text|
+  @browser.get_html_source.should =~ /#{text}/i
+end
+
+Then /^I should not see "([^\"]*)"$/ do |text|
+  @browser.get_html_source.should_not =~ /#{text}/i
+end
+
 Before('@clean') do
-  [CommonTestType, LabResult, Address, Event, Form, FormElement, LoincCode, Organism].each(&:delete_all)
+  cleanable_classes.each(&:delete_all)
 end
 
 After('@clean') do
-  [CommonTestType, LabResult, Address, Event, Form, FormElement, LoincCode, Organism].each(&:delete_all)
+  cleanable_classes.each(&:delete_all)
+end
+
+def cleanable_classes
+  [CommonTestType, LabResult, Address, Note, Event, Form, FormElement, LoincCode, Organism]
 end
