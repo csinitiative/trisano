@@ -40,7 +40,9 @@ class StagedMessage < ActiveRecord::Base
     def find_by_search(criteria)
       with_last_name_starting criteria[:last_name] do
         with_first_name_starting criteria[:first_name] do
-          find :all
+          with_lab_name_containing criteria[:laboratory] do
+            find :all
+          end
         end
       end
     end
@@ -51,6 +53,10 @@ class StagedMessage < ActiveRecord::Base
 
     def with_last_name_starting(last_name, &block)
       with_scope_unless last_name.blank?, :find => {:conditions => ["patient_last_name ILIKE ?", "#{last_name}%"] }, &block
+    end
+
+    def with_lab_name_containing(lab_name, &block)
+      with_scope_unless lab_name.blank?, :find => {:conditions => ["laboratory_name ILIKE ?", "%#{lab_name}%"] }, &block
     end
   end
 
@@ -191,9 +197,9 @@ class StagedMessage < ActiveRecord::Base
   end
 
   def set_searchable_attributes
-    if self.patient
-      self.patient_last_name = self.patient.patient_last_name
-      self.patient_first_name = self.patient.patient_first_name
-    end
+    self.patient_last_name =  self.patient.try :patient_last_name
+    self.patient_first_name = self.patient.try :patient_first_name
+
+    self.laboratory_name =    self.message_header.try :sending_facility
   end
 end

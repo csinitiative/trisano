@@ -248,6 +248,7 @@ describe StagedMessage do
     before do
       @jones_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('David Jones')
       @davis_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('Mike Davis')
+      @quest_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_lab].call('Quest Labs')
     end
 
     it 'finds records by last name' do
@@ -256,6 +257,10 @@ describe StagedMessage do
 
     it 'finds records by first name' do
       StagedMessage.find_by_search(:first_name => 'mike').should == [@davis_message]
+    end
+
+    it 'finds records by lab name' do
+      StagedMessage.find_by_search(:laboratory => 'quest').should == [@quest_message]
     end
   end
 end

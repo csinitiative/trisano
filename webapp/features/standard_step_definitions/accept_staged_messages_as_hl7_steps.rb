@@ -28,6 +28,12 @@ Given /^ELRs for the following patients:$/ do |table|
   end
 end
 
+Given /^ELRs from the following labs:$/ do |table|
+  table.rows.each do |lab_name|
+    @staged_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_lab].call(lab_name.first)
+  end
+end
+
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end
