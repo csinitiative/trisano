@@ -40,6 +40,12 @@ Given /^ELRs with the following collection dates:$/ do |table|
   end
 end
 
+Given /^ELRs with the following test types:$/ do |table|
+  table.rows.each do |test_type|
+    @staged_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_test_type].call(test_type.first)
+  end
+end
+
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end

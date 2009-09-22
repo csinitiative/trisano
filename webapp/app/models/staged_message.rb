@@ -42,7 +42,9 @@ class StagedMessage < ActiveRecord::Base
         with_first_name_starting criteria[:first_name] do
           with_lab_name_containing criteria[:laboratory] do
             with_collection_date_between criteria[:start_date], criteria[:end_date] do
-              find :all
+              with_test_type_containing criteria[:test_type] do
+                all
+              end
             end
           end
         end
@@ -61,12 +63,22 @@ class StagedMessage < ActiveRecord::Base
       with_scope_unless lab_name.blank?, :find => {:conditions => ["laboratory_name ILIKE ?", "%#{lab_name}%"] }, &block
     end
 
+    def with_test_type_containing(test_type, &block)
+      with_scope_unless(test_type.blank?,
+                        :find => {
+                          :conditions => ["test_type ILIKE ?", "%#{test_type}%"],
+                          :joins => [:staged_observations],
+                          :select => 'DISTINCT ON(staged_messages.id) staged_messages.*' },
+                        &block)
+    end
+
     def with_collection_date_between(start_date, end_date, &block)
       with_scope_unless start_date.blank? && end_date.blank?, :find => {:conditions => ["collection_date BETWEEN ? AND ?", start_date, end_date] }, &block
     end
   end
 
   has_many :lab_results
+  has_many :staged_observations
 
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
@@ -207,9 +219,14 @@ class StagedMessage < ActiveRecord::Base
     self.patient_first_name = self.patient.try :patient_first_name
 
     self.laboratory_name =    self.message_header.try :sending_facility
-    begin
-      self.collection_date = Date.parse self.observation_request.try(:collection_date)
-    rescue
+    if self.observation_request
+      begin
+        self.collection_date = Date.parse self.observation_request.collection_date
+      rescue
+      end
+      self.observation_request.tests.each do |test|
+        self.staged_observations.build :test_type => test.test_type
+      end
     end
   end
 end
