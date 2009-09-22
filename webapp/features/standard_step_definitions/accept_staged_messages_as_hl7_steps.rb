@@ -22,6 +22,12 @@ Given /^I have the staged message "([^\"]*)"$/ do |msg_key|
   @staged_message = StagedMessage.create(:hl7_message => hl7_messages[msg_key.downcase.to_sym])
 end
 
+Given /^ELRs for the following patients:$/ do |table|
+  table.rows.each do |patient_name|
+    @staged_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call(patient_name.first)
+  end
+end
+
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end

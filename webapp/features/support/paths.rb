@@ -132,6 +132,9 @@ def path_to(page_name)
   when /the CDC export for the current week/i
     current_week_cdc_events_path
 
+  when /the staged message search page/
+    search_staged_messages_path
+
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

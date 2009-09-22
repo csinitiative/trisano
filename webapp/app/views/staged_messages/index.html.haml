@@ -16,6 +16,10 @@
 - content_for :title do
   Staged Messages
 
+-content_for :tools do
+  =link_to 'Search', search_staged_messages_path
+  %p
+
 = link_to('Create a staged message', new_staged_message_path, :rel => "http://trisano.org/relation/staged_messages_new") if User.current_user.is_entitled_to?(:write_staged_message)
 
 - form_tag(staged_messages_url, :style => "display: inline", :method => :get) do

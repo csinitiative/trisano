@@ -243,5 +243,20 @@ describe StagedMessage do
       @staged_message.should_not be_new_record
     end
   end
+
+  describe "search" do
+    before do
+      @jones_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('David Jones')
+      @davis_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('Mike Davis')
+    end
+
+    it 'finds records by last name' do
+      StagedMessage.find_by_search(:last_name => 'Jones').should == [@jones_message]
+    end
+
+    it 'finds records by first name' do
+      StagedMessage.find_by_search(:first_name => 'mike').should == [@davis_message]
+    end
+  end
 end
 

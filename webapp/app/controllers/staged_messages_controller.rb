@@ -126,6 +126,12 @@ class StagedMessagesController < ApplicationController
     redirect_to(staged_message_path(staged_message))
   end
 
+  def search
+    if params.delete(:do) == "Search"
+      @staged_messages = StagedMessage.find_by_search params
+    end
+  end
+
   private
 
   def can_manage

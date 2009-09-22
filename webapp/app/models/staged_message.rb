@@ -36,12 +36,29 @@ class StagedMessage < ActiveRecord::Base
         :unprocessable => 'UNPROCESSABLE'
       }
     end
+
+    def find_by_search(criteria)
+      with_last_name_starting criteria[:last_name] do
+        with_first_name_starting criteria[:first_name] do
+          find :all
+        end
+      end
+    end
+
+    def with_first_name_starting(first_name, &block)
+      with_scope_unless first_name.blank?, :find => {:conditions => ["patient_first_name ILIKE ?", "#{first_name}%"] }, &block
+    end
+
+    def with_last_name_starting(last_name, &block)
+      with_scope_unless last_name.blank?, :find => {:conditions => ["patient_last_name ILIKE ?", "#{last_name}%"] }, &block
+    end
   end
 
   has_many :lab_results
 
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
+  after_validation_on_create  :set_searchable_attributes
 
   validates_presence_of :hl7_message
   validates_length_of :hl7_message, :maximum => 10485760
@@ -171,5 +188,12 @@ class StagedMessage < ActiveRecord::Base
     return if hl7_message.nil?
     self.hl7_message.gsub!(/\n/, '')
     self.hl7_message << "\n"
+  end
+
+  def set_searchable_attributes
+    if self.patient
+      self.patient_last_name = self.patient.patient_last_name
+      self.patient_first_name = self.patient.patient_first_name
+    end
   end
 end

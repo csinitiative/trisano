@@ -165,14 +165,17 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments', :except => [:edit]
 
   map.resources :core_fields
-  
+
   map.resources :csv_fields
 
   map.resources :staged_messages,
     :member => {
-    :event_search => :get,
-    :event => :post,
-    :discard => :post
+      :event_search => :get,
+      :event => :post,
+      :discard => :post
+  },
+    :collection => {
+      :search => :get
   }
 
   map.resources :places
