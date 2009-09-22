@@ -224,7 +224,7 @@ module StagedMessages
     def specimen_source
       obr_segment.specimen_source.split('^').join(', ')
     end
-  
+
     def collection_date
       begin
         return nil if obr_segment.observation_date.blank?
@@ -241,7 +241,7 @@ module StagedMessages
 
   class ObxWrapper
     attr_reader :obx_segment
-    
+
     def initialize(obx_segment)
       @obx_segment = obx_segment
     end

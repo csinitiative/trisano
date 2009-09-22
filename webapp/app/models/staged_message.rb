@@ -41,7 +41,9 @@ class StagedMessage < ActiveRecord::Base
       with_last_name_starting criteria[:last_name] do
         with_first_name_starting criteria[:first_name] do
           with_lab_name_containing criteria[:laboratory] do
-            find :all
+            with_collection_date_between criteria[:start_date], criteria[:end_date] do
+              find :all
+            end
           end
         end
       end
@@ -57,6 +59,10 @@ class StagedMessage < ActiveRecord::Base
 
     def with_lab_name_containing(lab_name, &block)
       with_scope_unless lab_name.blank?, :find => {:conditions => ["laboratory_name ILIKE ?", "%#{lab_name}%"] }, &block
+    end
+
+    def with_collection_date_between(start_date, end_date, &block)
+      with_scope_unless start_date.blank? && end_date.blank?, :find => {:conditions => ["collection_date BETWEEN ? AND ?", start_date, end_date] }, &block
     end
   end
 
@@ -201,5 +207,9 @@ class StagedMessage < ActiveRecord::Base
     self.patient_first_name = self.patient.try :patient_first_name
 
     self.laboratory_name =    self.message_header.try :sending_facility
+    begin
+      self.collection_date = Date.parse self.observation_request.try(:collection_date)
+    rescue
+    end
   end
 end

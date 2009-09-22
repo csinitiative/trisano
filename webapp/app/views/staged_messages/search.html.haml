@@ -23,13 +23,21 @@
 -form_tag search_staged_messages_path, :method => :get do
   %span.vert
     =label_tag :last_name
-    =text_field_tag :last_name
+    =text_field_tag :last_name, params[:last_name]
   %span.horiz
     =label_tag :first_name
-    =text_field_tag :first_name
+    =text_field_tag :first_name, params[:first_name]
   %span.vert
     =label_tag :laboratory
-    =text_field_tag :laboratory
+    =text_field_tag :laboratory, params[:laboratory]
+  .vert
+    =label_tag 'Collection date range:'
+    %span.vert
+      =label_tag :start_date
+      =text_field_tag :start_date, params[:start_date]
+    %span.horiz
+      =label_tag :end_date
+      =text_field_tag :end_date, params[:end_date]
   %span.vert
     =label_tag "&nbsp;"
     =submit_tag "Search", :name => :do

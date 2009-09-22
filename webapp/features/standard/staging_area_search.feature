@@ -44,3 +44,18 @@ Feature: Searching the staged electronic messages
     Then I should see "ARUP"
       And I should not see "Trisano Labs"
       And I should not see "Quest"
+
+  Scenario: Search staged messages by collection date
+    Given I am logged in as a super user
+      And ELRs with the following collection dates:
+        | Collection date |
+        | 2008-05-01      |
+        | 2009-06-14      |
+        | 2009-08-29      |
+    When I go to the staged message search page
+      And I fill in "Start" with "2008-01-01"
+      And I fill in "End" with "2008-12-31"
+      And I press "Search"
+    Then I should see "2008-05-01"
+      And I should not see "2009-06-14"
+      And I should not see "2009-08-29"

@@ -34,6 +34,12 @@ Given /^ELRs from the following labs:$/ do |table|
   end
 end
 
+Given /^ELRs with the following collection dates:$/ do |table|
+  table.rows.each do |collection_date|
+    @staged_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_collection_date].call(collection_date.first)
+  end
+end
+
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end

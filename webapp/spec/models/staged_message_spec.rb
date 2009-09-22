@@ -249,6 +249,7 @@ describe StagedMessage do
       @jones_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('David Jones')
       @davis_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('Mike Davis')
       @quest_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_lab].call('Quest Labs')
+      @date_message  = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_collection_date].call('200810011645')
     end
 
     it 'finds records by last name' do
@@ -261,6 +262,10 @@ describe StagedMessage do
 
     it 'finds records by lab name' do
       StagedMessage.find_by_search(:laboratory => 'quest').should == [@quest_message]
+    end
+
+    it 'finds records by collection date' do
+      StagedMessage.find_by_search(:start_date => '2008-01-01', :end_date => '2008-12-31').should == [@date_message]
     end
   end
 end

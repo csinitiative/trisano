@@ -128,7 +128,11 @@ class StagedMessagesController < ApplicationController
 
   def search
     if params.delete(:do) == "Search"
-      @staged_messages = StagedMessage.find_by_search params
+      begin
+        @staged_messages = StagedMessage.find_by_search params
+      rescue
+        flash.now[:error] = "Search failed. Make sure the date range is valid"
+      end
     end
   end
 
