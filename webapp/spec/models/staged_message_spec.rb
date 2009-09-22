@@ -272,6 +272,14 @@ describe StagedMessage do
     it 'finds records by test type' do
       StagedMessage.find_by_search(:test_type => 'Monkey').should == [@test_type_message]
     end
+
+    it 'finds nothing if criteria is empty' do
+      StagedMessage.find_by_search(:test_type => '').should == []
+    end
+
+    it "finds nothing if criteria contains only options we don't care about" do
+      StagedMessage.find_by_search(:action => 'Search').should == []
+    end
   end
 end
 

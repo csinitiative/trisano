@@ -38,6 +38,8 @@ class StagedMessage < ActiveRecord::Base
     end
 
     def find_by_search(criteria)
+      return [] if extract_search_criteria(criteria).all? {|k,v| v.blank?}
+
       with_last_name_starting criteria[:last_name] do
         with_first_name_starting criteria[:first_name] do
           with_lab_name_containing criteria[:laboratory] do
@@ -74,6 +76,12 @@ class StagedMessage < ActiveRecord::Base
 
     def with_collection_date_between(start_date, end_date, &block)
       with_scope_unless start_date.blank? && end_date.blank?, :find => {:conditions => ["collection_date BETWEEN ? AND ?", start_date, end_date] }, &block
+    end
+
+    def extract_search_criteria(params)
+      options = params.to_options
+      keys = [:last_name, :first_name, :laboratory, :start_date, :end_date, :test_type]
+      Hash[*options.select{|k,v| keys.include? k}.flatten]
     end
   end
 

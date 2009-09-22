@@ -90,3 +90,16 @@ Feature: Searching the staged electronic messages
     Then I should see "Hepatitis Be Antigen"
       And I should not see "SAT"
       And I should not see "ACT"
+
+  Scenario: Search staged messages w/out filling out the form
+    Given I am logged in as a super user
+      And ELRs with the following test types:
+        | Test type            |
+        | Hepatitis Be Antigen |
+        | SAT                  |
+        | ACT                  |
+    When I go to the staged message search page
+      And I press "Search"
+    Then I should not see "Hepatitis Be Antigen"
+      And I should not see "SAT"
+      And I should not see "ACT"
