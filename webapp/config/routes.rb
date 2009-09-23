@@ -35,6 +35,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :ibis_events, :collection => { :by_range => :get }
 
   map.home '', :controller => 'dashboard'
+  map.calendar 'calendar/:year/:month', :controller => 'dashboard', :action => 'calendar', :month => Time.now.month, :year => Time.now.year
 
   map.with_options :controller => 'search' do |search|
     search.search_cmrs   'search/cmrs',           :action => 'cmrs'

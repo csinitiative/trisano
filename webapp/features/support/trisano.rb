@@ -19,6 +19,7 @@ def log_in_as(user)
   visit home_path unless current_url
   select user, :from => "user_id"
   submit_form "switch_user"
+  @current_user = User.find_by_user_name(user)
 end
 
 def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)

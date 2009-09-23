@@ -21,8 +21,9 @@
 
 #edit-task-form
 
-  %h2
-    Edit Task
+  %p
+    %span{ :style => "font-size: 150%;"}Edit Task
+    ="(#{link_to("View on calendar", calendar_path(:month => @task.due_date.month, :year => @task.due_date.year))})"
 
   = error_messages_for :task
 

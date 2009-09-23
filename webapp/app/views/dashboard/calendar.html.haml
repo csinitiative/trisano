@@ -14,25 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Welcome to TriSano
+  Calendar
 
-/- content_for :name do
+= event_calendar
 
-#rot
-  %script
-    detect();
+%br
 
-%h2
-  Tasks
-%span{:style => "clear: both;"}
-  = link_to_function('Change filter', "Effect.BlindDown('task_view_settings')")
-  &nbsp;|&nbsp;
-  = link_to("View on calendar", calendar_path(:month => Time.now.month, :year => Time.now.year))
-
-#task_view_settings{:style => 'display: none;'}
-  = render :partial => 'filter_tasks_form'
-#tasks{:style => "clear: both;"}
-  = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
+%ul
+  %li{ :class => "task-list-pending", :style => "display: inline;"} Pending
+  %li{ :class => "task-list-complete", :style => "display: inline;"} Complete
+  %li{ :class => "task-list-na", :style => "display: inline;"} Not applicable
 
 %br
 %br

@@ -30,7 +30,19 @@ class DashboardController < ApplicationController
     end
   end
 
+  def calendar
+    calendar_setup(params)
+  end
+  
   private
+
+  def calendar_setup(params)
+    @month = params[:month].blank? ? Time.now.month : params[:month].to_i
+    @year = params[:month].blank? ? Time.now.year : params[:year].to_i
+    start_date = Date.new(@year, @month) - 1.day
+    end_date = start_date.advance(:months => 1) + 3.days
+    @tasks = Task.find_all_by_user_id(User.current_user.id, :conditions => ["due_date BETWEEN ? AND ?", start_date, end_date], :include => :category)
+  end
 
   def has_a_filter_applied?(params)
     params.keys.any? { |param| User.task_view_params.include?(param.to_sym) }

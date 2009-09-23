@@ -141,6 +141,13 @@ Factory.define :user do |u|
   u.status 'active'
 end
 
+Factory.define :task do |t|
+  t.name { Factory.next(:task_name) }
+  t.association :event, :factory => :morbidity_event
+  t.association :user
+  t.due_date DateTime.now
+end
+
 #
 # Sequences
 #
@@ -199,4 +206,8 @@ end
 
 Factory.sequence :uid do |n|
   "#{n}"
+end
+
+Factory.sequence :task_name do |n|
+  "task_name_#{n}"
 end

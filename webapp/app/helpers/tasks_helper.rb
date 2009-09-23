@@ -47,6 +47,10 @@ module TasksHelper
 
     result << "&nbsp;|&nbsp;"
     result << link_to("Edit&nbsp;task", edit_event_task_path(task.event, task))
+    unless task.due_date.nil?
+      result << "&nbsp;|&nbsp;"
+      result << link_to("Calendar&nbsp;view", calendar_path(:month => task.due_date.month, :year => task.due_date.year))
+    end
   end
 
   def sort_urls(task_owner)

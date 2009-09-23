@@ -549,7 +549,7 @@ module TrisanoHelper
     end
   end
 
-  def add_note(browser, note_text, options={:is_admin => false})
+  def enter_note(browser, note_text, options={:is_admin => false})
     browser.type('css=textarea[id$=_note]', note_text)
     browser.click('css=input[id$=_note_type]') if options[:is_admin]
   end

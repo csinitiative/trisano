@@ -1,0 +1,92 @@
+/*
+  A theme inspired by Blinksale and their ColorBurn widget. http://firewheeldesign.com
+  
+  AUTHOR: Geoffrey Grosenbach http://nubyonrails.com
+  Modified for the TriSano calendar.
+*/
+
+.calendar {
+  margin: auto;
+}
+
+.monthName th {
+  font-weight: normal;
+  text-align: right;
+  padding-top: 1em;
+  padding-bottom: 0.7em;
+}
+
+.dayName th {
+  font-size: 0.7em;
+  padding-top: 0.6em;
+  padding-bottom: 0.3em;
+  background-color: #006229;
+  color: white;
+}
+
+.otherMonth, .day, .specialDay {
+  padding: 0.7em 1em;
+  border-right: 1px solid white;
+  vertical-align: top;
+}
+
+.otherMonth {
+  color: #000;
+  background-color: white;
+}
+
+.day, .specialDay {
+  border-bottom: 1px dotted #bbbbbb;
+  background-color: #fff;
+  vertical-align: top;
+  width: 14%
+}
+.specialDay {
+  background-color: #003355;
+  color: white;
+}
+.specialDay a, .specialDay a:visited, .specialDay a:hover {
+  color: white;
+  text-decoration: none;
+  padding: 1em;
+}
+.specialDay a:hover {
+  color: white;
+  background-color: black;
+}
+.weekendDay {
+  background-color: #C1D41B;
+}
+.today{
+	background-color: #ededed;
+}
+
+.task-list-pending{
+  margin:0px 0px 1px;
+  list-style-type:none;
+  border-style:solid;
+  border-width:0px 0px 0px 12px;
+  border-color:#E7E01E;
+  padding-left: 5px;
+  font-size: .9em;
+}
+
+.task-list-complete {
+  margin:0px 0px 1px;
+  list-style-type:none;
+  border-style:solid;
+  border-width:0px 0px 0px 12px;
+  border-color:#7FBE31;
+  padding-left: 5px;
+  font-size: .9em;
+}
+
+.task-list-na {
+  margin:0px 0px 1px;
+  list-style-type:none;
+  border-style:solid;
+  border-width:0px 0px 0px 12px;
+  border-color:#000;
+  padding-left: 5px;
+  font-size: .9em;
+}
