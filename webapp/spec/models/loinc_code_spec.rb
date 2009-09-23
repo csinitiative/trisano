@@ -121,7 +121,7 @@ describe LoincCode do
   describe 'associations' do
 
     it { should belong_to(:common_test_type) }
-    it { should have_many(:disease_common_test_types) }
+    it { should have_many(:diseases_loinc_codes) }
     it { should have_many(:diseases) }
     it { should belong_to(:organism) }
 

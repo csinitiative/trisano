@@ -25,7 +25,9 @@
       %span.vert-break
         = f.label(:disease_name, "Disease name")
         = f.text_field(:disease_name)
-        = "#{f.check_box(:active)} Active?"
+        %label{:for => 'disease_active', :style => 'display: inline'}
+          = f.check_box(:active)
+          Active?
 
       %span.vert-break
         = f.label(:contact_lead_in, "Contact lead-in question")
@@ -57,20 +59,3 @@
       = scroll_pane do
         - ExternalCode.find_cases(:all).each do |code|
           = "<label>" + check_box_tag("disease[external_code_ids][]", code.id, @disease.external_code_ids.include?(code.id), :id => h(code.code_description.tr(" ", "_"))) + h(code.code_description) + "</label>"
-
-  - unless @disease.new_record?
-    %tr
-      %th
-        %span.forminformation
-          Common Test Types
-        %span{ :style => "position: absolute; right: 15px;" }
-          = show_hide_disease_section_link
-
-    %tr
-      %td
-        %span
-          = f.label(:case_id, "Associated test types")
-        = scroll_pane do
-          - @common_test_types.each do |common_test_type|
-            = disease_common_test_type_check_box(common_test_type, @disease.common_test_type_ids)
-        = link_to 'Create a new common test type', new_common_test_type_path

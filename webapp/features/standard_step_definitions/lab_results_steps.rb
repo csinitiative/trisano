@@ -17,9 +17,12 @@
 
 
 Given /^the following disease to common test types mapping exists$/ do |disease_test_maps|
+  code = '10000-0'
   disease_test_maps.rows.each do |disease_test_map|
     d = Disease.find_by_disease_name(disease_test_map.first)
-    d.common_test_types << CommonTestType.find_or_create_by_common_name(disease_test_map.last)
+    c = CommonTestType.find_or_create_by_common_name(disease_test_map.last)
+    l = LoincCode.create! :loinc_code => code.succ!, :scale => ExternalCode.loinc_scales.first, :common_test_type => c
+    d.loinc_codes << l
   end
 end
 

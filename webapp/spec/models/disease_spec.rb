@@ -70,11 +70,6 @@ describe Disease do
     live_forms.should be_empty
   end
 
-  describe "associations" do
-    it { should have_many(:disease_common_test_types) }
-    it { should have_many(:common_test_types) }
-  end
-
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
       @disease.external_codes.should be_empty
@@ -141,39 +136,4 @@ describe Disease do
 
   end
 
-  describe '#update_common_test_types' do
-    fixtures :diseases, :common_test_types
-
-    before :each do
-      @disease = diseases(:chicken_pox)
-      @starting_tests = [common_test_types(:blood_test), common_test_types(:hep_b_ag)]
-      @starting_tests.each do |test|
-        DiseaseCommonTestType.create!(:disease_id => @disease.id, :common_test_type_id => test.id)
-      end
-      @changed_tests = [common_test_types(:blood_test), common_test_types(:western_blot)]
-    end
-
-    it 'method should exist' do
-      Disease.new.respond_to?(:update_common_test_types).should be_true
-    end
-
-    it 'should update common test types from ID list' do
-      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
-      @disease.update_common_test_types(@changed_tests.collect(&:id))
-      @disease.common_test_type_ids.sort.should == @changed_tests.collect(&:id).sort
-    end
-
-    it 'should update common test types from CommonTestType list' do
-      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
-      @disease.update_common_test_types(@changed_tests)
-      @disease.common_test_type_ids.sort.should == @changed_tests.collect(&:id).sort
-    end
-
-    it 'should delete all common test types if handed an empty array' do
-      @disease.common_test_type_ids.sort.should == @starting_tests.collect(&:id).sort
-      @disease.update_common_test_types([])
-      @disease.common_test_type_ids.should be_empty
-    end
-
-  end
 end

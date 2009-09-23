@@ -14,8 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-
-Given /^I have an active disease named "([^\"]*)"$/ do |disease_name|
-  @disease = Factory.create(:disease, :disease_name => disease_name)
+class DiseasesLoincCode < ActiveRecord::Base
+  belongs_to :disease
+  belongs_to :loinc_code
 end
-

@@ -90,7 +90,10 @@ def path_to(page_name)
   when /the place edit page/
     edit_place_path(@place_entity)
 
-  when /edit the disease/
+  when /edit the disease named "([^"]*)"/
+    edit_disease_path Disease.find_by_disease_name($1)
+
+  when /edit the disease$/
     edit_disease_path(@disease)
 
   when /the loinc code index page/

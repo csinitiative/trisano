@@ -93,17 +93,3 @@
               - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
                 %li
                   = export_column.export_column_name
-
-  %table.list
-    %tr
-      %th.forminformation
-        Common Test Types
-    %tr
-      %td.forminformation
-        - if @disease.common_test_types.empty?
-          %span No associated common test types
-        - else
-          %ul
-            - @disease.common_test_types.each do |common_test_type|
-              %li
-                =h common_test_type.common_name
