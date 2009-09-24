@@ -148,6 +148,10 @@ Factory.define :task do |t|
   t.due_date DateTime.now
 end
 
+Factory.define :avr_group do |t|
+  t.name { Factory.next(:avr_group_name) }
+end
+
 #
 # Sequences
 #
@@ -211,3 +215,8 @@ end
 Factory.sequence :task_name do |n|
   "task_name_#{n}"
 end
+
+Factory.sequence :avr_group_name do |n|
+  "avr_group_name_#{n}"
+end
+

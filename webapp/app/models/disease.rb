@@ -24,6 +24,7 @@ class Disease < ActiveRecord::Base
 
   has_and_belongs_to_many :external_codes
   has_and_belongs_to_many :export_columns
+  has_and_belongs_to_many :avr_groups
 
   has_many :diseases_loinc_codes, :dependent => :destroy
   has_many :loinc_codes, :through => :diseases_loinc_codes

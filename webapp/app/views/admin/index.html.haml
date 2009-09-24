@@ -39,6 +39,8 @@
 = link_to 'Configure System for CSV Export', csv_fields_path, :id => "admin_csv_config"
 = "<br />\n" + link_to('Send System Messages', system_messages_path, :id => "admin_system_message") rescue ""
 %br
+= link_to 'Manage AVR Groups', avr_groups_path, :id => "avr_groups"
+%br
 
 %h2 Lab Management
 = link_to 'Manage Common Test Types', common_test_types_path, :id => "admin_common_test_types"

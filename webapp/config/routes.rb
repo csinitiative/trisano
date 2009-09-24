@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 ActionController::Routing::Routes.draw do |map|
-
+  
   map.process_condition 'question_elements/process_condition', :controller => 'question_elements', :action => 'process_condition'
   map.process_core_condition 'follow_up_elements/process_core_condition', :controller => 'follow_up_elements', :action => 'process_core_condition'
 
@@ -182,6 +182,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :places
 
   map.resources :jurisdictions
+
+  map.resources :avr_groups
 
   map.js 'js/:action.js', :controller => 'js', :format => 'js'
 

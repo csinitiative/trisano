@@ -37,3 +37,37 @@ Feature: Updating diseases
       And I press "Update"
     Then I should see "Disease was successfully updated"
       And I should not see "Confirmed"
+
+  Scenario: Configure AVR groups
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | The Trots    |
+      And the following AVR groups:
+        | name |
+        | enterics |
+        | bad lurgies |
+        | not so bad lurgies |
+    When I go to edit the disease named "The Trots"
+      And I check "enterics"
+      And I check "bad_lurgies"
+      And I press "Update"
+    Then I should see "Disease was successfully updated"
+      And I should see "enterics"
+      And I should see "bad lurgies"
+      And I should not see "not so bad lurgies"
+
+  Scenario: Configure no AVR groups
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | The Trots    |
+      And the following AVR groups:
+        | name |
+        | enterics |
+        | bad lurgies |
+        | not so bad lurgies |
+    When I go to edit the disease named "The Trots"
+      And I press "Update"
+    Then I should see "Disease was successfully updated"
+      And I should see "No AVR groups configured"

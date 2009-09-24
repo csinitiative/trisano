@@ -150,6 +150,18 @@ def path_to(page_name)
   when /the staged message search page/
     search_staged_messages_path
 
+  when /the AVR groups page/
+    avr_groups_path
+
+  when /the new AVR group page/
+    new_avr_group_path
+
+  when /the AVR group show page/
+    avr_group_path(@avr_group)
+
+  when /the AVR group edit page/
+    edit_avr_group_path(@avr_group)
+    
   else
     raise "Can't find mapping from \"#{page_name}\" to a path."
   end

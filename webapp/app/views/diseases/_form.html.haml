@@ -59,3 +59,18 @@
       = scroll_pane do
         - ExternalCode.find_cases(:all).each do |code|
           = "<label>" + check_box_tag("disease[external_code_ids][]", code.id, @disease.external_code_ids.include?(code.id), :id => h(code.code_description.tr(" ", "_"))) + h(code.code_description) + "</label>"
+
+  %tr
+    %th
+      %span.forminformation
+        AVR Groups
+      %span{ :style => "position: absolute; right: 15px;" }
+        = show_hide_disease_section_link
+  %tr
+    %td
+      %span
+        = f.label("AVR Groups:")
+
+      = scroll_pane do
+        - AvrGroup.all(:order => "name ASC").each do |avr_group|
+          = "<label>" + check_box_tag("disease[avr_group_ids][]", avr_group.id, @disease.avr_group_ids.include?(avr_group.id), :id => h(avr_group.name.tr(" ", "_"))) + h(avr_group.name) + "</label>"

@@ -93,3 +93,17 @@
               - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
                 %li
                   = export_column.export_column_name
+
+  %table.list
+    %tr
+      %th.forminformation
+        AVR Groups
+      %tr
+        %td.forminformation
+          - if @disease.avr_groups.empty?
+            %span No AVR groups configured
+          - else
+            %ul
+              - @disease.avr_groups.each do |avr_group|
+                %li
+                  = avr_group.name
