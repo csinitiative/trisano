@@ -24,7 +24,8 @@ Feature: Updating diseases
       And I check "Probable"
       And I press "Update"
     Then I should see "Disease was successfully updated"
-      And I should see "Confirmed, Probable"
+      And I should see "Confirmed"
+      And I should see "Probable"
 
   Scenario: Unset disease export status
     Given I am logged in as a super user
