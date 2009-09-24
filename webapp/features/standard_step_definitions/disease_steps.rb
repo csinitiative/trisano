@@ -13,3 +13,9 @@ Given /^the following active diseases:$/ do |table|
     Disease.create! attr.merge(:active => true)
   end
 end
+
+Given /^the disease "([^\"]*)" is exported when "([^\"]*)"$/ do |disease_name, status|
+  disease = Disease.find_by_disease_name disease_name
+  disease.external_codes << ExternalCode.case.find_by_code_description(status)
+  disease.save!
+end

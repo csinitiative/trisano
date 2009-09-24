@@ -65,7 +65,9 @@ class DiseasesController < AdminController
 
   def update
     @disease = Disease.find params[:id]
-
+    if params[:disease]
+      params[:disease][:external_code_ids] ||= []
+    end
     respond_to do |format|
       if @disease.update_attributes params[:disease]
         flash[:notice] = 'Disease was successfully updated.'
