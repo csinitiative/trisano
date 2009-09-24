@@ -38,6 +38,12 @@ Given /^LOINC code "([^\"]*)"$/ do |code|
   LoincCode.create! :loinc_code => code, :scale => ExternalCode.loinc_scale_by_the_code('Ord')
 end
 
+Given /^disease "([^\"]*)" is associated with LOINC code "([^\"]*)"$/ do |disease_name, loinc_code|
+  loinc = LoincCode.find_by_loinc_code loinc_code
+  loinc.diseases << Disease.find_by_disease_name(disease_name)
+  loinc.save!
+end
+
 Then /^the "(.*)" value from Scale should be selected$/ do |value|
   response.should have_xpath("//select[@id='loinc_code_scale_id']//option[@selected='selected' and text()='#{value}']")
 end

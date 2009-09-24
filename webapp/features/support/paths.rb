@@ -117,6 +117,9 @@ def path_to(page_name)
   when /the "([^"]*)" loinc code page/
     loinc_code_path LoincCode.find_by_loinc_code($1)
 
+  when /the LOINC code "([^\"]*)" page/
+    loinc_code_path LoincCode.find_by_loinc_code($1)
+
   when /the users index page/
     users_path
 

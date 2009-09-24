@@ -41,6 +41,9 @@ class LoincCodesController < AdminController
   end
 
   def update
+    if params[:loinc_code]
+      params[:loinc_code][:disease_ids] ||= []
+    end
     respond_to do |format|
       if @loinc_code.update_attributes(params[:loinc_code])
         flash[:notice] = 'Loinc code was successfully updated.'

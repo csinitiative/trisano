@@ -23,13 +23,13 @@ module DiseasesHelper
     end
   end
 
-  def disease_common_test_type_check_box(common_test_type, associated_test_type_ids)
-    check = check_box_tag("disease[common_test_type_ids][]",
-                          common_test_type.id,
-                          associated_test_type_ids.include?(common_test_type.id),
-                          :id => h(common_test_type.common_name.gsub(' ', '_')),
-                          :class => 'common_test_type')
-    label_tag h(common_test_type.common_name), check + h(common_test_type.common_name)
+  def disease_check_boxes(name, checked_values=[])
+    Disease.all.each do |disease|
+      id = name.gsub('[', '_').gsub(']', '') + disease.id.to_s
+      haml_tag :label, :for => id do
+        haml_concat check_box_tag(name, disease.id, checked_values.include?(disease.id), :id => id)
+        haml_concat disease.disease_name
+      end
+    end
   end
-
 end
