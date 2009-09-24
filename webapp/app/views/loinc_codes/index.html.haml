@@ -34,21 +34,7 @@
         &nbsp;
       - @loinc_codes.each do |loinc_code|
         %tr.roll
-          %td.forminformation
-            .formname
-              %span.common_name
-                = link_to h(loinc_code.loinc_code), loinc_code
-          %td
-            %span.test_name
-              = h(loinc_code.test_name)
-          %td
-            %span.scale
-              = h(loinc_code.scale.code_description)
-          %td
-            %span.organism
-              =h loinc_code.organism.try(:organism_name)
-          %td
-            = loinc_code_tools loinc_code
+          =render loinc_code
 
   %span.vert-break
     = will_paginate @loinc_codes

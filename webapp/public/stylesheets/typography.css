@@ -216,3 +216,10 @@ label {
   white-space: normal;
   border: 1px solid #C1DAD7;
   background-color: #eee; }
+
+.test_name {
+  font-weight: bold; }
+  .test_name .common_test_name {
+    font-weight: normal;
+    font-style: italic;
+    padding: 0px 0px 0px 5px; }

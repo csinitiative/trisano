@@ -16,6 +16,9 @@
             =f.label      :test_name
             =f.text_field :test_name, :size => 60
           %span.horiz
+            =f.label      :common_test_type_id
+            =f.select     :common_test_type_id, select_options_common_test_types, :include_blank => true
+          %span.horiz
             =f.label      :scale_id, "Scale"
             =f.select     :scale_id, select_options_loinc_scales
           %span.horiz

@@ -36,7 +36,7 @@ class LoincCode < ActiveRecord::Base
   belongs_to :common_test_type
   belongs_to :scale, :class_name => 'ExternalCode'
   belongs_to :organism
-  has_many   :diseases_loinc_codes
+  has_many   :diseases_loinc_codes, :dependent => :destroy
   has_many   :diseases, :through => :diseases_loinc_codes
 
   named_scope :unrelated_to, lambda { |common_test_type|

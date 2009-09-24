@@ -26,6 +26,10 @@ Given /^loinc code "([^\"]*)" is associated with the common test type$/ do |loin
   @common_test_type.update_loinc_code_ids :add => [loinc_code.id]
 end
 
+Given /^common test type "([^\"]*)"$/ do |test_name|
+  CommonTestType.create! :common_name => test_name
+end
+
 When /^I try to delete the common test type$/ do
   delete common_test_type_path(@common_test_type)
 end

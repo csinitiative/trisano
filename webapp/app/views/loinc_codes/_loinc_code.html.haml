@@ -13,18 +13,20 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        LOINC Code
-      %th
-        Test Name
-      %th
-        Scale
-      %th
-        Organism
-      %th
-        &nbsp;
-    %tr
-      =render loinc_code
+%td.forminformation
+  .formname
+    %span.loinc_code
+      =link_to_unless_current h(loinc_code.loinc_code), loinc_code
+%td
+  %span.test_name
+    =h loinc_code.test_name
+    .common_test_name
+      =h loinc_code.common_test_type.try(:common_name)
+%td
+  %span.scale
+    =h loinc_code.scale.code_description
+%td
+  %span.organism
+    =h loinc_code.organism.try(:organism_name)
+%td
+  =loinc_code_tools loinc_code

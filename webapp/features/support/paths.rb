@@ -29,7 +29,7 @@ def path_to(page_name)
 
   when /the admin dashboard page/i
     admin_path
-  
+
   when /the jurisdictions page/i
     jurisdictions_path
 
@@ -90,7 +90,7 @@ def path_to(page_name)
   when /the place edit page/
     edit_place_path(@place_entity)
 
-  when /edit the disease named "([^"]*)"/
+  when /edit the disease named "([^\"]*)"/
     edit_disease_path Disease.find_by_disease_name($1)
 
   when /edit the disease$/
@@ -101,6 +101,9 @@ def path_to(page_name)
 
   when /the new loinc code page/
     new_loinc_code_path
+
+  when /edit LOINC code "([^\"]*)"/
+    edit_loinc_code_path LoincCode.find_by_loinc_code($1)
 
   when /edit the loinc code/
     edit_loinc_code_path @loinc_code

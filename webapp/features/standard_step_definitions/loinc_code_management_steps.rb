@@ -34,6 +34,10 @@ Given /^I have the following LOINC codes in the system:$/ do |table|
   end
 end
 
+Given /^LOINC code "([^\"]*)"$/ do |code|
+  LoincCode.create! :loinc_code => code, :scale => ExternalCode.loinc_scale_by_the_code('Ord')
+end
+
 Then /^the "(.*)" value from Scale should be selected$/ do |value|
   response.should have_xpath("//select[@id='loinc_code_scale_id']//option[@selected='selected' and text()='#{value}']")
 end
