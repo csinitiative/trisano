@@ -1,942 +1,1036 @@
-10349-9,Total Ab,Brucella Ab Ser-aCnc,Qn
-10352-3,Culture,Bacteria Genital Aerobe Cult,Nom
-10353-1,Culture,Bacteria Nose Aerobe Cult,Nom
-10354-9,Culture,Bacteria Urth Cult,Nom
-10356-4,Microscopy,Deprecated ~ Stl Tri Stn,Nom
-10643-5,Culture,Amoeba Stl Cult,Nom
-10659-1,Acid Fast Stain,Cyclospora Stl Acid fast Stn,Nom
-10670-8,Culture,Giardia Stl Cult,Nom
-10671-6,Identification,Worm XXX,Nom
-10672-4,Identification,Worm+Insect XXX,Nom
-10673-2,Core Ag (HBcAg),HBV core Ag Tiss Ql ImStn,Ord
-10674-0,Surface Ag (HBsAg),HBV surface Ag Tiss Ql ImStn,Ord
-10675-7,Surface Ag (HBsAg),HBV surface Ag Tiss Orcein Stn,Nom
-10676-5,PCR/amplification,HCV RNA SerPl Amp Prb-aCnc,Qn
-10701-1,Microscopy,O+P Stl Conc,Nom
-10702-9,Microscopy,O+P Stl ImStn,Nom
-10703-7,Microscopy,O+P Stl Kinyoun IH Stn,Nom
-10704-5,Microscopy,O+P Stl Micro,Nom
-10709-4,Antigen,P falciparum Ag Bld IF-aCnc,Qn
-10710-2,Microscopy,Plasmodium Bld Thin Film,Nom
-10734-2,Electron microscopy,VZV Skin EM,Nom
-10736-7,Electron microscopy,Virus CSF EM,Nom
-10737-5,Electron microscopy,Virus Stl EM,Nom
-108-1,Cefotaxime susceptibility,Cefotaxime Islt MIC,OrdQn
-10847-2,PCR/amplification,B burgdor DNA Fld Ql Amp Prb,Ord
-10850-6,Unknown method,C cayetanenis XXX Ql,Ord
-10851-4,Culture,E coli O157H7 Stl Ql Cult,Ord
-10860-5,Culture,VZV XXX Ql Cult,Ord
-10896-9,IgG Ab,EEEV IgG Titr Ser IF,Qn
-10897-7,IgG Ab,EEEV IgG Titr CSF IF,Qn
-10898-5,IgM Ab,EEEV IgM Titr Ser IF,Qn
-10899-3,IgM Ab,EEEV IgM Titr CSF IF,Qn
-10900-9,Surface Ab (HBsAb),HBV surface Ab Ser Ql EIA,Ord
-10904-1,IgG Ab,LACV IgG Titr Ser IF,Qn
-10905-8,IgM Ab,LACV IgM Titr Ser IF,Qn
-10906-6,IgG Ab,SLEV IgG Titr Ser IF,Qn
-10907-4,IgM Ab,SLEV IgM Titr Ser IF,Qn
-11006-4,Total Ab,B burgdor Ab Ser Ql,Ord
-11011-4,PCR/amplification,HCV RNA SerPl PCR-aCnc,Qn
-11076-7,Western (immuno) blot,HCV5-1-1 Ab Ser Ql IB,Ord
-11077-5,Western (immuno) blot,HCV SOD Ab Ser Ql IB,Ord
-11084-1,Unknown method,Reagin Ab Titr Ser,Qn
-11255-7,Culture,H ducreyi XXX Ql Cult,Ord
-11258-1,DNA probe - not amplified/PCR,HBV DNA Ser-aCnc,Qn
-11259-9,PCR/amplification,HCV RNA SerPl Ql PCR,Ord
-11469-4,Culture,B anthracis XXX Ql Cult,Ord
-11470-2,Toxin,C bot Tox Stl-aCnc,Qn
-11473-6,Antigen test,Cryptoc Ag Titr XXX,Qn
-11475-1,Culture,Microorganism XXX Cult,Nom
-11476-9,Microscopy,Acid fast Stn Gast,Nom
-11482-7,PCR/amplification,R rickettsi RNA Tiss Ql PCR,Ord
-11483-5,PCR/amplification,VZV DNA XXX Ql PCR,Ord
-11545-1,Microscopy,Acid fast Stn XXX,Nom
-11546-9,Microscopy,Other Stn XXX,Nom
-11550-1,Culture,B burgdor XXX Ql Cult,Ord
-11597-2,Unknown method,T pallidum Ab Ser-aCnc,Qn
-12271-3,Total Ab,VZV Ab Ser Ql LA,Ord
-12272-1,DFA/IF,Virus XXX IF,Nom
-12276-2,Culture,E coli O157H7 Stl Cult,Nom
-12781-1,Western (immuno) blot,B burgdor Ab Patrn Ser IB-Imp,Nom
-12860-3,Western (immuno) blot,B burgdor39kD Ab CSF Ql IB,Ord
-12862-9,Western (immuno) blot,B burgdor66kD Ab CSF Ql IB,Ord
-12863-7,Western (immuno) blot,B burgdor41kD Ab CSF Ql IB,Ord
-12867-8,Western (immuno) blot,B burgdor58kD Ab CSF Ql IB,Ord
-12869-4,Western (immuno) blot,B burgdor30kD Ab CSF Ql IB,Ord
-13125-0,Western (immuno) blot,Deprecated HCV C33c Ab SerPl Ql IB,Ord
-13195-3,Total Ab,E chaffeensis Ab Ser-aCnc,Qn
-13202-7,IgG Ab,B burgdor IgG CSF Ql IB,Ord
-13203-5,IgM Ab,B burgdor IgM CSF Ql IB,Ord
-13204-3,IgG Ab,B burgdor IgG CSF IF-aCnc,Qn
-13205-0,IgM Ab,B burgdor IgM CSF IF-aCnc,Qn
-13210-0,IgG Ab,Brucella IgG Ser-aCnc,Qn
-13228-2,IgG Ab,EEEV IgG CSF-aCnc,Qn
-13229-0,IgM Ab,EEEV IgM CSF-aCnc,Qn
-13230-8,IgG Ab,SLEV IgG CSF-aCnc,Qn
-13231-6,IgM Ab,SLEV IgM CSF-aCnc,Qn
-13248-0,Total Ab,HDV Ab Ser Ql,Ord
-13254-8,Total Ab,L pneumo Atyp Ab Ser Ql,Ord
-13255-5,Total Ab,L longbeachae1+2 Ab Ser Ql,Ord
-13266-2,IgG Ab,MuV IgG CSF-aCnc,Qn
-13267-0,IgM Ab,MuV IgM CSF-aCnc,Qn
-13279-5,IgG Ab,RUBV IgG sp1 Ser-aCnc,Qn
-13282-9,IgM Ab,RUBV IgM CSF-aCnc,Qn
-13283-7,IgM Ab,MeV IgM CSF-aCnc,Qn
-13284-5,Total Ab,S typhi H d Ab Ser Ql,Ord
-13288-6,FTA,T pallidum Ab Bld IF-aCnc,Qn
-133-9,Ceftazidime susceptibility,Ceftazidime Islt MIC,OrdQn
-13503-8,Western (immuno) blot,B burgdor IgM Patrn Ser IB-Imp,Nom
-13504-6,Total Ab,Deprecated B burgdor Ab SerPl-Imp,Nom
-13586-3,Vancomycin susceptibility,Vancomycin CSF-mCnc,Qn
-13921-2,Culture,MuV XXX Ql Cult,Ord
-13950-1,IgM Ab,HAV IgM Ser Ql EIA,Ord
-13951-9,Total Ab,HAV Ab Ser Ql EIA,Ord
-13952-7,Core Ab (HBcAb),HBV core Ab Ser Ql EIA,Ord
-13953-5,e Ab (HBeAb),HBV e Ab Ser Ql EIA,Ord
-13954-3,e Ag (HBeAg),HBV e Ag Ser Ql EIA,Ord
-13955-0,Total Ab,HCV Ab Ser Ql EIA,Ord
-13956-8,PCR/amplification,M tb DNA XXX Ql PCR,Ord
-14077-2,IgG Ab,B burgdor IgG CSF EIA-aCnc,Qn
-14078-0,IgM Ab,B burgdor IgM CSF EIA-aCnc,Qn
-141-2,Ceftriaxone susceptibility,Ceftriaxone Islt MIC,OrdQn
-14125-9,Microscopy,E histolyt Stl Ql Tri Stn,Ord
-14127-5,Culture,N gonorrhoea Anal Ql Cult,Ord
-14198-6,Total Ab,C psittaci Ab Titr Ser IF,Qn
-14202-6,IgA Ab,C trach C IgA Titr Ser IF,Qn
-14203-4,IgA Ab,C trach C IgG Titr Ser IF,Qn
-14209-1,IgA Ab,F tular IgA Ser Ql,Ord
-14210-9,Antigen by DFA/IF,G lamblia Ag Stl Ql IF,Ord
-14211-7,IgG Ab,HEV IgG Ser Ql,Ord
-14212-5,IgM Ab,HEV IgM Ser Ql,Ord
-14304-0,IgG Ab,MeV IgG sp1 Ser EIA-aCnc,Qn
-14305-7,IgG Ab,MeV IgG sp2 Ser EIA-aCnc,Qn
-14323-0,Typing,Gp B Strep Ag CSF Ql LA,Ord
-14461-8,Culture,C trach Bld Ql Cult,Ord
-14462-6,Culture,C trach CSF Ql Cult,Ord
-14463-4,Culture,C trach Cervix Ql Cult,Ord
-14464-2,Culture,C trach Vag Ql Cult,Ord
-14465-9,Culture,C trach Urth Ql Cult,Ord
-14466-7,Culture,C trach Penis Ql Cult,Ord
-14467-5,Culture,C trach UrnS Ql Cult,Ord
-14468-3,EIA/ELISA,C trach Ag Bld Ql EIA,Ord
-14469-1,EIA/ELISA,C trach Ag CSF Ql EIA,Ord
-14470-9,EIA/ELISA,C trach Ag Cervix Ql EIA,Ord
-14471-7,EIA/ELISA,C trach Ag Vag Ql EIA,Ord
-14472-5,EIA/ELISA,C trach Ag Urth Ql EIA,Ord
-14473-3,EIA/ELISA,C trach Ag Penis Ql EIA,Ord
-14474-1,EIA/ELISA,C trach Ag UrnS Ql EIA,Ord
-14475-8,Culture,Bacteria Cervix Aerobe Cult,Nom
-14476-6,Culture,Deprecated Microorganism Vag Aerobe Cult,Nom
-14477-4,Culture,Bacteria Urth Aerobe Cult,Nom
-14478-2,Culture,Bacteria Penis Aerobe Cult,Nom
-14479-0,Culture,Diphtheria Throat Cult,Nom
-14480-8,Culture,Diphtheria Spt Cult,Nom
-14481-6,Culture,Diphtheria Nose Cult,Nom
-14483-2,Culture,Diphtheria Bronch Cult,Nom
-14488-1,DFA/IF,Virus CSF IF,Nom
-14489-9,DFA/IF,Virus Bld IF,Nom
-14491-5,DFA/IF,Virus Throat IF,Nom
-14507-8,Antigen by DFA/IF,C trach Ag Bld Ql IF,Ord
-14508-6,Antigen by DFA/IF,C trach Ag CSF Ql IF,Ord
-14509-4,Antigen by DFA/IF,C trach Ag Cervix Ql IF,Ord
-14510-2,Antigen by DFA/IF,C trach Ag Vag Ql IF,Ord
-14511-0,Antigen by DFA/IF,C trach Ag Urth Ql IF,Ord
-14512-8,Antigen by DFA/IF,C trach Ag Penis Ql IF,Ord
-14513-6,Antigen by DFA/IF,C trach Ag UrnS Ql IF,Ord
-14545-8,Antigen,MuV Ag CSF Ql IF,Ord
-14556-5,PCR/amplification,M tb DNA Spt Ql PCR,Ord
-14557-3,PCR/amplification,M tb DNA Bronch Ql PCR,Ord
-14558-1,PCR/amplification,M tb DNA Gast Ql PCR,Ord
-14559-9,PCR/amplification,M tb DNA Plr Ql PCR,Ord
-14560-7,PCR/amplification,M tb DNA Ur Ql PCR,Ord
-14561-5,PCR/amplification,M tb DNA CSF Ql PCR,Ord
-14562-3,PCR/amplification,M tb DNA Smn Ql PCR,Ord
-14788-4,Identification,Worm+Insect XXX Rearing/Cult,Nom
-14789-2,Identification,Worm XXX Macro/micro Id,Nom
-14790-0,Identification,Worm XXX Perm Mount,Nom
-14974-0,PCR/amplification,Mycobacterium DNA XXX Ql PCR,Ord
-16099-4,Ethionamide susceptibility,Ethionamide Islt MIC,OrdQn
-16128-1,Total Ab,HCV Ab Ser Ql,Ord
-16129-9,IgG Ab,HCV IgG Ser Ql,Ord
-16133-1,IgM Ab,L pneumo IgM Titr Ser IF,Qn
-16134-9,Culture,N men XXX Ql Cult,Ord
-16278-4,PCR/amplification,M tb DNA Bld Ql PCR,Ord
-16475-6,Total Ab,B burgdor Ab CSF Ql EIA,Ord
-16480-6,IgG Ab,B burgdor IgG Ser Ql EIA,Ord
-16528-2,DNA probe - not amplified/PCR,C coli rRNA Ser Prb-aCnc,Qn
-16529-0,DNA probe - not amplified/PCR,C jejuni rRNA Ser Prb-aCnc,Qn
-16531-6,DNA probe - not amplified/PCR,C lari rRNA Ser Prb-aCnc,Qn
-16532-4,DNA probe - not amplified/PCR,C lari rRNA Ser Ql Prb,Ord
-16534-0,DNA probe - not amplified/PCR,Campylobacter rRNA Ser Ql Prb,Ord
-16589-4,Antigen by DFA/IF,Chlamydia Ab Ser IF-aCnc,Qn
-16599-3,PCR/amplification,C trach DNA Bld Ql PCR,Ord
-16600-9,DNA probe - not amplified/PCR,C trach rRNA Genital Ql Prb,Ord
-16601-7,DNA probe - not amplified/PCR,C trach rRNA Ur Ql Prb,Ord
-16676-9,Culture,C diphtheriae XXX Ql Cult,Ord
-16808-8,IgG Ab,A phagocytoph IgG Ser-aCnc,Qn
-16809-6,IgM Ab,A phagocytoph IgM Ser-aCnc,Qn
-16835-1,Culture,E coli SLTEC Stl Cult,Nom
-16875-7,Total Ab,F tular Ab Titr Ser,Qn
-16876-5,IgA Ab,F tular IgA Ser Ql LA,Ord
-16877-3,IgG Ab,F tular IgG Ser Ql LA,Ord
-16878-1,IgM Ab,F tular IgM Ser-aCnc,Qn
-16879-9,DFA/IF,F tular Ag Ser Ql IF,Ord
-16898-9,Antigen by DFA/IF,G lamblia65 Ag Stl Ql,Ord
-16899-7,Antigen by DFA/IF,G lamblia Ag XXX Ql,Ord
-16936-7,IgG Ab,HCV IgG Ser-aCnc,Qn
-17036-5,Total Ab,LACV Ab Titr Ser,Qn
-17037-3,Total Ab,LACV Ab Titr CSF,Qn
-17038-1,IgG Ab,LACV IgG Titr Ser,Qn
-17039-9,IgM Ab,LACV IgM Titr Ser,Qn
-17057-1,Antigen,L pneumo Ag XXX Ql,Ord
-17058-9,Antigen,L pneumo Ag Ur Ql LA,Ord
-17060-5,Total Ab,L pneumo1 Ab Titr Ser,Qn
-17061-3,Total Ab,L pneumo1 IgM Ser-aCnc,Qn
-17296-5,DNA probe - not amplified/PCR,M TB Cmplx rRNA XXX Ql Prb,Ord
-17297-3,DNA probe - not amplified/PCR,Deprecated M TB rRNA XXX Ql Prb,Ord
-17537-2,PCR/amplification,Rick SF RNA Ser Ql PCR,Ord
-17538-0,DNA probe - not amplified/PCR,Rick SF RNA Ser Ql Prb,Ord
-17551-3,IgG Ab,RUBV IgG CSF EIA-aCnc,Qn
-17552-1,IgM Ab,RUBV IgM CSF Ql,Ord
-17553-9,Total Ab,MeV Ab CSF-aCnc,Qn
-17563-8,Culture,Salmonella XXX Cult,Nom
-17576-0,Culture,Shigella XXX Cult,Nom
-17653-7,Typing,Deprecated ~ Ag XXX Ql,Ord
-17656-0,Culture,S pyog XXX Cult,Nom
-17725-3,Latex agglutination,T pallidum Ab Ser LA-aCnc,Qn
-17726-1,FTA,T pallidum IgG Ser Ql IF,Ord
-17732-9,Total Ab,T spiralis Ab Ser Ql LA,Ord
-17733-7,IgA Ab,T spiralis IgA Ser Ql,Ord
-17734-5,IgG Ab,T spiralis IgG Ser-aCnc,Qn
-17735-2,IgM Ab,T spiralis IgM Ser Ql,Ord
-17766-7,IgM Ab,VZV IgM Ser IF-aCnc,Qn
-17769-1,Total Ab,WEEV Ab Titr CSF,Qn
-17770-9,Total Ab,WEEV Ab Titr Ser,Qn
-17898-8,Culture,Bacteria Throat Aerobe Cult,Nom
-17969-7,Culture,Bacteria Ur Aerobe Cult,Nom
-18201-4,IgA Ab,B burgdor IgA Ser Ql IB,Ord
-18202-2,IgA Ab,B burgdor IgA CSF Ql IB,Ord
-18203-0,Total Ab,B burgdor IgG+IgM Ser Ql IB,Ord
-18307-9,Microscopy,O+P Stl IH Stn,Nom
-18429-1,IgG Ab,R rickettsi IgG CSF-aCnc,Qn
-18430-9,IgM Ab,R rickettsi IgM CSF-aCnc,Qn
-18493-7,Microscopy,O+P sp3 Stl Conc,Nom
-18494-5,Microscopy,O+P sp2 Stl Conc,Nom
-18495-2,Microscopy,O+P sp3 Stl Tri Stn,Nom
-18496-0,Microscopy,O+P sp2 Stl Tri Stn,Nom
-185-9,Ciprofloxacin susceptibility,Ciprofloxacin Islt MIC,OrdQn
-18860-7,Amikacin susceptibility,Amikacin Susc Islt,OrdQn
-18861-5,Amoxicillin susceptibility,Amoxicillin Susc Islt,OrdQn
-18862-3,Amoxicillin+clavulanate (clavamox) susceptibility,Amoxicillin+Clav Susc Islt,OrdQn
-18864-9,Ampicillin susceptibility,Ampicillin Susc Islt,OrdQn
-18865-6,Ampicillin+Sulbactam susceptibility,Ampicillin+Sulbac Susc Islt,OrdQn
-18866-4,Azithromycin susceptibility,Azithromycin Susc Islt,OrdQn
-18868-0,Aztreonam susceptibility,Aztreonam Susc Islt,OrdQn
-18872-2,Capreomycin susceptibility,Capreomycin Susc Islt,OrdQn
-18873-0,Carbenicillin susceptibility,Carbenicillin Susc Islt,OrdQn
-18874-8,Cefaclor susceptibility,Cefaclor Susc Islt,OrdQn
-18878-9,Cefazolin susceptibility,Cefazolin Susc Islt,OrdQn
-18879-7,Cefepime susceptibility,Cefepime Susc Islt,OrdQn
-18880-5,Cefixime susceptibility,Cefixime Susc Islt,OrdQn
-18884-7,Cefoperazone susceptibility,Cefoperazone Susc Islt,OrdQn
-18886-2,Cefotaxime susceptibility,Cefotaxime Susc Islt,OrdQn
-18887-0,Cefotetan susceptibility,Cefotetan Susc Islt,OrdQn
-18888-8,Cefoxitin susceptibility,Cefoxitin Susc Islt,OrdQn
-18893-8,Ceftazidime susceptibility,Ceftazidime Susc Islt,OrdQn
-18894-6,Ceftizoxime susceptibility,Ceftizoxime Susc Islt,OrdQn
-18895-3,Ceftriaxone susceptibility,Ceftriaxone Susc Islt,OrdQn
-18896-1,Cefuroxine susceptibility,Cefuroxime Parenter Susc Islt,OrdQn
-18900-1,Cephalothin susceptibility,Cephalothin Susc Islt,OrdQn
-18903-5,Chloramphenicol susceptibility,Chloramphen Susc Islt,OrdQn
-18906-8,Ciprofloxacin susceptibility,Ciprofloxacin Susc Islt,OrdQn
-18907-6,Clarithromycin susceptibility,Clarithro Susc Islt,OrdQn
-18908-4,Clindamycin susceptibility,Clindamycin Susc Islt,OrdQn
-18910-0,Cloxacillin susceptibility,Cloxacillin Susc Islt,OrdQn
-18914-2,Cycloserine susceptibility,Cycloserine Susc Islt,OrdQn
-18917-5,Doxycycline susceptibility,Doxycycline Susc Islt,OrdQn
-18919-1,Erythromycin susceptibility,Erythromycin Susc Islt,OrdQn
-18921-7,Ethambutol susceptibility,Ethambutol Susc Islt,OrdQn
-18922-5,Ethionamide susceptibility,Ethionamide Susc Islt,OrdQn
-18928-2,Gentamicin susceptibility,Gentamicin Susc Islt,OrdQn
-18929-0,Gentamicin (high potency) susceptibility,Gentamicin Synergy Susc Islt,OrdQn
-18932-4,Imipenem susceptibility,Imipenem Susc Islt,OrdQn
-18934-0,Isoniazid susceptibility,Isoniazid Susc Islt,OrdQn
-18935-7,Kanamycin susceptibility,Kanamycin Susc Islt,OrdQn
-18938-1,Lincomycin susceptibility,Lincomycin Susc Islt,OrdQn
-18939-9,Lomefloxacin susceptibility,Lomefloxacin Susc Islt,OrdQn
-18943-1,Meropenem susceptibility,Meropenem Susc Islt,OrdQn
-18945-6,Methicillin susceptibility,Methicillin Susc Islt,OrdQn
-18947-2,Mezlocillin susceptibility,Mezlocillin Susc Islt,OrdQn
-18948-0,Minocycline susceptibility,Minocycline Susc Islt,OrdQn
-18951-4,Nafcillin susceptibility,Nafcillin Susc Islt,OrdQn
-18952-2,Nalidixate susceptibility,Nalidixate Susc Islt,OrdQn
-18955-5,Nitrofurantoin susceptibility,Nitrofurantoin Susc Islt,OrdQn
-18956-3,Norfloxacin susceptibility,Norfloxacin Susc Islt,OrdQn
-18959-7,Ofloxacin susceptibility,Ofloxacin Susc Islt,OrdQn
-18961-3,Oxacillin susceptibility,Oxacillin Susc Islt,OrdQn
-18964-7,Penicillin susceptibility,Penicillin Susc Islt,OrdQn
-18965-4,Penicillin G susceptibility,Penicillin G Susc Islt,OrdQn
-18969-6,Piperacillin susceptibility,Piperacillin Susc Islt,OrdQn
-18970-4,Piperacillin+Tazobactam susceptibility,Piperacillin+Tazobac Susc Islt,OrdQn
-18972-0,Polymyxin B susceptibility,Polymyxin B Susc Islt,OrdQn
-18973-8,Pyrazinamide susceptibility,PZA Susc Islt,OrdQn
-18974-6,Rifampin susceptibility,Rifampin Susc Islt,OrdQn
-18980-3,Spectinomycin susceptibility,Spectinomycin Susc Islt,OrdQn
-18982-9,Streptomycin susceptibility,Streptomycin Susc Islt,OrdQn
-18983-7,Streptomycin (high potency) susceptibility,Streptomycin High Pot Susc Islt,OrdQn
-18985-2,Sulfamethoxazole susceptibility,Sulfamethoxazole Susc Islt,OrdQn
-18993-6,Tetracycline susceptibility,Tetracycline Susc Islt,OrdQn
-18994-4,Ticarcillin susceptibility,Ticarcillin Susc Islt,OrdQn
-18995-1,Ticarcillin+Clavulanate susceptibility,Ticarcillin+Clav Susc Islt,OrdQn
-18996-9,Tobramycin susceptibility,Tobramycin Susc Islt,OrdQn
-18998-5,Trimethoprim+sulfamethoxazole susceptibility,TMP SMX Susc Islt,OrdQn
-19000-9,Vancomycin susceptibility,Vancomycin Susc Islt,OrdQn
-19149-4,Rifabutin susceptibility,Rifabutin Susc Islt,OrdQn
-19253-4,Total Ab,T spiralis Ab Ser Ql EIA,Ord
-193-3,Clindamycin susceptibility,Clindamycin Islt MIC,OrdQn
-20396-8,Levofloxacin susceptibility,Levofloxacin Islt MIC,OrdQn
-20416-4,PCR/amplification,HCV RNA # SerPl PCR,Qn
-20442-0,PCR/amplification,HBV DNA # Ser bDNA,Qn
-20449-5,Total Ab,B burgdor Ab Ser Ql EIA,Ord
-20474-3,Culture,Bacteria Tiss Bx Cult,Nom
-20479-2,IgG Ab,MeV IgG Ser Ql,Ord
-20507-0,RPR,RPR Ser Ql,Ord
-20508-8,RPR,RPR Ser-aCnc,Qn
-20629-2,Levofloxacin susceptibility,Levofloxacin Susc Islt,OrdQn
-20706-8,Animal inoculation,C bot Tox XXX Anim Inoc,Nom
-20752-2,Culture,C psittaci XXX Ql Cult,Ord
-20781-1,Microscopy,Cryptosp Stl Ql Acid fast Stn,Ord
-20931-2,Number (count),Parasites # Gast,Qn
-20932-0,Unknown method,Parasite XXX Inspect,Nom
-20951-0,Typing,Salmonella Sertyp Islt Aggl,Nom
-20993-2,DNA probe - not amplified/PCR,Deprecated C trach rRNA XXX Ql Prb,Ord
-21006-2,Surface Ab (HBsAb),HBV surface Ab Ser Donr EIA-aCnc,Qn
-21189-6,PCR/amplification,C trach DNA Cerv mucus Ql PCR,Ord
-21190-4,PCR/amplification,C trach DNA Cervix Ql PCR,Ord
-21191-2,PCR/amplification,C trach DNA Urth Ql PCR,Ord
-21262-1,Toxin by EIA/ELISA,E coli SLTEC Stl Ql EIA,Ord
-21414-8,PCR/amplification,N gonorrhoea DNA Cerv mucus Ql PCR,Ord
-21415-5,PCR/amplification,N gonorrhoea DNA Urth Ql PCR,Ord
-21416-3,PCR/amplification,N gonorrhoea DNA Ur Ql PCR,Ord
-21501-2,IgG Ab,MeV IgG Titr Ser IF,Qn
-21502-0,IgM Ab,MeV IgM Titr CSF IF,Qn
-21592-1,Total Ab,VZV Ab Titr CSF,Qn
-21594-7,Total Ab,VZV Ab Titr Ser,Qn
-21596-2,IgM Ab,VZV IgM Titr CSF IF,Qn
-21597-0,IgM Ab,VZV IgM Ser Ql,Ord
-21598-8,PCR/amplification,VZV DNA CSF Ql PCR,Ord
-21613-5,PCR/amplification,C trach DNA XXX Ql PCR,Ord
-22119-2,Total Ab,B burgdor Ab CSF-aCnc,Qn
-22122-6,Total Ab,B burgdor Ab Titr Ser,Qn
-22135-8,IgM Ab,B burgdor IgM Ser Ql,Ord
-22151-5,IgM Ab,B abortus IgM Ser-aCnc,Qn
-22180-4,IgG Ab,C psittaci IgG Titr Ser,Qn
-22181-2,IgM Ab,C psittaci IgM Titr Ser,Qn
-22191-1,IgG Ab,C trach IgG Titr Ser,Qn
-22193-7,IgM Ab,C trach IgM Titr Ser,Qn
-22283-6,IgG Ab,E chaffeensis IgG Ser Ql,Ord
-22312-3,Total Ab,HAV Ab Ser-aCnc,Qn
-22313-1,IgG Ab,HAV IgG Ser-aCnc,Qn
-22314-9,IgM Ab,HAV IgM Ser Ql,Ord
-22327-1,Total Ab,HCV Ab Ser-aCnc,Qn
-22382-6,IgM Ab,L pneumo1 IgM Titr Ser,Qn
-22398-2,IgM Ab,L pneumo IgM Titr Ser,Qn
-22414-7,Total Ab,MuV Ab Titr Ser,Qn
-22415-4,IgG Ab,MuV IgG Ser Ql,Ord
-22461-8,Unknown method,Reagin Ab Ser Ql,Ord
-22502-9,IgG Ab,MeV IgG Titr Ser,Qn
-22506-0,IgM Ab,MeV IgM Titr Ser,Qn
-22517-7,Total Ab,S paraty A H Ab Ser Ql,Ord
-22587-0,Unknown method,T pallidum Ab Ser Ql,Ord
-22592-0,Unknown method,T pallidum IgG Ser-aCnc,Qn
-22600-1,Total Ab,VZV Ab Ser Ql,Ord
-22605-0,IgM Ab,VZV IgM Titr CSF,Qn
-22606-8,IgM Ab,VZV IgM Titr Ser,Qn
-22956-7,Total Ab,B mallei Ab Ser Ql,Ord
-22958-3,Total Ab,B mallei Ab Ser Ql EIA,Ord
-22959-1,Total Ab,B mallei Ab Ser Ql CF,Ord
-23018-5,Total Ab,C burnet Ab Ser Ql IF,Ord
-23046-6,IgM Ab,EEEV IgM Ser Ql,Ord
-23125-8,Total Ab,F tular Ab Titr Ser Aggl,Qn
-233-7,Erythromycin susceptibility,Erythromycin Islt MIC,OrdQn
-23602-6,Culture,S enteritid Stl Ql Cult,Ord
-23640-6,Quinupristin+Dalfopristin susceptibility,Quinupristin+Dalfoprist Susc Islt,OrdQn
-23667-9,Unknown method,Bacteria XXX,Nom
-23826-1,PCR/amplification,B pert DNA XXX Ql PCR,Ord
-23833-7,Ab index,B burgdor Ab Indx Ser+CSF Ql,Ord
-23867-5,IgG Ab,SNV IgG Titr Ser,Qn
-23868-3,IgM Ab,SNV IgM Titr Ser,Qn
-23869-1,DNA probe - not amplified/PCR,HBV DNA Ser Prb-mCnc,Qn
-23870-9,Western (immuno) blot,HCV100+5-1-1 Ab Ser Ql IB,Ord
-23871-7,Western (immuno) blot,HCV NS5 Ab Ser Ql IB,Ord
-23877-4,IgG Ab,A phagocytoph IgG Titr Ser IF,Qn
-23878-2,IgM Ab,A phagocytoph IgM Titr Ser IF,Qn
-23908-7,DNA probe - not amplified/PCR,Deprecated N gonorrhoea rRNA XXX Ql Prb,Ord
-23979-8,Western (immuno) blot,B burgdor IgG Patrn CSF IB-Imp,Nom
-23981-4,Western (immuno) blot,B burgdor IgG Patrn Fld IB-Imp,Nom
-23982-2,IgM Ab,B burgdor IgM Fld Ql IB,Ord
-23983-0,Western (immuno) blot,B burgdor IgM Patrn Fld IB-Imp,Nom
-23985-5,Western (immuno) blot,B burgdor IgM Patrn CSF IB-Imp,Nom
-23991-3,IgG Ab,DENV IgG Ser EIA-aCnc,Qn
-23992-1,IgM Ab,DENV IgM Ser EIA-aCnc,Qn
-24011-9,Western (immuno) blot,HCV Ab Patrn Ser IB-Imp,Nom
-24015-0,Rapid,FLUAV+FLUBV Ag XXX Ql,Ord
-24042-4,PCR/amplification,E chaffeensis DNA XXX Ql PCR,Ord
-241-0,Ethambutol susceptibility,Ethambutol Islt MIC,OrdQn
-24110-9,EIA/ELISA,T pallidum Ab Ser Ql EIA,Ord
-24111-7,PCR/amplification,N gonorrhoea DNA XXX Ql PCR,Ord
-24113-3,Core IgM Ab,HBV core IgM Ser Ql EIA,Ord
-24116-6,IgM Ab,RUBV IgM Ser Ql EIA,Ord
-24312-1,RPR,T pallidum Ab Ser Ql Aggl,Ord
-24388-1,IgM Ab,Brucella IgM Ser Ql EIA,Ord
-25418-5,IgG Ab,MuV IgG Ser EIA-aCnc,Qn
-25514-1,IgG Ab,RUBV IgG Ser Ql,Ord
-26654-4,IgG Ab,SNV IgG Ser Ql,Ord
-26723-7,Total Ab,VZV Ab Titr CSF IF,Qn
-267-5,Gentamicin susceptibility,Gentamicin Islt MIC,OrdQn
-27265-8,"Antigen, unknown method",Giardia Ag Stl Ql,Ord
-279-0,Imipenem susceptibility,Imipenem Islt MIC,OrdQn
-27907-5,Culture,Cryptosp Stl Cult,Nom
-27994-3,PCR/amplification,E chaffeensis DNA Bld Ql PCR,Ord
-28-1,Ampicillin susceptibility,Ampicillin Islt MIC,OrdQn
-287-3,Isoniazid susceptibility,Isoniazid Islt MIC,OrdQn
-291-5,Kanamycin susceptibility,Kanamycin Islt MIC,OrdQn
-29248-2,PCR/amplification,VZV DNA Bld Ql PCR,Ord
-29258-1,Linezolid susceptibility,Linezolid Susc Islt,OrdQn
-29310-0,FTA,T pallidum XXX Ql IF,Ord
-29535-2,IgG Ab,WNV IgG Ser-aCnc,Qn
-29536-0,IgM Ab,WNV IgM Ser-aCnc,Qn
-29537-8,IgG Ab,WNV IgG CSF-aCnc,Qn
-29538-6,IgM Ab,WNV IgM CSF-aCnc,Qn
-29560-0,PCR/amplification,A phagocytoph DNA XXX Ql PCR,Ord
-29566-7,IgG Ab,WNV IgG Ser Ql EIA,Ord
-29567-5,IgM Ab,WNV IgM Ser Ql EIA,Ord
-29568-3,Total Ab,WNV Ab Titr Ser Nt,Qn
-29569-1,IgM Ab,WNV IgM CSF Ql EIA,Ord
-29609-5,PCR/amplification,HCV RNA SerPl bDNA-aCnc,Qn
-29610-3,PCR/amplification,HBV DNA SerPl Ql PCR,Ord
-29615-2,PCR/amplification,HBV DNA # SerPl PCR,Qn
-29662-4,IgM Ab,VZV IgM Ser Ql EIA,Ord
-29778-8,IgM Ab,WNV IgM XXX Ql EIA,Ord
-29783-8,Total Ab,SLEV Ab Titr XXX Nt,Qn
-29785-3,IgG Ab,EEEV IgG XXX Ql IF,Ord
-29789-5,IgG Ab,LACV IgG XXX Ql IF,Ord
-29793-7,IgG Ab,A phagocytoph IgG XXX Ql IB,Ord
-29794-5,IgM Ab,A phagocytoph IgM XXX Ql IB,Ord
-29898-4,IgG Ab,B burgdor IgG XXX Ql IB,Ord
-30174-7,IgG Ab,JCV IgG Titr XXX IF,Qn
-30175-4,Total Ab,JCV Ab XXX Ql Nt,Ord
-30176-2,Total Ab,LACV Ab XXX Ql Nt,Ord
-30177-0,IgG Ab,POWV IgG Titr XXX IF,Qn
-30178-8,IgG Ab,WNV IgG XXX Ql EIA,Ord
-30179-6,IgM Ab,POWV IgM Titr XXX IF,Qn
-30307-3,Indinavir susceptibility,Indinavir Susc Islt,OrdQn
-30526-8,IgM Ab,B burgdor IgM Ser Ql IF,Ord
-31038-3,Gatifloxacin susceptibility,Gatifloxacin Susc Islt,OrdQn
-31039-1,Moxifloxacin susceptibility,Moxifloxacin Susc Islt,OrdQn
-31146-4,VDRL,VDRL CSF-Titr,Qn
-31147-2,RPR,RPR Ser-Titr,Qn
-31204-1,Core IgM Ab,HBV core IgM Ser Ql,Ord
-31694-3,Total Ab,VZV Ab CSF-aCnc,Qn
-31695-0,IgM Ab,VZV IgM CSF-aCnc,Qn
-31698-4,Total Ab,V cholerae Ab Ser-aCnc,Qn
-31844-4,e Ag (HBeAg),HBV e Ag Ser Ql,Ord
-31858-4,Rapid,FLUAV Ag Throat Ql,Ord
-31859-2,Rapid,FLUAV Ag XXX Ql,Ord
-31863-4,Rapid,FLUBV Ag Throat Ql,Ord
-31864-2,Rapid,FLUBV Ag XXX Ql,Ord
-31870-9,Antigen,L pneumo Ag Ur Ql,Ord
-31906-1,Antigen,N gonorrhoea Ag XXX Ql,Ord
-31910-3,Antigen,N men A+C+W135+Y Ag XXX Ql,Ord
-31981-4,Antigen,VZV Ag Skin Ql,Ord
-31982-2,Antigen,VZV Ag XXX Ql,Ord
-32198-4,DNA probe - not amplified/PCR,N gonorrhoea rRNA Cervix Ql Prb,Ord
-32206-5,Microscopy,Plasmodium Bld Smear,Nom
-32286-7,Genotype by PCR,HCV Gentyp SerPl PCR,Nom
-32-3,Ampicillin+Sulbactam susceptibility,Ampicillin+Sulbac Islt MIC,OrdQn
-32355-0,Culture,Bacteria XXX Resp Cult,Nom
-32366-7,Genotype by PCR,HBV Gentyp SerPl PCR,Nom
-32376-6,Clinofloxacin susceptibility,Clinafloxacin Susc Islt,OrdQn
-32669-4,PCR/amplification,B burgdor DNA Snv Ql PCR,Ord
-32696-7,Total Ab,L pneumo pool 1-6 Ab Titr Ser,Qn
-32700-7,Microscopy,Malaria Smear Bld,Nom
-32705-6,PCR/amplification,N gonorrhoea DNA Vag Ql PCR,Ord
-33295-7,PCR/amplification,JCPyV DNA CSF Ql PCR,Ord
-33327-8,Total Ab,VZV Ab Titr CSF CF,Qn
-33463-1,e IgG Ab,HBV e IgG Ser Ql EIA,Ord
-33581-0,Total Ab,Deprecated A phagocytoph Ab Titr Ser IF,Qn
-33633-9,Precore Tag mutation by PCR,HBV preC TAG Mut Ser PCR,Nom
-33676-8,Culture,F tular XXX Ql Cult,Ord
-33694-1,Culture,C bot XXX Ql Cult,Ord
-33696-6,Animal inoculation,C bot Tox XXX Ql MA,Ord
-33764-2,Toxin by PCR,Shiga toxin gene XXX PCR,Nom
-33964-8,PCR/amplification,SARS-CoV Urb RNA XXX Ql PCR,Ord
-33968-9,PCR/amplification,SARS-CoV Urb Ab Ser Ql EIA,Ord
-34148-7,Total Ab,B burgdor IgG+IgM Ser-aCnc,Qn
-34382-2,FTA,T pallidum Ab Titr Ser IF,Qn
-34450-7,PCR/amplification,EEEV RNA CSF Ql PCR,Ord
-34487-9,PCR/amplification,FLUAV RNA XXX Ql PCR,Ord
-35276-5,IgM Ab,MeV IgM Ser Ql EIA,Ord
-35393-8,IgM Ab,Hantavirus IgM Ser-aCnc,Qn
-35399-5,PCR/amplification,VZV DNA Eye Ql PCR,Ord
-35400-1,PCR/amplification,VZV DNA Tiss Ql PCR,Ord
-35679-0,Total Ab,VZV IgG+IgM Pnl CSF,Qn
-35713-7,PCR/amplification,Chlamydia DNA Cervix Ql PCR,Ord
-35783-0,Cefuroxine susceptibility,Cefuroxime Oral Susc Islt,OrdQn
-35789-7,Daptomycin susceptibility,Daptomycin Susc Islt,OrdQn
-35802-8,Ertapenem susceptibility,Ertapenem Susc Islt,OrdQn
-35816-8,Gemifloxacin susceptibility,Gemifloxacin Susc Islt,OrdQn
-35861-4,Virginiamycin susceptibility,Virginiamycin Susc Islt,OrdQn
-363-2,Nitrofurantoin susceptibility,Nitrofurantoin Islt MIC,OrdQn
-36896-9,Polyvalent E Ab,WNV Polyval E Ab XXX Ql EIA,Ord
-36897-7,Total Ab,WNV Ab XXX Ql EIA,Ord
-36898-5,NS5 Ab,WNV NS5 Ab XXX Ql EIA,Ord
-36902-5,PCR/amplification,C trach+GC DNA XXX Ql PCR,Ord
-36903-3,PCR/amplification,C trach+GC DNA XXX PCR,Nom
-37983-4,DNA probe - not amplified/PCR,EEEV cDNA XXX Ql Prb,Ord
-37984-2,DNA probe - not amplified/PCR,SLEV cDNA XXX Ql Prb,Ord
-37985-9,DNA probe - not amplified/PCR,WNV cDNA XXX Ql Prb,Ord
-38180-6,PCR/amplification,HCV RNA SerPl PCR-Log IU,Qn
-383-0,Oxacillin susceptibility,Oxacillin Islt MIC,OrdQn
-38347-1,PCR/amplification,Other microorganism DNA XXX PCR,Nom
-38379-4,PCR/amplification,M TB Cmplx DNA XXX Ql PCR,Ord
-38382-8,Culture,FLUBV XXX Ql Cult,Ord
-38916-3,PCR/amplification,Calicivirus RNA XXX Ql PCR,Ord
-38997-3,IgG Ab,WNV IgG Ser EIA-aCnc,Qn
-39102-9,PCR/amplification,FLUAV HA cDNA XXX PCR,Nom
-39103-7,PCR/amplification,FLUAV NA cDNA XXX PCR,Nom
-3911-5,Penicillin susceptibility,Penicillin SerPl-mCnc,Qn
-39534-3,Antigen by DFA/IF,Cryptosp Ag Stl Ql IF,Ord
-39572-3,IgG Ab,WNV IgG CSF EIA-aCnc,Qn
-40699-1,Unknown method,Mycobacterium XXX,Nom
-408-5,Piperacillin susceptibility,Piperacillin Islt MIC,OrdQn
-412-7,Piperacillin+Tazobactam susceptibility,Piperacillin+Tazobac Islt MIC,OrdQn
-41499-5,Antigen,L pneumo1 Ag Ur Ql EIA,Ord
-41852-5,Unknown method,Microorganism/Agent XXX,Nom
-41878-0,Total Ab,DENV IgG+IgM Pnl Ser EIA-aCnc,Qn
-42190-9,PCR/amplification,Shigella DNA XXX PCR,Nom
-42357-4,Tigecycline susceptibility,Tigecycline Susc Islt,OrdQn
-424-2,Pyrazinamide susceptibility,PZA Islt MIC,OrdQn
-42595-9,PCR/amplification,HBV DNA SerPl PCR-aCnc,Qn
-42617-1,PCR/amplification,HCV RNA SerPl bDNA-Log IU,Qn
-428-3,Rifampin susceptibility,Rifampin Islt MIC,OrdQn
-43174-2,Antigen by DFA/IF,C trach L2 IgA Titr Ser IF,Qn
-43304-5,PCR/amplification,C trach rRNA XXX Ql PCR,Ord
-43305-2,PCR/amplification,N gonorrhoea rRNA XXX Ql PCR,Ord
-43403-5,PCR/amplification,N gonorrhoea DNA XXX Ql bDNA,Ord
-43588-3,IgM Ab,VZV IgM Ser Ql IF,Ord
-43693-1,Culture,VZV Skin Shell Vial Cult,Nom
-43978-6,Total Ab,VZV Ab Ser Ql EIA,Ord
-44079-2,Total Ab,C trach IgA+IgG+IgM Ser-Imp,Nom
-44088-3,PCR/amplification,E coli O157H7 DNA XXX PCR,Nom
-44771-4,Total Ab,VZV Ab Titr Ser IF,Qn
-44-8,Aztreonam susceptibility,Aztreonam Islt MIC,OrdQn
-45063-5,Total Ab,VZV IgG+IgM Pnl Ser,Qn
-45078-3,DNA probe - not amplified/PCR,C trach rRNA Cervix Ql Prb,Ord
-460-6,Streptomycin susceptibility,Streptomycin Islt MIC,OrdQn
-46245-7,PCR/amplification,M TB pncA Islt PCR,Nom
-46705-0,PCR/amplification,C bot Tox gene XXX PCR,Nom
-47002-1,PCR/amplification,VZV DNA # CSF PCR,Qn
-47003-9,PCR/amplification,VZV DNA # SerPl PCR,Qn
-47211-8,PCR/amplification,C trach L2 DNA XXX Ql PCR,Ord
-47212-6,PCR/amplification,C trach DNA XXX PCR,Nom
-47238-1,EIA/ELISA,T pallidum IgG Ser Ql EIA,Ord
-47387-6,PCR/amplification,N gonorrhoea DNA Genital Ql PCR,Ord
-47405-6,IgG Ab,E chaffeensis IgG Titr Ser IF,Qn
-47419-7,Total Ab,VZV Ab Ser EIA-aCnc,Qn
-48159-8,Ab signal/cutoff,HCV Ab s/co SerPl EIA-Rto,Qn
-48310-7,Culture,FLUAV XXX Ql Cult,Ord
-48509-4,PCR/amplification,FLUAV+FLUBV RNA XXX PCR,Nom
-496-0,Tetracycline susceptibility,Tetracycline Islt MIC,OrdQn
-49614-1,PCR/amplification,Campylobacter DNA XXX PCR,Nom
-49671-1,PCR/amplification,N men DNA XXX Ql PCR,Ord
-4991-6,PCR/amplification,B burgdor DNA XXX Ql PCR,Ord
-4992-4,DNA probe - not amplified/PCR,Campylobacter rRNA XXX Ql Prb,Ord
-4993-2,DNA probe - not amplified/PCR,C trach rRNA XXX Ql Prb,Ord
-5007-0,PCR/amplification,HBV DNA Bld Ql PCR,Ord
-5010-4,PCR/amplification,HCV RNA Bld Ql PCR,Ord
-5011-2,PCR/amplification,HCV RNA Tiss Ql PCR,Ord
-5012-0,PCR/amplification,HCV RNA XXX Ql PCR,Ord
-5022-9,DNA probe - not amplified/PCR,M avium Cmplx rRNA XXX Ql Prb,Ord
-5028-6,DNA probe - not amplified/PCR,N gonorrhoea rRNA XXX Ql Prb,Ord
-5034-4,DNA probe - not amplified/PCR,Gp B Strep rRNA XXX Ql Prb,Ord
-5036-9,DNA probe - not amplified/PCR,S pyog rRNA XXX Ql Prb,Ord
-50387-0,PCR/amplification,C trach rRNA Cervix Ql PCR,Ord
-50388-8,PCR/amplification,N gonorrhoea rRNA Cervix Ql PCR,Ord
-504-1,Ticarcillin+Clavulanate susceptibility,Ticarcillin+Clav Islt MIC,OrdQn
-5060-9,Total Ab,B burgdor Ab Ser EIA-aCnc,Qn
-5061-7,Total Ab,B burgdor Ab Titr Ser IF,Qn
-5062-5,IgG Ab,B burgdor IgG Ser EIA-aCnc,Qn
-5063-3,IgG Ab,B burgdor IgG Titr Ser IF,Qn
-5064-1,IgM Ab,B burgdor IgM Ser EIA-aCnc,Qn
-5065-8,IgM Ab,B burgdor IgM Titr Ser IF,Qn
-5066-6,Total Ab,B abortus Ab Ser Ql LA,Ord
-5067-4,Total Ab,B abortus Ab Titr Ser LA,Qn
-5068-2,Total Ab,B canis Ab Titr Ser LA,Qn
-5069-0,Total Ab,B melitensis Ab Titr Ser LA,Qn
-5071-6,Total Ab,B suis Ab Titr Ser LA,Qn
-5073-2,Total Ab,LACV Ab Ser-aCnc,Qn
-5079-9,Total Ab,C psittaci Ab Titr Ser CF,Qn
-508-2,Tobramycin susceptibility,Tobramycin Islt MIC,OrdQn
-5084-9,Total Ab,Chlamydia Ab Titr Ser IF,Qn
-5090-6,IgM Ab,C trach IgM Ser-aCnc,Qn
-5134-2,Total Ab,EEEV Ab Ser-aCnc,Qn
-5151-6,HA,E histolyt Ab Ser HA-aCnc,Qn
-516-5,Trimethoprim+sulfamethoxazole susceptibility,TMP SMX Islt MIC,OrdQn
-5166-4,Total Ab,F tular Ab Ser Ql LA,Ord
-5167-2,Total Ab,F tular Ab Titr Ser LA,Qn
-5169-8,Total Ab,G lamblia Ab Ser-aCnc,Qn
-5181-3,IgM Ab,HAV IgM Ser EIA-aCnc,Qn
-5182-1,IgM Ab,HAV IgM Ser RIA-aCnc,Qn
-5183-9,Total Ab,HAV Ab Ser EIA-aCnc,Qn
-5185-4,Core IgM Ab,HBV core IgM Ser EIA-aCnc,Qn
-5186-2,Core IgM Ab,HBV core IgM Ser RIA-aCnc,Qn
-5187-0,Core Ab (HBcAb),HBV core Ab Ser EIA-aCnc,Qn
-5189-6,e Ab (HBeAb),HBV e Ab Ser EIA-aCnc,Qn
-5191-2,e Ag (HBeAg),HBV e Ag Ser EIA-aCnc,Qn
-5193-8,Surface Ab (HBsAb),HBV surface Ab Ser EIA-aCnc,Qn
-5194-6,Surface Ab (HBsAb),HBV surface Ab Ser RIA-aCnc,Qn
-5195-3,Surface Ab (HBsAb),HBV surface Ag Ser Ql,Ord
-5196-1,Surface Ag (HBsAg),HBV surface Ag Ser Ql EIA,Ord
-5197-9,Surface Ag (HBsAg),HBV surface Ag Ser Ql RIA,Ord
-5198-7,Total Ab,HCV Ab Ser EIA-aCnc,Qn
-5199-5,Total Ab,HCV Ab Ser Ql IB,Ord
-5236-5,Total Ab,L pneumo Ab Ser Ql IF,Ord
-5237-3,Total Ab,L pneumo Ab Titr Ser IF,Qn
-5242-3,Total Ab,MeV Ab Ser EIA-aCnc,Qn
-5243-1,Total Ab,MeV Ab Titr Ser CF,Qn
-5244-9,IgG Ab,MeV IgG Ser EIA-aCnc,Qn
-5245-6,IgM Ab,MeV IgM Titr Ser IF,Qn
-524-9,Vancomycin susceptibility,Vancomycin Islt MIC,OrdQn
-5249-8,Total Ab,MuV Ab Titr Ser CF,Qn
-5250-6,Total Ab,MuV Ab Titr Ser IF,Qn
-5289-4,VDRL,VDRL CSF-aCnc,Qn
-5290-2,VDRL,VDRL CSF Ql,Ord
-5291-0,VDRL,VDRL Ser-aCnc,Qn
-5292-8,VDRL,VDRL Ser Ql,Ord
-5307-4,IgG Ab,R rickettsi IgG Titr Ser IF,Qn
-5308-2,IgM Ab,R rickettsi IgM Titr Ser IF,Qn
-5310-8,Total Ab,Rick SF Ab Ser Ql LA,Ord
-5311-6,Total Ab,Rick SF Ab Titr Ser IF,Qn
-5312-4,IgG Ab,Rick SF IgG Ser EIA-aCnc,Qn
-5313-2,IgG Ab,Rick SF IgG Titr Ser IF,Qn
-5314-0,IgM Ab,Rick SF IgM Ser EIA-aCnc,Qn
-5315-7,IgM Ab,Rick SF IgM Titr Ser IF,Qn
-532-2,Culture,Mycobacterium Aspirate Cult,Nom
-533-0,Culture,Mycobacterium Bld Cult,Nom
-5334-8,IgG Ab,RUBV IgG Ser EIA-aCnc,Qn
-5335-5,IgM Ab,RUBV IgM Ser EIA-aCnc,Qn
-534-8,Culture,Mycobacterium CSF Cult,Nom
-535-5,Culture,Mycobacterium Fld Cult,Nom
-536-3,Culture,Mycobacterium Mar Cult,Nom
-537-1,Culture,Mycobacterium Prt Cult,Nom
-538-9,Culture,Mycobacterium Snv Cult,Nom
-5393-4,FTA,T pallidum Ab Ser Ql IF,Ord
-5395-9,Total Ab,T spiralis Ab Titr Ser LA,Qn
-539-7,Culture,Mycobacterium Spt Cult,Nom
-5401-5,Total Ab,VZV Ab Titr Ser CF,Qn
-5402-3,Total Ab,VZV Ab Titr Ser LA,Qn
-5404-9,IgM Ab,VZV IgM Ser EIA-aCnc,Qn
-540-5,Culture,Mycobacterium Tiss Cult,Nom
-5405-6,Total Ab,V cholerae Ab Ser-mCnc,Qn
-5406-4,Total Ab,WEEV Ab Ser-aCnc,Qn
-5407-2,O3 Ab,Y enteroO3 Ab Ser-aCnc,Qn
-5408-0,O8 Ab,Y enteroO8 Ab Ser-aCnc,Qn
-5409-8,O9 Ab,Y enteroO9 Ab Ser-aCnc,Qn
-5410-6,Total Ab,Y pseudoTB Ab Ser-aCnc,Qn
-541-3,Culture,Mycobacterium Ur Cult,Nom
-542-1,Culture,Mycobacterium Wnd Cult,Nom
-543-9,Culture,Mycobacterium XXX Cult,Nom
-547-0,Culture,B-Hem Strep XXX Ql Cult,Ord
-548-8,Culture,B pert Throat Ql Cult,Ord
-549-6,Culture,B pert XXX Ql Cult,Ord
-551-2,Culture,Brucella Bld Cult,Nom
-552-0,Culture,Brucella XXX Cult,Nom
-558-7,Culture,Chlamydia Throat Cult,Nom
-560-3,Culture,Chlamydia XXX Cult,Nom
-566-0,Antigen by DFA/IF,Cryptosp Ag XXX Ql IF,Ord
-567-8,Culture,Diphtheria XXX Cult,Nom
-5860-2,Rapid,FLUAV Ag Throat Ql EIA,Ord
-5861-0,DFA/IF,FLUAV Ag Throat Ql IF,Ord
-5862-8,Rapid,FLUAV Ag XXX Ql EIA,Ord
-5863-6,DFA/IF,FLUAV Ag XXX Ql IF,Ord
-5864-4,Rapid,FLUBV Ag Throat Ql EIA,Ord
-5865-1,DFA/IF,FLUBV Ag Throat Ql IF,Ord
-5866-9,Rapid,FLUBV Ag XXX Ql EIA,Ord
-5867-7,DFA/IF,FLUBV Ag XXX Ql IF,Ord
-586-8,Culture,Gp B Strep XXX Ql Cult,Ord
-5878-4,Culture,Rickettsia Bld Cult,Nom
-5881-8,Antigen by DFA/IF,VZV Ag Skin Ql IF,Ord
-5882-6,Antigen by DFA/IF,VZV Ag XXX Ql IF,Ord
-5883-4,Culture,Virus Bld Cult,Nom
-588-4,Antigen,L pneumo Ag XXX Ql IF,Ord
-5884-2,Culture,Virus CSF Cult,Nom
-5886-7,Culture,Virus Stl Cult,Nom
-5887-5,Culture,Virus Throat Cult,Nom
-5888-3,Culture,Virus Tiss Cult,Nom
-589-2,Culture,Legionella Bronch Cult,Nom
-590-0,Culture,Legionella Spt Cult,Nom
-593-4,Culture,Legionella XXX Cult,Nom
-597-5,Culture,Bacteria Aspirate Aerobe Cult,Nom
-600-7,Culture,Bacteria Bld Cult,Nom
-604-9,Culture,Bacteria Bronch Aerobe Cult,Nom
-605-6,Culture,Bacteria Cannula Aerobe Cult,Nom
-606-4,Culture,Bacteria CSF Cult,Nom
-609-8,Culture,Bacteria Eye Aerobe Cult,Nom
-610-6,Culture,Bacteria Fld Aerobe Cult,Nom
-611-4,Culture,Bacteria Fld Cult,Nom
-614-8,Typing,Mycobacterium Islt Mycob Subtyping,Nom
-620-5,Culture,Bacteria Skin Aerobe Cult,Nom
-621-3,Culture,Bacteria Snv Cult,Nom
-622-1,Culture,Bacteria Spt Aerobe Cult,Nom
-623-9,Culture,Bacteria Spt CF Resp Cult,Nom
-624-7,Culture,Bacteria Spt Resp Cult,Nom
-625-4,Culture,Bacteria Stl Cult,Nom
-626-2,Culture,Bacteria Throat Cult,Nom
-627-0,Culture,Bacteria Tiss Aerobe Cult,Nom
-628-8,Culture,Bacteria Tiss Anaerobe Cult,Nom
-630-4,Culture,Bacteria Ur Cult,Nom
-6309-9,Culture,Arbovirus Bld Cult,Nom
-6310-7,Culture,Arbovirus XXX Cult,Nom
-6317-2,Culture,Bordetella XXX Cult,Nom
-6318-0,Total Ab,B burgdor Ab CSF EIA-aCnc,Qn
-632-0,Culture,Bacteria Wnd Aerobe Cult,Nom
-6320-6,IgG Ab,B burgdor IgG Ser Ql IB,Ord
-6321-4,IgM Ab,B burgdor IgM Ser Ql IB,Ord
-6323-0,Culture,Borrelia XXX Cult,Nom
-6324-8,Total Ab,B abortus Ab Titr Ser Aggl,Qn
-6326-3,IgM Ab,B abortus IgM Ser EIA-aCnc,Qn
-6329-7,DNA probe - not amplified/PCR,C coli rRNA XXX Ql Prb,Ord
-6330-5,Culture,Campylobacter Bld Cult,Nom
-6331-3,Culture,Campylobacter Stl Cult,Nom
-6332-1,Culture,Campylobacter XXX Cult,Nom
-6333-9,DNA probe - not amplified/PCR,C jejuni rRNA XXX Ql Prb,Ord
-6334-7,DNA probe - not amplified/PCR,C lari rRNA XXX Ql Prb,Ord
-6335-4,Culture,Deprecated Campylobacter XXX Cult,Nom
-634-6,Culture,Bacteria XXX Aerobe Cult,Nom
-6348-7,Culture,Chlamydia Spt Cult,Nom
-6349-5,Culture,C trach XXX Ql Cult,Ord
-6350-3,EIA/ELISA,C trach Ag Conjunct Ql EIA,Ord
-6351-1,Antigen by DFA/IF,C trach Ag Conjunct Ql IF,Ord
-635-3,Culture,Bacteria XXX Anaerobe Cult,Nom
-6353-7,Antigen by DFA/IF,C trach Ag Tiss Ql IF,Ord
-6354-5,Antigen by EIA/ELISA,C trach Ag XXX Ql EIA,Ord
-6355-2,Antigen by DFA/IF,C trach Ag XXX Ql IF,Ord
-6356-0,PCR/amplification,C trach DNA Genital Ql PCR,Ord
-6357-8,PCR/amplification,C trach DNA Ur Ql PCR,Ord
-6358-6,DNA probe - not amplified/PCR,Deprecated C trach rRNA XXX Ql Prb,Ord
-636-1,Culture,Bacteria XXX BFld Cult,Nom
-6367-7,IgG Ab,C tetani IgG Ser EIA-aCnc,Qn
-6371-9,Antigen by EIA/ELISA,Cryptosp Ag Stl Ql EIA,Ord
-6372-7,Antigen by DFA/IF,Cryptosp Ag Titr Stl IF,Qn
-637-9,Microscopy,Malaria Thick Smear Bld,Nom
-6383-4,Total Ab,Deprecated DENV Ab XXX,OrdQn
-6388-3,Antigen by EIA/ELISA,EEEV Ag Ser Ql EIA,Ord
-6389-1,Antigen by DFA/IF,EEEV Ag Ser Ql IF,Ord
-6396-6,PCR/amplification,E histolyt DNA XXX Ql PCR,Ord
-6397-4,Antigen by EIA/ELISA,E histolyt Ag Ser EIA-aCnc,Qn
-6398-2,Antigen by EIA/ELISA,E histolyt Ag Stl EIA-aCnc,Qn
-6399-0,Antigen by EIA/ELISA,E histolyt Ag XXX EIA-aCnc,Qn
-6401-4,IgG Ab,E chaffeensis IgG Ser Ql EIA,Ord
-6402-2,IgM Ab,E chaffeensis IgM Ser Ql EIA,Ord
-6403-0,Total Ab,A phagocytoph Ab Ser Ql EIA,Ord
-6404-8,Total Ab,Deprecated A phagocytoph Ab Ser Ql EIA,Ord
-6407-1,IgM Ab,F tular IgM Ser Ql LA,Ord
-6408-9,DFA/IF,F tular Ag XXX Ql IF,Ord
-6412-1,Antigen by EIA/ELISA,G lamblia Ag Stl Ql EIA,Ord
-6413-9,Antigen by EIA/ELISA,G lamblia Ag XXX Ql EIA,Ord
-6422-0,DNA probe - not amplified/PCR,Deprecated HCV rRNA XXX Ql Prb,Ord
-6437-8,Rapid,FLUAV+FLUBV Ag XXX Ql EIA,Ord
-6438-6,DFA/IF,FLUAV+FLUBV Ag XXX Ql IF,Ord
-6445-1,Antigen,L pneumo Ag Spt Ql IF,Ord
-6447-7,Antigen,L pneumo Ag Ur Ql EIA,Ord
-6448-5,Antigen,L pneumo Ag Ur Ql RIA,Ord
-6451-9,DNA probe - not amplified/PCR,Deprecated Legionella rRNA XXX Ql Prb,Ord
-645-2,Microscopy,Acid fast Kiny Stn Spt,Nom
-646-0,Microscopy,Acid fast Mod Kiny Stn Spt,Nom
-6460-0,Culture,Bacteria Spt Cult,Nom
-6462-6,Culture,Bacteria Wnd Cult,Nom
-6463-4,Culture,Bacteria XXX Cult,Nom
-6470-9,Microscopy,Wet Prep Stl,Nom
-6471-7,Microscopy,Other Stn Tiss,Nom
-6473-3,Microscopy,Tri Stn Tiss,Nom
-6476-6,IgG Ab,MuV IgG Ser Ql EIA,Ord
-6477-4,IgG Ab,MuV IgG Titr Ser IF,Qn
-6478-2,IgM Ab,MuV IgM Ser Ql EIA,Ord
-6479-0,IgM Ab,MuV IgM Titr Ser IF,Qn
-6487-3,Antigen by EIA/ELISA,N gonorrhoea Ag Genital Ql EIA,Ord
-6488-1,Antigen by DFA/IF,N gonorrhoea Ag Genital Ql IF,Ord
-6489-9,Antigen,N gonorrhoea Ag Genital Ql LA,Ord
-6490-7,Antigen,N gonorrhoea Ag Urth Ql,Ord
-6491-5,PCR/amplification,Deprecated N gonorrhoea rRNA XXX Ql Prb,Ord
-6509-4,DNA probe - not amplified/PCR,N men rRNA CSF Ql Prb,Ord
-6523-5,Total Ab,RABV Ab CSF Nt-aCnc,Qn
-6524-3,Total Ab,RABV Ab Ser Nt-aCnc,Qn
-6527-6,Total Ab,RABV Ab XXX Nt-aCnc,Qn
-6528-4,Antigen,RABV Ag Tiss Ql IF,Ord
-6529-2,Antigen,RABV Ag Tiss IF-aCnc,Qn
-6532-6,Antigen,RABV Ag XXX Ql IF,Ord
-6533-4,Antigen,RABV Ag XXX IF-aCnc,Qn
-6543-3,Antigen by DFA/IF,R rickettsi Ag Tiss IF,Nom
-6544-1,Culture,Rickettsia Genital Cult,Nom
-6545-8,Culture,Rickettsia Spt Cult,Nom
-6546-6,Culture,Rickettsia XXX Cult,Nom
-6548-2,Culture,RUBV Ser Cult,Nom
-6549-0,"Antigen, unknown method",SLEV Ag Ser-aCnc,Qn
-6558-1,Typing,S pyog Ag XXX Ql EIA,Ord
-6559-9,Typing,S pyog Ag XXX Ql IF,Ord
-6561-5,Unknown method,T pallidum IgG Ser Ql,Ord
-6562-3,Unknown method,T pallidum IgM Ser Ql,Ord
-6563-1,IgG Ab,T spiralis IgG Ser Ql EIA,Ord
-6570-6,IgM Ab,VZV IgM Titr Ser IF,Qn
-6578-9,Culture,Vibrio Bld Cult,Nom
-6579-7,Culture,Vibrio Stl Cult,Nom
-6581-3,Culture,Vibrio XXX Cult,Nom
-6584-7,Culture,Virus XXX Cult,Nom
-6585-4,Antigen by EIA/ELISA,WEEV Ag Ser Ql EIA,Ord
-6586-2,Antigen by DFA/IF,WEEV Ag Ser Ql IF,Ord
-6587-0,Total Ab,YFV Ab Titr Ser CF,Qn
-6588-8,Total Ab,YFV Ab Ser HAI-aCnc,Qn
-6589-6,Total Ab,YFV Ab Titr Ser IF,Qn
-6590-4,Total Ab,YFV Ab Titr Ser LA,Qn
-6591-2,Total Ab,YFV Ab Ser Nt-aCnc,Qn
-6592-0,IgG Ab,YFV IgG Ser EIA-aCnc,Qn
-6593-8,IgM Ab,YFV IgM Ser EIA-aCnc,Qn
-6594-6,Culture,Amoeba XXX Cult,Nom
-6596-1,Culture,Diphtheria Islt Cult,Nom
-6600-1,Culture,Haemphilus XXX Cult,Nom
-6601-9,Culture,FLUV Spt Cult,Nom
-6602-7,Culture,FLUV Sputum trach asp Cult,Nom
-6603-5,Culture,FLUV Throat Cult,Nom
-6604-3,Culture,FLUV XXX Cult,Nom
-6609-2,Culture,Listeria XXX Cult,Nom
-662-7,Microscopy,Gie Stn XXX,Nom
-665-0,Microscopy,H+E Stn XXX,Nom
-6652-2,Meropenem susceptibility,Meropenem Islt MIC,OrdQn
-6656-3,Microscopy,Acid fast Mod Kiny Stn Tiss,Nom
-6665-4,Microscopy,H+E Stn Tiss,Nom
-6674-6,Microscopy,O&P Prep Tiss,Nom
-6680-3,Microscopy,Wet Prep Tiss,Nom
-673-4,Microscopy,O&P Prep XXX,Nom
-676-7,Microscopy,Rhodamine-auramine Stn XXX,Nom
-678-3,Microscopy,Tri Stn XXX,Nom
-680-9,Microscopy,Wet Prep XXX,Nom
-6812-2,IgM Ab,DENV IgM Titr Ser,Qn
-688-2,Culture,N gonorrhoea Cervix Ql Cult,Ord
-690-8,Culture,N gonorrhoea Endometrium Ql Cult,Ord
-6911-2,IgG Ab,B abortus IgG Ser-aCnc,Qn
-6915-3,IgA Ab,C psittaci IgA Titr Ser IF,Qn
-691-6,Culture,N gonorrhoea Genital Ql Cult,Ord
-6916-1,IgG Ab,C psittaci IgG Titr Ser IF,Qn
-6917-9,IgM Ab,C psittaci IgM Titr Ser IF,Qn
-6918-7,IgA Ab,C trach IgA Titr Ser IF,Qn
-6919-5,IgG Ab,C trach IgG Titr Ser IF,Qn
-6920-3,IgM Ab,C trach IgM Titr Ser IF,Qn
-692-4,Culture,N gonorrhoea Gen lochia Ql Cult,Ord
-693-2,Culture,N gonorrhoea Vag Ql Cult,Ord
-6932-8,Penicillin susceptibility,Penicillin Islt MIC,OrdQn
-694-0,Culture,N gonorrhoea Smn Ql Cult,Ord
-695-7,Culture,N gonorrhoea Snv Ql Cult,Ord
-6957-5,IgG Ab,WEEV IgG Titr Ser IF,Qn
-6958-3,IgM Ab,WEEV IgM Titr Ser IF,Qn
-6959-1,O3 Ab,Y enteroO3 Ab Titr Ser,Qn
-6960-9,O5 Ab,Y enteroO5 Ab Titr Ser,Qn
-6961-7,O8 Ab,Y enteroO8 Ab Titr Ser,Qn
-6962-5,O9 Ab,Y enteroO9 Ab Titr Ser,Qn
-6963-3,Total Ab,Y enterocol Ab Titr Ser,Qn
-6964-1,IgA Ab,Y enterocol IgA Ser EIA-aCnc,Qn
-696-5,Culture,N gonorrhoea Throat Ql Cult,Ord
-6965-8,IgG Ab,Y enterocol IgG Ser EIA-aCnc,Qn
-6966-6,IgM Ab,Y enterocol IgM Ser EIA-aCnc,Qn
-6967-4,Total Ab,Y pseudoTB Ab Titr Ser,Qn
-697-3,Culture,N gonorrhoea Urth Ql Cult,Ord
-698-1,Culture,N gonorrhoea XXX Ql Cult,Ord
-6984-9,Beta lactamase extended spectrum susceptibility,B-Lactamase Extended Susc Islt,OrdQn
-6985-6,Beta lactamase susceptibility,B-Lactamase Usual Susc Islt,OrdQn
-699-9,Organism count,Organism # XXX Microscopic Cnt,Qn
-701-3,Culture,Yersinia XXX Cult,Nom
-7817-0,IgG Ab,B burgdor IgG Ser-aCnc,Qn
-7818-8,IgM Ab,B burgdor IgM Ser-aCnc,Qn
-7828-7,Total Ab,C burnet Ab Ser-aCnc,Qn
-7829-5,IgG Ab,C burnet Ph1 IgG Ser-aCnc,Qn
-7830-3,IgG Ab,C burnet Ph2 IgG Ser-aCnc,Qn
-7860-0,IgG Ab,EEEV IgG Ser-aCnc,Qn
-7861-8,IgM Ab,EEEV IgM Ser-aCnc,Qn
-7875-8,IgG Ab,E chaffeensis IgG Ser EIA-aCnc,Qn
-7876-6,IgM Ab,E chaffeensis IgM Ser Ql,Ord
-7877-4,Total Ab,A phagocytoph Ab Ser Ql,Ord
-7878-2,Total Ab,Deprecated A phagocytoph Ab Ser Ql,Ord
-7888-1,Total Ab,F tular Ab Ser Ql,Ord
-7889-9,IgG Ab,F tular IgG Ser Ql,Ord
-7890-7,IgM Ab,F tular IgM Ser Ql,Ord
-7898-0,IgM Ab,PUUV IgM Ser-aCnc,Qn
-7899-8,PCR/amplification,Hantavirus RNA Ser Ql PCR,Ord
-7905-3,Surface Ag (HBsAg),HBV surface Ag Ser Ql Nt,Ord
-7938-4,Total Ab,Deprecated LACV Ab Ser EIA,OrdQn
-7940-0,IgG Ab,LACV IgG Ser-aCnc,Qn
-7941-8,IgM Ab,LACV IgM Ser-aCnc,Qn
-7947-5,Total Ab,L pneumo Ab Ser Ql,Ord
-7948-3,Total Ab,L pneumo1 Ab Titr Ser IF,Qn
-7961-6,Total Ab,MeV Ab Ser-aCnc,Qn
-7962-4,IgG Ab,MeV IgG Ser-aCnc,Qn
-7963-2,IgM Ab,MeV IgM Ser-aCnc,Qn
-7966-5,IgG,MuV IgG Ser-aCnc,Qn
-7967-3,IgM Ab,MuV IgM Ser-aCnc,Qn
-7968-1,PCR/amplification,MuV RNA CSF Ql PCR,Ord
-7997-0,Total Ab,Rick SF Ab Ser-aCnc,Qn
-7998-8,IgG Ab,Rick SF IgG Ser-aCnc,Qn
-7999-6,IgM Ab,Rick SF IgM Ser-aCnc,Qn
-8003-6,IgG Ab,R rickettsi IgG Ser-aCnc,Qn
-8004-4,IgM Ab,R rickettsi IgM Ser-aCnc,Qn
-8005-1,PCR/amplification,R rickettsi RNA Ser Ql PCR,Ord
-8015-0,IgM Ab,RUBV IgM Ser-aCnc,Qn
-8016-8,IgG Ab,SLEV IgG Ser-aCnc,Qn
-8017-6,IgM Ab,SLEV IgM Ser-aCnc,Qn
-8021-8,Total Ab,SLEV Ab CSF Ql EIA,Ord
-8023-4,Total Ab,SLEV Ab Ser Ql EIA,Ord
-8025-9,PCR/amplification,SLEV RNA Ser Ql PCR,Ord
-8041-6,HA,T pallidum Ab Ser Ql HA,Ord
-8042-4,Total Ab,T spiralis Ab Ser-aCnc,Qn
-8043-2,IgG Ab,T spiralis IgG Ser Ql,Ord
-8046-5,Total Ab,VZV Ab Ser-aCnc,Qn
-8048-1,IgM Ab,VZV IgM Ser-aCnc,Qn
-8049-9,PCR/amplification,VZV DNA Ser Ql PCR,Ord
-8052-3,IgG Ab,WEEV IgG Ser-aCnc,Qn
-8053-1,IgM Ab,WEEV IgM Ser-aCnc,Qn
-8054-9,Total Ab,YFV Ab Ser-aCnc,Qn
-8055-6,IgG Ab,YFV IgG Ser-aCnc,Qn
-8056-4,IgM Ab,YFV IgM Ser-aCnc,Qn
-8057-2,PCR/amplification,YFV RNA Ser Ql PCR,Ord
-9314-6,Total Ab,WEEV Ab Titr CSF IF,Qn
-9315-3,IgG Ab,WEEV IgG Titr CSF IF,Qn
-9316-1,IgM Ab,WEEV IgM Titr CSF IF,Qn
-9526-5,Antigen,Deprecated HDV Ag Ser EIA,OrdQn
-9539-8,IgG Ab,LACV IgG Titr CSF IF,Qn
-9540-6,IgM Ab,LACV IgM Titr CSF IF,Qn
-9541-4,IgG Ab,L pneumo1 IgG Titr Ser IF,Qn
-9542-2,IgM Ab,L pneumo1 IgM Titr Ser IF,Qn
-9543-0,Antigen,L pneumo1 Ag Ur Ql RIA,Ord
-9551-3,IgM Ab,L pneumo5 IgM Titr Ser IF,Qn
-9552-1,IgG Ab,L pneumo6 IgG Titr Ser IF,Qn
-9566-1,IgG Ab,MeV IgG CSF EIA-aCnc,Qn
-9567-9,Total Ab,MuV Ab Titr CSF CF,Qn
-9568-7,Total Ab,N gonorrhoea Ab Titr Ser CF,Qn
-9576-0,Total Ab,RUBV Ab CSF EIA-aCnc,Qn
-9577-8,Total Ab,SLEV Ab Titr CSF IF,Qn
-9586-9,Total Ab,B burgdor Ab Ser-Imp,Nom
-9608-1,Western (immuno) blot,HCV100-3 Ab Ser Ql IB,Ord
-9609-9,Western (immuno) blot,HCV22-3 Ab Ser Ql IB,Ord
-9610-7,Western (immuno) blot,HCV C33c Ab Ser Ql IB,Ord
-9634-7,IgG Ab,SLEV IgG Titr XXX,Qn
-9635-4,IgM Ab,SLEV IgM Titr XXX,Qn
-9636-2,Total Ab,VZV Ab CSF Ql,Ord
-9710-5,IgM Ab,C burnet Ph1 IgM Titr Ser,Qn
-9711-3,IgM Ab,C burnet Ph2 IgM Titr Ser,Qn
-9783-2,IgG Ab,E chaffeensis IgG Titr Ser,Qn
-9784-0,IgM Ab,E chaffeensis IgM Titr Ser,Qn
-9785-7,Microscopy,O&P Prep Stl,Nom
-9786-5,Microscopy,PAS Stn Bld/Mar,Nom
-9823-6,Culture,Mycobacterium Bronch Cult,Nom
-9824-4,Culture,Mycobacterium Gast Cult,Nom
-9825-1,Unknown method,Mycobacterium Islt,Nom
-9826-9,FTA,T pallidum Ab CSF Ql IF,Ord
+"10349-9","Total Ab","Brucella sp Ab","Qn"
+"10352-3","Culture","Bacteria identified","Nom"
+"10353-1","Culture","Bacteria identified","Nom"
+"10354-9","Culture","Bacteria identified","Nom"
+"10356-4","Microscopy","Microscopic observation","Nom"
+"10643-5","Culture","Amoeba identified","Nom"
+"10659-1","Acid Fast Stain","Cyclospora sp identified","Nom"
+"10670-8","Culture","Giardia sp identified","Nom"
+"10671-6","Identification","Helminth identified","Nom"
+"10672-4","Identification","Helminth+Arthropod identified","Nom"
+"10673-2","Core Ag (HBcAg)","Hepatitis B virus core Ag","Ord"
+"10674-0","Surface Ag (HBsAg)","Hepatitis B virus surface Ag","Ord"
+"10675-7","Surface Ag (HBsAg)","Hepatitis B virus surface Ag","Nom"
+"10676-5","PCR/amplification","Hepatitis C virus RNA","Qn"
+"10701-1","Microscopy","Ova+Parasites identified","Nom"
+"10702-9","Microscopy","Ova+Parasites identified","Nom"
+"10703-7","Microscopy","Ova+Parasites identified","Nom"
+"10704-5","Microscopy","Ova+Parasites identified","Nom"
+"10709-4","Antigen by DFA/IF","Plasmodium falciparum Ag","Qn"
+"10710-2","Microscopy","Plasmodium sp identified","Nom"
+"10734-2","Microscopy","Varicella zoster virus identified","Nom"
+"10736-7","Electron microscopy","Virus identified","Nom"
+"10737-5","Electron microscopy","Virus identified","Nom"
+"108-1","Cefotaxime susceptibility","Cefotaxime","OrdQn"
+"10847-2","PCR/amplification","Borrelia burgdorferi DNA","Ord"
+"10850-6","Unknown method","Cyclospora cayetanensis","Ord"
+"10851-4","Culture","Escherichia coli O157:H7","Ord"
+"10860-5","Culture","Varicella zoster virus","Ord"
+"10896-9","IgG Ab","Eastern equine encephalitis virus Ab.IgG","Qn"
+"10897-7","IgG Ab","Eastern equine encephalitis virus Ab.IgG","Qn"
+"10898-5","IgM Ab","Eastern equine encephalitis virus Ab.IgM","Qn"
+"10899-3","IgM Ab","Eastern equine encephalitis virus Ab.IgM","Qn"
+"10900-9","Surface Ab (HBsAb)","Hepatitis B virus surface Ab","Ord"
+"10904-1","IgG Ab","La Crosse virus Ab.IgG","Qn"
+"10905-8","IgM Ab","La Crosse virus Ab.IgM","Qn"
+"10906-6","IgG Ab","Saint Louis encephalitis virus Ab.IgG","Qn"
+"10907-4","IgM Ab","Saint Louis encephalitis virus Ab.IgM","Qn"
+"11006-4","Total Ab","Borrelia burgdorferi Ab","Ord"
+"11011-4","PCR/amplification","Hepatitis C virus RNA","Qn"
+"11076-7","Western (immuno) blot  (5-1-1-Ab only)","Hepatitis C virus 5-1-1 Ab","Ord"
+"11077-5","Western (immuno) blot (superoxide dismutase only)","Hepatitis C virus superoxide dismutase Ab","Ord"
+"11084-1","Unknown method","Reagin Ab","Qn"
+"11086-6",,"Streptococcus pneumoniae Ag","Ord"
+"11255-7","Culture","Haemophilus ducreyi","Ord"
+"11258-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn"
+"11259-9","PCR/amplification","Hepatitis C virus RNA","Ord"
+"11469-4","Culture","Bacillus anthracis","Ord"
+"11470-2","Toxin assay","Clostridium botulinum toxin","Qn"
+"11473-6","Antigen, unknown method","Cryptococcus sp Ag","Qn"
+"11475-1","Culture","Microorganism identified","Nom"
+"11476-9","Acid fast stain","Microscopic observation","Nom"
+"11482-7","PCR/amplification","Rickettsia rickettsii RNA","Ord"
+"11483-5","PCR/amplification","Varicella zoster virus DNA","Ord"
+"11545-1","Acid fast stain","Microscopic observation","Nom"
+"11546-9","Microscopy","Microscopic observation","Nom"
+"11550-1","Culture","Borrelia burgdorferi","Ord"
+"11597-2","Unknown method","Treponema pallidum Ab","Qn"
+"12271-3","Total Ab","Varicella zoster virus Ab","Ord"
+"12272-1","Antigen by DFA/IF","Virus identified","Nom"
+"12276-2","Culture","Escherichia coli O157:H7 identified","Nom"
+"12781-1","Western (immuno) blot","Borrelia burgdorferi Ab band pattern","Nom"
+"12860-3","Western (immuno) blot (39 kD Ab only)","Borrelia burgdorferi 39kD Ab","Ord"
+"12862-9","Western (immuno) blot (66kD Ab only","Borrelia burgdorferi 66kD Ab","Ord"
+"12863-7","Western (immuno) blot (41kD Ab only)","Borrelia burgdorferi 41kD Ab","Ord"
+"12867-8","Western (immuno) blot (58kD Ab only)","Borrelia burgdorferi 58kD Ab","Ord"
+"12869-4","Western (immuno) blot (30kD Ab only)","Borrelia burgdorferi 30kD Ab","Ord"
+"13125-0","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Ab","Ord"
+"13195-3","Total Ab","Ehrlichia chaffeensis Ab","Qn"
+"13202-7","IgG Ab","Borrelia burgdorferi Ab.IgG","Ord"
+"13203-5","IgM Ab","Borrelia burgdorferi Ab.IgM","Ord"
+"13204-3","IgG Ab","Borrelia burgdorferi Ab.IgG","Qn"
+"13205-0","IgM Ab","Borrelia burgdorferi Ab.IgM","Qn"
+"13210-0","IgG Ab","Brucella sp Ab.IgG","Qn"
+"13228-2","IgG Ab","Eastern equine encephalitis virus Ab.IgG","Qn"
+"13229-0","IgM Ab","Eastern equine encephalitis virus Ab.IgM","Qn"
+"13230-8","IgG Ab","Saint Louis encephalitis virus Ab.IgG","Qn"
+"13231-6","IgM Ab","Saint Louis encephalitis virus Ab.IgM","Qn"
+"13248-0","Total Ab","Hepatitis D virus Ab","Ord"
+"13254-8","Total Ab","Legionella pneumophila atypical Ab","Ord"
+"13255-5","Total Ab ","Legionella longbeachae 1+2 Ab","Ord"
+"13266-2","IgG Ab","Mumps virus Ab.IgG","Qn"
+"13267-0","IgM Ab","Mumps virus Ab.IgM","Qn"
+"13279-5","IgG Ab","Rubella virus Ab.IgG^1st specimen","Qn"
+"13282-9","IgM Ab","Rubella virus Ab.IgM","Qn"
+"13283-7","IgM Ab","Measles virus Ab.IgM","Qn"
+"13284-5","Total Ab","Salmonella typhi H D Ab","Ord"
+"13288-6","FTA (Fluorescent treponemal antibody)","Treponema pallidum Ab","Qn"
+"133-9","Ceftazidime susceptibility","Ceftazidime","OrdQn"
+"13503-8","Western (immuno) blot (IgM)","Borrelia burgdorferi Ab.IgM band pattern","Nom"
+"13504-6","Total Ab","Borrelia burgdorferi Ab","Nom"
+"13586-3","Vancomycin susceptibility","Vancomycin","Qn"
+"13921-2","Culture","Mumps virus","Ord"
+"13950-1","IgM Ab","Hepatitis A virus Ab.IgM","Ord"
+"13951-9","Total Ab","Hepatitis A virus Ab","Ord"
+"13952-7","Core Ab (HBcAb)","Hepatitis B virus core Ab","Ord"
+"13953-5","e Ab (HBeAb)","Hepatitis B virus little e Ab","Ord"
+"13954-3","e Ag (HBeAg)","Hepatitis B virus little e Ag","Ord"
+"13955-0","Total Ab","Hepatitis C virus Ab","Ord"
+"13956-8","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14077-2","IgG Ab","Borrelia burgdorferi Ab.IgG","Qn"
+"14078-0","IgM Ab","Borrelia burgdorferi Ab.IgM","Qn"
+"14125-9","Microscopy","Entamoeba histolytica","Nom"
+"14127-5","Culture","Neisseria gonorrhoeae","Ord"
+"141-2","Ceftriaxone susceptibility","Ceftriaxone","OrdQn"
+"14198-6","Total Ab","Chlamydophila psittaci Ab","Qn"
+"14202-6","IgA Ab","Chlamydia trachomatis C Ab.IgA","Qn"
+"14203-4","IgA Ab","Chlamydia trachomatis C Ab.IgG","Qn"
+"14209-1","IgA Ab","Francisella tularensis Ab.IgA","Ord"
+"14210-9","Antigen by DFA/IF","Giardia lamblia Ag","Ord"
+"14211-7","IgG Ab","Hepatitis E virus Ab.IgG","Ord"
+"14212-5","IgM Ab","Hepatitis E virus Ab.IgM","Ord"
+"14304-0","IgG Ab ","Measles virus Ab.IgG^1st specimen","Qn"
+"14305-7","IgG Ab","Measles virus Ab.IgG^2nd specimen","Qn"
+"14321-4",,"Haemophilus influenzae B Ag","Ord"
+"14322-2",,"Streptococcus pneumoniae Ag","Ord"
+"14323-0","Typing","Streptococcus agalactiae Ag","Ord"
+"14461-8","Culture","Chlamydia trachomatis","Ord"
+"14462-6","Culture","Chlamydia trachomatis","Ord"
+"14463-4","Culture","Chlamydia trachomatis","Ord"
+"14464-2","Culture","Chlamydia trachomatis","Ord"
+"14465-9","Culture","Chlamydia trachomatis","Ord"
+"14466-7","Culture","Chlamydia trachomatis","Ord"
+"14467-5","Culture","Chlamydia trachomatis","Ord"
+"14468-3","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14469-1","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14470-9","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14471-7","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14472-5","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14473-3","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14474-1","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"14475-8","Culture","Bacteria identified","Nom"
+"14476-6","Culture","Microorganism identified","Nom"
+"14477-4","Culture","Bacteria identified","Nom"
+"14478-2","Culture","Bacteria identified","Nom"
+"14479-0","Culture","Diphtheria sp identified","Nom"
+"14480-8","Culture","Diphtheria sp identified","Nom"
+"14481-6","Culture","Diphtheria sp identified","Nom"
+"14483-2","Culture","Diphtheria sp identified","Nom"
+"14488-1","Antigen by DFA/IF","Virus identified","Nom"
+"14489-9","Antigen by DFA/IF","Virus identified","Nom"
+"14491-5","Antigen by DFA/IF","Virus identified","Nom"
+"14507-8","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14508-6","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14509-4","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14510-2","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14511-0","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14512-8","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14513-6","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"14545-8","Antigen by DFA/IF","Mumps virus Ag","Ord"
+"14556-5","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14557-3","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14558-1","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14559-9","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14560-7","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14561-5","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14562-3","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"14788-4","Identification","Helminth+Arthropod identified","Nom"
+"14789-2","Identification","Helminth identified","Nom"
+"14790-0","Identification","Helminth identified","Nom"
+"14974-0","PCR/amplification","Mycobacterium sp DNA","Ord"
+"16099-4","Ethionamide susceptibility","Ethionamide","OrdQn"
+"16128-1","Total Ab","Hepatitis C virus Ab","Ord"
+"16129-9","IgG Ab","Hepatitis C virus Ab.IgG","Ord"
+"16133-1","IgM Ab","Legionella pneumophila Ab.IgM","Qn"
+"16134-9","Culture","Neisseria meningitidis","Ord"
+"16278-4","PCR/amplification","Mycobacterium tuberculosis DNA","Ord"
+"16284-2",,"Polio virus Ab","Qn"
+"16475-6","Total Ab","Borrelia burgdorferi Ab","Ord"
+"16480-6","IgG Ab","Borrelia burgdorferi Ab.IgG","Ord"
+"16528-2","DNA probe - not amplified/PCR","Campylobacter coli rRNA","Qn"
+"16529-0","DNA probe - not amplified/PCR","Campylobacter jejuni rRNA","Qn"
+"16531-6","DNA probe - not amplified/PCR","Campylobacter lari rRNA","Qn"
+"16532-4","DNA probe - not amplified/PCR","Campylobacter lari rRNA","Ord"
+"16534-0","DNA probe - not amplified/PCR","Campylobacter sp rRNA","Ord"
+"16589-4","Antigen by DFA/IF","Chlamydia sp Ab","Qn"
+"16599-3","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"16600-9","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"16601-7","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"16676-9","Culture","Corynebacterium diphtheriae","Ord"
+"16808-8","IgG Ab","Anaplasma phagocytophilum Ab.IgG","Qn"
+"16809-6","IgM Ab","Anaplasma phagocytophilum Ab.IgM","Qn"
+"16835-1","Culture","Escherichia coli shiga-like identified","Nom"
+"16875-7","Total Ab","Francisella tularensis Ab","Qn"
+"16876-5","IgA Ab","Francisella tularensis Ab.IgA","Ord"
+"16877-3","IgG Ab","Francisella tularensis Ab.IgG","Ord"
+"16878-1","IgM Ab","Francisella tularensis Ab.IgM","Qn"
+"16879-9","Antigen by DFA/IF","Francisella tularensis Ag","Ord"
+"16898-9","65 Antigen by DFA/IF","Giardia lamblia 65 Ag","Ord"
+"16899-7","Antigen by DFA/IF","Giardia lamblia Ag","Ord"
+"16926-8",,"Haemophilus influenzae A Ag","Ord"
+"16936-7","IgG Ab","Hepatitis C virus Ab.IgG","Qn"
+"17012-6",,"Influenza virus A Ab","Qn"
+"17014-2",,"Influenza virus B Ab","Qn"
+"17015-9",,"Influenza virus B Ab.IgG","Qn"
+"17016-7",,"Influenza virus B Ab.IgM","Qn"
+"17036-5","Total Ab","La Crosse virus Ab","Qn"
+"17037-3","Total Ab","La Crosse virus Ab","Qn"
+"17038-1","IgG Ab","La Crosse virus Ab.IgG","Qn"
+"17039-9","IgM Ab","La Crosse virus Ab.IgM","Qn"
+"17057-1","Antigen, unknown method","Legionella pneumophila Ag","Ord"
+"17058-9","Antigen by Latex agglutination","Legionella pneumophila Ag","Ord"
+"17060-5","Total Ab","Legionella pneumophila 1 Ab","Qn"
+"17061-3","Total Ab","Legionella pneumophila 1 Ab.IgM","Qn"
+"17296-5","DNA probe - not amplified/PCR","Mycobacterium tuberculosis complex rRNA","Ord"
+"17297-3","DNA probe - not amplified/PCR","Mycobacterium tuberculosis rRNA","Ord"
+"17324-5",,"Neisseria meningitidis Ag","Qn"
+"17326-0",,"Neisseria meningitidis A Ag","Ord"
+"17329-4",,"Neisseria meningitidis C Ag","Ord"
+"17330-2",,"Neisseria meningitidis Y Ag","Ord"
+"17332-8",,"Neisseria meningitidis polyvalent Ag","Ord"
+"17537-2","PCR/amplification","Rickettsia spotted fever group RNA","Ord"
+"17538-0","DNA probe - not amplified/PCR","Rickettsia spotted fever group RNA","Ord"
+"17551-3","IgG Ab","Rubella virus Ab.IgG","Qn"
+"17552-1","IgM Ab","Rubella virus Ab.IgM","Ord"
+"17553-9","Total Ab","Measles virus Ab","Qn"
+"17563-8","Culture","Salmonella sp identified","Nom"
+"17576-0","Culture","Shigella sp identified","Nom"
+"17652-9",,"Streptococcus pneumoniae Ag","Ord"
+"17653-7","Typing","Streptococcus pneumoniae group A Ag","Ord"
+"17655-2",,"Streptococcus pneumoniae group B Ag","Ord"
+"17656-0","Culture","Streptococcus pyogenes identified","Nom"
+"17725-3","Latex agglutination","Treponema pallidum Ab","Qn"
+"17726-1","FTA (Fluorescent treponemal antibody)","Treponema pallidum Ab.IgG","Ord"
+"17732-9","Total Ab","Trichinella spiralis Ab","Ord"
+"17733-7","IgA Ab","Trichinella spiralis Ab.IgA","Ord"
+"17734-5","IgG Ab","Trichinella spiralis Ab.IgG","Qn"
+"17735-2","IgM Ab","Trichinella spiralis Ab.IgM","Ord"
+"17766-7","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"17769-1","Total Ab","Western equine encephalitis virus Ab","Qn"
+"17770-9","Total Ab","Western equine encephalitis virus Ab","Qn"
+"17898-8","Culture","Bacteria identified","Nom"
+"17969-7","Culture","Bacteria identified","Nom"
+"18201-4","IgA Ab","Borrelia burgdorferi Ab.IgA","Ord"
+"18202-2","IgA Ab","Borrelia burgdorferi Ab.IgA","Ord"
+"18203-0","Total Ab","Borrelia burgdorferi Ab.IgG+IgM","Ord"
+"18307-9","Microscopy","Ova+Parasites identified","Nom"
+"18429-1","IgG Ab","Rickettsia rickettsii Ab.IgG","Qn"
+"18430-9","IgM Ab","Rickettsia rickettsii Ab.IgM","Qn"
+"18493-7","Microscopy","Ova+Parasites identified^3rd specimen","Nom"
+"18494-5","Microscopy","Ova+Parasites identified^2nd specimen","Nom"
+"18495-2","Microscopy","Ova+Parasites identified^3rd specimen","Nom"
+"18496-0","Microscopy","Ova+Parasites identified^2nd specimen","Nom"
+"185-9","Ciprofloxacin susceptibility","Ciprofloxacin","OrdQn"
+"18860-7","Amikacin susceptibility","Amikacin","OrdQn"
+"18861-5","Amoxicillin susceptibility","Amoxicillin","OrdQn"
+"18862-3","Amoxicillin+clavulanate (clavamox) susceptibility","Amoxicillin+Clavulanate","OrdQn"
+"18864-9","Ampicillin susceptibility","Ampicillin","OrdQn"
+"18865-6","Ampicillin+Sulbactam susceptibility","Ampicillin+Sulbactam","OrdQn"
+"18866-4","Azithromycin susceptibility","Azithromycin","OrdQn"
+"18868-0","Aztreonam susceptibility","Aztreonam","OrdQn"
+"18872-2","Capreomycin susceptibility","Capreomycin","OrdQn"
+"18873-0","Carbenicillin susceptibility","Carbenicillin","OrdQn"
+"18874-8","Cefaclor susceptibility","Cefaclor","OrdQn"
+"18878-9","Cefazolin susceptibility","Cefazolin","OrdQn"
+"18879-7","Cefepime susceptibility","Cefepime","OrdQn"
+"18880-5","Cefixime susceptibility","Cefixime","OrdQn"
+"18884-7","Cefoperazone susceptibility","Cefoperazone","OrdQn"
+"18886-2","Cefotaxime susceptibility","Cefotaxime","OrdQn"
+"18887-0","Cefotetan susceptibility","Cefotetan","OrdQn"
+"18888-8","Cefoxitin susceptibility","Cefoxitin","OrdQn"
+"18893-8","Ceftazidime susceptibility","Ceftazidime","OrdQn"
+"18894-6","Ceftizoxime susceptibility","Ceftizoxime","OrdQn"
+"18895-3","Ceftriaxone susceptibility","Ceftriaxone","OrdQn"
+"18896-1","Cefuroxine susceptibility","Cefuroxime.parenteral","OrdQn"
+"18900-1","Cephalothin susceptibility","Cephalothin","OrdQn"
+"18903-5","Chloramphenicol susceptibility","Chloramphenicol","OrdQn"
+"18906-8","Ciprofloxacin susceptibility","Ciprofloxacin","OrdQn"
+"18907-6","Clarithromycin susceptibility","Clarithromycin","OrdQn"
+"18908-4","Clindamycin susceptibility","Clindamycin","OrdQn"
+"18910-0","Cloxacillin susceptibility","Cloxacillin","OrdQn"
+"18914-2","Cycloserine susceptibility","Cycloserine","OrdQn"
+"18917-5","Doxycycline susceptibility","Doxycycline","OrdQn"
+"18919-1","Erythromycin susceptibility","Erythromycin","OrdQn"
+"18921-7","Ethambutol susceptibility","Ethambutol","OrdQn"
+"18922-5","Ethionamide susceptibility","Ethionamide","OrdQn"
+"18928-2","Gentamicin susceptibility","Gentamicin","OrdQn"
+"18929-0","Gentamicin (high potency) susceptibility","Gentamicin.high potency","OrdQn"
+"18932-4","Imipenem susceptibility","Imipenem","OrdQn"
+"18934-0","Isoniazid susceptibility","Isoniazid","OrdQn"
+"18935-7","Kanamycin susceptibility","Kanamycin","OrdQn"
+"18938-1","Lincomycin susceptibility","Lincomycin","OrdQn"
+"18939-9","Lomefloxacin susceptibility","Lomefloxacin","OrdQn"
+"18943-1","Meropenem susceptibility","Meropenem","OrdQn"
+"18945-6","Methicillin susceptibility","Methicillin","OrdQn"
+"18947-2","Mezlocillin susceptibility","Mezlocillin","OrdQn"
+"18948-0","Minocycline susceptibility","Minocycline","OrdQn"
+"18951-4","Nafcillin susceptibility","Nafcillin","OrdQn"
+"18952-2","Nalidixate susceptibility","Nalidixate","OrdQn"
+"18955-5","Nitrofurantoin susceptibility","Nitrofurantoin","OrdQn"
+"18956-3","Norfloxacin susceptibility","Norfloxacin","OrdQn"
+"18959-7","Ofloxacin susceptibility","Ofloxacin","OrdQn"
+"18961-3","Oxacillin susceptibility","Oxacillin","OrdQn"
+"18964-7","Penicillin susceptibility","Penicillin","OrdQn"
+"18965-4","Penicillin G susceptibility","Penicillin G","OrdQn"
+"18969-6","Piperacillin susceptibility","Piperacillin","OrdQn"
+"18970-4","Piperacillin+Tazobactam susceptibility","Piperacillin+Tazobactam","OrdQn"
+"18972-0","Polymyxin B susceptibility","Polymyxin B","OrdQn"
+"18973-8","Pyrazinamide susceptibility","Pyrazinamide","OrdQn"
+"18974-6","Rifampin susceptibility","Rifampin","OrdQn"
+"18980-3","Spectinomycin susceptibility","Spectinomycin","OrdQn"
+"18982-9","Streptomycin susceptibility","Streptomycin","OrdQn"
+"18983-7","Streptomycin (high potency) susceptibility","Streptomycin.high potency","OrdQn"
+"18985-2","Sulfamethoxazole susceptibility","Sulfamethoxazole","OrdQn"
+"18993-6","Tetracycline susceptibility","Tetracycline","OrdQn"
+"18994-4","Ticarcillin susceptibility","Ticarcillin","OrdQn"
+"18995-1","Ticarcillin+Clavulanate susceptibility","Ticarcillin+Clavulanate","OrdQn"
+"18996-9","Tobramycin susceptibility","Tobramycin","OrdQn"
+"18998-5","Trimethoprim+sulfamethoxazole susceptibility","Trimethoprim+Sulfamethoxazole","OrdQn"
+"19000-9","Vancomycin susceptibility","Vancomycin","OrdQn"
+"19022-3",,"Neisseria meningitidis C+w135 Ag","Ord"
+"19133-8",,"Neisseria meningitidis A+C+w135+Y Ag","Ord"
+"19134-6",,"Neisseria meningitidis B+Escherichia coli K1 Ag","Ord"
+"19149-4","Rifabutin susceptibility","Rifabutin","OrdQn"
+"19253-4","Total Ab","Trichinella spiralis Ab","Ord"
+"19259-1",,"Neisseria meningitidis A+C+w135+Y Ag","Ord"
+"193-3","Clindamycin susceptibility","Clindamycin","OrdQn"
+"20396-8","Levofloxacin susceptibility","Levofloxacin","OrdQn"
+"20416-4","PCR/amplification","Hepatitis C virus RNA","Qn"
+"20442-0","PCR/amplification","Hepatitis B virus DNA","Qn"
+"20449-5","Total Ab","Borrelia burgdorferi Ab","Ord"
+"20474-3","Culture","Bacteria identified","Nom"
+"20479-2","IgG Ab","Measles virus Ab.IgG","Ord"
+"20507-0","RPR (Rapid plasma reagin)","Reagin Ab","Ord"
+"20508-8","RPR (Rapid plasma reagin)","Reagin Ab","Qn"
+"20629-2","Levofloxacin susceptibility","Levofloxacin","OrdQn"
+"20706-8","Toxin assay","Clostridium botulinum toxin","Nom"
+"20752-2","Culture","Chlamydophila psittaci","Ord"
+"20781-1","Acid Fast Stain","Cryptosporidium sp","Ord"
+"20931-2","Unknown method","Parasites","Qn"
+"20932-0","Unknown method","Parasite identified","Nom"
+"20951-0","Typing","Salmonella sp serotype","Nom"
+"20993-2","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"21006-2","Surface Ab (HBsAb)","Hepatitis B virus surface Ab","Qn"
+"21189-6","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"21190-4","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"21191-2","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"21262-1","Toxin assay","Escherichia coli shiga-like","Ord"
+"21414-8","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"21415-5","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"21416-3","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"21501-2","IgG Ab","Measles virus Ab.IgG","Qn"
+"21502-0","IgM Ab","Measles virus Ab.IgM","Qn"
+"21592-1","Total Ab","Varicella zoster virus Ab","Qn"
+"21594-7","Total Ab","Varicella zoster virus Ab","Qn"
+"21596-2","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"21597-0","IgM Ab","Varicella zoster virus Ab.IgM","Ord"
+"21598-8","PCR/amplification","Varicella zoster virus DNA","Ord"
+"21613-5","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"22119-2","Total Ab","Borrelia burgdorferi Ab","Qn"
+"22122-6","Total Ab","Borrelia burgdorferi Ab","Qn"
+"22135-8","IgM Ab","Borrelia burgdorferi Ab.IgM","Ord"
+"22151-5","IgM Ab","Brucella abortus Ab.IgM","Qn"
+"22180-4","IgG Ab","Chlamydophila psittaci Ab.IgG","Qn"
+"22181-2","IgM Ab","Chlamydophila psittaci Ab.IgM","Qn"
+"22191-1","IgG Ab","Chlamydia trachomatis Ab.IgG","Qn"
+"22193-7","IgM Ab","Chlamydia trachomatis Ab.IgM","Qn"
+"22283-6","IgG Ab","Ehrlichia chaffeensis Ab.IgG","Ord"
+"22312-3","Total Ab","Hepatitis A virus Ab","Qn"
+"22313-1","IgG Ab","Hepatitis A virus Ab.IgG","Qn"
+"22314-9","IgM Ab","Hepatitis A virus Ab.IgM","Ord"
+"22327-1","Total Ab","Hepatitis C virus Ab","Qn"
+"22365-1",,"Influenza virus A Ab","Qn"
+"22367-7",,"Influenza virus B Ab","Qn"
+"22382-6","IgM Ab","Legionella pneumophila 1 Ab.IgM","Qn"
+"22398-2","IgM Ab","Legionella pneumophila Ab.IgM","Qn"
+"22414-7","Total Ab","Mumps virus Ab","Qn"
+"22415-4","IgG Ab","Mumps virus Ab.IgG","Ord"
+"22461-8","Unknown method","Reagin Ab","Ord"
+"22502-9","IgG Ab","Measles virus Ab.IgG","Qn"
+"22506-0","IgM Ab","Measles virus Ab.IgM","Qn"
+"22517-7","Total Ab","Salmonella paratyphi A H Ab","Ord"
+"22587-0","Unknown method","Treponema pallidum Ab","Ord"
+"22592-0","IgG Ab","Treponema pallidum Ab.IgG","Qn"
+"22600-1","Total Ab","Varicella zoster virus Ab","Ord"
+"22605-0","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"22606-8","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"22956-7","Total Ab","Burkholderia mallei Ab","Ord"
+"22958-3","Total Ab","Burkholderia mallei Ab","Ord"
+"22959-1","Total Ab","Burkholderia mallei Ab","Ord"
+"23018-5","Total Ab","Coxiella burnetii Ab","Ord"
+"23046-6","IgM Ab","Eastern equine encephalitis virus Ab.IgM","Ord"
+"23125-8","Total Ab","Francisella tularensis Ab","Qn"
+"233-7","Erythromycin susceptibility","Erythromycin","OrdQn"
+"23602-6","Culture","Salmonella enteritidis","Ord"
+"23640-6","Quinupristin+Dalfopristin susceptibility","Quinupristin+Dalfopristin","OrdQn"
+"23667-9","Unknown method","Bacteria identified","Nom"
+"23826-1","PCR/amplification","Bordetella pertussis DNA","Ord"
+"23827-9",,"Bordetella pertussis.filamentous hemagglutinin Ab.IgA","Qn"
+"23828-7",,"Bordetella pertussis.filamentous hemagglutinin Ab.IgG","Qn"
+"23830-3",,"Bordetella pertussis.toxin Ab.IgA","Qn"
+"23831-1",,"Bordetella pertussis.toxin Ab.IgG","Qn"
+"23833-7","Ab index","Borrelia burgdorferi Ab index","Ord"
+"23867-5","IgG Ab","Hantavirus sin nombre Ab.IgG","Qn"
+"23868-3","IgM Ab","Hantavirus sin nombre Ab.IgM","Qn"
+"23869-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn"
+"23870-9","Western (immuno) blot (100+5-1-1 Ab only)","Hepatitis C virus 100+5-1-1 Ab","Ord"
+"23871-7","Western (immuno) blot (NS5 Ab only)","Hepatitis C virus NS5 Ab","Ord"
+"23877-4","IgG Ab","Anaplasma phagocytophilum Ab.IgG","Qn"
+"23878-2","IgM Ab","Anaplasma phagocytophilum Ab.IgM","Qn"
+"23908-7","DNA probe - not amplified/PCR","Neisseria gonorrhoeae rRNA","Ord"
+"23979-8","Western (immuno) blot (IgG)","Borrelia burgdorferi Ab.IgG band pattern","Nom"
+"23981-4","Western (immuno) blot (IgG)","Borrelia burgdorferi Ab.IgG band pattern","Nom"
+"23982-2","IgM Ab","Borrelia burgdorferi Ab.IgM","Ord"
+"23983-0","Western (immuno) blot (IgM)","Borrelia burgdorferi Ab.IgM band pattern","Nom"
+"23985-5","Western (immuno) blot (IgM)","Borrelia burgdorferi Ab.IgM band pattern","Nom"
+"23991-3","IgG Ab","Dengue virus Ab.IgG","Qn"
+"23992-1","IgM Ab","Dengue virus Ab.IgM","Qn"
+"24011-9","Western (immuno) blot","Hepatitis C virus Ab band pattern","Nom"
+"24015-0","Rapid","Influenza virus A+B Ag","Ord"
+"24042-4","PCR/amplification","Ehrlichia chaffeensis DNA","Ord"
+"241-0","Ethambutol susceptibility","Ethambutol","OrdQn"
+"24110-9","Total Ab","Treponema pallidum Ab","Ord"
+"24111-7","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"24113-3","Core IgM Ab","Hepatitis B virus core Ab.IgM","Ord"
+"24116-6","IgM Ab","Rubella virus Ab.IgM","Ord"
+"24127-3",,"Bordetella pertussis.toxin Ab.IgG","Qn"
+"24128-1",,"Bordetella pertussis.toxin Ab.IgA","Qn"
+"24129-9",,"Bordetella pertussis.toxin Ab.IgM","Qn"
+"24312-1","Unknown method","Treponema pallidum Ab","Ord"
+"24388-1","IgM Ab","Brucella sp Ab.IgM","Ord"
+"25332-8",,"Bordetella pertussis Ab.IgM","Qn"
+"25418-5","IgG Ab","Mumps virus Ab.IgG","Qn"
+"25514-1","IgG Ab","Rubella virus Ab.IgG","Ord"
+"26654-4","IgG Ab","Hantavirus sin nombre Ab.IgG","Ord"
+"26723-7","Total Ab","Varicella zoster virus Ab","Qn"
+"267-5","Gentamicin susceptibility","Gentamicin","OrdQn"
+"27265-8","Antigen, unknown method","Giardia sp Ag","Ord"
+"27907-5","Culture","Cryptosporidium sp","Nom"
+"279-0","Imipenem susceptibility","Imipenem","OrdQn"
+"27994-3","PCR/amplification","Ehrlichia chaffeensis DNA","Ord"
+"28-1","Ampicillin susceptibility","Ampicillin","OrdQn"
+"287-3","Isoniazid susceptibility","Isoniazid","OrdQn"
+"291-5","Kanamycin susceptibility","Kanamycin","OrdQn"
+"29248-2","PCR/amplification","Varicella zoster virus DNA","Ord"
+"29258-1","Linezolid susceptibility","Linezolid","OrdQn"
+"29310-0","FTA (Fluorescent treponemal antibody)","Treponema pallidum","Ord"
+"29535-2","IgG Ab","West Nile virus Ab.IgG","Qn"
+"29536-0","IgM Ab","West Nile virus Ab.IgM","Qn"
+"29537-8","IgG Ab","West Nile virus Ab.IgG","Qn"
+"29538-6","IgM Ab","West Nile virus Ab.IgM","Qn"
+"29560-0","PCR/amplification","Anaplasma phagocytophilum DNA","Ord"
+"29566-7","IgG Ab","West Nile virus Ab.IgG","Ord"
+"29567-5","IgM Ab","West Nile virus Ab.IgM","Ord"
+"29568-3","Total Ab","West Nile virus Ab","Qn"
+"29569-1","IgM Ab","West Nile virus Ab.IgM","Ord"
+"29609-5","PCR/amplification","Hepatitis C virus RNA","Qn"
+"29610-3","PCR/amplification","Hepatitis B virus DNA","Ord"
+"29615-2","PCR/amplification","Hepatitis B virus DNA","Qn"
+"29662-4","IgM Ab","Varicella zoster virus Ab.IgM","Ord"
+"29778-8","IgM Ab","West Nile virus Ab.IgM","Ord"
+"29783-8","Total Ab","Saint Louis encephalitis virus Ab","Qn"
+"29785-3","IgG Ab","Eastern equine encephalitis virus Ab.IgG","Ord"
+"29789-5","IgG Ab","La Crosse virus Ab.IgG","Ord"
+"29793-7","IgG Ab","Anaplasma phagocytophilum Ab.IgG","Ord"
+"29794-5","IgM Ab","Anaplasma phagocytophilum Ab.IgM","Ord"
+"29898-4","IgG Ab","Borrelia burgdorferi Ab.IgG","Ord"
+"30174-7","IgG Ab","Jamestown canyon virus Ab.IgG","Qn"
+"30175-4","Total Ab","Jamestown canyon virus Ab","Ord"
+"30176-2","Total Ab","La Crosse virus Ab","Ord"
+"30177-0","IgG Ab","Powassan virus Ab.IgG","Qn"
+"30178-8","IgG Ab","West Nile virus Ab.IgG","Ord"
+"30179-6","IgM Ab","Powassan virus Ab.IgM","Qn"
+"30307-3","Indinavir susceptibility","Indinavir","OrdQn"
+"30526-8","IgM Ab","Borrelia burgdorferi Ab.IgM","Ord"
+"31038-3","Gatifloxacin susceptibility","Gatifloxacin","OrdQn"
+"31039-1","Moxifloxacin susceptibility","Moxifloxacin","OrdQn"
+"31146-4","VDRL (Venereal disease research laboratory)","Reagin Ab","Qn"
+"31147-2","RPR (Rapid plasma reagin)","Reagin Ab","Qn"
+"31204-1","Core IgM Ab","Hepatitis B virus core Ab.IgM","Ord"
+"31437-7",,"Influenza virus A Ab.IgG","Qn"
+"31438-5",,"Influenza virus A Ab.IgM","Qn"
+"31694-3","Total Ab","Varicella zoster virus Ab","Qn"
+"31695-0","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"31698-4","Total Ab","Vibrio cholerae Ab","Qn"
+"31844-4","e Ag (HBeAg)","Hepatitis B virus little e Ag","Ord"
+"31858-4","Rapid","Influenza virus A Ag","Ord"
+"31859-2","Rapid","Influenza virus A Ag","Ord"
+"31863-4","Rapid","Influenza virus B Ag","Ord"
+"31864-2","Rapid","Influenza virus B Ag","Ord"
+"31870-9","Antigen, unknown method","Legionella pneumophila Ag","Ord"
+"31906-1","Antigen, unknown method","Neisseria gonorrhoeae Ag","Ord"
+"31910-3","Antigen, unknown method","Neisseria meningitidis A+C+w135+Y Ag","Ord"
+"31981-4","Antigen","Varicella zoster virus Ag","Ord"
+"31982-2","Antigen","Varicella zoster virus Ag","Ord"
+"32139-8",,"Haemophilus influenzae Ag","Ord"
+"32198-4","DNA probe - not amplified/PCR","Neisseria gonorrhoeae rRNA","Ord"
+"32206-5","Microscopy","Plasmodium sp identified","Nom"
+"32286-7","Genotype by PCR","Hepatitis C virus genotype","Nom"
+"32355-0","Culture","Bacteria identified","Nom"
+"32366-7","Genotype by PCR","Hepatitis B virus genotype","Nom"
+"32376-6","Clinofloxacin susceptibility","Clinafloxacin","OrdQn"
+"32-3","Ampicillin+Sulbactam susceptibility","Ampicillin+Sulbactam","OrdQn"
+"32669-4","PCR/amplification","Borrelia burgdorferi DNA","Ord"
+"32696-7","Total Ab","Legionella pneumophila 1+2+3+4+5+6 Ab","Qn"
+"32700-7","Microscopy","Microscopic observation","Nom"
+"32705-6","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"33295-7","PCR/amplification","JC virus DNA","Ord"
+"33327-8","Total Ab","Varicella zoster virus Ab","Qn"
+"33463-1","e IgG Ab","Hepatitis B virus little e Ab.IgG","Ord"
+"33581-0","Total Ab","Anaplasma phagocytophilum Ab","Qn"
+"33633-9","Precore Tag mutation by PCR","Hepatitis B virus precore TAG mutation","Nom"
+"33676-8","Culture","Francisella tularensis","Ord"
+"33694-1","Culture","Clostridium botulinum","Ord"
+"33696-6","Toxin assay","Clostridium botulinum toxin","Ord"
+"33764-2","Toxin assay","STX gene","Nom"
+"33964-8","PCR/amplification","SARS coronavirus Urbani RNA","Ord"
+"33968-9","PCR/amplification","SARS coronavirus Urbani Ab","Ord"
+"34148-7","Total Ab","Borrelia burgdorferi Ab.IgG+IgM","Qn"
+"34153-7",,"Influenza virus A Ab","Qn"
+"34154-5",,"Influenza virus B Ab","Qn"
+"34382-2","FTA (Fluorescent treponemal antibody)","Treponema pallidum Ab","Qn"
+"34450-7","PCR/amplification","Eastern equine encephalitis virus RNA","Ord"
+"34487-9","PCR/amplification","Influenza virus A RNA","Ord"
+"35276-5","IgM Ab","Measles virus Ab.IgM","Ord"
+"35393-8","IgM Ab","Hantavirus Ab.IgM","Qn"
+"35399-5","PCR/amplification","Varicella zoster virus DNA","Ord"
+"35400-1","PCR/amplification","Varicella zoster virus DNA","Ord"
+"35679-0","Total Ab","Varicella zoster virus Ab.IgG & IgM panel","Qn"
+"35713-7","PCR/amplification","Chlamydia sp DNA","Ord"
+"35783-0","Cefuroxine susceptibility","Cefuroxime.oral","OrdQn"
+"35789-7","Daptomycin susceptibility","Daptomycin","OrdQn"
+"35802-8","Ertapenem susceptibility","Ertapenem","OrdQn"
+"35816-8","Gemifloxacin susceptibility","Gemifloxacin","OrdQn"
+"35861-4","Virginiamycin susceptibility","Virginiamycin","OrdQn"
+"363-2","Nitrofurantoin susceptibility","Nitrofurantoin","OrdQn"
+"36896-9","Polyvalent E Ab","West Nile virus polyvalent E Ab","Ord"
+"36897-7","Total Ab","West Nile virus Ab","Ord"
+"36898-5","NS5 Ab","West Nile virus NS5 Ab","Ord"
+"36902-5","PCR/amplification","Chlamydia trachomatis+Neisseria gonorrhoeae DNA","Ord"
+"36903-3","PCR/amplification","Chlamydia trachomatis+Neisseria gonorrhoeae DNA","Nom"
+"37983-4","DNA probe - not amplified/PCR","Eastern equine encephalitis virus cDNA","Ord"
+"37984-2","DNA probe - not amplified/PCR","Saint Louis encephalitis virus cDNA","Ord"
+"37985-9","DNA probe - not amplified/PCR","West Nile virus cDNA","Ord"
+"38180-6","PCR/amplification","Hepatitis C virus RNA","Qn"
+"383-0","Oxacillin susceptibility","Oxacillin","OrdQn"
+"38347-1","PCR/amplification","XXX microorganism DNA","Nom"
+"38379-4","PCR/amplification","Mycobacterium tuberculosis complex DNA","Ord"
+"38382-8","Culture","Influenza virus B","Ord"
+"38916-3","PCR/amplification","Calicivirus RNA","Ord"
+"38997-3","IgG Ab","West Nile virus Ab.IgG","Qn"
+"39102-9","PCR/amplification","Influenza virus A hemagglutinin cDNA","Nom"
+"39103-7","PCR/amplification","Influenza virus A neuraminidase cDNA","Nom"
+"3911-5","Penicillin susceptibility","Penicillin","Qn"
+"39534-3","Antigen by DFA/IF","Cryptosporidium sp Ag","Ord"
+"39572-3","IgG Ab","West Nile virus Ab.IgG","Qn"
+"40699-1","Unknown method","Mycobacterium sp identified","Nom"
+"408-5","Piperacillin susceptibility","Piperacillin","OrdQn"
+"412-7","Piperacillin+Tazobactam susceptibility","Piperacillin+Tazobactam","OrdQn"
+"41499-5","Antigen by EIA/ELISA","Legionella pneumophila 1 Ag","Ord"
+"41852-5","Unknown method","Microorganism or agent identified","Nom"
+"41878-0","Total Ab","Dengue virus Ab.IgG & IgM panel","Qn"
+"42190-9","PCR/amplification","Shigella sp DNA","Nom"
+"42329-3",,"Bordetella pertussis Ab.IgM","Qn"
+"42357-4","Tigecycline susceptibility","Tigecycline","OrdQn"
+"424-2","Pyrazinamide susceptibility","Pyrazinamide","OrdQn"
+"42595-9","PCR/amplification","Hepatitis B virus DNA","Qn"
+"42617-1","PCR/amplification","Hepatitis C virus RNA","Qn"
+"428-3","Rifampin susceptibility","Rifampin","OrdQn"
+"43174-2","Antigen by DFA/IF","Chlamydia trachomatis L2 Ab.IgA","Qn"
+"43304-5","PCR/amplification","Chlamydia trachomatis rRNA","Ord"
+"43305-2","PCR/amplification","Neisseria gonorrhoeae rRNA","Ord"
+"43403-5","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"43588-3","IgM Ab","Varicella zoster virus Ab.IgM","Ord"
+"43693-1","Culture","Varicella zoster virus identified","Nom"
+"43978-6","Total Ab","Varicella zoster virus Ab","Ord"
+"44079-2","Total Ab","Chlamydia trachomatis Ab.IgA & IgG & IgM","Nom"
+"44088-3","PCR/amplification","Escherichia coli O157:H7 DNA","Nom"
+"44771-4","Total Ab","Varicella zoster virus Ab","Qn"
+"44-8","Aztreonam susceptibility","Aztreonam","OrdQn"
+"45063-5","Total Ab","Varicella zoster virus Ab.IgG & IgM panel","Qn"
+"45078-3","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"460-6","Streptomycin susceptibility","Streptomycin","OrdQn"
+"46245-7","PCR/amplification","Mycobacterium tuberculosis DNA.pncA","Nom"
+"46705-0","PCR/amplification","Clostridium botulinum toxin gene","Nom"
+"47002-1","PCR/amplification","Varicella zoster virus DNA","Qn"
+"47003-9","PCR/amplification","Varicella zoster virus DNA","Qn"
+"47211-8","PCR/amplification","Chlamydia trachomatis L2 DNA","Ord"
+"47212-6","PCR/amplification","Chlamydia trachomatis DNA","Nom"
+"47238-1","IgG Ab ","Treponema pallidum Ab.IgG","Ord"
+"47387-6","PCR/amplification","Neisseria gonorrhoeae DNA","Ord"
+"47405-6","IgG Ab","Ehrlichia chaffeensis Ab.IgG","Qn"
+"47419-7","Total Ab","Varicella zoster virus Ab","Qn"
+"48159-8","Ab signal/cutoff","Hepatitis C virus Ab Signal/Cutoff","Qn"
+"48310-7","Culture","Influenza virus A","Ord"
+"48509-4","PCR/amplification","Influenza virus A+B RNA","Nom"
+"496-0","Tetracycline susceptibility","Tetracycline","OrdQn"
+"49614-1","PCR/amplification","Campylobacter sp DNA","Nom"
+"49671-1","PCR/amplification","Neisseria meningitidis DNA","Ord"
+"4991-6","PCR/amplification","Borrelia burgdorferi DNA","Ord"
+"4992-4","DNA probe - not amplified/PCR","Campylobacter sp rRNA","Ord"
+"4993-2","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"5007-0","PCR/amplification","Hepatitis B virus DNA","Ord"
+"5010-4","PCR/amplification","Hepatitis C virus RNA","Ord"
+"5011-2","PCR/amplification","Hepatitis C virus RNA","Ord"
+"5012-0","PCR/amplification","Hepatitis C virus RNA","Ord"
+"5022-9","DNA probe - not amplified/PCR","Mycobacterium avium complex rRNA","Ord"
+"5028-6","DNA probe - not amplified/PCR","Neisseria gonorrhoeae rRNA","Ord"
+"5034-4","DNA probe - not amplified/PCR","Streptococcus agalactiae rRNA","Ord"
+"5036-9","DNA probe - not amplified/PCR","Streptococcus pyogenes rRNA","Ord"
+"50387-0","PCR/amplification","Chlamydia trachomatis rRNA","Ord"
+"50388-8","PCR/amplification","Neisseria gonorrhoeae rRNA","Ord"
+"504-1","Ticarcillin+Clavulanate susceptibility","Ticarcillin+Clavulanate","OrdQn"
+"5060-9","Total Ab","Borrelia burgdorferi Ab","Qn"
+"5061-7","Total Ab","Borrelia burgdorferi Ab","Qn"
+"5062-5","IgG Ab","Borrelia burgdorferi Ab.IgG","Qn"
+"5063-3","IgG Ab","Borrelia burgdorferi Ab.IgG","Qn"
+"5064-1","IgM Ab","Borrelia burgdorferi Ab.IgM","Qn"
+"5065-8","IgM Ab","Borrelia burgdorferi Ab.IgM","Qn"
+"5066-6","Total Ab","Brucella abortus Ab","Ord"
+"5067-4","Total Ab","Brucella abortus Ab","Qn"
+"5068-2","Total Ab","Brucella canis Ab","Qn"
+"5069-0","Total Ab","Brucella melitensis Ab","Qn"
+"5071-6","Total Ab","Brucella suis Ab","Qn"
+"5073-2","Total Ab","La Crosse virus Ab","Qn"
+"5079-9","Total Ab","Chlamydophila psittaci Ab","Qn"
+"508-2","Tobramycin susceptibility","Tobramycin","OrdQn"
+"5084-9","Total Ab","Chlamydia sp Ab","Qn"
+"5090-6","IgM Ab","Chlamydia trachomatis Ab.IgM","Qn"
+"5133-4",,"DNAse B Ab.Streptococcal","Qn"
+"5134-2","Total Ab","Eastern equine encephalitis virus Ab","Qn"
+"5151-6","Total Ab","Entamoeba histolytica Ab","Qn"
+"516-5","Trimethoprim+sulfamethoxazole susceptibility","Trimethoprim+Sulfamethoxazole","OrdQn"
+"5166-4","Total Ab","Francisella tularensis Ab","Ord"
+"5167-2","Total Ab","Francisella tularensis Ab","Qn"
+"5169-8","Total Ab","Giardia lamblia Ab","Qn"
+"5172-2",,"Streptococcus pyogenes enzyme Ab","Ord"
+"5173-0",,"Streptococcus pyogenes enzyme Ab","Qn"
+"5181-3","IgM Ab","Hepatitis A virus Ab.IgM","Qn"
+"5182-1","IgM Ab","Hepatitis A virus Ab.IgM","Qn"
+"5183-9","Total Ab","Hepatitis A virus Ab","Qn"
+"5185-4","Core IgM Ab","Hepatitis B virus core Ab.IgM","Qn"
+"5186-2","Core IgM Ab","Hepatitis B virus core Ab.IgM","Qn"
+"5187-0","Core Ab (HBcAb)","Hepatitis B virus core Ab","Qn"
+"5189-6","e Ab (HBeAb)","Hepatitis B virus little e Ab","Qn"
+"5191-2","e Ag (HBeAg)","Hepatitis B virus little e Ag","Qn"
+"5193-8","Surface Ab (HBsAb)","Hepatitis B virus surface Ab","Qn"
+"5194-6","Surface Ab (HBsAb)","Hepatitis B virus surface Ab","Qn"
+"5195-3","Surface Ab (HBsAb)","Hepatitis B virus surface Ag","Ord"
+"5196-1","Surface Ag (HBsAg)","Hepatitis B virus surface Ag","Ord"
+"5197-9","Surface Ag (HBsAg)","Hepatitis B virus surface Ag","Ord"
+"5198-7","Total Ab","Hepatitis C virus Ab","Qn"
+"5199-5","Total Ab","Hepatitis C virus Ab","Ord"
+"5229-0","Total Ab","Influenza virus A Ab","Qn"
+"5230-8",,"Influenza virus B Ab","Qn"
+"5236-5","Total Ab","Legionella pneumophila Ab","Ord"
+"5237-3","Total Ab","Legionella pneumophila Ab","Qn"
+"5242-3","Total Ab","Measles virus Ab","Qn"
+"5243-1","Total Ab","Measles virus Ab","Qn"
+"5244-9","IgG Ab","Measles virus Ab.IgG","Qn"
+"5245-6","IgM Ab","Measles virus Ab.IgM","Qn"
+"5249-8","Total Ab","Mumps virus Ab","Qn"
+"524-9","Vancomycin susceptibility","Vancomycin","OrdQn"
+"5250-6","Total Ab","Mumps virus Ab","Qn"
+"5289-4","VDRL (Venereal disease research laboratory)","Reagin Ab","Qn"
+"5290-2","VDRL (Venereal disease research laboratory)","Reagin Ab","Ord"
+"5291-0","VDRL (Venereal disease research laboratory)","Reagin Ab","Qn"
+"5292-8","VDRL (Venereal disease research laboratory)","Reagin Ab","Ord"
+"5307-4","IgG Ab","Rickettsia rickettsii Ab.IgG","Qn"
+"5308-2","IgM Ab","Rickettsia rickettsii Ab.IgM","Qn"
+"5310-8","Total Ab","Rickettsia spotted fever group Ab","Ord"
+"5311-6","Total Ab","Rickettsia spotted fever group Ab","Qn"
+"5312-4","IgG Ab","Rickettsia spotted fever group Ab.IgG","Qn"
+"5313-2","IgG Ab","Rickettsia spotted fever group Ab.IgG","Qn"
+"5314-0","IgM Ab","Rickettsia spotted fever group Ab.IgM","Qn"
+"5315-7","IgM Ab","Rickettsia spotted fever group Ab.IgM","Qn"
+"5320-7","IgG Ab","Rickettsia typhus group Ab.IgG","Qn"
+"5322-3","IgM Ab","Rickettsia typhus group Ab.IgM","Qn"
+"532-2","Culture","Mycobacterium sp identified","Nom"
+"533-0","Culture","Mycobacterium sp identified","Nom"
+"5334-8","IgG Ab","Rubella virus Ab.IgG","Qn"
+"5335-5","IgM Ab","Rubella virus Ab.IgM","Qn"
+"534-8","Culture","Mycobacterium sp identified","Nom"
+"535-5","Culture","Mycobacterium sp identified","Nom"
+"536-3","Culture","Mycobacterium sp identified","Nom"
+"537-1","Culture","Mycobacterium sp identified","Nom"
+"538-9","Culture","Mycobacterium sp identified","Nom"
+"5393-4","FTA (Fluorescent treponemal antibody)","Treponema pallidum Ab","Ord"
+"5395-9","Total Ab","Trichinella spiralis Ab","Qn"
+"539-7","Culture","Mycobacterium sp identified","Nom"
+"5401-5","Total Ab","Varicella zoster virus Ab","Qn"
+"5402-3","Total Ab","Varicella zoster virus Ab","Qn"
+"5404-9","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"5405-6","Total Ab","Vibrio cholerae Ab","Qn"
+"540-5","Culture","Mycobacterium sp identified","Nom"
+"5406-4","Total Ab","Western equine encephalitis virus Ab","Qn"
+"5407-2","O3 Ab","Yersinia enterocolitica O3 Ab","Qn"
+"5408-0","O8 Ab","Yersinia enterocolitica O8 Ab","Qn"
+"5409-8","O9 Ab","Yersinia enterocolitica O9 Ab","Qn"
+"5410-6","Total Ab","Yersinia pseudotuberculosis Ab","Qn"
+"541-3","Culture","Mycobacterium sp identified","Nom"
+"542-1","Culture","Mycobacterium sp identified","Nom"
+"543-9","Culture","Mycobacterium sp identified","Nom"
+"547-0","Culture","Streptococcus.beta-hemolytic","Ord"
+"548-8","Culture","Bordetella pertussis","Ord"
+"549-6","Culture","Bordetella pertussis","Ord"
+"550-4",,"Bordetella pertussis Ag","Ord"
+"551-2","Culture","Brucella sp identified","Nom"
+"552-0","Culture","Brucella sp identified","Nom"
+"558-7","Culture","Chlamydia sp identified","Nom"
+"560-3","Culture","Chlamydia sp identified","Nom"
+"566-0","Antigen by DFA/IF","Cryptosporidium sp Ag","Ord"
+"567-8","Culture","Diphtheria sp identified","Nom"
+"5860-2","Rapid","Influenza virus A Ag","Ord"
+"5861-0","Antigen by DFA/IF","Influenza virus A Ag","Ord"
+"5862-8","Rapid","Influenza virus A Ag","Ord"
+"5863-6","Antigen by DFA/IF","Influenza virus A Ag","Ord"
+"5864-4","Rapid","Influenza virus B Ag","Ord"
+"5865-1","Antigen by DFA/IF","Influenza virus B Ag","Ord"
+"5866-9","Rapid","Influenza virus B Ag","Ord"
+"5867-7","Antigen by DFA/IF","Influenza virus B Ag","Ord"
+"586-8","Culture","Streptococcus agalactiae","Ord"
+"5878-4","Culture","Rickettsia sp identified","Nom"
+"5881-8","Antigen by DFA/IF","Varicella zoster virus Ag","Ord"
+"5882-6","Antigen by DFA/IF","Varicella zoster virus Ag","Ord"
+"5883-4","Culture","Virus identified","Nom"
+"5884-2","Culture","Virus identified","Nom"
+"588-4","Antigen by DFA/IF","Legionella pneumophila Ag","Ord"
+"5886-7","Culture","Virus identified","Nom"
+"5887-5","Culture","Virus identified","Nom"
+"5888-3","Culture","Virus identified","Nom"
+"589-2","Culture","Legionella sp identified","Nom"
+"590-0","Culture","Legionella sp identified","Nom"
+"593-4","Culture","Legionella sp identified","Nom"
+"597-5","Culture","Bacteria identified","Nom"
+"600-7","Culture","Bacteria identified","Nom"
+"604-9","Culture","Bacteria identified","Nom"
+"605-6","Culture","Bacteria identified","Nom"
+"606-4","Culture","Bacteria identified","Nom"
+"609-8","Culture","Bacteria identified","Nom"
+"610-6","Culture","Bacteria identified","Nom"
+"611-4","Culture","Bacteria identified","Nom"
+"614-8","Typing","Mycobacterium sp identified","Nom"
+"620-5","Culture","Bacteria identified","Nom"
+"621-3","Culture","Bacteria identified","Nom"
+"622-1","Culture","Bacteria identified","Nom"
+"623-9","Culture","Bacteria identified","Nom"
+"624-7","Culture","Bacteria identified","Nom"
+"625-4","Culture","Bacteria identified","Nom"
+"626-2","Culture","Bacteria identified","Nom"
+"627-0","Culture","Bacteria identified","Nom"
+"628-8","Culture","Bacteria identified","Nom"
+"630-4","Culture","Bacteria identified","Nom"
+"6309-9","Culture","Arbovirus identified","Nom"
+"6310-7","Culture","Arbovirus identified","Nom"
+"6315-6",,"Bordetella pertussis Ab","Qn"
+"6317-2","Culture","Bordetella sp identified","Nom"
+"6318-0","Total Ab","Borrelia burgdorferi Ab","Qn"
+"6320-6","IgG Ab","Borrelia burgdorferi Ab.IgG","Ord"
+"632-0","Culture","Bacteria identified","Nom"
+"6321-4","IgM Ab","Borrelia burgdorferi Ab.IgM","Ord"
+"6323-0","Culture","Borrelia sp identified","Nom"
+"6324-8","Total Ab","Brucella abortus Ab","Qn"
+"6326-3","IgM Ab","Brucella abortus Ab.IgM","Qn"
+"6329-7","DNA probe - not amplified/PCR","Campylobacter coli rRNA","Ord"
+"6330-5","Culture","Campylobacter sp identified","Nom"
+"6331-3","Culture","Campylobacter sp identified","Nom"
+"6332-1","Culture","Campylobacter sp identified","Nom"
+"6333-9","DNA probe - not amplified/PCR","Campylobacter jejuni rRNA","Ord"
+"6334-7","DNA probe - not amplified/PCR","Campylobacter lari rRNA","Ord"
+"6335-4","Culture","Campylobacter sp identified","Nom"
+"634-6","Culture","Bacteria identified","Nom"
+"6348-7","Culture","Chlamydia sp identified","Nom"
+"6349-5","Culture","Chlamydia trachomatis","Ord"
+"6350-3","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"6351-1","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"6353-7","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"635-3","Culture","Bacteria identified","Nom"
+"6354-5","Antigen by EIA/ELISA","Chlamydia trachomatis Ag","Ord"
+"6355-2","Antigen by DFA/IF","Chlamydia trachomatis Ag","Ord"
+"6356-0","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"6357-8","PCR/amplification","Chlamydia trachomatis DNA","Ord"
+"6358-6","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord"
+"636-1","Culture","Bacteria identified","Nom"
+"6367-7","IgG Ab","Clostridium tetani Ab.IgG","Qn"
+"6371-9","Antigen by EIA/ELISA","Cryptosporidium sp Ag","Ord"
+"6372-7","Antigen by DFA/IF","Cryptosporidium sp Ag","Qn"
+"637-9","Microscopy","Microscopic observation","Nom"
+"6383-4","Total Ab","Dengue virus Ab","OrdQn"
+"6388-3","Antigen by EIA/ELISA","Eastern equine encephalitis virus Ag","Ord"
+"6389-1","Antigen by DFA/IF","Eastern equine encephalitis virus Ag","Ord"
+"6396-6","PCR/amplification","Entamoeba histolytica DNA","Ord"
+"6397-4","Antigen by EIA/ELISA","Entamoeba histolytica Ag","Qn"
+"6398-2","Antigen by EIA/ELISA","Entamoeba histolytica Ag","Qn"
+"6399-0","Antigen by EIA/ELISA","Entamoeba histolytica Ag","Qn"
+"6401-4","IgG Ab","Ehrlichia chaffeensis Ab.IgG","Ord"
+"6402-2","IgM Ab","Ehrlichia chaffeensis Ab.IgM","Ord"
+"6403-0","Total Ab","Anaplasma phagocytophilum Ab","Ord"
+"6404-8","Total Ab","Anaplasma phagocytophilum Ab","Ord"
+"6407-1","IgM Ab","Francisella tularensis Ab.IgM","Ord"
+"6408-9","Antigen by DFA/IF","Francisella tularensis Ag","Ord"
+"6412-1","Antigen by EIA/ELISA","Giardia lamblia Ag","Ord"
+"6413-9","Antigen by EIA/ELISA","Giardia lamblia Ag","Ord"
+"6422-0","DNA probe - not amplified/PCR","Hepatitis C virus rRNA","Ord"
+"6437-8","Rapid","Influenza virus A+B Ag","Ord"
+"6438-6","Antigen by DFA/IF","Influenza virus A+B Ag","Ord"
+"6445-1","Antigen by DFA/IF","Legionella pneumophila Ag","Ord"
+"6447-7","Antigen by EIA/ELISA","Legionella pneumophila Ag","Ord"
+"6448-5","Antigen by EIA/ELISA","Legionella pneumophila Ag","Ord"
+"6451-9","DNA probe - not amplified/PCR","Legionella sp rRNA","Ord"
+"645-2","Acid fast stain","Microscopic observation","Nom"
+"6460-0","Culture","Bacteria identified","Nom"
+"646-0","Acid fast stain","Microscopic observation","Nom"
+"6462-6","Culture","Bacteria identified","Nom"
+"6463-4","Culture","Bacteria identified","Nom"
+"6470-9","Microscopy","Microscopic observation","Nom"
+"6471-7","Microscopy","Microscopic observation","Nom"
+"6473-3","Microscopy","Microscopic observation","Nom"
+"6476-6","IgG Ab","Mumps virus Ab.IgG","Ord"
+"6477-4","IgG Ab","Mumps virus Ab.IgG","Qn"
+"6478-2","IgM Ab","Mumps virus Ab.IgM","Ord"
+"6479-0","IgM Ab","Mumps virus Ab.IgM","Qn"
+"6487-3","Antigen by EIA/ELISA","Neisseria gonorrhoeae Ag","Ord"
+"6488-1","Antigen by DFA/IF","Neisseria gonorrhoeae Ag","Ord"
+"6489-9","Antigen, unknown method","Neisseria gonorrhoeae Ag","Ord"
+"6490-7","Antigen, unknown method","Neisseria gonorrhoeae Ag","Ord"
+"6491-5","PCR/amplification","Neisseria gonorrhoeae rRNA","Ord"
+"6493-1",,"Neisseria meningitidis A Ag","Ord"
+"6494-9",,"Neisseria meningitidis A Ag","Ord"
+"6496-4",,"Neisseria meningitidis B Ag","Ord"
+"6497-2",,"Neisseria meningitidis B Ag","Ord"
+"6498-0",,"Neisseria meningitidis B Ag","Ord"
+"6499-8",,"Neisseria meningitidis C Ag","Ord"
+"6500-3",,"Neisseria meningitidis C Ag","Ord"
+"6503-7",,"Neisseria meningitidis Y Ag","Ord"
+"6504-5",,"Neisseria meningitidis Y Ag","Ord"
+"6505-2",,"Neisseria meningitidis Y Ag","Ord"
+"6506-0",,"Neisseria meningitidis w135 Ag","Ord"
+"6507-8",,"Neisseria meningitidis w135 Ag","Ord"
+"6508-6",,"Neisseria meningitidis Ag","Ord"
+"6509-4","DNA probe - not amplified/PCR","Neisseria meningitidis rRNA","Ord"
+"6523-5","Total Ab","Rabies virus Ab","Qn"
+"6524-3","Total Ab","Rabies virus Ab","Qn"
+"6527-6","Total Ab","Rabies virus Ab","Qn"
+"6528-4","Antigen by FRA","Rabies virus Ag","Ord"
+"6529-2","Antigen by FRA","Rabies virus Ag","Qn"
+"6532-6","Antigen by FRA","Rabies virus Ag","Ord"
+"6533-4","Antigen by FRA","Rabies virus Ag","Qn"
+"6543-3","Antigen by DFA/IF","Rickettsia rickettsii Ag","Nom"
+"6544-1","Culture","Rickettsia sp identified","Nom"
+"6545-8","Culture","Rickettsia sp identified","Nom"
+"6546-6","Culture","Rickettsia sp identified","Nom"
+"6548-2","Culture","Rubella virus identified","Nom"
+"6549-0","Antigen, unknown method","Saint Louis encephalitis virus Ag","Qn"
+"6553-2",,"Streptococcus pneumoniae Ag","Ord"
+"6555-7",,"Streptococcus pneumoniae Ag","Ord"
+"6558-1","Typing","Streptococcus pyogenes Ag","Ord"
+"6559-9","Typing","Streptococcus pyogenes Ag","Ord"
+"6561-5","IgG Ab","Treponema pallidum Ab.IgG","Ord"
+"6562-3","IgM Ab","Treponema pallidum Ab.IgM","Ord"
+"6563-1","IgG Ab","Trichinella spiralis Ab.IgG","Ord"
+"6570-6","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"6578-9","Culture","Vibrio sp identified","Nom"
+"6579-7","Culture","Vibrio sp identified","Nom"
+"6581-3","Culture","Vibrio sp identified","Nom"
+"6584-7","Culture","Virus identified","Nom"
+"6585-4","Antigen by EIA/ELISA","Western equine encephalitis virus Ag","Ord"
+"6586-2","Antigen by DFA/IF","Western equine encephalitis virus Ag","Ord"
+"6587-0","Total Ab","Yellow fever virus Ab","Qn"
+"6588-8","Total Ab","Yellow fever virus Ab","Qn"
+"6589-6","Total Ab","Yellow fever virus Ab","Qn"
+"6590-4","Total Ab","Yellow fever virus Ab","Qn"
+"6591-2","Total Ab","Yellow fever virus Ab","Qn"
+"6592-0","IgG Ab","Yellow fever virus Ab.IgG","Qn"
+"6593-8","IgM Ab","Yellow fever virus Ab.IgM","Qn"
+"6594-6","Culture","Amoeba identified","Nom"
+"6596-1","Culture","Diphtheria sp identified","Nom"
+"6600-1","Culture","Haemophilus sp identified","Nom"
+"6601-9","Culture","Influenza virus identified","Nom"
+"6602-7","Culture","Influenza virus identified","Nom"
+"6603-5","Culture","Influenza virus identified","Nom"
+"6604-3","Culture","Influenza virus identified","Nom"
+"6609-2","Culture","Listeria sp identified","Nom"
+"6610-0",,"Haemophilus influenzae A Ag","Ord"
+"6611-8",,"Haemophilus influenzae B Ag","Ord"
+"6612-6",,"Haemophilus influenzae C Ag","Ord"
+"6613-4",,"Haemophilus influenzae D Ag","Ord"
+"6614-2",,"Haemophilus influenzae E Ag","Ord"
+"6615-9",,"Haemophilus influenzae F Ag","Ord"
+"662-7","Microscopy","Microscopic observation","Nom"
+"6634-0",,"Influenza virus A Hong Kong Ab","Qn"
+"6635-7",,"Influenza virus A England Ab","Qn"
+"6636-5",,"Influenza virus A Port Chalmers Ab","Qn"
+"6637-3",,"Influenza virus A Victoria Ab","Qn"
+"6638-1",,"Influenza virus A Texas Ab","Qn"
+"6639-9",,"Influenza virus A Bangkok Ab","Qn"
+"6640-7",,"Influenza virus A Phillipines Ab","Qn"
+"6641-5",,"Influenza virus A Mississippi Ab","Qn"
+"6642-3",,"Influenza virus A Leningrad Ab","Qn"
+"665-0","Microscopy","Microscopic observation","Nom"
+"6652-2","Meropenem susceptibility","Meropenem","OrdQn"
+"6656-3","Acid fast stain","Microscopic observation","Nom"
+"6665-4","Microscopy","Microscopic observation","Nom"
+"6674-6","Microscopy","Microscopic observation","Nom"
+"6680-3","Microscopy","Microscopic observation","Nom"
+"673-4","Microscopy","Microscopic observation","Nom"
+"676-7","Microscopy","Microscopic observation","Nom"
+"678-3","Microscopy","Microscopic observation","Nom"
+"680-9","Microscopy","Microscopic observation","Nom"
+"6812-2","IgM Ab","Dengue virus Ab.IgM","Qn"
+"688-2","Culture","Neisseria gonorrhoeae","Ord"
+"690-8","Culture","Neisseria gonorrhoeae","Ord"
+"6911-2","IgG Ab","Brucella abortus Ab.IgG","Qn"
+"6915-3","IgA Ab","Chlamydophila psittaci Ab.IgA","Qn"
+"6916-1","IgG Ab","Chlamydophila psittaci Ab.IgG","Qn"
+"691-6","Culture","Neisseria gonorrhoeae","Ord"
+"6917-9","IgM Ab","Chlamydophila psittaci Ab.IgM","Qn"
+"6918-7","IgA Ab","Chlamydia trachomatis Ab.IgA","Qn"
+"6919-5","IgG Ab","Chlamydia trachomatis Ab.IgG","Qn"
+"6920-3","IgM Ab","Chlamydia trachomatis Ab.IgM","Qn"
+"692-4","Culture","Neisseria gonorrhoeae","Ord"
+"6932-8","Penicillin susceptibility","Penicillin","OrdQn"
+"693-2","Culture","Neisseria gonorrhoeae","Ord"
+"694-0","Culture","Neisseria gonorrhoeae","Ord"
+"6957-5","IgG Ab","Western equine encephalitis virus Ab.IgG","Qn"
+"695-7","Culture","Neisseria gonorrhoeae","Ord"
+"6958-3","IgM Ab","Western equine encephalitis virus Ab.IgM","Qn"
+"6959-1","O3 Ab","Yersinia enterocolitica O3 Ab","Qn"
+"6960-9","O5 Ab","Yersinia enterocolitica O5 Ab","Qn"
+"6961-7","O8 Ab","Yersinia enterocolitica O8 Ab","Qn"
+"6962-5","O9 Ab","Yersinia enterocolitica O9 Ab","Qn"
+"6963-3","Total Ab","Yersinia enterocolitica Ab","Qn"
+"6964-1","IgA Ab","Yersinia enterocolitica Ab.IgA","Qn"
+"6965-8","IgG Ab","Yersinia enterocolitica Ab.IgG","Qn"
+"696-5","Culture","Neisseria gonorrhoeae","Ord"
+"6966-6","IgM Ab","Yersinia enterocolitica Ab.IgM","Qn"
+"6967-4","Total Ab","Yersinia pseudotuberculosis Ab","Qn"
+"697-3","Culture","Neisseria gonorrhoeae","Ord"
+"698-1","Culture","Neisseria gonorrhoeae","Ord"
+"6984-9","Beta lactamase extended spectrum susceptibility","Beta lactamase.extended spectrum","OrdQn"
+"6985-6","Beta lactamase susceptibility","Beta lactamase.usual","OrdQn"
+"699-9","Unknown method","Organism count","Qn"
+"701-3","Culture","Yersinia sp identified","Nom"
+"7817-0","IgG Ab","Borrelia burgdorferi Ab.IgG","Qn"
+"7818-8","IgM Ab","Borrelia burgdorferi Ab.IgM","Qn"
+"7828-7","Total Ab","Coxiella burnetii Ab","Qn"
+"7829-5","IgG Ab","Coxiella burnetii phase 1 Ab.IgG","Qn"
+"7830-3","IgG Ab","Coxiella burnetii phase 2 Ab.IgG","Qn"
+"7860-0","IgG Ab","Eastern equine encephalitis virus Ab.IgG","Qn"
+"7861-8","IgM Ab","Eastern equine encephalitis virus Ab.IgM","Qn"
+"7875-8","IgG Ab","Ehrlichia chaffeensis Ab.IgG","Qn"
+"7876-6","IgM Ab","Ehrlichia chaffeensis Ab.IgM","Ord"
+"7877-4","Total Ab","Anaplasma phagocytophilum Ab","Ord"
+"7878-2","Total Ab","Anaplasma phagocytophilum Ab","Ord"
+"7888-1","Total Ab","Francisella tularensis Ab","Ord"
+"7889-9","IgG Ab","Francisella tularensis Ab.IgG","Ord"
+"7890-7","IgM Ab","Francisella tularensis Ab.IgM","Ord"
+"7898-0","IgM Ab","Hantavirus puumala Ab.IgM","Qn"
+"7899-8","PCR/amplification","Hantavirus RNA","Ord"
+"7905-3","Surface Ag (HBsAg)","Hepatitis B virus surface Ag","Ord"
+"7920-2",,"Influenza virus A Ab","Qn"
+"7921-0",,"Influenza virus A Bangkok Ab","Qn"
+"7922-8",,"Influenza virus A England Ab","Qn"
+"7923-6",,"Influenza virus A Hong Kong Ab","Qn"
+"7924-4",,"Influenza virus A Leningrad Ab","Qn"
+"7925-1",,"Influenza virus A Mississippi Ab","Qn"
+"7926-9",,"Influenza virus A Phillipines Ab","Qn"
+"7927-7",,"Influenza virus A Port Chalmers Ab","Qn"
+"7928-5",,"Influenza virus A Texas Ab","Qn"
+"7929-3",,"Influenza virus A Victoria Ab","Qn"
+"7931-9",,"Influenza virus B Ab","Qn"
+"7938-4","Total Ab","La Crosse virus Ab","OrdQn"
+"7940-0","IgG Ab","La Crosse virus Ab.IgG","Qn"
+"7941-8","IgM Ab","La Crosse virus Ab.IgM","Qn"
+"7947-5","Total Ab","Legionella pneumophila Ab","Ord"
+"7948-3","Total Ab","Legionella pneumophila 1 Ab","Qn"
+"7961-6","Total Ab","Measles virus Ab","Qn"
+"7962-4","IgG Ab","Measles virus Ab.IgG","Qn"
+"7963-2","IgM Ab","Measles virus Ab.IgM","Qn"
+"7966-5","IgG Ab","Mumps virus Ab.IgG","Qn"
+"7967-3","IgM Ab","Mumps virus Ab.IgM","Qn"
+"7968-1","PCR/amplification","Mumps virus RNA","Ord"
+"7997-0","Total Ab","Rickettsia spotted fever group Ab","Qn"
+"7998-8","IgG Ab","Rickettsia spotted fever group Ab.IgG","Qn"
+"7999-6","IgM Ab","Rickettsia spotted fever group Ab.IgM","Qn"
+"8003-6","IgG Ab","Rickettsia rickettsii Ab.IgG","Qn"
+"8004-4","IgM Ab","Rickettsia rickettsii Ab.IgM","Qn"
+"8005-1","PCR/amplification","Rickettsia rickettsii RNA","Ord"
+"8015-0","IgM Ab","Rubella virus Ab.IgM","Qn"
+"8016-8","IgG Ab","Saint Louis encephalitis virus Ab.IgG","Qn"
+"8017-6","IgM Ab","Saint Louis encephalitis virus Ab.IgM","Qn"
+"8021-8","Total Ab","Saint Louis encephalitis virus Ab","Ord"
+"8023-4","Total Ab","Saint Louis encephalitis virus Ab","Ord"
+"8025-9","PCR/amplification","Saint Louis encephalitis virus RNA","Ord"
+"8041-6","MHA-TP (Microhemagluttination assay)","Treponema pallidum Ab","Ord"
+"8042-4","Total Ab","Trichinella spiralis Ab","Qn"
+"8043-2","IgG Ab","Trichinella spiralis Ab.IgG","Ord"
+"8046-5","Total Ab","Varicella zoster virus Ab","Qn"
+"8048-1","IgM Ab","Varicella zoster virus Ab.IgM","Qn"
+"8049-9","PCR/amplification","Varicella zoster virus DNA","Ord"
+"8052-3","IgG Ab","Western equine encephalitis virus Ab.IgG","Qn"
+"8053-1","IgM Ab","Western equine encephalitis virus Ab.IgM","Qn"
+"8054-9","Total Ab","Yellow fever virus Ab","Qn"
+"8055-6","IgG Ab","Yellow fever virus Ab.IgG","Qn"
+"8056-4","IgM Ab","Yellow fever virus Ab.IgM","Qn"
+"8057-2","PCR/amplification","Yellow fever virus RNA","Ord"
+"9314-6","Total Ab","Western equine encephalitis virus Ab","Qn"
+"9315-3","IgG Ab","Western equine encephalitis virus Ab.IgG","Qn"
+"9316-1","IgM Ab","Western equine encephalitis virus Ab.IgM","Qn"
+"9362-5",,"Bordetella pertussis Ab.IgA","Qn"
+"9364-1",,"Bordetella pertussis Ab.IgM","Qn"
+"9526-5","Antigen by EIA/ELISA","Hepatitis D virus Ag","OrdQn"
+"9531-5",,"Influenza virus A Ab","Qn"
+"9532-3",,"Influenza virus A Ab.IgG","Qn"
+"9533-1",,"Influenza virus A Ab.IgM","Qn"
+"9534-9",,"Influenza virus B Ab","Qn"
+"9535-6",,"Influenza virus B Ab.IgG","Qn"
+"9536-4",,"Influenza virus B Ab.IgM","Qn"
+"9539-8","IgG Ab","La Crosse virus Ab.IgG","Qn"
+"9540-6","IgM Ab","La Crosse virus Ab.IgM","Qn"
+"9541-4","IgG Ab","Legionella pneumophila 1 Ab.IgG","Qn"
+"9542-2","IgM Ab","Legionella pneumophila 1 Ab.IgM","Qn"
+"9543-0","Antigen by EIA/ELISA","Legionella pneumophila 1 Ag","Ord"
+"9551-3","IgM Ab","Legionella pneumophila 5 Ab.IgM","Qn"
+"9552-1","IgG Ab","Legionella pneumophila 6 Ab.IgG","Qn"
+"9566-1","IgG Ab","Measles virus Ab.IgG","Qn"
+"9567-9","Total Ab","Mumps virus Ab","Qn"
+"9568-7","Total Ab","Neisseria gonorrhoeae Ab","Qn"
+"9576-0","Total Ab","Rubella virus Ab","Qn"
+"9577-8","Total Ab","Saint Louis encephalitis virus Ab","Qn"
+"9586-9","Total Ab","Borrelia burgdorferi Ab","Nom"
+"9608-1","Western (immuno) blot (100-3 Ab only)","Hepatitis C virus 100-3 Ab","Ord"
+"9609-9","Western (immuno) blot (22-3 Ab only)","Hepatitis C virus 22-3 Ab","Ord"
+"9610-7","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Ab","Ord"
+"9634-7","IgG Ab","Saint Louis encephalitis virus Ab.IgG","Qn"
+"9635-4","IgM Ab","Saint Louis encephalitis virus Ab.IgM","Qn"
+"9636-2","Total Ab","Varicella zoster virus Ab","Ord"
+"9710-5","IgM Ab","Coxiella burnetii phase 1 Ab.IgM","Qn"
+"9711-3","IgM Ab","Coxiella burnetii phase 2 Ab.IgM","Qn"
+"9783-2","IgG Ab","Ehrlichia chaffeensis Ab.IgG","Qn"
+"9784-0","IgM Ab","Ehrlichia chaffeensis Ab.IgM","Qn"
+"9785-7","Microscopy","Microscopic observation","Nom"
+"9786-5","Microscopy","Microscopic observation","Nom"
+"9823-6","Culture","Mycobacterium sp identified","Nom"
+"9824-4","Culture","Mycobacterium sp identified","Nom"
+"9825-1","Unknown method","Mycobacterium sp identified","Nom"
+"9826-9","FTA (Fluorescent treponemal antibody)","Treponema pallidum Ab","Ord"
