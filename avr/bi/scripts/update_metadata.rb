@@ -69,11 +69,52 @@ class Metadata
     @meta.databases.each {|db| return Database.new(db) unless db.name =~ /Update Script Connection/}
   end
 
+  def trisano_business_model
+    @trisano_business_model ||= @meta.find_model('TriSano')
+  end
+
   def update_from_database
-    publish writable_database.modified_tables, {
-      :success => lambda{ writable_database.clear_modified_tables; puts 'Success!' },
-      :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" },
-      :none    => lambda{ puts "No modified tables. Nothing to do" }}
+    ro_database.disease_groups.each do |disease_group|
+      model = @meta.find_model(disease_group)
+      if model == nil
+        puts "Creating new business model for disease group #{disease_group}"
+        # See src/org/pentaho/pms/ui/MetaEditor.java, line 2506 for API examples
+        model = BusinessModel.new(disease_group)
+        trisano_business_model.get_business_tables.each do |t|
+          model.add_business_table t
+        end
+        trisano_business_model.get_relationships.each do |t|
+          model.add_relationship t
+        end
+        trisano_business_model.get_notes.each do |t|
+          model.add_note t
+        end
+        # For category examples, see:
+        # CwmSchemaFactory.java line 1371
+
+        # Clone() is important. Otherwise, each group has the *same* category
+        # object. Then, each group has all the same categories. Oddly enough,
+        # though, the categories are empty except for the diseases in that
+        # group.
+        model.set_root_category trisano_business_model.get_root_category.clone()
+
+        model.set_connection trisano_business_model.get_connection
+        @meta.add_model(model)
+      end
+      
+      puts "Processing disease group #{disease_group}"
+      tables = writable_database.modified_tables(disease_group)
+      create_tables tables, model, {
+        :success => lambda{ puts 'Success!' },
+        :none    => lambda{ puts "No modified tables. Nothing to do" }}
+      writable_database.update_disease_groups_col tables.join("','"), disease_group
+    end
+
+    writable_database.clear_modified_tables
+
+    publish ({
+      :success => lambda{ puts 'Success!' },
+      :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" }})
   end
 
   def hash_fail
@@ -93,45 +134,44 @@ class Metadata
     @meta.find_physical_table(table_name)
   end
 
-  def find_business_table(table_name)
-    trisano_business_model.find_business_table(table_name)
+  def find_business_table(table_name, model)
+    model.find_business_table(table_name)
   end
 
-  def find_business_category(category_name)
-    trisano_business_model.root_category.business_categories.each do |bc|
+  def find_business_category(category_name, model)
+    model.root_category.business_categories.each do |bc|
       return bc if bc.get_id == category_name
     end
-  end
-
-  def trisano_business_model
-    @trisano_business_model ||= @meta.find_model('TriSano')
   end
 
   def view_for(table_name)
     "#{table_name}_view"
   end
 
-  def create_relationship(options)
+  def create_relationship(options, model)
     relationship = Relationship.new
     relationship.table_from = options[:from]
     relationship.field_from = options[:from].find_business_column("#{options[:from].get_id}_event_id")
     relationship.table_to   = options[:to]
     relationship.field_to   = options[:to].id_column
     relationship.type       = options[:type]
-    if trisano_business_model.index_of_relationship(relationship) == -1
-      trisano_business_model.add_relationship relationship
+    if model.index_of_relationship(relationship) == -1
+      model.add_relationship relationship
     end
   end
 
   def update_physical_table(table_name)
     pt = find_physical_table view_for(table_name)
     if pt.nil?
+      puts "   Creating new physical table"
       pt = PhysicalTable.new view_for(table_name)
       pt.locale_name 'en_US', table_name.gsub('_', ' ')
       pt.set_database_meta(ro_database.meta)
       pt.set_target_schema('trisano')
       pt.set_target_table view_for(table_name)
       @meta.add_table(pt)
+    else
+      puts "   Physical table already exists"
     end
     writable_database.column_names_for(table_name).each do |column_name|
       unless pt.has_column?(column_name)
@@ -148,13 +188,14 @@ class Metadata
     end
   end
 
-  def update_business_table(table_name)
+  def update_business_table(table_name, model)
     pt = find_physical_table view_for(table_name)
     unless pt.nil?
-      table = find_business_table view_for(table_name)
+      table = find_business_table view_for(table_name), model
       if table.nil?
+        puts "      Creating new business table #{table_name}"
         table = Java::OrgPentahoPmsSchema::BusinessTable.new view_for(table_name), pt
-        trisano_business_model.add_business_table table
+        model.add_business_table table
       end
       pt.physical_columns.each do |pc|        
         bc = Java::OrgPentahoPmsSchema::BusinessColumn.new
@@ -167,13 +208,13 @@ class Metadata
     end
   end
 
-  def update_category(category_name, *tables)
-    category = find_business_category(category_name)
+  def update_category(category_name, model, *tables)
+    category = find_business_category(category_name, model)
     if category.nil?
       category = BusinessCategory.new(category_name)
       secure category
       category.locale_name 'en_US', category_name.gsub('_', ' ')
-      trisano_business_model.add_category(category)
+      model.add_category(category)
     end
     tables.each do |table|
       table.business_columns.each do |column|
@@ -216,39 +257,44 @@ class Metadata
     end
   end
 
-  def publish(tables, result_hooks={})
+  def publish(result_hooks={})
+    CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
+
+    puts "Saving metadata to file"
+    File.open('metadata.out', 'w') do |io|
+      io << @cwm.getXMI
+    end
+    FileUtils.cp('metadata.out', 'metadata.xmi')
+
+    puts "Publishing metadata to server"
+    files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
+    result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(publish_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
+    if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
+      result_hooks[:success].call(result) if result_hooks[:success]
+    else 
+      result_hooks[:failure].call(result) if result_hooks[:failure]
+    end
+  end
+
+  def create_tables(tables, model, result_hooks={})
     if tables.empty?
       result_hooks[:none].call if result_hooks[:none]
     else
       puts "Creating business tables and relationships"
       tables.each do |short_name, table_name|
+        puts "Adding table #{short_name} to disease group model"
         update_physical_table table_name
-        update_business_table table_name do |table|
+        update_business_table table_name, model do |table|
           secure table
-          event_table = table_name =~ /contact/ ? contact_events_table : morbidity_events_table
+          event_table = table_name =~ /contact/ ? contact_events_table(model) : morbidity_events_table(model)
           create_relationship({ :from => table, 
                                 :to   => event_table,
-                                :type => "N:1"})
-          update_category category_name(short_name), table
+                                :type => "N:1"}, model)
+          update_category category_name(short_name), model, table
         end
       end        
-      setup_role_security trisano_business_model
-      CwmSchemaFactory.new.store_schema_meta(@cwm, @meta, nil)
-
-      puts "Saving metadata to file"
-      File.open('metadata.out', 'w') do |io|
-        io << @cwm.getXMI
-      end
-      FileUtils.cp('metadata.out', 'metadata.xmi')
-
-      puts "Publishing metadata to server"
-      files = [Java::JavaIo::File.new('metadata.xmi')].to_java(Java::JavaIo::File)
-      result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(publish_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
-      if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
-        result_hooks[:success].call(result) if result_hooks[:success]
-      else 
-        result_hooks[:failure].call(result) if result_hooks[:failure]
-      end
+      setup_role_security model
+      result_hooks[:success].call if result_hooks[:success]
     end
   end
 
@@ -260,12 +306,12 @@ class Metadata
     @meta.find_concept('Base')
   end
 
-  def morbidity_events_table
-    find_business_table 'MorbidityEvents'
+  def morbidity_events_table(model)
+    find_business_table 'MorbidityEvents', model
   end
 
-  def contact_events_table
-    find_business_table 'ContactEvents'
+  def contact_events_table(model)
+    find_business_table 'ContactEvents', model
   end
 
   def secure(obj)
@@ -276,7 +322,15 @@ class Metadata
     return @rights_mask if @rights_mask
     secref = @meta.get_security_reference
     secref.get_security_service.serviceURL = "#{server_url}/pentaho/ServiceAction?action=SecurityDetails&details=all"
-    @rights_mask = secref.find_acl("All").mask
+    secref.get_security_service.set_username(fs_user)
+    secref.get_security_service.set_password(fs_user_password)
+    acl = secref.find_acl("All")
+    if acl == nil
+      raise "Couldn't get ACL from Pentaho. Is Pentaho running, at #{server_url}? Perhaps the username (#{fs_user}) or the password are wrong."
+    else
+      @rights_mask = acl.mask
+    end
+    @rights_mask
   end
 
   def security
@@ -319,6 +373,19 @@ class Metadata
       @database_info = database_info
     end
 
+    def update_disease_groups_col(tables, disease_group)
+      execute( %{
+        UPDATE trisano.formbuilder_tables
+        SET disease_groups =
+            CASE
+                WHEN disease_groups IS NULL THEN ARRAY['#{disease_group}']
+                ELSE disease_groups || '#{disease_group}'::text
+            END
+        WHERE short_name IN ('#{tables}')
+        AND (disease_groups IS NULL OR NOT ('#{disease_group}' = ANY(disease_groups)))
+      })
+    end
+
     def meta
       @database_info
     end
@@ -351,31 +418,84 @@ class Metadata
       eval("#{@database_info.driver_class}").new
     end
 
+    def get_query_results(query_string)
+      rs = query(query_string)
+      while rs.next
+        yield rs
+      end
+    end
+
+    def disease_groups
+      return @disease_groups if @disease_groups
+      @disease_groups = []
+      get_query_results 'SELECT DISTINCT group_name FROM trisano.disease_groups_view' do
+        |rs|
+        a = rs.getString(1)
+        @disease_groups << a
+      end
+      @disease_groups
+    end
+
     def jurisdiction_hash
-      if ! @jurisdiction_hash
-        rs = query(%{
+      return @jurisdiction_hash if @jurisdiction_hash
+      @jurisdiction_hash = {}
+      get_query_results %{
           SELECT p.name
           FROM trisano.places_view p
           JOIN trisano.places_types_view pt
               ON (p.id = pt.place_id)
           JOIN trisano.codes_view c
               ON (c.id = pt.type_id)
-          WHERE c.code_description = 'Jurisdiction'})
-        @jurisdiction_hash = {}
-        while rs.next
-          @jurisdiction_hash[rs.getString(1)] = 1
-        end
+          WHERE c.code_description = 'Jurisdiction'} do |rs|
+        @jurisdiction_hash[rs.getString(1)] = 1
       end
-      return @jurisdiction_hash
+      @jurisdiction_hash
     end
 
-    def modified_tables
-      rs = query("SELECT short_name, table_name FROM trisano.formbuilder_tables WHERE modified=true ORDER BY short_name;")
-      results = []
-      while rs.next        
-        results << [rs.getString(1), rs.getString(2)]
+    def modified_tables(disease_group=nil)
+      # Get all formbuilder tables that are part of this disease group.
+
+      # Note on the disease_groups column: The tables required to provide all
+      # relevant formbuilder information for a particular disease group might
+      # change just by someone filling out an old form for a new disease, or by
+      # a disease group changing. So adding forms to the schema based only on
+      # the 'modified' column isn't adequate. Instead, we track which disease
+      # groups use this form currently.  If we find a form with answers for a
+      # disease in this disease group where the disease_groups, and for that
+      # form short name, modified is true or where the current disease group
+      # isn't represented in the disease_groups column, we add it to the schema
+      # for this disease group
+
+      modified_tables = [] 
+      query = "SELECT ft.short_name, ft.table_name FROM trisano.formbuilder_tables ft "
+      if disease_group
+        query += %{
+          JOIN trisano.forms_view f ON (ft.short_name = f.short_name)
+          JOIN trisano.form_elements_view fe ON (f.id = fe.form_id)
+          JOIN trisano.questions_view q ON (q.form_element_id = fe.id)
+          JOIN trisano.answers_view a ON (a.question_id = q.id)
+          JOIN trisano.events_view e ON (e.id = a.event_id)
+          JOIN trisano.disease_events_view de ON (de.event_id = e.id)
+          JOIN trisano.disease_groups_view dg
+            ON (dg.disease_id = de.disease_id AND group_name = '#{disease_group}')
+          WHERE a.text_answer IS NOT NULL AND a.text_answer != '' AND (
+            ft.modified OR
+            ft.disease_groups IS NULL OR
+            NOT ('#{disease_group}' = ANY(ft.disease_groups))
+          )
+          GROUP BY ft.short_name, ft.table_name
+        }
+      else
+        query += " WHERE ft.modified"
       end
-      results
+      query += " ORDER BY ft.short_name;"
+      get_query_results query do |rs|
+        modified_tables << [rs.getString(1), rs.getString(2)]
+      end
+      modified_tables.each do |a|
+        puts "Adding table #{a} for disease group #{disease_group}"
+      end
+      modified_tables
     end
 
     def clear_modified_tables
@@ -383,11 +503,10 @@ class Metadata
     end
 
     def column_names_for(table_name)
-      rs = query("SELECT column_name FROM trisano.formbuilder_columns WHERE formbuilder_table_name='#{table_name}' ORDER BY column_name;")
       results = []
-      while rs.next
+      get_query_results "SELECT column_name FROM trisano.formbuilder_columns WHERE formbuilder_table_name='#{table_name}' ORDER BY column_name;" do |rs|
         results << rs.getString(1)
-      end      
+      end
       results.empty? ? results : %w(event_id type) + results
     end
   end
