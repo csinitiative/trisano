@@ -13,14 +13,11 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        Organism Name
-      %th
-        Disease
-      %th
-        &nbsp;
-    %tr
-      =render organism
+%td.forminformation
+  .formname
+    %span.organism_name
+      =link_to_unless_current h(organism.organism_name), organism
+%td
+  =link_to_unless_current h(organism.disease.try(:disease_name)), organism.disease
+%td
+  =organism_tools organism

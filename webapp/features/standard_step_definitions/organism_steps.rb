@@ -1,6 +1,6 @@
 Then /^I should see the following organisms:$/ do |expected_table|
   t = table element_at('#organisms').to_table
-  t.map_headers! t.headers[1] => 'Actions'
+  t.map_headers! t.headers[2] => 'Actions'
   t.map_column! 'Organism Name' do |names|
     Nokogiri::HTML("<html>#{names}</html>").css('a').text()
   end

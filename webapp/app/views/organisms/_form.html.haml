@@ -27,5 +27,8 @@
             =f.label      :organism_name
             =f.text_field :organism_name, :size => 60
 
+          %span.horiz
+            =f.label  :disease_id
+            =f.select :disease_id, diseases_organism_options, :include_blank => true
     %span.vert
       =create_or_update_button organism

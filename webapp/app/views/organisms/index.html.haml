@@ -24,13 +24,10 @@
     %tr
       %th.forminformation<
         Organism Name
+      %th
+        Disease
       %th<
         &nbsp;
       -@organisms.each do |organism|
         %tr.roll
-          %td.forminformation<
-            .formname
-              %span.organism_name
-                =link_to h(organism.organism_name), organism
-          %td<
-            =organism_tools organism
+          =render organism
