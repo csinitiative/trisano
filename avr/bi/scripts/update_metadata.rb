@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # XXX Make sure we can set security, etc. even if no tables are modified
@@ -33,6 +33,7 @@ end
 require_jars Dir.glob(File.join(server_dir, 'tomcat/webapps/pentaho/WEB-INF/lib', '*.jar'))
 require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'postgres*.jar'))
 
+AllTablesGroupName = 'All Formbuilder Tables';
 
 CWM = Java::OrgPentahoPmsCore::CWM
 CwmSchemaFactory = Java::OrgPentahoPmsFactory::CwmSchemaFactory
@@ -53,7 +54,7 @@ end
 class Metadata
   def initialize(metafile)
     FileUtils.rm Dir.glob('mdr.*')
-    @schema_factory = CwmSchemaFactory.new    
+    @schema_factory = CwmSchemaFactory.new
     @cwm = CWM.get_instance('__tmp_domain__')
     @cwm.importFromXMI metafile
     @meta = @schema_factory.getSchemaMeta(@cwm)
@@ -101,9 +102,9 @@ class Metadata
         model.set_connection trisano_business_model.get_connection
         @meta.add_model(model)
       end
-      
+
       puts "Processing disease group #{disease_group}"
-      tables = writable_database.modified_tables(disease_group)
+      tables = writable_database.modified_tables(disease_group == AllTablesGroupName ? nil : disease_group)
       create_tables tables, model, {
         :success => lambda{ puts 'Success!' },
         :none    => lambda{ puts "No modified tables. Nothing to do" }}
@@ -118,8 +119,8 @@ class Metadata
   end
 
   def hash_fail
-    @hash_fail ||= { 
-      1 => "file exists", 
+    @hash_fail ||= {
+      1 => "file exists",
       2 => "file add failed",
       3 => "file add successfule",
       4 => "invalid publish password",
@@ -197,7 +198,7 @@ class Metadata
         table = Java::OrgPentahoPmsSchema::BusinessTable.new view_for(table_name), pt
         model.add_business_table table
       end
-      pt.physical_columns.each do |pc|        
+      pt.physical_columns.each do |pc|
         bc = Java::OrgPentahoPmsSchema::BusinessColumn.new
         bc.set_id "#{view_for(table_name)}_#{pc.get_id}"
         bc.physical_column = pc
@@ -271,7 +272,7 @@ class Metadata
     result = Java::OrgPentahoPlatformUtilClient::PublisherUtil.publish(publish_url, 'TriSano', files, publisher_password, fs_user, fs_user_password, true)
     if result == Java::OrgPentahoPlatformUtilClient::PublisherUtil::FILE_ADD_SUCCESSFUL
       result_hooks[:success].call(result) if result_hooks[:success]
-    else 
+    else
       result_hooks[:failure].call(result) if result_hooks[:failure]
     end
   end
@@ -287,12 +288,12 @@ class Metadata
         update_business_table table_name, model do |table|
           secure table
           event_table = table_name =~ /contact/ ? contact_events_table(model) : morbidity_events_table(model)
-          create_relationship({ :from => table, 
+          create_relationship({ :from => table,
                                 :to   => event_table,
                                 :type => "N:1"}, model)
           update_category category_name(short_name), model, table
         end
-      end        
+      end
       setup_role_security model
       result_hooks[:success].call if result_hooks[:success]
     end
@@ -348,7 +349,7 @@ class Metadata
     Java::OrgPentahoPmsSchemaSecurity::SecurityOwner::OWNER_TYPE_ROLE
   end
 
-  def server_url    
+  def server_url
     ENV['BI_SERVER_URL'] || 'http://localhost:8080'
   end
 
@@ -399,7 +400,7 @@ class Metadata
     def query(sql)
       connection do |conn|
         conn.prepare_call(sql).execute_query
-      end      
+      end
     end
 
     def connection
@@ -428,12 +429,12 @@ class Metadata
     def disease_groups
       return @disease_groups if @disease_groups
       @disease_groups = []
-      get_query_results 'SELECT DISTINCT group_name FROM trisano.disease_groups_view' do
+      get_query_results 'SELECT DISTINCT name FROM trisano.avr_groups_view' do
         |rs|
         a = rs.getString(1)
         @disease_groups << a
       end
-      @disease_groups
+      @disease_groups << AllTablesGroupName;
     end
 
     def jurisdiction_hash
@@ -466,7 +467,7 @@ class Metadata
       # isn't represented in the disease_groups column, we add it to the schema
       # for this disease group
 
-      modified_tables = [] 
+      modified_tables = []
       query = "SELECT ft.short_name, ft.table_name FROM trisano.formbuilder_tables ft "
       if disease_group
         query += %{
@@ -476,8 +477,10 @@ class Metadata
           JOIN trisano.answers_view a ON (a.question_id = q.id)
           JOIN trisano.events_view e ON (e.id = a.event_id)
           JOIN trisano.disease_events_view de ON (de.event_id = e.id)
-          JOIN trisano.disease_groups_view dg
-            ON (dg.disease_id = de.disease_id AND group_name = '#{disease_group}')
+          JOIN trisano.avr_groups_diseases_view adg
+            ON (adg.disease_id = de.disease_id)
+          JOIN trisano.avr_groups_view ag
+            ON (ag.id = adg.avr_group_id AND ag.name = '#{disease_group}')
           WHERE a.text_answer IS NOT NULL AND a.text_answer != '' AND (
             ft.modified OR
             ft.disease_groups IS NULL OR
@@ -518,8 +521,8 @@ module ConceptExtension
   end
 end
 
-BusinessModel.class_eval do  
-  def find_relationships_from(table)    
+BusinessModel.class_eval do
+  def find_relationships_from(table)
     relationships.select {|r| r.table_from.get_id == table.get_id}
   end
 
@@ -532,7 +535,7 @@ BusinessTable.class_eval do
   def id_column
     @id_column ||= business_columns.each { |c| return c if c.get_id =~ /VIEW_ID$/ }
   end
-  
+
   def has_column?(column_name)
     !find_business_column(column_name).nil?
   end

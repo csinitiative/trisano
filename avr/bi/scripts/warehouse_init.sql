@@ -30,7 +30,7 @@ CREATE LANGUAGE plpgsql;
 COMMIT;
 
 BEGIN;
--- NOTE: Adjust this user to the DEST_DB_USER 
+-- NOTE: Adjust this user to the DEST_DB_USER
 ALTER SCHEMA public OWNER TO trisano_su;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
 GRANT USAGE ON SCHEMA population TO trisano_ro;
@@ -170,7 +170,7 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS trisano.dp_cust CASCADE;
 
 CREATE TYPE trisano.dp_cust AS (
-    dp DOUBLE PRECISION); 
+    dp DOUBLE PRECISION);
 
 CREATE OR REPLACE FUNCTION trisano.make_dpcust(a DOUBLE PRECISION) RETURNS trisano.dp_cust IMMUTABLE AS $$
 DECLARE
@@ -492,9 +492,9 @@ DECLARE
     done                    BOOLEAN;
 BEGIN
     -- This function creates tables for formbuilder data, in a series of steps:
-    -- 
+    --
     -- 1) Develop schema for formbuilder tables
-    -- 
+    --
     -- Forms are represented as one or more tables containing a column for
     -- each question. These tables contain up to questions_per_table columns.
     -- This step loops through each form name that has answers, and on each
@@ -507,7 +507,7 @@ BEGIN
     -- questions_per_table columns, after which new tables are added. Any
     -- tables added or modified in this process are flagged so the metadata
     -- builder stuff can know to recreate that table.
-    -- 
+    --
     -- 2) Build schema based on results from step 1
     --
     -- Having developed a schema in the last step, this step builds each of
@@ -521,7 +521,7 @@ BEGIN
     -- Loop through each form
     FOR form_name IN
                 SELECT DISTINCT short_name
-                FROM forms 
+                FROM forms
                 WHERE short_name IS NOT NULL AND short_name != ''
                 ORDER BY short_name LOOP
 
@@ -570,7 +570,7 @@ BEGIN
                     WHERE tfc.orig_column_name = q.short_name
                 )
                 AND q.short_name IS NOT NULL AND q.short_name != ''
-                ORDER BY 1 LOOP 
+                ORDER BY 1 LOOP
 
             question_name := tmprec.safe_name;
 
@@ -724,13 +724,13 @@ BEGIN
           ON pg_namespace.oid = pg_class.relnamespace
           WHERE pg_class.relname = viewname AND pg_class.relkind = 'v') THEN
             -- CASCADE just in case there are dependencies
-            tmp := 'DROP VIEW trisano.' || viewname || ' CASCADE';   
+            tmp := 'DROP VIEW trisano.' || viewname || ' CASCADE';
             EXECUTE tmp;
         END IF;
     END LOOP;
 
     -- Create a new view for each table in the current schema
-    FOR viewname IN 
+    FOR viewname IN
       SELECT pg_class.relname
       FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'formtable_%'
@@ -867,7 +867,7 @@ BEGIN
                     OR dsj.dw_morbidity_events_id IS NOT NULL
             ) f
                 ON (p.id = f.id)';
-            
+
     EXECUTE
         'CREATE VIEW trisano.dw_contact_jurisdictions_view AS
             SELECT p.*
@@ -885,7 +885,7 @@ BEGIN
             ) f
                 ON (p.id = f.id)';
 
-    FOR viewname IN 
+    FOR viewname IN
       SELECT relname
       FROM pg_class JOIN pg_namespace
       ON (pg_class.relnamespace = pg_namespace.oid)
