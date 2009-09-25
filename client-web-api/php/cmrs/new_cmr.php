@@ -5,8 +5,12 @@ require_once('../lib/trisano-web-api-cmr.php');
 
 $trisano = new TrisanoWebApiCmr;
 
-$page = $trisano->get("/cmrs/new");
-$trisano->browser->setField('morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][last_name]', 'Jones');
+$trisano->get("/cmrs/new");
+$trisano->parse_args($argv);
+$trisano->populate_form();
+if ($trisano->browser->getTransportError()) {
+  die($trisano->browser->getTransportError());
+}
 $page = $trisano->browser->clickSubmitByName('commit');
 
 exit(0);
