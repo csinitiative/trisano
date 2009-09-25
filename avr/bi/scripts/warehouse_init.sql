@@ -74,7 +74,8 @@ CREATE TABLE trisano.formbuilder_tables (
     id SERIAL PRIMARY KEY,
     short_name TEXT,
     table_name TEXT,
-    modified BOOLEAN DEFAULT TRUE
+    modified BOOLEAN DEFAULT TRUE,
+    disease_groups TEXT[]
 );
 CREATE INDEX formbuilder_form_name
     ON trisano.formbuilder_tables (short_name);
