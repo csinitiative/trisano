@@ -84,26 +84,39 @@
     %tr
       %th.forminformation
         CDC Export Columns
-      %tr
-        %td.forminformation
-          - if @disease.export_columns.empty?
-            %span No CDC export columns configured
-          - else
-            %ul
-              - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
-                %li
-                  = export_column.export_column_name
+    %tr
+      %td.forminformation
+        - if @disease.export_columns.empty?
+          %span No CDC export columns configured
+        - else
+          %ul
+            - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
+              %li
+                =h export_column.export_column_name
 
   %table.list
     %tr
       %th.forminformation
         AVR Groups
+    %tr
+      %td.forminformation
+        - if @disease.avr_groups.empty?
+          %span No AVR groups configured
+        - else
+          %ul
+            - @disease.avr_groups.each do |avr_group|
+              %li
+                =h avr_group.name
+
+  %table.list
+    %tr
+      %th.forminformation{ :colspan => (@disease.organisms.empty? ? 1 : 3) }
+        Organisms
+    -if @disease.organisms.empty?
       %tr
         %td.forminformation
-          - if @disease.avr_groups.empty?
-            %span No AVR groups configured
-          - else
-            %ul
-              - @disease.avr_groups.each do |avr_group|
-                %li
-                  = avr_group.name
+          %span No Organisms configured
+    -else
+      -@disease.organisms.each do |organism|
+        %tr.roll
+          =render organism

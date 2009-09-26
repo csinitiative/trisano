@@ -28,7 +28,7 @@ class Disease < ActiveRecord::Base
 
   has_many :diseases_loinc_codes, :dependent => :destroy
   has_many :loinc_codes, :through => :diseases_loinc_codes
-
+  has_many :organisms
   has_many :common_test_types, :finder_sql => %q{
     SELECT common_test_types.* FROM common_test_types
       JOIN loinc_codes ON common_test_types.id = loinc_codes.common_test_type_id

@@ -22,6 +22,8 @@ describe Disease do
     @disease = Disease.new(:disease_name => "The Pops")
   end
 
+  it { should have_many(:organisms) }
+
   it "should be valid" do
     @disease.should be_valid
   end

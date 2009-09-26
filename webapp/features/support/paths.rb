@@ -96,6 +96,9 @@ def path_to(page_name)
   when /edit the disease$/
     edit_disease_path(@disease)
 
+  when /view the disease "([^\"]*)"/
+    disease_path Disease.find_by_disease_name($1)
+
   when /the loinc code index page/
     loinc_codes_path
 

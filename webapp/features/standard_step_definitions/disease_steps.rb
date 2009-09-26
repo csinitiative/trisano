@@ -19,3 +19,11 @@ Given /^the disease "([^\"]*)" is exported when "([^\"]*)"$/ do |disease_name, s
   disease.external_codes << ExternalCode.case.find_by_code_description(status)
   disease.save!
 end
+
+Given /^the following organisms are associated with the disease "([^\"]*)":$/ do |disease_name, table|
+  disease = Disease.find_or_create_by_disease_name disease_name
+  table.map_headers! 'Organism name' => :organism_name
+  table.hashes.each do |attr|
+    Organism.create! attr.merge(:disease => disease)
+  end
+end
