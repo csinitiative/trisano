@@ -37,10 +37,10 @@
     =label_tag 'Collection date range:'
     %span.vert
       =label_tag :start_date
-      =text_field_tag :start_date, params[:start_date]
+      =calendar_date_select_tag :start_date, params[:start_date]
     %span.horiz
       =label_tag :end_date
-      =text_field_tag :end_date, params[:end_date]
+      =calendar_date_select_tag :end_date, params[:end_date]
   %span.vert
     =label_tag "&nbsp;"
     =submit_tag "Search", :name => :do
