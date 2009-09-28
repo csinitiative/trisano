@@ -63,6 +63,7 @@ module LayoutHelper
     result << "<div class='bottom'>"
     result << "Copyright © 2009 Collaborative Software Foundation"
     result << "</div>"
+    result << "</div>"
 
     result
   end

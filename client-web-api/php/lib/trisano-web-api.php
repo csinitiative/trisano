@@ -5,6 +5,7 @@ require_once('../lib/simpletest/browser.php');
 class TrisanoWebApi {
   public $browser;
   private $base_url;
+  public $page;
 
   function __construct() {
     if (!isset($_ENV['TRISANO_BASE_URL'])) die('Missing TRISANO_BASE_URL environment variable');
@@ -30,7 +31,12 @@ class TrisanoWebApi {
   }
 
   public function get($path) {
-    return $this->browser->get($this->base_url . $path);
+    $this->page = $this->browser->get($this->base_url . $path);
+    return $this->page;
+  }
+
+  public function get_page() {
+    return $this->page;
   }
 
 }
