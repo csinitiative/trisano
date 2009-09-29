@@ -116,7 +116,10 @@ class Metadata
 
     publish ({
       :success => lambda{ puts 'Success!' },
-      :failure => lambda{ |result| puts "Failed because #{hash_fail[result]}" }})
+      :failure => lambda{ 
+        |result| puts "*** ERROR PUBLISHING METADATA *** Publishing failed because #{hash_fail[result]}" 
+        Process.exit(1)
+      }})
   end
 
   def hash_fail
