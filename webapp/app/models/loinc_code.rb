@@ -65,12 +65,14 @@ class LoincCode < ActiveRecord::Base
   def self.load_from_csv(str_or_readable)
     require 'csv'
     CSV.parse str_or_readable do |row|
-      scale = ExternalCode.loinc_scale_by_the_code row.last
+      scale = ExternalCode.loinc_scale_by_the_code row.fourth
       ctt   = CommonTestType.find_by_common_name row.second
+      organism = row.last ? Organism.find_or_create_by_organism_name(row.last) : nil
       LoincCode.create!(:loinc_code       => row.first,
                         :test_name        => row.third,
                         :scale            => scale,
-                        :common_test_type => ctt)
+                        :common_test_type => ctt,
+                        :organism         => organism)
     end
   end
 

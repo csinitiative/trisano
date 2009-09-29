@@ -21,3 +21,16 @@
   %p
 
 =render :partial => 'summary', :locals => {:organism => @organism}
+%br{ :style => 'clear: both;'}
+%table.list
+  %tr
+    %th.forminformation{ :colspan => (@organism.loinc_codes.empty? ? 1 : 5) }
+      Loinc codes
+  -if @organism.loinc_codes.empty?
+    %tr
+      %td.forminformation
+        %span No Loinc codes configured
+  -else
+    -@organism.loinc_codes.each do |loinc|
+      %tr.roll
+        =render loinc

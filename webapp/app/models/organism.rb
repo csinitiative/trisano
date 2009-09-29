@@ -22,7 +22,7 @@ class Organism < ActiveRecord::Base
 
   validates_presence_of   :organism_name
   validates_uniqueness_of :organism_name, :case_sensitive => false
-  validates_length_of     :organism_name, :maximum => 50, :allow_blank => true
+  validates_length_of     :organism_name, :maximum => 255, :allow_blank => true
 
   has_many :loinc_codes
   belongs_to :disease

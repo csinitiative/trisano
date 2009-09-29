@@ -133,17 +133,17 @@ describe LoincCode do
     it 'should bulk load from csv' do
       lambda do
         LoincCode.load_from_csv <<CSV
-10349-9,Total Ab,Brucella Ab Ser-aCnc,Qn
-10352-3,Culture,Bacteria Genital Aerobe Cult,Nom
-10674-0,Surface Ag (HBsAg),HBV surface Ag Tiss Ql ImStn,Ord
-108-1,Cefotaxime susceptibility,Cefotaxime Islt MIC,OrdQn
+"10349-9","Total Ab","Brucella Ab Ser-aCnc","Qn","Brucella species"
+"10352-3","Culture","Bacteria Genital Aerobe Cult","Nom"," "
+"10674-0","Surface Ag (HBsAg)","HBV surface Ag Tiss Ql ImStn","Ord",
+"108-1","Cefotaxime susceptibility","Cefotaxime Islt MIC","OrdQn",
 CSV
       end.should change(LoincCode, :count).by(4)
     end
 
     it 'csv bulk loads associate loincs w/ a common test type' do
       CommonTestType.create :common_name => 'Total Ab'
-      LoincCode.load_from_csv '10349-9,Total Ab,Brucella Ab Ser-aCnc,Qn'
+      LoincCode.load_from_csv '10349-9,Total Ab,Brucella Ab Ser-aCnc,Qn,'
       LoincCode.find_by_loinc_code('10349-9').common_test_type.should_not be_nil
     end
   end

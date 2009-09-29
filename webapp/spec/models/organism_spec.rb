@@ -33,8 +33,8 @@ describe Organism do
     Organism.create(:organism_name => '').errors.on(:organism_name).should == "can't be blank"
   end
 
-  it "name can't be longer then 50 characters" do
-    Organism.create(:organism_name => 'g' * 50).errors.on(:organism_name).should == nil
-    Organism.create(:organism_name => 'g' * 51).errors.on(:organism_name).should == 'is too long (maximum is 50 characters)'
+  it "name can't be longer then 255 characters" do
+    Organism.create(:organism_name => 'g' * 255).errors.on(:organism_name).should == nil
+    Organism.create(:organism_name => 'f' * 256).errors.on(:organism_name).should == 'is too long (maximum is 255 characters)'
   end
 end
