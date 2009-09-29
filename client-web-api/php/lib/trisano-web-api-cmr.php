@@ -131,7 +131,6 @@ class TrisanoWebApiCmr extends TrisanoWebApi {
           $this->browser->setField('morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][middle_name]', $o[1]);
           break;
         case '--last_name':
-          $this->get_menu_option_id('morbidity_event[disease_event_attributes][died_id]', 'Yes');
           $this->browser->setField('morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][last_name]', $o[1]);
           break;
         case '--birth_date':
