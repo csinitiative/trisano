@@ -100,6 +100,7 @@ class Metadata
         model.set_root_category trisano_business_model.get_root_category.clone()
 
         model.set_connection trisano_business_model.get_connection
+        model.set_security(trisano_business_model.get_security.clone())
         @meta.add_model(model)
       end
 
