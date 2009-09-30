@@ -43,101 +43,106 @@
           = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
 
     %div.search_group.clearfix
-      = link_to_function "Show | Hide Demographic Criteria", "Effect.toggle('demographic_criteria', 'blind', { duration: 0 })"
+      = link_to_function "Show | Hide All Other Criteria", "Effect.toggle('all_other_criteria', 'blind', { duration: 0 })"
 
-      %div#demographic_criteria{:style => "margin-top: 5px"}
-        %div{ :class => "horiz" }
-          %label City
-          = model_auto_completer("city", params[:city], "", "", { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
-        %div{ :class => "horiz" }
-          %label County
-          %select{ :name => "county"}
-            %option
-            - for county in @counties
-              %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
-                = "#{h(county.code_description)}"
-        %div{ :class => "horiz" }
-          %label Gender
-          %select{ :name => "gender" }
-            %option
-              - for gender in @genders
-                %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
-                  = "#{h(gender.code_description)}"
-        %div{ :class => "horiz" }
-          %label Date or year of birth (mm/dd/yyyy or yyyy)
-          = text_field_tag :birth_date, params[:birth_date], :size => "10"
+      %div#all_other_criteria{:style => "margin-top: 5px; display: none"}
+    
+        %div.search_group.clearfix
+          = link_to_function "Show | Hide Demographic Criteria", "Effect.toggle('demographic_criteria', 'blind', { duration: 0 })"
 
-    %div.search_group.clearfix
-      = link_to_function "Show | Hide Clinical Criteria", "Effect.toggle('clinical_criteria', 'blind', { duration: 0 })"
+          %div#demographic_criteria{:style => "margin-top: 5px"}
+            %div{ :class => "horiz" }
+              %label City
+              = model_auto_completer("city", params[:city], "", "", { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
+            %div{ :class => "horiz" }
+              %label County
+              %select{ :name => "county"}
+                %option
+                - for county in @counties
+                  %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
+                    = "#{h(county.code_description)}"
+            %div{ :class => "horiz" }
+              %label Gender
+              %select{ :name => "gender" }
+                %option
+                  - for gender in @genders
+                    %option{ :value => gender.id, :selected => gender.id == (params[:gender].to_i) ?  "selected" : nil}
+                      = "#{h(gender.code_description)}"
+            %div{ :class => "horiz" }
+              %label Date or year of birth (mm/dd/yyyy or yyyy)
+              = text_field_tag :birth_date, params[:birth_date], :size => "10"
 
-      %div#clinical_criteria{:style => "margin-top: 5px"}
-        %div{ :class => "horiz" }
-          %label Diseases
-          %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
-            %div{:style => 'background:#fff; overflow:auto;height: 10em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
-              - @diseases.each do |disease|
-                = "<label>" + check_box_tag("diseases[]", disease.id, (params[:diseases] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
-        %div{ :class => "horiz" }
-          %label{ :for => 'pregnant_id' } Pregnant
-          = yesno_select(:pregnant_id, params['pregnant_id'].to_i)
+        %div.search_group.clearfix
+          = link_to_function "Show | Hide Clinical Criteria", "Effect.toggle('clinical_criteria', 'blind', { duration: 0 })"
 
-    %div.search_group.clearfix
-      = link_to_function "Show | Hide Event Criteria", "Effect.toggle('event_criteria', 'blind', { duration: 0 })"
+          %div#clinical_criteria{:style => "margin-top: 5px"}
+            %div{ :class => "horiz" }
+              %label Diseases
+              %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
+                %div{:style => 'background:#fff; overflow:auto;height: 10em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
+                  - @diseases.each do |disease|
+                    = "<label>" + check_box_tag("diseases[]", disease.id, (params[:diseases] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
+            %div{ :class => "horiz" }
+              %label{ :for => 'pregnant_id' } Pregnant
+              = yesno_select(:pregnant_id, params['pregnant_id'].to_i)
 
-      %div#event_criteria{:style => "margin-top: 5px"}
-        %div{ :class => "horiz" }
-          %label Event Status
-          %select{ :name => "workflow_state"}
-            %option
-            = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
-        %div{ :class => "horiz" }
-          %label Event Type
-          %select{ :name => "event_type"}
-            %option
-            - for event_type in @event_types
-              %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
-                = h("#{event_type[:name]}")
-        %div{ :class => "horiz" }
-          %label{:for => 'sent_to_cdc'} Sent to CDC
-          = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
-        %p{:style => "clear: both"}
-        %div{ :class => "horiz" }
-          %label Entered-on date range (mm/dd/yyyy)
-          = text_field_tag :entered_on_start, params[:entered_on_start], :size => "10"
-          &nbsp;-&nbsp;
-          = text_field_tag :entered_on_end, params[:entered_on_end], :size => "10"
-        %div{ :class => "horiz" }
-          %label{ :for => 'record_number' } Record number
-          = text_field_tag :record_number, params[:record_number], :size => "15"
-        %p{:style => "clear: both"}
-        %div{ :class => "horiz" }
-          %label Jurisdiction of Investigation
-          = select_tag 'jurisdiction_ids', options_from_collection_for_select(@jurisdictions, 'entity_id', 'short_name', array_of_strs_to_ints(params[:jurisdiction_ids]) ), {:multiple => true, :size => 7}
-        %div{ :class => "horiz" }
-          %label{:for => 'state_case_status_ids'} State Case Status
-          = case_status_select(:state_case_status_ids, array_of_strs_to_ints(params[:state_case_status_ids]), false, true)
-        %div{ :class => "horiz" }
-          %label{:for => 'lhd_case_status_ids'} LHD Case Status
-          = case_status_select(:lhd_case_status_ids, array_of_strs_to_ints(params[:lhd_case_status_ids]), false, true)
-        %div{ :class => "horiz" }
-          %label{:for => 'investigator_ids'} Investigated by
-          = investigators_select :investigator_ids, array_of_strs_to_ints(params[:investigator_ids])
+        %div.search_group.clearfix
+          = link_to_function "Show | Hide Event Criteria", "Effect.toggle('event_criteria', 'blind', { duration: 0 })"
 
-    %div.search_group.clearfix
-      = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"
+          %div#event_criteria{:style => "margin-top: 5px"}
+            %div{ :class => "horiz" }
+              %label Event Status
+              %select{ :name => "workflow_state"}
+                %option
+                = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
+            %div{ :class => "horiz" }
+              %label Event Type
+              %select{ :name => "event_type"}
+                %option
+                - for event_type in @event_types
+                  %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
+                    = h("#{event_type[:name]}")
+            %div{ :class => "horiz" }
+              %label{:for => 'sent_to_cdc'} Sent to CDC
+              = select_tag 'sent_to_cdc', options_for_select([[nil, nil],['Yes', 'true'], ['No', 'false']], :selected => params[:sent_to_cdc])
+            %p{:style => "clear: both"}
+            %div{ :class => "horiz" }
+              %label Entered-on date range (mm/dd/yyyy)
+              = text_field_tag :entered_on_start, params[:entered_on_start], :size => "10"
+              &nbsp;-&nbsp;
+              = text_field_tag :entered_on_end, params[:entered_on_end], :size => "10"
+            %div{ :class => "horiz" }
+              %label{ :for => 'record_number' } Record number
+              = text_field_tag :record_number, params[:record_number], :size => "15"
+            %p{:style => "clear: both"}
+            %div{ :class => "horiz" }
+              %label Jurisdiction of Investigation
+              = select_tag 'jurisdiction_ids', options_from_collection_for_select(@jurisdictions, 'entity_id', 'short_name', array_of_strs_to_ints(params[:jurisdiction_ids]) ), {:multiple => true, :size => 7}
+            %div{ :class => "horiz" }
+              %label{:for => 'state_case_status_ids'} State Case Status
+              = case_status_select(:state_case_status_ids, array_of_strs_to_ints(params[:state_case_status_ids]), false, true)
+            %div{ :class => "horiz" }
+              %label{:for => 'lhd_case_status_ids'} LHD Case Status
+              = case_status_select(:lhd_case_status_ids, array_of_strs_to_ints(params[:lhd_case_status_ids]), false, true)
+            %div{ :class => "horiz" }
+              %label{:for => 'investigator_ids'} Investigated by
+              = investigators_select :investigator_ids, array_of_strs_to_ints(params[:investigator_ids])
 
-      %div#epi_reporting_criteria{:style => "margin-top: 5px"}
-        %div{ :class => "horiz" }
-          %label{ :for => 'other_data_1' } Other data 1
-          = text_field_tag :other_data_1, params[:other_data_1], :size => "15"
-        %div{ :class => "horiz" }
-          %label{ :for => 'other_data_2' } Other data 2
-          = text_field_tag :other_data_2, params[:other_data_2], :size => "15"
-        %div{ :class => "horiz" }
-          %label First reported to public health date range (mm/dd/yyyy)
-          = text_field_tag :first_reported_PH_date_start, params[:first_reported_PH_date_start], :size => "10"
-          &nbsp;-&nbsp;
-          = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
+        %div.search_group.clearfix
+          = link_to_function "Show | Hide Epi and Reporting Criteria", "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"
+
+          %div#epi_reporting_criteria{:style => "margin-top: 5px"}
+            %div{ :class => "horiz" }
+              %label{ :for => 'other_data_1' } Other data 1
+              = text_field_tag :other_data_1, params[:other_data_1], :size => "15"
+            %div{ :class => "horiz" }
+              %label{ :for => 'other_data_2' } Other data 2
+              = text_field_tag :other_data_2, params[:other_data_2], :size => "15"
+            %div{ :class => "horiz" }
+              %label First reported to public health date range (mm/dd/yyyy)
+              = text_field_tag :first_reported_PH_date_start, params[:first_reported_PH_date_start], :size => "10"
+              &nbsp;-&nbsp;
+              = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
 
     %input{ :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 12em; width:130px;" }
 = button_to("Start over", search_cmrs_path, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
