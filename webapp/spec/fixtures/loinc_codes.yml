@@ -34,3 +34,21 @@ nominal:
   scale_id: 2601
   loinc_code: 10007-0
   common_test_type_id: 2
+
+no_disease:
+  id: 8
+  scale_id: 2600
+  loinc_code: 20001-0
+  common_test_type_id: 2
+
+one_disease:
+  id: 9
+  scale_id: 2600
+  loinc_code: 20002-0
+  common_test_type_id: 2
+
+two_diseases:
+  id: 10
+  scale_id: 2600
+  loinc_code: 20003-0
+  common_test_type_id: 2

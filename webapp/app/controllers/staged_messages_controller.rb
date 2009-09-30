@@ -121,7 +121,7 @@ class StagedMessagesController < ApplicationController
     rescue
       flash[:error] = "Could not assign message to #{msg_string} event. #{$!}"
     else
-      flash[:notice] = "Staged message was successfully assigned to #{msg_string} event."
+      flash[:notice] = "Staged message was successfully assigned to #{msg_string} event. <br/> #{staged_message.note}"
     end
     redirect_to(staged_message_path(staged_message))
   end

@@ -31,6 +31,7 @@ end
 def set_obx_5(msg, value)
   msg.gsub(/(OBX\|.\|..\|.+?\|.\|).+?\|/, '\1'+value+'|')
 end
+
 describe HumanEvent, 'associations'  do
   it { should have_one(:interested_party) }
   it { should have_many(:labs) }
@@ -261,6 +262,61 @@ describe HumanEvent, 'adding staged messages' do
         event.labs.first.lab_results.first.result_value.should be_blank
         event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
         event.labs.first.lab_results.first.test_status.code_description.should == "Final"
+      end
+    end
+  end
+
+  describe "setting disease" do
+    fixtures :diseases_loinc_codes, :diseases
+
+    before(:each) do
+      @event_hash = {
+        "interested_party_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Green"
+            }
+          },
+        },
+        :created_at => DateTime.now,
+        :updated_at => DateTime.now
+      }
+    end
+
+    it "should not assign disease if disease already assigned" do
+      @event_hash['disease_event_attributes'] = {'disease_id' => 1}
+      with_human_event do |event|
+        msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:one_disease).loinc_code)
+        staged_message = StagedMessage.new(:hl7_message => msg)
+        event.add_labs_from_staged_message(staged_message)
+        event.disease_event.disease_id.should == 1
+      end
+    end
+
+    it "should assign disease if LOINC points to just one disease" do
+      with_human_event do |event|
+        msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:one_disease).loinc_code)
+        staged_message = StagedMessage.new(:hl7_message => msg)
+        event.add_labs_from_staged_message(staged_message)
+        event.disease_event.disease_id.should == loinc_codes(:one_disease).diseases.first.id
+      end
+    end
+
+    it "should not assign disease if LOINC points to multiple diseases" do
+      with_human_event do |event|
+        msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:two_diseases).loinc_code)
+        staged_message = StagedMessage.new(:hl7_message => msg)
+        event.add_labs_from_staged_message(staged_message)
+        event.disease_event.should be_nil
+      end
+    end
+
+    it "should not assign disease if LOINC points to no diseases" do
+      with_human_event do |event|
+        msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:no_disease).loinc_code)
+        staged_message = StagedMessage.new(:hl7_message => msg)
+        event.add_labs_from_staged_message(staged_message)
+        event.disease_event.should be_nil
       end
     end
   end

@@ -1,0 +1,14 @@
+loinc_to_one:
+  id: 1
+  loinc_code_id: 9
+  disease_id: 1
+
+loinc_to_two_1:
+  id: 2
+  loinc_code_id: 10
+  disease_id: 1
+
+loinc_to_two_2:
+  id: 3
+  loinc_code_id: 10
+  disease_id: 2

@@ -67,11 +67,11 @@
             = h(result['event_onset_date']) if includes_event
 
           %td
-          -if includes_event
-            - if can_update || can_view
-              = h(result['disease_name'])
-            - else
-              Private
+            -if includes_event
+              - if can_update || can_view
+                = h(result['disease_name'])
+              - else
+                Private
           %td 
             - if includes_event
               - view_path = result['event_type'] == 'MorbidityEvent' ? cmr_path(result['event_id']) : contact_event_path(result['event_id'])

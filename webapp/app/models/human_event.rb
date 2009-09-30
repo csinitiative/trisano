@@ -651,6 +651,7 @@ class HumanEvent < Event
     # Create one lab result per OBX segment
     obr = staged_message.observation_request
     i = 0
+    diseases = Set.new
     obr.tests.each do | obx |
       loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
       raise StagedMessage::UnknownLoincCode, "LOINC code, #{obx.loinc_code}, is unknown to TriSano." if loinc_code.nil?
@@ -668,6 +669,8 @@ class HumanEvent < Event
         else
           result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
         end
+
+        loinc_code.diseases.each { |disease| diseases << disease }
       end
 
       case scale_type
@@ -713,6 +716,22 @@ class HumanEvent < Event
       self.add_note("ELR with test type \"#{obx.test_type}\" assigned to event.")
     end
     self.labs_attributes = [ lab_attributes ]
+
+    # Assign disease
+    unless self.disease_event  # Don't overwrite disease if already there.
+      case diseases.size
+      when 0
+        staged_message.note = "#{staged_message.note}No LOINC code maps to a disease. "
+      when 1
+        disease_event = DiseaseEvent.new
+        disease_event.disease = diseases.to_a.first
+        self.build_disease_event(disease_event.attributes)
+        staged_message.note = "#{staged_message.note}Event's disease set to " + disease_event.disease.disease_name
+      else
+        staged_message.note = "#{staged_message.note}LOINC code(s) map to multiple diseases: " + diseases.collect { |d| d.disease_name }.join('; ') + ". "
+      end
+    end
+
   end
 
   private

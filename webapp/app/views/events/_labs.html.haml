@@ -36,15 +36,15 @@
             %tr
               %td
                 %b= h(lab.place_entity.place.name)
+                %br
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
+                %br
+                %b= h(lab_result.comment)
               %td
                 %b= h(lab_result.test_type.try(:common_name))
                 %br
                 Organism: 
                 %b= h(lab_result.organism.try(:organism_name))
-                %br
-                %br
-                %b= h(lab_result.comment)
               %td
                 - no_result = true
                 - unless lab_result.test_result.blank?
