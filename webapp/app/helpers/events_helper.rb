@@ -430,9 +430,7 @@ module EventsHelper
             no_more = true
           else
             # Page load, edit form, new lab, disease
-            p "here"
             opts = disease.organisms
-            p opts
             if opts.empty?
               opts = Organism.all(:order => "organism_name ASC")
               no_more = true
