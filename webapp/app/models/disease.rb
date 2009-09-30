@@ -38,7 +38,7 @@ class Disease < ActiveRecord::Base
   }
 
   has_many :common_test_types, :finder_sql => %q{
-    SELECT common_test_types.* FROM common_test_types
+    SELECT DISTINCT common_test_types.* FROM common_test_types
       JOIN loinc_codes ON common_test_types.id = loinc_codes.common_test_type_id
       JOIN diseases_loinc_codes ON loinc_codes.id = diseases_loinc_codes.loinc_code_id
     WHERE diseases_loinc_codes.disease_id = #{id}

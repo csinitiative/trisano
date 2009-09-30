@@ -149,6 +149,15 @@ class EventsController < ApplicationController
     test_opts
   end
 
+  def organism_options
+    render :inline => <<-org_opts
+      <% org_types = organism_options(nil, nil, nil) %>
+      <option value=""/>
+      <%= options_from_collection_for_select(org_types, 'id', 'organism_name') %>
+    org_opts
+  end
+
+
   # Route an event from one jurisdiction to another
   def jurisdiction
     @event = Event.find(params[:id])

@@ -392,6 +392,67 @@ module EventsHelper
     opts
   end
 
+  # Test type select list for Ajaxy add of new lab result
+  #   No disease selected:                     blank, all test types
+  #   Disease selected:                        blank, test types for disease, get more.
+
+  # Test type select list for new and edit will be:
+  #   new form (no disease selected):          blank, all test types.
+  #   edit form, no disease selected, new lab: blank, all test types
+  #   edit form, disease selected, new lab:    blank, test types for disease, get more.
+  #   edit form, existing lab:                 blank, saved test type, get more.
+
+  def organism_options(event, disease, lab_result)
+    no_more = false
+    if event.nil?
+      if disease.nil?
+        # Ajax, no disease selected or Ajax, get all
+        opts = Organism.all(:order => "organism_name ASC")
+        no_more = true
+      else
+        # Ajax, disease selected
+        opts = disease.organisms
+        if opts.empty?
+          opts = Organism.all(:order => "organism_name ASC")
+          no_more = true
+        end
+      end
+    else
+      if event.new_record?
+        # Page load, new form
+        opts = Organism.all(:order => "organism_name ASC")
+        no_more = true
+      else
+        if lab_result.new_record?
+          if disease.nil?
+            # Page load, edit form, new lab, no disease
+            opts = Organism.all(:order => "organism_name ASC")
+            no_more = true
+          else
+            # Page load, edit form, new lab, disease
+            p "here"
+            opts = disease.organisms
+            p opts
+            if opts.empty?
+              opts = Organism.all(:order => "organism_name ASC")
+              no_more = true
+            end
+          end
+        else
+          # Page load, edit form, existing lab
+          opts = Organism.find_all_by_organism_name(lab_result.organism.organism_name)
+        end
+      end
+    end
+    unless no_more
+      more = Organism.new(:organism_name => "More choices...")
+      more.id = 0  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
+      opts += [more]
+    end
+    opts
+  end
+
+
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
   def event_div_class(event, &block)
     return if event.nil?
