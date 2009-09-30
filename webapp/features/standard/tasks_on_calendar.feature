@@ -9,8 +9,8 @@ Features: Viewing and working with tasks via the calendar
     And the following tasks for the event
     | name | category | priority | status | due_date |
     | Visit the sick | Appointment | High | Pending | today |
-    | Call the sick | Call Back | Medium  | Complete | tomorrow |
-    | Treat the sick | Treatment | Low | Not applicable | tomorrow |
+    | Call the sick | Call Back | Medium  | Complete | today |
+    | Treat the sick | Treatment | Low | Not applicable | today |
     | Treat the sick again | Treatment | Low | Not applicable | next month |
 
     When I am on the dashboard page
