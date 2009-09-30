@@ -116,6 +116,7 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_csv_defaults.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_loinc_codes.rb #{RAILS_ROOT}/db/defaults/loinc_codes_to_common_test_types.csv"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/associate_diseases_and_loincs.rb #{RAILS_ROOT}/db/defaults/disease_to_loinc.csv"
     end
 
     desc "Load test/demo data"

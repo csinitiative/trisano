@@ -73,7 +73,6 @@ class Disease < ActiveRecord::Base
       diseases = collect_diseases(&:invalid_case_status_where_clause)
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
-
   end
 
   def live_forms(event_type = "MorbidityEvent")

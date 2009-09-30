@@ -209,6 +209,12 @@
 - disease_name: "Measles (rubeola), total"
   cdc_code: 10140
 
+- disease_name: "Meningitis, Bacterial other"
+  cdc_code:
+
+- disease_name: "Meningitis, Viral"
+  cdc_code:
+
 - disease_name: "Meningococcal disease (Neisseria meningitidis)"
   cdc_code: 10150
 
@@ -230,8 +236,11 @@
 - disease_name: "Nongonococcal urethritis (NGU)"
   cdc_code: 10307
 
+- disease_name: "Norovirus"
+  cdc_code:
+
 - disease_name: "Novel influenza A virus infections"
-  cdc_code: 
+  cdc_code:
 
 - disease_name: "Pelvic Inflammatory Disease (PID), Unknown Etiology"
   cdc_code: 10309

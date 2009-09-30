@@ -76,6 +76,19 @@ class LoincCode < ActiveRecord::Base
     end
   end
 
+  def self.associate_diseases_from_csv(str_or_readable)
+    require 'csv'
+    transaction do
+      CSV.parse(str_or_readable) do |row|
+        loinc = LoincCode.find_by_loinc_code row.last
+        disease = Disease.first(:conditions => ['lower(disease_name) = ?', row.first.downcase])
+        p row if disease.nil?
+        loinc.diseases << disease
+        loinc.save!
+      end
+    end
+  end
+
   def self.scales_compatible_with_organisms
     ExternalCode.loinc_scales.all(:conditions => ['the_code != ?', "Nom"])
   end
