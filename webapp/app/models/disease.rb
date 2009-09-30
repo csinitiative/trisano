@@ -19,6 +19,7 @@ class Disease < ActiveRecord::Base
   include Export::Cdc::DiseaseRules
 
   before_save :update_cdc_code
+  before_validation :strip_disease_name
 
   validates_presence_of :disease_name
 
@@ -106,6 +107,10 @@ class Disease < ActiveRecord::Base
         export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
       end
     end
+  end
+
+  def strip_disease_name
+    self.disease_name.strip! if attribute_present? :disease_name
   end
 
 end
