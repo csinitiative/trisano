@@ -423,7 +423,7 @@ module EventsHelper
         opts = Organism.all(:order => "organism_name ASC")
         no_more = true
       else
-        if lab_result.new_record?
+        if lab_result.organism.blank?
           if disease.nil?
             # Page load, edit form, new lab, no disease
             opts = Organism.all(:order => "organism_name ASC")
