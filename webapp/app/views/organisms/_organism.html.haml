@@ -18,6 +18,4 @@
     %span.organism_name
       =link_to_unless_current h(organism.organism_name), organism
 %td
-  =link_to_unless_current h(organism.disease.try(:disease_name)), organism.disease
-%td
   =organism_tools organism

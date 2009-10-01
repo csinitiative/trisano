@@ -21,9 +21,16 @@ Given /^the disease "([^\"]*)" is exported when "([^\"]*)"$/ do |disease_name, s
 end
 
 Given /^the following organisms are associated with the disease "([^\"]*)":$/ do |disease_name, table|
+  base_loinc = '1000-0'
+  scale = ExternalCode.loinc_scales.find_by_the_code('Ord')
   disease = Disease.find_or_create_by_disease_name disease_name
+
   table.map_headers! 'Organism name' => :organism_name
   table.hashes.each do |attr|
-    Organism.create! attr.merge(:disease => disease)
+    organism = Organism.create! attr
+    loinc = LoincCode.create! :loinc_code => base_loinc.succ!, :scale => scale, :organism => organism
+    disease.loinc_codes << loinc
   end
+
+  disease.save!
 end
