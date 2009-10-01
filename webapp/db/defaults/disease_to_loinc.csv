@@ -24,6 +24,29 @@ AMEBIASIS,673-4
 AMEBIASIS,678-3
 AMEBIASIS,680-9
 AMEBIASIS,9785-7
+Anaplasma phagocytophilum,13195-3
+Anaplasma phagocytophilum,16808-8
+Anaplasma phagocytophilum,16809-6
+Anaplasma phagocytophilum,22283-6
+Anaplasma phagocytophilum,23877-4
+Anaplasma phagocytophilum,23878-2
+Anaplasma phagocytophilum,24042-4
+Anaplasma phagocytophilum,27994-3
+Anaplasma phagocytophilum,29560-0
+Anaplasma phagocytophilum,29793-7
+Anaplasma phagocytophilum,29794-5
+Anaplasma phagocytophilum,33581-0
+Anaplasma phagocytophilum,47405-6
+Anaplasma phagocytophilum,6401-4
+Anaplasma phagocytophilum,6402-2
+Anaplasma phagocytophilum,6403-0
+Anaplasma phagocytophilum,6404-8
+Anaplasma phagocytophilum,7875-8
+Anaplasma phagocytophilum,7876-6
+Anaplasma phagocytophilum,7877-4
+Anaplasma phagocytophilum,7878-2
+Anaplasma phagocytophilum,9783-2
+Anaplasma phagocytophilum,9784-0
 ANTHRAX,11469-4
 ANTHRAX,11475-1
 ANTHRAX,38347-1
@@ -36,6 +59,14 @@ ANTHRAX,610-6
 "Botulism, infant",41852-5
 "Botulism, infant",46705-0
 "Botulism, infant",6463-4
+"Botulism, foodborne",11470-2
+"Botulism, foodborne",11475-1
+"Botulism, foodborne",20706-8
+"Botulism, foodborne",33694-1
+"Botulism, foodborne",33696-6
+"Botulism, foodborne",41852-5
+"Botulism, foodborne",46705-0
+"Botulism, foodborne",6463-4
 "Botulism, other unspecified",11470-2
 "Botulism, other unspecified",11475-1
 "Botulism, other unspecified",20706-8
@@ -145,6 +176,79 @@ Cache Valley virus non-neuroinvasive disease,9540-6
 Cache Valley virus non-neuroinvasive disease,9577-8
 Cache Valley virus non-neuroinvasive disease,9634-7
 Cache Valley virus non-neuroinvasive disease,9635-4
+Cache Valley virus neuroinvasive disease,10896-9
+Cache Valley virus neuroinvasive disease,10897-7
+Cache Valley virus neuroinvasive disease,10898-5
+Cache Valley virus neuroinvasive disease,10899-3
+Cache Valley virus neuroinvasive disease,10904-1
+Cache Valley virus neuroinvasive disease,10905-8
+Cache Valley virus neuroinvasive disease,10906-6
+Cache Valley virus neuroinvasive disease,10907-4
+Cache Valley virus neuroinvasive disease,13228-2
+Cache Valley virus neuroinvasive disease,13229-0
+Cache Valley virus neuroinvasive disease,13230-8
+Cache Valley virus neuroinvasive disease,13231-6
+Cache Valley virus neuroinvasive disease,17036-5
+Cache Valley virus neuroinvasive disease,17037-3
+Cache Valley virus neuroinvasive disease,17038-1
+Cache Valley virus neuroinvasive disease,17039-9
+Cache Valley virus neuroinvasive disease,17769-1
+Cache Valley virus neuroinvasive disease,17770-9
+Cache Valley virus neuroinvasive disease,21509-5
+Cache Valley virus neuroinvasive disease,21510-3
+Cache Valley virus neuroinvasive disease,23046-6
+Cache Valley virus neuroinvasive disease,23991-3
+Cache Valley virus neuroinvasive disease,23992-1
+Cache Valley virus neuroinvasive disease,29783-8
+Cache Valley virus neuroinvasive disease,29785-3
+Cache Valley virus neuroinvasive disease,29789-5
+Cache Valley virus neuroinvasive disease,30174-7
+Cache Valley virus neuroinvasive disease,30175-4
+Cache Valley virus neuroinvasive disease,30176-2
+Cache Valley virus neuroinvasive disease,30177-0
+Cache Valley virus neuroinvasive disease,30179-6
+Cache Valley virus neuroinvasive disease,33295-7
+Cache Valley virus neuroinvasive disease,34450-7
+Cache Valley virus neuroinvasive disease,37983-4
+Cache Valley virus neuroinvasive disease,37984-2
+Cache Valley virus neuroinvasive disease,41878-0
+Cache Valley virus neuroinvasive disease,5073-2
+Cache Valley virus neuroinvasive disease,5134-2
+Cache Valley virus neuroinvasive disease,5406-4
+Cache Valley virus neuroinvasive disease,5883-4
+Cache Valley virus neuroinvasive disease,5884-2
+Cache Valley virus neuroinvasive disease,5888-3
+Cache Valley virus neuroinvasive disease,6309-9
+Cache Valley virus neuroinvasive disease,6310-7
+Cache Valley virus neuroinvasive disease,6383-4
+Cache Valley virus neuroinvasive disease,6388-3
+Cache Valley virus neuroinvasive disease,6389-1
+Cache Valley virus neuroinvasive disease,6549-0
+Cache Valley virus neuroinvasive disease,6585-4
+Cache Valley virus neuroinvasive disease,6586-2
+Cache Valley virus neuroinvasive disease,6812-2
+Cache Valley virus neuroinvasive disease,6957-5
+Cache Valley virus neuroinvasive disease,6958-3
+Cache Valley virus neuroinvasive disease,7860-0
+Cache Valley virus neuroinvasive disease,7861-8
+Cache Valley virus neuroinvasive disease,7938-4
+Cache Valley virus neuroinvasive disease,7940-0
+Cache Valley virus neuroinvasive disease,7941-8
+Cache Valley virus neuroinvasive disease,8016-8
+Cache Valley virus neuroinvasive disease,8017-6
+Cache Valley virus neuroinvasive disease,8021-8
+Cache Valley virus neuroinvasive disease,8023-4
+Cache Valley virus neuroinvasive disease,8025-9
+Cache Valley virus neuroinvasive disease,8052-3
+Cache Valley virus neuroinvasive disease,8053-1
+Cache Valley virus neuroinvasive disease,9314-6
+Cache Valley virus neuroinvasive disease,9315-3
+Cache Valley virus neuroinvasive disease,9316-1
+Cache Valley virus neuroinvasive disease,9539-8
+Cache Valley virus neuroinvasive disease,9540-6
+Cache Valley virus neuroinvasive disease,9577-8
+Cache Valley virus neuroinvasive disease,9634-7
+Cache Valley virus neuroinvasive disease,9635-4
 California serogroup virus neuroinvasive disease,10896-9
 California serogroup virus neuroinvasive disease,10897-7
 California serogroup virus neuroinvasive disease,10898-5
@@ -1043,6 +1147,12 @@ Hantavirus pulmonary syndrome,26654-4
 Hantavirus pulmonary syndrome,35393-8
 Hantavirus pulmonary syndrome,7898-0
 Hantavirus pulmonary syndrome,7899-8
+Hantavirus infection,23867-5
+Hantavirus infection,23868-3
+Hantavirus infection,26654-4
+Hantavirus infection,35393-8
+Hantavirus infection,7898-0
+Hantavirus infection,7899-8
 "HEPATITIS A, acute",13950-1
 "HEPATITIS A, acute",13951-9
 "HEPATITIS A, acute",22312-3
@@ -1144,10 +1254,43 @@ Hantavirus pulmonary syndrome,7899-8
 "Hepatitis C virus infection, past or present",9608-1
 "Hepatitis C virus infection, past or present",9609-9
 "Hepatitis C virus infection, past or present",9610-7
+"Hepatitis C, acute",10676-5
+"Hepatitis C, acute",11011-4
+"Hepatitis C, acute",11076-7
+"Hepatitis C, acute",11077-5
+"Hepatitis C, acute",11259-9
+"Hepatitis C, acute",13125-0
+"Hepatitis C, acute",13955-0
+"Hepatitis C, acute",16128-1
+"Hepatitis C, acute",16129-9
+"Hepatitis C, acute",16936-7
+"Hepatitis C, acute",20416-4
+"Hepatitis C, acute",22327-1
+"Hepatitis C, acute",23870-9
+"Hepatitis C, acute",23871-7
+"Hepatitis C, acute",24011-9
+"Hepatitis C, acute",29609-5
+"Hepatitis C, acute",32286-7
+"Hepatitis C, acute",38180-6
+"Hepatitis C, acute",42617-1
+"Hepatitis C, acute",48159-8
+"Hepatitis C, acute",5010-4
+"Hepatitis C, acute",5011-2
+"Hepatitis C, acute",5012-0
+"Hepatitis C, acute",5198-7
+"Hepatitis C, acute",5199-5
+"Hepatitis C, acute",6422-0
+"Hepatitis C, acute",9608-1
+"Hepatitis C, acute",9609-9
+"Hepatitis C, acute",9610-7
 "Hepatitis E, acute",13248-0
 "Hepatitis E, acute",14211-7
 "Hepatitis E, acute",14212-5
 "Hepatitis E, acute",9526-5
+"Hepatitis Delta co- or super-infection, acute (Hepatitis D)",13248-0
+"Hepatitis Delta co- or super-infection, acute (Hepatitis D)",14211-7
+"Hepatitis Delta co- or super-infection, acute (Hepatitis D)",14212-5
+"Hepatitis Delta co- or super-infection, acute (Hepatitis D)",9526-5
 "Hepatitis, viral unspecified",13248-0
 "Hepatitis, viral unspecified",14211-7
 "Hepatitis, viral unspecified",14212-5
@@ -1219,6 +1362,274 @@ Novel influenza A virus infections,9533-1
 Novel influenza A virus infections,9534-9
 Novel influenza A virus infections,9535-6
 Novel influenza A virus infections,9536-4
+"Influenza, animal isolates",17012-6
+"Influenza, animal isolates",17014-2
+"Influenza, animal isolates",17015-9
+"Influenza, animal isolates",17016-7
+"Influenza, animal isolates",22365-1
+"Influenza, animal isolates",22367-7
+"Influenza, animal isolates",24015-0
+"Influenza, animal isolates",31437-7
+"Influenza, animal isolates",31438-5
+"Influenza, animal isolates",31858-4
+"Influenza, animal isolates",31859-2
+"Influenza, animal isolates",31863-4
+"Influenza, animal isolates",31864-2
+"Influenza, animal isolates",34153-7
+"Influenza, animal isolates",34154-5
+"Influenza, animal isolates",34487-9
+"Influenza, animal isolates",38347-1
+"Influenza, animal isolates",38382-8
+"Influenza, animal isolates",39102-9
+"Influenza, animal isolates",39103-7
+"Influenza, animal isolates",40982-1
+"Influenza, animal isolates",48310-7
+"Influenza, animal isolates",48509-4
+"Influenza, animal isolates",5229-0
+"Influenza, animal isolates",5230-8
+"Influenza, animal isolates",5860-2
+"Influenza, animal isolates",5861-0
+"Influenza, animal isolates",5862-8
+"Influenza, animal isolates",5863-6
+"Influenza, animal isolates",5864-4
+"Influenza, animal isolates",5865-1
+"Influenza, animal isolates",5866-9
+"Influenza, animal isolates",5867-7
+"Influenza, animal isolates",610-6
+"Influenza, animal isolates",6437-8
+"Influenza, animal isolates",6438-6
+"Influenza, animal isolates",6584-7
+"Influenza, animal isolates",6601-9
+"Influenza, animal isolates",6602-7
+"Influenza, animal isolates",6603-5
+"Influenza, animal isolates",6604-3
+"Influenza, animal isolates",6634-0
+"Influenza, animal isolates",6635-7
+"Influenza, animal isolates",6636-5
+"Influenza, animal isolates",6637-3
+"Influenza, animal isolates",6638-1
+"Influenza, animal isolates",6639-9
+"Influenza, animal isolates",6640-7
+"Influenza, animal isolates",6641-5
+"Influenza, animal isolates",6642-3
+"Influenza, animal isolates",7920-2
+"Influenza, animal isolates",7921-0
+"Influenza, animal isolates",7922-8
+"Influenza, animal isolates",7923-6
+"Influenza, animal isolates",7924-4
+"Influenza, animal isolates",7925-1
+"Influenza, animal isolates",7926-9
+"Influenza, animal isolates",7927-7
+"Influenza, animal isolates",7928-5
+"Influenza, animal isolates",7929-3
+"Influenza, animal isolates",7931-9
+"Influenza, animal isolates",9531-5
+"Influenza, animal isolates",9532-3
+"Influenza, animal isolates",9533-1
+"Influenza, animal isolates",9534-9
+"Influenza, animal isolates",9535-6
+"Influenza, animal isolates",9536-4
+"Influenza, human isolates",17012-6
+"Influenza, human isolates",17014-2
+"Influenza, human isolates",17015-9
+"Influenza, human isolates",17016-7
+"Influenza, human isolates",22365-1
+"Influenza, human isolates",22367-7
+"Influenza, human isolates",24015-0
+"Influenza, human isolates",31437-7
+"Influenza, human isolates",31438-5
+"Influenza, human isolates",31858-4
+"Influenza, human isolates",31859-2
+"Influenza, human isolates",31863-4
+"Influenza, human isolates",31864-2
+"Influenza, human isolates",34153-7
+"Influenza, human isolates",34154-5
+"Influenza, human isolates",34487-9
+"Influenza, human isolates",38347-1
+"Influenza, human isolates",38382-8
+"Influenza, human isolates",39102-9
+"Influenza, human isolates",39103-7
+"Influenza, human isolates",40982-1
+"Influenza, human isolates",48310-7
+"Influenza, human isolates",48509-4
+"Influenza, human isolates",5229-0
+"Influenza, human isolates",5230-8
+"Influenza, human isolates",5860-2
+"Influenza, human isolates",5861-0
+"Influenza, human isolates",5862-8
+"Influenza, human isolates",5863-6
+"Influenza, human isolates",5864-4
+"Influenza, human isolates",5865-1
+"Influenza, human isolates",5866-9
+"Influenza, human isolates",5867-7
+"Influenza, human isolates",610-6
+"Influenza, human isolates",6437-8
+"Influenza, human isolates",6438-6
+"Influenza, human isolates",6584-7
+"Influenza, human isolates",6601-9
+"Influenza, human isolates",6602-7
+"Influenza, human isolates",6603-5
+"Influenza, human isolates",6604-3
+"Influenza, human isolates",6634-0
+"Influenza, human isolates",6635-7
+"Influenza, human isolates",6636-5
+"Influenza, human isolates",6637-3
+"Influenza, human isolates",6638-1
+"Influenza, human isolates",6639-9
+"Influenza, human isolates",6640-7
+"Influenza, human isolates",6641-5
+"Influenza, human isolates",6642-3
+"Influenza, human isolates",7920-2
+"Influenza, human isolates",7921-0
+"Influenza, human isolates",7922-8
+"Influenza, human isolates",7923-6
+"Influenza, human isolates",7924-4
+"Influenza, human isolates",7925-1
+"Influenza, human isolates",7926-9
+"Influenza, human isolates",7927-7
+"Influenza, human isolates",7928-5
+"Influenza, human isolates",7929-3
+"Influenza, human isolates",7931-9
+"Influenza, human isolates",9531-5
+"Influenza, human isolates",9532-3
+"Influenza, human isolates",9533-1
+"Influenza, human isolates",9534-9
+"Influenza, human isolates",9535-6
+"Influenza, human isolates",9536-4
+"Influenza-associated mortality",17012-6
+"Influenza-associated mortality",17014-2
+"Influenza-associated mortality",17015-9
+"Influenza-associated mortality",17016-7
+"Influenza-associated mortality",22365-1
+"Influenza-associated mortality",22367-7
+"Influenza-associated mortality",24015-0
+"Influenza-associated mortality",31437-7
+"Influenza-associated mortality",31438-5
+"Influenza-associated mortality",31858-4
+"Influenza-associated mortality",31859-2
+"Influenza-associated mortality",31863-4
+"Influenza-associated mortality",31864-2
+"Influenza-associated mortality",34153-7
+"Influenza-associated mortality",34154-5
+"Influenza-associated mortality",34487-9
+"Influenza-associated mortality",38347-1
+"Influenza-associated mortality",38382-8
+"Influenza-associated mortality",39102-9
+"Influenza-associated mortality",39103-7
+"Influenza-associated mortality",40982-1
+"Influenza-associated mortality",48310-7
+"Influenza-associated mortality",48509-4
+"Influenza-associated mortality",5229-0
+"Influenza-associated mortality",5230-8
+"Influenza-associated mortality",5860-2
+"Influenza-associated mortality",5861-0
+"Influenza-associated mortality",5862-8
+"Influenza-associated mortality",5863-6
+"Influenza-associated mortality",5864-4
+"Influenza-associated mortality",5865-1
+"Influenza-associated mortality",5866-9
+"Influenza-associated mortality",5867-7
+"Influenza-associated mortality",610-6
+"Influenza-associated mortality",6437-8
+"Influenza-associated mortality",6438-6
+"Influenza-associated mortality",6584-7
+"Influenza-associated mortality",6601-9
+"Influenza-associated mortality",6602-7
+"Influenza-associated mortality",6603-5
+"Influenza-associated mortality",6604-3
+"Influenza-associated mortality",6634-0
+"Influenza-associated mortality",6635-7
+"Influenza-associated mortality",6636-5
+"Influenza-associated mortality",6637-3
+"Influenza-associated mortality",6638-1
+"Influenza-associated mortality",6639-9
+"Influenza-associated mortality",6640-7
+"Influenza-associated mortality",6641-5
+"Influenza-associated mortality",6642-3
+"Influenza-associated mortality",7920-2
+"Influenza-associated mortality",7921-0
+"Influenza-associated mortality",7922-8
+"Influenza-associated mortality",7923-6
+"Influenza-associated mortality",7924-4
+"Influenza-associated mortality",7925-1
+"Influenza-associated mortality",7926-9
+"Influenza-associated mortality",7927-7
+"Influenza-associated mortality",7928-5
+"Influenza-associated mortality",7929-3
+"Influenza-associated mortality",7931-9
+"Influenza-associated mortality",9531-5
+"Influenza-associated mortality",9532-3
+"Influenza-associated mortality",9533-1
+"Influenza-associated mortality",9534-9
+"Influenza-associated mortality",9535-6
+"Influenza-associated mortality",9536-4
+"Flu activity code (Influenza)",17012-6
+"Flu activity code (Influenza)",17014-2
+"Flu activity code (Influenza)",17015-9
+"Flu activity code (Influenza)",17016-7
+"Flu activity code (Influenza)",22365-1
+"Flu activity code (Influenza)",22367-7
+"Flu activity code (Influenza)",24015-0
+"Flu activity code (Influenza)",31437-7
+"Flu activity code (Influenza)",31438-5
+"Flu activity code (Influenza)",31858-4
+"Flu activity code (Influenza)",31859-2
+"Flu activity code (Influenza)",31863-4
+"Flu activity code (Influenza)",31864-2
+"Flu activity code (Influenza)",34153-7
+"Flu activity code (Influenza)",34154-5
+"Flu activity code (Influenza)",34487-9
+"Flu activity code (Influenza)",38347-1
+"Flu activity code (Influenza)",38382-8
+"Flu activity code (Influenza)",39102-9
+"Flu activity code (Influenza)",39103-7
+"Flu activity code (Influenza)",40982-1
+"Flu activity code (Influenza)",48310-7
+"Flu activity code (Influenza)",48509-4
+"Flu activity code (Influenza)",5229-0
+"Flu activity code (Influenza)",5230-8
+"Flu activity code (Influenza)",5860-2
+"Flu activity code (Influenza)",5861-0
+"Flu activity code (Influenza)",5862-8
+"Flu activity code (Influenza)",5863-6
+"Flu activity code (Influenza)",5864-4
+"Flu activity code (Influenza)",5865-1
+"Flu activity code (Influenza)",5866-9
+"Flu activity code (Influenza)",5867-7
+"Flu activity code (Influenza)",610-6
+"Flu activity code (Influenza)",6437-8
+"Flu activity code (Influenza)",6438-6
+"Flu activity code (Influenza)",6584-7
+"Flu activity code (Influenza)",6601-9
+"Flu activity code (Influenza)",6602-7
+"Flu activity code (Influenza)",6603-5
+"Flu activity code (Influenza)",6604-3
+"Flu activity code (Influenza)",6634-0
+"Flu activity code (Influenza)",6635-7
+"Flu activity code (Influenza)",6636-5
+"Flu activity code (Influenza)",6637-3
+"Flu activity code (Influenza)",6638-1
+"Flu activity code (Influenza)",6639-9
+"Flu activity code (Influenza)",6640-7
+"Flu activity code (Influenza)",6641-5
+"Flu activity code (Influenza)",6642-3
+"Flu activity code (Influenza)",7920-2
+"Flu activity code (Influenza)",7921-0
+"Flu activity code (Influenza)",7922-8
+"Flu activity code (Influenza)",7923-6
+"Flu activity code (Influenza)",7924-4
+"Flu activity code (Influenza)",7925-1
+"Flu activity code (Influenza)",7926-9
+"Flu activity code (Influenza)",7927-7
+"Flu activity code (Influenza)",7928-5
+"Flu activity code (Influenza)",7929-3
+"Flu activity code (Influenza)",7931-9
+"Flu activity code (Influenza)",9531-5
+"Flu activity code (Influenza)",9532-3
+"Flu activity code (Influenza)",9533-1
+"Flu activity code (Influenza)",9534-9
+"Flu activity code (Influenza)",9535-6
+"Flu activity code (Influenza)",9536-4
 Japanese encephalitis virus neuroinvasive disease,10896-9
 Japanese encephalitis virus neuroinvasive disease,10897-7
 Japanese encephalitis virus neuroinvasive disease,10898-5
@@ -1606,6 +2017,17 @@ PLAGUE,701-3
 "Poliovirus infection, nonparalytic",5884-2
 "Poliovirus infection, nonparalytic",5886-7
 "Poliovirus infection, nonparalytic",5887-5
+"Poliomyelitis, paralytic",10736-7
+"Poliomyelitis, paralytic",10737-5
+"Poliomyelitis, paralytic",12272-1
+"Poliomyelitis, paralytic",14488-1
+"Poliomyelitis, paralytic",14489-9
+"Poliomyelitis, paralytic",14491-5
+"Poliomyelitis, paralytic",16284-2
+"Poliomyelitis, paralytic",5883-4
+"Poliomyelitis, paralytic",5884-2
+"Poliomyelitis, paralytic",5886-7
+"Poliomyelitis, paralytic",5887-5
 Powassan virus neuroinvasive disease,10896-9
 Powassan virus neuroinvasive disease,10897-7
 Powassan virus neuroinvasive disease,10898-5
@@ -1774,6 +2196,22 @@ Psittacosis (Ornithosis),6917-9
 "Q fever, chronic",9709-7
 "Q fever, chronic",9710-5
 "Q fever, chronic",9711-3
+"Q fever, acute",23018-5
+"Q fever, acute",7828-7
+"Q fever, acute",7829-5
+"Q fever, acute",7830-3
+"Q fever, acute",9708-9
+"Q fever, acute",9709-7
+"Q fever, acute",9710-5
+"Q fever, acute",9711-3
+"Q fever",23018-5
+"Q fever",7828-7
+"Q fever",7829-5
+"Q fever",7830-3
+"Q fever",9708-9
+"Q fever",9709-7
+"Q fever",9710-5
+"Q fever",9711-3
 "Rabies, human",6523-5
 "Rabies, human",6524-3
 "Rabies, human",6527-6
@@ -1781,6 +2219,13 @@ Psittacosis (Ornithosis),6917-9
 "Rabies, human",6529-2
 "Rabies, human",6532-6
 "Rabies, human",6533-4
+"Rabies, animal",6523-5
+"Rabies, animal",6524-3
+"Rabies, animal",6527-6
+"Rabies, animal",6528-4
+"Rabies, animal",6529-2
+"Rabies, animal",6532-6
+"Rabies, animal",6533-4
 ROCKY MOUNTAIN SPOTTED FEVER,11482-7
 ROCKY MOUNTAIN SPOTTED FEVER,17537-2
 ROCKY MOUNTAIN SPOTTED FEVER,17538-0
@@ -1819,6 +2264,20 @@ ROCKY MOUNTAIN SPOTTED FEVER,8005-1
 "Rubella, congenital syndrome",6548-2
 "Rubella, congenital syndrome",8015-0
 "Rubella, congenital syndrome",9576-0
+"Rubella",13279-5
+"Rubella",13282-9
+"Rubella",17551-3
+"Rubella",17552-1
+"Rubella",24116-6
+"Rubella",25514-1
+"Rubella",5334-8
+"Rubella",5335-5
+"Rubella",5883-4
+"Rubella",5884-2
+"Rubella",5887-5
+"Rubella",6548-2
+"Rubella",8015-0
+"Rubella",9576-0
 Salmonellosis,10354-9
 Salmonellosis,11475-1
 Salmonellosis,13284-5
@@ -1863,6 +2322,7 @@ SHIGELLOSIS,634-6
 SHIGELLOSIS,636-1
 SHIGELLOSIS,6463-4
 Vancomycin-resistant Staphylococcus aureus (VRSA),610-6
+Vancomycin-intermediate Staphylococcus aureus (VISA),610-6
 Shiga toxin-producing Escherichia coli (STEC),10851-4
 Shiga toxin-producing Escherichia coli (STEC),11475-1
 Shiga toxin-producing Escherichia coli (STEC),12276-2
@@ -2075,6 +2535,23 @@ St. Louis encephalitis virus non-neuroinvasive disease,9635-4
 "Streptococcus pneumoniae, invasive disease",6463-4
 "Streptococcus pneumoniae, invasive disease",6553-2
 "Streptococcus pneumoniae, invasive disease",6555-7
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",11086-6
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",11475-1
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",14322-2
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",17652-9
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",17655-2
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",23667-9
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",600-7
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",606-4
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",610-6
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",611-4
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",622-1
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",624-7
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",627-0
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",632-0
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",6463-4
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",6553-2
+"Streptococcus pneumoniae invasive, drug-resistant (DRSP)",6555-7
 "Syphilis, early latent",11084-1
 "Syphilis, early latent",11597-2
 "Syphilis, early latent",13288-6
@@ -2102,6 +2579,33 @@ St. Louis encephalitis virus non-neuroinvasive disease,9635-4
 "Syphilis, early latent",6562-3
 "Syphilis, early latent",8041-6
 "Syphilis, early latent",9826-9
+"Syphilis, congenital",11084-1
+"Syphilis, congenital",11597-2
+"Syphilis, congenital",13288-6
+"Syphilis, congenital",17725-3
+"Syphilis, congenital",17726-1
+"Syphilis, congenital",20507-0
+"Syphilis, congenital",20508-8
+"Syphilis, congenital",22461-8
+"Syphilis, congenital",22587-0
+"Syphilis, congenital",22592-0
+"Syphilis, congenital",22594-6
+"Syphilis, congenital",24110-9
+"Syphilis, congenital",24312-1
+"Syphilis, congenital",29310-0
+"Syphilis, congenital",31146-4
+"Syphilis, congenital",31147-2
+"Syphilis, congenital",34382-2
+"Syphilis, congenital",47238-1
+"Syphilis, congenital",5289-4
+"Syphilis, congenital",5290-2
+"Syphilis, congenital",5291-0
+"Syphilis, congenital",5292-8
+"Syphilis, congenital",5393-4
+"Syphilis, congenital",6561-5
+"Syphilis, congenital",6562-3
+"Syphilis, congenital",8041-6
+"Syphilis, congenital",9826-9
 "Syphilis, late latent",11084-1
 "Syphilis, late latent",11597-2
 "Syphilis, late latent",13288-6
@@ -2156,6 +2660,114 @@ St. Louis encephalitis virus non-neuroinvasive disease,9635-4
 "Syphilis, late with clinical manifestations other than neurosyphilis",6562-3
 "Syphilis, late with clinical manifestations other than neurosyphilis",8041-6
 "Syphilis, late with clinical manifestations other than neurosyphilis",9826-9
+"Syphilis, primary",11084-1
+"Syphilis, primary",11597-2
+"Syphilis, primary",13288-6
+"Syphilis, primary",17725-3
+"Syphilis, primary",17726-1
+"Syphilis, primary",20507-0
+"Syphilis, primary",20508-8
+"Syphilis, primary",22461-8
+"Syphilis, primary",22587-0
+"Syphilis, primary",22592-0
+"Syphilis, primary",22594-6
+"Syphilis, primary",24110-9
+"Syphilis, primary",24312-1
+"Syphilis, primary",29310-0
+"Syphilis, primary",31146-4
+"Syphilis, primary",31147-2
+"Syphilis, primary",34382-2
+"Syphilis, primary",47238-1
+"Syphilis, primary",5289-4
+"Syphilis, primary",5290-2
+"Syphilis, primary",5291-0
+"Syphilis, primary",5292-8
+"Syphilis, primary",5393-4
+"Syphilis, primary",6561-5
+"Syphilis, primary",6562-3
+"Syphilis, primary",8041-6
+"Syphilis, primary",9826-9
+"Syphilis, secondary",11084-1
+"Syphilis, secondary",11597-2
+"Syphilis, secondary",13288-6
+"Syphilis, secondary",17725-3
+"Syphilis, secondary",17726-1
+"Syphilis, secondary",20507-0
+"Syphilis, secondary",20508-8
+"Syphilis, secondary",22461-8
+"Syphilis, secondary",22587-0
+"Syphilis, secondary",22592-0
+"Syphilis, secondary",22594-6
+"Syphilis, secondary",24110-9
+"Syphilis, secondary",24312-1
+"Syphilis, secondary",29310-0
+"Syphilis, secondary",31146-4
+"Syphilis, secondary",31147-2
+"Syphilis, secondary",34382-2
+"Syphilis, secondary",47238-1
+"Syphilis, secondary",5289-4
+"Syphilis, secondary",5290-2
+"Syphilis, secondary",5291-0
+"Syphilis, secondary",5292-8
+"Syphilis, secondary",5393-4
+"Syphilis, secondary",6561-5
+"Syphilis, secondary",6562-3
+"Syphilis, secondary",8041-6
+"Syphilis, secondary",9826-9
+"Syphilis, total primary and secondary",11084-1
+"Syphilis, total primary and secondary",11597-2
+"Syphilis, total primary and secondary",13288-6
+"Syphilis, total primary and secondary",17725-3
+"Syphilis, total primary and secondary",17726-1
+"Syphilis, total primary and secondary",20507-0
+"Syphilis, total primary and secondary",20508-8
+"Syphilis, total primary and secondary",22461-8
+"Syphilis, total primary and secondary",22587-0
+"Syphilis, total primary and secondary",22592-0
+"Syphilis, total primary and secondary",22594-6
+"Syphilis, total primary and secondary",24110-9
+"Syphilis, total primary and secondary",24312-1
+"Syphilis, total primary and secondary",29310-0
+"Syphilis, total primary and secondary",31146-4
+"Syphilis, total primary and secondary",31147-2
+"Syphilis, total primary and secondary",34382-2
+"Syphilis, total primary and secondary",47238-1
+"Syphilis, total primary and secondary",5289-4
+"Syphilis, total primary and secondary",5290-2
+"Syphilis, total primary and secondary",5291-0
+"Syphilis, total primary and secondary",5292-8
+"Syphilis, total primary and secondary",5393-4
+"Syphilis, total primary and secondary",6561-5
+"Syphilis, total primary and secondary",6562-3
+"Syphilis, total primary and secondary",8041-6
+"Syphilis, total primary and secondary",9826-9
+"Syphilis, unknown latent",11084-1
+"Syphilis, unknown latent",11597-2
+"Syphilis, unknown latent",13288-6
+"Syphilis, unknown latent",17725-3
+"Syphilis, unknown latent",17726-1
+"Syphilis, unknown latent",20507-0
+"Syphilis, unknown latent",20508-8
+"Syphilis, unknown latent",22461-8
+"Syphilis, unknown latent",22587-0
+"Syphilis, unknown latent",22592-0
+"Syphilis, unknown latent",22594-6
+"Syphilis, unknown latent",24110-9
+"Syphilis, unknown latent",24312-1
+"Syphilis, unknown latent",29310-0
+"Syphilis, unknown latent",31146-4
+"Syphilis, unknown latent",31147-2
+"Syphilis, unknown latent",34382-2
+"Syphilis, unknown latent",47238-1
+"Syphilis, unknown latent",5289-4
+"Syphilis, unknown latent",5290-2
+"Syphilis, unknown latent",5291-0
+"Syphilis, unknown latent",5292-8
+"Syphilis, unknown latent",5393-4
+"Syphilis, unknown latent",6561-5
+"Syphilis, unknown latent",6562-3
+"Syphilis, unknown latent",8041-6
+"Syphilis, unknown latent",9826-9
 "Neurosyphilis",11084-1
 "Neurosyphilis",11597-2
 "Neurosyphilis",13288-6
