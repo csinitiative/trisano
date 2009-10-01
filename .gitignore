@@ -13,7 +13,6 @@ distro/database/trisano_schema.sql
 distro/upgrade_db_output.txt
 *.dump_obfu
 dump
-rails
 *.swp
 distro/config.yml
 webapp/config/database.yml

@@ -25,7 +25,6 @@ class Organism < ActiveRecord::Base
   validates_length_of     :organism_name, :maximum => 255, :allow_blank => true
 
   has_many :loinc_codes
-  belongs_to :disease
 
   private
 

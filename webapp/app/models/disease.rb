@@ -19,6 +19,7 @@ class Disease < ActiveRecord::Base
   include Export::Cdc::DiseaseRules
 
   before_save :update_cdc_code
+  before_validation :strip_disease_name
 
   validates_presence_of :disease_name
 
@@ -28,7 +29,14 @@ class Disease < ActiveRecord::Base
 
   has_many :diseases_loinc_codes, :dependent => :destroy
   has_many :loinc_codes, :through => :diseases_loinc_codes
-  has_many :organisms
+
+  has_many :organisms, :finder_sql => %q{
+    SELECT DISTINCT ON (organisms.id) organisms.* FROM organisms
+      JOIN loinc_codes ON organisms.id = loinc_codes.organism_id
+      JOIN diseases_loinc_codes ON loinc_codes.id = diseases_loinc_codes.loinc_code_id
+    WHERE diseases_loinc_codes.disease_id = #{id}
+  }
+
   has_many :common_test_types, :finder_sql => %q{
     SELECT common_test_types.* FROM common_test_types
       JOIN loinc_codes ON common_test_types.id = loinc_codes.common_test_type_id
@@ -73,6 +81,7 @@ class Disease < ActiveRecord::Base
       diseases = collect_diseases(&:invalid_case_status_where_clause)
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
+
   end
 
   def live_forms(event_type = "MorbidityEvent")
@@ -106,6 +115,10 @@ class Disease < ActiveRecord::Base
         export_value.update_attributes(:value_from => disease_name, :value_to => cdc_code)
       end
     end
+  end
+
+  def strip_disease_name
+    self.disease_name.strip! if attribute_present? :disease_name
   end
 
 end
