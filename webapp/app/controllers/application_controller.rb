@@ -131,7 +131,7 @@ class ApplicationController < ActionController::Base
     render :text => "<html><body bgcolor='#ededed'><br/><table bgcolor='#000000' width='500' cellspacing='1' cellpadding='10' align='center'>
 <tr bgcolor='#ffffff'><td style='font-family: verdana, sans-serif'><h2>TriSano</h2><hr/><h3>Application Error</h3>
 <p style='font-size: 12px'>An error occurred while your request was being processed.</p><br/><hr/>
-<b style='font-size: 12px'><a href='https://trisano.csinitiative.net/wiki/ProvideFeedbackOnTriSano' style='font-size: 12px'>Provide feedback</a></b>
+<b style='font-size: 12px'><a href='https://wiki.csinitiative.com/display/tri/Feedback' style='font-size: 12px'>Provide feedback</a></b>
 </td></tr></table></body></html>"
   end
 
