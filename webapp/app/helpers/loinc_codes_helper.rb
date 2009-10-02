@@ -5,8 +5,10 @@ module LoincCodesHelper
       haml_concat link_to_unless_current('Show', loinc_code)
       haml_concat "&nbsp;|&nbsp;"
       haml_concat link_to_unless_current('Edit', edit_loinc_code_path(loinc_code))
-      haml_concat "&nbsp;|&nbsp;"
-      haml_concat link_to('Delete', loinc_code, :method => :delete, :confirm => 'Are you sure?')
+      if current_page_is_loinc_page? loinc_code
+        haml_concat "&nbsp;|&nbsp;"
+        haml_concat link_to('Delete', loinc_code, :method => :delete, :confirm => 'Are you sure?')
+      end
     end
   end
 
@@ -52,4 +54,9 @@ module LoincCodesHelper
     form_for record_or_name_or_array, *(args << options.merge(:builder => ObservableFieldsFormBuilder)), &proc
   end
 
+  def current_page_is_loinc_page?(loinc)
+    [loinc_codes_path, loinc_code_path(loinc), edit_loinc_code_path(loinc)].any? do |path|
+      current_page? path
+    end
+  end
 end

@@ -34,3 +34,15 @@ Given /^the following organisms are associated with the disease "([^\"]*)":$/ do
 
   disease.save!
 end
+
+Given /^the following loinc codes are associated with the disease "([^\"]*)":$/ do |disease_name, table|
+  disease = Disease.find_or_create_by_disease_name disease_name
+  table.map_headers! 'Loinc code' => :loinc_code, 'Scale' => :scale
+  table.hashes.each do |hash|
+    attr = hash.dup
+    attr[:scale] = ExternalCode.loinc_scales.find_by_the_code attr[:scale]
+    loinc = LoincCode.find_or_create_by_loinc_code attr
+    disease.loinc_codes << loinc
+  end
+  disease.save!
+end

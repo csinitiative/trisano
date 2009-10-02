@@ -110,6 +110,19 @@
 
   %table.list
     %tr
+      %th.forminformation{ :colspan => (@disease.loinc_codes.empty? ? 1 : 5) }
+        LOINC Codes
+    -if @disease.loinc_codes.empty?
+      %tr
+        %td.forminformation
+          %span No LOINC codes configured
+    -else
+      -@disease.loinc_codes.each do |loinc_code|
+        %tr.roll
+          =render loinc_code
+
+  %table.list
+    %tr
       %th.forminformation{ :colspan => (@disease.organisms.empty? ? 1 : 2) }
         Organisms
     -if @disease.organisms.empty?
