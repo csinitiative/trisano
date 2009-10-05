@@ -17,9 +17,16 @@
 .header
   .left
     %h2= @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
+
+  %br
+  .left
     %i
       Printed
       = Date.today.strftime("%B %d, %Y")
+  .right
+    %i
+      Current Investigator:
+      = @event.investigator.blank? ? "Unassigned" : @event.investigator.best_name 
     
 .sub-header
   .left
