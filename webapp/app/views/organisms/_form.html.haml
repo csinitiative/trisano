@@ -26,6 +26,10 @@
           %span.vert
             =f.label      :organism_name
             =f.text_field :organism_name, :size => 60
+          %span.vert
+            %label Diseases
+            -scroll_pane do
+              -disease_check_boxes f.object_name + "[disease_ids][]", organism.disease_ids
 
     %span.vert
       =create_or_update_button organism

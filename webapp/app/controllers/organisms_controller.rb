@@ -29,6 +29,8 @@ class OrganismsController < AdminController
   end
 
   def update
+    params[:organism][:disease_ids] ||= [] if params[:organism]
+
     respond_to do |format|
       if @organism.update_attributes params[:organism]
         flash[:notice] = 'Organism was successfully updated.'

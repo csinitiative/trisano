@@ -34,3 +34,15 @@
     -@organism.loinc_codes.each do |loinc|
       %tr.roll
         =render loinc
+%table.list
+  %tr
+    %th.forminformation{ :colspan => (@organism.diseases.empty? ? 1 : 3) }
+      Diseases
+  -if @organism.diseases.empty?
+    %tr
+      %td.forminformation
+        %span No diseases configured
+  -else
+    -@organism.diseases.each do |disease|
+      %tr.roll
+        =render disease

@@ -20,6 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Organism do
 
   it { should have_many(:loinc_codes) }
+  it { should have_many(:diseases) }
 
   it 'has unique organism name (case insensitive)' do
     Organism.create(:organism_name => 'Arbovirus').errors.on(:organism_name).should == nil

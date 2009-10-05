@@ -26,6 +26,9 @@ class Organism < ActiveRecord::Base
 
   has_many :loinc_codes
 
+  has_many :diseases_organisms
+  has_many :diseases, :through => :diseases_organisms
+
   private
 
   def strip_organism_name

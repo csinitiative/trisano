@@ -9,3 +9,10 @@ Then /^I should see the following organisms:$/ do |expected_table|
   end
   expected_table.diff! t
 end
+
+Given /^disease "([^\"]*)" is linked to organism "([^\"]*)"$/ do |disease_name, organism_name|
+  disease = Disease.find_by_disease_name disease_name
+  organism = Organism.find_by_organism_name organism_name
+  organism.diseases << disease
+  organism.save!
+end

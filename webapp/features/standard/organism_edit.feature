@@ -31,3 +31,24 @@ Feature: Editing an organism
       And an organism named "Arbovirus"
     When I go to the "Arbovirus" edit organism page
     Then I should get a 403 response
+
+  Scenario: An administrator links an organism to diseases
+    Given I am logged in as a super user
+      And an organism named "Arbovirus"
+    When I go to the "Arbovirus" edit organism page
+      And I check "African Tick Bite Fever"
+      And I press "Update"
+    Then I should see "Organism was successfully updated"
+      And I should be on the "Arbovirus" organism page
+      And I should see "African Tick Bite Fever"
+
+  Scenario: An administrator unlinks all diseases from an organism
+    Given I am logged in as a super user
+      And an organism named "Arbovirus"
+      And disease "Dengue" is linked to organism "Arbovirus"
+    When I go to the "Arbovirus" edit organism page
+      And I uncheck "Dengue"
+      And I press "Update"
+    Then I should see "Organism was successfully updated"
+      And I should be on the "Arbovirus" organism page
+      And I should not see "Dengue"
