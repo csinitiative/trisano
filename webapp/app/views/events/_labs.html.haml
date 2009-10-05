@@ -38,8 +38,6 @@
                 %b= h(lab.place_entity.place.name)
                 %br
                 = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
-                %br
-                %b= h(lab_result.comment)
               %td
                 %b= h(lab_result.test_type.try(:common_name))
                 %br
@@ -79,3 +77,8 @@
                 %br
                 Sent to state lab:
                 %b= h(l(lab_result.specimen_sent_to_state))
+
+            %tr
+              %td
+              %td{:colspan => 3}
+                %b= h(lab_result.comment)
