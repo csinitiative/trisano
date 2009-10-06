@@ -146,7 +146,7 @@ namespace :trisano do
         sleep 10
         puts "executing smoke test"
 
-        Hpricot.buffer_size = 32768
+        Hpricot.buffer_size = 65536
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new
         agent.basic_auth('utah', 'arches')
