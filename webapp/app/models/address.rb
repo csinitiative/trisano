@@ -46,6 +46,17 @@ class Address < ActiveRecord::Base
     self.county.code_description if self.county
   end
 
+  def formatted_address
+    fa = number_and_street
+    fa << ", Unit: #{self.unit_number}" unless self.unit_number.blank?
+    fa << ", #{self.city}" unless self.city.blank?
+    fa << ", #{self.state.the_code}" unless self.state.blank?
+    fa << " #{self.postal_code}" unless self.postal_code.blank?
+    fa << ". County: #{self.county.code_description}" unless self.county.blank?
+    fa << ". District: #{self.district.code_description}" unless self.district.blank?
+    fa
+  end
+
   protected
   def validate
     if attributes.all? {|k, v| v.blank?}

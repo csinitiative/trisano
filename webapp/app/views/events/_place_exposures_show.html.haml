@@ -29,12 +29,14 @@
       %table.list
         %tr
           %th Place Name
+          %th Address
           %th Place Type
           %th Date of Exposure
           %th
 
         -@event.place_child_events.each do |pe|
-          -place = pe.interested_place.place_entity.place
+          -place_entity = pe.interested_place.place_entity
+          -place = place_entity.place
 
           - if pe.deleted_at
             - style = {:class => 'struck-through'}
@@ -43,6 +45,7 @@
 
           %tr
             %td{style}=h(place.name)
+            %td{style}=h(place_entity.canonical_address.formatted_address)
             %td{style}=h(place.formatted_place_descriptions)
             %td{style}=h(format_date(pe.participations_place.date_of_exposure))
             %td.tools

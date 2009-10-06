@@ -24,16 +24,18 @@
   -else
     .three-valued-row
       .left
-        %span.print-label Place Name
+        %span.print-label Place Name & Address
       .left
         %span.print-label Place Type
       .right
         %span.print-label Date of Exposure
       -@event.place_child_events.each do |pe|
-        -place = pe.interested_place.place_entity.place
+        -place_entity = pe.interested_place.place_entity
+        -place = place_entity.place
         .three-valued-row
           .left
-            %span.print-value=h(place.name)
+            %span.print-value
+              =h(place.name + "; " + place_entity.canonical_address.formatted_address)
           .left
             %span.print-value=h(place.formatted_place_descriptions)
           .right

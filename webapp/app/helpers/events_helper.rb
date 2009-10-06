@@ -569,6 +569,7 @@ module EventsHelper
         place.build_interested_place unless place.interested_place
         place.interested_place.build_place_entity unless place.interested_place.place_entity
         place.interested_place.place_entity.build_place unless place.interested_place.place_entity.place
+        place.interested_place.place_entity.build_canonical_address unless place.interested_place.place_entity.canonical_address
       end
 
       event.encounter_child_events.build if event.encounter_child_events.empty?

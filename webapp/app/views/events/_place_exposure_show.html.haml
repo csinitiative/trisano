@@ -29,7 +29,9 @@
   - fields_for(event_type + "[place_child_events_attributes][#{uniq_id}]", @place) do |pe|
     - place_form = pe
 
-- place = place_form.object.interested_place.place_entity.place
+- place_entity = place_form.object.interested_place.place_entity
+- place = place_entity.place
+
 %div.existing_place{:style => 'margin-top: 20px; clear: both;'}
   
   - place_form.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
@@ -38,13 +40,16 @@
       %label Name
       = h(place.name)
     %span.horiz
+      %label Address
+      = h(place_entity.canonical_address.formatted_address)
+    %span.horiz
       %label Types
       = h place.formatted_place_descriptions
 
   - place_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pe_form|
     %span{:class => 'horiz'}
       =pe_form.label(:date_of_exposure)
-      =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now)
+      =pe_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now, :size => 15)
     %span.horiz
     - if place_form.object.new_record?
       -# This place was added via live search. Provide a mechanism for removing the place before saving.
@@ -55,7 +60,6 @@
       %span.horiz
         = place_form.label :_delete, "Remove"
         = place_form.check_box :_delete
-
 
     = place_form.label('&nbsp;')
     = show_and_edit_event_links(place_form.object)
