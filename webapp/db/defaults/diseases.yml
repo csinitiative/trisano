@@ -38,16 +38,16 @@
 - disease_name: "Brucellosis"
   cdc_code: "10020"
 
-- disease_name: "Cache Valley virus neuroinvasive disease"
+- disease_name: "Cache Valley virus neuroinvasive"
   cdc_code: 
 
-- disease_name: "Cache Valley virus non-neuroinvasive disease"
+- disease_name: "Cache Valley virus non-neuroinvasive"
   cdc_code: 
 
-- disease_name: "California serogroup virus neuroinvasive disease"
+- disease_name: "California serogroup virus neuroinvasive"
   cdc_code: 
 
-- disease_name: "California serogroup virus non-neuroinvasive disease"
+- disease_name: "California serogroup virus non-neuroinvasive"
   cdc_code: 
 
 - disease_name: "Campylobacteriosis"
@@ -56,14 +56,20 @@
 - disease_name: "Chancroid"
   cdc_code: "10273"
 
-- disease_name: "Chlamydia trachomatis genital infection"
+- disease_name: "Chlamydia"
   cdc_code: 10274
 
-- disease_name: "Cholera (toxigenic Vibrio cholerae O1 or O139)"
+- disease_name: "Cholera"
   cdc_code: 
+
+- disease_name: CJD
+  cdc_code:
 
 - disease_name: "Coccidioidomycosis"
   cdc_code: 
+
+- disease_name: Colorado Tick Fever
+  cdc_code:
 
 - disease_name: "Cryptosporidiosis"
   cdc_code: "11580"
@@ -77,14 +83,20 @@
 - disease_name: "Dengue hemorrhagic fever"
   cdc_code: "10685"
 
+- disease_name: Viral hemorrhagic fever
+  cdc_code:
+
 - disease_name: "Diphtheria"
   cdc_code: "10040"
 
-- disease_name: "Eastern equine encephalitis virus neuroinvasive disease"
+- disease_name: "Eastern equine encephalitis virus neuroinvasive"
   cdc_code: 
 
-- disease_name: "Eastern equine encephalitis virus non-neuroinvasive disease"
+- disease_name: "Eastern equine encephalitis virus non-neuroinvasive"
   cdc_code: 
+
+- disease_name: Echinococcus
+  cdc_code:
 
 - disease_name: "Ehrlichia chaffeensis"
   cdc_code: 
@@ -92,7 +104,7 @@
 - disease_name: "Ehrlichia ewingii"
   cdc_code: 
 
-- disease_name: "Ehrlichiosis/Anaplasmosis, undetermined"
+- disease_name: "Ehrlichiosis/Anaplasmosis"
   cdc_code: 
 
 - disease_name: "Encephalitis, post-chickenpox"
@@ -113,19 +125,22 @@
 - disease_name: "Giardiasis"
   cdc_code: 
 
+- disease_name: Glanders (B. mallei)
+  cdc_code:
+
 - disease_name: "Gonorrhea"
   cdc_code: 10280
 
-- disease_name: "Granuloma inguinale (GI)"
+- disease_name: "Granuloma inguinale"
   cdc_code: 
 
-- disease_name: "Haemophilus influenzae, invasive disease"
+- disease_name: "Haemophilus influenzae"
   cdc_code: 10590
 
-- disease_name: "Hansen disease (Leprosy)"
+- disease_name: "Hansen's disease"
   cdc_code: 
 
-- disease_name: "Hantavirus infection"
+- disease_name: "Hantavirus"
   cdc_code: 
 
 - disease_name: "Hantavirus pulmonary syndrome"
@@ -134,31 +149,31 @@
 - disease_name: "Hemolytic uremic syndrome postdiarrheal"
   cdc_code: 
 
-- disease_name: "Hepatitis A, acute"
+- disease_name: "Hepatitis A"
   cdc_code: "10110"
 
-- disease_name: "Hepatitis B virus infection, chronic"
+- disease_name: "Hepatitis B infection chronic"
   cdc_code: "10105"
 
-- disease_name: "Hepatitis B, acute"
+- disease_name: "Hepatitis B acute"
   cdc_code: "10100"
 
-- disease_name: "Hepatitis B, virus infection perinatal"
+- disease_name: "Hepatitis B infection perinatal"
   cdc_code: "10104"
 
-- disease_name: "Hepatitis C virus infection, past or present"
+- disease_name: "Hepatitis C, past or present"
   cdc_code: "10106"
 
 - disease_name: "Hepatitis C, acute"
   cdc_code: "10101"
 
-- disease_name: "Hepatitis Delta co- or super-infection, acute (Hepatitis D)"
+- disease_name: "Hepatitis D"
   cdc_code: "10102"
 
-- disease_name: "Hepatitis E, acute"
+- disease_name: "Hepatitis E"
   cdc_code: "10103"
 
-- disease_name: "Hepatitis, viral unspecified"
+- disease_name: "Hepatitis other"
   cdc_code: "10120"
 
 - disease_name: "HIV Infection, adult"
@@ -173,19 +188,20 @@
 - disease_name: "Human T-Lymphotropic virus type II infection (HTLV-II)"
   cdc_code: 
 
-- disease_name: "Influenza, animal isolates"
+- disease_name: "Influenza activity"
   cdc_code: 
 
-- disease_name: "Influenza, human isolates"
+- disease_name: Influenza-associated death in person under 18
   cdc_code: 
 
-- disease_name: "Influenza-associated mortality"
+- disease_name: Influenza-associated hospitalization
+  cdc_code:
+
+
+- disease_name: "Japanese encephalitis virus neuroinvasive"
   cdc_code: 
 
-- disease_name: "Japanese encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Japanese encephalitis virus non-neuroinvasive disease"
+- disease_name: "Japanese encephalitis virus non-neuroinvasive"
   cdc_code: 
 
 - disease_name: "Lead poisoning"
@@ -206,8 +222,11 @@
 - disease_name: "Malaria"
   cdc_code: "10130"
 
-- disease_name: "Measles (rubeola), total"
+- disease_name: "Measles"
   cdc_code: 10140
+
+- disease_name: "Meningitis, aseptic"
+  cdc_code:
 
 - disease_name: "Meningitis, Bacterial other"
   cdc_code:
@@ -215,7 +234,7 @@
 - disease_name: "Meningitis, Viral"
   cdc_code:
 
-- disease_name: "Meningococcal disease (Neisseria meningitidis)"
+- disease_name: "Meningococcal disease"
   cdc_code: 10150
 
 - disease_name: "Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)"
@@ -230,7 +249,7 @@
 - disease_name: "Mumps"
   cdc_code: "10180"
 
-- disease_name: "Neurosyphilis"
+- disease_name: "Syphilis, neurosyphilis"
   cdc_code: "10317"
 
 - disease_name: "Nongonococcal urethritis (NGU)"
@@ -239,7 +258,10 @@
 - disease_name: "Norovirus"
   cdc_code:
 
-- disease_name: "Novel influenza A virus infections"
+- disease_name: Influenza A, novel virus
+  cdc_code:
+
+- disease_name: Melioidosis (B. pseudomallei)
   cdc_code:
 
 - disease_name: "Pelvic Inflammatory Disease (PID), Unknown Etiology"
@@ -263,16 +285,13 @@
 - disease_name: "Powassan virus non-neuroinvasive disease"
   cdc_code: 
 
-- disease_name: "Psittacosis (Ornithosis)"
+- disease_name: "Psittacosis"
   cdc_code: 
 
-- disease_name: "Q fever"
+- disease_name: "Q fever acute"
   cdc_code: "10255"
 
-- disease_name: "Q fever, acute"
-  cdc_code: 
-
-- disease_name: "Q fever, chronic"
+- disease_name: "Q fever chronic"
   cdc_code: 
 
 - disease_name: "Rabies, animal"
@@ -281,22 +300,25 @@
 - disease_name: "Rabies, human"
   cdc_code: 
 
-- disease_name: "Rocky Mountain spotted fever"
+- disease_name: Relapsing fever
+  cdc_code:
+
+- disease_name: "Rocky mountain spotted fever"
   cdc_code: 
 
 - disease_name: "Rubella"
   cdc_code: "10200"
 
-- disease_name: "Rubella, congenital syndrome"
+- disease_name: "Rubella congenital syndrome"
   cdc_code: 
 
 - disease_name: "Salmonellosis"
   cdc_code: 
 
-- disease_name: "Severe Acute Respiratory Syndrome (SARS)-associated Coronavirus disease (SARS-CoV)"
+- disease_name: "SARS"
   cdc_code: 
 
-- disease_name: "Shiga toxin-producing Escherichia coli (STEC)"
+- disease_name: "STEC"
   cdc_code: 
 
 - disease_name: "Shigellosis"
@@ -305,23 +327,29 @@
 - disease_name: "Smallpox"
   cdc_code: "11800"
 
-- disease_name: "St. Louis encephalitis virus neuroinvasive disease"
+- disease_name: Smallpox vaccine associated adverse event
+  cdc_code:
+
+- disease_name: "St. Louis encephalitis virus neuroinvasive"
   cdc_code: 
 
-- disease_name: "St. Louis encephalitis virus non-neuroinvasive disease"
+- disease_name: "St. Louis encephalitis virus non-neuroinvasive"
   cdc_code: 
 
-- disease_name: "Streptococcal disease, invasive, Group A"
+- disease_name: "Streptococcal disease, Group A"
   cdc_code: 
 
-- disease_name: "Streptococcal disease, invasive, Group B"
+- disease_name: "Streptococcal disease, Group B"
   cdc_code: 
 
-- disease_name: "Streptococcal disease, other, invasive, beta-hemolytic (non-group A and non-group B)"
+- disease_name: "Streptococcal disease, Group C and G"
   cdc_code: 
 
 - disease_name: "Streptococcal toxic-shock syndrome"
   cdc_code: 
+
+- disease_name: Streptococcus pneumoniae, <5, drug susceptible
+  cdc_code:
 
 - disease_name: "Streptococcus pneumoniae invasive, drug-resistant (DRSP)"
   cdc_code: 
@@ -359,25 +387,40 @@
 - disease_name: "Toxic-shock syndrome (staphylococcal)"
   cdc_code: 
 
+- disease_name: Trichinosis
+  cdc_code:
+
 - disease_name: "Trichinellosis"
   cdc_code: 
 
-- disease_name: "Tuberculosis"
+- disease_name: "Tuberculosis, active"
+  cdc_code: 
+
+- disease_name: "Tuberculosis, B1"
+  cdc_code: 
+
+- disease_name: "Tuberculosis, B2"
+  cdc_code: 
+
+- disease_name: "Tuberculosis, LTBI"
+  cdc_code: 
+
+- disease_name: "Tuberculosis, suspect"
   cdc_code: 
 
 - disease_name: "Tularemia"
   cdc_code: "10230"
 
-- disease_name: "Typhoid fever (caused by Salmonella typhi)"
+- disease_name: "Typhoid"
   cdc_code: 
 
-- disease_name: "Vancomycin-intermediate Staphylococcus aureus (VISA)"
+- disease_name: "VISA"
   cdc_code: 
 
-- disease_name: "Vancomycin-resistant Staphylococcus aureus (VRSA)"
+- disease_name: "VRSA"
   cdc_code: 
 
-- disease_name: "Varicella (Chickenpox)"
+- disease_name: "Chickenpox"
   cdc_code: 
 
 - disease_name: "Venezuelan equine encephalitis virus neuroinvasive disease"
@@ -386,13 +429,13 @@
 - disease_name: "Venezuelan equine encephalitis virus non-neuroinvasive disease"
   cdc_code: 
 
-- disease_name: "Vibriosis (non-cholera Vibrio species infections)"
+- disease_name: "Vibriosis"
   cdc_code: 
 
-- disease_name: "West Nile virus neuroinvasive disease"
+- disease_name: "West Nile neuroinvasive disease"
   cdc_code: 
 
-- disease_name: "West Nile virus non-neuroinvasive disease"
+- disease_name: "West Nile non-neuroinvasive disease"
   cdc_code: 
 
 - disease_name: "Western equine encephalitis virus neuroinvasive disease"
