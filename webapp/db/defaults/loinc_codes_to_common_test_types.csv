@@ -440,20 +440,20 @@
 "29248-2","PCR/amplification","Varicella zoster virus DNA","Ord","Varicella-zoster virus"
 "29258-1","Linezolid susceptibility","Linezolid","OrdQn",
 "29310-0","FTA (Fluorescent treponemal antibody)","Treponema pallidum","Ord","Treponema pallidum"
-"29535-2","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile Virus"
-"29536-0","IgM Antibody","West Nile virus Ab.IgM","Qn","West Nile Virus"
-"29537-8","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile Virus"
-"29538-6","IgM Antibody","West Nile virus Ab.IgM","Qn","West Nile Virus"
+"29535-2","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile virus"
+"29536-0","IgM Antibody","West Nile virus Ab.IgM","Qn","West Nile virus"
+"29537-8","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile virus"
+"29538-6","IgM Antibody","West Nile virus Ab.IgM","Qn","West Nile virus"
 "29560-0","PCR/amplification","Anaplasma phagocytophilum DNA","Ord","Anaplasma phagocytophilum"
-"29566-7","IgG Antibody","West Nile virus Ab.IgG","Ord","West Nile Virus"
-"29567-5","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile Virus"
-"29568-3","Total Antibody","West Nile virus Antibody","Qn","West Nile Virus"
-"29569-1","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile Virus"
+"29566-7","IgG Antibody","West Nile virus Ab.IgG","Ord","West Nile virus"
+"29567-5","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
+"29568-3","Total Antibody","West Nile virus Antibody","Qn","West Nile virus"
+"29569-1","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
 "29609-5","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
 "29610-3","PCR/amplification","Hepatitis B virus DNA","Ord","Hepatitis B"
 "29615-2","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B"
 "29662-4","IgM Antibody","Varicella zoster virus Ab.IgM","Ord","Varicella-zoster virus"
-"29778-8","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile Virus"
+"29778-8","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
 "29783-8","Total Antibody","Saint Louis encephalitis virus Antibody","Qn","Saint Louis encephalitis virus"
 "29785-3","IgG Antibody","Eastern equine encephalitis virus Ab.IgG","Ord","Eastern equine encephalitis virus"
 "29789-5","IgG Antibody","La Crosse virus Ab.IgG","Ord","La Crosse virus"
@@ -465,7 +465,7 @@
 "30175-4","Total Antibody","Jamestown canyon virus Antibody","Ord","Jamestown Canyon virus"
 "30176-2","Total Antibody","La Crosse virus Antibody","Ord","La Crosse virus"
 "30177-0","IgG Antibody","Powassan virus Ab.IgG","Qn","Powassan virus"
-"30178-8","IgG Antibody","West Nile virus Ab.IgG","Ord","West Nile Virus"
+"30178-8","IgG Antibody","West Nile virus Ab.IgG","Ord","West Nile virus"
 "30179-6","IgM Antibody","Powassan virus Ab.IgM","Qn","Powassan virus"
 "30307-3","Indinavir susceptibility","Indinavir","OrdQn",
 "30526-8","IgM Antibody","Borrelia burgdorferi Ab.IgM","Ord","Borrelia burgdorferi"
@@ -496,7 +496,7 @@
 "32206-5","Microscopy","Plasmodium sp identified","Nom",
 "32286-7","Genotype by PCR","Hepatitis C virus genotype","Nom",
 "32355-0","Culture","Bacteria identified","Nom",
-"32361-8","PCR/amplification","West Nile Virus RNA by RT-PCR","Ord","West Nile Virus"
+"32361-8","PCR/amplification","West Nile Virus RNA by RT-PCR","Ord","West Nile virus"
 "32366-7","Genotype by PCR","Hepatitis B virus genotype","Nom",
 "32376-6","Clinofloxacin susceptibility","Clinafloxacin","OrdQn",
 "32-3","Ampicillin+Sulbactam susceptibility","Ampicillin+Sulbactam","OrdQn",
@@ -534,14 +534,14 @@
 "35816-8","Gemifloxacin susceptibility","Gemifloxacin","OrdQn",
 "35861-4","Virginiamycin susceptibility","Virginiamycin","OrdQn",
 "363-2","Nitrofurantoin susceptibility","Nitrofurantoin","OrdQn",
-"36896-9","Total Antibody","West Nile virus polyvalent E Antibody","Ord","West Nile Virus"
-"36897-7","Total Antibody","West Nile virus Antibody","Ord","West Nile Virus"
-"36898-5","NS5 Antibody","West Nile virus NS5 Antibody","Ord","West Nile Virus"
+"36896-9","Total Antibody","West Nile virus polyvalent E Antibody","Ord","West Nile virus"
+"36897-7","Total Antibody","West Nile virus Antibody","Ord","West Nile virus"
+"36898-5","NS5 Antibody","West Nile virus NS5 Antibody","Ord","West Nile virus"
 "36902-5","PCR/amplification","Chlamydia trachomatis+Neisseria gonorrhoeae DNA","Ord","Neisseria gonorrhoeae"
 "36903-3","PCR/amplification","Chlamydia trachomatis+Neisseria gonorrhoeae DNA","Nom",
 "37983-4","DNA probe - not amplified/PCR","Eastern equine encephalitis virus cDNA","Ord","Eastern equine encephalitis virus"
 "37984-2","DNA probe - not amplified/PCR","Saint Louis encephalitis virus cDNA","Ord","Saint Louis encephalitis virus"
-"37985-9","DNA probe - not amplified/PCR","West Nile virus cDNA","Ord","West Nile Virus"
+"37985-9","DNA probe - not amplified/PCR","West Nile virus cDNA","Ord","West Nile virus"
 "38173-1","Total Antibody","Borrelia burgdorferi C6 Pep Abs, ELISA","Qn","Borrelia burgdorferi"
 "38174-9","Total Antibody","C6 Peptide CSF","Qn","Borrelia burgdorferi"
 "38180-6","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
@@ -550,12 +550,12 @@
 "38379-4","PCR/amplification","Mycobacterium tuberculosis complex DNA","Ord","Mycobacterium tuberculosis complex"
 "38382-8","Culture","Influenza virus B","Ord","Influenza B"
 "38916-3","PCR/amplification","Calicivirus RNA","Ord","CALICIVIRUS"
-"38997-3","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile Virus"
+"38997-3","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile virus"
 "39102-9","PCR/amplification","Influenza virus A hemagglutinin cDNA","Nom",
 "39103-7","PCR/amplification","Influenza virus A neuraminidase cDNA","Nom",
 "3911-5","Penicillin susceptibility","Penicillin","Qn",
 "39534-3","Antigen by DFA/IF","Cryptosporidium sp Ag","Ord","Cryptosporidium species"
-"39572-3","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile Virus"
+"39572-3","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile virus"
 "40699-1","Unknown method","Mycobacterium sp identified","Nom",
 "408-5","Piperacillin susceptibility","Piperacillin","OrdQn",
 "40982-1","PCR/amplification","Influenza B by PCR","Ord","Influenza B"
