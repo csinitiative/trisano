@@ -372,7 +372,10 @@ SELECT
 --      events."investigation_LHD_status_id",  Can be ignored, as it's never used
     events.sent_to_ibis,
     events.ibis_updated_at,
-    disevdied.code_description AS disease_event_died        -- code description?
+    disevdied.code_description AS disease_event_died,        -- code description?
+    1::integer AS always_one     -- This column joins against the population.population_years view
+                                 -- to associate every event with every population year, and keep
+                                 -- Mondrian happy
 FROM events
     LEFT JOIN participations pplpart
         ON (events.id = pplpart.event_id)
@@ -546,7 +549,8 @@ SELECT
 --      events."investigation_LHD_status_id",  Can be ignored, as it's never used
     events.sent_to_ibis,
     events.ibis_updated_at,
-    disevdied.code_description AS disease_event_died        -- code description?
+    disevdied.code_description AS disease_event_died,        -- code description?
+    1::integer AS always_one
 FROM events
     LEFT JOIN participations pplpart
         ON (events.id = pplpart.event_id)

@@ -1532,7 +1532,8 @@ ALTER TABLE ONLY population_tables
 
 INSERT INTO population_dimensions VALUES
     ('Investigating Jurisdiction', ARRAY['jurisdiction'], NULL),
-    ('Race',                       ARRAY['race'],         NULL);
+    ('Race',                       ARRAY['race'],         NULL),
+    ('Year',                       ARRAY['year'],         NULL);
 
 DROP TABLE IF EXISTS population;
 
@@ -1544,6 +1545,62 @@ CREATE TABLE population (
 );
 
 INSERT INTO population_tables VALUES ('population', 1);
+
+CREATE OR REPLACE FUNCTION population.distinct_dimension_values(my_dim_name TEXT, my_level INTEGER) RETURNS SETOF TEXT STABLE AS $$
+DECLARE
+    col_name TEXT;
+    table_name TEXT;
+    query TEXT := '';
+    value TEXT;
+    tmp TEXT;
+BEGIN
+    -- Returns all distinct values for a particular level of a particular
+    -- dimension across all population tables supporting that dimension
+
+    -- First, find column name
+    SELECT dim_cols[my_level] FROM population.population_dimensions WHERE dim_name = my_dim_name INTO col_name;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Couldn''t find column for dimension called %, level %', my_dim_name, my_level;
+    END IF;
+
+    -- Now, find tables containing that column
+    FOR table_name IN 
+        SELECT
+            ppt.table_name
+        FROM
+            population.population_tables ppt
+            JOIN information_schema.columns isc
+                ON (
+                    isc.table_name = ppt.table_name AND
+                    isc.table_schema = 'population'
+                )
+        WHERE
+            isc.column_name = col_name
+    LOOP
+        IF query != '' THEN
+            query := query || ' UNION ALL ';
+        END IF;
+        query := query || '(SELECT ' || col_name || '::TEXT AS res FROM population.' || table_name || ')';
+    END LOOP; -- Tables containing the dimension we want
+
+    IF query = '' THEN
+        RAISE EXCEPTION 'Found no tables containing the dimension %', my_dim_name;
+    END IF;
+    
+    tmp := query;
+    query := 'SELECT DISTINCT res FROM ( ' || tmp || ' ) f ORDER BY res';
+
+    RAISE DEBUG 'getting distinct values for dimension % level % using this query: %', my_dim_name, my_level, query;
+    FOR value IN EXECUTE query LOOP
+        RETURN NEXT value;
+    END LOOP; -- Results loop
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW population.population_years AS
+    SELECT 1 AS id, d.year AS year
+    FROM population.distinct_dimension_values('Year'::text, 1) d(year); 
 
 COMMIT;
 

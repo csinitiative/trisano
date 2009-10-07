@@ -23,7 +23,7 @@
             </Hierarchy>
         </Dimension>
 		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+			<Hierarchy name="Date" hasAll="true" allMemberName="All Disease Diagnosis Dates" primaryKey="fulldate">
 				<Table name="dw_date_dimension_view" schema="trisano"></Table>
 				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
 				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
@@ -31,7 +31,7 @@
 			</Hierarchy>
 		</Dimension>
 		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true" primaryKey="fulldate">
 				<Table name="dw_date_dimension_view" schema="trisano"></Table>
 				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
 				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
@@ -39,13 +39,13 @@
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
-            <Hierarchy hasAll="true">
+            <Hierarchy hasAll="true" allMemberName="All Jurisdictions">
                 <Level type="String" name="Jurisdiction" column="investigating_jurisdiction"></Level>
                 <Level type="String" name="Investigator" column="investigator"></Level>
             </Hierarchy>
         </Dimension>
-        <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease">
-            <Hierarchy name="Disease" hasAll="true" primaryKey="id">
+        <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease" allMemberName="All Diseases">
+            <Hierarchy hasAll="true" primaryKey="id">
                 <Table name="diseases_view" schema="trisano"></Table>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
             </Hierarchy>
@@ -71,6 +71,12 @@
                     <Table name="dw_morbidity_patients_races_view" schema="trisano" />
                 </Join>
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_morbidity_patients_races_view" />
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Population Year" foreignKey="always_one" allMemberName="All Population Years">
+            <Hierarchy primaryKey="id" hasAll="true">
+                <Table schema="population" name="population_years" />
+                <Level name="Population Year" column="year" type="String" />
             </Hierarchy>
         </Dimension>
         <!-- Measures -->
@@ -323,7 +329,7 @@
             </Hierarchy>
         </Dimension>
 		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Diagnosis Dates">
 				<Table name="dw_date_dimension_view" schema="trisano"></Table>
 				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
 				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
@@ -331,7 +337,7 @@
 			</Hierarchy>
 		</Dimension>
 		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate">
+			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Onset Dates">
 				<Table name="dw_date_dimension_view" schema="trisano"></Table>
 				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
 				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
@@ -339,13 +345,13 @@
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
-            <Hierarchy hasAll="true">
+            <Hierarchy hasAll="true" allMemberName="All Jurisdictions">
                 <Level type="String" name="Jurisdiction" column="investigating_jurisdiction"></Level>
                 <Level type="String" name="Investigator" column="investigator"></Level>
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease">
-            <Hierarchy name="Disease" hasAll="true" primaryKey="id">
+            <Hierarchy name="Disease" hasAll="true" primaryKey="id" allMemberName="All Diseases">
                 <Table name="diseases_view" schema="trisano"></Table>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
             </Hierarchy>
@@ -357,6 +363,12 @@
                     <Table name="dw_contact_patients_races_view" schema="trisano" />
                 </Join>
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_contact_patients_races_view" />
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Population Year" foreignKey="always_one" allMemberName="All Population Years">
+            <Hierarchy primaryKey="id" hasAll="true">
+                <Table schema="population" name="population_years" />
+                <Level name="Population Year" column="year" type="String" />
             </Hierarchy>
         </Dimension>
         <!-- Measures -->

@@ -265,5 +265,6 @@ INSERT INTO population_dimensions VALUES ('Age', '{age_group,age}', NULL);
 INSERT INTO population_dimensions VALUES ('Ethnicity', '{ethnicity}', NULL);
 INSERT INTO population_dimensions VALUES ('Race', '{race}', NULL);
 INSERT INTO population_dimensions VALUES ('Gender', '{sex}', NULL);
+INSERT INTO population_dimensions VALUES ('Year', '{year}', NULL);
 
 COMMIT;
