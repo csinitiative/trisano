@@ -42,20 +42,20 @@ Arbovirus:
     - :organism_name: Snowshoe hare virus
     - :organism_name: Trivittatus virus
   :diseases:
-    - :disease_name: Cache Valley virus neuroinvasive
-    - :disease_name: Cache Valley virus non-neuroinvasive
-    - :disease_name: California serogroup virus neuroinvasive
-    - :disease_name: California serogroup virus non-neuroinvasive
+    - :disease_name: Cache Valley virus neuroinvasive disease
+    - :disease_name: Cache Valley virus non-neuroinvasive disease
+    - :disease_name: California serogroup virus neuroinvasive disease
+    - :disease_name: California serogroup virus non-neuroinvasive disease
     - :disease_name: Dengue
-    - :disease_name: Dengue hemorrhagic fever
-    - :disease_name: Eastern equine encephalitis virus neuroinvasive
-    - :disease_name: Eastern equine encephalitis virus non-neuroinvasive
-    - :disease_name: Japanese encephalitis virus neuroinvasive
-    - :disease_name: Japanese encephalitis virus non-neuroinvasive
+    - :disease_name: Dengue Hemorrhagic Fever
+    - :disease_name: Eastern equine encephalitis virus neuroinvasive disease
+    - :disease_name: Eastern equine encephalitis virus non-neuroinvasive disease
+    - :disease_name: Japanese encephalitis virus neuroinvasive disease
+    - :disease_name: Japanese encephalitis virus non-neuroinvasive disease
     - :disease_name: Powassan virus neuroinvasive disease
     - :disease_name: Powassan virus non-neuroinvasive disease
-    - :disease_name: St. Louis encephalitis virus neuroinvasive
-    - :disease_name: St. Louis encephalitis virus non-neuroinvasive
+    - :disease_name: St. Louis encephalitis virus neuroinvasive disease
+    - :disease_name: St. Louis encephalitis virus non-neuroinvasive disease
     - :disease_name: Venezuelan equine encephalitis virus neuroinvasive disease
     - :disease_name: Venezuelan equine encephalitis virus non-neuroinvasive disease
     - :disease_name: Western equine encephalitis virus neuroinvasive disease
@@ -96,13 +96,13 @@ Glanders:
   :organisms:
     - :organism_name: Burkholderia mallei
   :diseases:
-    - :disease_name: Glanders (B. mallei)
+    - :disease_name: Glanders (Burkholderia mallei)
 
 Melioidosis:
   :organisms:
     - :organism_name: Burkholderia pseudomallei
   :diseases:
-    - :disease_name: Melioidosis (B. pseudomallei)
+    - :disease_name: Melioidosis (Burkholderia pseudomallei)
 
 Campylobacteriosis:
   :organisms:
@@ -125,28 +125,28 @@ Chancroid:
   :diseases:
     - :disease_name: Chancroid
 
-Chickenpox:
+Chickenpox (Varicella):
   :organisms:
     - :organism_name: Varicella-zoster virus
   :diseases:
-    - :disease_name: Chickenpox
+    - :disease_name: Chickenpox (Varicella)
 
-Chlamydia:
+Chlamydia trachomatis infection:
   :organisms:
-    - :organism_name: Chlamydia species
-    - :organism_name: Chlamydia trachomatis
-    - :organism_name: Chlamydia trachomatis, serotype A 
-    - :organism_name: Chlamydia trachomatis, serotype B 
-    - :organism_name: Chlamydia trachomatis, serotype Ba 
-    - :organism_name: Chlamydia trachomatis, serotype C 
-    - :organism_name: Chlamydia trachomatis, serotype D 
-    - :organism_name: Chlamydia trachomatis, serotype E 
-    - :organism_name: Chlamydia trachomatis, serotype F 
-    - :organism_name: Chlamydia trachomatis, serotype I 
-    - :organism_name: Chlamydia trachomatis, serotype J 
-    - :organism_name: Chlamydia trachomatis, serotype K 
+    - :organism_name: Chlamydia trachomatis infection species
+    - :organism_name: Chlamydia trachomatis infection trachomatis
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype A 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype B 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype Ba 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype C 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype D 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype E 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype F 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype I 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype J 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype K 
   :diseases:
-    - :disease_name: Chlamydia
+    - :disease_name: Chlamydia trachomatis infection
 
 Cholera:
   :organisms:
@@ -176,14 +176,14 @@ Colorado Tick Fever:
   :diseases:
     - :disease_name: Colorado Tick Fever
 
-CJD:
+Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies:
   :organisms:
     - :organism_name: Human spongiform encephalopathy agent
     - :organism_name: Creutzfeldt-Jacob agent
     - :organism_name: Gerstmann-Straussler syndrome agent
     - :organism_name: Kuru Agent
   :diseases:
-    - :disease_name: CJD
+    - :disease_name: Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies
 
 Cryptosporidium:
   :organisms:
@@ -207,20 +207,20 @@ Diphtheria:
 
 Echinococcosis:
   :organisms:
-    - :organism_name: Echinococcus species
+    - :organism_name: Echinococcosis species
   :diseases:
-    - :disease_name: Echinococcus
+    - :disease_name: Echinococcosis
 
 Ehrlichiosis:
   :organisms:
-    - :organism_name: Anaplasma phagocytophilum
-    - :organism_name: Ehrlichia chaffeensis
+    - :organism_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
+    - :organism_name: Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis
     - :organism_name: Ehrlichia ewingii
   :diseases:
-    - :disease_name: Anaplasma phagocytophilum
-    - :disease_name: Ehrlichia chaffeensis
+    - :disease_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
+    - :disease_name: Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis
     - :disease_name: Ehrlichia ewingii
-    - :disease_name: Ehrlichiosis/Anaplasmosis
+    - :disease_name: Ehrlichiosis/Anaplasmosis, undetermined
 
 Giardiasis:
   :organisms:
@@ -240,34 +240,34 @@ Granuloma Inguinale:
   :organisms:
     - :organism_name: Donovania granulomatis
   :diseases:
-    - :disease_name: Granuloma inguinale
+    - :disease_name: Granuloma inguinale (GI)
 
-Haemophilus influenzae:
+Haemophilus influenzae, invasive disease:
   :organisms:
-    - :organism_name: Haemophilus influenzae
-    - :organism_name: Haemophilus influenzae, non-typable
-    - :organism_name: Haemophilus influenzae, type A
-    - :organism_name: Haemophilus influenzae, type B
-    - :organism_name: Haemophilus influenzae, type D
-    - :organism_name: Haemophilus influenzae, type E
-    - :organism_name: Haemophilus influenzae, type F
+    - :organism_name: Haemophilus influenzae, invasive disease
+    - :organism_name: Haemophilus influenzae, invasive disease, non-typable
+    - :organism_name: Haemophilus influenzae, invasive disease, type A
+    - :organism_name: Haemophilus influenzae, invasive disease, type B
+    - :organism_name: Haemophilus influenzae, invasive disease, type D
+    - :organism_name: Haemophilus influenzae, invasive disease, type E
+    - :organism_name: Haemophilus influenzae, invasive disease, type F
   :diseases:
-    - :disease_name: Haemophilus influenzae
+    - :disease_name: Haemophilus influenzae, invasive disease
 
 Hansen Disease:
   :organisms:
     - :organism_name: Mycobacterium leprae
   :diseases:
-    - :disease_name: "Hansen's disease"
+    - :disease_name: "Hansen's disease (Leprosy)"
 
-Hantavirus:
+Hantavirus Infection:
   :organisms:
-    - :organism_name: Hantavirus species
-    - :organism_name: Hantavirus (Sin Nombre)
-    - :organism_name: Hantavirus (Puumala)
+    - :organism_name: Hantavirus Infection species
+    - :organism_name: Hantavirus Infection (Sin Nombre)
+    - :organism_name: Hantavirus Infection (Puumala)
   :diseases:
-    - :disease_name: Hantavirus
-    - :disease_name: Hantavirus pulmonary syndrome
+    - :disease_name: Hantavirus Infection
+    - :disease_name: Hantavirus Pulmonary Syndrome
 
 Hepatitis A:
   :organisms:
@@ -279,26 +279,26 @@ Hepatitis B:
   :organisms:
     - :organism_name: Hepatitis B virus
   :diseases:
-    - :disease_name: Hepatitis B acute
-    - :disease_name: Hepatitis B infection chronic
-    - :disease_name: Hepatitis B infection perinatal
+    - :disease_name: Hepatitis B, acute
+    - :disease_name: Hepatitis B virus infection, chronic
+    - :disease_name: Hepatitis B virus infection, perinatal
 
 Hepatitis C:
   :organisms:
     - :organism_name: Hepatitis C virus
   :diseases:
     - :disease_name: Hepatitis C, acute
-    - :disease_name: Hepatitis C, past or present
+    - :disease_name: Hepatitis C virus infection, past or present
 
-Hepatitis other:
+Hepatitis, viral other:
   :organisms:
     - :organism_name: Hepatitis G virus
-    - :organism_name: Hepatitis D virus
-    - :organism_name: Hepatitis E virus
+    - :organism_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D) virus
+    - :organism_name: Hepatitis E, acute virus
   :diseases:
-    - :disease_name: Hepatitis D
-    - :disease_name: Hepatitis E
-    - :disease_name: Hepatitis other
+    - :disease_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D)
+    - :disease_name: Hepatitis E, acute
+    - :disease_name: Hepatitis, viral other
 
 Influenza:
   :organisms:
@@ -310,8 +310,8 @@ Influenza:
     - :organism_name: Influenza B
   :diseases:
     - :disease_name: Influenza activity
-    - :disease_name: Influenza A, novel virus
-    - :disease_name: Influenza-associated death in person under 18
+    - :disease_name: Influenza A, Novel Virus
+    - :disease_name: Influenza-associated death in a person under 18
     - :disease_name: Influenza-associated hospitalization
 
 Legionellosis:
@@ -351,10 +351,10 @@ Lyme Disease:
 
 LGV:
   :organisms:
-    - :organism_name: Chlamydia trachomatis, serotype L2 
-    - :organism_name: Chlamydia trachomatis, serotype L 
-    - :organism_name: Chlamydia trachomatis, serotype L1 
-    - :organism_name: Chlamydia trachomatis, serotype L3
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L2 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L1 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L3
   :diseases:
     - :disease_name: Lymphogranuloma venereum (LGV)
 
@@ -368,18 +368,18 @@ Malaria:
   :diseases:
     - :disease_name: Malaria
 
-Measles:
+Measles (rubeola):
   :organisms:
-    - :organism_name: Measles virus
+    - :organism_name: Measles (rubeola) virus
   :diseases:
-    - :disease_name: Measles
+    - :disease_name: Measles (rubeola)
 
 Meningitis:
   :organisms:
     - :organism_name: Cryptococcus species
   :diseases:
-    - :disease_name: Meningitis, aseptic
-    - :disease_name: Meningitis, Bacterial other
+    - :disease_name: Meningitis, Aseptic
+    - :disease_name: Meningitis, Bacterial Other
     - :disease_name: Meningitis, Viral
 
 Meningococcus:
@@ -392,7 +392,7 @@ Meningococcus:
     - :organism_name: Neisseria meningitidis group W135
     - :organism_name: Neisseria meningitidis, non-typable
   :diseases:
-    - :disease_name: Meningococcal disease
+    - :disease_name: Meningococcal disease (Neisseria meningitidis)
 
 Mumps:
   :organisms:
@@ -431,8 +431,8 @@ Polio:
 
 Psittacosis:
   :organisms:
-    - :organism_name: Chlamydia species
-    - :organism_name: Chlamydia psittaci
+    - :organism_name: Chlamydia trachomatis infection species
+    - :organism_name: Chlamydia trachomatis infection psittaci
   :diseases:
     - :disease_name: Psittacosis
 
@@ -442,8 +442,8 @@ Q fever:
     - :organism_name: Coxiella burnetii phase I
     - :organism_name: Coxiella burnetii phase 2
   :diseases:
-    - :disease_name: Q fever acute
-    - :disease_name: Q fever chronic
+    - :disease_name: Q fever, acute
+    - :disease_name: Q fever, chronic
 
 Rabies:
   :organisms:
@@ -459,21 +459,21 @@ Relapsing Fever:
     - :organism_name: Borrelia parkerii
     - :organism_name: Borrelia turicatae
   :diseases:
-    - :disease_name: Relapsing fever
+    - :disease_name: Relapsing Fever
 
 Rocky Mountain Spotted Fever:
   :organisms:
     - :organism_name: Rickettsia rickettsii
     - :organism_name: Rickettsia spotted fever group
   :diseases:
-    - :disease_name: Rocky mountain spotted fever
+    - :disease_name: Rocky Mountain Spotted Fever
 
 Rubella:
   :organisms:
     - :organism_name: Rubella virus
   :diseases:
     - :disease_name: Rubella
-    - :disease_name: Rubella congenital syndrome
+    - :disease_name: Rubella, congenital syndrome
 
 Salmonella:
   :organisms:
@@ -623,11 +623,11 @@ Salmonella:
   :diseases:
     - :disease_name: Salmonellosis
 
-SARS Coronavirus:
+Severe Acute Respiratory Syndrome (SARS) Coronavirus:
   :organisms:
-    - :organism_name: SARS coronavirus
+    - :organism_name: Severe Acute Respiratory Syndrome (SARS) coronavirus
   :diseases:
-    - :disease_name: SARS
+    - :disease_name: Severe Acute Respiratory Syndrome (SARS)
 
 Shigella:
   :organisms:
@@ -644,50 +644,50 @@ Smallpox:
     - :organism_name: Variola virus
   :diseases:
     - :disease_name: Smallpox
-    - :disease_name: Smallpox vaccine associated adverse event
+    - :disease_name: Smallpox Vaccine-Associated Adverse Event
 
 Staph aureus resistance:
   :organisms:
     - :organism_name: Staphylococcus aureus, vancomycin resistant
   :diseases:
-    - :disease_name: VRSA
-    - :disease_name: VISA
+    - :disease_name: Vancomycin-resistant Staphylococcus aureus (VRSA)
+    - :disease_name: Vancomycin-intermediate Staphylococcus aureus (VISA)
 
-STEC:
+Shiga toxin-producing Escherichia coli (STEC):
   :organisms:
     - :organism_name: Shiga toxin
-    - :organism_name: Enterohemorrhagic Escherichia coli (STEC)
+    - :organism_name: Enterohemorrhagic Escherichia coli (Shiga toxin-producing Escherichia coli (STEC))
     - :organism_name: Escherichia coli O157:H7
     - :organism_name: Escherichia coli O157:non-motile
     - :organism_name: Escherichia coli serogroup O121:H19
   :diseases:
-    - :disease_name: STEC
+    - :disease_name: Shiga toxin-producing Escherichia coli (STEC)
 
 Group A Strep:
   :organisms:
     - :organism_name: Group A strep (Streptococcus pyogenes)
   :diseases:
-    - :disease_name: Streptococcal disease, Group A
+    - :disease_name: Streptococcal disease, invasive, Group A
 
 Group B Strep:
   :organisms:
     - :organism_name: Group B strep (Streptococcus agalactiae)
   :diseases:
-    - :disease_name: Streptococcal disease, Group B
+    - :disease_name: Streptococcal disease, invasive, Group B
 
 Group C and G Strep:
   :organisms:
     - :organism_name: Group C strep
     - :organism_name: Group G strep
   :diseases:
-    - :disease_name: Streptococcal disease, Group C and G
+    - :disease_name: Streptococcal disease, invasive, Groups C & G
 
 Streptococcus pneumoniae:
   :organisms:
     - :organism_name: Streptococcus pneumoniae
   :diseases:
     - :disease_name: Streptococcus pneumoniae, invasive disease
-    - :disease_name: Streptococcus pneumoniae, <5, drug susceptible
+    - :disease_name: Streptococcus pneumoniae, invasive disease, < 5 (drug susceptible)
 
 Syphilis:
   :organisms:
@@ -731,10 +731,10 @@ Tuberculosis:
     - :organism_name: Mycobacterium gordonae
     - :organism_name: Mycobacterium smegmatis
   :diseases:
-    - :disease_name: Tuberculosis, active
+    - :disease_name: Tuberculosis, Active
     - :disease_name: Tuberculosis, B1
     - :disease_name: Tuberculosis, B2
-    - :disease_name: Tuberculosis, LTBI
+    - :disease_name: Tuberculosis, Latent  Infection (LTBI)
     - :disease_name: Tuberculosis, suspect
 
 Tularemia:
@@ -743,13 +743,13 @@ Tularemia:
   :diseases:
     - :disease_name: Tularemia
 
-Typhoid:
+Typhoid (cases and carriers; caused by Salmonella typhi):
   :organisms:
     - :organism_name: Salmonella typhi
   :diseases:
-    - :disease_name: Typhoid
+    - :disease_name: Typhoid (cases and carriers; caused by Salmonella typhi)
 
-Vibriosis:
+Vibriosis (non-cholera Vibrio species infections):
   :organisms:
     - :organism_name: Vibrio species
     - :organism_name: Vibrio parahemolyticus
@@ -758,34 +758,22 @@ Vibriosis:
     - :organism_name: Vibrio fluvialis
     - :organism_name: Vibrio cholerae non O1/nonO139
   :diseases:
-    - :disease_name: Vibriosis
-
-Viral hemorrhagic fever:
-  :organisms:
-    - :organism_name: Crimean-Congo hemorrhagic fever virus
-    - :organism_name: Ebola virus
-    - :organism_name: Lassa fever virus
-    - :organism_name: Marburg virus
-    - :organism_name: Hendra virus
-    - :organism_name: Nipah virus
-    - :organism_name: Rift Valley fever virus
-  :diseases:
-    - :disease_name: Viral hemorrhagic fever
+    - :disease_name: Vibriosis (non-cholera Vibrio species infections)
 
 West Nile virus:
   :organisms:
     - :organism_name: West Nile virus
     - :organism_name: Kunjin virus
   :diseases:
-    - :disease_name: West Nile neuroinvasive disease
-    - :disease_name: West Nile non-neuroinvasive disease
+    - :disease_name: West Nile virus neuroinvasive disease
+    - :disease_name: West Nile virus non-neuroinvasive disease
 
 Yellow Fever:
   :organisms:
-    - :organism_name: Yellow fever virus group
+    - :organism_name: Yellow Fever virus group
     - :organism_name: Yellow Fever virus
   :diseases:
-    - :disease_name: Yellow fever
+    - :disease_name: Yellow Fever
 
 Yersiniosis:
   :organisms:
