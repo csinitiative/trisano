@@ -149,32 +149,14 @@ namespace :trisano do
         Hpricot.buffer_size = 65536
         #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new
-        agent.basic_auth('utah', 'arches')
         agent.read_timeout = 300
         #agent.set_proxy("localhost", "8118")
 
-        puts "POST CMR to #{TRISANO_URL}/trisano/cmrs/new"
-        new_event_url = TRISANO_URL + '/trisano/cmrs/new'
-        page = agent.get(new_event_url)
-        form = page.forms[1]
-        #form.fields.each { |f| puts f.name }
+        puts "GET / to #{TRISANO_URL}/trisano/"
+        url = TRISANO_URL + '/trisano'
+        page = agent.get(url)
 
-        # Set minimal values
-        form['morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][first_name]'] =  'Steve'
-        form['morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][last_name]'] = 'Smoker'
-
-        # Hack Mechanize to send some blank drop values so Rails doesn't have a fit
-        # Firefox sends these as blanks, but mechanize doesn't so I have to do it manually
-        form.add_field!("morbidity_event[disease_event_attributes][disease_id]", "")
-        form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][birth_gender_id]", "")
-        form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][ethnicity_id]", "")
-        form.add_field!("morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][primary_language_id]", "")
-        form.add_field!("morbidity_event[address_attributes][state_id]", "")
-        form.add_field!("morbidity_event[address_attributes][county_id]", "")
-        form.add_field!("morbidity_event[jurisdiction_attributes][secondary_entity_id]", "1")
-
-        page = agent.submit form
-        raise "POST content invalid" unless (page.search("//#errorExplanation")).empty?
+        raise "GET content invalid" unless (page.search("//#errorExplanation")).empty?
 
         puts "smoke test success"
       rescue => error
