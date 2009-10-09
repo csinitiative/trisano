@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS newpop;
 DROP TABLE IF EXISTS racecombined;
 
 CREATE TABLE newpop_src (
-    year integer,
+    year text,
     popcount integer,
     age integer,
     rescnty integer,
@@ -53,7 +53,7 @@ CREATE TABLE newpop_src (
 
 CREATE TABLE racecombined_src (
     fips integer,
-    year integer,
+    year text,
     agegrp integer,
     popcount integer,
     sex integer,
@@ -153,7 +153,7 @@ CREATE TABLE newpop AS
         JOIN dist_map dm
             ON (dm.a = dist)
     WHERE
-        year = 2007
+        year = '2007'
 ;
 
 CREATE OR REPLACE FUNCTION get_age_group(INTEGER) RETURNS TEXT IMMUTABLE AS $$
@@ -240,7 +240,7 @@ CREATE TABLE racecombined AS
         JOIN dist_map
             ON (dist_map.a = dist)
     WHERE
-        year = 2007
+        year = '2007'
 ;
 
 DROP TABLE newpop_src;
@@ -260,11 +260,11 @@ GRANT SELECT ON racecombined TO trisano_ro;
 
 TRUNCATE TABLE population_dimensions;
 
-INSERT INTO population_dimensions VALUES ('Investigating Jurisdiction', '{jurisdiction}', NULL);
-INSERT INTO population_dimensions VALUES ('Age', '{age_group,age}', NULL);
-INSERT INTO population_dimensions VALUES ('Ethnicity', '{ethnicity}', NULL);
-INSERT INTO population_dimensions VALUES ('Race', '{race}', NULL);
-INSERT INTO population_dimensions VALUES ('Gender', '{sex}', NULL);
-INSERT INTO population_dimensions VALUES ('Year', '{year}', NULL);
+INSERT INTO population_dimensions VALUES ('Investigating Jurisdiction', '{jurisdiction}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Age', '{age_group,age}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Ethnicity', '{ethnicity}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Race', '{race}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Gender', '{sex}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Population Year', '{year}', NULL, true);
 
 COMMIT;

@@ -58,7 +58,7 @@ public class GetPopulation implements UserDefinedFunction {
         try {
             conn = evaluator.getQuery().getConnection().getDataSource().getConnection();
             PreparedStatement st =
-                conn.prepareStatement("SELECT dim_cols[?], mapping_func[?] FROM population.population_dimensions WHERE dim_name = ?");
+                conn.prepareStatement("SELECT dim_cols[?], mapping_func[?], required FROM population.population_dimensions WHERE dim_name = ?");
 
             // Get data on all necessary dimensions
             for (Dimension d : evaluator.getCube().getDimensions()) {
@@ -72,21 +72,29 @@ public class GetPopulation implements UserDefinedFunction {
                 st.setInt(2, depth);
                 st.setString(3, d.getName());
                 rs = st.executeQuery();
-                if (rs.next() && depth != 0) {
-                    // rs.next() is true only if it returned something, or in
-                    // other words, only when this dimension is important to
-                    // us. We also only care when depth is nonzero
-                    dimhash.put("name", d.getName());
-                    dimhash.put("depth", depth.toString());
-                    dimhash.put("value", evaluator.getContext(d).getName());
-                    dimhash.put("column", rs.getString(1));
-                    dimhash.put("mapper", rs.getString(2));
-                    dimensions.add(dimhash);
-                    if (! column_names.equals(""))
-                        column_names += ", ";
-                    column_names += "'" + dimhash.get("column") + "'";
-                    logger.info("Dimension " + d.getName() + " is useful, so keeping. Column: " + dimhash.get("column") + "\tMapper: " + dimhash.get("mapper"));
-                    logger.debug("column names list now == " + column_names);
+                if (rs.next()) {
+                    if (depth != 0) {
+                        // rs.next() is true only if it returned something, or in
+                        // other words, only when this dimension is important to
+                        // us. Nonzero depth means the user has selected a level of this
+                        // dimension
+                        dimhash.put("name", d.getName());
+                        dimhash.put("depth", depth.toString());
+                        dimhash.put("value", evaluator.getContext(d).getName());
+                        dimhash.put("column", rs.getString(1));
+                        dimhash.put("mapper", rs.getString(2));
+                        dimensions.add(dimhash);
+                        if (! column_names.equals(""))
+                            column_names += ", ";
+                        column_names += "'" + dimhash.get("column") + "'";
+                        logger.info("Dimension " + d.getName() + " is useful, so keeping. Column: " + dimhash.get("column") + "\tMapper: " + dimhash.get("mapper"));
+                        logger.debug("column names list now == " + column_names);
+                    }
+                    else if (rs.getBoolean(3)) {
+                        // If depth is zero but required is true, return nothing,
+                        // because the user hasn't specified all required values to get a population
+                        throw this.new GetPopulationException("Dimension " + d.getName() + " unspecified, but required for population data output");
+                    }
                 }
             }
 

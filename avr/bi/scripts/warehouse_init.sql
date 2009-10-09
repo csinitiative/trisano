@@ -1518,7 +1518,8 @@ GRANT SELECT ON population_tables TO trisano_ro;
 CREATE TABLE population_dimensions (
     dim_name text NOT NULL,
     dim_cols text[],
-    mapping_func text[]
+    mapping_func text[],
+    required boolean default false
 );
 
 GRANT SELECT ON population_dimensions TO trisano_ro;
@@ -1531,16 +1532,16 @@ ALTER TABLE ONLY population_tables
     ADD CONSTRAINT population_tables_table_rank_key UNIQUE (table_rank);
 
 INSERT INTO population_dimensions VALUES
-    ('Investigating Jurisdiction', ARRAY['jurisdiction'], NULL),
-    ('Race',                       ARRAY['race'],         NULL),
-    ('Year',                       ARRAY['year'],         NULL);
+    ('Investigating Jurisdiction', ARRAY['jurisdiction'], NULL, false),
+    ('Race',                       ARRAY['race'],         NULL, false),
+    ('Population Year',            ARRAY['year'],         NULL, true);
 
 DROP TABLE IF EXISTS population;
 
 CREATE TABLE population (
     race TEXT,
     jurisdiction TEXT,
-    year INTEGER,
+    year TEXT,
     population INTEGER
 );
 
@@ -1600,7 +1601,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE VIEW population.population_years AS
     SELECT 1 AS id, d.year AS year
-    FROM population.distinct_dimension_values('Year'::text, 1) d(year); 
+    FROM population.distinct_dimension_values('Population Year'::text, 1) d(year); 
 
 COMMIT;
 

@@ -61,7 +61,7 @@ SELECT
         WHEN race = 'Asian or Pacific Islander' THEN 'Asian'
         ELSE race
     END AS race,
-    :TRISANO_POP_YEAR AS year,
+    :TRISANO_POP_YEAR::TEXT AS year,
     CASE
         WHEN race = 'American Indian or Alaska Native' THEN
             floor(population * (SELECT percentage FROM percentages WHERE race = 'American Indian') / 100)
