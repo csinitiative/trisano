@@ -29,6 +29,10 @@ class Organism < ActiveRecord::Base
   has_many :diseases_organisms
   has_many :diseases, :through => :diseases_organisms
 
+  named_scope :all_by_name, lambda { |name|
+    { :conditions => ['lower(organism_name) = ?', name.downcase] }
+  }
+
   private
 
   def strip_organism_name

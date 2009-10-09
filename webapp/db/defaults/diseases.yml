@@ -1,449 +1,2068 @@
-
-- disease_name: "African Tick Bite Fever"
-  cdc_code: 
-    
-- disease_name: "AIDS"
-  cdc_code: "10560"
-    
-- disease_name: "Amebiasis"
-  cdc_code: "11040"
-
-- disease_name: "Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis"
-  cdc_code: 
-
-- disease_name: "Anthrax"
-  cdc_code: "10350"
-
-- disease_name: "Aseptic meningitis"
-  cdc_code: "10010"
-
-- disease_name: "Bacterial meningitis, other"
-  cdc_code: "10650"
-
-- disease_name: "Botulism, foodborne"
-  cdc_code: 
-
-- disease_name: "Botulism, infant"
-  cdc_code: 
-
-- disease_name: "Botulism, other (includes wound)"
-  cdc_code: 
-
-- disease_name: "Botulism, other unspecified"
-  cdc_code: 
-
-- disease_name: "Botulism, wound"
-  cdc_code: 
-
-- disease_name: "Brucellosis"
-  cdc_code: "10020"
-
-- disease_name: "Cache Valley virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Cache Valley virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "California serogroup virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "California serogroup virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Campylobacteriosis"
-  cdc_code: "11020"
-
-- disease_name: "Chancroid"
-  cdc_code: "10273"
-
-- disease_name: "Chlamydia trachomatis infection"
-  cdc_code: 10274
-
-- disease_name: "Cholera"
-  cdc_code: 
-
-- disease_name: Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies
-  cdc_code:
-
-- disease_name: "Coccidioidomycosis"
-  cdc_code: 
-
-- disease_name: Colorado Tick Fever
-  cdc_code:
-
-- disease_name: "Cryptosporidiosis"
-  cdc_code: "11580"
-
-- disease_name: "Cyclosporiasis"
-  cdc_code: "11575"
-
-- disease_name: "Dengue"
-  cdc_code: 
-
-- disease_name: "Dengue Hemorrhagic Fever"
-  cdc_code: "10685"
-
-- disease_name: "Diphtheria"
-  cdc_code: "10040"
-
-- disease_name: "Eastern equine encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Eastern equine encephalitis virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: Echinococcosis
-  cdc_code:
-
-- disease_name: "Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis"
-  cdc_code: 
-
-- disease_name: "Ehrlichia ewingii"
-  cdc_code: 
-
-- disease_name: "Ehrlichiosis/Anaplasmosis, undetermined"
-  cdc_code: 
-
-- disease_name: "Encephalitis, post-chickenpox"
-  cdc_code: 
-
-- disease_name: "Encephalitis, post-mumps"
-  cdc_code: "10080"
-
-- disease_name: "Encephalitis, post-other"
-  cdc_code: "10090"
-
-- disease_name: "Encephalitis, primary"
-  cdc_code: "10050"
-
-- disease_name: "Flu activity code (Influenza)"
-  cdc_code: 
-
-- disease_name: "Giardiasis"
-  cdc_code: 
-
-- disease_name: Glanders (Burkholderia mallei)
-  cdc_code:
-
-- disease_name: "Gonorrhea"
-  cdc_code: 10280
-
-- disease_name: "Granuloma inguinale (GI)"
-  cdc_code: 
-
-- disease_name: "Haemophilus influenzae, invasive disease"
-  cdc_code: 10590
-
-- disease_name: "Hansen's disease (Leprosy)"
-  cdc_code: 
-
-- disease_name: "Hantavirus Infection"
-  cdc_code: 
-
-- disease_name: "Hantavirus Pulmonary Syndrome"
-  cdc_code: 
-
-- disease_name: "Hemolytic uremic syndrome postdiarrheal"
-  cdc_code: 
-
-- disease_name: "Hepatitis A"
-  cdc_code: "10110"
-
-- disease_name: "Hepatitis B virus infection, chronic"
-  cdc_code: "10105"
-
-- disease_name: "Hepatitis B, acute"
-  cdc_code: "10100"
-
-- disease_name: "Hepatitis B virus infection, perinatal"
-  cdc_code: "10104"
-
-- disease_name: "Hepatitis C virus infection, past or present"
-  cdc_code: "10106"
-
-- disease_name: "Hepatitis C, acute"
-  cdc_code: "10101"
-
-- disease_name: "Hepatitis Delta co- or super-infection, acute (Hepatitis D)"
-  cdc_code: "10102"
-
-- disease_name: "Hepatitis E, acute"
-  cdc_code: "10103"
-
-- disease_name: "Hepatitis, viral other"
-  cdc_code: "10120"
-
-- disease_name: "HIV Infection, adult"
-  cdc_code: 
-
-- disease_name: "HIV Infection, pediatric"
-  cdc_code: 
-
-- disease_name: "Human T-Lymphotropic virus type I infection (HTLV-I)"
-  cdc_code: 
-
-- disease_name: "Human T-Lymphotropic virus type II infection (HTLV-II)"
-  cdc_code: 
-
-- disease_name: "Influenza activity"
-  cdc_code: 
-
-- disease_name: Influenza-associated death in a person under 18
-  cdc_code: 
-
-- disease_name: Influenza-associated hospitalization
-  cdc_code:
-
-
-- disease_name: "Japanese encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Japanese encephalitis virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Lead poisoning"
-  cdc_code: "32010"
-
-- disease_name: "Legionellosis"
-  cdc_code: "10490"
-
-- disease_name: "Listeriosis"
-  cdc_code: 10640
-
-- disease_name: "Lyme disease"
-  cdc_code: 11080
-
-- disease_name: "Lymphogranuloma venereum (LGV)"
-  cdc_code: 10306
-
-- disease_name: "Malaria"
-  cdc_code: "10130"
-
-- disease_name: "Measles (rubeola)"
-  cdc_code: 10140
-
-- disease_name: "Meningitis, Aseptic"
-  cdc_code:
-
-- disease_name: "Meningitis, Bacterial Other"
-  cdc_code:
-
-- disease_name: "Meningitis, Viral"
-  cdc_code:
-
-- disease_name: "Meningococcal disease (Neisseria meningitidis)"
-  cdc_code: 10150
-
-- disease_name: "Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)"
-  cdc_code: 
-
-- disease_name: "Monkeypox"
-  cdc_code: 
-
-- disease_name: "Mucopurulent cervicitis (MPC)"
-  cdc_code: 
-
-- disease_name: "Mumps"
-  cdc_code: "10180"
-
-- disease_name: "Syphilis, neurosyphilis"
-  cdc_code: "10317"
-
-- disease_name: "Nongonococcal urethritis (NGU)"
-  cdc_code: 10307
-
-- disease_name: "Norovirus"
-  cdc_code:
-
-- disease_name: Influenza A, Novel Virus
-  cdc_code:
-
-- disease_name: Melioidosis (Burkholderia pseudomallei)
-  cdc_code:
-
-- disease_name: "Pelvic Inflammatory Disease (PID), Unknown Etiology"
-  cdc_code: 10309
-
-- disease_name: "Pertussis"
-  cdc_code: "10190"
-
-- disease_name: "Plague"
-  cdc_code: "10440"
-
-- disease_name: "Poliomyelitis, paralytic"
-  cdc_code: 
-
-- disease_name: "Poliovirus infection, nonparalytic"
-  cdc_code: 
-
-- disease_name: "Powassan virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Powassan virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Psittacosis"
-  cdc_code: 
-
-- disease_name: "Q fever, acute"
-  cdc_code: "10255"
-
-- disease_name: "Q fever, chronic"
-  cdc_code: 
-
-- disease_name: "Rabies, animal"
-  cdc_code: 
-
-- disease_name: "Rabies, human"
-  cdc_code: 
-
-- disease_name: Relapsing Fever
-  cdc_code:
-
-- disease_name: "Rocky Mountain Spotted Fever"
-  cdc_code: 
-
-- disease_name: "Rubella"
-  cdc_code: "10200"
-
-- disease_name: "Rubella, congenital syndrome"
-  cdc_code: 
-
-- disease_name: "Salmonellosis"
-  cdc_code: 
-
-- disease_name: "Severe Acute Respiratory Syndrome (SARS)"
-  cdc_code: 
-
-- disease_name: "Shiga toxin-producing Escherichia coli (STEC)"
-  cdc_code: 
-
-- disease_name: "Shigellosis"
-  cdc_code: 
-
-- disease_name: "Smallpox"
-  cdc_code: "11800"
-
-- disease_name: Smallpox Vaccine-Associated Adverse Event
-  cdc_code:
-
-- disease_name: "St. Louis encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "St. Louis encephalitis virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Streptococcal disease, invasive, Group A"
-  cdc_code: 
-
-- disease_name: "Streptococcal disease, invasive, Group B"
-  cdc_code: 
-
-- disease_name: "Streptococcal disease, invasive, Groups C & G"
-  cdc_code: 
-
-- disease_name: "Streptococcal toxic-shock syndrome"
-  cdc_code: 
-
-- disease_name: Streptococcus pneumoniae, invasive disease, < 5 (drug susceptible)
-  cdc_code:
-
-- disease_name: "Streptococcus pneumoniae invasive, drug-resistant (DRSP)"
-  cdc_code: 
-
-- disease_name: "Streptococcus pneumoniae, invasive disease"
-  cdc_code: 
-
-- disease_name: "Syphilis, congenital"
-  cdc_code: 10316
-
-- disease_name: "Syphilis, early latent"
-  cdc_code: 10313
-
-- disease_name: "Syphilis, late latent"
-  cdc_code: 10314
-
-- disease_name: "Syphilis, late with clinical manifestations other than neurosyphilis"
-  cdc_code: 10318
-
-- disease_name: "Syphilis, primary"
-  cdc_code: 10311
-
-- disease_name: "Syphilis, secondary"
-  cdc_code: 10312
-
-- disease_name: "Syphilis, total primary and secondary"
-  cdc_code: 
-
-- disease_name: "Syphilis, unknown latent"
-  cdc_code: 
-
-- disease_name: "Tetanus"
-  cdc_code: "10210"
-
-- disease_name: "Toxic-shock syndrome (staphylococcal)"
-  cdc_code: 
-
-- disease_name: Trichinosis
-  cdc_code:
-
-- disease_name: "Trichinellosis"
-  cdc_code: 
-
-- disease_name: "Tuberculosis, Active"
-  cdc_code: 
-
-- disease_name: "Tuberculosis, B1"
-  cdc_code: 
-
-- disease_name: "Tuberculosis, B2"
-  cdc_code: 
-
-- disease_name: "Tuberculosis, Latent  Infection (LTBI)"
-  cdc_code: 
-
-- disease_name: "Tuberculosis, suspect"
-  cdc_code: 
-
-- disease_name: "Tularemia"
-  cdc_code: "10230"
-
-- disease_name: "Typhoid (cases and carriers; caused by Salmonella typhi)"
-  cdc_code: 
-
-- disease_name: "Vancomycin-intermediate Staphylococcus aureus (VISA)"
-  cdc_code: 
-
-- disease_name: "Vancomycin-resistant Staphylococcus aureus (VRSA)"
-  cdc_code: 
-
-- disease_name: "Chickenpox (Varicella)"
-  cdc_code: 
-
-- disease_name: "Venezuelan equine encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Venezuelan equine encephalitis virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Vibriosis (non-cholera Vibrio species infections)"
-  cdc_code: 
-
-- disease_name: "West Nile virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "West Nile virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Western equine encephalitis virus neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Western equine encephalitis virus non-neuroinvasive disease"
-  cdc_code: 
-
-- disease_name: "Yellow Fever"
-  cdc_code: 
-
-- disease_name: "Yersiniosis"
-  cdc_code: 
-
+---
+African Tick Bite Fever:
+  :organisms:
+    - :organism_name: Rickettsia africae
+  :diseases:
+    - :disease_name: African Tick Bite Fever
+
+Amebiasis:
+  :organisms:
+    - :organism_name: Entamoeba histolytica
+    - :organism_name: Entamoeba histolytica cysts
+    - :organism_name: Entamoeba histolytica trophozoites
+  :diseases:
+    - :disease_name: Amebiasis
+      :cdc_code: 11040
+  :loinc_codes:
+    - :loinc_code: 10356-4
+    - :loinc_code: 10643-5
+    - :loinc_code: 10701-1
+    - :loinc_code: 10702-9
+    - :loinc_code: 10703-7
+    - :loinc_code: 10704-5
+    - :loinc_code: 14125-9
+    - :loinc_code: 18307-9
+    - :loinc_code: 20932-0
+    - :loinc_code: 29905-7
+    - :loinc_code: 5151-6
+    - :loinc_code: 6396-6
+    - :loinc_code: 6397-4
+    - :loinc_code: 6398-2
+    - :loinc_code: 6399-0
+    - :loinc_code: 6470-9
+    - :loinc_code: 6473-3
+    - :loinc_code: 6594-6
+    - :loinc_code: 665-0
+    - :loinc_code: 6665-4
+    - :loinc_code: 6674-6
+    - :loinc_code: 6680-3
+    - :loinc_code: 673-4
+    - :loinc_code: 678-3
+    - :loinc_code: 680-9
+    - :loinc_code: 9785-7
+
+Anthrax:
+  :organisms:
+    - :organism_name: Bacillus anthracis
+    - :organism_name: Bacillus anthracis - Pasteur strain
+    - :organism_name: Bacillus anthracis - Sterne Strain
+    - :organism_name: Bacillus anthracis - virulent strain
+  :diseases:
+    - :disease_name: Anthrax
+      :cdc_code: 10350
+  :loinc_codes:
+    - :loinc_code: 11469-4
+    - :loinc_code: 11475-1
+    - :loinc_code: 38347-1
+    - :loinc_code: 610-6
+
+Arbovirus:
+  :organisms:
+    - :organism_name: Eastern equine encephalitis virus
+    - :organism_name: Western equine encephalomyelitis virus
+    - :organism_name: Saint Louis encephalitis virus
+    - :organism_name: Venezuelan equine encephalomyelitis virus
+    - :organism_name: Dengue virus
+    - :organism_name: Dengue virus (includes types 1-4)
+    - :organism_name: Japanese encephalitis virus group
+    - :organism_name: Japanese encephalitis virus
+    - :organism_name: Powassan virus
+    - :organism_name: Cache Valley virus
+    - :organism_name: Bunyavirus serogroup
+    - :organism_name: California encephalitis virus
+    - :organism_name: Jamestown Canyon virus
+    - :organism_name: Keystone virus
+    - :organism_name: La Crosse virus
+    - :organism_name: Snowshoe hare virus
+    - :organism_name: Trivittatus virus
+  :diseases:
+    - :disease_name: Cache Valley virus neuroinvasive disease
+    - :disease_name: Cache Valley virus non-neuroinvasive disease
+    - :disease_name: California serogroup virus neuroinvasive disease
+    - :disease_name: California serogroup virus non-neuroinvasive disease
+    - :disease_name: Dengue
+    - :disease_name: Dengue Hemorrhagic Fever
+      :cdc_code: 10685
+    - :disease_name: Eastern equine encephalitis virus neuroinvasive disease
+    - :disease_name: Eastern equine encephalitis virus non-neuroinvasive disease
+    - :disease_name: Japanese encephalitis virus neuroinvasive disease
+    - :disease_name: Japanese encephalitis virus non-neuroinvasive disease
+    - :disease_name: Powassan virus neuroinvasive disease
+    - :disease_name: Powassan virus non-neuroinvasive disease
+    - :disease_name: St. Louis encephalitis virus neuroinvasive disease
+    - :disease_name: St. Louis encephalitis virus non-neuroinvasive disease
+    - :disease_name: Venezuelan equine encephalitis virus neuroinvasive disease
+    - :disease_name: Venezuelan equine encephalitis virus non-neuroinvasive disease
+    - :disease_name: Western equine encephalitis virus neuroinvasive disease
+    - :disease_name: Western equine encephalitis virus non-neuroinvasive disease
+  :loinc_codes:
+    - :loinc_code: 10896-9
+    - :loinc_code: 10897-7
+    - :loinc_code: 10898-5
+    - :loinc_code: 10899-3
+    - :loinc_code: 10904-1
+    - :loinc_code: 10905-8
+    - :loinc_code: 10906-6
+    - :loinc_code: 10907-4
+    - :loinc_code: 13228-2
+    - :loinc_code: 13229-0
+    - :loinc_code: 13230-8
+    - :loinc_code: 13231-6
+    - :loinc_code: 17036-5
+    - :loinc_code: 17037-3
+    - :loinc_code: 17038-1
+    - :loinc_code: 17039-9
+    - :loinc_code: 17769-1
+    - :loinc_code: 17770-9
+    - :loinc_code: 21509-5
+    - :loinc_code: 21510-3
+    - :loinc_code: 23046-6
+    - :loinc_code: 23991-3
+    - :loinc_code: 23992-1
+    - :loinc_code: 29783-8
+    - :loinc_code: 29785-3
+    - :loinc_code: 29789-5
+    - :loinc_code: 30174-7
+    - :loinc_code: 30175-4
+    - :loinc_code: 30176-2
+    - :loinc_code: 30177-0
+    - :loinc_code: 30179-6
+    - :loinc_code: 33295-7
+    - :loinc_code: 34450-7
+    - :loinc_code: 37983-4
+    - :loinc_code: 37984-2
+    - :loinc_code: 41878-0
+    - :loinc_code: 5073-2
+    - :loinc_code: 5134-2
+    - :loinc_code: 5406-4
+    - :loinc_code: 5883-4
+    - :loinc_code: 5884-2
+    - :loinc_code: 5888-3
+    - :loinc_code: 6309-9
+    - :loinc_code: 6310-7
+    - :loinc_code: 6383-4
+    - :loinc_code: 6388-3
+    - :loinc_code: 6389-1
+    - :loinc_code: 6549-0
+    - :loinc_code: 6585-4
+    - :loinc_code: 6586-2
+    - :loinc_code: 6812-2
+    - :loinc_code: 6957-5
+    - :loinc_code: 6958-3
+    - :loinc_code: 7860-0
+    - :loinc_code: 7861-8
+    - :loinc_code: 7938-4
+    - :loinc_code: 7940-0
+    - :loinc_code: 7941-8
+    - :loinc_code: 8016-8
+    - :loinc_code: 8017-6
+    - :loinc_code: 8021-8
+    - :loinc_code: 8023-4
+    - :loinc_code: 8025-9
+    - :loinc_code: 8052-3
+    - :loinc_code: 8053-1
+    - :loinc_code: 9314-6
+    - :loinc_code: 9315-3
+    - :loinc_code: 9316-1
+    - :loinc_code: 9539-8
+    - :loinc_code: 9540-6
+    - :loinc_code: 9577-8
+    - :loinc_code: 9634-7
+    - :loinc_code: 9635-4
+
+Botulism:
+  :organisms:
+    - :organism_name: Clostridium botulinum
+    - :organism_name: Clostridium botulinum - non toxin producer
+    - :organism_name: Clostridium botulinum, type A
+    - :organism_name: Clostridium botulinum, type B
+    - :organism_name: Clostridium botulinum, type C
+    - :organism_name: Clostridium botulinum, type D
+    - :organism_name: Clostridium botulinum, type E
+    - :organism_name: Clostridium botulinum, type F
+  :diseases:
+    - :disease_name: Botulism, foodborne
+    - :disease_name: Botulism, infant
+    - :disease_name: Botulism, wound
+    - :disease_name: Botulism, other unspecified
+  :loinc_codes:
+    - loinc_code: 11470-2
+    - loinc_code: 11475-1
+    - loinc_code: 20706-8
+    - loinc_code: 33694-1
+    - loinc_code: 33696-6
+    - loinc_code: 41852-5
+    - loinc_code: 46705-0
+    - loinc_code: 6463-4
+
+Brucella:
+  :organisms:
+    - :organism_name: Brucella species
+    - :organism_name: Brucella species
+    - :organism_name: Brucella melitensis
+    - :organism_name: Brucella abortus
+    - :organism_name: Brucella suis
+    - :organism_name: Brucella canis
+    - :organism_name: Brucella maris
+    - :organism_name: Brucella neotomae
+    - :organism_name: Brucella ovis
+    - :organism_name: Brucella rangiferi tarandi
+  :diseases:
+    - :disease_name: Brucellosis
+      :cdc_code: 10020
+  :loinc_codes:
+    - :loinc_code: 10349-9
+    - :loinc_code: 11475-1
+    - :loinc_code: 13210-0
+    - :loinc_code: 22151-5
+    - :loinc_code: 24388-1
+    - :loinc_code: 5066-6
+    - :loinc_code: 5067-4
+    - :loinc_code: 5068-2
+    - :loinc_code: 5069-0
+    - :loinc_code: 5071-6
+    - :loinc_code: 551-2
+    - :loinc_code: 552-0
+    - :loinc_code: 600-7
+    - :loinc_code: 627-0
+    - :loinc_code: 6324-8
+    - :loinc_code: 6326-3
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6911-2
+    - :loinc_code: 699-9
+
+Glanders:
+  :organisms:
+    - :organism_name: Burkholderia mallei
+  :diseases:
+    - :disease_name: Glanders (Burkholderia mallei)
+
+Melioidosis:
+  :organisms:
+    - :organism_name: Burkholderia pseudomallei
+  :diseases:
+    - :disease_name: Melioidosis (Burkholderia pseudomallei)
+
+Campylobacteriosis:
+  :organisms:
+    - :organism_name: Campylobacter species
+    - :organism_name: Campylobacter species
+    - :organism_name: Campylobacter coli
+    - :organism_name: Campylobacter fetus
+    - :organism_name: Campylobacter fetus ss. fetus
+    - :organism_name: Campylobacter gracilis
+    - :organism_name: Campylobacter jejuni
+    - :organism_name: Campylobacter laridis
+    - :organism_name: Campylobacter upsaliensis
+    - :organism_name: Campylobacter sputorum
+  :diseases:
+    - :disease_name: Campylobacteriosis
+      :cdc_code: 11020
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 16528-2
+    - :loinc_code: 16529-0
+    - :loinc_code: 16531-6
+    - :loinc_code: 16532-4
+    - :loinc_code: 16534-0
+    - :loinc_code: 38347-1
+    - :loinc_code: 41852-5
+    - :loinc_code: 49614-1
+    - :loinc_code: 4992-4
+    - :loinc_code: 600-7
+    - :loinc_code: 625-4
+    - :loinc_code: 6329-7
+    - :loinc_code: 6330-5
+    - :loinc_code: 6331-3
+    - :loinc_code: 6332-1
+    - :loinc_code: 6333-9
+    - :loinc_code: 6334-7
+    - :loinc_code: 6335-4
+    - :loinc_code: 646-0
+    - :loinc_code: 6463-4
+
+Chancroid:
+  :organisms:
+    - :organism_name: Haemophilus ducreyi
+  :diseases:
+    - :disease_name: Chancroid
+      :cdc_code: 10273
+  :loinc_codes:
+    - :loinc_code: 10352-3
+    - :loinc_code: 11255-7
+    - :loinc_code: 11475-1
+    - :loinc_code: 14475-8
+    - :loinc_code: 14476-6
+    - :loinc_code: 14478-2
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6600-1
+
+Chickenpox (Varicella):
+  :organisms:
+    - :organism_name: Varicella-zoster virus
+  :diseases:
+    - :disease_name: Chickenpox (Varicella)
+  :loinc_codes:
+    - :loinc_code: 10734-2
+    - :loinc_code: 10860-5
+    - :loinc_code: 11483-5
+    - :loinc_code: 12271-3
+    - :loinc_code: 17766-7
+    - :loinc_code: 21592-1
+    - :loinc_code: 21594-7
+    - :loinc_code: 21596-2
+    - :loinc_code: 21597-0
+    - :loinc_code: 21598-8
+    - :loinc_code: 22600-1
+    - :loinc_code: 22605-0
+    - :loinc_code: 22606-8
+    - :loinc_code: 26723-7
+    - :loinc_code: 29248-2
+    - :loinc_code: 29662-4
+    - :loinc_code: 31694-3
+    - :loinc_code: 31695-0
+    - :loinc_code: 31981-4
+    - :loinc_code: 31982-2
+    - :loinc_code: 33327-8
+    - :loinc_code: 35399-5
+    - :loinc_code: 35400-1
+    - :loinc_code: 35679-0
+    - :loinc_code: 43588-3
+    - :loinc_code: 43693-1
+    - :loinc_code: 43978-6
+    - :loinc_code: 44771-4
+    - :loinc_code: 45063-5
+    - :loinc_code: 47002-1
+    - :loinc_code: 47003-9
+    - :loinc_code: 47419-7
+    - :loinc_code: 5401-5
+    - :loinc_code: 5402-3
+    - :loinc_code: 5404-9
+    - :loinc_code: 5881-8
+    - :loinc_code: 5882-6
+    - :loinc_code: 6570-6
+    - :loinc_code: 8046-5
+    - :loinc_code: 8048-1
+    - :loinc_code: 8049-9
+    - :loinc_code: 9636-2
+
+Chlamydia trachomatis infection:
+  :organisms:
+    - :organism_name: Chlamydia trachomatis infection species
+    - :organism_name: Chlamydia trachomatis infection trachomatis
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype A 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype B 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype Ba 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype C 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype D 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype E 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype F 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype I 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype J 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype K 
+  :diseases:
+    - :disease_name: Chlamydia trachomatis infection
+      :cdc_code: 10274
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 14202-6
+    - :loinc_code: 14203-4
+    - :loinc_code: 14461-8
+    - :loinc_code: 14462-6
+    - :loinc_code: 14463-4
+    - :loinc_code: 14464-2
+    - :loinc_code: 14465-9
+    - :loinc_code: 14466-7
+    - :loinc_code: 14467-5
+    - :loinc_code: 14468-3
+    - :loinc_code: 14469-1
+    - :loinc_code: 14470-9
+    - :loinc_code: 14471-7
+    - :loinc_code: 14472-5
+    - :loinc_code: 14473-3
+    - :loinc_code: 14474-1
+    - :loinc_code: 14507-8
+    - :loinc_code: 14508-6
+    - :loinc_code: 14509-4
+    - :loinc_code: 14510-2
+    - :loinc_code: 14511-0
+    - :loinc_code: 14512-8
+    - :loinc_code: 14513-6
+    - :loinc_code: 16589-4
+    - :loinc_code: 16599-3
+    - :loinc_code: 16600-9
+    - :loinc_code: 16601-7
+    - :loinc_code: 20993-2
+    - :loinc_code: 21189-6
+    - :loinc_code: 21190-4
+    - :loinc_code: 21191-2
+    - :loinc_code: 21613-5
+    - :loinc_code: 22191-1
+    - :loinc_code: 22193-7
+    - :loinc_code: 35713-7
+    - :loinc_code: 36902-5
+    - :loinc_code: 36903-3
+    - :loinc_code: 43304-5
+    - :loinc_code: 43404-3
+    - :loinc_code: 44079-2
+    - :loinc_code: 45078-3
+    - :loinc_code: 47212-6
+    - :loinc_code: 4993-2
+    - :loinc_code: 50387-0
+    - :loinc_code: 5084-9
+    - :loinc_code: 5090-6
+    - :loinc_code: 560-3
+    - :loinc_code: 600-7
+    - :loinc_code: 6349-5
+    - :loinc_code: 6350-3
+    - :loinc_code: 6351-1
+    - :loinc_code: 6353-7
+    - :loinc_code: 6354-5
+    - :loinc_code: 6355-2
+    - :loinc_code: 6356-0
+    - :loinc_code: 6357-8
+    - :loinc_code: 6358-6
+    - :loinc_code: 6918-7
+    - :loinc_code: 6919-5
+    - :loinc_code: 6920-3
+
+Cholera:
+  :organisms:
+    - :organism_name: Vibrio cholerae
+    - :organism_name: Vibrio cholerae, 01
+    - :organism_name: Vibrio cholerae, classical
+    - :organism_name: Vibrio cholerae, El tor
+    - :organism_name: Vibrio cholerae, Hikojima
+    - :organism_name: Vibrio cholerae, Inaba
+    - :organism_name: Vibrio cholerae, Ogawa
+    - :organism_name: Vibrio cholerae serogroup O139
+  :diseases:
+    - :disease_name: Cholera
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 31698-4
+    - :loinc_code: 5405-6
+    - :loinc_code: 625-4
+    - :loinc_code: 6578-9
+    - :loinc_code: 6579-7
+    - :loinc_code: 6581-3
+
+Coccidiodomycosis:
+  :organisms:
+    - :organism_name: Coccidioides species
+    - :organism_name: Coccidioides species
+    - :organism_name: Coccidioides immitis
+    - :organism_name: Coccidioides posadasii
+  :diseases:
+    - :disease_name: Coccidioidomycosis
+  :loinc_codes:
+    - :loinc_code: 31153-0
+    - :loinc_code: 31154-8
+    - :loinc_code: 33510-9
+    - :loinc_code: 5096-3
+
+Colorado Tick Fever:
+  :organisms:
+    - :organism_name: Colorado tick fever virus
+  :diseases:
+    - :disease_name: Colorado Tick Fever
+
+Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies:
+  :organisms:
+    - :organism_name: Human spongiform encephalopathy agent
+    - :organism_name: Creutzfeldt-Jacob agent
+    - :organism_name: Gerstmann-Straussler syndrome agent
+    - :organism_name: Kuru Agent
+  :diseases:
+    - :disease_name: Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies
+
+Cryptosporidium:
+  :organisms:
+    - :organism_name: Cryptosporidium species
+    - :organism_name: Cryptosporidium species
+    - :organism_name: Cryptosporidium parvum
+  :diseases:
+    - :disease_name: Cryptosporidiosis
+      :cdc_code: 11580
+  :loinc_code:
+    - :loinc_code: 10704-5
+    - :loinc_code: 11475-1
+    - :loinc_code: 20781-1
+    - :loinc_code: 20932-0
+    - :loinc_code: 27907-5
+    - :loinc_code: 39534-3
+    - :loinc_code: 566-0
+    - :loinc_code: 6371-9
+    - :loinc_code: 6372-7
+    - :loinc_code: 6471-7
+    - :loinc_code: 6674-6
+    - :loinc_code: 673-4
+    - :loinc_code: 9785-7
+
+Cyclosporiasis:
+  :organisms:
+    - :organism_name: Cyclospora cayetanensis
+  :diseases:
+    - :disease_name: Cyclosporiasis
+      :cdc_code: 11575
+  :loinc_codes:
+    - :loinc_code: 10659-1
+    - :loinc_code: 10704-5
+    - :loinc_code: 10850-6
+    - :loinc_code: 20932-0
+    - :loinc_code: 673-4
+    - :loinc_code: 9785-7
+
+Diphtheria:
+  :organisms:
+    - :organism_name: Corynebacterium diphtheriae
+  :diseases:
+    - :disease_name: Diphtheria
+      :cdc_code: 10040
+  :loinc_codes:
+    - :loinc_code: 10353-1
+    - :loinc_code: 11475-1
+    - :loinc_code: 14479-0
+    - :loinc_code: 14480-8
+    - :loinc_code: 14481-6
+    - :loinc_code: 14483-2
+    - :loinc_code: 16676-9
+    - :loinc_code: 567-8
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 604-9
+    - :loinc_code: 605-6
+    - :loinc_code: 622-1
+    - :loinc_code: 623-9
+    - :loinc_code: 624-7
+    - :loinc_code: 626-2
+    - :loinc_code: 632-0
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6460-0
+    - :loinc_code: 6462-6
+    - :loinc_code: 6463-4
+    - :loinc_code: 6596-1
+
+Echinococcosis:
+  :organisms:
+    - :organism_name: Echinococcosis species
+  :diseases:
+    - :disease_name: Echinococcosis
+
+Ehrlichiosis:
+  :organisms:
+    - :organism_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
+    - :organism_name: Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis
+    - :organism_name: Ehrlichia ewingii
+  :diseases:
+    - :disease_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
+    - :disease_name: Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis
+    - :disease_name: Ehrlichia ewingii
+    - :disease_name: Ehrlichiosis/Anaplasmosis, undetermined
+  :loinc_codes:
+    - :loinc_code: 13195-3
+    - :loinc_code: 16808-8
+    - :loinc_code: 16809-6
+    - :loinc_code: 22283-6
+    - :loinc_code: 23877-4
+    - :loinc_code: 23878-2
+    - :loinc_code: 24042-4
+    - :loinc_code: 27994-3
+    - :loinc_code: 29560-0
+    - :loinc_code: 29793-7
+    - :loinc_code: 29794-5
+    - :loinc_code: 33581-0
+    - :loinc_code: 47405-6
+    - :loinc_code: 6401-4
+    - :loinc_code: 6402-2
+    - :loinc_code: 6403-0
+    - :loinc_code: 6404-8
+    - :loinc_code: 7875-8
+    - :loinc_code: 7876-6
+    - :loinc_code: 7877-4
+    - :loinc_code: 7878-2
+    - :loinc_code: 9783-2
+    - :loinc_code: 9784-0
+
+Giardiasis:
+  :organisms:
+    - :organism_name: Giardia species
+    - :organism_name: Giardia lamblia
+  :diseases:
+    - :disease_name: Giardiasis
+  :loinc_codes:
+    - :loinc_code: 10356-4
+    - :loinc_code: 10670-8
+    - :loinc_code: 10701-1
+    - :loinc_code: 10702-9
+    - :loinc_code: 10703-7
+    - :loinc_code: 10704-5
+    - :loinc_code: 11475-1
+    - :loinc_code: 14210-9
+    - :loinc_code: 16898-9
+    - :loinc_code: 16899-7
+    - :loinc_code: 18307-9
+    - :loinc_code: 18493-7
+    - :loinc_code: 18494-5
+    - :loinc_code: 18495-2
+    - :loinc_code: 18496-0
+    - :loinc_code: 20931-2
+    - :loinc_code: 20932-0
+    - :loinc_code: 27265-8
+    - :loinc_code: 5169-8
+    - :loinc_code: 6412-1
+    - :loinc_code: 6413-9
+    - :loinc_code: 6470-9
+    - :loinc_code: 673-4
+    - :loinc_code: 9785-7
+
+Gonorrhea:
+  :organisms:
+    - :organism_name: Gram-negative diplococcus
+    - :organism_name: Neisseria gonorrhoeae
+  :diseases:
+    - :disease_name: Gonorrhea
+      :cdc_code: 10280
+  :loinc_codes:
+    - :loinc_code: 10352-3
+    - :loinc_code: 10354-9
+    - :loinc_code: 11475-1
+    - :loinc_code: 14127-5
+    - :loinc_code: 14475-8
+    - :loinc_code: 14476-6
+    - :loinc_code: 14477-4
+    - :loinc_code: 14478-2
+    - :loinc_code: 17898-8
+    - :loinc_code: 21414-8
+    - :loinc_code: 21415-5
+    - :loinc_code: 21416-3
+    - :loinc_code: 23908-7
+    - :loinc_code: 24111-7
+    - :loinc_code: 31906-1
+    - :loinc_code: 31910-3
+    - :loinc_code: 32198-4
+    - :loinc_code: 32705-6
+    - :loinc_code: 36902-5
+    - :loinc_code: 36903-3
+    - :loinc_code: 43305-2
+    - :loinc_code: 43403-5
+    - :loinc_code: 47387-6
+    - :loinc_code: 5028-6
+    - :loinc_code: 50388-8
+    - :loinc_code: 600-7
+    - :loinc_code: 605-6
+    - :loinc_code: 609-8
+    - :loinc_code: 620-5
+    - :loinc_code: 621-3
+    - :loinc_code: 626-2
+    - :loinc_code: 630-4
+    - :loinc_code: 6463-4
+    - :loinc_code: 6487-3
+    - :loinc_code: 6488-1
+    - :loinc_code: 6489-9
+    - :loinc_code: 6490-7
+    - :loinc_code: 6491-5
+    - :loinc_code: 688-2
+    - :loinc_code: 690-8
+    - :loinc_code: 691-6
+    - :loinc_code: 692-4
+    - :loinc_code: 693-2
+    - :loinc_code: 694-0
+    - :loinc_code: 695-7
+    - :loinc_code: 696-5
+    - :loinc_code: 697-3
+    - :loinc_code: 698-1
+    - :loinc_code: 9568-7
+
+Granuloma Inguinale:
+  :organisms:
+    - :organism_name: Donovania granulomatis
+  :diseases:
+    - :disease_name: Granuloma inguinale (GI)
+
+Haemophilus influenzae, invasive disease:
+  :organisms:
+    - :organism_name: Haemophilus influenzae, invasive disease
+    - :organism_name: Haemophilus influenzae, invasive disease, non-typable
+    - :organism_name: Haemophilus influenzae, invasive disease, type A
+    - :organism_name: Haemophilus influenzae, invasive disease, type B
+    - :organism_name: Haemophilus influenzae, invasive disease, type D
+    - :organism_name: Haemophilus influenzae, invasive disease, type E
+    - :organism_name: Haemophilus influenzae, invasive disease, type F
+  :diseases:
+    - :disease_name: Haemophilus influenzae, invasive disease
+      :cdc_code: 10590
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 14321-4
+    - :loinc_code: 16926-8
+    - :loinc_code: 32139-8
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 606-4
+    - :loinc_code: 609-8
+    - :loinc_code: 610-6
+    - :loinc_code: 611-4
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+    - :loinc_code: 6600-1
+    - :loinc_code: 6610-0
+    - :loinc_code: 6611-8
+    - :loinc_code: 6612-6
+    - :loinc_code: 6613-4
+    - :loinc_code: 6614-2
+    - :loinc_code: 6615-9
+
+Hansen Disease:
+  :organisms:
+    - :organism_name: Mycobacterium leprae
+  :diseases:
+    - :disease_name: "Hansen's disease (Leprosy)"
+
+Hantavirus Infection:
+  :organisms:
+    - :organism_name: Hantavirus Infection species
+    - :organism_name: Hantavirus Infection (Sin Nombre)
+    - :organism_name: Hantavirus Infection (Puumala)
+  :diseases:
+    - :disease_name: Hantavirus Infection
+    - :disease_name: Hantavirus Pulmonary Syndrome
+  :loinc_codes:
+    - :loinc_code: 23867-5
+    - :loinc_code: 23868-3
+    - :loinc_code: 26654-4
+    - :loinc_code: 35393-8
+    - :loinc_code: 7898-0
+    - :loinc_code: 7899-8
+
+Hepatitis A:
+  :organisms:
+    - :organism_name: Hepatitis A virus (human enterovirus 72)
+  :diseases:
+    - :disease_name: Hepatitis A
+      :cdc_code: 10110
+  :loinc_codes:
+    - :loinc_code: 13950-1
+    - :loinc_code: 13951-9
+    - :loinc_code: 22312-3
+    - :loinc_code: 22313-1
+    - :loinc_code: 22314-9
+    - :loinc_code: 5181-3
+    - :loinc_code: 5182-1
+    - :loinc_code: 5183-9
+
+Hepatitis B:
+  :organisms:
+    - :organism_name: Hepatitis B virus
+  :diseases:
+    - :disease_name: Hepatitis B, acute
+      :cdc_code: 10100
+    - :disease_name: Hepatitis B virus infection, chronic
+      :cdc_code: 10105
+    - :disease_name: Hepatitis B virus infection, perinatal
+      :cdc_code: 10104
+  :loinc_codes:
+    - :loinc_code: 10673-2
+    - :loinc_code: 10674-0
+    - :loinc_code: 10675-7
+    - :loinc_code: 10900-9
+    - :loinc_code: 11258-1
+    - :loinc_code: 13952-7
+    - :loinc_code: 13953-5
+    - :loinc_code: 13954-3
+    - :loinc_code: 20442-0
+    - :loinc_code: 21006-2
+    - :loinc_code: 23869-1
+    - :loinc_code: 24113-3
+    - :loinc_code: 29610-3
+    - :loinc_code: 29615-2
+    - :loinc_code: 31204-1
+    - :loinc_code: 31844-4
+    - :loinc_code: 32366-7
+    - :loinc_code: 33463-1
+    - :loinc_code: 33633-9
+    - :loinc_code: 42595-9
+    - :loinc_code: 5007-0
+    - :loinc_code: 5185-4
+    - :loinc_code: 5186-2
+    - :loinc_code: 5187-0
+    - :loinc_code: 5189-6
+    - :loinc_code: 5191-2
+    - :loinc_code: 5193-8
+    - :loinc_code: 5194-6
+    - :loinc_code: 5195-3
+    - :loinc_code: 5196-1
+    - :loinc_code: 5197-9
+    - :loinc_code: 7905-3
+
+Hepatitis C:
+  :organisms:
+    - :organism_name: Hepatitis C virus
+  :diseases:
+    - :disease_name: Hepatitis C, acute
+      :cdc_code: 10101
+    - :disease_name: Hepatitis C virus infection, past or present
+      :cdc_code: 10106
+  :loinc_codes:
+    - :loinc_code: 10676-5
+    - :loinc_code: 11011-4
+    - :loinc_code: 11076-7
+    - :loinc_code: 11077-5
+    - :loinc_code: 11259-9
+    - :loinc_code: 13125-0
+    - :loinc_code: 13955-0
+    - :loinc_code: 16128-1
+    - :loinc_code: 16129-9
+    - :loinc_code: 16936-7
+    - :loinc_code: 20416-4
+    - :loinc_code: 22327-1
+    - :loinc_code: 23870-9
+    - :loinc_code: 23871-7
+    - :loinc_code: 24011-9
+    - :loinc_code: 29609-5
+    - :loinc_code: 32286-7
+    - :loinc_code: 38180-6
+    - :loinc_code: 42617-1
+    - :loinc_code: 48159-8
+    - :loinc_code: 5010-4
+    - :loinc_code: 5011-2
+    - :loinc_code: 5012-0
+    - :loinc_code: 5198-7
+    - :loinc_code: 5199-5
+    - :loinc_code: 6422-0
+    - :loinc_code: 9608-1
+    - :loinc_code: 9609-9
+    - :loinc_code: 9610-7
+
+Hepatitis, viral other:
+  :organisms:
+    - :organism_name: Hepatitis G virus
+    - :organism_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D) virus
+    - :organism_name: Hepatitis E, acute virus
+  :diseases:
+    - :disease_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D)
+      :cdc_code: 10102
+    - :disease_name: Hepatitis E, acute
+      :cdc_code: 10103
+    - :disease_name: Hepatitis, viral other
+      :cdc_code: 10120
+  :loinc_codes:
+    - :loinc_code: 13248-0
+    - :loinc_code: 14211-7
+    - :loinc_code: 14212-5
+    - :loinc_code: 9526-5
+
+Influenza:
+  :organisms:
+    - :organism_name: Influenza A/B undifferentiated
+    - :organism_name: Influenza A
+    - :organism_name: Influenza A (seasonal H1)
+    - :organism_name: Influenza A (seasonal H3)
+    - :organism_name: Influenza A (2009 pandemic H1N1)
+    - :organism_name: Influenza B
+  :diseases:
+    - :disease_name: Influenza activity
+    - :disease_name: Influenza A, Novel Virus
+    - :disease_name: Influenza-associated death in a person under 18
+    - :disease_name: Influenza-associated hospitalization
+  :loinc_codes:
+    - :loinc_code: 17012-6
+    - :loinc_code: 17014-2
+    - :loinc_code: 17015-9
+    - :loinc_code: 17016-7
+    - :loinc_code: 22365-1
+    - :loinc_code: 22367-7
+    - :loinc_code: 24015-0
+    - :loinc_code: 31437-7
+    - :loinc_code: 31438-5
+    - :loinc_code: 31858-4
+    - :loinc_code: 31859-2
+    - :loinc_code: 31863-4
+    - :loinc_code: 31864-2
+    - :loinc_code: 34153-7
+    - :loinc_code: 34154-5
+    - :loinc_code: 34487-9
+    - :loinc_code: 38347-1
+    - :loinc_code: 38382-8
+    - :loinc_code: 39102-9
+    - :loinc_code: 39103-7
+    - :loinc_code: 40982-1
+    - :loinc_code: 48310-7
+    - :loinc_code: 48509-4
+    - :loinc_code: 5229-0
+    - :loinc_code: 5230-8
+    - :loinc_code: 5860-2
+    - :loinc_code: 5861-0
+    - :loinc_code: 5862-8
+    - :loinc_code: 5863-6
+    - :loinc_code: 5864-4
+    - :loinc_code: 5865-1
+    - :loinc_code: 5866-9
+    - :loinc_code: 5867-7
+    - :loinc_code: 610-6
+    - :loinc_code: 6437-8
+    - :loinc_code: 6438-6
+    - :loinc_code: 6584-7
+    - :loinc_code: 6601-9
+    - :loinc_code: 6602-7
+    - :loinc_code: 6603-5
+    - :loinc_code: 6604-3
+    - :loinc_code: 6634-0
+    - :loinc_code: 6635-7
+    - :loinc_code: 6636-5
+    - :loinc_code: 6637-3
+    - :loinc_code: 6638-1
+    - :loinc_code: 6639-9
+    - :loinc_code: 6640-7
+    - :loinc_code: 6641-5
+    - :loinc_code: 6642-3
+    - :loinc_code: 7920-2
+    - :loinc_code: 7921-0
+    - :loinc_code: 7922-8
+    - :loinc_code: 7923-6
+    - :loinc_code: 7924-4
+    - :loinc_code: 7925-1
+    - :loinc_code: 7926-9
+    - :loinc_code: 7927-7
+    - :loinc_code: 7928-5
+    - :loinc_code: 7929-3
+    - :loinc_code: 7931-9
+    - :loinc_code: 9531-5
+    - :loinc_code: 9532-3
+    - :loinc_code: 9533-1
+    - :loinc_code: 9534-9
+    - :loinc_code: 9535-6
+    - :loinc_code: 9536-4
+
+Legionellosis:
+  :organisms:
+    - :organism_name: Legionella species
+    - :organism_name: Legionella pneumophila
+    - :organism_name: Legionella feeleii
+    - :organism_name: Legionella rubrilucens
+    - :organism_name: Legionella anisa
+    - :organism_name: Legionella pneumophila ss. fraseri
+    - :organism_name: Legionella longbeachii
+    - :organism_name: Legionella pneumophila ss. pascullei
+    - :organism_name: Legionella pneumophila ss. pneumophila
+    - :organism_name: Legionella species
+    - :organism_name: Legionella pneumophila serogroup 1
+    - :organism_name: Legionella pneumophila serogroup 2
+    - :organism_name: Legionella pneumophila serogroup 3
+    - :organism_name: Legionella pneumophila serogroup 4
+    - :organism_name: Legionella pneumophila serogroup 5
+    - :organism_name: Legionella pneumophila serogroup 6
+    - :organism_name: Legionella pneumophila serogroup 8
+    - :organism_name: Legionella pneumophilia serogroup 12
+  :diseases:
+    - :disease_name: Legionellosis
+      :cdc_code: 10490
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 13254-8
+    - :loinc_code: 13255-5
+    - :loinc_code: 16133-1
+    - :loinc_code: 17057-1
+    - :loinc_code: 17058-9
+    - :loinc_code: 17060-5
+    - :loinc_code: 17061-3
+    - :loinc_code: 21363-7
+    - :loinc_code: 22382-6
+    - :loinc_code: 22398-2
+    - :loinc_code: 31870-9
+    - :loinc_code: 32355-0
+    - :loinc_code: 32696-7
+    - :loinc_code: 38347-1
+    - :loinc_code: 41499-5
+    - :loinc_code: 41852-5
+    - :loinc_code: 49914-5
+    - :loinc_code: 5236-5
+    - :loinc_code: 5237-3
+    - :loinc_code: 588-4
+    - :loinc_code: 589-2
+    - :loinc_code: 590-0
+    - :loinc_code: 593-4
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 604-9
+    - :loinc_code: 622-1
+    - :loinc_code: 624-7
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6445-1
+    - :loinc_code: 6447-7
+    - :loinc_code: 6448-5
+    - :loinc_code: 6451-9
+    - :loinc_code: 7947-5
+    - :loinc_code: 7948-3
+    - :loinc_code: 9541-4
+    - :loinc_code: 9542-2
+    - :loinc_code: 9543-0
+    - :loinc_code: 9551-3
+    - :loinc_code: 9552-1
+
+Listeriosis:
+  :organisms:
+    - :organism_name: Listeria monocytogenes
+  :diseases:
+    - :disease_name: Listeriosis
+      :cdc_code: 10640
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 41852-5
+    - :loinc_code: 600-7
+    - :loinc_code: 610-6
+    - :loinc_code: 627-0
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+    - :loinc_code: 6609-2
+
+Lyme Disease:
+  :organisms:
+    - :organism_name: Borrelia burgdorferi
+  :diseases:
+    - :disease_name: Lyme disease
+      :cdc_code: 11080
+  :loinc_codes:
+    - :loinc_code: 10847-2
+    - :loinc_code: 11006-4
+    - :loinc_code: 11550-1
+    - :loinc_code: 12781-1
+    - :loinc_code: 12860-3
+    - :loinc_code: 12862-9
+    - :loinc_code: 12863-7
+    - :loinc_code: 12867-8
+    - :loinc_code: 12869-4
+    - :loinc_code: 13202-7
+    - :loinc_code: 13203-5
+    - :loinc_code: 13204-3
+    - :loinc_code: 13205-0
+    - :loinc_code: 13503-8
+    - :loinc_code: 13504-6
+    - :loinc_code: 14077-2
+    - :loinc_code: 14078-0
+    - :loinc_code: 16475-6
+    - :loinc_code: 16480-6
+    - :loinc_code: 18201-4
+    - :loinc_code: 18202-2
+    - :loinc_code: 18203-0
+    - :loinc_code: 20449-5
+    - :loinc_code: 22119-2
+    - :loinc_code: 22122-6
+    - :loinc_code: 22135-8
+    - :loinc_code: 23833-7
+    - :loinc_code: 23979-8
+    - :loinc_code: 23981-4
+    - :loinc_code: 23982-2
+    - :loinc_code: 23983-0
+    - :loinc_code: 23985-5
+    - :loinc_code: 29898-4
+    - :loinc_code: 30526-8
+    - :loinc_code: 32669-4
+    - :loinc_code: 34148-7
+    - :loinc_code: 38173-1
+    - :loinc_code: 38174-9
+    - :loinc_code: 4991-6
+    - :loinc_code: 5060-9
+    - :loinc_code: 5061-7
+    - :loinc_code: 5062-5
+    - :loinc_code: 5063-3
+    - :loinc_code: 5064-1
+    - :loinc_code: 5065-8
+    - :loinc_code: 6318-0
+    - :loinc_code: 6320-6
+    - :loinc_code: 6321-4
+    - :loinc_code: 6323-0
+    - :loinc_code: 6471-7
+    - :loinc_code: 7817-0
+    - :loinc_code: 7818-8
+    - :loinc_code: 9586-9
+
+LGV:
+  :organisms:
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L2 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L1 
+    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L3
+  :diseases:
+    - :disease_name: Lymphogranuloma venereum (LGV)
+      :cdc_code: 10306
+  :loinc_codes:
+    - :loinc_code: 43174-2
+    - :loinc_code: 47211-8
+    - :loinc_code: 47212-6
+
+Malaria:
+  :organisms:
+    - :organism_name: Plasmodium species
+    - :organism_name: Plasmodium falciparum
+    - :organism_name: Plasmodium malariae
+    - :organism_name: Plasmodium ovale
+    - :organism_name: Plasmodium vivax
+  :diseases:
+    - :disease_name: Malaria
+      :cdc_code: 10130
+  :loinc_codes:
+    - :loinc_code: 10709-4
+    - :loinc_code: 10710-2
+    - :loinc_code: 11546-9
+    - :loinc_code: 32206-5
+    - :loinc_code: 32700-7
+    - :loinc_code: 38347-1
+    - :loinc_code: 637-9
+    - :loinc_code: 662-7
+
+Measles (rubeola):
+  :organisms:
+    - :organism_name: Measles (rubeola) virus
+  :diseases:
+    - :disease_name: Measles (rubeola)
+      :cdc_code: 10140
+  :loinc_codes:
+    - :loinc_code: 13283-7
+    - :loinc_code: 14304-0
+    - :loinc_code: 14305-7
+    - :loinc_code: 17553-9
+    - :loinc_code: 20479-2
+    - :loinc_code: 21501-2
+    - :loinc_code: 21502-0
+    - :loinc_code: 22502-9
+    - :loinc_code: 22506-0
+    - :loinc_code: 25421-9
+    - :loinc_code: 35276-5
+    - :loinc_code: 5242-3
+    - :loinc_code: 5243-1
+    - :loinc_code: 5244-9
+    - :loinc_code: 5245-6
+    - :loinc_code: 5886-7
+    - :loinc_code: 7961-6
+    - :loinc_code: 7962-4
+    - :loinc_code: 7963-2
+    - :loinc_code: 9566-1
+
+Meningitis:
+  :organisms:
+    - :organism_name: Cryptococcus species
+  :diseases:
+    - :disease_name: Meningitis, Aseptic
+      :cdc_code: 10010
+    - :disease_name: Meningitis, Bacterial Other
+      :cdc_code: 10650
+    - :disease_name: Meningitis, Viral
+  :loinc_codes:
+    - :loinc_code: 11473-6
+
+Meningococcus:
+  :organisms:
+    - :organism_name: Neisseria meningitidis
+    - :organism_name: Neisseria meningitidis group A
+    - :organism_name: Neisseria meningitidis group B
+    - :organism_name: Neisseria meningitidis group C
+    - :organism_name: Neisseria meningitidis group Y
+    - :organism_name: Neisseria meningitidis group W135
+    - :organism_name: Neisseria meningitidis, non-typable
+  :diseases:
+    - :disease_name: Meningococcal disease (Neisseria meningitidis)
+      :cdc_code: 10150
+  :loinc_codes:
+    - :loinc_code: 10353-1
+    - :loinc_code: 11475-1
+    - :loinc_code: 16134-9
+    - :loinc_code: 17324-5
+    - :loinc_code: 17326-0
+    - :loinc_code: 17329-4
+    - :loinc_code: 17330-2
+    - :loinc_code: 17332-8
+    - :loinc_code: 19022-3
+    - :loinc_code: 19133-8
+    - :loinc_code: 19134-6
+    - :loinc_code: 19259-1
+    - :loinc_code: 23667-9
+    - :loinc_code: 38347-1
+    - :loinc_code: 41852-5
+    - :loinc_code: 49671-1
+    - :loinc_code: 600-7
+    - :loinc_code: 606-4
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+    - :loinc_code: 6493-1
+    - :loinc_code: 6494-9
+    - :loinc_code: 6496-4
+    - :loinc_code: 6497-2
+    - :loinc_code: 6498-0
+    - :loinc_code: 6499-8
+    - :loinc_code: 6500-3
+    - :loinc_code: 6503-7
+    - :loinc_code: 6504-5
+    - :loinc_code: 6505-2
+    - :loinc_code: 6506-0
+    - :loinc_code: 6507-8
+    - :loinc_code: 6508-6
+    - :loinc_code: 6509-4
+
+Mumps:
+  :organisms:
+    - :organism_name: Mumps virus
+  :diseases:
+    - :disease_name: Mumps
+      :cdc_code: 10180
+  :loinc_codes:
+    - :loinc_code: 13266-2
+    - :loinc_code: 13267-0
+    - :loinc_code: 13921-2
+    - :loinc_code: 14545-8
+    - :loinc_code: 22414-7
+    - :loinc_code: 22415-4
+    - :loinc_code: 25418-5
+    - :loinc_code: 25419-3
+    - :loinc_code: 5249-8
+    - :loinc_code: 5250-6
+    - :loinc_code: 5883-4
+    - :loinc_code: 5887-5
+    - :loinc_code: 6476-6
+    - :loinc_code: 6477-4
+    - :loinc_code: 6478-2
+    - :loinc_code: 6479-0
+    - :loinc_code: 7966-5
+    - :loinc_code: 7967-3
+    - :loinc_code: 7968-1
+    - :loinc_code: 9567-9
+
+Norovirus:
+  :organisms:
+    - :organism_name: Calicivirus
+    - :organism_name: Norovirus
+  :diseases:
+    - :disease_name: Norovirus
+  :loinc_codes:
+    - :loinc_code: 38916-3
+
+Pertussis:
+  :organisms:
+    - :organism_name: Bordetella pertussis
+  :diseases:
+    - :disease_name: Pertussis
+      :cdc_code: 10190
+  :loinc_codes:
+    - :loinc_code: 10353-1
+    - :loinc_code: 11475-1
+    - :loinc_code: 23826-1
+    - :loinc_code: 23827-9
+    - :loinc_code: 23828-7
+    - :loinc_code: 23830-3
+    - :loinc_code: 23831-1
+    - :loinc_code: 24127-3
+    - :loinc_code: 24128-1
+    - :loinc_code: 24129-9
+    - :loinc_code: 25332-8
+    - :loinc_code: 32355-0
+    - :loinc_code: 38347-1
+    - :loinc_code: 42329-3
+    - :loinc_code: 548-8
+    - :loinc_code: 549-6
+    - :loinc_code: 550-4
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 604-9
+    - :loinc_code: 626-2
+    - :loinc_code: 6315-6
+    - :loinc_code: 6317-2
+    - :loinc_code: 6463-4
+    - :loinc_code: 9362-5
+    - :loinc_code: 9364-1
+
+Plague:
+  :organisms:
+    - :organism_name: Yersinia pestis
+  :diseases:
+    - :disease_name: Plague
+      :cdc_code: 10440
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 41400-3
+    - :loinc_code: 41401-1
+    - :loinc_code: 48410-5
+    - :loinc_code: 600-7
+    - :loinc_code: 605-6
+    - :loinc_code: 610-6
+    - :loinc_code: 625-4
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+    - :loinc_code: 701-3
+
+Polio:
+  :organisms:
+    - :organism_name: Human poliovirus
+    - :organism_name: Human poliovirus 1
+    - :organism_name: Human poliovirus 2
+    - :organism_name: Human poliovirus 3
+  :diseases:
+    - :disease_name: Poliomyelitis, paralytic
+    - :disease_name: Poliovirus infection, nonparalytic
+  :loinc_codes:
+    - :loinc_code: 10736-7
+    - :loinc_code: 10737-5
+    - :loinc_code: 12272-1
+    - :loinc_code: 14488-1
+    - :loinc_code: 14489-9
+    - :loinc_code: 14491-5
+    - :loinc_code: 16284-2
+    - :loinc_code: 5883-4
+    - :loinc_code: 5884-2
+    - :loinc_code: 5886-7
+    - :loinc_code: 5887-5
+
+Psittacosis:
+  :organisms:
+    - :organism_name: Chlamydia trachomatis infection species
+    - :organism_name: Chlamydia trachomatis infection psittaci
+  :diseases:
+    - :disease_name: Psittacosis
+  :loinc_codes:
+    - :loinc_code: 14198-6
+    - :loinc_code: 16589-4
+    - :loinc_code: 20752-2
+    - :loinc_code: 22180-4
+    - :loinc_code: 22181-2
+    - :loinc_code: 35713-7
+    - :loinc_code: 5079-9
+    - :loinc_code: 5084-9
+    - :loinc_code: 558-7
+    - :loinc_code: 560-3
+    - :loinc_code: 6348-7
+    - :loinc_code: 6915-3
+    - :loinc_code: 6916-1
+    - :loinc_code: 6917-9
+
+Q fever:
+  :organisms:
+    - :organism_name: Coxiella burnetii
+    - :organism_name: Coxiella burnetii phase I
+    - :organism_name: Coxiella burnetii phase 2
+  :diseases:
+    - :disease_name: Q fever, acute
+      :cdc_code: 10255
+    - :disease_name: Q fever, chronic
+  :loinc_codes:
+    - :loinc_code: 23018-5
+    - :loinc_code: 7828-7
+    - :loinc_code: 7829-5
+    - :loinc_code: 7830-3
+    - :loinc_code: 9708-9
+    - :loinc_code: 9709-7
+    - :loinc_code: 9710-5
+    - :loinc_code: 9711-3
+
+Rabies:
+  :organisms:
+    - :organism_name: Rabies virus
+  :diseases:
+    - :disease_name: Rabies, animal
+    - :disease_name: Rabies, human
+  :loinc_codes:
+    - :loinc_code: 6523-5
+    - :loinc_code: 6524-3
+    - :loinc_code: 6527-6
+    - :loinc_code: 6528-4
+    - :loinc_code: 6529-2
+    - :loinc_code: 6532-6
+    - :loinc_code: 6533-4
+
+Relapsing Fever:
+  :organisms:
+    - :organism_name: Borrelia recurrentis
+    - :organism_name: Borrelia hermsii
+    - :organism_name: Borrelia parkerii
+    - :organism_name: Borrelia turicatae
+  :diseases:
+    - :disease_name: Relapsing Fever
+
+Rocky Mountain Spotted Fever:
+  :organisms:
+    - :organism_name: Rickettsia rickettsii
+    - :organism_name: Rickettsia spotted fever group
+  :diseases:
+    - :disease_name: Rocky Mountain Spotted Fever
+  :loinc_codes:
+    - :loinc_code: 11482-7
+    - :loinc_code: 17537-2
+    - :loinc_code: 17538-0
+    - :loinc_code: 18429-1
+    - :loinc_code: 18430-9
+    - :loinc_code: 5307-4
+    - :loinc_code: 5308-2
+    - :loinc_code: 5310-8
+    - :loinc_code: 5311-6
+    - :loinc_code: 5312-4
+    - :loinc_code: 5313-2
+    - :loinc_code: 5314-0
+    - :loinc_code: 5315-7
+    - :loinc_code: 5878-4
+    - :loinc_code: 6543-3
+    - :loinc_code: 6544-1
+    - :loinc_code: 6545-8
+    - :loinc_code: 6546-6
+    - :loinc_code: 7997-0
+    - :loinc_code: 7998-8
+    - :loinc_code: 7999-6
+    - :loinc_code: 8003-6
+    - :loinc_code: 8004-4
+    - :loinc_code: 8005-1
+
+Rubella:
+  :organisms:
+    - :organism_name: Rubella virus
+  :diseases:
+    - :disease_name: Rubella
+      :cdc_code: 10200
+    - :disease_name: Rubella, congenital syndrome
+  :loinc_codes:
+    - :loinc_code: 13279-5
+    - :loinc_code: 13282-9
+    - :loinc_code: 17551-3
+    - :loinc_code: 17552-1
+    - :loinc_code: 24116-6
+    - :loinc_code: 25514-1
+    - :loinc_code: 5334-8
+    - :loinc_code: 5335-5
+    - :loinc_code: 5883-4
+    - :loinc_code: 5884-2
+    - :loinc_code: 5887-5
+    - :loinc_code: 6548-2
+    - :loinc_code: 8015-0
+    - :loinc_code: 9576-0
+
+Salmonella:
+  :organisms:
+    - :organism_name: Salmonella species
+    - :organism_name: Salmonella species
+    - :organism_name: Salmonella Agona
+    - :organism_name: Salmonella Braenderup
+    - :organism_name: Salmonella Brandenburg
+    - :organism_name: Salmonella Enteritidis
+    - :organism_name: Salmonella Grumpensis
+    - :organism_name: Salmonella Havana
+    - :organism_name: Salmonella Heidelburg
+    - :organism_name: Salmonella Infantis
+    - :organism_name: Salmonella Java
+    - :organism_name: Salmonella Javiana
+    - :organism_name: Salmonella Montevideo
+    - :organism_name: Salmonella Muenchen
+    - :organism_name: Salmonella Oranienburg
+    - :organism_name: Salmonella Paratyphi A
+    - :organism_name: Salmonella Paratyphi B
+    - :organism_name: Salmonella Poona
+    - :organism_name: Salmonella Saintpaul
+    - :organism_name: Salmonella Schwarzengrund
+    - :organism_name: Salmonella Senftenberg
+    - :organism_name: Salmonella Thompson
+    - :organism_name: Salmonella Typhimurium
+    - :organism_name: Salmonella Irumu
+    - :organism_name: Salmonella Agbeni
+    - :organism_name: Salmonella London
+    - :organism_name: Salmonella Uganda
+    - :organism_name: Salmonella Poano
+    - :organism_name: Salmonella Seremban
+    - :organism_name: Salmonella Nottingham
+    - :organism_name: Salmonella Baildon
+    - :organism_name: Salmonella Virchow
+    - :organism_name: Salmonella Glostrup
+    - :organism_name: Salmonella Bareilly
+    - :organism_name: Salmonella Denver
+    - :organism_name: Salmonella Jangwani
+    - :organism_name: Salmonella Kentucky
+    - :organism_name: Salmonella Potsdam
+    - :organism_name: Salmonella Wandsworth
+    - :organism_name: Salmonella Mbandaka
+    - :organism_name: Salmonella Pensacola
+    - :organism_name: Salmonella Adelaide
+    - :organism_name: Salmonella Norwich
+    - :organism_name: Salmonella Kiambu
+    - :organism_name: Salmonella Indiana
+    - :organism_name: Salmonella Madelia
+    - :organism_name: Salmonella Freetown
+    - :organism_name: Salmonella Tokoin
+    - :organism_name: Salmonella Ealing
+    - :organism_name: Salmonella Coeln
+    - :organism_name: Salmonella Mississippi
+    - :organism_name: Salmonella Manhattan
+    - :organism_name: Salmonella Worthington
+    - :organism_name: Salmonella Matopeni
+    - :organism_name: Salmonella Hartford
+    - :organism_name: Salmonella Redlands
+    - :organism_name: Salmonella Zanzibar
+    - :organism_name: Salmonella Kisarawe
+    - :organism_name: Salmonella Richmond
+    - :organism_name: Salmonella Tornow
+    - :organism_name: Salmonella paratyphi C
+    - :organism_name: Salmonella Orion
+    - :organism_name: Salmonella Holcomb
+    - :organism_name: Salmonella Wangata
+    - :organism_name: Salmonella Eastbourne
+    - :organism_name: Salmonella Istanbul
+    - :organism_name: Salmonella Oslo
+    - :organism_name: Salmonella Brunei
+    - :organism_name: Salmonella Derby
+    - :organism_name: Salmonella Anatum
+    - :organism_name: Salmonella Florida
+    - :organism_name: Salmonella Kottbus
+    - :organism_name: Salmonella Panama
+    - :organism_name: Salmonella Abony
+    - :organism_name: Salmonella Berta
+    - :organism_name: Salmonella Duisburg
+    - :organism_name: Salmonella Mikawasima
+    - :organism_name: Salmonella Roodepoort
+    - :organism_name: Salmonella Putten
+    - :organism_name: Salmonella Hindmarsh
+    - :organism_name: Salmonella Corvallis
+    - :organism_name: Salmonella Apapa
+    - :organism_name: Salmonella Johannesburg
+    - :organism_name: Salmonella Hadar
+    - :organism_name: Salmonella Urbana
+    - :organism_name: Salmonella Overschie
+    - :organism_name: Salmonella Rissen
+    - :organism_name: Salmonella Blockley
+    - :organism_name: Salmonella Praha
+    - :organism_name: Salmonella Edinburg
+    - :organism_name: Salmonella Daytona
+    - :organism_name: Salmonella Cubana
+    - :organism_name: Salmonella Newport
+    - :organism_name: Salmonella Aberdeen
+    - :organism_name: Salmonella Inverness
+    - :organism_name: Salmonella Durban
+    - :organism_name: Salmonella Fluntern
+    - :organism_name: Salmonella Colindale
+    - :organism_name: Salmonella Gaminara
+    - :organism_name: Salmonella Meleagridis
+    - :organism_name: Salmonella Dublin
+    - :organism_name: Salmonella Reading
+    - :organism_name: Salmonella Telelkebir
+    - :organism_name: Salmonella Miami
+    - :organism_name: Salmonella Haardt
+    - :organism_name: Salmonella Monschaui
+    - :organism_name: Salmonella Kintambo
+    - :organism_name: Salmonella Ohio
+    - :organism_name: Salmonella Hvittingfoss
+    - :organism_name: Salmonella Muenster
+    - :organism_name: Salmonella Cerro
+    - :organism_name: Salmonella Give
+    - :organism_name: Salmonella Albany
+    - :organism_name: Salmonella Kingabwa
+    - :organism_name: Salmonella Napoli
+    - :organism_name: Salmonella Butantan
+    - :organism_name: Salmonella Aba
+    - :organism_name: Salmonella Nyanza
+    - :organism_name: Salmonella Amager
+    - :organism_name: Salmonella Tennessee
+    - :organism_name: Salmonella Kokomlemle
+    - :organism_name: Salmonella Concord
+    - :organism_name: Salmonella choleraesuis ss. choleraesuis
+    - :organism_name: Salmonella Rubislaw
+    - :organism_name: Salmonella Litchfield
+    - :organism_name: Salmonella Bovismorbificans
+    - :organism_name: Salmonella Bredeney
+    - :organism_name: Salmonella Kedougou
+    - :organism_name: Salmonella Minnesota
+    - :organism_name: Salmonella Bardo
+    - :organism_name: Salmonella Tilene
+    - :organism_name: Salmonella Anfo
+    - :organism_name: Salmonella Stanley
+    - :organism_name: Salmonella Matadi
+    - :organism_name: Salmonella Haifa
+    - :organism_name: Salmonella Isangi
+    - :organism_name: Salmonella Presov
+    - :organism_name: Salmonella Weltevreden
+    - :organism_name: Salmonella Enterica
+    - :organism_name: Salmonella Sandiego
+    - :organism_name: Salmonella Virginia
+    - :organism_name: Salmonella Pomona
+    - :organism_name: Salmonella species, unable to serotype
+  :diseases:
+    - :disease_name: Salmonellosis
+  :loinc_codes:
+    - :loinc_code: 10354-9
+    - :loinc_code: 11475-1
+    - :loinc_code: 13284-5
+    - :loinc_code: 17563-8
+    - :loinc_code: 17969-7
+    - :loinc_code: 20474-3
+    - :loinc_code: 20951-0
+    - :loinc_code: 22517-7
+    - :loinc_code: 23602-6
+    - :loinc_code: 38347-1
+    - :loinc_code: 41852-5
+    - :loinc_code: 597-5
+    - :loinc_code: 600-7
+    - :loinc_code: 604-9
+    - :loinc_code: 605-6
+    - :loinc_code: 606-4
+    - :loinc_code: 610-6
+    - :loinc_code: 611-4
+    - :loinc_code: 621-3
+    - :loinc_code: 622-1
+    - :loinc_code: 624-7
+    - :loinc_code: 625-4
+    - :loinc_code: 626-2
+    - :loinc_code: 627-0
+    - :loinc_code: 630-4
+    - :loinc_code: 632-0
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6460-0
+    - :loinc_code: 6462-6
+    - :loinc_code: 6463-4
+
+Severe Acute Respiratory Syndrome (SARS) Coronavirus:
+  :organisms:
+    - :organism_name: Severe Acute Respiratory Syndrome (SARS) coronavirus
+  :diseases:
+    - :disease_name: Severe Acute Respiratory Syndrome (SARS)
+  :loinc_codes:
+    - :loinc_code: 33964-8
+    - :loinc_code: 33968-9
+
+Shigella:
+  :organisms:
+    - :organism_name: Shigella species
+    - :organism_name: Shigella flexneri
+    - :organism_name: Shigella sonnei
+    - :organism_name: Shigella boydii
+    - :organism_name: Shigella dysenteriae
+  :diseases:
+    - :disease_name: Shigellosis
+  :loinc_codes:
+    - :loinc_code: 10354-9
+    - :loinc_code: 11475-1
+    - :loinc_code: 17576-0
+    - :loinc_code: 42190-9
+    - :loinc_code: 600-7
+    - :loinc_code: 625-4
+    - :loinc_code: 630-4
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+
+Smallpox:
+  :organisms:
+    - :organism_name: Variola virus
+  :diseases:
+    - :disease_name: Smallpox
+      :cdc_code: 11800
+    - :disease_name: Smallpox Vaccine-Associated Adverse Event
+
+Staph aureus resistance:
+  :organisms:
+    - :organism_name: Staphylococcus aureus, vancomycin resistant
+  :diseases:
+    - :disease_name: Vancomycin-resistant Staphylococcus aureus (VRSA)
+    - :disease_name: Vancomycin-intermediate Staphylococcus aureus (VISA)
+  :loinc_codes:
+    - :loinc_code: 610-6
+
+Shiga toxin-producing Escherichia coli (STEC):
+  :organisms:
+    - :organism_name: Shiga toxin
+    - :organism_name: Enterohemorrhagic Escherichia coli (Shiga toxin-producing Escherichia coli (STEC))
+    - :organism_name: Escherichia coli O157:H7
+    - :organism_name: Escherichia coli O157:non-motile
+    - :organism_name: Escherichia coli serogroup O121:H19
+  :diseases:
+    - :disease_name: Shiga toxin-producing Escherichia coli (STEC)
+  :loinc_codes:
+    - :loinc_code: 10851-4
+    - :loinc_code: 11475-1
+    - :loinc_code: 12276-2
+    - :loinc_code: 16835-1
+    - :loinc_code: 17969-7
+    - :loinc_code: 21262-1
+    - :loinc_code: 33764-2
+    - :loinc_code: 41852-5
+    - :loinc_code: 44088-3
+    - :loinc_code: 600-7
+    - :loinc_code: 625-4
+    - :loinc_code: 6463-4
+
+Group A Strep:
+  :organisms:
+    - :organism_name: Group A strep (Streptococcus pyogenes)
+  :diseases:
+    - :disease_name: Streptococcal disease, invasive, Group A
+  :loinc_codes:
+    - :loinc_code: 10352-3
+    - :loinc_code: 11475-1
+    - :loinc_code: 14475-8
+    - :loinc_code: 17653-7
+    - :loinc_code: 17656-0
+    - :loinc_code: 5036-9
+    - :loinc_code: 5133-4
+    - :loinc_code: 5172-2
+    - :loinc_code: 5173-0
+    - :loinc_code: 547-0
+    - :loinc_code: 600-7
+    - :loinc_code: 606-4
+    - :loinc_code: 610-6
+    - :loinc_code: 621-3
+    - :loinc_code: 626-2
+    - :loinc_code: 627-0
+    - :loinc_code: 632-0
+    - :loinc_code: 635-3
+    - :loinc_code: 636-1
+    - :loinc_code: 6463-4
+    - :loinc_code: 6558-1
+    - :loinc_code: 6559-9
+
+Group B Strep:
+  :organisms:
+    - :organism_name: Group B strep (Streptococcus agalactiae)
+  :diseases:
+    - :disease_name: Streptococcal disease, invasive, Group B
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 14323-0
+    - :loinc_code: 14475-8
+    - :loinc_code: 14476-6
+    - :loinc_code: 5034-4
+    - :loinc_code: 586-8
+    - :loinc_code: 600-7
+    - :loinc_code: 606-4
+    - :loinc_code: 610-6
+    - :loinc_code: 611-4
+    - :loinc_code: 621-3
+    - :loinc_code: 627-0
+    - :loinc_code: 632-0
+    - :loinc_code: 6463-4
+    - :loinc_code: 9786-5
+
+Group C and G Strep:
+  :organisms:
+    - :organism_name: Group C strep
+    - :organism_name: Group G strep
+  :diseases:
+    - :disease_name: Streptococcal disease, invasive, Groups C & G
+
+Streptococcus pneumoniae:
+  :organisms:
+    - :organism_name: Streptococcus pneumoniae
+  :diseases:
+    - :disease_name: Streptococcus pneumoniae, invasive disease
+    - :disease_name: Streptococcus pneumoniae, invasive disease, < 5 (drug susceptible)
+  :loinc_codes:
+    - :loinc_code: 11086-6
+    - :loinc_code: 11475-1
+    - :loinc_code: 14322-2
+    - :loinc_code: 17652-9
+    - :loinc_code: 17655-2
+    - :loinc_code: 23667-9
+    - :loinc_code: 600-7
+    - :loinc_code: 606-4
+    - :loinc_code: 610-6
+    - :loinc_code: 611-4
+    - :loinc_code: 622-1
+    - :loinc_code: 624-7
+    - :loinc_code: 627-0
+    - :loinc_code: 632-0
+    - :loinc_code: 6463-4
+    - :loinc_code: 6553-2
+    - :loinc_code: 6555-7
+
+Syphilis:
+  :organisms:
+    - :organism_name: Treponema pallidum
+  :diseases:
+    - :disease_name: Syphilis, congenital
+      :cdc_code: 10316
+    - :disease_name: Syphilis, early latent
+      :cdc_code: 10313
+    - :disease_name: Syphilis, late latent
+      :cdc_code: 10314
+    - :disease_name: Syphilis, late with clinical manifestations other than neurosyphilis
+      :cdc_code: 10318
+    - :disease_name: Syphilis, neurosyphilis
+      :cdc_code: 10317
+    - :disease_name: Syphilis, primary
+      :cdc_code: 10311
+    - :disease_name: Syphilis, secondary
+      :cdc_code: 10312
+    - :disease_name: Syphilis, unknown latent
+  :loinc_codes:
+    - :loinc_code: 11084-1
+    - :loinc_code: 11597-2
+    - :loinc_code: 13288-6
+    - :loinc_code: 17725-3
+    - :loinc_code: 17726-1
+    - :loinc_code: 20507-0
+    - :loinc_code: 20508-8
+    - :loinc_code: 22461-8
+    - :loinc_code: 22587-0
+    - :loinc_code: 22592-0
+    - :loinc_code: 22594-6
+    - :loinc_code: 24110-9
+    - :loinc_code: 24312-1
+    - :loinc_code: 29310-0
+    - :loinc_code: 31146-4
+    - :loinc_code: 31147-2
+    - :loinc_code: 34382-2
+    - :loinc_code: 47238-1
+    - :loinc_code: 5289-4
+    - :loinc_code: 5290-2
+    - :loinc_code: 5291-0
+    - :loinc_code: 5292-8
+    - :loinc_code: 5393-4
+    - :loinc_code: 6561-5
+    - :loinc_code: 6562-3
+    - :loinc_code: 8041-6
+    - :loinc_code: 9826-9
+
+Tetanus:
+  :organisms:
+    - :organism_name: Clostridium tetani
+  :diseases:
+    - :disease_name: Tetanus
+      :cdc_code: 10210
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 600-7
+    - :loinc_code: 628-8
+    - :loinc_code: 6367-7
+
+Trichinosis:
+  :organisms:
+    - :organism_name: Trichinella spiralis
+  :diseases:
+    - :disease_name: Trichinosis
+
+Tuberculosis:
+  :organisms:
+    - :organism_name: Acid-fast bacillus
+    - :organism_name: Mycobacterium tuberculosis complex
+    - :organism_name: Mycobacterium kansasii
+    - :organism_name: Mycobacterium xenopi
+    - :organism_name: Mycobacterium marinum
+    - :organism_name: Mycobacterium fortuitum
+    - :organism_name: Mycobacterium chelonae
+    - :organism_name: Mycobacterium absessus
+    - :organism_name: Mycobacterium simiae
+    - :organism_name: Mycobacterium lentiflavum
+    - :organism_name: Mycobacterium szulgai
+    - :organism_name: Mycobacterium ulcerans
+    - :organism_name: Mycobacterium gordonae
+    - :organism_name: Mycobacterium smegmatis
+  :diseases:
+    - :disease_name: Tuberculosis, Active
+    - :disease_name: Tuberculosis, B1
+    - :disease_name: Tuberculosis, B2
+    - :disease_name: Tuberculosis, Latent  Infection (LTBI)
+    - :disease_name: Tuberculosis, suspect
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 11476-9
+    - :loinc_code: 11545-1
+    - :loinc_code: 13956-8
+    - :loinc_code: 14556-5
+    - :loinc_code: 14557-3
+    - :loinc_code: 14558-1
+    - :loinc_code: 14559-9
+    - :loinc_code: 14560-7
+    - :loinc_code: 14561-5
+    - :loinc_code: 14562-3
+    - :loinc_code: 14974-0
+    - :loinc_code: 16278-4
+    - :loinc_code: 17296-5
+    - :loinc_code: 17297-3
+    - :loinc_code: 38379-4
+    - :loinc_code: 40699-1
+    - :loinc_code: 46245-7
+    - :loinc_code: 5022-9
+    - :loinc_code: 5027-8
+    - :loinc_code: 532-2
+    - :loinc_code: 533-0
+    - :loinc_code: 534-8
+    - :loinc_code: 535-5
+    - :loinc_code: 536-3
+    - :loinc_code: 537-1
+    - :loinc_code: 538-9
+    - :loinc_code: 539-7
+    - :loinc_code: 540-5
+    - :loinc_code: 541-3
+    - :loinc_code: 54146-6
+    - :loinc_code: 542-1
+    - :loinc_code: 543-9
+    - :loinc_code: 600-7
+    - :loinc_code: 614-8
+    - :loinc_code: 627-0
+    - :loinc_code: 645-2
+    - :loinc_code: 646-0
+    - :loinc_code: 6463-4
+    - :loinc_code: 6656-3
+    - :loinc_code: 676-7
+    - :loinc_code: 9823-6
+    - :loinc_code: 9824-4
+    - :loinc_code: 9825-1
+
+Tularemia:
+  :organisms:
+    - :organism_name: Francisella tularensis
+  :diseases:
+    - :disease_name: Tularemia
+      :cdc_code: 10230
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 14209-1
+    - :loinc_code: 16875-7
+    - :loinc_code: 16876-5
+    - :loinc_code: 16877-3
+    - :loinc_code: 16878-1
+    - :loinc_code: 16879-9
+    - :loinc_code: 23125-8
+    - :loinc_code: 33676-8
+    - :loinc_code: 45040-3
+    - :loinc_code: 5166-4
+    - :loinc_code: 5167-2
+    - :loinc_code: 600-7
+    - :loinc_code: 610-6
+    - :loinc_code: 611-4
+    - :loinc_code: 627-0
+    - :loinc_code: 630-4
+    - :loinc_code: 634-6
+    - :loinc_code: 636-1
+    - :loinc_code: 6407-1
+    - :loinc_code: 6408-9
+    - :loinc_code: 6463-4
+    - :loinc_code: 7888-1
+    - :loinc_code: 7889-9
+    - :loinc_code: 7890-7
+
+Typhoid (cases and carriers; caused by Salmonella typhi):
+  :organisms:
+    - :organism_name: Salmonella typhi
+  :diseases:
+    - :disease_name: Typhoid (cases and carriers; caused by Salmonella typhi)
+  :loinc_codes:
+    - :loinc_code: 5320-7
+    - :loinc_code: 5322-3
+
+Vibriosis (non-cholera Vibrio species infections):
+  :organisms:
+    - :organism_name: Vibrio species
+    - :organism_name: Vibrio parahemolyticus
+    - :organism_name: Vibrio alginolyticus
+    - :organism_name: Vibrio vulnificus
+    - :organism_name: Vibrio fluvialis
+    - :organism_name: Vibrio cholerae non O1/nonO139
+  :diseases:
+    - :disease_name: Vibriosis (non-cholera Vibrio species infections)
+  :loinc_codes:
+    - :loinc_code: 11475-1
+    - :loinc_code: 600-7
+    - :loinc_code: 625-4
+    - :loinc_code: 6579-7
+    - :loinc_code: 6581-3
+
+West Nile virus:
+  :organisms:
+    - :organism_name: West Nile virus
+    - :organism_name: Kunjin virus
+  :diseases:
+    - :disease_name: West Nile virus neuroinvasive disease
+    - :disease_name: West Nile virus non-neuroinvasive disease
+  :loinc_codes:
+    - :loinc_code: 29535-2
+    - :loinc_code: 29536-0
+    - :loinc_code: 29537-8
+    - :loinc_code: 29538-6
+    - :loinc_code: 29566-7
+    - :loinc_code: 29567-5
+    - :loinc_code: 29568-3
+    - :loinc_code: 29569-1
+    - :loinc_code: 29778-8
+    - :loinc_code: 30178-8
+    - :loinc_code: 32361-8
+    - :loinc_code: 36896-9
+    - :loinc_code: 36897-7
+    - :loinc_code: 36898-5
+    - :loinc_code: 37985-9
+    - :loinc_code: 38997-3
+    - :loinc_code: 39572-3
+
+Yellow Fever:
+  :organisms:
+    - :organism_name: Yellow Fever virus group
+    - :organism_name: Yellow Fever virus
+  :diseases:
+    - :disease_name: Yellow Fever
+  :loinc_codes:
+    - :loinc_code: 5883-4
+    - :loinc_code: 6587-0
+    - :loinc_code: 6588-8
+    - :loinc_code: 6589-6
+    - :loinc_code: 6590-4
+    - :loinc_code: 6591-2
+    - :loinc_code: 6592-0
+    - :loinc_code: 6593-8
+    - :loinc_code: 8054-9
+    - :loinc_code: 8055-6
+    - :loinc_code: 8056-4
+    - :loinc_code: 8057-2
+
+Yersiniosis:
+  :organisms:
+    - :organism_name: Yersinia species
+    - :organism_name: Yersinia enterocolitica
+    - :organism_name: Yersinia intermedia
+    - :organism_name: Yersinia frederiksenii
+    - :organism_name: Yersinia pseudotuberculosis
+    - :organism_name: Yersinia enterocolitica serogroup O:3
+    - :organism_name: Yersinia enterocolitica serogroup O:8
+    - :organism_name: Yersinia enterocolitica serogroup O:9
+    - :organism_name: Yersinia enterocolitica serogroup O:5
+  :diseases:
+    - :disease_name: Yersiniosis
+  :loinc_codes:
+    - :loinc_code: 5409-8
+    - :loinc_code: 5410-6
+    - :loinc_code: 625-4
+    - :loinc_code: 6959-1
+    - :loinc_code: 6960-9
+    - :loinc_code: 6961-7
+    - :loinc_code: 6962-5
+    - :loinc_code: 6963-3
+    - :loinc_code: 6964-1
+    - :loinc_code: 6965-8
+    - :loinc_code: 6966-6
+    - :loinc_code: 6967-4
+    - :loinc_code: 701-3
+
+Unclassified:
+  :diseases:
+    - :disease_name: Human T-Lymphotropic virus type I infection (HTLV-I)
+    - :disease_name: Human T-Lymphotropic virus type II infection (HTLV-II)
+    - :disease_name: AIDS
+      :cdc_code: 10560
+    - :disease_name: Lead poisoning
+      :cdc_code: 32010
+    - :disease_name: Monkeypox
+    - :disease_name: Mucopurulent cervicitis (MPC)
+    - :disease_name: Encephalitis, post-chickenpox
+    - :disease_name: Encephalitis, post-mumps
+      :cdc_code: 10080
+    - :disease_name: Encephalitis, primary
+      :cdc_code: 10050
+    - :disease_name: Encephalitis, post-other
+      :cdc_code: 10090
+    - :disease_name: HIV Infection, adult
+    - :disease_name: HIV Infection, pediatric
+    - :disease_name: Nongonococcal urethritis (NGU)
+      :cdc_code: 10307
+    - :disease_name: Hemolytic uremic syndrome postdiarrheal
+    - :disease_name: Toxic-shock syndrome (staphylococcal)
+    - :disease_name: Pelvic Inflammatory Disease (PID), Unknown Etiology
+      :cdc_code: 10309
+    - :disease_name: Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)

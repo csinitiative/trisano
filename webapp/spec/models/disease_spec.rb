@@ -72,6 +72,69 @@ describe Disease do
     live_forms.should be_empty
   end
 
+  describe "loading from a YAML file" do
+    fixtures :loinc_codes
+
+    before do
+      Disease.create! :disease_name => 'Already here'
+      Organism.create! :organism_name => 'Pre-existing Allan'
+      @yaml = <<-"end-yaml"
+        ---
+        Sample Group:
+          :diseases:
+            - :disease_name: Clumsy
+              :cdc_code: 99100
+            - :disease_name: Already here
+          :organisms:
+            - :organism_name: Steve
+            - :organism_name: Pre-existing Allan
+          :loinc_codes:
+            - :loinc_code: 10007-0
+            - :loinc_code: 20002-0
+            - :loinc_code: 20001-0
+      end-yaml
+    end
+
+    it "should create diseases if they don't exist" do
+      lambda {Disease.load_from_yaml(@yaml)}.should change(Disease, :count).by(1)
+    end
+
+    it "should load all provided attributes" do
+      Disease.load_from_yaml(@yaml)
+      disease = Disease.find_by_disease_name 'Clumsy'
+      disease.should_not be_nil
+      disease.cdc_code.should == "99100"
+    end
+
+    it "should default created diseases to active" do
+      Disease.load_from_yaml(@yaml)
+      disease = Disease.find_by_disease_name 'Clumsy'
+      disease.should_not be_nil
+      disease.active.should be_true
+    end
+
+    it "should create organisms if they don't already exist" do
+      lambda {Disease.load_from_yaml(@yaml)}.should change(Organism, :count).by(1)
+    end
+
+    it "should link organisms to diseases" do
+      Disease.load_from_yaml(@yaml)
+      organisms = Organism.all(:conditions => ['organism_name IN (?)', ['Pre-existing Allan', 'Steve']])
+      organisms.size.should == 2
+      Disease.find_by_disease_name('Clumsy').organisms.sort_by(&:organism_name).should == organisms
+      Disease.find_by_disease_name('Already here').organisms.sort_by(&:organism_name).should == organisms
+    end
+
+    it "should link loinc codes to diseases" do
+      Disease.load_from_yaml(@yaml)
+      loincs = LoincCode.all(:conditions => ['loinc_code IN (?)', %w(10007-0 20001-0 20002-0)])
+      loincs.size.should == 3
+      Disease.find_by_disease_name('Clumsy').loinc_codes.should == loincs
+      Disease.find_by_disease_name('Already here').loinc_codes.should == loincs
+    end
+
+  end
+
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
       @disease.external_codes.should be_empty

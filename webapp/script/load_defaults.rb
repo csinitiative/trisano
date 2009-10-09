@@ -17,20 +17,6 @@
 
 puts "Loading defaults"
 
-# Diseases are represented as an array of strings
-
-diseases = YAML::load_file("#{RAILS_ROOT}/db/defaults/diseases.yml")
-Disease.transaction do
-  diseases.each do |disease|
-    d = Disease.find_or_initialize_by_disease_name(
-      :disease_name => disease['disease_name'],
-      :cdc_code => disease['cdc_code']
-    )
-    d.active = true
-    d.save! if d.new_record?
-  end
-end
-
 # core fields
 core_fields = YAML::load_file("#{RAILS_ROOT}/db/defaults/core_fields.yml")
 CoreField.transaction do

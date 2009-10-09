@@ -83,12 +83,31 @@ class Disease < ActiveRecord::Base
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
 
+    def load_from_yaml(str_or_readable)
+      transaction do
+        YAML.load(str_or_readable).each do |disease_group, data|
+          data[:diseases].each do |disease_attr|
+            disease = find_or_create_by_disease_name({:active => true}.merge(disease_attr))
+
+            data[:organisms].each do |organism_attr|
+              organism = Organism.all_by_name(organism_attr[:organism_name]).first || Organism.create!(organism_attr)
+              organism.diseases << disease unless organism.diseases.include?(disease)
+            end if data[:organisms]
+
+            data[:loinc_codes].each do |loinc_attr|
+              loinc = LoincCode.first(:conditions => loinc_attr)
+              loinc.diseases << disease unless loinc.diseases.include?(disease)
+            end if data[:loinc_codes]
+          end
+        end
+      end
+    end
   end
 
   def live_forms(event_type = "MorbidityEvent")
     Form.find(:all,
       :joins => "INNER JOIN diseases_forms df ON df.form_id = id",
-      :conditions => ["df.disease_id = ? AND status = 'Live' AND event_type = ?",  self.id, event_type.underscore]
+      :conditions => ["df.disease_id = ? AND status = ? AND event_type = ?",  self.id, 'Live', event_type.underscore]
     )
   end
 

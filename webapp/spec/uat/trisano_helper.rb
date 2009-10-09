@@ -155,10 +155,10 @@ module TrisanoHelper
   end
 
   def get_random_disease()
-    wordlist = YAML.load_file(File.join(RAILS_ROOT, 'db', 'defaults', 'diseases.yml')).collect {|d| d['disease_name']}
+    wordlist = YAML.load_file(File.join(RAILS_ROOT, 'db', 'defaults', 'diseases.yml')).collect { |k,v| v[:diseases] }.collect{ |d| d[:disease_name] }.uniq
     wordlist[rand(wordlist.size)]
   end
-  
+
   def get_random_jurisdiction()
     wordlist = ["Out of State","Weber-Morgan Health Department","Wasatch County Health Department","Utah State","Utah County Health Department","TriCounty Health Department","Tooele County Health Department","Summit County Public Health Department","Southwest Utah Public Health Department","Southeastern Utah District Health Department","Salt Lake Valley Health Department","Davis County Health Department","Central Utah Public Health Department","Bear River Health Department","Unassigned"]
     wordlist[rand(wordlist.size)]
