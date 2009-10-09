@@ -786,8 +786,8 @@ FROM
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 ;
 
-ALTER TABLE dw_lab_results
-    ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id, lab_type);
+--ALTER TABLE dw_lab_results
+    --ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id, lab_type);
 CREATE INDEX dw_lab_results_morbidity_id_ix
     ON dw_lab_results (dw_morbidity_events_id);
 CREATE INDEX dw_lab_results_contact_id_ix
