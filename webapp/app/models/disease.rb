@@ -70,7 +70,7 @@ class Disease < ActiveRecord::Base
 
     def disease_status_where_clause
       diseases = collect_diseases(&:case_status_where_clause)
-      "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
+      "(#{diseases.join(' OR ')})" unless diseases.compact!.try :empty?
     end
 
     def with_no_export_status

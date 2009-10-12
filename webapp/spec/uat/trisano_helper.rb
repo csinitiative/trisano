@@ -155,7 +155,7 @@ module TrisanoHelper
   end
 
   def get_random_disease()
-    wordlist = YAML.load_file(File.join(RAILS_ROOT, 'db', 'defaults', 'diseases.yml')).collect { |k,v| v[:diseases] }.collect{ |d| d[:disease_name] }.uniq
+    wordlist = YAML.load_file(File.join(RAILS_ROOT, 'db', 'defaults', 'diseases.yml')).collect { |k,v| v[:diseases] }.flatten.collect{ |d| d[:disease_name] }.uniq
     wordlist[rand(wordlist.size)]
   end
 

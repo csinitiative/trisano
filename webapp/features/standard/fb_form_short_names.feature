@@ -5,7 +5,9 @@ Feature: Active forms must have unique short names
 
   Scenario: Creating a new form
     Given I am logged in as a super user
-    
+      And the following active diseases:
+        | Disease name |
+        | African Tick Bite Fever |
     When I navigate to the new form view
     And I enter a form name of Lipsom
     And I enter a form short name of lipsom_form
@@ -16,6 +18,9 @@ Feature: Active forms must have unique short names
 
   Scenario: Creating a new form with a blank short name
     Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | African Tick Bite Fever |
 
     When I navigate to the new form view
     And I enter a form name of Lipsom

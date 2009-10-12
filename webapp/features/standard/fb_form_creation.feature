@@ -6,6 +6,9 @@ Feature: Forms can be created
 
   Scenario: Creating a new form
     Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | African Tick Bite Fever |
 
     When I navigate to the new form view
     And I enter a form name of ATBF

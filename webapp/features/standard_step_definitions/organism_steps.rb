@@ -11,7 +11,7 @@ Then /^I should see the following organisms:$/ do |expected_table|
 end
 
 Given /^disease "([^\"]*)" is linked to organism "([^\"]*)"$/ do |disease_name, organism_name|
-  disease = Disease.find_by_disease_name disease_name
+  disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   organism = Organism.find_by_organism_name organism_name
   organism.diseases << disease
   organism.save!

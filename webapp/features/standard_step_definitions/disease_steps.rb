@@ -1,3 +1,7 @@
+Given /^the disease "([^\"]*)" with the cdc code "([^\"]*)"$/ do |disease_name, cdc_code|
+  @disease = Disease.find_or_create_by_disease_name(:disease_name => disease_name, :cdc_code => cdc_code, :active => true)
+end
+
 Given /^the disease "([^\"]*)" exports to CDC when state is "([^\"]*)"$/ do |disease_name, case_description|
   disease = Disease.find_by_disease_name disease_name
   disease.external_codes << ExternalCode.case.find_by_code_description(case_description)

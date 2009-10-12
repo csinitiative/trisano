@@ -16,6 +16,10 @@ Feature: Associate common test types with loinc codes
 
   Scenario: Associate a Loinc code with a diseases
     Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name             |
+        | African Tick Bite Fever  |
+        | Dengue                   |
       And LOINC code "10000-1"
     When I go to edit LOINC code "10000-1"
       And I check "African Tick Bite Fever"
@@ -28,6 +32,10 @@ Feature: Associate common test types with loinc codes
 
   Scenario: Delete a disease's association with a loinc code
     Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name             |
+        | African Tick Bite Fever  |
+        | Dengue                   |
       And LOINC code "10000-1"
       And disease "Dengue" is associated with LOINC code "10000-1"
       And disease "African Tick Bite Fever" is associated with LOINC code "10000-1"

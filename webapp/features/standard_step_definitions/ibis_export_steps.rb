@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the state$/ do |disease_name, status_description|
-  disease = Disease.find_by_disease_name(disease_name)
+  disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.state_case_status = status
@@ -25,7 +25,7 @@ Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the state$/ 
 end
 
 Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the LHD$/ do |disease_name, status_description|
-  disease = Disease.find_by_disease_name(disease_name)
+  disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.lhd_case_status = status
@@ -34,9 +34,9 @@ Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the LHD$/ do
 end
 
 Given /^a morbidity event in "([^\"]*)" county, with disease "([^\"]*)" and "([^\"]*)" by the state$/ do |county_name, disease_name, status_description|
-  disease = Disease.find_by_disease_name(disease_name)
+  disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
-  county = ExternalCode.find_by_code_name_and_code_description('county', county_name)
+ county = ExternalCode.find_by_code_name_and_code_description('county', county_name)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.state_case_status = status
   @event_to_match.build_disease_event(:disease_id => disease.id)
@@ -45,7 +45,7 @@ Given /^a morbidity event in "([^\"]*)" county, with disease "([^\"]*)" and "([^
 end
 
 Given /^a morbidity event already sent to ibis, with an "([^\"]*)" LHD status$/ do |status_description|
-  disease = Disease.find_by_disease_name('African Tick Bite Fever')
+  disease = Disease.find_or_create_by_disease_name :disease_name => 'African Tick Bite Fever', :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.state_case_status = status

@@ -5,6 +5,7 @@ Feature: Exporting reportable diseases for the CDC
 
   Scenario: Exporting a new record to the CDC
     Given I am logged in as a super user
+      And the disease "Brucellosis" with the cdc code "10020"
       And the disease "Brucellosis" exports to CDC when state is "Confirmed"
       And a morbidity event exists with the disease Brucellosis
       And the morbidity event state case status is "Confirmed"
@@ -15,6 +16,7 @@ Feature: Exporting reportable diseases for the CDC
   @pending
   Scenario: Exporting a deleted record that's already been sent to the CDC
     Given I am logged in as a super user
+      And the disease "Brucellosis" with the cdc code "10020"
       And the disease "Brucellosis" exports to CDC when state is "Confirmed"
       And a morbidity event exists with the disease Brucellosis
       And the morbidity event state case status is "Confirmed"

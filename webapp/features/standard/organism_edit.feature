@@ -34,6 +34,9 @@ Feature: Editing an organism
 
   Scenario: An administrator links an organism to diseases
     Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | African Tick Bite Fever |
       And an organism named "Arbovirus"
     When I go to the "Arbovirus" edit organism page
       And I check "African Tick Bite Fever"

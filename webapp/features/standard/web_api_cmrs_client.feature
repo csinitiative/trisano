@@ -4,6 +4,9 @@ Feature: Web API Cmrs Client
   An interface is needed that can be integrated into code
 
   Scenario: Create CMR
+    Given the following active diseases:
+      | Disease name |
+      | AIDS         |
     When I visit the cmrs new page
     
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "David"
