@@ -31,6 +31,11 @@ class Entity < ActiveRecord::Base
 
   attr_protected :entity_type
 
+  def formatted_address
+    addr = canonical_address || addresses.first
+    addr.blank? ? "" : addr.formatted_address 
+  end
+
   def primary_phone
     self.telephones.first 
   end
