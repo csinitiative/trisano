@@ -245,9 +245,7 @@ class EventsController < ApplicationController
       @event.add_note("Extra-jurisdictional, view-only access")
       return
     end
-    response.last_modified = @event.updated_at.utc
-    response.etag = @event
-    head :not_modified if request.fresh?(response)
+    stale?(:last_modified => @event.updated_at.utc, :etag => @event) if RAILS_ENV == 'production'
   end
 
   def reject_if_wrong_type(event)
