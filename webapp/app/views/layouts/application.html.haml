@@ -81,6 +81,10 @@
               = link_to 'PLACES', places_path
               |
 
+            - if User.current_user.is_entitled_to?(:view_event) and config_option(:show_outbreak_events) == true
+              = link_to 'OUTBREAKS', outbreak_events_path
+              |
+
             - if User.current_user.is_entitled_to?(:access_avr)
               = link_to 'AVR', config_option(:bi_server_url), :popup => true
               |
