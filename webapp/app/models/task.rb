@@ -16,12 +16,12 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Task < ActiveRecord::Base
-  
+
   belongs_to :user
   belongs_to :event
   belongs_to :category, :class_name => 'ExternalCode', :foreign_key => :category_id
   has_many   :repeating_tasks, :class_name => 'Task',  :foreign_key => :repeating_task_id
-  
+
   class << self
     def status_array
       [["Pending", "pending"], ["Complete", "complete"], ["Not applicable", "not_applicable"]]
@@ -39,13 +39,13 @@ class Task < ActiveRecord::Base
       @valid_intervals ||= interval_array.map { |interval| interval.last }
     end
   end
-  
+
   validates_presence_of :user_id, :name
   validates_length_of :name, :maximum => 255, :allow_blank => true
   validates_inclusion_of :status, :in => self.valid_statuses, :message => "is not valid"
   validates_date :due_date
   validates_date :until_date, :allow_nil => true
-  
+
   before_validation :set_status
   before_save :create_note
   after_create :create_repeating_tasks

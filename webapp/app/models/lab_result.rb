@@ -25,6 +25,8 @@ class LabResult < ActiveRecord::Base
   belongs_to :test_type, :class_name => 'CommonTestType'
   belongs_to :test_status, :class_name => 'ExternalCode'
 
+  after_create :generate_task
+
   before_destroy do |lab_result|
     lab_result.participation.event.add_note("Lab result deleted")
   end
@@ -44,6 +46,17 @@ class LabResult < ActiveRecord::Base
   def validate
     if !collection_date.blank? && !lab_test_date.blank?
       errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
+    end
+  end
+
+  def generate_task
+    event = participation.try :event
+    investigator = event.try  :investigator
+    if investigator && investigator != User.current_user
+      Task.create!(:name     => "New lab result added: #{test_type.common_name}",
+                   :due_date => Date.today,
+                   :user     => investigator,
+                   :event    => event)
     end
   end
 end

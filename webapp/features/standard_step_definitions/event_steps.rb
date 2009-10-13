@@ -66,6 +66,12 @@ Given /^the morbidity event is deleted$/ do
   @event.soft_delete
 end
 
+Given /^the event is assigned to user "([^\"]*)"$/ do |user_id|
+  @event.workflow_state = 'under_investigation'
+  @event.investigator = User.find_by_uid user_id
+  @event.save!
+end
+
 When /^I visit the events index page$/ do
   visit cmrs_path({})
 end

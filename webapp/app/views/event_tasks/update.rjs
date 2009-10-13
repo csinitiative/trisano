@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 page.replace_html 'tasks', :partial => "tasks/list.html.haml", :locals => { :task_owner => @event }
-  
+
 if !flash[:notice].nil?
   page.replace_html 'task-message', "<span style='color:green'>#{flash[:notice]}</span>"
   flash[:notice] = nil

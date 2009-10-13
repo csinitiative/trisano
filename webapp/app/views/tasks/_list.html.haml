@@ -21,7 +21,7 @@
   - tasks = task_owner.filter_tasks(params)
   - unless tasks.empty?
     #task-message{ :align => 'center' }
-    %table.list
+    %table#task-list.list
       %thead
         %tr
           %th= link_to_remote('Due&nbsp;date',    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])

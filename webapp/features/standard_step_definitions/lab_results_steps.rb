@@ -130,6 +130,10 @@ When /^I save the new event form$/ do
   submit_form "new_morbidity_event"
 end
 
+When /^I save the edit event form$/ do
+  submit_form "edit_morbidity_event_#{@event.id}"
+end
+
 Then /^I should see the values entered above$/ do
   response.should have_xpath("//div[@id='labs']") do |labs|
     @lab_values.each { |value| labs.should contain(value) }
