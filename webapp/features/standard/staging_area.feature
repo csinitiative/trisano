@@ -77,12 +77,10 @@ Feature: Staging Electronic Messages
       | 13954-3    | Hep-B Ag    |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
-    And I click the 'Assign lab result' link of the found event
+      And I click 'Similar Events' for the staged message
+      And I click the 'Assign lab result' link of the found event
     Then I should remain on the staged message show page
-    And I should see a 'success' message
-    And I should not see the 'Similar Events' link
-    And I should not see the 'Discard' link
+      And I should see a 'success' message
 
     When I visit the assigned-to event
     Then I should see the new lab result with 'Hep-B Ag'
