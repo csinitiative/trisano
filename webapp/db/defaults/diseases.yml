@@ -352,18 +352,18 @@ Chickenpox (Varicella):
 
 Chlamydia trachomatis infection:
   :organisms:
-    - :organism_name: Chlamydia trachomatis infection species
-    - :organism_name: Chlamydia trachomatis infection trachomatis
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype A 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype B 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype Ba 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype C 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype D 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype E 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype F 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype I 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype J 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype K 
+    - :organism_name: Chlamydia species
+    - :organism_name: Chlamydia trachomatis
+    - :organism_name: Chlamydia trachomatis, serotype A 
+    - :organism_name: Chlamydia trachomatis, serotype B 
+    - :organism_name: Chlamydia trachomatis, serotype Ba 
+    - :organism_name: Chlamydia trachomatis, serotype C 
+    - :organism_name: Chlamydia trachomatis, serotype D 
+    - :organism_name: Chlamydia trachomatis, serotype E 
+    - :organism_name: Chlamydia trachomatis, serotype F 
+    - :organism_name: Chlamydia trachomatis, serotype I 
+    - :organism_name: Chlamydia trachomatis, serotype J 
+    - :organism_name: Chlamydia trachomatis, serotype K 
   :diseases:
     - :disease_name: Chlamydia trachomatis infection
       :cdc_code: 10274
@@ -550,14 +550,14 @@ Diphtheria:
 
 Echinococcosis:
   :organisms:
-    - :organism_name: Echinococcosis species
+    - :organism_name: Echinococcus species
   :diseases:
     - :disease_name: Echinococcosis
 
 Ehrlichiosis:
   :organisms:
-    - :organism_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
-    - :organism_name: Ehrlichia chaffeensis- Human Monocytic Ehrlichiosis
+    - :organism_name: Anaplasma phagocytophilum
+    - :organism_name: Ehrlichia chaffeensis
     - :organism_name: Ehrlichia ewingii
   :diseases:
     - :disease_name: Anaplasma phagocytophilum- Human Granulocytic Anaplasmosis, formerly Human Granulocytic Ehrlichiosis
@@ -687,13 +687,13 @@ Granuloma Inguinale:
 
 Haemophilus influenzae, invasive disease:
   :organisms:
-    - :organism_name: Haemophilus influenzae, invasive disease
-    - :organism_name: Haemophilus influenzae, invasive disease, non-typable
-    - :organism_name: Haemophilus influenzae, invasive disease, type A
-    - :organism_name: Haemophilus influenzae, invasive disease, type B
-    - :organism_name: Haemophilus influenzae, invasive disease, type D
-    - :organism_name: Haemophilus influenzae, invasive disease, type E
-    - :organism_name: Haemophilus influenzae, invasive disease, type F
+    - :organism_name: Haemophilus influenzae
+    - :organism_name: Haemophilus influenzae, non-typable
+    - :organism_name: Haemophilus influenzae, type A
+    - :organism_name: Haemophilus influenzae, type B
+    - :organism_name: Haemophilus influenzae, type D
+    - :organism_name: Haemophilus influenzae, type E
+    - :organism_name: Haemophilus influenzae, type F
   :diseases:
     - :disease_name: Haemophilus influenzae, invasive disease
       :cdc_code: 10590
@@ -727,9 +727,9 @@ Hansen Disease:
 
 Hantavirus Infection:
   :organisms:
-    - :organism_name: Hantavirus Infection species
-    - :organism_name: Hantavirus Infection (Sin Nombre)
-    - :organism_name: Hantavirus Infection (Puumala)
+    - :organism_name: Hantavirus species
+    - :organism_name: Hantavirus (Sin Nombre)
+    - :organism_name: Hantavirus (Puumala)
   :diseases:
     - :disease_name: Hantavirus Infection
     - :disease_name: Hantavirus Pulmonary Syndrome
@@ -843,7 +843,7 @@ Hepatitis C:
 Hepatitis, viral other:
   :organisms:
     - :organism_name: Hepatitis G virus
-    - :organism_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D) virus
+    - :organism_name: Hepatitis D virus
     - :organism_name: Hepatitis E, acute virus
   :diseases:
     - :disease_name: Hepatitis Delta co- or super-infection, acute (Hepatitis D)
@@ -1087,10 +1087,10 @@ Lyme Disease:
 
 LGV:
   :organisms:
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L2 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L1 
-    - :organism_name: Chlamydia trachomatis infection trachomatis, serotype L3
+    - :organism_name: Chlamydia trachomatis, serotype L2 
+    - :organism_name: Chlamydia trachomatis, serotype L 
+    - :organism_name: Chlamydia trachomatis, serotype L1 
+    - :organism_name: Chlamydia trachomatis, serotype L3
   :diseases:
     - :disease_name: Lymphogranuloma venereum (LGV)
       :cdc_code: 10306
@@ -1121,7 +1121,7 @@ Malaria:
 
 Measles (rubeola):
   :organisms:
-    - :organism_name: Measles (rubeola) virus
+    - :organism_name: Measles virus
   :diseases:
     - :disease_name: Measles (rubeola)
       :cdc_code: 10140
@@ -1322,8 +1322,8 @@ Polio:
 
 Psittacosis:
   :organisms:
-    - :organism_name: Chlamydia trachomatis infection species
-    - :organism_name: Chlamydia trachomatis infection psittaci
+    - :organism_name: Chlamydia species
+    - :organism_name: Chlamydia psittaci
   :diseases:
     - :disease_name: Psittacosis
   :loinc_codes:
@@ -1622,7 +1622,7 @@ Salmonella:
 
 Severe Acute Respiratory Syndrome (SARS) Coronavirus:
   :organisms:
-    - :organism_name: Severe Acute Respiratory Syndrome (SARS) coronavirus
+    - :organism_name: SARS coronavirus
   :diseases:
     - :disease_name: Severe Acute Respiratory Syndrome (SARS)
   :loinc_codes:
@@ -1670,7 +1670,7 @@ Staph aureus resistance:
 Shiga toxin-producing Escherichia coli (STEC):
   :organisms:
     - :organism_name: Shiga toxin
-    - :organism_name: Enterohemorrhagic Escherichia coli (Shiga toxin-producing Escherichia coli (STEC))
+    - :organism_name: Enterohemorrhagic Escherichia coli (STEC)
     - :organism_name: Escherichia coli O157:H7
     - :organism_name: Escherichia coli O157:non-motile
     - :organism_name: Escherichia coli serogroup O121:H19
