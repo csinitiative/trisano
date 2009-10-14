@@ -58,3 +58,24 @@ Feature: Adding Lab Results to an Event Generates a Task
         | Due Date | Name                           | Description | Category | Priority | Assigned to  | Status  |
         | Today    | New lab result added: Hep-B Ag |             |          |          | investigator | Pending |
 
+  Scenario: ELR assigned to event by user who is responsible for the event
+    Given I am logged in as a super user
+      And I have the staged message "ARUP_1"
+      And there is a morbidity event with a matching name and birth date
+      And the event is assigned to user "default_user"
+      And the following loinc code to common test types mapping exists
+        | loinc_code | common_name |
+        | 10000-1    | Blood Test  |
+        | 20000-2    | Urine Test  |
+        | 13954-3    | Hep-B Ag    |
+    When I visit the staged message show page
+      And I click 'Similar Events' for the staged message
+      And I click the 'Assign lab result' link of the found event
+    Then I should remain on the staged message show page
+      And I should see a 'success' message
+    When I visit the assigned-to event
+    Then I should see the new lab result with 'Hep-B Ag'
+      And  I should see a note for the assigned lab
+      And I should not see any tasks
+
+
