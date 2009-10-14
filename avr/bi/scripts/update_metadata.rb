@@ -71,7 +71,11 @@ class Metadata
   end
 
   def trisano_business_model
-    @trisano_business_model ||= @meta.find_model('TriSano')
+    if ! defined? @trisano_business_model
+      @trisano_business_model = @meta.find_model('TriSano')
+      setup_role_security @trisano_business_model
+    end
+    return @trisano_business_model
   end
 
   def update_from_database
@@ -108,8 +112,10 @@ class Metadata
       tables = writable_database.modified_tables(disease_group == AllTablesGroupName ? nil : disease_group)
       create_tables tables, model, {
         :success => lambda{ puts 'Success!' },
-        :none    => lambda{ puts "No modified tables. Nothing to do" }}
+        :none    => lambda{ puts "No modified tables." }}
       writable_database.update_disease_groups_col tables.join("','"), disease_group
+
+      setup_role_security model
     end
 
     writable_database.clear_modified_tables
@@ -299,7 +305,6 @@ class Metadata
           update_category category_name(short_name), model, table
         end
       end
-      setup_role_security model
       result_hooks[:success].call if result_hooks[:success]
     end
   end
