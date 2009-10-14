@@ -10,7 +10,7 @@ Then /^I should see the following tasks:$/ do |expected_tasks|
                  t.headers[6] => 'Status')
   t.headers.each do |column|
     t.map_column!(column) do |value|
-      v = value.gsub([0xA0].pack('U'), ' ').strip
+      v = value.gsub([0xA0].pack('U'), ' ').gsub('&nbsp;', ' ').strip
       if v.blank?
         nil
       else
