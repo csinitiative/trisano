@@ -24,7 +24,7 @@ module DiseasesHelper
   end
 
   def disease_check_boxes(name, checked_values=[])
-    Disease.all.each do |disease|
+    Disease.all(:order => 'disease_name').each do |disease|
       id = name.gsub('[', '_').gsub(']', '') + disease.id.to_s
       haml_tag :label, :for => id do
         haml_concat check_box_tag(name, disease.id, checked_values.include?(disease.id), :id => id)
