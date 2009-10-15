@@ -32,7 +32,7 @@ Given /^the following organisms are associated with the disease "([^\"]*)":$/ do
   table.map_headers! 'Organism name' => :organism_name
   table.hashes.each do |attr|
     organism = Organism.create! attr
-    loinc = LoincCode.create! :loinc_code => base_loinc.succ!, :scale => scale, :organism => organism
+    loinc = LoincCode.create! :loinc_code => base_loinc = base_loinc.loinc_succ, :scale => scale, :organism => organism
     disease.loinc_codes << loinc
   end
 

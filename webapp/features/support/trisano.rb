@@ -122,3 +122,12 @@ def lab_attributes(values)
     }
   }
 end
+
+# A dirty, filthy hack because succ! seems to be broken in JRuby on 64
+# bit Java
+String.class_eval do
+  def loinc_succ
+    (self.gsub('-', '').to_i + 1).to_s.insert(-2, '-')
+  end
+end
+

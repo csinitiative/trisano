@@ -15,13 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+# A dirty, filthy hack because succ! seems to be broken in JRuby on 64
+# bit Java
+String.class_eval do
+  def loinc_succ
+    (self.gsub('-', '').to_i + 1).to_s.insert(-2, '-')
+  end
+end
+
 
 Given /^the following disease to common test types mapping exists$/ do |disease_test_maps|
   code = '10000-0'
   disease_test_maps.rows.each do |disease_test_map|
     d = Disease.find_or_create_by_disease_name(:disease_name => disease_test_map.first, :active => true)
     c = CommonTestType.find_or_create_by_common_name(disease_test_map.last)
-    l = LoincCode.create! :loinc_code => code.succ!, :scale => ExternalCode.loinc_scales.first, :common_test_type => c
+    l = LoincCode.create! :loinc_code => code = code.loinc_succ, :scale => ExternalCode.loinc_scales.first, :common_test_type => c
     d.loinc_codes << l
   end
 end
