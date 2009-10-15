@@ -26,7 +26,7 @@ class Organism < ActiveRecord::Base
 
   has_many :loinc_codes
 
-  has_many :diseases_organisms
+  has_many :diseases_organisms, :dependent => :destroy
   has_many :diseases, :through => :diseases_organisms
 
   named_scope :all_by_name, lambda { |name|
