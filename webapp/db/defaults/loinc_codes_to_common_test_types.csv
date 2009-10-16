@@ -8,10 +8,10 @@
 "10670-8","Culture","Giardia sp identified","Nom",
 "10671-6","Identification","Helminth identified","Nom",
 "10672-4","Identification","Helminth+Arthropod identified","Nom",
-"10673-2","Core Antigen (HBcAg)","Hepatitis B virus core Ag","Ord","Hepatitis B"
-"10674-0","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B"
+"10673-2","Core Antigen (HBcAg)","Hepatitis B virus core Ag","Ord","Hepatitis B virus"
+"10674-0","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B virus"
 "10675-7","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Nom",
-"10676-5","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
+"10676-5","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
 "10701-1","Microscopy","Ova+Parasites identified","Nom",
 "10702-9","Microscopy","Ova+Parasites identified","Nom",
 "10703-7","Microscopy","Ova+Parasites identified","Nom",
@@ -30,20 +30,20 @@
 "10897-7","IgG Antibody","Eastern equine encephalitis virus Ab.IgG","Qn","Eastern equine encephalitis virus"
 "10898-5","IgM Antibody","Eastern equine encephalitis virus Ab.IgM","Qn","Eastern equine encephalitis virus"
 "10899-3","IgM Antibody","Eastern equine encephalitis virus Ab.IgM","Qn","Eastern equine encephalitis virus"
-"10900-9","Surface Antibody (HBsAb)","Hepatitis B virus surface Ab","Ord","Hepatitis B"
+"10900-9","Surface Antibody (HBsAb)","Hepatitis B virus surface Ab","Ord","Hepatitis B virus"
 "10904-1","IgG Antibody","La Crosse virus Ab.IgG","Qn","La Crosse virus"
 "10905-8","IgM Antibody","La Crosse virus Ab.IgM","Qn","La Crosse virus"
 "10906-6","IgG Antibody","Saint Louis encephalitis virus Ab.IgG","Qn","Saint Louis encephalitis virus"
 "10907-4","IgM Antibody","Saint Louis encephalitis virus Ab.IgM","Qn","Saint Louis encephalitis virus"
 "11006-4","Total Antibody","Borrelia burgdorferi Ab","Ord","Borrelia burgdorferi"
-"11011-4","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
-"11076-7","Western (immuno) blot  (5-1-1-Ab only)","Hepatitis C virus 5-1-1 Ab","Ord","Hepatitis C"
-"11077-5","Western (immuno) blot (superoxide dismutase only)","Hepatitis C virus superoxide dismutase Ab","Ord","Hepatitis C"
+"11011-4","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
+"11076-7","Western (immuno) blot  (5-1-1-Ab only)","Hepatitis C virus 5-1-1 Ab","Ord","Hepatitis C virus"
+"11077-5","Western (immuno) blot (superoxide dismutase only)","Hepatitis C virus superoxide dismutase Ab","Ord","Hepatitis C virus"
 "11084-1","Unknown method","Reagin Ab","Qn","Treponema pallidum"
 "11086-6",,"Streptococcus pneumoniae Ag","Ord",
 "11255-7","Culture","Haemophilus ducreyi","Ord","Haemophilus ducreyi"
-"11258-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn","Hepatitis B"
-"11259-9","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C"
+"11258-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn","Hepatitis B virus"
+"11259-9","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C virus"
 "11469-4","Culture","Bacillus anthracis","Ord","Bacillus anthracis"
 "11470-2","Toxin assay","Clostridium botulinum toxin","Qn","Clostridium botulinum"
 "11473-6","Antigen, unknown method","Cryptococcus sp Ag","Qn","Cryptococcus species"
@@ -64,7 +64,7 @@
 "12863-7","Western (immuno) blot (41kD Ab only)","Borrelia burgdorferi 41kD Ab","Ord","Borrelia burgdorferi"
 "12867-8","Western (immuno) blot (58kD Ab only)","Borrelia burgdorferi 58kD Ab","Ord","Borrelia burgdorferi"
 "12869-4","Western (immuno) blot (30kD Ab only)","Borrelia burgdorferi 30kD Ab","Ord","Borrelia burgdorferi"
-"13125-0","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Ab","Ord","Hepatitis C"
+"13125-0","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Ab","Ord","Hepatitis C virus"
 "13195-3","Total Antibody","Ehrlichia chaffeensis Ab","Qn","Ehrlichia chaffeensis"
 "13202-7","IgG Antibody","Borrelia burgdorferi Ab.IgG","Ord","Borrelia burgdorferi"
 "13203-5","IgM Antibody","Borrelia burgdorferi Ab.IgM","Ord","Borrelia burgdorferi"
@@ -92,10 +92,10 @@
 "13921-2","Culture","Mumps virus","Ord","Mumps virus"
 "13950-1","IgM Antibody","Hepatitis A virus Ab.IgM","Ord","Hepatitis A virus (human enterovirus 72)"
 "13951-9","Total Antibody","Hepatitis A virus Ab","Ord","Hepatitis A virus (human enterovirus 72)"
-"13952-7","Core Antibody (HBcAb)","Hepatitis B virus core Ab","Ord","Hepatitis B"
-"13953-5","e Antibody (HBeAb)","Hepatitis B virus little e Ab","Ord","Hepatitis B"
-"13954-3","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Ord","Hepatitis B"
-"13955-0","Total Antibody","Hepatitis C virus Ab","Ord","Hepatitis C"
+"13952-7","Core Antibody (HBcAb)","Hepatitis B virus core Ab","Ord","Hepatitis B virus"
+"13953-5","e Antibody (HBeAb)","Hepatitis B virus little e Ab","Ord","Hepatitis B virus"
+"13954-3","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Ord","Hepatitis B virus"
+"13955-0","Total Antibody","Hepatitis C virus Ab","Ord","Hepatitis C virus"
 "13956-8","PCR/amplification","Mycobacterium tuberculosis DNA","Ord","Mycobacterium tuberculosis complex"
 "14077-2","IgG Antibody","Borrelia burgdorferi Ab.IgG","Qn","Borrelia burgdorferi"
 "14078-0","IgM Antibody","Borrelia burgdorferi Ab.IgM","Qn","Borrelia burgdorferi"
@@ -103,8 +103,8 @@
 "14127-5","Culture","Neisseria gonorrhoeae","Ord","Neisseria gonorrhoeae"
 "141-2","Ceftriaxone susceptibility","Ceftriaxone","OrdQn",
 "14198-6","Total Antibody","Chlamydophila psittaci Ab","Qn","Chlamydia psittaci"
-"14202-6","IgA Antibody","Chlamydia trachomatis C Ab.IgA","Qn","Chlamydia trachomatis, serotype C"
-"14203-4","IgA Antibody","Chlamydia trachomatis C Ab.IgG","Qn","Chlamydia trachomatis, serotype C"
+"14202-6","IgA Antibody","Chlamydia trachomatis C Ab.IgA","Qn","Chlamydia trachomatis, serotype C virus"
+"14203-4","IgA Antibody","Chlamydia trachomatis C Ab.IgG","Qn","Chlamydia trachomatis, serotype C virus"
 "14209-1","IgA Antibody","Francisella tularensis Ab.IgA","Ord","Francisella tularensis"
 "14210-9","Antigen by DFA/IF","Giardia lamblia Ag","Ord","Giardia lamblia"
 "14211-7","IgG Antibody","Hepatitis E virus Ab.IgG","Ord","Hepatitis E virus"
@@ -159,8 +159,8 @@
 "14790-0","Identification","Helminth identified","Nom",
 "14974-0","PCR/amplification","Mycobacterium sp DNA","Ord","Mycobacterium tuberculosis complex"
 "16099-4","Ethionamide susceptibility","Ethionamide","OrdQn",
-"16128-1","Total Antibody","Hepatitis C virus Ab","Ord","Hepatitis C"
-"16129-9","IgG Antibody","Hepatitis C virus Ab.IgG","Ord","Hepatitis C"
+"16128-1","Total Antibody","Hepatitis C virus Ab","Ord","Hepatitis C virus"
+"16129-9","IgG Antibody","Hepatitis C virus Ab.IgG","Ord","Hepatitis C virus"
 "16133-1","IgM Antibody","Legionella pneumophila Ab.IgM","Qn","Legionella pneumophila"
 "16134-9","Culture","Neisseria meningitidis","Ord","Neisseria meningitidis"
 "16278-4","PCR/amplification","Mycobacterium tuberculosis DNA","Ord","Mycobacterium tuberculosis complex"
@@ -188,7 +188,7 @@
 "16898-9","65 Antigen by DFA/IF","Giardia lamblia 65 Ag","Ord","Giardia lamblia"
 "16899-7","Antigen by DFA/IF","Giardia lamblia Ag","Ord","Giardia lamblia"
 "16926-8",,"Haemophilus influenzae A Ag","Ord",
-"16936-7","IgG Antibody","Hepatitis C virus Ab.IgG","Qn","Hepatitis C"
+"16936-7","IgG Antibody","Hepatitis C virus Ab.IgG","Qn","Hepatitis C virus"
 "17012-6",,"Influenza virus A Antibody","Qn",
 "17014-2",,"Influenza virus B Antibody","Qn",
 "17015-9",,"Influenza virus B Ab.IgG","Qn",
@@ -226,8 +226,8 @@
 "17734-5","IgG Antibody","Trichinella spiralis Ab.IgG","Qn","Trichinella spiralis"
 "17735-2","IgM Antibody","Trichinella spiralis Ab.IgM","Ord","Trichinella spiralis"
 "17766-7","IgM Antibody","Varicella zoster virus Ab.IgM","Qn","Varicella-zoster virus"
-"17769-1","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalomyelitis virus"
-"17770-9","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalomyelitis virus"
+"17769-1","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalitis virus"
+"17770-9","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalitis virus"
 "17898-8","Culture","Bacteria identified","Nom",
 "17969-7","Culture","Bacteria identified","Nom",
 "18201-4","IgA Antibody","Borrelia burgdorferi Ab.IgA","Ord","Borrelia burgdorferi"
@@ -315,8 +315,8 @@
 "19259-1","Antigen (not B) by Latex agglutination","Neisseria meningitidis A+C+w135+Y Ag","Ord","Neisseria meningitidis"
 "193-3","Clindamycin susceptibility","Clindamycin","OrdQn",
 "20396-8","Levofloxacin susceptibility","Levofloxacin","OrdQn",
-"20416-4","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
-"20442-0","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B"
+"20416-4","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
+"20442-0","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B virus"
 "20449-5","Total Antibody","Borrelia burgdorferi Antibody","Ord","Borrelia burgdorferi"
 "20474-3","Culture","Bacteria identified","Nom",
 "20479-2","IgG Antibody","Measles virus Ab.IgG","Ord","Measles virus"
@@ -330,7 +330,7 @@
 "20932-0","Unknown method","Parasite identified","Nom",
 "20951-0","Typing","Salmonella sp serotype","Nom",
 "20993-2","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord","Chlamydia trachomatis"
-"21006-2","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B"
+"21006-2","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B virus"
 "21189-6","PCR/amplification","Chlamydia trachomatis DNA","Ord","Chlamydia trachomatis"
 "21190-4","PCR/amplification","Chlamydia trachomatis DNA","Ord","Chlamydia trachomatis"
 "21191-2","PCR/amplification","Chlamydia trachomatis DNA","Ord","Chlamydia trachomatis"
@@ -361,7 +361,7 @@
 "22312-3","Total Antibody","Hepatitis A virus Antibody","Qn","Hepatitis A virus (human enterovirus 72)"
 "22313-1","IgG Antibody","Hepatitis A virus Ab.IgG","Qn","Hepatitis A virus (human enterovirus 72)"
 "22314-9","IgM Antibody","Hepatitis A virus Ab.IgM","Ord","Hepatitis A virus (human enterovirus 72)"
-"22327-1","Total Antibody","Hepatitis C virus Antibody","Qn","Hepatitis C"
+"22327-1","Total Antibody","Hepatitis C virus Antibody","Qn","Hepatitis C virus"
 "22365-1",,"Influenza virus A Antibody","Qn",
 "22367-7",,"Influenza virus B Antibody","Qn",
 "22382-6","IgM Antibody","Legionella pneumophila 1 Ab.IgM","Qn","Legionella pneumophila serogroup 1"
@@ -396,9 +396,9 @@
 "23833-7","Antibody index","Borrelia burgdorferi Ab index","Ord","Borrelia burgdorferi"
 "23867-5","IgG Antibody","Hantavirus sin nombre Ab.IgG","Qn","Hantavirus (sin nombre)"
 "23868-3","IgM Antibody","Hantavirus sin nombre Ab.IgM","Qn","Hantavirus (sin nombre)"
-"23869-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn","Hepatitis B"
-"23870-9","Western (immuno) blot (100+5-1-1 Ab only)","Hepatitis C virus 100+5-1-1 Antibody","Ord","Hepatitis C"
-"23871-7","Western (immuno) blot (NS5 Ab only)","Hepatitis C virus NS5 Antibody","Ord","Hepatitis C"
+"23869-1","DNA probe - not amplified/PCR","Hepatitis B virus DNA","Qn","Hepatitis B virus"
+"23870-9","Western (immuno) blot (100+5-1-1 Ab only)","Hepatitis C virus 100+5-1-1 Antibody","Ord","Hepatitis C virus"
+"23871-7","Western (immuno) blot (NS5 Ab only)","Hepatitis C virus NS5 Antibody","Ord","Hepatitis C virus"
 "23877-4","IgG Antibody","Anaplasma phagocytophilum Ab.IgG","Qn","Anaplasma phagocytophilum"
 "23878-2","IgM Antibody","Anaplasma phagocytophilum Ab.IgM","Qn","Anaplasma phagocytophilum"
 "23908-7","DNA probe - not amplified/PCR","Neisseria gonorrhoeae rRNA","Ord","Neisseria gonorrhoeae"
@@ -415,7 +415,7 @@
 "241-0","Ethambutol susceptibility","Ethambutol","OrdQn",
 "24110-9","Total Antibody","Treponema pallidum Antibody","Ord","Treponema pallidum"
 "24111-7","PCR/amplification","Neisseria gonorrhoeae DNA","Ord","Neisseria gonorrhoeae"
-"24113-3","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Ord","Hepatitis B"
+"24113-3","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Ord","Hepatitis B virus"
 "24116-6","IgM Antibody","Rubella virus Ab.IgM","Ord","Rubella virus"
 "24127-3",,"Bordetella pertussis.toxin Ab.IgG","Qn",
 "24128-1",,"Bordetella pertussis.toxin Ab.IgA","Qn",
@@ -449,9 +449,9 @@
 "29567-5","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
 "29568-3","Total Antibody","West Nile virus Antibody","Qn","West Nile virus"
 "29569-1","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
-"29609-5","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
-"29610-3","PCR/amplification","Hepatitis B virus DNA","Ord","Hepatitis B"
-"29615-2","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B"
+"29609-5","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
+"29610-3","PCR/amplification","Hepatitis B virus DNA","Ord","Hepatitis B virus"
+"29615-2","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B virus"
 "29662-4","IgM Antibody","Varicella zoster virus Ab.IgM","Ord","Varicella-zoster virus"
 "29778-8","IgM Antibody","West Nile virus Ab.IgM","Ord","West Nile virus"
 "29783-8","Total Antibody","Saint Louis encephalitis virus Antibody","Qn","Saint Louis encephalitis virus"
@@ -475,13 +475,13 @@
 "31147-2","RPR (Rapid plasma reagin)","Reagin Antibody","Qn","Treponema pallidum"
 "31153-0","Total Antibody","Coccidioides Antibody by ID","Ord","Coccidioides species"
 "31154-8","IgG Antibody","Coccidioides Antibody, IgG by ELISA","Ord","Coccidioides species"
-"31204-1","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Ord","Hepatitis B"
+"31204-1","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Ord","Hepatitis B virus"
 "31437-7",,"Influenza virus A Ab.IgG","Qn",
 "31438-5",,"Influenza virus A Ab.IgM","Qn",
 "31694-3","Total Antibody","Varicella zoster virus Antibody","Qn","Varicella-zoster virus"
 "31695-0","IgM Antibody","Varicella zoster virus Ab.IgM","Qn","Varicella-zoster virus"
 "31698-4","Total Antibody","Vibrio cholerae Antibody","Qn","Vibrio cholerae"
-"31844-4","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Ord","Hepatitis B"
+"31844-4","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Ord","Hepatitis B virus"
 "31858-4","Rapid","Influenza virus A Ag","Ord","Influenza A"
 "31859-2","Rapid","Influenza virus A Ag","Ord","Influenza A"
 "31863-4","Rapid","Influenza virus B Ag","Ord","Influenza B"
@@ -506,7 +506,7 @@
 "32705-6","PCR/amplification","Neisseria gonorrhoeae DNA","Ord","Neisseria gonorrhoeae"
 "33295-7","PCR/amplification","JC virus DNA","Ord","Jamestown Canyon virus"
 "33327-8","Total Antibody","Varicella zoster virus Antibody","Qn","Varicella-zoster virus"
-"33463-1","e IgG Antibody","Hepatitis B virus little e Ab.IgG","Ord","Hepatitis B"
+"33463-1","e IgG Antibody","Hepatitis B virus little e Ab.IgG","Ord","Hepatitis B virus"
 "33510-9","IgM Antibody","Coccidioides immitis, Ab.IgM","Ord","Coccidioides immitis"
 "33581-0","Total Antibody","Anaplasma phagocytophilum Antibody","Qn","Anaplasma phagocytophilum"
 "33633-9","Precore Tag mutation by PCR","Hepatitis B virus precore TAG mutation","Nom",
@@ -544,12 +544,12 @@
 "37985-9","DNA probe - not amplified/PCR","West Nile virus cDNA","Ord","West Nile virus"
 "38173-1","Total Antibody","Borrelia burgdorferi C6 Pep Abs, ELISA","Qn","Borrelia burgdorferi"
 "38174-9","Total Antibody","C6 Peptide CSF","Qn","Borrelia burgdorferi"
-"38180-6","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
+"38180-6","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
 "383-0","Oxacillin susceptibility","Oxacillin","OrdQn",
 "38347-1","PCR/amplification","XXX microorganism DNA","Nom",
 "38379-4","PCR/amplification","Mycobacterium tuberculosis complex DNA","Ord","Mycobacterium tuberculosis complex"
 "38382-8","Culture","Influenza virus B","Ord","Influenza B"
-"38916-3","PCR/amplification","Calicivirus RNA","Ord","CALICIVIRUS"
+"38916-3","PCR/amplification","Calicivirus RNA","Ord","Norovirus"
 "38997-3","IgG Antibody","West Nile virus Ab.IgG","Qn","West Nile virus"
 "39102-9","PCR/amplification","Influenza virus A hemagglutinin cDNA","Nom",
 "39103-7","PCR/amplification","Influenza virus A neuraminidase cDNA","Nom",
@@ -569,8 +569,8 @@
 "42329-3",,"Bordetella pertussis Ab.IgM","Qn",
 "42357-4","Tigecycline susceptibility","Tigecycline","OrdQn",
 "424-2","Pyrazinamide susceptibility","Pyrazinamide","OrdQn",
-"42595-9","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B"
-"42617-1","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C"
+"42595-9","PCR/amplification","Hepatitis B virus DNA","Qn","Hepatitis B virus"
+"42617-1","PCR/amplification","Hepatitis C virus RNA","Qn","Hepatitis C virus"
 "428-3","Rifampin susceptibility","Rifampin","OrdQn",
 "43174-2","Antigen by DFA/IF","Chlamydia trachomatis L2 Ab.IgA","Qn","Chlamydia trachomatis serotype L2"
 "43304-5","PCR/amplification","Chlamydia trachomatis rRNA","Ord","Chlamydia trachomatis"
@@ -598,7 +598,7 @@
 "47387-6","PCR/amplification","Neisseria gonorrhoeae DNA","Ord","Neisseria gonorrhoeae"
 "47405-6","IgG Antibody","Ehrlichia chaffeensis Ab.IgG","Qn","Ehrlichia chaffeensis"
 "47419-7","Total Antibody","Varicella zoster virus Antibody","Qn","Varicella-zoster virus"
-"48159-8","Antibody signal/cutoff","Hepatitis C virus Ab Signal/Cutoff","Qn","Hepatitis C"
+"48159-8","Antibody signal/cutoff","Hepatitis C virus Ab Signal/Cutoff","Qn","Hepatitis C virus"
 "48310-7","Culture","Influenza virus A","Ord","Influenza A"
 "48410-5","Western (immuno) blot IgM","Yersinia, IgM by Western Blot","Ord","Yersinia species"
 "48509-4","PCR/amplification","Influenza virus A+B RNA","Nom",
@@ -610,10 +610,10 @@
 "4991-6","PCR/amplification","Borrelia burgdorferi DNA","Ord","Borrelia burgdorferi"
 "4992-4","DNA probe - not amplified/PCR","Campylobacter sp rRNA","Ord","Campylobacter species"
 "4993-2","DNA probe - not amplified/PCR","Chlamydia trachomatis rRNA","Ord","Chlamydia trachomatis"
-"5007-0","PCR/amplification","Hepatitis B virus DNA","Ord","Hepatitis B"
-"5010-4","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C"
-"5011-2","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C"
-"5012-0","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C"
+"5007-0","PCR/amplification","Hepatitis B virus DNA","Ord","Hepatitis B virus"
+"5010-4","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C virus"
+"5011-2","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C virus"
+"5012-0","PCR/amplification","Hepatitis C virus RNA","Ord","Hepatitis C virus"
 "5022-9","DNA probe - not amplified/PCR","Mycobacterium avium complex rRNA","Ord",
 "5027-8","PCR/amplification","M tuberculosis Amplified Detection","Ord","Mycobacterium tuberculosis complex"
 "5028-6","DNA probe - not amplified/PCR","Neisseria gonorrhoeae rRNA","Ord","Neisseria gonorrhoeae"
@@ -651,18 +651,18 @@
 "5181-3","IgM Antibody","Hepatitis A virus Ab.IgM","Qn","Hepatitis A virus (human enterovirus 72)"
 "5182-1","IgM Antibody","Hepatitis A virus Ab.IgM","Qn","Hepatitis A virus (human enterovirus 72)"
 "5183-9","Total Antibody","Hepatitis A virus Antibody","Qn","Hepatitis A virus (human enterovirus 72)"
-"5185-4","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Qn","Hepatitis B"
-"5186-2","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Qn","Hepatitis B"
-"5187-0","Core Antibody (HBcAb)","Hepatitis B virus core Antibody","Qn","Hepatitis B"
-"5189-6","e Antibody (HBeAb)","Hepatitis B virus little e Antibody","Qn","Hepatitis B"
-"5191-2","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Qn","Hepatitis B"
-"5193-8","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B"
-"5194-6","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B"
-"5195-3","Surface Antibody (HBsAb)","Hepatitis B virus surface Ag","Ord","Hepatitis B"
-"5196-1","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B"
-"5197-9","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B"
-"5198-7","Total Antibody","Hepatitis C virus Antibody","Qn","Hepatitis C"
-"5199-5","Total Antibody","Hepatitis C virus Antibody","Ord","Hepatitis C"
+"5185-4","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Qn","Hepatitis B virus"
+"5186-2","Core IgM Antibody","Hepatitis B virus core Ab.IgM","Qn","Hepatitis B virus"
+"5187-0","Core Antibody (HBcAb)","Hepatitis B virus core Antibody","Qn","Hepatitis B virus"
+"5189-6","e Antibody (HBeAb)","Hepatitis B virus little e Antibody","Qn","Hepatitis B virus"
+"5191-2","e Antigen (HBeAg)","Hepatitis B virus little e Ag","Qn","Hepatitis B virus"
+"5193-8","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B virus"
+"5194-6","Surface Antibody (HBsAb)","Hepatitis B virus surface Antibody","Qn","Hepatitis B virus"
+"5195-3","Surface Antibody (HBsAb)","Hepatitis B virus surface Ag","Ord","Hepatitis B virus"
+"5196-1","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B virus"
+"5197-9","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B virus"
+"5198-7","Total Antibody","Hepatitis C virus Antibody","Qn","Hepatitis C virus"
+"5199-5","Total Antibody","Hepatitis C virus Antibody","Ord","Hepatitis C virus"
 "5229-0",,"Influenza virus A Antibody","Qn",
 "5230-8",,"Influenza virus B Antibody","Qn",
 "5236-5","Total Antibody","Legionella pneumophila Antibody","Ord","Legionella pneumophila"
@@ -705,7 +705,7 @@
 "5404-9","IgM Antibody","Varicella zoster virus Ab.IgM","Qn","Varicella-zoster virus"
 "5405-6","Total Antibody","Vibrio cholerae Antibody","Qn","Vibrio cholerae"
 "540-5","Culture","Mycobacterium sp identified","Nom",
-"5406-4","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalomyelitis virus"
+"5406-4","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalitis virus"
 "5407-2","O3 Antibody","Yersinia enterocolitica O3 Antibody","Qn","Yersinia enterocolitica serogroup O:3"
 "5408-0","O8 Antibody","Yersinia enterocolitica O8 Antibody","Qn","Yersinia enterocolitica serogroup O:8"
 "5409-8","O9 Antibody","Yersinia enterocolitica O9 Antibody","Qn","Yersinia enterocolitica serogroup O:9"
@@ -714,7 +714,7 @@
 "54146-6","IgG Antibody","Mycobacterium TB Antibody, IgG by ELISA","Qn","Mycobacterium tuberculosis complex"
 "542-1","Culture","Mycobacterium sp identified","Nom",
 "543-9","Culture","Mycobacterium sp identified","Nom",
-"547-0","Culture","Streptococcus.beta-hemolytic","Ord","Beta hemolytic streptococcus"
+"547-0","Culture","Streptococcus.beta-hemolytic","Ord",
 "548-8","Culture","Bordetella pertussis","Ord","Bordetella pertussis"
 "549-6","Culture","Bordetella pertussis","Ord","Bordetella pertussis"
 "550-4",,"Bordetella pertussis Ag","Ord",
@@ -814,7 +814,7 @@
 "6408-9","Antigen by DFA/IF","Francisella tularensis Ag","Ord","Francisella tularensis"
 "6412-1","Antigen by EIA/ELISA","Giardia lamblia Ag","Ord","Giardia lamblia"
 "6413-9","Antigen by EIA/ELISA","Giardia lamblia Ag","Ord","Giardia lamblia"
-"6422-0","DNA probe - not amplified/PCR","Hepatitis C virus rRNA","Ord","Hepatitis C"
+"6422-0","DNA probe - not amplified/PCR","Hepatitis C virus rRNA","Ord","Hepatitis C virus"
 "6437-8","Rapid","Influenza virus A+B Ag","Ord","Influenza A/B undifferentiated"
 "6438-6","Antigen by DFA/IF","Influenza virus A+B Ag","Ord","Influenza A/B undifferentiated"
 "6445-1","Antigen by DFA/IF","Legionella pneumophila Ag","Ord","Legionella pneumophila"
@@ -868,7 +868,7 @@
 "6553-2",,"Streptococcus pneumoniae Ag","Ord",
 "6555-7",,"Streptococcus pneumoniae Ag","Ord",
 "6558-1","Typing","Streptococcus pyogenes Ag","Ord","Group A strep (Streptococcus pyogenes)"
-"6559-9","Typing","Streptococcus pyogenes Ag","Ord","Streptococcus pyogenes (Beta hemolytic Group A Streptococcus)"
+"6559-9","Typing","Streptococcus pyogenes Ag","Ord","Group A strep (Streptococcus pyogenes)"
 "6561-5","IgG Antibody","Treponema pallidum Ab.IgG","Ord","Treponema pallidum"
 "6562-3","IgM Antibody","Treponema pallidum Ab.IgM","Ord","Treponema pallidum"
 "6563-1","IgG Antibody","Trichinella spiralis Ab.IgG","Ord","Trichinella spiralis"
@@ -877,8 +877,8 @@
 "6579-7","Culture","Vibrio sp identified","Nom",
 "6581-3","Culture","Vibrio sp identified","Nom",
 "6584-7","Culture","Virus identified","Nom",
-"6585-4","Antigen by EIA/ELISA","Western equine encephalitis virus Ag","Ord","Western equine encephalomyelitis virus"
-"6586-2","Antigen by DFA/IF","Western equine encephalitis virus Ag","Ord","Western equine encephalomyelitis virus"
+"6585-4","Antigen by EIA/ELISA","Western equine encephalitis virus Ag","Ord","Western equine encephalitis virus"
+"6586-2","Antigen by DFA/IF","Western equine encephalitis virus Ag","Ord","Western equine encephalitis virus"
 "6587-0","Total Antibody","Yellow fever virus Antibody","Qn","Yellow Fever virus"
 "6588-8","Total Antibody","Yellow fever virus Antibody","Qn","Yellow Fever virus"
 "6589-6","Total Antibody","Yellow fever virus Antibody","Qn","Yellow Fever virus"
@@ -935,9 +935,9 @@
 "6932-8","Penicillin susceptibility","Penicillin","OrdQn",
 "693-2","Culture","Neisseria gonorrhoeae","Ord","Neisseria gonorrhoeae"
 "694-0","Culture","Neisseria gonorrhoeae","Ord","Neisseria gonorrhoeae"
-"6957-5","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalomyelitis virus"
+"6957-5","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalitis virus"
 "695-7","Culture","Neisseria gonorrhoeae","Ord","Neisseria gonorrhoeae"
-"6958-3","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalomyelitis virus"
+"6958-3","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalitis virus"
 "6959-1","O3 Antibody","Yersinia enterocolitica O3 Antibody","Qn","Yersinia enterocolitica serogroup O:3"
 "6960-9","O5 Antibody","Yersinia enterocolitica O5 Antibody","Qn","Yersinia enterocolitica serogroup O:5"
 "6961-7","O8 Antibody","Yersinia enterocolitica O8 Antibody","Qn","Yersinia enterocolitica serogroup O:8"
@@ -970,7 +970,7 @@
 "7890-7","IgM Antibody","Francisella tularensis Ab.IgM","Ord","Francisella tularensis"
 "7898-0","IgM Antibody","Hantavirus puumala Ab.IgM","Qn","Hantavirus (puumala)"
 "7899-8","PCR/amplification","Hantavirus RNA","Ord","Hantavirus species"
-"7905-3","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B"
+"7905-3","Surface Antigen (HBsAg)","Hepatitis B virus surface Ag","Ord","Hepatitis B virus"
 "7920-2",,"Influenza virus A Antibody","Qn",
 "7921-0",,"Influenza virus A Bangkok Antibody","Qn",
 "7922-8",,"Influenza virus A England Antibody","Qn",
@@ -1011,15 +1011,15 @@
 "8046-5","Total Antibody","Varicella zoster virus Antibody","Qn","Varicella-zoster virus"
 "8048-1","IgM Antibody","Varicella zoster virus Ab.IgM","Qn","Varicella-zoster virus"
 "8049-9","PCR/amplification","Varicella zoster virus DNA","Ord","Varicella-zoster virus"
-"8052-3","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalomyelitis virus"
-"8053-1","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalomyelitis virus"
+"8052-3","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalitis virus"
+"8053-1","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalitis virus"
 "8054-9","Total Antibody","Yellow fever virus Antibody","Qn","Yellow Fever virus"
 "8055-6","IgG Antibody","Yellow fever virus Ab.IgG","Qn","Yellow Fever virus"
 "8056-4","IgM Antibody","Yellow fever virus Ab.IgM","Qn","Yellow Fever virus"
 "8057-2","PCR/amplification","Yellow fever virus RNA","Ord","Yellow Fever virus"
-"9314-6","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalomyelitis virus"
-"9315-3","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalomyelitis virus"
-"9316-1","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalomyelitis virus"
+"9314-6","Total Antibody","Western equine encephalitis virus Antibody","Qn","Western equine encephalitis virus"
+"9315-3","IgG Antibody","Western equine encephalitis virus Ab.IgG","Qn","Western equine encephalitis virus"
+"9316-1","IgM Antibody","Western equine encephalitis virus Ab.IgM","Qn","Western equine encephalitis virus"
 "9362-5",,"Bordetella pertussis Ab.IgA","Qn",
 "9364-1",,"Bordetella pertussis Ab.IgM","Qn",
 "9526-5","Antigen by EIA/ELISA","Hepatitis D virus Ag","OrdQn","Hepatitis D virus"
@@ -1042,9 +1042,9 @@
 "9576-0","Total Antibody","Rubella virus Antibody","Qn","Rubella virus"
 "9577-8","Total Antibody","Saint Louis encephalitis virus Antibody","Qn","Saint Louis encephalitis virus"
 "9586-9","Total Antibody","Borrelia burgdorferi Antibody","Nom",
-"9608-1","Western (immuno) blot (100-3 Ab only)","Hepatitis C virus 100-3 Antibody","Ord","Hepatitis C"
-"9609-9","Western (immuno) blot (22-3 Ab only)","Hepatitis C virus 22-3 Antibody","Ord","Hepatitis C"
-"9610-7","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Antibody","Ord","Hepatitis C"
+"9608-1","Western (immuno) blot (100-3 Ab only)","Hepatitis C virus 100-3 Antibody","Ord","Hepatitis C virus"
+"9609-9","Western (immuno) blot (22-3 Ab only)","Hepatitis C virus 22-3 Antibody","Ord","Hepatitis C virus"
+"9610-7","Western (immuno) blot (c33c Ab only)","Hepatitis C virus c33c Antibody","Ord","Hepatitis C virus"
 "9634-7","IgG Antibody","Saint Louis encephalitis virus Ab.IgG","Qn","Saint Louis encephalitis virus"
 "9635-4","IgM Antibody","Saint Louis encephalitis virus Ab.IgM","Qn","Saint Louis encephalitis virus"
 "9636-2","Total Antibody","Varicella zoster virus Antibody","Ord","Varicella-zoster virus"
