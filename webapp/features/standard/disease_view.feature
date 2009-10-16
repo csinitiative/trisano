@@ -30,7 +30,6 @@ Feature: Viewing diseases
     Then I should see "636-9"
       And I should see "15234-1"
 
-  @wip
   Scenario: Viewing diseases to common test type links
     Given I am logged in as a super user
       And the following active diseases:
