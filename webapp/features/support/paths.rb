@@ -72,6 +72,12 @@ def path_to(page_name)
   when /edit the common test type/
     edit_common_test_type_path(@common_test_type)
 
+  when /edit common test type "([^\"]*)"/
+    edit_common_test_type_path CommonTestType.find_by_common_name($1)
+
+  when /the common test type "([^\"]*)" page/
+    common_test_type_path CommonTestType.find_by_common_name($1)
+
   when /manage the common test type\'s loinc codes/
     loinc_codes_common_test_type_path(@common_test_type)
 

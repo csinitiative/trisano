@@ -22,8 +22,8 @@ class CommonTestType < ActiveRecord::Base
   validates_length_of     :common_name, :in => 1..255
 
   has_many :loinc_codes
-  has_many :disease_common_test_types
-  has_many :diseases, :through => :disease_common_test_types
+  has_many :common_test_types_diseases
+  has_many :diseases, :through => :common_test_types_diseases
   has_many :lab_results, :foreign_key => :test_type_id
 
   class << self

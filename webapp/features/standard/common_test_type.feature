@@ -213,3 +213,43 @@ Feature: Common tests types for lab results
     Then I should get a 500 response
     And I should see "Common test type could not be deleted. It may already be associated with a lab result"
     And I should not see a link to "Delete"
+
+  Scenario: Linking diseases to common test types
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name    |
+        | Dropsy          |
+        | The Trots       |
+        | Reduced Gravity |
+      And I have a common test type named Culture X
+    When I go to edit common test type "Culture X"
+      And I check "Dropsy"
+      And I check "The Trots"
+      And I press "Update"
+    Then I should be on the common test type "Culture X" page
+      And I should see "Common test type was successfully updated"
+      And I should see "Dropsy"
+      And I should see "The Trots"
+      And I should not see "Reduced Gravity"
+
+  Scenario: Unlinking all diseases from common test types
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name    |
+        | Dropsy          |
+        | The Trots       |
+        | Reduced Gravity |
+      And I have a common test type named Culture X
+      And common test type "Culture X" is linked to the following diseases:
+        | Disease name    |
+        | Dropsy          |
+        | Reduced Gravity |
+    When I go to edit common test type "Culture X"
+      And I uncheck "Dropsy"
+      And I uncheck "Reduced Gravity"
+      And I press "Update"
+    Then I should be on the common test type "Culture X" page
+      And I should see "Common test type was successfully updated"
+      And I should not see "Dropsy"
+      And I should not see "The Trots"
+      And I should not see "Reduced Gravity"

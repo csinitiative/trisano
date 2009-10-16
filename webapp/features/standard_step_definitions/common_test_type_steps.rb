@@ -54,3 +54,12 @@ end
 Then /^I should not see "([^\"]*)" associated with the test type$/ do |test_name|
   response.should_not have_xpath("//div[@id='associated-loincs']//span[@class='test_name' and contains(text(),'#{test_name}')]")
 end
+
+Given /^common test type "([^\"]*)" is linked to the following diseases:$/ do |test_name, table|
+  ctt = CommonTestType.find_by_common_name test_name
+  table.map_headers! 'Disease name' => :disease_name
+  table.hashes.each do |attr|
+    ctt.diseases << Disease.first(:conditions => attr)
+  end
+  ctt.save!
+end

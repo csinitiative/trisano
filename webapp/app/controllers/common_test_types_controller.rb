@@ -56,6 +56,9 @@ class CommonTestTypesController < AdminController
 
   def update
     @common_test_type = CommonTestType.find(params[:id])
+    if params[:common_test_type]
+      params[:common_test_type][:disease_ids] ||= []
+    end
 
     respond_to do |format|
       if @common_test_type.update_attributes(params[:common_test_type])

@@ -21,7 +21,7 @@ describe CommonTestType do
   fixtures :external_codes
 
   describe 'associations' do
-    it { should have_many(:disease_common_test_types) }
+    it { should have_many(:common_test_types_diseases) }
     it { should have_many(:diseases) }
     it { should have_many(:loinc_codes) }
     it { should have_many(:lab_results) }

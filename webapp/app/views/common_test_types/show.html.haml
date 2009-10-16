@@ -21,3 +21,11 @@
   %p
 
 =render :partial => 'summary', :locals => {:common_test_type => @common_test_type}
+-unless @common_test_type.diseases.empty?
+  #rot
+    %table.list
+      %tr
+        %th.forminformation
+          Diseases
+        %th
+      =render @common_test_type.diseases
