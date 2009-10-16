@@ -12,13 +12,10 @@
 -# 
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-
-.vert-break#rot
-  %table.list
-    %tr
-      %th.forminformation
-        Common Test Type
-      %th
-        &nbsp;
-    %tr
-      =render common_test_type
+%td.forminformation
+  .formname
+    %span.common_name
+      =h common_test_type.common_name
+      &nbsp;
+%td
+  =common_test_type_tools common_test_type

@@ -1,18 +1,20 @@
 module CommonTestTypesHelper
 
   def common_test_type_tools(common_test_type)
-    haml_tag :div, :class => 'tools', :style => "position: absolute; right: 15px;" do
+    haml_tag :div, :class => 'tools' do
       haml_concat link_to_unless_current('Show', common_test_type)
       haml_concat "|"
       haml_concat link_to_unless_current('Edit', edit_common_test_type_path(common_test_type))
-      haml_concat "|"
-      haml_concat link_to_unless_current('LOINC Codes', loinc_codes_common_test_type_path(common_test_type))
-      haml_concat "|"
-      haml_concat link_to_if(common_test_type.lab_results.empty?,
-                             'Delete',
-                             common_test_type_path(common_test_type),
-                             :method => :delete,
-                             :confirm => 'Are you sure?')
+      if current_page_is_common_test_type_page? common_test_type
+        haml_concat "|"
+        haml_concat link_to_unless_current('LOINC Codes', loinc_codes_common_test_type_path(common_test_type))
+        haml_concat "|"
+        haml_concat link_to_if(common_test_type.lab_results.empty?,
+                               'Delete',
+                               common_test_type_path(common_test_type),
+                               :method => :delete,
+                               :confirm => 'Are you sure?')
+      end
     end
   end
 
@@ -35,4 +37,16 @@ module CommonTestTypesHelper
                h(loinc_code.common_test_type.try(:common_name)),
                loinc_code.common_test_type)
   end
+
+  def current_page_is_common_test_type_page?(ctt)
+    [common_test_types_path,
+     common_test_type_path(ctt),
+     edit_common_test_type_path(ctt),
+     update_loincs_common_test_type_path(ctt),
+     loinc_codes_common_test_type_path(ctt)
+    ].any? do |path|
+      current_page? path
+    end
+  end
+
 end

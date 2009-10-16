@@ -133,3 +133,16 @@
       -@disease.organisms.each do |organism|
         %tr.roll
           =render organism
+
+  %table.list
+    %tr
+      %th.forminformation{ :colspan => (@disease.common_test_types.empty? ? 1 : 2) }
+        Common Test Types
+    -if @disease.common_test_types.empty?
+      %tr
+        %td.forminformation
+          %span No common test types configured
+    -else
+      -@disease.common_test_types.each do |common_test_type|
+        %tr.roll
+          =render common_test_type

@@ -17,7 +17,7 @@ Feature: Viewing diseases
     Then I should see "Burrito"
       And I should see "Lactose Intolerance"
 
-  Scenario: Viewing diseases for Organism relationships
+  Scenario: Viewing diseases to loinc code relationships
     Given I am logged in as a super user
       And the following active diseases:
         | Disease name |
@@ -29,3 +29,18 @@ Feature: Viewing diseases
     When I go to view the disease "The Trots"
     Then I should see "636-9"
       And I should see "15234-1"
+
+  @wip
+  Scenario: Viewing diseases to common test type links
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | The Trots    |
+      And I have a common test type named Culture X
+      And common test type "Culture X" is linked to the following diseases:
+        | Disease name |
+        | The Trots    |
+    When I go to view the disease "The Trots"
+    Then I should see "Common Test Types"
+      And I should see "Culture X"
+
