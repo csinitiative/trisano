@@ -99,6 +99,11 @@ class Disease < ActiveRecord::Base
               loinc = LoincCode.first(:conditions => loinc_attr)
               loinc.diseases << disease unless loinc.diseases.include?(disease)
             end if data[:loinc_codes]
+
+            data[:common_tests].each do |ctt_attr|
+              ctt = CommonTestType.first(:conditions => ['lower(common_name) = ?', ctt_attr[:common_name].downcase]) || CommonTestType.create!(ctt_attr)
+              ctt.diseases << disease unless ctt.diseases.include?(disease)
+            end if data[:common_tests]
           end
         end
       end

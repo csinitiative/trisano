@@ -4,6 +4,9 @@ African Tick Bite Fever:
     - :organism_name: Rickettsia africae
   :diseases:
     - :disease_name: African Tick Bite Fever
+  :common_tests:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
 
 Amebiasis:
   :organisms:
@@ -40,6 +43,13 @@ Amebiasis:
     - :loinc_code: 678-3
     - :loinc_code: 680-9
     - :loinc_code: 9785-7
+  :common_tests:
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Culture
+    - :common_name: Microscopy
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
+    - :common_name: Unknown method
 
 Anthrax:
   :organisms:
@@ -55,6 +65,9 @@ Anthrax:
     - :loinc_code: 11475-1
     - :loinc_code: 38347-1
     - :loinc_code: 610-6
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PCR/Amplification
 
 Arbovirus:
   :organisms:
@@ -169,6 +182,16 @@ Arbovirus:
     - :loinc_code: 9577-8
     - :loinc_code: 9634-7
     - :loinc_code: 9635-4
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
 
 Botulism:
   :organisms:
@@ -194,6 +217,11 @@ Botulism:
     - loinc_code: 41852-5
     - loinc_code: 46705-0
     - loinc_code: 6463-4
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PCR/Amplification
+    - :common_name: Toxin assay
+    - :common_name: Unknown method
 
 Brucella:
   :organisms:
@@ -231,18 +259,30 @@ Brucella:
     - :loinc_code: 636-1
     - :loinc_code: 6911-2
     - :loinc_code: 699-9
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
+    - :common_name: Unknown method
 
 Glanders:
   :organisms:
     - :organism_name: Burkholderia mallei
   :diseases:
     - :disease_name: Glanders (Burkholderia mallei)
+  :common_tests:
+    - :common_name: Total Antibody
 
 Melioidosis:
   :organisms:
     - :organism_name: Burkholderia pseudomallei
   :diseases:
     - :disease_name: Melioidosis (Burkholderia pseudomallei)
+  :common_tests:
+    - :common_name: Total Antibody
 
 Campylobacteriosis:
   :organisms:
@@ -281,6 +321,14 @@ Campylobacteriosis:
     - :loinc_code: 6335-4
     - :loinc_code: 646-0
     - :loinc_code: 6463-4
+  :common_tests:
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: Microscopy
+    - :common_name: PCR/Amplification
+    - :common_name: PFGE
+    - :common_name: Unknown method
 
 Chancroid:
   :organisms:
@@ -300,6 +348,8 @@ Chancroid:
     - :loinc_code: 634-6
     - :loinc_code: 636-1
     - :loinc_code: 6600-1
+  :common_names:
+    - :common_name: Culture
 
 Chickenpox (Varicella):
   :organisms:
@@ -349,21 +399,30 @@ Chickenpox (Varicella):
     - :loinc_code: 8048-1
     - :loinc_code: 8049-9
     - :loinc_code: 9636-2
+  :common_tests:
+    - :common_name: Antigen, unknown method
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Microscopy
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
 
 Chlamydia trachomatis infection:
   :organisms:
     - :organism_name: Chlamydia species
     - :organism_name: Chlamydia trachomatis
-    - :organism_name: Chlamydia trachomatis, serotype A 
-    - :organism_name: Chlamydia trachomatis, serotype B 
-    - :organism_name: Chlamydia trachomatis, serotype Ba 
-    - :organism_name: Chlamydia trachomatis, serotype C 
-    - :organism_name: Chlamydia trachomatis, serotype D 
-    - :organism_name: Chlamydia trachomatis, serotype E 
-    - :organism_name: Chlamydia trachomatis, serotype F 
-    - :organism_name: Chlamydia trachomatis, serotype I 
-    - :organism_name: Chlamydia trachomatis, serotype J 
-    - :organism_name: Chlamydia trachomatis, serotype K 
+    - :organism_name: Chlamydia trachomatis, serotype A
+    - :organism_name: Chlamydia trachomatis, serotype B
+    - :organism_name: Chlamydia trachomatis, serotype Ba
+    - :organism_name: Chlamydia trachomatis, serotype C
+    - :organism_name: Chlamydia trachomatis, serotype D
+    - :organism_name: Chlamydia trachomatis, serotype E
+    - :organism_name: Chlamydia trachomatis, serotype F
+    - :organism_name: Chlamydia trachomatis, serotype I
+    - :organism_name: Chlamydia trachomatis, serotype J
+    - :organism_name: Chlamydia trachomatis, serotype K
   :diseases:
     - :disease_name: Chlamydia trachomatis infection
       :cdc_code: 10274
@@ -429,6 +488,17 @@ Chlamydia trachomatis infection:
     - :loinc_code: 6918-7
     - :loinc_code: 6919-5
     - :loinc_code: 6920-3
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
 
 Cholera:
   :organisms:
@@ -450,6 +520,9 @@ Cholera:
     - :loinc_code: 6578-9
     - :loinc_code: 6579-7
     - :loinc_code: 6581-3
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Total Antibody
 
 Coccidiodomycosis:
   :organisms:
@@ -464,12 +537,21 @@ Coccidiodomycosis:
     - :loinc_code: 31154-8
     - :loinc_code: 33510-9
     - :loinc_code: 5096-3
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Microscopy
+    - :common_name: Total Antibody
 
 Colorado Tick Fever:
   :organisms:
     - :organism_name: Colorado tick fever virus
   :diseases:
     - :disease_name: Colorado Tick Fever
+  :common_tests:
+    - :common_name: Culture
 
 Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies:
   :organisms:
@@ -479,6 +561,12 @@ Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopath
     - :organism_name: Kuru Agent
   :diseases:
     - :disease_name: Creutzfeldt-Jakob Disease and Other Transmissible Human Spongiform Encephalopathies
+  :common_tests:
+    - :common_name: 14-3-3 by EIA/ELISA
+    - :common_name: PCR/Amplification
+    - :common_name: Tau protein by EIA/ELISA
+    - :common_name: Western (immuno) blot
+    - :common_name: Unknown method
 
 Cryptosporidium:
   :organisms:
@@ -502,6 +590,13 @@ Cryptosporidium:
     - :loinc_code: 6674-6
     - :loinc_code: 673-4
     - :loinc_code: 9785-7
+  :common_tests:
+    - :common_name: Acid fast stain
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Culture
+    - :common_name: Microscopy
+    - :common_name: Unknown method
 
 Cyclosporiasis:
   :organisms:
@@ -516,6 +611,10 @@ Cyclosporiasis:
     - :loinc_code: 20932-0
     - :loinc_code: 673-4
     - :loinc_code: 9785-7
+  :common_tests:
+    - :common_name: Acid fast stain
+    - :common_name: Microscopy
+    - :common_name: Unknown method
 
 Diphtheria:
   :organisms:
@@ -547,6 +646,14 @@ Diphtheria:
     - :loinc_code: 6462-6
     - :loinc_code: 6463-4
     - :loinc_code: 6596-1
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Microscopy
+    - :common_name: PCR/amplification
+    - :common_name: Toxin assay (Elek)
+    - :common_name: Typing
 
 Echinococcosis:
   :organisms:
@@ -588,6 +695,11 @@ Ehrlichiosis:
     - :loinc_code: 7878-2
     - :loinc_code: 9783-2
     - :loinc_code: 9784-0
+  :common_names:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
 
 Giardiasis:
   :organisms:
@@ -620,6 +732,15 @@ Giardiasis:
     - :loinc_code: 6470-9
     - :loinc_code: 673-4
     - :loinc_code: 9785-7
+  :common_tests:
+    - :common_name: 65 Antigen by DFA/IF
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
+    - :common_name: Microscopy
+    - :common_name: Total Antibody
+    - :common_name: Unknown method
 
 Gonorrhea:
   :organisms:
@@ -678,6 +799,15 @@ Gonorrhea:
     - :loinc_code: 697-3
     - :loinc_code: 698-1
     - :loinc_code: 9568-7
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: Microscopy
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
 
 Granuloma Inguinale:
   :organisms:
@@ -718,6 +848,9 @@ Haemophilus influenzae, invasive disease:
     - :loinc_code: 6613-4
     - :loinc_code: 6614-2
     - :loinc_code: 6615-9
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Typing
 
 Hansen Disease:
   :organisms:
@@ -740,6 +873,10 @@ Hantavirus Infection:
     - :loinc_code: 35393-8
     - :loinc_code: 7898-0
     - :loinc_code: 7899-8
+  :common_tests:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
 
 Hepatitis A:
   :organisms:
@@ -756,6 +893,10 @@ Hepatitis A:
     - :loinc_code: 5181-3
     - :loinc_code: 5182-1
     - :loinc_code: 5183-9
+  :common_tests:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Total Antibody
 
 Hepatitis B:
   :organisms:
@@ -800,6 +941,21 @@ Hepatitis B:
     - :loinc_code: 5196-1
     - :loinc_code: 5197-9
     - :loinc_code: 7905-3
+  :common_tests:
+    - :common_name: Core Antibody (HBcAb)
+    - :common_name: Core Antigen (HBcAg)
+    - :common_name: Core IgM Antibody
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: e Antibody(HBeAb)
+    - :common_name: e Antigen (HBeAg)
+    - :common_name: e IgG Antibody
+    - :common_name: Genotype by PCR
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Precore Tag mutation by PCR
+    - :common_name: Surface Antibody (HBsAb)
+    - :common_name: Surface Antigen (HBsAg)
+    - :common_name: Western (immuno) blot
 
 Hepatitis C:
   :organisms:
@@ -839,6 +995,22 @@ Hepatitis C:
     - :loinc_code: 9608-1
     - :loinc_code: 9609-9
     - :loinc_code: 9610-7
+  :common_tests:
+    - :common_name: Antibody signal/cutoff
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: Genotype by PCR
+    - :common_name: IgG Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
+    - :common_name: Western (immuno) blot (RIBA)
+    - :common_name: Western (immuno) blot  (5-1-1-Antibody only)
+    - :common_name: Western (immuno) blot (100+5-1-1 Antibody only)
+    - :common_name: Western (immuno) blot (100-3 Antibody only)
+    - :common_name: Western (immuno) blot (22-3 Antibody only)
+    - :common_name: Western (immuno) blot (c33c Antibody only)
+    - :common_name: Western (immuno) blot (NS5 Antibody only)
+    - :common_name: Western (immuno) blot (superoxide dismutase only)
 
 Hepatitis, viral other:
   :organisms:
@@ -857,6 +1029,11 @@ Hepatitis, viral other:
     - :loinc_code: 14211-7
     - :loinc_code: 14212-5
     - :loinc_code: 9526-5
+  :common_tests:
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Total Antibody
 
 Influenza:
   :organisms:
@@ -939,6 +1116,13 @@ Influenza:
     - :loinc_code: 9534-9
     - :loinc_code: 9535-6
     - :loinc_code: 9536-4
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Rapid
 
 Legionellosis:
   :organisms:
@@ -1006,6 +1190,18 @@ Legionellosis:
     - :loinc_code: 9543-0
     - :loinc_code: 9551-3
     - :loinc_code: 9552-1
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Antigen by EIA/ELISA
+    - :common_name: Antigen by latex agglutination
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/Amplification
+    - :common_name: Total Antibody
+    - :common_name: Unknown method
 
 Listeriosis:
   :organisms:
@@ -1023,6 +1219,11 @@ Listeriosis:
     - :loinc_code: 636-1
     - :loinc_code: 6463-4
     - :loinc_code: 6609-2
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: PFGE
+    - :common_name: Unknown method
 
 Lyme Disease:
   :organisms:
@@ -1084,12 +1285,29 @@ Lyme Disease:
     - :loinc_code: 7817-0
     - :loinc_code: 7818-8
     - :loinc_code: 9586-9
+  :common_tests:
+    - :common_name: Antibody index
+    - :common_name: Culture
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Microscopy
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
+    - :common_name: Western (immuno) blot
+    - :common_name: Western (immuno) blot (30kD Antibody only)
+    - :common_name: Western (immuno) blot (39 kD Antibody only)
+    - :common_name: Western (immuno) blot (41kD Antibody only)
+    - :common_name: Western (immuno) blot (58kD Antibody only)
+    - :common_name: Western (immuno) blot (66kD Antibody only
+    - :common_name: Western (immuno) blot (IgG)
+    - :common_name: Western (immuno) blot (IgM)
 
 LGV:
   :organisms:
-    - :organism_name: Chlamydia trachomatis, serotype L2 
-    - :organism_name: Chlamydia trachomatis, serotype L 
-    - :organism_name: Chlamydia trachomatis, serotype L1 
+    - :organism_name: Chlamydia trachomatis, serotype L2
+    - :organism_name: Chlamydia trachomatis, serotype L
+    - :organism_name: Chlamydia trachomatis, serotype L1
     - :organism_name: Chlamydia trachomatis, serotype L3
   :diseases:
     - :disease_name: Lymphogranuloma venereum (LGV)
@@ -1098,6 +1316,9 @@ LGV:
     - :loinc_code: 43174-2
     - :loinc_code: 47211-8
     - :loinc_code: 47212-6
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: PCR/amplification
 
 Malaria:
   :organisms:
@@ -1118,6 +1339,10 @@ Malaria:
     - :loinc_code: 38347-1
     - :loinc_code: 637-9
     - :loinc_code: 662-7
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Microscopy
+    - :common_name: PCR/amplification
 
 Measles (rubeola):
   :organisms:
@@ -1146,6 +1371,13 @@ Measles (rubeola):
     - :loinc_code: 7962-4
     - :loinc_code: 7963-2
     - :loinc_code: 9566-1
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
+    - :common_name: Typing
 
 Meningitis:
   :organisms:
@@ -1153,11 +1385,24 @@ Meningitis:
   :diseases:
     - :disease_name: Meningitis, Aseptic
       :cdc_code: 10010
-    - :disease_name: Meningitis, Bacterial Other
-      :cdc_code: 10650
     - :disease_name: Meningitis, Viral
   :loinc_codes:
     - :loinc_code: 11473-6
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PCR/amplification
+
+Meningitis, baterial other:
+  :organisms:
+    - :organism_name: Cryptococcus species
+  :diseases:
+    - :disease_name: Meningitis, Bacterial Other
+      :cdc_code: 10650
+  :loinc_codes:
+    - :loinc_code: 11473-6
+  :common_tests:
+    - :common_name: Antigen, unknown method
+    - :common_name: Culture
 
 Meningococcus:
   :organisms:
@@ -1206,6 +1451,19 @@ Meningococcus:
     - :loinc_code: 6507-8
     - :loinc_code: 6508-6
     - :loinc_code: 6509-4
+  :common_tests:
+    - :common_name: Antigen by Latex agglutination
+    - :common_name: Antigen (A) by Latex agglutination
+    - :common_name: Antigen (B) by Latex agglutination
+    - :common_name: Antigen (not B) by Latex agglutination
+    - :common_name: Antigen ( C) by Latex agglutination
+    - :common_name: Antigen (Y) by Latex agglutination
+    - :common_name: Antigen (W135) by Latex agglutination
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: PCR/amplification
+    - :common_name: Typing
+    - :common_name: Unknown method
 
 Mumps:
   :organisms:
@@ -1234,6 +1492,13 @@ Mumps:
     - :loinc_code: 7967-3
     - :loinc_code: 7968-1
     - :loinc_code: 9567-9
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
 
 Norovirus:
   :organisms:
@@ -1243,6 +1508,8 @@ Norovirus:
     - :disease_name: Norovirus
   :loinc_codes:
     - :loinc_code: 38916-3
+  :common_tests:
+    - :common_name: PCR/amplification
 
 Pertussis:
   :organisms:
@@ -1277,6 +1544,13 @@ Pertussis:
     - :loinc_code: 6463-4
     - :loinc_code: 9362-5
     - :loinc_code: 9364-1
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
 
 Plague:
   :organisms:
@@ -1297,6 +1571,11 @@ Plague:
     - :loinc_code: 636-1
     - :loinc_code: 6463-4
     - :loinc_code: 701-3
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Western (immuno) blot IgA
+    - :common_name: Western (immuno) blot IgG
+    - :common_name: Western (immuno) blot IgM
 
 Polio:
   :organisms:
@@ -1319,6 +1598,14 @@ Polio:
     - :loinc_code: 5884-2
     - :loinc_code: 5886-7
     - :loinc_code: 5887-5
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: Electron microscopy
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Typing
 
 Psittacosis:
   :organisms:
@@ -1341,6 +1628,14 @@ Psittacosis:
     - :loinc_code: 6915-3
     - :loinc_code: 6916-1
     - :loinc_code: 6917-9
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
 
 Q fever:
   :organisms:
@@ -1360,6 +1655,10 @@ Q fever:
     - :loinc_code: 9709-7
     - :loinc_code: 9710-5
     - :loinc_code: 9711-3
+  :common_tests:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Total Antibody
 
 Rabies:
   :organisms:
@@ -1375,6 +1674,9 @@ Rabies:
     - :loinc_code: 6529-2
     - :loinc_code: 6532-6
     - :loinc_code: 6533-4
+  :common_tests:
+    - :common_name: Antigen by FRA
+    - :common_name: Total Antibody
 
 Relapsing Fever:
   :organisms:
@@ -1416,6 +1718,14 @@ Rocky Mountain Spotted Fever:
     - :loinc_code: 8003-6
     - :loinc_code: 8004-4
     - :loinc_code: 8005-1
+  :common_tests:
+    - :common_name: Antigen by DFA/IF
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
 
 Rubella:
   :organisms:
@@ -1439,6 +1749,12 @@ Rubella:
     - :loinc_code: 6548-2
     - :loinc_code: 8015-0
     - :loinc_code: 9576-0
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
 
 Salmonella:
   :organisms:
@@ -1619,6 +1935,13 @@ Salmonella:
     - :loinc_code: 6460-0
     - :loinc_code: 6462-6
     - :loinc_code: 6463-4
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PCR/amplification
+    - :common_name: PFGE
+    - :common_name: Total Antibody
+    - :common_name: Typing
+    - :common_name: Unknown method
 
 Severe Acute Respiratory Syndrome (SARS) Coronavirus:
   :organisms:
@@ -1628,6 +1951,8 @@ Severe Acute Respiratory Syndrome (SARS) Coronavirus:
   :loinc_codes:
     - :loinc_code: 33964-8
     - :loinc_code: 33968-9
+  :common_tests:
+    - :common_name: PCR/amplification
 
 Shigella:
   :organisms:
@@ -1649,6 +1974,10 @@ Shigella:
     - :loinc_code: 634-6
     - :loinc_code: 636-1
     - :loinc_code: 6463-4
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PFGE
+    - :common_name: PCR/amplification
 
 Smallpox:
   :organisms:
@@ -1657,6 +1986,9 @@ Smallpox:
     - :disease_name: Smallpox
       :cdc_code: 11800
     - :disease_name: Smallpox Vaccine-Associated Adverse Event
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PCR/amplification
 
 Staph aureus resistance:
   :organisms:
@@ -1666,6 +1998,9 @@ Staph aureus resistance:
     - :disease_name: Vancomycin-intermediate Staphylococcus aureus (VISA)
   :loinc_codes:
     - :loinc_code: 610-6
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Susceptibility
 
 Shiga toxin-producing Escherichia coli (STEC):
   :organisms:
@@ -1689,6 +2024,12 @@ Shiga toxin-producing Escherichia coli (STEC):
     - :loinc_code: 600-7
     - :loinc_code: 625-4
     - :loinc_code: 6463-4
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: PFGE
+    - :common_name: PCR/amplification
+    - :common_name: Toxin assay
+    - :common_name: Typing
 
 Group A Strep:
   :organisms:
@@ -1718,6 +2059,10 @@ Group A Strep:
     - :loinc_code: 6463-4
     - :loinc_code: 6558-1
     - :loinc_code: 6559-9
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: Typing
 
 Group B Strep:
   :organisms:
@@ -1740,6 +2085,12 @@ Group B Strep:
     - :loinc_code: 632-0
     - :loinc_code: 6463-4
     - :loinc_code: 9786-5
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: Microscopy
+    - :common_name: PCR/amplification
+    - :common_name: Typing
 
 Group C and G Strep:
   :organisms:
@@ -1747,6 +2098,9 @@ Group C and G Strep:
     - :organism_name: Group G strep
   :diseases:
     - :disease_name: Streptococcal disease, invasive, Groups C & G
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Typing
 
 Streptococcus pneumoniae:
   :organisms:
@@ -1772,6 +2126,9 @@ Streptococcus pneumoniae:
     - :loinc_code: 6463-4
     - :loinc_code: 6553-2
     - :loinc_code: 6555-7
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Susceptibility
 
 Syphilis:
   :organisms:
@@ -1820,6 +2177,18 @@ Syphilis:
     - :loinc_code: 6562-3
     - :loinc_code: 8041-6
     - :loinc_code: 9826-9
+  :common_tests:
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: FTA (Fluorescent treponemal antibody)
+    - :common_name: Latex agglutination
+    - :common_name: MHA-TP (Microhemagluttination assay)
+    - :common_name: Microscopy (darkfield)
+    - :common_name: RPR (Rapid plasma reagin)
+    - :common_name: TPPA (Treponema pallidum particle agglutination assay)
+    - :common_name: Total Antibody
+    - :common_name: VDRL (Venereal disease research laboratory)
+    - :common_name: Unknown method
 
 Tetanus:
   :organisms:
@@ -1832,12 +2201,22 @@ Tetanus:
     - :loinc_code: 600-7
     - :loinc_code: 628-8
     - :loinc_code: 6367-7
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
 
 Trichinosis:
   :organisms:
     - :organism_name: Trichinella spiralis
   :diseases:
     - :disease_name: Trichinosis
+  :common_tests:
+    - :common_name: Identification
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Microscopy
+    - :common_name: Total Antibody
 
 Tuberculosis:
   :organisms:
@@ -1906,6 +2285,20 @@ Tuberculosis:
     - :loinc_code: 9823-6
     - :loinc_code: 9824-4
     - :loinc_code: 9825-1
+  :common_tests:
+    - :common_name: Acid fast stain
+    - :common_name: Chest X-ray
+    - :common_name: Culture
+    - :common_name: CT scan
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: Microscopy
+    - :common_name: MRI Scan
+    - :common_name: PCR/amplification
+    - :common_name: TST (Tuberculin Skin Test)
+    - :common_name: Quantiferon
+    - :common_name: Typing
+    - :common_name: Unknown method
 
 Tularemia:
   :organisms:
@@ -1939,6 +2332,13 @@ Tularemia:
     - :loinc_code: 7888-1
     - :loinc_code: 7889-9
     - :loinc_code: 7890-7
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: Antigen by DFA/IF
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: Total Antibody
 
 Typhoid (cases and carriers; caused by Salmonella typhi):
   :organisms:
@@ -1948,6 +2348,8 @@ Typhoid (cases and carriers; caused by Salmonella typhi):
   :loinc_codes:
     - :loinc_code: 5320-7
     - :loinc_code: 5322-3
+  :common_tests:
+    - :common_name: Culture
 
 Vibriosis (non-cholera Vibrio species infections):
   :organisms:
@@ -1965,6 +2367,8 @@ Vibriosis (non-cholera Vibrio species infections):
     - :loinc_code: 625-4
     - :loinc_code: 6579-7
     - :loinc_code: 6581-3
+  :common_tests:
+    - :common_name: Culture
 
 West Nile virus:
   :organisms:
@@ -1991,6 +2395,13 @@ West Nile virus:
     - :loinc_code: 37985-9
     - :loinc_code: 38997-3
     - :loinc_code: 39572-3
+  :common_tests:
+    - :common_name: DNA probe - not amplified/PCR
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: NS5 Antibody
+    - :common_name: Polyvalent E Antibody
+    - :common_name: Total Antibody
 
 Yellow Fever:
   :organisms:
@@ -2011,6 +2422,12 @@ Yellow Fever:
     - :loinc_code: 8055-6
     - :loinc_code: 8056-4
     - :loinc_code: 8057-2
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: PCR/amplification
+    - :common_name: Total Antibody
 
 Yersiniosis:
   :organisms:
@@ -2039,6 +2456,39 @@ Yersiniosis:
     - :loinc_code: 6966-6
     - :loinc_code: 6967-4
     - :loinc_code: 701-3
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgA Antibody
+    - :common_name: IgG Antibody
+    - :common_name: IgM Antibody
+    - :common_name: O3 Antibody
+    - :common_name: O8 Antibody
+    - :common_name: O9 Antibody
+    - :common_name: Total Antibody
+    - :common_name: Western (immuno) blot IgA
+    - :common_name: Western (immuno) blot IgG
+    - :common_name: Western (immuno) blot IgM
+
+Encephalitis:
+  :diseases:
+    - :disease_name: Encephalitis, post-chickenpox
+    - :disease_name: Encephalitis, post-mumps
+      :cdc_code: 10080
+    - :disease_name: Encephalitis, primary
+      :cdc_code: 10050
+    - :disease_name: Encephalitis, post-other
+      :cdc_code: 10090
+  :common_tests:
+    - :common_name: Culture
+    - :common_name: IgG Antibody
+    - :common_name: Microscopy
+    - :common_name: PCR/amplification
+
+Toxic Shock Syndrome:
+  :diseases:
+    - :disease_name: Toxic-shock syndrome (staphylococcal)
+  :common_tests:
+    - :common_name: Culture
 
 Unclassified:
   :diseases:
@@ -2050,19 +2500,11 @@ Unclassified:
       :cdc_code: 32010
     - :disease_name: Monkeypox
     - :disease_name: Mucopurulent cervicitis (MPC)
-    - :disease_name: Encephalitis, post-chickenpox
-    - :disease_name: Encephalitis, post-mumps
-      :cdc_code: 10080
-    - :disease_name: Encephalitis, primary
-      :cdc_code: 10050
-    - :disease_name: Encephalitis, post-other
-      :cdc_code: 10090
     - :disease_name: HIV Infection, adult
     - :disease_name: HIV Infection, pediatric
     - :disease_name: Nongonococcal urethritis (NGU)
       :cdc_code: 10307
     - :disease_name: Hemolytic uremic syndrome postdiarrheal
-    - :disease_name: Toxic-shock syndrome (staphylococcal)
     - :disease_name: Pelvic Inflammatory Disease (PID), Unknown Etiology
       :cdc_code: 10309
     - :disease_name: Methicillin- or oxicillin- resistant Staphylococcus aureus coagulase-positive (MRSA a.k.a. ORSA)
