@@ -28,6 +28,7 @@
             =f.label      :common_name
             =f.text_field :common_name
           %span.vert
+            %label Diseases
             -scroll_pane do
               -disease_check_boxes f.object_name, common_test_type.disease_ids
 
