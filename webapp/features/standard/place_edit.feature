@@ -25,4 +25,11 @@ Feature: Editing places
     And I submit the place update form
 
     Then the place edit form should be redisplayed with an error message
-    
+
+  Scenario: Navigating to the parent cmr in edit mode
+    Given I am logged in as a super user
+      And a simple morbidity event in jurisdiction Bear River for last name Smoker
+      And there is a place on the event named Red Dragon Pavilion
+    When I go to the first CMR place's edit page
+      And I follow "Smoker"
+    Then I should be on edit the CMR

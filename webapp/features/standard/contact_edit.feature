@@ -4,7 +4,6 @@ Feature: Editing contacts
   able to edit contact information in more detail then is possible
   just on the parent cmr.
 
-  @wip
   Scenario: Navigating to the parent cmr in edit mode
     Given I am logged in as a super user
       And a simple morbidity event in jurisdiction Bear River for last name Smoker

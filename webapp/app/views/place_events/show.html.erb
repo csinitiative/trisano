@@ -44,9 +44,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <b><%= @event.primary_jurisdiction.short_name %></b>
       </td>
       <td>
-        <%- original_patient = @event.parent_event %>
-        <%= link_to("#{original_patient.interested_party.person_entity.person.full_name}", cmr_path(original_patient)) -%>
-        <p style='font-size: 12px; font-weight: light;'><%= original_patient.safe_call_chain(:disease_event, :disease, :disease_name) %></p>
+        <%= original_patient_controls(@event) %>
       </td>
     </tr>
   </table>
@@ -68,7 +66,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Place" } %>
       <br clear="all"/>
     </div>
-  
+
     <div id="investigation_tab">
       <%= render :partial => "events/investigation_show_tab" %>
       <br clear="all"/>
