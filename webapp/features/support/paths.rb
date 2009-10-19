@@ -54,6 +54,9 @@ def path_to(page_name)
   when /the contact show page/i
     contact_event_path(@contact_event)
 
+  when /the first CMR contact\'s edit page/i
+    edit_contact_event_path(@event.contact_child_events.first)
+
   when /the add and remove forms page/i
     event_forms_path(@event)
 

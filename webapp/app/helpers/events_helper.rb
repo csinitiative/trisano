@@ -609,12 +609,20 @@ module EventsHelper
     original_patient = event.parent_event
     name = "#{h(original_patient.interested_party.person_entity.person.first_name)} #{h(original_patient.interested_party.person_entity.person.last_name)}"
     disease = original_patient.safe_call_chain(:disease_event, :disease, :disease_name)
-    out = "<div>Parent Patient: #{link_to(name, cmr_path(original_patient))}"
-    unless disease.blank?
-      out << " | <span style='font-size: 12px; font-weight: light;'>#{h(disease)}</span>"
-    end
-    out << "</div>"
-    out
+    ERB.new(<<-HELPER_ERB).result(binding)
+      <div>
+        Parent Patient: <%= link_to_parent event %>
+        <%= " | <span style='font-size: 12px; font-weight: light;'>#{h disease}</span>" unless disease.blank? %>
+      </div>
+    HELPER_ERB
+  end
+
+  def link_to_parent(event)
+    parent = event.parent_event
+    person = parent.interested_party.person_entity.person
+    name = "#{h(person.first_name)} #{h(person.last_name)}"
+    path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
+    link_to name, path
   end
 
   def association_recorded?(association_collection)
