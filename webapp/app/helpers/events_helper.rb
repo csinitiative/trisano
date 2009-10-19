@@ -606,9 +606,7 @@ module EventsHelper
   end
 
   def original_patient_controls(event)
-    original_patient = event.parent_event
-    name = "#{h(original_patient.interested_party.person_entity.person.first_name)} #{h(original_patient.interested_party.person_entity.person.last_name)}"
-    disease = original_patient.safe_call_chain(:disease_event, :disease, :disease_name)
+    disease = event.safe_call_chain(:parent_event, :disease_event, :disease, :disease_name)
     ERB.new(<<-HELPER_ERB).result(binding)
       <div>
         Parent Patient: <%= link_to_parent event %>

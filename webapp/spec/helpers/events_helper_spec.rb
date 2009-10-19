@@ -38,20 +38,20 @@ describe EventsHelper do
         before(:each) do
           @user.stub!(:is_entitled_to_in?).and_return(true)
         end
-       
+
         it "should return a properly constructed form that posts to the morbidity event's controller's state action" do
           pending "There are serious difficulties testing Haml helpers in RSpec.  Pending till figured out."
           form = state_controls(@event_1, @jurisdiction)
           # form test here
           # radio button test here
         end
-          
+
       end
 
       describe "when the user is not allowed to accept an event" do
       end
     end
-   
+
     # Repeat the above pattern as new state transitions are implemented
   end
 
@@ -61,10 +61,11 @@ describe EventsHelper do
       @event = mock_event
       @encounter_event = mock_model(EncounterEvent)
       @encounter_event.stub!(:parent_event).and_return(@event)
+      @encounter_event.stub!(:safe_call_chain).with(:parent_event, :disease_event, :disease, :disease_name).and_return("Bubonic,Plague")
       helper.original_patient_controls(@encounter_event).include?("Groucho Marx").should be_true
       helper.original_patient_controls(@encounter_event).include?("Bubonic,Plague").should be_true
     end
-   
+
   end
 
   describe "association recorded helper" do
