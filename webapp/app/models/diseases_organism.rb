@@ -19,7 +19,7 @@ class DiseasesOrganism < ActiveRecord::Base
             organism.diseases << disease unless organism.diseases.include?(disease)
           end
           organism.save!
-        end
+        end if value[:organisms]
       end
     end
 
