@@ -87,6 +87,7 @@ class Disease < ActiveRecord::Base
     def load_from_yaml(str_or_readable)
       transaction do
         YAML.load(str_or_readable).each do |disease_group, data|
+          puts "Loading disease group #{disease_group}"
           data[:diseases].each do |disease_attr|
             disease = find_or_create_by_disease_name({:active => true}.merge(disease_attr))
 

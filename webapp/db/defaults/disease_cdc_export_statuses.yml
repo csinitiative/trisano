@@ -11,7 +11,7 @@ Anthrax:
   suspect: 
   unknown: 
 
-Bacterial meningitis, other:
+Meningitis, Bacterial Other:
   confirmed: X
   probable: 
   suspect: 
@@ -53,7 +53,7 @@ Chancroid:
   suspect: X
   unknown: X
 
-Chlamydia trachomatis genital infection:
+Chlamydia trachomatis infection:
   confirmed: X
   probable: X
   suspect: X
@@ -77,7 +77,7 @@ Cryptosporidiosis:
   suspect: 
   unknown: 
 
-Cyclosporidiosis:
+Cyclosporiasis:
   confirmed: X
   probable: 
   suspect: 
@@ -101,7 +101,7 @@ Diptheria:
   suspect: 
   unknown: X
 
-Eastern Equine Encephalitis Virus (invasive disease)**:
+Eastern equine encephalitis virus neuroinvasive disease:
   confirmed: X
   probable: X
   suspect: 
@@ -137,13 +137,13 @@ Hansen disease (Leprosy):
   suspect: 
   unknown: 
 
-Hantavirus infection:
+Hantavirus Infection:
   confirmed: X
   probable: 
   suspect: 
   unknown: X
 
-Hemolytic Uremic syndrome (post-diarrheal):
+Hemolytic uremic syndrome postdiarrheal:
   confirmed: X
   probable: X
   suspect: 

@@ -31,7 +31,8 @@ class CommonTestType < ActiveRecord::Base
       require 'csv'
       transaction do
         CSV.parse str_or_readable do |row|
-          CommonTestType.create! :common_name => row.first
+          conditions = {:common_name => row.first}
+          CommonTestType.first(:conditions => conditions) || CommonTestType.create!(conditions)
         end
       end
     end
