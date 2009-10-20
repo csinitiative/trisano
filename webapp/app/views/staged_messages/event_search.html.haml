@@ -1,7 +1,7 @@
 = content_for :title do
   = "Event Search using staged message #{h(@staged_message.id)} / #{h(@staged_message.patient.patient_name)}"
 
-= link_to h('<< Back'), staged_messages_path 
+= link_to h('<< Back'), staged_messages_path
 
 %fieldset.form
   %legend Message Details
@@ -40,14 +40,14 @@
           - previous_entity_id = current_entity_id
         - else
           - output_name = false
-        
+
         - if includes_event
           - jurisdictions = pg_array(result['secondary_jurisdictions']) << result['jurisdiction_entity_id']
           - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
           - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
 
         %tr{:class => result_class, :id => "entity_#{result['entity_id']}"}
-          %td 
+          %td
             - if output_name
               = "#{h(result['last_name'])}, #{h(result['first_name'])}"
             - else
@@ -72,20 +72,20 @@
                 = h(result['disease_name'])
               - else
                 Private
-          %td 
+          %td
             - if includes_event
               - view_path = result['event_type'] == 'MorbidityEvent' ? cmr_path(result['event_id']) : contact_event_path(result['event_id'])
               = link_to "Show", view_path
               |
-              - form_tag(event_staged_message_url(@staged_message), :style => "display: inline", :id => "assign_#{result['event_id']}") do
+              - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_#{result['event_id']}") do
                 = hidden_field_tag('event_id', result['event_id'])
                 = link_to_function("Assign lab result", "this.parentNode.submit()")
           %td
             - if output_name
-              - form_tag(event_staged_message_url(@staged_message), :style => "display: inline", :id => "assign_to_new_with_person_#{current_entity_id}") do
+              - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_to_new_with_person_#{current_entity_id}") do
                 = hidden_field_tag('entity_id', current_entity_id)
                 = link_to_function("Assign to new CMR using this person", "this.parentNode.submit()")
 
   %br
-  - form_tag(event_staged_message_url(@staged_message), :id => "assign_to_new") do
+  - form_tag(event_staged_message_path(@staged_message), :id => "assign_to_new") do
     = link_to_function("Create a CMR from this message", "this.parentNode.submit()")
