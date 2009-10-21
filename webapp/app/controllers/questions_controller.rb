@@ -16,8 +16,40 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class QuestionsController < ApplicationController
+  before_filter :find_form_and_master_form
 
   def edit
+  end
+
+  def show
+  end
+
+  def update
+    params[:questions] ||= {}
+    errors = []
+    Question.transaction do
+      params[:questions].delete_if do |pkey, attr|
+        question = Question.find(pkey)
+        unless question.update_attributes(attr)
+          errors << question.errors
+        end
+      end
+    end
+    respond_to do |format|
+      if errors.empty?
+        flash[:notice] = 'Form questions were successfully updated.'
+        format.html { redirect_to form_questions_path(@form) }
+      else
+        p errors
+        @form.errors += errors.flatten
+        format.html { render :action => :edit, :status => :bad_request }
+      end
+    end
+  end
+
+  private
+
+  def find_form_and_master_form
     @form = Form.find(params[:form_id])
     @master_form = @form.template
   end

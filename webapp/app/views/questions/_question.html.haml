@@ -15,10 +15,8 @@
 
 %tr
   %td
-    %label.question.label Question
-    =h question.question_text
-    %small
-      [
-      ="#{h question.short_name},"
-      =h question.data_type.to_s.humanize
-      ]
+    =sanitize question.question_text, :tags => %w(br)
+  %td
+    =h question.data_type.to_s.humanize
+  %td
+    =h question.short_name

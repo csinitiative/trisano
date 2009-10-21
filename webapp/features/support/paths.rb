@@ -66,8 +66,13 @@ def path_to(page_name)
   when /the "([^\"]*)" form details page/i
     form_path Form.templates.find_by_name($1)
 
-  when /the form\'s edit questions page \(version ([\d]+)\)/i
-    edit_form_questions_path @form.published_versions.find_by_version($1)
+  when /the form\'s edit questions page \(version ([\d]+)\)/i:
+    @published_form = @form.published_versions.find_by_version($1)
+    edit_form_questions_path @published_form
+
+  when /the form\'s show questions page \(version ([\d]+)\)/i:
+    @published_form = @form.published_versions.find_by_version($1)
+    form_questions_path @published_form
 
   when /the investigator user edit page/i
     "/users/4/edit"

@@ -30,9 +30,10 @@ class Form < ActiveRecord::Base
   belongs_to :template, :class_name => "Form"
   has_many :form_references
   has_many :questions, :finder_sql => %q{
-    SELECT DISTINCT questions.* FROM form_elements
+    SELECT DISTINCT questions.*, form_elements.lft FROM form_elements
       JOIN questions ON form_elements.id = questions.form_element_id
      WHERE form_elements.form_id = #{id}
+     ORDER BY form_elements.lft ASC
   }
 
   validates_presence_of :name, :event_type
