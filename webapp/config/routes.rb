@@ -2,21 +2,21 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 ActionController::Routing::Routes.draw do |map|
-  
+
   map.process_condition 'question_elements/process_condition', :controller => 'question_elements', :action => 'process_condition'
   map.process_core_condition 'follow_up_elements/process_core_condition', :controller => 'follow_up_elements', :action => 'process_core_condition'
 
@@ -57,13 +57,14 @@ ActionController::Routing::Routes.draw do |map|
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
   map.form_rollback 'forms/rollback/:id', :controller => 'forms', :action => 'rollback'
 
-  map.resources :forms, 
+  map.resources :forms,
     :member => {
-    :copy => :post,
-    :export => :post,
-    :push => :post,
-    :deactivate => :post
-  }
+      :copy => :post,
+      :export => :post,
+      :push => :post,
+      :deactivate => :post} do |form|
+    form.resource :questions
+  end
 
   map.with_options :controller => 'external_codes' do |codes|
     codes.codes            'codes',                                   :action => 'index'
@@ -78,7 +79,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :question_elements
-  
+
   map.resources :group_elements
 
   map.resources :section_elements
@@ -86,15 +87,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :value_set_elements
 
   map.resources :value_elements
-  
+
   map.resources :core_view_elements
-  
+
   map.resources :core_field_elements
-  
+
   map.resources :view_elements
-  
+
   map.resources :form_elements, :member => { :to_library => :post }, :member => { :from_library => :post }
-  
+
   map.resources :follow_up_elements
 
   map.resources :users
@@ -102,8 +103,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :roles
 
   map.resources :people
-  
-  map.resources :cmrs, 
+
+  map.resources :cmrs,
     :controller => :morbidity_events,
     :collection => {
     :event_search => :get,
@@ -120,7 +121,7 @@ ActionController::Routing::Routes.draw do |map|
       :lab_result_form => :get
     }
 
-  map.resources :contact_events, 
+  map.resources :contact_events,
     :member => {
       :soft_delete => :post,
       :event_type => :post
@@ -157,7 +158,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :edit, :create, :update, :index]
 
   # These are the tasks for a particular user.
-  map.resources :tasks, :path_prefix => '/users/:user_id',   :name_prefix => 'user_',  :controller => 'user_tasks',  :only => [:index, :update]   
+  map.resources :tasks, :path_prefix => '/users/:user_id',   :name_prefix => 'user_',  :controller => 'user_tasks',  :only => [:index, :update]
 
   # These are the notes in use with and available to an event
   map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]

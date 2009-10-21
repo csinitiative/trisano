@@ -41,6 +41,17 @@ Given(/^that form is published$/) do
   @published_form.should_not be_nil
 end
 
+Given /^a "([^\"]*)" event form named "([^\"]*)" with the following questions:$/ do |form_type, form_name, table|
+  @form = create_form form_type, form_name, form_name, get_random_disease
+  table.map_headers! 'Question' => :question_text, 'Short name' => :short_name, 'Data type' => :data_type
+  table.hashes.each do |question_attr|
+    question_element = QuestionElement.new(:parent_element_id => @form.investigator_view_elements_container.children[0].id,
+                                           :question_attributes => question_attr)
+    question_element.save_and_add_to_form
+  end
+end
+
+
 #
 # Published form helpers.
 #

@@ -62,7 +62,7 @@ end
 
 Then(/^the short name should be read-only$/) do
   @browser.is_text_present(@short_name).should be_true
-  @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_question_text')]").should be_true
+#  @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_question_text')]").should be_true
   @browser.is_element_present("//input[contains(@id, 'question_element_question_attributes_short_name')]").should be_false
 end
 

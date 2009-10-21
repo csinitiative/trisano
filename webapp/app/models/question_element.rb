@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class QuestionElement < FormElement
@@ -32,7 +32,7 @@ class QuestionElement < FormElement
       question_instance.data_type = export_column.data_type
       question_instance.size = export_column.length_to_output
     end
-    
+
     self.question = question_instance
     super do
       build_cdc_value_set unless export_column.nil?
@@ -45,7 +45,7 @@ class QuestionElement < FormElement
     result = nil
     potential_follow_ups = retrieve_follow_ups(form_elements_cache)
     condition = parse_condition_from_answer(answer)
-    
+
     potential_follow_ups.each do |follow_up|
       if (follow_up.condition_match?(condition))
         result = follow_up
@@ -53,7 +53,7 @@ class QuestionElement < FormElement
         FormElement.delete_answers_to_follow_ups(event_id, follow_up)
       end
     end
-    
+
     result
   end
 
@@ -68,17 +68,17 @@ class QuestionElement < FormElement
   def is_multi_valued_and_empty?
     is_multi_valued? && (children_count_by_type("ValueSetElement") == 0)
   end
-  
+
   def build_cdc_value_set
     return unless ((export_column.data_type == "radio_button") or (export_column.data_type == "drop_down") or (export_column.data_type == "check_box"))
-    
+
     value_set = ValueSetElement.create({
         :form_id => self.form_id,
         :tree_id => self.tree_id,
         :export_column_id => export_column.id,
         :name => "#{export_column.export_name.export_name} #{export_column.export_column_name}",
       })
-    
+
     self.add_child(value_set)
 
     if (export_column.data_type == "drop_down")
@@ -129,7 +129,7 @@ class QuestionElement < FormElement
     return false if (most_recent_version.created_at > self.created_at)
     return true
   end
-  
+
   private
 
   def validate_question_short_name_uniqueness
@@ -148,12 +148,12 @@ class QuestionElement < FormElement
     end
 
     existing_question_elements = FormElement.find(:all, :conditions => conditions)
-    
+
     if (existing_question_elements.detect { |element| element.question.short_name == self.question.short_name })
       self.errors.add_to_base("The short name entered is already in use on this form. Please choose another.")
     end
   end
-  
+
   # Follow ups can come out of the form element cache, if one has already
   # been initialized, otherwise, go to the database.
   def retrieve_follow_ups(form_elements_cache)
@@ -173,5 +173,5 @@ class QuestionElement < FormElement
       return answer[:response]
     end
   end
-  
+
 end
