@@ -13,26 +13,12 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--content_for :title do
-  Form:
-  =h "'#{@form.name}'"
-  Version
-  =h "#{@form.version}: "
-  Short Names
-
--content_for :tools do
-  =link_to h('< Master Copy'), @master_form
-  %p
-
-%table.list
-  %tr
-    %th Version
-    %th Published
-    %th Diseases
-    %th Form Metadata
-  =render :partial => 'forms/admin_version_info', :locals => {:form => @form}
-
-%table.list
-  %tr
-    %th Questions
-  =render @form.questions
+%tr
+  %td
+    %label.question.label Question
+    =h question.question_text
+    %small
+      [
+      ="#{h question.short_name},"
+      =h question.data_type.to_s.humanize
+      ]

@@ -457,7 +457,6 @@ module FormsHelper
   end
 
   def admin_version_info(form)
-    date_format = '%B %d, %Y %I:%M %p'
     result = ""
     published_versions = form.published_versions
     result << "<h2>Published Versions</h2>"
@@ -471,27 +470,7 @@ module FormsHelper
     result << "<tr><th>Version</th><th>Published</th><th>Diseases</th><th>Form Metadata</th><th>&nbsp;</th></tr>"
 
     form.published_versions.each do |published_form|
-      result << "<tr>"
-      result << "<td>#{h(published_form.version)}</td>"
-      result << "<td>#{h(published_form.created_at.strftime(date_format))}</td>"
-      result << "<td>"
-
-      form.diseases.each do |disease|
-        result << "#{h(disease.disease_name)}<br/>"
-      end
-
-      result << "</td>"
-      result << "<td>"
-      result << "Form ID: #{h(published_form.id)}<br/>"
-      result << "#{h(pluralize(published_form.element_count, 'element'))}<br/>"
-      result << "#{h(pluralize(published_form.question_count, 'question'))}<br/>"
-      result << "#{h(pluralize(published_form.core_element_count, 'element'))} with ties to core fields<br/>"
-      result << "#{h(pluralize(published_form.cdc_question_count, 'CDC export question'))}<br/>"
-      result << "Applies to #{h(pluralize(published_form.form_references.size, 'events'))}<br/>"
-
-      result << "</td>"
-      result << "<td>#{ link_to 'Fix short names', edit_form_questions_path(published_form) }</td>"
-      result << "</tr>"
+      result << render(:partial => 'admin_version_info', :locals => {:form => published_form})
     end
 
     result << "</table>"

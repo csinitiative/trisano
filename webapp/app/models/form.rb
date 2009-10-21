@@ -29,6 +29,11 @@ class Form < ActiveRecord::Base
   has_many :published_versions, :class_name => "Form", :foreign_key => "template_id", :order => "created_at DESC"
   belongs_to :template, :class_name => "Form"
   has_many :form_references
+  has_many :questions, :finder_sql => %q{
+    SELECT DISTINCT questions.* FROM form_elements
+      JOIN questions ON form_elements.id = questions.form_element_id
+     WHERE form_elements.form_id = #{id}
+  }
 
   validates_presence_of :name, :event_type
   validates_presence_of :short_name, :if => :is_template
