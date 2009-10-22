@@ -36,4 +36,10 @@ describe Questions do
     Question.find(not_on_form.id).short_name.should_not == 'new_short_name_not_on_form'
     Question.find(on_form.id).short_name.should == 'new_short_name_on_form'
   end
+
+  it 'update should gracefully handle a nil questions hash' do
+    form = forms(:test_form)
+    questions = Questions.from_form(form)
+    questions.update(nil).should be_true
+  end
 end

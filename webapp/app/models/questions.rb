@@ -52,6 +52,7 @@ class Questions
   end
 
   def update(questions_hash)
+    return true unless questions_hash
     errors.clear
     begin
       Question.transaction do
