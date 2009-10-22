@@ -66,7 +66,7 @@ class Question < ActiveRecord::Base
   def sanitize_short_name
     self.short_name = self.short_name.strip.gsub(/ /, '_') unless self.short_name.blank?
   end
-  
+
   def short_name_filter
     if self.short_name_changed?
       unless (question_element.nil? || question_element.form.nil?)

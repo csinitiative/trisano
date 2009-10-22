@@ -34,6 +34,10 @@ class Form < ActiveRecord::Base
       JOIN questions ON form_elements.id = questions.form_element_id
      WHERE form_elements.form_id = #{id}
      ORDER BY form_elements.lft ASC
+  }, :counter_sql => %q{
+    SELECT COUNT(DISTINCT questions.id) FROM form_elements
+      JOIN questions ON form_elements.id = questions.form_element_id
+     WHERE form_elements.form_id = #{id}
   }
 
   validates_presence_of :name, :event_type

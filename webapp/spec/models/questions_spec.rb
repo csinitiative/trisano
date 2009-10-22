@@ -18,10 +18,22 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Questions do
+  fixtures :forms, :form_elements, :questions
 
   it 'should instaniate from a Form' do
     form = Form.new
     form.questions << Question.new
     Questions.from_form(form).size.should == 1
+  end
+
+  it 'should only update questions scoped to the current form' do
+    form = forms(:test_form)
+    questions = Questions.from_form(form)
+    not_on_form = questions(:hep_non_cdc_q)
+    on_form     = questions(:demo_q1)
+    questions.update(not_on_form.id.to_s => {:short_name => 'new_short_name_not_on_form'},
+                     on_form.id.to_s     => {:short_name => 'new_short_name_on_form'})
+    Question.find(not_on_form.id).short_name.should_not == 'new_short_name_not_on_form'
+    Question.find(on_form.id).short_name.should == 'new_short_name_on_form'
   end
 end

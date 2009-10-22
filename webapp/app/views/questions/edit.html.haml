@@ -33,7 +33,7 @@
     %th
   =render :partial => 'forms/admin_version_info', :locals => {:form => @form}
 -form_tag  form_questions_path(@form), :method => :put do
-  =error_messages_for 'questions'
+  =error_messages_for 'form', :object => @questions
   %table.list
     %tr
       %th Question
