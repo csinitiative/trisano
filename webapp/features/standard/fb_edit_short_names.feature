@@ -64,3 +64,14 @@ Feature: Edit short names on form questions
       And I should not see "whose_it"
       And I should not see "whats_it"
       And I should see "wheres_it"
+
+  Scenario: Investigators should not be able to edit questions
+    Given I am logged in as an investigator
+      And a "morbidity" event form named "Cuke" with the following questions:
+        | Question | Short name | Data type        |
+        | Who?     | whose_it   | single_line_text |
+        | What?    | whats_it   | single_line_text |
+        | Where?   | wheres_it  | single_line_text |
+       And that form is published
+     When I go to the form's edit questions page (version 1)
+     Then I should get a 403 response
