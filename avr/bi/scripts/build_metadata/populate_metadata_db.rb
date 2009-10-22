@@ -42,6 +42,10 @@ PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
 PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
 PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
 SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
+ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
+ConceptPropertyString = Java::OrgPentahoPmsSchemaConceptTypesString::ConceptPropertyString
+ConceptPropertyTableType = Java::OrgPentahoPmsSchemaConceptTypesTabletype::ConceptPropertyTableType
+ConceptPropertyNumber = Java::OrgPentahoPmsSchemaConceptTypesNumber::ConceptPropertyNumber
 
 def load_metadata_xmi(file_path)
   puts "Loading metadata"
@@ -73,6 +77,111 @@ class Metadata
       setup_role_security @trisano_business_model
     end
     return @trisano_business_model
+  end
+
+  def write_physical_column(c, tbl)
+    puts "INSERT INTO columns VALUES ('#{tbl}', '#{c.get_id}', '#{c.get_display_name('en_US')}', '#{c.get_aggregation_type_desc}', '#{c.get_formula}', '#{c.get_model_element_description}', '#{c.get_relative_size}', '#{c.is_attribute_field}', '#{c.is_dimension_field}', '#{c.is_dimension_table}', '#{c.is_exact}', '#{c.is_fact_field}', '#{c.is_fact_table}', '#{c.is_hidden}');"
+    agg = c.get_aggregation_type
+    puts "INSERT INTO column_aggregation_types VALUES ('#{tbl}', '#{c.get_id}', '#{agg.get_code}', '#{agg.get_description}', '#{agg.get_type}');"
+    puts "TODO: c.get_concept"
+    puts "TODO: c.get_field_type"
+    puts "TODO: c.get_data_type"  # Likely this is what needs changing for acuity to work
+    if c.get_mask != nil
+      puts "XXX XXX XXX non-nil column model_element_description XXX XXX XXX"
+    end
+    if c.getSecurity.getOwners != nil and c.getSecurity.getOwners.length != 0
+      puts "XXX XXX XXX non-nil owners list in #{tbl} #{c.get_display_name('en_US')} security"
+      c.getSecurity.getOwners.each do |a| puts a end
+    end
+    s = c.get_row_level_security
+    if s.is_global? or s.is_role_based? 
+      puts "XXX XXX XXX non-empty role-based security map on table #{tbl} #{c.get_display_name('en_US')}"
+    end
+  end
+
+  def write_physical_table(t) 
+    nm = t.get_name('en_US')
+    puts "INSERT INTO tables VALUES ('#{t.get_id}', '#{nm}', '#{t.get_aggregation_type_desc}', '#{t.get_data_type.get_type}', '#{t.get_data_type.get_length}', '#{t.get_data_type.get_precision}', '#{t.get_data_type.get_description}', '#{t.get_description('en_US')}', '#{t.get_display_name('en_US')}', '#{t.get_field_type.get_code}', '#{t.get_field_type_desc}', '#{t.get_formula}', '#{t.get_model_element_description}', '#{t.get_relative_size}', '#{t.isAttributeField}', '#{t.isDimensionField}', '#{t.isDimensionTable}', '#{t.is_exact}', '#{t.is_fact_field}', '#{t.is_fact_table}', '#{t.is_hidden}');"
+    if t.has_aggregate?
+      puts "XXX XXX XXX This table has an aggregate XXX XXX XXX"
+    end
+    if t.get_field_type.get_code != "Other"
+      puts "XXX XXX XXX Non-'other' field type XXX XXX XXX"
+    end
+    if t.get_mask != nil
+      puts "XXX XXX XXX Non-nil table mask XXX XXX XXX"
+    end
+    if t.get_security.get_owners != nil and t.getSecurity.getOwners.length != 0
+      puts "XXX XXX XXX non-nil owners list in #{t.get_id} security"
+    end
+    s = t.get_row_level_security
+    if s.is_global? or s.is_role_based? 
+      puts "XXX XXX XXX non-empty role-based security map on table #{t.get_id}"
+    end
+    agg = t.get_aggregation_type
+    puts "INSERT INTO table_aggregation_types VALUES ('#{t.get_id}', '#{agg.get_code}', '#{agg.get_description}', '#{agg.get_type}');"
+    con = t.get_concept
+    puts "INSERT INTO table_concepts VALUES ('#{t.get_id}', '#{con.get_name}', '#{con.get_description('en_US')}');"
+    con.get_child_property_ids.each do |cpi|
+      cp = con.get_child_property(cpi)
+      if cp.is_a? ConceptPropertyLocalizedString then
+        val = cp.get_value.get_string('en_US')
+      elsif cp.is_a? String then
+        val = cp
+      elsif cp.is_a? ConceptPropertyString then
+        val = cp.to_string
+      elsif cp.is_a? ConceptPropertyTableType then
+        val = cp.get_value.get_description
+        if val != "Other"
+          puts "XXX XXX XXX Something other than \"Other\" XXX XXX"
+        end
+      elsif cp.is_a? ConceptPropertyNumber then
+        val = cp.get_value
+        if val == nil
+          val = ""
+        else
+          puts "XXX XXX XXX XXX  non-nil ConceptPropertyNumber"
+        end
+      else
+        val = "I dunno how to handle these yet"
+      end
+      puts "INSERT INTO table_concept_child_properties VALUES ('#{t.get_id}', '#{con.get_name}', '#{cpi}', '#{val}', '#{cp.get_type}');"
+    end
+    t.get_physical_columns.each do |a| write_physical_column a, t.get_id end
+  end
+
+  def write_relationship(rel)
+    puts "INSERT INTO relationships (table_from, field_from, table_to, field_to, type_desc) VALUES ('#{rel.get_table_from.get_id}', '#{rel.get_field_from.get_id}', '#{rel.get_table_to.get_id}', '#{rel.get_field_to.get_id}', '#{rel.get_type_desc}');"
+  end
+
+  def write_business_column(bcol)
+    puts "INSERT INTO business_columns VALUES ('#{bcol.get_id}', '#{bcol.get_physical_column.get_table.get_id}', '#{bcol.get_physical_column.get_id}');"
+  end
+
+  def write_business_table(tbl)
+    puts "INSERT INTO business_tables VALUES ('#{tbl.get_id}', '#{tbl.get_physical_table.get_id}', '#{tbl.get_name('en_US')}');"
+    tbl.get_business_columns.each do |bcol|
+      write_business_column bcol
+    end
+  end
+
+  def write_category_column(cat, c)
+    puts "INSERT INTO category_columns (category_name, business_table, business_column) VALUES ('#{cat.get_name('en_US')}', '#{c.get_business_table.get_id}', '#{c.get_id}');"
+  end
+
+  def write_category(cat)
+    puts "INSERT INTO categories VALUES ('#{cat.get_name('en_US')}', '#{cat.get_display_name('en_US')}');"
+    cat.get_business_columns.each do |c| write_category_column cat, c end
+  end
+
+  def write_to_database
+    # Write physical tables
+    @meta.get_tables.each do |a| write_physical_table a end
+    # Note to self -- relationships are a property of business tables, and
+    # thus of business models, not of physical tables
+    trisano_business_model.get_business_tables.each do |tbl| write_business_table tbl end
+    trisano_business_model.get_relationships.each do |rel| write_relationship rel end
+    trisano_business_model.get_root_category.get_business_categories.each do |cat| write_category cat end
   end
 
   def update_from_database
@@ -263,7 +372,6 @@ class Metadata
         rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, rolename), "OR([MorbidityEvents.BC_DW_MORBIDITY_EVENTS_VIEW_INVESTIGATING_JURISDICTION]=\"#{rolename}\" ;  [MorbiditySecondaryJurisdictions.BC_DW_MORBIDITY_SECONDARY_JURISDICTIONS_VIEW_NAME] = \"#{rolename}\")")
       end
     end
-    puts "Finished matching roles to jurisdictions"
     model.rowLevelSecurity.set_type(Java::OrgPentahoPmsSchemaSecurity::RowLevelSecurity::Type::ROLEBASED)
   end
 
@@ -588,5 +696,5 @@ end
 
 if __FILE__ == $0
   meta = load_metadata_xmi(File.expand_path(File.join(File.dirname(__FILE__), 'metadata.xmi')))
-  meta.update_from_database
+  meta.write_to_database
 end
