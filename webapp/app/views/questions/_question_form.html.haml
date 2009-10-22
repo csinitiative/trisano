@@ -19,4 +19,4 @@
   %td
     =h question.data_type.to_s.humanize
   %td
-    =text_field_tag "questions[#{question.id}][short_name]", question.short_name
+    =short_name_field_tag question

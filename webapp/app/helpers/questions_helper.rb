@@ -15,32 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class QuestionsController < ApplicationController
-  before_filter :find_questions
+module QuestionsHelper
 
-  def edit
-  end
-
-  def show
-  end
-
-  def update
-    respond_to do |format|
-      if @questions.update(params[:questions])
-        flash[:notice] = 'Form questions were successfully updated.'
-        format.html { redirect_to form_questions_path(@form) }
-      else
-        format.html { render :action => :edit, :status => :bad_request }
-      end
-    end
-  end
-
-  private
-
-  def find_questions
-    @form = Form.find(params[:form_id])
-    @master_form = @form.template
-    @questions = Questions.from_form(@form)
+  def short_name_field_tag(question)
+    result = ""
+    result << "<div class='fieldWithErrors' style='border-style: solid; border-width: 3px; border-color: red;'>" unless question.errors.empty?
+    result << text_field_tag("questions[#{question.id}][short_name]", question.short_name)
+    result << "</div>" unless question.errors.empty?
+    result
   end
 
 end

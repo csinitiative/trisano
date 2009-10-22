@@ -32,13 +32,13 @@
     %th Form Metadata
     %th
   =render :partial => 'forms/admin_version_info', :locals => {:form => @form}
-  =form_for @form, :url => form_questions_path(@form) do |f|
-  =f.error_messages
-    %table.list
-      %tr
-        %th Question
-        %th Data type
-        %th Short name
-      -for question in @form.questions
-        =render :partial => 'question_form', :locals => {:question => question, :f => f}
-    =f.submit 'Update'
+-form_tag  form_questions_path(@form), :method => :put do
+  =error_messages_for 'questions'
+  %table.list
+    %tr
+      %th Question
+      %th Data type
+      %th Short name
+    -for question in @questions
+      =render :partial => 'question_form', :locals => {:question => question}
+  =submit_tag 'Update'
