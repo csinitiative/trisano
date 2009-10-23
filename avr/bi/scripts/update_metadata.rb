@@ -44,7 +44,7 @@ PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
 SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
 
 def load_metadata_xmi(file_path)
-  puts "Loading metadata"
+  puts "Loading metadata from #{file_path}"
   Metadata.new(file_path)
 end
 

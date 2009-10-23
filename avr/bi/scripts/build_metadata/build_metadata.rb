@@ -141,7 +141,7 @@ def table_child_concepts(tbl, conc)
 end
 
 def business_tables(tbl)
-  return "SELECT table_id, display_name FROM business_tables WHERE physical_table_id = '#{tbl}'"
+  return "SELECT table_id, display_name FROM business_tables WHERE physical_table_id = '#{tbl}' ORDER BY order_num"
 end
 
 def columns(tbl)
@@ -257,9 +257,11 @@ if __FILE__ == $0
 
   model = BusinessModel.new('TriSano')
   secure model
-  dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_su', 'password')
+  dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_ro', 'password')
   meta.add_database dm
   model.set_connection dm
+  udm = DatabaseMeta.new('Update Script Connection', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_su', 'password')
+  meta.add_database udm
   db_connection do |conn|    #  0          1          2                 3       4           5                      6          7
     get_query_results(all_tables, conn).each do |tbl|
         puts "Creating new physical table #{tbl[0]} #{tbl[1]} #{tbl[6]} #{tbl[7]}"
@@ -360,7 +362,7 @@ if __FILE__ == $0
     puts "Building Business Categories"
     root_bc = BusinessCategory.new
     root_bc.set_root_category true
-    get_query_results("SELECT category_name, display_name FROM categories", conn).each do |cat|
+    get_query_results("SELECT category_name, display_name FROM categories ORDER BY order_num", conn).each do |cat|
       bc = BusinessCategory.new(cat[0])
       puts "#{cat[0]}"
       bc.set_name('en_US', cat[1])
