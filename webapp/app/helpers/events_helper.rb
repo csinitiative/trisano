@@ -380,7 +380,12 @@ module EventsHelper
           end
         else
           # Page load, edit form, existing lab
-          opts = CommonTestType.find_all_by_common_name(lab_result.test_type.common_name)
+          if lab_result.test_type
+            opts = CommonTestType.find_all_by_common_name(lab_result.test_type.common_name)
+          else
+            opts = CommonTestType.all(:order => "common_name ASC")
+            no_more = true
+          end
         end
       end
     end
