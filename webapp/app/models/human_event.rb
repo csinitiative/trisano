@@ -773,11 +773,12 @@ class HumanEvent < Event
     base_errors = {}
 
     self.hospitalization_facilities.each do |hf|
-      if (date = hf.hospitals_participation.admission_date.try(:to_date)) && (date < bdate)
+
+      if (date = hf.hospitals_participation.try(:admission_date).try(:to_date)) && (date < bdate)
         hf.hospitals_participation.errors.add(:admission_date, "cannot be earlier than birth date") 
         base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
       end
-      if (date = hf.hospitals_participation.discharge_date.try(:to_date)) && (date < bdate)
+      if (date = hf.hospitals_participation.try(:discharge_date).try(:to_date)) && (date < bdate)
         hf.hospitals_participation.errors.add(:discharge_date, "cannot be earlier than birth date")
         base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
       end
