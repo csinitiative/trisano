@@ -1,3 +1,7 @@
 This directory contains, as of this writing, files desgined to allow automatic
 metadata.xmi file building, and automatic interrogation of an existing
 metadata.xmi file to determine what should go in the newly-built file.
+
+populate_metadata_db.rb is a script to read the metadata from an XMI file; it
+shouldn't be necessary in production, but I'm saving here for posterity's sake.
+It uses a schema built by populate_metadata_db.sql

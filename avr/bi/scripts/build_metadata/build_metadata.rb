@@ -18,6 +18,7 @@
 require 'java'
 require 'benchmark'
 require 'fileutils'
+require 'yaml'
 
 def server_dir
   ENV['BI_SERVER_PATH'] || '/usr/local/pentaho/server/biserver-ce'
@@ -48,6 +49,7 @@ require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'postgres*.jar'
 
 AllTablesGroupName = 'All Formbuilder Tables';
 DefaultFieldType = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
+MaxX = 800
 
 CWM = Java::OrgPentahoPmsCore::CWM
 CwmSchemaFactory = Java::OrgPentahoPmsFactory::CwmSchemaFactory
@@ -80,7 +82,12 @@ def db_connection
     props.setProperty "password", database_password
     begin
       conn = create_db_connection.connect database_url, props
+      conn.create_statement.execute_update("SET search_path = 'trisano'");
       yield conn
+    #rescue
+    #  e = $!
+    #  puts "Some exception occurred: #{e}"
+    #  raise e
     ensure
       conn.close if conn
     end
@@ -95,74 +102,13 @@ def get_query_results(query_string, conn)
     res = []
     len = rs.getMetaData().getColumnCount()
     while rs.next
-      val = []
+      val = {}
       (1..len).each do |i|
-        val << rs.getString(i)
+        val[rs.getMetaData().getColumnName(i)] = rs.getString(i)
       end
       res << val
     end
     return res
-end
-
-def all_tables
-  tbls = []
-  get_query_results "SELECT tablename, table_id, table_friendly_name, table_description  FROM trisano.metadata_tables" do |rs|
-    tbls << [rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)]
-  end
-  return tbls
-end
-
-def table_columns(tbl)
-  cols = []
-  get_query_results "SELECT columnname, column_id, column_desc FROM trisano.metadata_columns WHERE tablename = '#{tbl}'" do |rs|
-    cols << [rs.getString(1), rs.getString(2), rs.getString(3)]
-  end
-  return cols
-end
-
-def all_relationships
-  rels = []
-  get_query_results "SELECT first_table, first_column, second_table, second_column, relationship_type FROM trisano.metadata_relationships" do |rs|
-    rels << [rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)]
-  end
-  return rels
-end
-
-def all_tables
-  return "SELECT table_id, table_name, aggregation_type, length, precision, data_type_description, description, display_name FROM tables"
-end
-
-def table_concepts(tbl)
-  return "SELECT concept_name, concept_description FROM table_concepts WHERE table_id = '#{tbl}'"
-end
-
-def table_child_concepts(tbl, conc)
-  return "SELECT child_concept_name, child_concept_value, child_concept_type FROM table_concept_child_properties WHERE table_id = '#{tbl}' AND concept_name = '#{conc}'"
-end
-
-def business_tables(tbl)
-  return "SELECT table_id, display_name FROM business_tables WHERE physical_table_id = '#{tbl}' ORDER BY order_num"
-end
-
-def columns(tbl)
-  return "SELECT column_id, column_display_name, aggregation_type_desc, formula, relative_size FROM columns WHERE table_id = '#{tbl}'"
-end
-
-def column_aggregation_types(tbl, col)
-  return "SELECT agg_type FROM column_aggregation_types WHERE table_id = '#{tbl}' AND column_id = '#{col}'"
-end
-
-def business_columns(pt, pc)
-  puts "Finding business columns for table '#{pt}' and column '#{pc}'"
-  return "SELECT business_column_id FROM business_columns WHERE physical_column_id = '#{pc}' AND physical_table_id = '#{pt}'"
-end
-
-def relationships
-  return "SELECT table_from, field_from, table_to, field_to, type_desc FROM relationships"
-end
-
-def category_columns(cat)
-  return "SELECT business_table, business_column FROM category_columns WHERE category_name = '#{cat}' ORDER BY col_order ASC"
 end
 
 def setup_security_reference(meta)
@@ -199,10 +145,11 @@ def pentaho_roles(meta)
   secserv = meta.securityReference.securityService
   secserv.serviceURL = "http://127.0.0.1:8080/pentaho/ServiceAction?action=SecurityDetails&details=all"
   res = secserv.getRoles
+  raise "Couldn't get Pentaho's roles. Perhaps Pentaho isn't running?" if res.nil?
   return res
 end
 
-def setup_role_security(model, meta, juris)
+def setup_role_security(model, dg, meta, juris)
   puts "Setting up role-based security"
   rbsm = model.rowLevelSecurity.getRoleBasedConstraintMap
 
@@ -221,7 +168,7 @@ def setup_role_security(model, meta, juris)
     puts "Checking out pentaho role #{rolename}"
     if juris[rolename] != nil then
       puts "  Found role match on #{rolename}"
-      rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, rolename), "OR([MorbidityEvents.BC_DW_MORBIDITY_EVENTS_VIEW_INVESTIGATING_JURISDICTION]=\"#{rolename}\" ;  [MorbiditySecondaryJurisdictions.BC_DW_MORBIDITY_SECONDARY_JURISDICTIONS_VIEW_NAME] = \"#{rolename}\")")
+      rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, rolename), "OR([dw_morbidity_events_view_#{dg}.dw_morbidity_events_view_investigating_jurisdiction_#{dg}]=\"#{rolename}\" ;  [dw_morbidity_secondary_jurisdictions_view_#{dg}.dw_morbidity_secondary_jurisdictions_view_name_#{dg}] = \"#{rolename}\")")
     end
   end
   model.rowLevelSecurity.set_type(Java::OrgPentahoPmsSchemaSecurity::RowLevelSecurity::Type::ROLEBASED)
@@ -230,7 +177,7 @@ end
 
 def jurisdiction_query
   %{
-    SELECT p.name
+    SELECT p.name AS name
     FROM trisano.places_view p
     JOIN trisano.places_types_view pt
         ON (p.id = pt.place_id)
@@ -243,156 +190,373 @@ end
 def jurisdiction_hash(conn)
     res = {}
     get_query_results(jurisdiction_query, conn).each do |rs|
-      res[rs[0]] = 1
+      res[rs['name']] = 1
     end
     return res
 end
 
-if __FILE__ == $0
-  FileUtils.rm Dir.glob('mdr.*'), :force => true
-  FileUtils.rm 'my_metadata.xmi', :force => true
-
-  meta = SchemaMeta.new
-  setup_security_reference meta
-
-  model = BusinessModel.new('TriSano')
+def initialize_model(model, meta)
+  model.set_connection meta.find_database('TriSano')
   secure model
+  return model
+end
+
+def initialize_meta(meta)
+  setup_security_reference meta
   dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_ro', 'password')
   meta.add_database dm
-  model.set_connection dm
-  udm = DatabaseMeta.new('Update Script Connection', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_su', 'password')
-  meta.add_database udm
-  db_connection do |conn|    #  0          1          2                 3       4           5                      6          7
-    get_query_results(all_tables, conn).each do |tbl|
-        puts "Creating new physical table #{tbl[0]} #{tbl[1]} #{tbl[6]} #{tbl[7]}"
-        pt = PhysicalTable.new tbl[0]
-        pt.set_name 'en_US', tbl[7]
-        pt.set_description 'en_US', tbl[6]
-        pt.set_database_meta dm
-        dts = DataTypeSettings.new(tbl[2].to_i)
-        dts.set_length(tbl[3].to_f)
-        dts.set_precision(tbl[4].to_f)
-        pt.set_data_type(dts)
-        pt.set_target_table tbl[1]
-        get_query_results(table_concepts(tbl[0]), conn).each do |conc|
-          con = Concept.new(conc[0])
-          con.set_description('en_US', conc[1])
-          get_query_results(table_child_concepts(tbl[0], conc[0]), conn).each do |cc|
-            if cc[2] =~ /Localized String/
-              l = LocalizedStringSettings.new
-              l.setLocaleString('en_US', cc[1])
-              con.addProperty(ConceptPropertyLocalizedString.new(cc[0], l))
-            elsif cc[2] =~ /TableType/
-              con.addProperty(ConceptPropertyTableType.new(cc[0], TableTypeSettings.new(0)))
-            elsif cc[2] =~ /String/
-              con.addProperty(ConceptPropertyString.new(cc[0], cc[1]))
-            elsif cc[2] =~ /Numeric Value/
-              if cc[1].to_i
-                con.addProperty(ConceptPropertyNumber.new(cc[0], cc[1].to_i))
-              else
-                con.addProperty(ConceptPropertyNumber(cc[0], 0))
-              end
-            else
-              raise "Can't figure out what to do with table property type #{cc[2]}"
-            end
-          end
-          pt.setConcept(con)
-        end
+#  udm = DatabaseMeta.new('Update Script Connection', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_su', 'password')
+#  meta.add_database udm
+  return meta
+end
 
-        bus_tables = []
-        get_query_results(business_tables(tbl[0]), conn).each do |btbl|
-          puts "Creating new business table : #{btbl[0]}"
-          bt = BusinessTable.new btbl[0], pt
-          puts "Setting table name #{btbl[1]}"
-          bt.set_name 'en_US', btbl[1]
-          secure bt
-          bus_tables << bt
-        end
-        get_query_results(columns(tbl[0]), conn).each do |col|
-          puts "Creating physical column #{col[0]} " + col[0].gsub(/^PC_/, 'BC_')
-          pc = PhysicalColumn.new(col[0])
-          pc.set_name 'en_US', col[1]
-# XXX -   make this smarter
-          pc.data_type = Java::OrgPentahoPmsSchemaConceptTypesDatatype::DataTypeSettings::STRING
-          pc.field_type = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
-          pc.table = pt
-          pc.formula = col[3]
-          pc.set_relative_size(col[4].to_i)
-          ag_type = nil
-          get_query_results(column_aggregation_types(tbl[0], col[0]), conn).each do |agtyp|
-            ag_type = agtyp[0].to_i
-            break
-          end
-          pt.set_aggregation_type(AggregationSettings.new(ag_type)) unless ag_type.nil?
-          pt.add_physical_column pc
-
-          i = 0
-          get_query_results(business_columns(pc.get_table.get_id, pc.get_id), conn).each do |bcid|
-            i += 1
-            bc = BusinessColumn.new
-            bc.set_id bcid[0]
-            bc.physical_column = pc
-            bc.field_type = DefaultFieldType
-            bus_tables.each do |bt|
-              puts "Adding column #{bcid[0]} to business table #{bt.get_id}"
-              bc.business_table = bt
-              bt.add_business_column bc
-            end
-          end
-          raise "Added #{i} business columns for physical column #{pc.get_table.get_id}.#{pc.get_id}" if i > 1 or i == 0
-        end
-        bus_tables.each do |bt|
-          model.add_business_table bt
-        end
-        meta.add_table(pt)
+def add_business_columns(bt, meta, category, dg, conn)
+  pt = bt.get_physical_table
+  get_query_results(columns_query(pt.get_target_table, pt.get_target_schema), conn).each do |bcrow|
+    bc = BusinessColumn.new "#{pt.get_id}_#{bcrow['name']}_#{dg}"
+#    bc.set_id "#{pt.get_id}_#{bcrow['name']}"
+    bc.set_name 'en_US', bcrow['description']
+    bc.set_description 'en_US', bcrow['description']
+    pc = pt.find_physical_column "#{pt.get_id}_#{bcrow['name']}"
+    if pc.nil?
+      pt.get_physical_columns.each do |a| puts a.get_id end
+      raise "Couldn't find physical column '#{pt.get_id}.#{bcrow['name']}' for new business column"
+    end
+    bc.physical_column = pc
+    bc.field_type = DefaultFieldType
+    bc.business_table = bt
+    bt.add_business_column bc
+    if (not category.nil?) and (bcrow['make_category_column'] == 'TRUE')
+      category.add_business_column bc
+      puts " *** Added business column #{bcrow['name']} to category #{category.get_name 'en_US'}"
     end
 
-    get_query_results(relationships, conn).each do |rel|
-        r = Relationship.new
-        puts "Creating relationship for #{rel[0]}.#{rel[1]} to #{rel[2]}.#{rel[3]}"
-        r.table_from = model.find_business_table('en_US', rel[0])
-        raise "Can't have a nil business table" if r.table_from == nil
-        r.field_from = model.find_business_table(rel[0]).find_business_column(rel[1])
-        r.table_to = model.find_business_table(rel[2])
-        r.field_to = model.find_business_table(rel[2]).find_business_column(rel[3])
-        r.type = rel[4]
-        model.add_relationship r
+  end
+end
+
+def business_table_query(disease_group)
+      query = "SELECT business_table_name, physical_table_name, table_description, make_category, order_num FROM ("
+      if disease_group != 'TriSano'
+        query += %{
+        SELECT
+            0 AS order_num,
+            ft.short_name AS business_table_name,
+            ft.short_name AS table_description,
+            ft.table_name || '_view' AS physical_table_name,
+            'TRUE' AS make_category
+        FROM trisano.formbuilder_tables ft
+          JOIN trisano.forms_view f ON (ft.short_name = f.short_name)
+          JOIN trisano.form_elements_view fe ON (f.id = fe.form_id)
+          JOIN trisano.questions_view q ON (q.form_element_id = fe.id)
+          JOIN trisano.answers_view a ON (a.question_id = q.id)
+          JOIN trisano.events_view e ON (e.id = a.event_id)
+          JOIN trisano.disease_events_view de ON (de.event_id = e.id)
+          JOIN trisano.avr_groups_diseases_view adg
+            ON (adg.disease_id = de.disease_id)
+          JOIN trisano.avr_groups_view ag
+            ON (ag.id = adg.avr_group_id AND (ag.name = '#{disease_group}' OR '#{disease_group}' = 'All tables'))
+          WHERE a.text_answer IS NOT NULL AND a.text_answer != '' -- AND (
+--            ft.disease_groups IS NULL OR
+--            NOT ('#{disease_group}' = ANY(ft.disease_groups))
+--           )
+          GROUP BY ft.short_name, ft.table_name
+        UNION
+
+        }
+      end
+      query += %{
+        SELECT order_num, table_name AS business_table_name, table_description, relname AS physical_table_name,
+        CASE
+            WHEN make_category THEN 'TRUE'
+            ELSE 'FALSE'
+        END AS make_category
+        FROM trisano.core_tables c JOIN pg_class pgc
+            ON (pgc.oid = c.target_table::regclass)
+        ) f ORDER BY order_num != 0 DESC NULLS FIRST, order_num, business_table_name
+-- LIMIT 25 -- limitline
+      }
+end
+
+def add_business_tables(model, meta, disease_group, dg, conn)
+  x = 0
+  y = 0
+  get_query_results(business_table_query(disease_group), conn).each do |btrow|
+    pt = meta.find_physical_table btrow['physical_table_name']
+    raise "Couldn't find physical table #{btrow['physical_table_name']}" if pt.nil?
+    #puts "Creating business table #{btrow['business_table_name']}_#{dg}"
+    bt = BusinessTable.new "#{btrow['business_table_name']}_#{dg}", pt
+    bt.set_name 'en_US', btrow['business_table_name']
+    #bt.set_description 'en_US', btrow['table_description']
+    x += 50
+    if x > MaxX
+      y += 120
+      x = 0
+    end
+    bt.set_location x, y
+    secure bt
+
+    # Build business categories, too
+    if btrow['make_category'] == 'TRUE'
+      puts "Building business category for '#{btrow['table_description']}'"
+      bc = BusinessCategory.new "#{btrow['table_description']}_#{dg}"
+      bc.set_name 'en_US', btrow['table_description']
+      bc.set_root_category false
+    else
+      bc = nil
     end
 
-    puts "Building Business Categories"
+    add_business_columns bt, meta, bc, dg, conn
+    model.add_business_table bt
+    unless bc.nil?
+      secure bc
+      model.get_root_category.add_business_category bc
+    end
+    
+    if btrow['physical_table_name'] =~ /^formbuilder/
+      rel = Relationship.new
+      rel.table_from = bt
+      f = nil
+      if btrow['physical_table_name'] =~ /_contacts_\d+_view/
+        f = "dw_contact_events_view"
+      else
+        f = "dw_morbidity_events_view"
+      end
+      rel.table_to = model.find_business_table "#{f}_#{dg}"
+      if rel.table_to.nil?
+        model.get_business_tables.each do |a| puts a.get_name 'en_US' end
+        raise "Couldn't find events table for relationship with #{btrow['physical_table_name']}" if f.nil?
+      end
+      rel.field_to = rel.table_to.find_business_column 'en_US', "#{f}_id_#{dg}"
+      if rel.field_to.nil?
+        f.get_business_columns.each do |a| puts "   #{a.get_id}" end
+        raise "Couldn't find field_to column #{f}_#{dg}.#{f}_id_#{dg}"
+      end
+      rel.table_from = bt
+      rel.field_from = bt.find_business_column 'en_US', 'event_id'
+      raise "Couldn't find field_from column #{bt.get_id}.event_id" if rel.field_from.nil?
+      rel.type = 'N:1'
+      model.add_relationship rel
+    end
+  end
+end
+
+def disease_group_query
+  return 'SELECT DISTINCT name FROM trisano.avr_groups_view'
+end
+
+def create_models(meta, conn)
+  groups = [] << 'Trisano' << 'All tables'
+  groups.concat get_query_results(disease_group_query, conn).map { |a| a['name'] }
+  i = 0
+  groups.each do |disease_group|
+    puts "Processing disease group #{disease_group}"
+    model = BusinessModel.new disease_group
+    initialize_model model, meta
     root_bc = BusinessCategory.new
     root_bc.set_root_category true
-    get_query_results("SELECT category_name, display_name FROM categories ORDER BY order_num", conn).each do |cat|
-      bc = BusinessCategory.new(cat[0])
-      puts "#{cat[0]}"
-      bc.set_name('en_US', cat[1])
-      get_query_results(category_columns(cat[0]), conn).each do |ccat|
-        mbt = model.find_business_table(ccat[0])
-        raise "Didn't find table #{ccat[0]}" if mbt.nil?
-        mbc = mbt.find_business_column(ccat[1])
-        if mbc.nil? 
-          puts "Writing business columns for table #{ccat[0]}"
-          mbt.get_business_columns.each do |a| puts a.get_name('en_US') end
-          puts "Done writing business columns for table #{ccat[0]}"
-          raise "Didn't find column #{ccat[0]}.#{ccat[1]}" if mbc.nil?
-        end
-        puts "  #{ccat[0]} #{ccat[1]}"
-        puts "  - #{mbc.get_name('en_US')}"
-        bc.add_business_column(mbc)
-      end
-      secure bc
-      bc.set_root_category false
-      root_bc.add_business_category(bc)
-    end
-    model.set_root_category(root_bc)
-    setup_role_security model, meta, jurisdiction_hash(conn)
-  end #db_connection
+    model.set_root_category root_bc
+    i += 1
+    add_business_tables model, meta, disease_group, "DG#{i}", conn
+    create_relationships model, "DG#{i}", conn
+    setup_role_security model, "DG#{i}", meta, jurisdiction_hash(conn)
+    meta.add_model(model)
+  end
+end
 
-  meta.add_model(model)
+def columns_query(tablename, schemaname)
+# From Pentaho's DataTypeSettings.java:
+# public static final int DATA_TYPE_STRING    = 1;                                                                                           
+# public static final int DATA_TYPE_DATE      = 2;                                                                                           
+# public static final int DATA_TYPE_BOOLEAN   = 3;                                                                                           
+# public static final int DATA_TYPE_NUMERIC   = 4;                                                                                           
+# public static final int DATA_TYPE_BINARY    = 5;                                                                                           
+# public static final int DATA_TYPE_IMAGE     = 6;                                                                                           
+# public static final int DATA_TYPE_URL       = 7;                                                                                           
+  if tablename =~ /formbuilder_.*/
+    return %{
+        SELECT
+            attname AS name,
+            attname AS description,
+            attname AS target_column,
+            regexp_replace(relname || '_' || attname, '[[:space:]]', '_') AS id,
+            CASE
+                WHEN format_type(atttypid, atttypmod) IN ('bigint', 'integer', 'numeric') THEN 4
+                WHEN format_type(atttypid, atttypmod) ~ 'timestamp' THEN 2
+                WHEN format_type(atttypid, atttypmod) = 'date' THEN 2
+                WHEN format_type(atttypid, atttypmod) = 'boolean' THEN 3
+                WHEN format_type(atttypid, atttypmod) = 'bytea' THEN 5
+                ELSE 1
+            END AS data_type,
+            CASE
+                WHEN attname IN ('event_id', 'type') THEN 'FALSE'
+                ELSE 'TRUE'
+            END AS make_category_column
+        FROM
+            pg_attribute pga
+            JOIN pg_class pgc ON (pgc.oid = pga.attrelid)
+        WHERE
+            relname = '#{tablename}' AND
+            relnamespace = (
+                SELECT oid FROM pg_namespace WHERE nspname = '#{schemaname}'
+            )
+        ORDER BY attnum
+    }
+  else
+    return %{
+        SELECT
+            column_name AS name, 
+            column_description AS description,
+            pga.attname AS target_column,
+            regexp_replace(relname || '_' || attname, '[[:space:]]', '_') AS id,
+            CASE
+                WHEN format_type(atttypid, atttypmod) IN ('bigint', 'integer', 'numeric') THEN 4
+                WHEN format_type(atttypid, atttypmod) ~ 'timestamp' THEN 2
+                WHEN format_type(atttypid, atttypmod) = 'date' THEN 2
+                WHEN format_type(atttypid, atttypmod) = 'boolean' THEN 3
+                WHEN format_type(atttypid, atttypmod) = 'bytea' THEN 5
+                ELSE 1
+            END AS data_type,
+            CASE
+                WHEN make_category_column THEN 'TRUE'
+                ELSE 'FALSE'
+            END AS make_category_column
+        FROM
+            trisano.core_columns c
+            JOIN pg_attribute pga ON (c.target_column = pga.attname AND c.target_table::regclass = pga.attrelid) 
+            JOIN pg_class pgc ON (pgc.oid = pga.attrelid)
+        WHERE
+            relname = '#{tablename}' AND
+            relnamespace = (
+                SELECT oid FROM pg_namespace WHERE nspname = '#{schemaname}'
+            )
+        ORDER BY attnum
+    }
+  end
+end
+
+def add_physical_columns(pt, conn)
+  i = 0
+  get_query_results(columns_query(pt.get_target_table, pt.get_target_schema), conn).each do |pcrow|
+    i = 1
+    pc = PhysicalColumn.new pcrow['id']
+    desc = (pcrow['description'] == '' ? pcrow['id'] : pcrow['description'])
+    pc.set_name 'en_US', desc
+    pc.set_description 'en_US', desc
+    pc.set_data_type DataTypeSettings.new(pcrow['data_type'].to_i)
+    pc.field_type = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
+    pc.table = pt
+    pc.formula = pcrow['target_column']
+    pc.set_relative_size -1
+    pc.set_aggregation_type AggregationSettings.new(0)
+    pc.set_hidden false
+#    pc.set_exact true
+    pt.add_physical_column pc
+  end
+  raise "Didn't add any physical columns for physical table #{pt.get_target_schema}.#{pt.get_target_table}" if i == 0
+end
+
+def physical_table_query
+  return %{
+    SELECT id, name, description, target_table, target_namespace FROM  (
+    SELECT
+        order_num,
+        table_name AS id,
+        table_name AS name,
+        table_description AS description,
+        relname AS target_table,
+        nspname AS target_namespace
+    FROM
+        trisano.core_tables
+        JOIN pg_class ON (pg_class.oid = target_table::regclass)
+        JOIN pg_namespace pgn ON (pgn.oid = relnamespace)
+
+    UNION
+
+    SELECT
+        0 AS order_num,
+        table_name || '_view' AS id,
+        short_name AS name,
+        short_name AS description,
+        table_name || '_view' AS target_table,
+        'trisano' AS target_namespace
+    FROM
+        trisano.formbuilder_tables
+    ) f ORDER BY order_num != 0 DESC NULLS FIRST, order_num, name
+  }
+end
+
+def create_physical_tables(meta, conn)
+  get_query_results(physical_table_query, conn).each do |ptrow|
+    puts "Creating new physical table: #{ptrow['name']}"
+    pt = PhysicalTable.new ptrow['id']
+    pt.set_name 'en_US', ptrow['name']
+    pt.set_description 'en_US', ptrow['description']
+    pt.set_database_meta meta.find_database 'TriSano'
+    pt.set_target_table ptrow['target_table']
+    pt.set_target_schema ptrow['target_namespace']
+    pt.set_relative_size -1
+    pt.set_table_type TableTypeSettings.new(0)
+    add_physical_columns pt, conn
+    meta.add_table pt
+  end
+end
+
+def relationships_query
+    return %{
+        SELECT
+            fromtab.relname || '_' || from_column AS fromcol,
+            fromtab.relname AS fromtab,
+            totab.relname || '_' || to_column AS tocol,
+            totab.relname AS totab,
+            relation_type AS type
+        FROM
+            trisano.core_relationships r
+            JOIN pg_class fromtab
+                ON (r.from_table::regclass = fromtab.oid)
+            JOIN pg_class totab
+                ON (r.to_table::regclass = totab.oid)
+    }
+end
+
+def create_relationships(model, dg, conn)
+  get_query_results(relationships_query, conn).each do |rel|
+    r = Relationship.new
+    puts "Creating relationship for #{rel['fromtab']}.#{rel['fromcol']} to #{rel['totab']}.#{rel['tocol']}"
+    r.table_from = model.find_business_table('en_US', rel['fromtab'])
+    raise "Can't have a nil business table" if r.table_from.nil?
+    r.field_from = r.table_from.find_business_column "#{rel['fromcol']}_#{dg}"
+    raise "Can't have a nil from column (looked for column #{rel['fromcol']})" if r.field_from.nil?
+    r.table_to = model.find_business_table('en_US', rel['totab'])
+    raise "Can't have a nil business table" if r.table_to.nil?
+    r.field_to = r.table_to.find_business_column "#{rel['tocol']}_#{dg}"
+    raise "Can't have a nil to column (looked for column #{rel['tocol']})" if r.field_from.nil?
+    r.type = rel['type']
+    model.add_relationship r
+  end
+end
+
+def save_metadata(meta, filename)
   cwm = CWM.get_instance('test')
   CwmSchemaFactory.new.store_schema_meta(cwm, meta, nil)
   puts "Writing out new XMI file"
-  File.open('my_metadata.xmi', 'w') do |io|
+  File.open(filename, 'w') do |io|
     io << cwm.getXMI
   end
+end
+
+if __FILE__ == $0
+  FileUtils.rm Dir.glob('mdr.*'), :force => true
+  FileUtils.rm 'metadata.xmi', :force => true
+
+  meta = initialize_meta SchemaMeta.new
+
+  db_connection do |conn|
+    # Create physical tables, and all physical columns
+    create_physical_tables meta, conn
+    create_models meta, conn
+  end
+
+
+  save_metadata meta, 'metadata.out'
+  FileUtils.cp('metadata.out', 'metadata.xmi')
 end
