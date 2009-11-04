@@ -215,8 +215,10 @@ def add_business_columns(bt, meta, category, dg, conn)
   get_query_results(columns_query(pt.get_target_table, pt.get_target_schema), conn).each do |bcrow|
     bc = BusinessColumn.new "#{pt.get_id}_#{bcrow['name']}_#{dg}"
 #    bc.set_id "#{pt.get_id}_#{bcrow['name']}"
-    bc.set_name 'en_US', bcrow['description']
-    bc.set_description 'en_US', bcrow['description']
+    desc = bcrow['description']
+    desc.gsub!(/^col_/, '') if pt.get_target_table =~ /^formbuilder_/
+    bc.set_name 'en_US', desc
+    bc.set_description 'en_US', desc
     pc = pt.find_physical_column "#{pt.get_id}_#{bcrow['name']}"
     if pc.nil?
       pt.get_physical_columns.each do |a| puts a.get_id end
@@ -440,6 +442,7 @@ def add_physical_columns(pt, conn)
     i = 1
     pc = PhysicalColumn.new pcrow['id']
     desc = (pcrow['description'] == '' ? pcrow['id'] : pcrow['description'])
+    desc.gsub!(/^col_/, '') if pt.get_target_table =~ /^formbuilder_/
     pc.set_name 'en_US', desc
     pc.set_description 'en_US', desc
     pc.set_data_type DataTypeSettings.new(pcrow['data_type'].to_i)
