@@ -28,7 +28,7 @@ class HumanEvent < Event
 
   validates_date :event_onset_date
 
-  before_validation :calculate_onset_date, :set_age_at_onset
+  before_validation :set_onset_date, :set_age_at_onset
 
   has_one :interested_party, :foreign_key => "event_id"
 
@@ -742,7 +742,7 @@ class HumanEvent < Event
     self.age_info = AgeInfo.create_from_dates(birthdate, self.event_onset_date)
   end
 
-  def calculate_onset_date
+  def set_onset_date
     self.event_onset_date = resolve_onset_date
   end
 
