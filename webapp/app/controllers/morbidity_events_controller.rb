@@ -43,7 +43,7 @@ class MorbidityEventsController < EventsController
 
   def new
     @event = MorbidityEvent.new
-    
+
     prepopulate unless params[:from_search].nil?
 
     respond_to do |format|
@@ -78,7 +78,6 @@ class MorbidityEventsController < EventsController
       if RAILS_ENV == 'production'
         @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
       end
-      @event.event_onset_date = Date.today
     end
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)

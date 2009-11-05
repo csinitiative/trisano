@@ -28,7 +28,7 @@ module Export
       events = [events] unless events.respond_to?(:each)
       return if events.empty?
       raise ArgumentError unless events.first.is_a? Event
-      full_export(events, options)      
+      full_export(events, options)
     end
 
     private
@@ -56,7 +56,7 @@ module Export
         place_forms = options[:disease].live_forms("PlaceEvent")
         place_forms.each { |form| exportable_questions[:place_event].concat(form.exportable_questions) }
       end
-      
+
       LineExporter.events_csv(events, options, exportable_questions)
     end
 
@@ -75,7 +75,7 @@ module Export
           exporter.to_csv
         end
       end
-      
+
       attr_reader :events, :options, :exportable_questions, :output
       private     :events, :options, :exportable_questions, :output
 
@@ -116,7 +116,7 @@ module Export
       def exporting_contacts?
         export_options.include? "contacts"
       end
-      
+
       def exporting_using_short_names?
         export_options.try(:include?, 'use_short_names')
       end
@@ -130,7 +130,7 @@ module Export
       def export_options
         options[:export_options]
       end
-      
+
       def output_header(event)
         csv_header  = event_headers(event)
         csv_header += lab_headers if exporting_labs?
@@ -211,14 +211,14 @@ module Export
               csv_row += event_values(contact_event).map { |value| value.to_s.gsub(/,/,' ') }
             end
           end
-          
+
           csv_out(csv_row)
         end
       end
 
       def event_values(event)
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-          event_data(event).collect do |event_datum| 
+          event_data(event).collect do |event_datum|
             begin
               value = event.instance_eval(event_datum.last).to_s
               if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
@@ -247,7 +247,7 @@ module Export
           end
         end
       end
-      
+
       def treatment_values(treatment)
         treatment_data.collect do |treatment_datum| 
           begin
@@ -263,13 +263,13 @@ module Export
         meth = "#{clazz.to_s.underscore}_fields"
         event_data = CsvField.send(meth).map do |csv_field|
           [csv_field.send(short_or_long_name), script_for(csv_field)]
-        end        
+        end
         if showing_answers? and event_or_class.respond_to?(:answers)
           event_data += event_answers(event_or_class)
         end
         event_data
       end
-  
+
       def event_answers(event)
         answers = []
         exportable_questions[event.class.name.underscore.to_sym].each do |question|
@@ -289,7 +289,7 @@ module Export
       end
 
       def treatment_data
-        CsvField.treatment_fields.map do |csv_field|      
+        CsvField.treatment_fields.map do |csv_field|
           [csv_field.send(short_or_long_name), script_for(csv_field)]
         end
       end
@@ -298,7 +298,7 @@ module Export
         exporting_using_short_names? ? :short_name : :long_name
       end
 
-      def script_for(csv_field)        
+      def script_for(csv_field)
         if options[csv_field.long_name] == 'use_code'
           csv_field.use_code || csv_field.use_description
         else

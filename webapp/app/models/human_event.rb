@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEvent < Event
-  include Export::Cdc::HumanEvent  
+  include Export::Cdc::HumanEvent
 
   validates_length_of :parent_guardian, :maximum => 255, :allow_blank => true
 
@@ -26,8 +26,9 @@ class HumanEvent < Event
     :only_integer => true,
     :message => 'is negative. This is usually caused by an incorrect onset date or birth date.'
 
-  before_validation_on_create :set_age_at_onset
-  before_validation_on_update :set_age_at_onset
+  validates_date :event_onset_date
+
+  before_validation :calculate_onset_date, :set_age_at_onset
 
   has_one :interested_party, :foreign_key => "event_id"
 
@@ -694,7 +695,7 @@ class HumanEvent < Event
         end
       end
 
-      specimen_source = ExternalCode.find_by_sql(["SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ?", obr.specimen_source]).first
+      specimen_source = ExternalCode.find_by_sql([%Q{ SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ? }, obr.specimen_source]).first
       specimen_source_id = specimen_source ? specimen_source['id'] : nil
       begin
         lab_hash = {
@@ -738,26 +739,21 @@ class HumanEvent < Event
 
   def set_age_at_onset
     birthdate = safe_call_chain(:interested_party, :person_entity, :person, :birth_date)
-    onset = onset_candidate_dates.compact.first
-    self.age_info = AgeInfo.create_from_dates(birthdate, onset)    
+    self.age_info = AgeInfo.create_from_dates(birthdate, self.event_onset_date)
   end
 
-  def onset_candidate_dates
-    dates = []
-    dates << safe_call_chain(:disease_event, :disease_onset_date)
-    dates << safe_call_chain(:disease_event, :date_diagnosed)
-    collections = []
-    test_dates = []
-    self.labs.each do |l| 
-      l.lab_results.collect{|r| collections << r.collection_date}
-      l.lab_results.collect{|r| test_dates << r.lab_test_date}
-    end
-    dates << collections.compact.sort
-    dates << test_dates.compact.sort
-    dates << self.first_reported_PH_date
-    dates << self.event_onset_date
-    dates << self.created_at.to_date unless self.created_at.nil?
-    dates.flatten
+  def calculate_onset_date
+    self.event_onset_date = resolve_onset_date
+  end
+
+  def resolve_onset_date
+    safe_call_chain(:disease_event, :disease_onset_date) ||
+      safe_call_chain(:disease_event, :date_diagnosed)   ||
+      labs.collect{|l| l.lab_results.collect{|r| r.collection_date}}.flatten.compact.sort.first ||
+      labs.collect{|l| l.lab_results.collect{|r| r.lab_test_date}}.flatten.compact.sort.first   ||
+      self.first_reported_PH_date   ||
+      self.created_at.try(:to_date) ||
+      Date.today
   end
 
   def validate

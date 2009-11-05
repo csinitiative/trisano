@@ -101,7 +101,7 @@ class EventsController < ApplicationController
     agency.place_entity = place_entity
     render(:update) { |page| page.update_reporting_agency(agency) }
   end
-    
+
   # This action is for development/testing purposes only.  This is not a "real" login action
   def change_user
     auth_allow_user_switch = config_option(:auth_allow_user_switch)
@@ -109,7 +109,7 @@ class EventsController < ApplicationController
     if auth_allow_user_switch == true
       session[:user_id] = params[:user_id]
       User.current_user = User.find_by_uid(params[:user_id])
-      
+
       redirect_to request.env["HTTP_REFERER"]
     else
       render :text => "Action not available", :status => 403

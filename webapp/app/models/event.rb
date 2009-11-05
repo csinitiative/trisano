@@ -21,7 +21,6 @@ class Event < ActiveRecord::Base
   include Export::Cdc::EventRules
 
   before_create :set_record_number
-  before_validation_on_create :set_event_onset_date
   before_update :attempt_form_assignment_on_update, :force_save
   after_create :attempt_form_assignment_on_create
 
@@ -150,7 +149,6 @@ class Event < ActiveRecord::Base
     encounter_empty ? true : false
   end
 
-  validates_date :event_onset_date
   validates_existence_of :investigator, :allow_nil => true
   validates_numericality_of :acuity, :only_integer => true, :less_than => 100, :allow_nil => true
   validates_length_of :event_name, :maximum => 100, :allow_blank => true
@@ -732,7 +730,6 @@ SEARCH
     new_event.build_jurisdiction
     new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
     new_event.workflow_state = 'accepted_by_lhd' unless new_event.primary_jurisdiction.name == "Unassigned"
-    new_event.event_onset_date = Date.today
     new_event.acuity = self.acuity
 
     if event_components.include?("clinical")
@@ -825,10 +822,6 @@ SEARCH
     customer_number_sequence = 'events_record_number_seq'
     record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
     self.record_number = record_number
-  end
-
-  def set_event_onset_date
-    self.event_onset_date = Date.today
   end
 
   # We're doing this to force the event model to be saved even if nothing has changed on the model.

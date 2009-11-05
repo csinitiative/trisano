@@ -18,10 +18,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
-def with_human_event(event_hash=@event_hash, &block)    
+def with_human_event(event_hash=@event_hash, &block)
   event = HumanEvent.new(event_hash)
   block.call(event) if block_given?
-  event                        
+  event
 end
 
 def set_loinc_code(msg, loinc)
@@ -147,14 +147,14 @@ describe HumanEvent, 'age at onset'  do
       event.age_info.age_type.code_description.should == 'unknown'
     end
   end
-    
-  it 'should be saved, along w/ an age type' do    
-    with_human_event do |event|     
+
+  it 'should be saved, along w/ an age type' do
+    with_human_event do |event|
       event.safe_call_chain(:interested_party, :person_entity, :person).birth_date = 20.years.ago
-      event.send(:set_age_at_onset)
-      event.age_info.age_at_onset.should_not be_nil
-      event.age_info.age_type.should_not be_nil
-      event.errors.on(:age_at_onset).should be_nil
+      event.save!
+      event.age_info.age_at_onset.should_not == nil
+      event.age_info.age_type.should_not == nil
+      event.errors.on(:age_at_onset).should == nil
     end
   end
 
@@ -166,7 +166,7 @@ describe HumanEvent, 'age at onset'  do
       event.should_not be_valid
       event.errors.on(:age_at_onset).should_not be_nil
     end
-  end 
+  end
 end
 
 describe HumanEvent, 'parent/guardian field' do
