@@ -373,6 +373,19 @@ describe MorbidityEvent do
       event = Event.find(event.id)
       event.should be_open_for_investigation
     end
+
+    it 'should set completed by state date automatically' do
+      require File.join(RAILS_ROOT, 'features', 'support', 'trisano')
+      event = create_basic_event 'morbidity', 'Jack'
+      event.workflow_state = 'approved_by_lhd'
+      event.save!
+      event = Event.find(event.id)
+      event.review_completed_by_state_date.should == nil
+      event.jurisdiction.stub!(:allows_current_user_to?).and_return true
+      event.approve 'A note'
+      event.save!
+      event.review_completed_by_state_date.should == Date.today
+    end
   end
 
   describe "Saving an event" do

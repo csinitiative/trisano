@@ -60,7 +60,7 @@ module Routing
         add_note "Promoted from contact."
       end
    end
- 
+
     def accept_by_lhd(action=:accept)
       event action, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
         unless self.jurisdiction.allows_current_user_to? :accept_event_for_lhd
@@ -69,7 +69,7 @@ module Routing
         add_note "Accepted by #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
     end
-    
+
     def reject_by_lhd(action=:reject)
       event action, :transitions_to => :rejected_by_lhd, :meta => {:priv_required => :accept_event_for_lhd} do |note|
         unless self.jurisdiction.allows_current_user_to? :accept_event_for_lhd
@@ -115,7 +115,7 @@ module Routing
         end
         add_note "Accepted by Investigator\n#{note}"
       end
-    end  
+    end
 
     def reject_by_investigator(action=:reject)
       event action, :transitions_to => :rejected_by_investigator, :meta => {:priv_required => :accept_event_for_investigation} do |note|
@@ -142,7 +142,7 @@ module Routing
         end
         add_note "Investigator closed investigation.\n#{note}"
       end
-    end      
+    end
 
     def reopen_by_manager(action=:reopen)
       event action, :transitions_to => :reopened_by_manager, :meta => {:priv_required => :approve_event_at_lhd} do |note|
@@ -160,7 +160,7 @@ module Routing
         end
         add_note "Reopened by State.\n#{note}"
       end
-    end      
+    end
 
     def close(action=:approve)
       event action, :transitions_to => :closed, :meta => {:priv_required => :approve_event_at_state} do |note|
@@ -168,7 +168,7 @@ module Routing
           halt! "You do not have sufficient privileges to make this change"
         end
         add_note "Approved by State.\n#{note}"
-        review_completed_by_state_date = Date.today
+        self.review_completed_by_state_date = Date.today
       end
     end
 
@@ -179,7 +179,7 @@ module Routing
         end
         add_note "Approved at #{self.primary_jurisdiction.try(:name)}.\n#{note}"
       end
-    end      
+    end
 
   end
 end
