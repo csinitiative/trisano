@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'java'
-require 'benchmark'
+#require 'benchmark'
 require 'fileutils'
 require 'yaml'
 
@@ -38,6 +38,38 @@ end
 
 def database_url
   ENV['TRISANO_JDBC_URL'] || 'jdbc:postgresql://localhost:5432/trisano_warehouse'
+end
+
+def bi_user
+  ENV['BI_USER_NAME'] || 'joe'
+end
+
+def bi_password
+  ENV['BI_USER_PASSWORD'] || 'password'
+end
+
+def bi_server_url
+  ENV['BI_SERVER_URL'] || 'http://127.0.0.1:8080'
+end
+
+def trisano_db_host
+  ENV['TRISANO_DB_HOST'] || '127.0.0.1'
+end
+
+def trisano_db_port
+  ENV['TRISANO_DB_PORT'] || '5432'
+end
+
+def trisano_db_name
+  ENV['TRISANO_DB_NAME'] || 'trisano_warehouse'
+end
+
+def trisano_db_user
+  ENV['TRISANO_DB_USER'] || 'trisano_dw'
+end
+
+def trisano_db_password
+  ENV['TRISANO_DB_PASSWORD'] || 'trisano_dw'
 end
 
 def require_jars(jars)
@@ -117,13 +149,13 @@ def setup_security_reference(meta)
   secserv.setDetailNameParameter('details')
   secserv.setDetailServiceType(0)
   secserv.setServiceName('SecurityDetails')
-  secserv.setUsername('joe')
-  secserv.setPassword('password')
+  secserv.setUsername(bi_user)
+  secserv.setPassword(bi_password)
   secserv.setProxyHostname('')
   secserv.setProxyPort('')
   secserv.setNonProxyHosts('')
   secserv.setFilename('')
-  secserv.serviceURL = "http://127.0.0.1:8080/pentaho/ServiceAction?action=SecurityDetails&details=all"
+  secserv.serviceURL = bi_server_url + '/pentaho/ServiceAction?action=SecurityDetails&details=all'
 
   meta.setSecurityReference(secref)
 end
@@ -143,7 +175,7 @@ end
 def pentaho_roles(meta)
   puts "Getting Pentaho's roles"
   secserv = meta.securityReference.securityService
-  secserv.serviceURL = "http://127.0.0.1:8080/pentaho/ServiceAction?action=SecurityDetails&details=all"
+  secserv.serviceURL = bi_server_url + '/pentaho/ServiceAction?action=SecurityDetails&details=all'
   res = secserv.getRoles
   raise "Couldn't get Pentaho's roles. Perhaps Pentaho isn't running?" if res.nil?
   return res
@@ -203,7 +235,7 @@ end
 
 def initialize_meta(meta)
   setup_security_reference meta
-  dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_ro', 'password')
+  dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', trisano_db_host, trisano_db_name, trisano_db_port, trisano_db_user, trisano_db_password)
   meta.add_database dm
 #  udm = DatabaseMeta.new('Update Script Connection', 'POSTGRESQL', 'Native', '127.0.0.1', 'trisano_warehouse', '5432', 'trisano_su', 'password')
 #  meta.add_database udm
