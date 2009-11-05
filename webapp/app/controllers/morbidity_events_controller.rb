@@ -73,13 +73,16 @@ class MorbidityEventsController < EventsController
       @event.copy_from_person(person)
     else
       @event.attributes = params[:morbidity_event]
-
-      # Allow for test scripts and developers to jump directly to the "under investigation" state
-      if RAILS_ENV == 'production'
-        @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
-      end
-      @event.event_onset_date = Date.today
     end
+
+    # Commented out the 'if prod' test because I don't think we need it anymore. If Selenium tests start to fail, uncomment this
+    # Allow for test scripts and developers to jump directly to the "under investigation" state
+    # if RAILS_ENV == 'production'
+    #   @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
+    # end
+
+    @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
+    @event.event_onset_date = Date.today
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)
       render :partial => "events/permission_denied", :locals => { :reason => "You do not have create priveleges in this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
