@@ -12,7 +12,7 @@
   * system/hibernate/oracle10g.hibernate.cfg.xml
   *
   -->
-    <config-file>system/hibernate/postgresql.hibernate.cfg.xml</config-file>
+    <config-file>system/hibernate/hibernate-c3p0-postgres.cfg.xml</config-file>
 
   <!--
   *
