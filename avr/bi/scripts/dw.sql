@@ -373,6 +373,16 @@ SELECT
     events.sent_to_ibis,
     events.ibis_updated_at,
     disevdied.code_description AS disease_event_died,        -- code description?
+
+    -- See "Feature Areas -- Public Health Status"
+    CASE
+        WHEN ijpl.id IS NULL OR ijpl.name = 'Unassigned' THEN 'Unassigned to a Jurisdiction'::TEXT
+        WHEN investigator_id IS NULL THEN 'Assigned to a Jurisdiction (not assigned to an investigator)'::TEXT
+        WHEN events.investigation_started_date IS NULL THEN 'Assigned to an Investigator'::TEXT
+        WHEN events."investigation_completed_LHD_date" IS NULL THEN 'Investigation in process'::TEXT
+        ELSE 'Investigation complete'::TEXT
+    END AS public_health_status,
+
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
                                  -- Mondrian happy
@@ -550,6 +560,16 @@ SELECT
     events.sent_to_ibis,
     events.ibis_updated_at,
     disevdied.code_description AS disease_event_died,        -- code description?
+
+    -- See "Feature Areas -- Public Health Status"
+    CASE
+        WHEN ijpl.id IS NULL OR ijpl.name = 'Unassigned' THEN 'Unassigned to a Jurisdiction'::TEXT
+        WHEN investigator_id IS NULL THEN 'Assigned to a Jurisdiction (not assigned to an investigator)'::TEXT
+        WHEN events.investigation_started_date IS NULL THEN 'Assigned to an Investigator'::TEXT
+        WHEN events."investigation_completed_LHD_date" IS NULL THEN 'Investigation in process'::TEXT
+        ELSE 'Investigation complete'::TEXT
+    END AS public_health_status,
+
     1::integer AS always_one
 FROM events
     LEFT JOIN participations pplpart
