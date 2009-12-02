@@ -1057,7 +1057,7 @@ FROM
     JOIN participations part
         ON (part.event_id = events.id AND part.type = 'InterestedPlace')
     JOIN places p
-        ON (p.entity_id = part.secondary_entity_id)
+        ON (p.entity_id = part.primary_entity_id)
     LEFT JOIN places_types pt
         ON (pt.place_id = p.id)
     LEFT JOIN codes c
