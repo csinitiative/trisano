@@ -682,17 +682,25 @@ SELECT
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
-    pl.id AS jurisdiction_id,
-    pl.name
+    CASE
+        WHEN pr.type IS NULL THEN -1::INTEGER
+        ELSE pl.id
+    END AS jurisdiction_id,
+    CASE
+        WHEN pr.type IS NULL THEN ''::TEXT
+        ELSE pl.name
+    END AS name
 FROM
     events
     LEFT JOIN participations pr
-        ON (pr.event_id = events.id)
+        ON (pr.event_id = events.id AND pr.type = 'AssociatedJurisdiction')
     LEFT JOIN places pl
         ON (pl.entity_id = pr.secondary_entity_id)
+    -- Filter out events with no patient
+    JOIN participations patpr
+        ON (patpr.event_id = events.id AND patpr.type = 'InterestedParty')
 WHERE
-    pr.type = 'AssociatedJurisdiction' AND
-    events.deleted_at IS NULL AND
+    events.deleted_at IS NULL AND 
     (
         events.type = 'ContactEvent' OR
         events.type = 'MorbidityEvent'
@@ -800,7 +808,10 @@ FROM
         ON (p.event_id = events.id AND events.deleted_at IS NULL)
     LEFT JOIN places
         ON (places.entity_id = p.secondary_entity_id)
-    LEFT JOIN places_types pt
+    LEFT JOIN (
+        -- Just in case there are places with multiple types. We only want it to create one record
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) pt
         ON (pt.place_id = places.id)
     LEFT JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
@@ -941,7 +952,10 @@ FROM
         ON (p.event_id = events.id)
     JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
-    JOIN places_types pt
+    JOIN (
+        -- Just in case there are places with multiple types. We only want it to create one record
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) pt
         ON (pt.place_id = pl.id)
     JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
@@ -981,7 +995,10 @@ FROM
         ON (p.event_id = events.id)
     JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
-    JOIN places_types pt
+    JOIN (
+        -- Just in case there are places with multiple types. We only want it to create one record
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) pt
         ON (pt.place_id = pl.id)
     JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
@@ -1058,7 +1075,10 @@ FROM
         ON (part.event_id = events.id AND part.type = 'InterestedPlace')
     JOIN places p
         ON (p.entity_id = part.primary_entity_id)
-    LEFT JOIN places_types pt
+    LEFT JOIN (
+        -- Just in case there are places with multiple types. We only want it to create one event
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) pt
         ON (pt.place_id = p.id)
     LEFT JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
