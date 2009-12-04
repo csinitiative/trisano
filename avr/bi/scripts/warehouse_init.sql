@@ -1545,6 +1545,8 @@ CREATE TABLE population (
     population INTEGER
 );
 
+GRANT SELECT ON population TO trisano_ro;
+
 INSERT INTO population_tables VALUES ('population', 1);
 
 CREATE OR REPLACE FUNCTION population.distinct_dimension_values(my_dim_name TEXT, my_level INTEGER) RETURNS SETOF TEXT STABLE AS $$
@@ -1599,9 +1601,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+GRANT EXECUTE ON FUNCTION population.distinct_dimension_values(my_dim_name TEXT, my_level INTEGER)
+    TO trisano_ro;
+
 CREATE OR REPLACE VIEW population.population_years AS
     SELECT 1 AS id, d.year AS year
     FROM population.distinct_dimension_values('Population Year'::text, 1) d(year); 
+
+GRANT SELECT ON population.population_years TO trisano_ro;
 
 COMMIT;
 
