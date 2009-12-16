@@ -570,7 +570,36 @@ SELECT
     pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
+    CASE
+        WHEN disev.disease_onset_date IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from disev.disease_onset_date)::TEXT
+    END AS date_disease_onset_year,
+    CASE
+        WHEN disev.disease_onset_date IS NULL THEN NULL
+        WHEN extract(month from disev.disease_onset_date) <= 2 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 2 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 5 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_disease_onset_quarter,
+    to_char(disev.disease_onset_date, 'Month') AS date_disease_onset_month,
+    'Week ' || (extract(week from disev.disease_onset_date))::TEXT AS date_disease_onset_week,
+    extract(day from disev.disease_onset_date)::TEXT AS date_disease_onset_day,
+
     upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
+    CASE
+        WHEN disev.date_diagnosed IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from disev.date_diagnosed)::TEXT
+    END AS date_disease_diagnosed_year,
+    CASE
+        WHEN disev.date_diagnosed IS NULL THEN NULL 
+        WHEN extract(month from disev.date_diagnosed) <= 2 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 2 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 5 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_disease_diagnosed_quarter,
+    to_char(disev.date_diagnosed, 'Month') AS date_disease_diagnosed_month,
+    'Week ' || (extract(week from disev.date_diagnosed))::TEXT AS date_disease_diagnosed_week,
+    extract(day from disev.date_diagnosed)::TEXT AS date_disease_diagnosed_day,
 
     upsert_date(events.event_onset_date) AS date_entered_into_system,
     upsert_date(events.investigation_started_date) AS date_investigation_started,
