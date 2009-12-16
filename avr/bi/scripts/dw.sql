@@ -354,7 +354,7 @@ SELECT
         ELSE extract(year from disev.disease_onset_date)::TEXT
     END AS date_disease_onset_year,
     CASE
-        WHEN disev.disease_onset_date IS NULL THEN NULL 
+        WHEN disev.disease_onset_date IS NULL THEN NULL
         WHEN extract(month from disev.disease_onset_date) <= 2 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 2 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 5 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
