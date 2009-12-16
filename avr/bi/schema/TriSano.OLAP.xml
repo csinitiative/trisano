@@ -577,7 +577,7 @@
 	</Cube>
 
 	<Cube name="Public Health Metrics - Morbidity Events" caption="Public Health Merics - Morbidity Events" cache="true" enabled="true">
-		<Table name="dw_contact_events_view" schema="trisano">
+		<Table name="dw_morbidity_events_view" schema="trisano">
 		</Table>
         <Dimension type="StandardDimension" foreignKey="dw_patients_id" name="Gender">
             <Hierarchy name="Gender" primaryKey="id" allMemberName="All Genders" hasAll="true">
