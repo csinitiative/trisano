@@ -22,20 +22,30 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" allMemberName="All Disease Diagnosis Dates" primaryKey="fulldate">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease diagnosis date">
+			<Hierarchy name="Date" allMemberName="All Disease Diagnosis Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_diagnosed_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_diagnosed_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
 			</Hierarchy>
 		</Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true" primaryKey="fulldate">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease onset date">
+			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_onset_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_onset_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
@@ -328,20 +338,30 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Diagnosis Dates">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease diagnosis date">
+			<Hierarchy name="Date" allMemberName="All Disease Diagnosis Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_diagnosed_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_diagnosed_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
 			</Hierarchy>
 		</Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Onset Dates">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease onset date">
+			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_onset_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_onset_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
@@ -579,20 +599,30 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" allMemberName="All Disease Diagnosis Dates" primaryKey="fulldate">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease diagnosis date">
+			<Hierarchy name="Date" allMemberName="All Disease Diagnosis Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_diagnosed_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_diagnosed_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
 			</Hierarchy>
 		</Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true" primaryKey="fulldate">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease onset date">
+			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_onset_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_onset_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
@@ -1200,20 +1230,30 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_diagnosed" name="Disease diagnosis date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Diagnosis Dates">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease diagnosis date">
+			<Hierarchy name="Date" allMemberName="All Disease Diagnosis Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_diagnosed_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_diagnosed_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
 			</Hierarchy>
 		</Dimension>
-		<Dimension type="StandardDimension" foreignKey="date_disease_onset" name="Disease onset date">
-			<Hierarchy name="Date" hasAll="true" primaryKey="fulldate" allMemberName="All Disease Onset Dates">
-				<Table name="dw_date_dimension_view" schema="trisano"></Table>
-				<Level name="Year" column="year" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Month" column="month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
-				<Level name="Day" column="day_of_month" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never"></Level>
+		<Dimension type="TimeDimension" name="Disease onset date">
+			<Hierarchy name="Date" allMemberName="All Disease Onset Dates" hasAll="true">
+				<Level name="Year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_onset_year"> </Level>
+				<Level name="Quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset_quarter"> </Level>
+				<Level name="Month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_onset_month" hideMemberIf="IfBlankName">
+                    <OrdinalExpression><SQL dialect="postgres">extract(month from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
+                    <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Investigation">
