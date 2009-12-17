@@ -1113,6 +1113,7 @@ SELECT
     events.parent_id AS dw_morbidity_events_id,
     p.name,
     c.code_description AS place_type,
+    prtpl.date_of_exposure,
     ad.street_number,
     ad.street_name,
     ad.unit_number,
@@ -1141,6 +1142,8 @@ FROM
         ON (pt.place_id = p.id)
     LEFT JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+    LEFT JOIN participations_places prtpl
+        ON (prtpl.id = events.participations_place_id)
 WHERE
     events.type = 'PlaceEvent' AND
     events.deleted_at IS NULL

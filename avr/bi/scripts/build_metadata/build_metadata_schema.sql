@@ -1,5 +1,9 @@
+BEGIN;
+
 -- Ideally we'd have the foreign keys described here, but foreign keys to
 -- system tables aren't allowed
+
+DROP TABLE IF EXISTS trisano.core_tables;
 
 CREATE TABLE trisano.core_tables (
     table_name NAME PRIMARY KEY,
@@ -8,6 +12,8 @@ CREATE TABLE trisano.core_tables (
     order_num INTEGER NOT NULL,
     make_category BOOLEAN DEFAULT true
 );
+
+DROP TABLE IF EXISTS trisano.core_columns;
 
 CREATE TABLE trisano.core_columns (
     target_column NAME,
@@ -173,6 +179,7 @@ INSERT INTO trisano.core_columns (target_column, target_table, column_name, colu
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('postal_code', 'trisano.dw_place_events_view', 'postal_code', 'Place Events Postal Code', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_place_events_view', 'name', 'Place Events Place Name', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_type', 'trisano.dw_place_events_view', 'place_type', 'Place Events Place Type', true);
+INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_exposure', 'trisano.dw_place_events_view', 'date_of_exposure', 'Place Events Date of Exposure', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_number', 'trisano.dw_place_events_view', 'street_number', 'Place Events Street Number', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_name', 'trisano.dw_place_events_view', 'street_name', 'Place Events Street Name', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('unit_number', 'trisano.dw_place_events_view', 'unit_number', 'Place Events Unit Number', true);
@@ -384,6 +391,8 @@ INSERT INTO trisano.core_columns (target_column, target_table, column_name, colu
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_status', 'trisano.dw_encounters_lab_results_view', 'test_status', 'Encounters Lab Results Test Status', true);
 INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('comment', 'trisano.dw_encounters_lab_results_view', 'comment', 'Encounters Lab Results Comment', true);
 
+DROP TABLE IF EXISTS trisano.core_relationships;
+
 CREATE TABLE trisano.core_relationships (
     from_column NAME NOT NULL,
     from_table TEXT NOT NULL,
@@ -418,3 +427,5 @@ INSERT INTO trisano.core_relationships (from_table, from_column, to_table, to_co
 ('dw_morbidity_events_view'         , 'id'                , 'dw_place_events_view'                      , 'dw_morbidity_events_id' , '1:N'),
 ('dw_contact_events_view'           , 'id'                , 'dw_contact_secondary_jurisdictions_view'   , 'dw_contact_events_id'   , '1:N'),
 ('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_secondary_jurisdictions_view' , 'dw_morbidity_events_id' , '1:N');
+
+COMMIT;
