@@ -406,11 +406,20 @@ SELECT
 
     -- See "Feature Areas -- Public Health Status"
     CASE
-        WHEN ijpl.id IS NULL OR ijpl.name = 'Unassigned' THEN 'Unassigned to a Jurisdiction'::TEXT
-        WHEN investigator_id IS NULL THEN 'Assigned to a Jurisdiction (not assigned to an investigator)'::TEXT
-        WHEN events.investigation_started_date IS NULL THEN 'Assigned to an Investigator'::TEXT
-        WHEN events."investigation_completed_LHD_date" IS NULL THEN 'Investigation in process'::TEXT
-        ELSE 'Investigation complete'::TEXT
+        WHEN events.workflow_state = 'accepted_by_lhd'          THEN 'Accepted by Local Health Dept.'
+        WHEN events.workflow_state = 'approved_by_lhd'          THEN 'Approved by Local Health Dept.'
+        WHEN events.workflow_state = 'assigned_to_investigator' THEN 'Assigned to Investigator'
+        WHEN events.workflow_state = 'assigned_to_lhd'          THEN 'Assigned to Local Health Dept.'
+        WHEN events.workflow_state = 'assigned_to_queue'        THEN 'Assigned to Queue'
+        WHEN events.workflow_state = 'closed'                   THEN 'Closed'
+        WHEN events.workflow_state = 'investigation_complete'   THEN 'Investigation Complete'
+        WHEN events.workflow_state = 'new'                      THEN 'New'
+        WHEN events.workflow_state = 'rejected_by_investigator' THEN 'Rejected by Investigator'
+        WHEN events.workflow_state = 'rejected_by_lhd'          THEN 'Rejected by Local Health Dept.'
+        WHEN events.workflow_state = 'reopened_by_manager'      THEN 'Reopened by Manager'
+        WHEN events.workflow_state = 'reopened_by_state'        THEN 'Reopened by State'
+        WHEN events.workflow_state = 'under_investigation'      THEN 'Under Investigation'
+        ELSE ''
     END AS public_health_status,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
