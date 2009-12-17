@@ -260,7 +260,7 @@ GRANT SELECT ON racecombined TO trisano_ro;
 
 TRUNCATE TABLE population_dimensions;
 
-INSERT INTO population_dimensions VALUES ('Investigating Jurisdiction', '{jurisdiction}', NULL, default);
+INSERT INTO population_dimensions VALUES ('Investigation', '{jurisdiction}', NULL, default);
 INSERT INTO population_dimensions VALUES ('Age', '{age_group,age}', NULL, default);
 INSERT INTO population_dimensions VALUES ('Ethnicity', '{ethnicity}', NULL, default);
 INSERT INTO population_dimensions VALUES ('Race', '{race}', NULL, default);
