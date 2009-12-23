@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -24,7 +24,7 @@ module LayoutHelper
 
   def render_onload_event
     # PLUGIN_HOOK - render_onload_event()
-    
+
     return %{ shortcuts_init('#{home_path}');
               focus_init(); }
   end
@@ -39,7 +39,7 @@ module LayoutHelper
 
   def render_footer
     # PLUGIN_HOOK - render_footer()
-    
+
     result = ""
 
     result << "<div class='footlogo'>"
@@ -67,5 +67,19 @@ module LayoutHelper
 
     result
   end
-  
+
+  # some javascript just needs to be in the hosted page
+  def embedded_javascripts
+    <<-JS
+      <script type="text/javascript">
+        function loadScript(src) {
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src  = src
+          document.body.appendChild(script);
+        }
+      </script>
+    JS
+  end
+
 end
