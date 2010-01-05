@@ -649,7 +649,7 @@ form.inplaceeditor-form a {
   display: none; }
 .hoverable b:hover span {
   display: block;
-  position: fixed;
+  position: absolute;
   border: solid 1px;
   margin: 1em;
   padding: 1em;
