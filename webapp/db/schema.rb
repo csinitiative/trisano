@@ -644,7 +644,7 @@ ActiveRecord::Schema.define(:version => 156) do
   end
 
   # can't forget these
-  execute 'CREATE SEQUENCE events_record_number_seq START WITH 2009000001 INCREMENT BY 1 MAXVALUE 2009999999 MINVALUE 2009000001 CACHE 1'
+  execute 'CREATE SEQUENCE events_record_number_seq START WITH 2010000001 INCREMENT BY 1 MAXVALUE 2010999999 MINVALUE 2010000001 CACHE 1'
   execute "create sequence tree_id_generator"
 
   # full text search stuff
