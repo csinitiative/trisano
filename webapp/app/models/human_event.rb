@@ -433,7 +433,7 @@ class HumanEvent < Event
   def definitive_lab_result
     # CDC calculations expect one lab result.  Choosing the most recent to be it
     return nil if lab_results.empty?
-    self.lab_results.sort_by { |lab_result| lab_result.lab_test_date || Date.parse("01/01/0000") }.last
+    self.lab_results.sort_by { |lab_result| lab_result.collection_date || Date.parse("01/01/0000") }.last
   end
 
   def set_primary_entity_on_secondary_participations
@@ -750,7 +750,6 @@ class HumanEvent < Event
     safe_call_chain(:disease_event, :disease_onset_date) ||
       safe_call_chain(:disease_event, :date_diagnosed)   ||
       labs.collect{|l| l.lab_results.collect{|r| r.collection_date}}.flatten.compact.sort.first ||
-      labs.collect{|l| l.lab_results.collect{|r| r.lab_test_date}}.flatten.compact.sort.first   ||
       self.first_reported_PH_date   ||
       self.created_at.try(:to_date) ||
       Date.today

@@ -199,7 +199,7 @@ class MorbidityEvent < HumanEvent
   def generate_mmwr
     epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date,
       :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed,
-      :labresultdate => definitive_lab_result.nil? ? nil : definitive_lab_result.lab_test_date,
+      :labresultdate => definitive_lab_result.nil? ? nil : definitive_lab_result.collection_date,
       :firstreportdate => self.first_reported_PH_date }
     mmwr = Mmwr.new(epi_dates)
 
