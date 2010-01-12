@@ -19,13 +19,13 @@ module LoincCodesHelper
   end
 
   def select_options_organisms
-    Organism.all.collect do |organism|
+    Organism.all(:order => 'organism_name').collect do |organism|
       [organism.organism_name, organism.id]
     end
   end
 
   def select_options_common_test_types
-    CommonTestType.all.collect do |ctt|
+    CommonTestType.all(:order => 'common_name').collect do |ctt|
       [ctt.common_name, ctt.id]
     end
   end
