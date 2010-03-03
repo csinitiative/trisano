@@ -19,3 +19,4 @@ webapp/config/database.yml
 webapp/config/site_config.yml
 avr/mdr.*
 webrat-*
+/webapp/vendor/trisano/trisano_locales_test

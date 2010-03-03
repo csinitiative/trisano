@@ -5,7 +5,7 @@ base_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', '..'))
 plugins_dir = File.join(base_dir, 'plugins')
 trisano_ext_dir = File.join(base_dir, 'webapp', 'vendor', 'trisano')
 
-%w(trisano_ee trisano_locales_test trisano_outbreaks).each do |plugin_name|
+%w(trisano_locales_test).each do |plugin_name|
   vendor = File.join(trisano_ext_dir, plugin_name)
   plugin = File.join(plugins_dir, plugin_name)
   FileUtils.rm vendor if File.exists?(vendor)
