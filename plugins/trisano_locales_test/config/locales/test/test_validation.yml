@@ -1,0 +1,226 @@
+test:
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:   "x1 error prohibited this {{model}} from being saved"
+          other:  "x{{count}} errors prohibited this {{model}} from being saved"
+        # The variable :count is also available
+        body: "xThere were problems with the following fields:"
+
+      # The values :model, :attribute and :value are always available for interpolation
+      # The value :count is available when applicable. Can be used for pluralization.
+      messages:
+        inclusion: "xis not included in the list"
+        exclusion: "xis reserved"
+        invalid: "xis invalid"
+        confirmation: "xdoesn't match confirmation"
+        accepted: "xmust be accepted"
+        empty: "xcan't be empty"
+        blank: "xcan't be blank"
+        too_long: "xis too long (maximum is {{count}} characters)"
+        too_short: "xis too short (minimum is {{count}} characters)"
+        wrong_length: "xis the wrong length (should be {{count}} characters)"
+        taken: "xhas already been taken"
+        not_a_number: "xis not a number"
+        greater_than: "xmust be greater than {{count}}"
+        greater_than_or_equal_to: "xmust be greater than or equal to {{count}}"
+        equal_to: "xmust be equal to {{count}}"
+        less_than: "xmust be less than {{count}}"
+        less_than_or_equal_to: "xmust be less than or equal to {{count}}"
+        odd: "xmust be odd"
+        even: "xmust be even"
+        # Append your own errors here or at the model/attributes scope.
+        is_not_valid: "xis not valid"
+        precede_birth_date: "x{{thing}} date(s) precede birth date"
+        cannot_precede_birth_date: "xcannot be earlier than birth date"
+        merge_race_errors: "xhas been merged into another entity and is no longer available for use on events. Actions you can take: Attempt to remove the entity or switch to show mode to view the replacement entity."
+
+      models:
+        # Overrides default messages
+        interested_place:
+          attributes:
+            base:
+              no_place_name: "xNo name has been supplied for this place."
+
+        value_set_element:
+          attributes:
+            base:
+              too_many_value_sets: "xA question can only have one value set"
+              bad_parent: "xAn error occurred checking the parent for existing value set children"
+
+        lab_result:
+          attributes:
+            lab_test_date:
+              precedes_collection_date: "xcannot precede collection date"
+
+        telephone:
+          attributes:
+            base:
+              all_blank: "xAt least one telephone field must have a value"
+            phone_number:
+              format: "xmust not be blank and must be 7 digits with an optional dash (e.g.5551212 or 555-1212)"
+            area_code:
+              format: "xmust be 3 digits"
+            extension:
+              format: "xmust have 1 to 6 digits"
+
+        staged_message:
+          attributes:
+            hl7_message:
+              parse_error: "xcould not be parsed"
+              missing_header: "xis missing the header"
+              missing_segment: "xis missing one or more of the following segments: PID, OBR, or OBX"
+              missing_last_name: "xNo last name provided for patient."
+              missing_loinc: "xOBX segment {{segment}} does not contain a LOINC code."
+
+        loinc_code:
+          attributes:
+            loinc_code:
+              invalid: "xis invalid (should be nnnnn-n)"
+
+        form:
+          attributes:
+            base:
+              invalid_base_element: "xForm base element is invalid"
+              investigator_view_type: "xInvestigator view element container is the wrong type"
+              core_view_type: "xCore view element container is the wrong type"
+              core_field_type: "xCore field element container is the wrong type"
+              incorrect_top_level: "xForm does not contain the correct top-level containers"
+              deactivate_unpublished: "xA form must have a status of 'Published' in order to be deactivated."
+              rollback_unpublished: "xOnly forms with published versions can be rolled back"
+              no_diseases: "xThere are no diseases associated with this form."
+              publishing_error: "xAn error occurred while pushing the form."
+              initialization_error: "xAn error occurred initializing form elements"
+            short_name:
+              in_use: "xis already being used by another active form."
+              immutable: "xcan't be changed once the form has been published"
+
+        task:
+          attributes:
+            base:
+              repeating_task_failure: "xUnable to create repeating tasks."
+              repeating_task_invalid: "xA repeating task requires an interval and an until date."
+              insufficient_privileges: "xInsufficient privileges for task assignment."
+            due_date:
+              due_date_range: "xmust fall within the next two years"
+            repeating_interval:
+              invalid: "xThe task interval is invalid"
+            until_date:
+              out_of_range: "xdate must fall within the next two years"
+
+        hospitalization_facility:
+          attributes:
+            base:
+              blank_hospitalization_facility: "xHospitalization Facility can not be blank if hospitalization dates or medical record number are given."
+
+        hospitals_participation:
+          attributes:
+            discharge_date:
+              precedes_admission_date: "xcannot precede admission date"
+
+        encounter_event:
+          attributes:
+            base:
+              before_bday: "xEncounter date(s) precede birth date"
+
+        participations_encounter:
+          attributes:
+            encounter_date:
+              before_bday: "xcannot be earlier than birth date"
+
+        core_field_element:
+          attributes:
+            base:
+              blank_core_path: "xCore path is required."
+
+        disease_event:
+          attributes:
+            date_diagnosed:
+              precedes_onset: "xcannot precede onset date"
+
+        questions:
+          attributes:
+            base:
+              unexpected_error: "xError updating short names. Please contact your administrator"
+            short_name:
+              taken: "x'{{short_name}}' has already been taken"
+
+        human_event:
+          attributes:
+            base:
+              invalid_case_status: "xLocal or state case status must be '{{status}}' or blank for an event with a {{attr}} of '{{value}}'"
+            age_at_onset:
+              less_than: "xis negative. This is usually caused by an incorrect onset date or birth date."
+
+        address:
+          attributes:
+            base:
+              all_blank: "xAt least one address field must have a value"
+
+        place_event:
+          attributes:
+            base:
+              precede_birth_date: "x{{thing}} date(s) precede patient's birth date"
+            date_of_exposure:
+              cannot_precede_birth_date: "xcannot be earlier then patient's birth date"
+
+        form_element:
+          attributes:
+            base:
+              incorrect_top_level: "xForm does not contain the correct top-level containers"
+              invalid_base_element: "xForm base element is invalid"
+              failed_copy: "xCan't complete copy. A question can only have one value set"
+              multiple_roots: "xMultiple root elements were detected"
+              overlap: "xOverlap was detected in the form element structure"
+              structure_gaps: "xGaps were detected in the form element structure"
+              orphans: "xOrphaned elements were detected"
+              corrupt_nesting: "xNesting structure is corrupt"
+              parent_exception: "xAn error occurred checking the parent for existing value set children"
+              investigator_view_type: "xInvestigator view element container is the wrong type"
+              core_view_type: "xCore view element container is the wrong type"
+              core_field_type: "xCore field element container is the wrong type"
+
+        question_element:
+          attributes:
+            base:
+              short_name_taken: "xThe short name entered is already in use on this form. Please choose another."
+              invalid_state: "xThe question element is not in a valid state for saving."
+
+        interested_party:
+          attributes:
+            base:
+              nil_person: "xNo information has been supplied for the interested party."
+
+        export_column:
+          attributes:
+            base:
+              data_type_required: "xData Type required if Data Source is {{source}}"
+              table_name_blank: "xTable Name must be blank if Data Source is {{source}}"
+              column_name_blank: "xColumn Name must be blank if Data Source is {{source}}"
+              table_name_required: "xTable Name required if Data Source is {{source}}"
+              column_name_required: "xColumn Name required if Data Source is {{source}}"
+              data_type_blank: "xData Type must be blank if Data Source is {{source}}"
+        user:
+          attributes:
+            status:
+              valid_status: "xcan only be {{status}}"
+
+        place:
+          attributes:
+            name:
+              unassigned_is_special: "x'Unassigned' is special for jurisdictions. Please choose a different name."
+
+        entity:
+          attributes:
+            base:
+              incomplete: "xEntity information is not complete.  Most likely you are adding phone or address information without a name"
+
+        answer:
+          attributes:
+            text_answer:
+              format: 'xPhone number must include area code and seven digit number'
+
+      attributes:
+        # Overrides model and default messages.

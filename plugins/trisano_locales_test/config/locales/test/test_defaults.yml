@@ -1,0 +1,275 @@
+# French translations for Ruby on Rails 
+# by Christian Lescuyer (christian@flyingcoders.com)
+# contributor: Sebastien Grosjean - ZenCocoon.com
+
+test:
+  locale_name: Test
+  language: xLanguage
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%e %b"
+      long: "%e %B %Y"
+      long_ordinal: "%e %B %Y"
+      only_day: "%e"
+
+    day_names: [dimanche, lundi, mardi, mercredi, jeudi, vendredi, samedi]
+    abbr_day_names: [dim, lun, mar, mer, jeu, ven, sam]
+    month_names: [~, Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Août, Septembre, Octobre, Novembre, Décembre]
+    abbr_month_names: [~, Jan, Fév, Mar, Avr, Mai, Juin, Juil, Août, Sept, Oct, Nov, Déc]
+    order: [ :day, :month, :year ]
+
+  calendar_date_select:
+    ok: xOK
+    now: xNow
+    today: xToday
+    clear: xClear
+
+  time:
+    formats:
+      default: "%d %B %Y %H:%M"
+      date_format: "%d %B %Y"
+      time: "%H:%M"
+      short: "%d %b %H:%M"
+      long: "%A %d %B %Y %H:%M:%S %Z"
+      long_ordinal: "%A %d %B %Y %H:%M:%S %Z"
+      only_second: "%S"
+      notes: "%a, %b %d, %Y @ %I:%M %p"
+    am: 'am'
+    pm: 'pm'
+
+  datetime:
+    distance_in_words:
+      half_a_minute: "une demi-minute"
+      less_than_x_seconds:
+        zero:  "moins d'une seconde"
+        one:   "moins de 1 seconde"
+        other: "moins de {{count}} secondes"
+      x_seconds:
+        one:   "1 seconde"
+        other: "{{count}} secondes"
+      less_than_x_minutes:
+        zero:  "moins d'une minute"
+        one:   "moins de 1 minute"
+        other: "moins de {{count}} minutes"
+      x_minutes:
+        one:   "1 minute"
+        other: "{{count}} minutes"
+      about_x_hours:
+        one:   "environ une heure"
+        other: "environ {{count}} heures"
+      x_days:
+        one:   "1 jour"
+        other: "{{count}} jours"
+      about_x_months:
+        one:   "environ un mois"
+        other: "environ {{count}} mois"
+      x_months:
+        one:   "1 mois"
+        other: "{{count}} mois"
+      about_x_years:
+        one:   "environ un an"
+        other: "environ {{count}} ans"
+      over_x_years:
+        one:   "plus d'un an"
+        other: "plus de {{count}} ans"
+    prompts:
+      year:   "Année"
+      month:  "Mois"
+      day:    "Jour"
+      hour:   "Heure"
+      minute: "Minute"
+      second: "Seconde"
+  
+  number:
+    format:
+      precision: 3
+      separator: ','
+      delimiter: ' '
+    currency:
+      format:
+        unit: '€'
+        precision: 2
+        format: '%n %u'
+    human:
+      format:
+        # These three are to override number.format and are optional
+        # separator: 
+        delimiter: "" 
+        precision: 2
+      # Rails <= v2.2.2
+      # storage_units: [octet, kb, Mb, Gb, Tb]
+      # Rails >= v2.3
+      storage_units:
+        format: "%n %u"
+        units:
+          byte:
+            one:   "octet"
+            other: "octets"
+          kb: "ko"
+          mb: "Mo"
+          gb: "Go"
+          tb: "To"
+
+  support:
+    array:
+      sentence_connector: 'et'
+      skip_last_comma: true
+      words_connector: ", "
+      two_words_connector: " et "
+      last_word_connector: " et "
+
+  unassigned_jurisdiction_name: "xUnassigned"
+  or: "x or"
+
+  not_available: "xN/A"
+  copy_of: "xCopy of"
+  default_view: "xDefault View"
+  library_export_file_name: "xlibrary-export"
+
+  workflow:
+    event_created_for_jurisdiction: "xEvent created for jurisdiction"
+    assigned_to_lhd: "xAssigned to Local Health Dept."
+    accepted_by_lhd: "xAccepted by Local Health Dept."
+    rejected_by_lhd: "xRejected by Local Health Dept."
+    assigned_to_queue: "xAssigned to Queue"
+    assigned_to_investigator: "xAssigned to Investigator"
+    approved_by_lhd: "xApproved by Local Health Dept."
+    approved_by_state: "xApproved by State"
+    not_participating_in_workflow: "xNot Participating in Workflow"
+    under_investigation: "xUnder Investigation"
+    new: xNew
+    rejected_by_investigator: xRejected by Investigator
+    investigation_complete: xInvestigation Complete
+    reopened_by_manager: xReopened by Manager
+    reopened_by_state: xReopened by State
+    closed: xClosed
+    not_routed: xNot Participating in Workflow
+
+  attachment_types:
+    correspondence: xCorrespondence
+    lab: xLaboratory results
+    letter: xLetter
+    x-ray: xX-ray
+
+  encounter_location_types:
+    clinic: xClinic
+    home: xHome
+    phone: xPhone
+    school: xSchool
+    work: xWork
+    other: xOther
+
+  question_data_types:
+    single_line_text: xSingle line text
+    multi_line_text: xMulti-line text
+    drop_down: xDrop-down select list
+    radio_button: xRadio buttons
+    check_box: xCheckboxes
+    date: xDate
+    phone: xPhone Number
+
+  question_styles:
+    horizontal: xHorizontal
+    vertical: xVertical
+
+  task_statuses:
+    pending: xPending
+    complete: xComplete
+    not_applicable: xNot applicable
+
+  task_intervals:
+    day: xDaily
+    week: xWeekly
+    month: xMonthly
+    year: xYearly
+
+  user_statuses:
+    active: xActive
+    disabled: xDisabled
+
+  core_views:
+    demographics: xDemographics
+    clinical: xClinical
+    laboratory: xLaboratory
+    contacts: xContacts
+    epidemiological: xEpidemiological
+    reporting: xReporting
+    administrative: xAdministrative
+    place: xPlace
+    encounter: xEncounter
+
+  system_notes:
+    event_deleted: xEvent deleted
+    event_edited: "xEdited event"
+    extra_jurisdictional_view_only_access: "xExtra-jurisdictional, view-only access"
+    event_derived_from: "xEvent derived from {{link}}."
+    event_promoted_from_contact: "xPromoted from contact."
+
+    event_queue_deleted: "xEvent queue '{{queue_name}}' has been deleted. Event has been moved out of that queue."
+    event_needs_reassignment: "xEvent has not yet been accepted for investigation and should be reassigned."
+
+    contact_event_created: "xContact event created."
+    event_changed_from_contact_to_morbidity: "xEvent changed from contact event to morbidity event"
+
+    lab_and_results_deleted: "xLab and all its results deleted"
+    lab_result_deleted: "xLab result deleted"
+    elr_with_test_type_assigned: "xELR with test type \"{{test_type}}\" assigned to event."
+
+    place_event_created: "xPlace event created."
+
+    task_created: "xTask created.\n\nName: {{name}}\nDescription: {{notes}}"
+    task_repeats: "xRepeats every {{repeating_interval}} until {{until_date}}"
+    task_status_change: "xTask status change.\n\n'{{name}}' changed from {{existing_status}} to {{new_status}}"
+
+    encounter_event_created: "xEncounter event created"
+
+    workflow_accepted_by: "xAccepted by {{jurisdiction_name}}.\n{{note}}"
+    workflow_rejected_by: "xRejected by {{jurisdiction_name}}.\n{{note}}"
+    workflow_approved_at: "xApproved at {{jurisdiction_name}}.\n{{note}}"
+    workflow_routed_to_queue: "xRouted to queue {{name}}.\n{{note}}"
+    workflow_routed_to_investigator: "xRouted to investigator {{name}}.\n{{note}}"
+    workflow_accepted_by_investigator: "xAccepted by Investigator {{name}}.\n{{note}}"
+    workflow_rejected_for_investigation: "xRejected for investigation.\n{{note}}"
+    workflow_completed_investigation: "xCompleted investigation.\n{{note}}"
+    workflow_investigator_closed_investigation: "xInvestigator closed investigation.\n{{note}}"
+    workflow_reopened_by: "xReopened by {{jurisdiction_name}} manager.\n{{note}}"
+    workflow_reopened_by_state: "xReopened by State.\n{{note}}"
+    workflow_approved_by_state: "xApproved by State.\n{{note}}"
+
+  common_test_type_associated_with_lab_results: "x{{name}} already associated with lab results"
+  investigator_already_assigned: "xInvestigator already assigned"
+  cannot_promote_unsaved_contact: "xCannot promote an unsaved contact to a morbidity event"
+  loading_disease_group: "xLoading disease group {{disease_group}}"
+  could_not_remove_form_from_event: "xCould not remove a form from an event: {{message}}"
+  unable_to_process_new_forms: "xUnable to process new forms"
+  missing_form_reference: "xMissing form reference."
+  cannot_publish_already_published_version: "xCannot publish an already published version"
+  zip_file_missing_library_export: "xThe zip file did not contain a form library export. Please ensure you aren't trying to import a single form."
+  import_file_empty: "xThe import file did not contain any content."
+  unable_to_find_export_column_data: "xUnable to find export column data ({{disease_group_name}}:{{export_column_name}}) required to import {{element_type}} '{{identifier}}'"
+  unable_to_find_export_conversion_value_date: "xUnable to find export conversion value data ({{disease_group_name}}:{{export_column_name}}:{{value_from}}:{{value_to}}) required to import a value."
+  unable_to_find_system_code_fore_core_follow_up: "xUnable to find the system code ({{code_name}}:{{the_code}}) required to import a core follow up on {{core_path}}"
+  no_queue_ids_returned: "xNo queue ids returned"
+  invalid_birthdate: "xInvalid birthdate"
+  new_jurisdiction_is_not_jurisdiction: "xNew jurisdiction is not a jurisdiction"
+  not_a_valid_staged_message: "x{{staged_message}} is not a valid staged message"
+  unknown_loinc_code: "xLOINC code, {{loinc_code}}, is unknown to TriSano."
+  loinc_code_known_but_not_linked: "xLOINC code, {{loinc_code}}, is known but not linked to a common test type."
+  no_loinc_code_maps_to_disease: "xNo LOINC code maps to a disease."
+  event_disease_set_to: "xEvent's disease set to {{disease_name}}"
+  loinc_code_maps_to_multiple_diseases: "xLOINC code(s) map to multiple diseases:"
+  loinc_code_must_be_blank_error: "xmust be blank when Scale is set to '{{code_description}}'"
+  errors_saving_short_names: "xErrors saving short names"
+  role_membership_already_assigned: "xis already assigned this role for this jurisdiction"
+  cannot_associate_labs_with: "xCannot associate labs with {{event_class}}"
+  staged_message_is_already_assigned: "xStaged message is already assigned to an event"
+  task_repeat_date_must_be_after_due_date: "xdate must come after the original due date"
+  form_element_could_not_find_external_code: "xThe external code for the condition on {{core_path}} could not be found."
+  form_element_export_column_or_disease_group_not_found: "xThe export column and/or disease group for the {{element_type}} '{{identifier}}' could not be found."
+  form_element_something_not_found_for_value_element: "xThe conversion value, export column, or disease group could not be found for the value element '{{name}}.'"
+  form_element_library_element_at_fault: "xThe library element at fault is the {{name}}"
+  insufficient_privileges_for_change: "xYou do not have sufficient privileges to make this change"
+  insufficient_privileges_to_route_from_jurisdiction: "xYou do not have sufficient privileges to route events from this jurisdiction"
+
+

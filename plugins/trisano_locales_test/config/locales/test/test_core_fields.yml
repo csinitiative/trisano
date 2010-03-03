@@ -1,0 +1,161 @@
+test:
+  event_fields:
+    place_event:
+      address:
+        city: xCity
+        postal_code: xZip code
+        unit_number: xUnit number
+        street_number: xStreet number
+        county_id: xCounty
+        street_name: xStreet name
+        state_id: xState
+      interested_place:
+        place_entity:
+          place:
+            name: xName
+            place_type_id: xType
+    contact_event:
+      address:
+        city: xContact city
+        postal_code: xContact zip code
+        unit_number: xContact unit number
+        county_id: xContact county
+        street_number: xContact street number
+        state_id: xContact state
+        street_name: xContact street name
+      disease_event:
+        date_diagnosed: xDisease date diagnosed
+        disease_onset_date: xDisease onset date
+        died_id: xDied
+        disease_id: xDisease
+        hospitalized_id: xHospitalized
+      treatments: xTreatments
+      interested_party:
+        risk_factor:
+          occupation: xOccupation
+          risk_factors: xRisk factors
+          pregnancy_due_date: xPregnancy due date
+          risk_factors_notes: xRisk factors notes
+          day_care_association_id: xDay care association
+          food_handler_id: xFood handler
+          group_living_id: xGroup living
+          pregnant_id: xPregnant
+          healthcare_worker_id: xHealthcare worker
+        person_entity:
+          person:
+            date_of_death: xContact date of death
+            age_at_onset: xAge at onset
+            birth_gender_id: xContact birth gender
+            birth_date: xContact date of birth
+            ethnicity_id: xContact ethnicity
+            primary_language_id: xContact primary language
+            last_name: xContact last name
+            approximate_age_no_birthday: xContact age
+            first_name: xContact first name
+            middle_name: xContact middle name
+      labs:
+        lab_results:
+          comment: xLab results | Comment
+          organism: xLab results | Organism
+          test_type: xLab results | Test type
+          test_status: xLab results | Test status
+          test_result: xLab results | Test result
+          units: xLab results | Units
+          collection_date: xLab results | Collection date
+          result_value: xLab results | Result value
+          reference_range: xLab results | Reference range
+          specimen_sent_to_state: xLab results | Specimen sent to state lab
+          lab_test_date: xLab results | Lab Test date
+          specimen_source: xLab results | Specimen source
+        place_entity:
+          place:
+            name: xLab results | Lab name
+      imported_from_id: xImported from
+    morbidity_event:
+      results_reported_to_clinician_date: xResults reported to clinician date
+      address:
+        city: xPatient city
+        postal_code: xPatient zip code
+        unit_number: xPatient unit number
+        street_number: xPatient street number
+        county_id: xPatient county
+        street_name: xPatient street name
+        state_id: xPatient state
+      investigation_completed_LHD_date: xDate investigation completed
+      review_completed_by_state_date: xDate review completed by state
+      reporter:
+        person_entity:
+          person:
+            last_name: xReporter last name
+            first_name: xReporter first name
+          telephones:
+            area_code: xReporter area code
+            extension: xReporter extension
+            phone_number: xReporter phone number
+      places: xPlaces
+      other_data_1: xOther Data (First Field)
+      disease_event:
+        date_diagnosed: xDisease date diagnosed
+        disease_onset_date: xDisease onset date
+        died_id: xDied
+        disease_id: xDisease
+        hospitalized_id: xHospitalized
+      other_data_2: xOther Data (Second Field)
+      outbreak_name: xOutbreak
+      jurisdiction:
+        secondary_entity_id: xJurisdiction responsible for investigation
+      first_reported_PH_date: xDate first reported to public health
+      reporting_agency:
+        place_entity:
+          place:
+            name: xReporting agency
+      acuity: xAcuity
+      event_name: xEvent name
+      lhd_case_status_id: xLHD case status
+      outbreak_associated_id: xOutbreak associated
+      treatments: xTreatments
+      contacts: xContacts
+      workflow_state: xEvent status
+      interested_party:
+        risk_factor:
+          occupation: xOccupation
+          risk_factors: xRisk factors
+          pregnancy_due_date: xPregnancy due date
+          risk_factors_notes: xRisk factors notes
+          day_care_association_id: xDay care association
+          food_handler_id: xFood handler
+          group_living_id: xGroup living
+          pregnant_id: xPregnant
+          healthcare_worker_id: xHealthcare worker
+        person_entity:
+          person:
+            date_of_death: xPatient date of death
+            age_at_onset: xAge at onset
+            birth_gender_id: xPatient birth gender
+            ethnicity_id: xPatient ethnicity
+            primary_language_id: xPatient primary language
+            birth_date: xPatient date of birth
+            last_name: xPatient last name
+            approximate_age_no_birthday: xPatient age
+            first_name: xPatient first name
+            middle_name: xPatient middle name
+      investigation_started_date: xDate investigation started
+      state_case_status_id: xState case status
+      labs:
+        lab_results:
+          organism: xLab results | Organism
+          comment: xLab results | Comment
+          test_type: xLab results | Test type
+          test_status: xLab results | Test status
+          test_result: xLab results | Test result
+          units: xLab results | Units
+          collection_date: xLab results | Collection date
+          result_value: xLab results | Result value
+          reference_range: xLab results | Reference range
+          specimen_sent_to_state: xLab results | Specimen sent to state lab
+          lab_test_date: xLab results | Lab Test date
+          specimen_source: xLab results | Specimen source
+        place_entity:
+          place:
+            name: xLab results | Lab name
+      imported_from_id: xImported from

@@ -1,0 +1,385 @@
+test:
+
+  activerecord:
+    attributes:
+      event:
+        parent_guardian: xParent/Guardian
+        age_at_onset: xAge at onset
+        lhd_case_status_id: xLHD case status
+        state_case_status_id: xState case status
+        outbreak_associated_id: xOutbreak associated
+        outbreak_name: xOutbreak name
+        workflow_state: xEvent status
+        investigation_completed_LHD_date: xDate investigation completed
+        investigation_started_date: xDate investigation started
+        event_name: xEvent name
+        review_completed_by_state_date: xDate review completed by state
+        acuity: xAcuity
+        imported_from_id: xImported from
+        other_data_1: xOther data 1
+        other_data_2: xOther data 2
+        results_reported_to_clinician_date: xResults reported to clinician date
+        first_reported_PH_date: xDate first reported to public health
+        _delete: xRemove
+
+      person:
+        last_name: xLast name
+        first_name: xFirst name
+        middle_name: xMiddle name
+        birth_date: xDate of birth
+        birth_gender: xBirth gender
+        birth_gender_id: xBirth gender
+        primary_language: xPrimary language
+        primary_language_id: xPrimary language
+        ethnicity: xEthnicity
+        ethnicity_id: xEthnicity
+        date_of_death: xDate of death
+        approximate_age_no_birthday: xAge
+
+      place:
+        name: xName
+        short_name: xShort name
+        place_type_ids: xTypes
+
+      entity:
+        race: xRace
+        race_ids: xRace
+
+      address:
+        street_number: xStreet number
+        street_name: xStreet name
+        unit_number: xUnit number
+        city: xCity
+        city_id: xCity
+        state: xState
+        state_id: xState
+        county: xCounty
+        county_id: xCounty
+        postal_code: xZip code
+        longitude: xLongitude
+        latitude: xLatitude
+        district: xDistrict
+
+      telephone:
+        entity_location_type_id: xPhone type
+        entity_location_type: xPhone type
+        country_code: xCountry code
+        area_code: xArea code
+        phone_number: xPhone number
+        extension: xExtension
+        _delete: xRemove
+
+      email_address:
+        email_address: xEmail address
+        _delete: xRemove
+
+      disease_event:
+        disease_id: xDisease
+        disease_onset_date: xOnset date
+        date_diagnosed: xDate diagnosed
+        hospitalized_id: xHospitalized
+        died_id: xDied
+
+      disease:
+        disease_name: xDisease name
+        contact_lead_in: xContact lead-in question
+        place_lead_in: xPlace lead-in question
+        treatment_lead_in: xTreatment lead-in question
+        cdc_code: xCDC/NETSS code
+        case_id: xCDC/NETSS export disease when case is
+
+      hospitalization_facility:
+        secondary_entity_id: xHealth facility
+
+      hospitals_participation:
+        admission_date: xAdmission date
+        discharge_date: xDischarge date
+        medical_record_number: xMedical record number
+
+      participations_risk_factor:
+        pregnant_id: xPregnant
+        pregnancy_due_date: xPregnancy due date
+        food_handler_id: xFood handler
+        healthcare_worker_id: xHealth care worker
+        group_living_id: xGroup living
+        day_care_association_id: xDay care association
+        occupation: xOccupation
+        risk_factors: xRisk factors
+        risk_factors_notes: xRisk factors notes
+
+      participations_treatment:
+        treatment_given_yn_id: xTreatment given
+        treatment_given_yn: xTreatment given
+        treatment: xTreatment
+        treatment_date: xDate of treatment
+        stop_treatment_date: xDate treatment stopped
+        _delete: xRemove
+
+      participations_contact:
+        disposition: xDisposition
+        disposition_id: xDisposition
+        contact_type_id: xContact type
+
+      participations_encounter:
+        user_id: xInvestigator
+        encounter_date: xEncounter date
+        encounter_location_type: xLocation
+        description: xDescription
+
+      participations_place:
+        date_of_exposure: xDate of exposure
+
+      reporting_agency:
+        agency_types: xAgency types
+        name: xReporting agency
+
+      participation:
+        _delete: xRemove
+
+      clinician:
+        _delete: xRemove
+
+      reporter:
+        _delete: xRemove
+
+      jurisdiction:
+        secondary_entity_id: xJurisdiction responsible for investigation
+
+      lab:
+        _delete: xRemove lab (with results)
+
+      lab_result:
+        test_type: xTest type
+        organism: xOrganism
+        test_result: xTest result
+        result_value: xResult value
+        units: xUnits
+        reference_range: xReference range
+        test_status_id: xTest status
+        specimen_source_id: xSpecimen source
+        collection_date: xCollection date
+        lab_test_date: xLab test date
+        specimen_sent_to_state_id: xSpecimen sent to state lab?
+        comment: xComment
+        _delete: xRemove
+
+      note:
+        note: xNew note
+        note_type: xIs admin
+
+      avr_group:
+        name: xName
+
+      common_test_type:
+        common_name: xCommon name
+
+      core_field:
+        help_text: xHelp text
+
+      attachment:
+        file: xFile
+        category: xCategory
+
+      event_queue:
+        queue_name: xQueue name
+        jurisdiction: xJurisdiction
+        jurisdiction_id: xJurisdiction
+
+      task:
+        name: xName
+        notes: xDescription
+        status: xStatus
+        category: xCategory
+        priority: xPriority
+        due_date: xDue date
+        user: xUser
+        user_id: xUser
+
+      export_column:
+        name: xDescriptive name
+        export_column_name: xCDC column name
+        export_disease_group: xDisease group (empty if all)
+        export_disease_group_show: xDisease group
+        type_data: xData source
+        data_type: xData type (if source if Formbuilder)
+        table_name: xTable name (if source is Core Data)
+        column_name: xColumn name (if source is Core Data)
+        start_position: xStart position
+        length_to_output: xLength to output
+        is_required: xRequired
+
+      export_conversion_value:
+        value_from: xWhen local value is&nbsp;&nbsp;(leave blank for 'text' values)
+        value_to: xConvert it to
+        sort_order: xSort order
+
+      external_code:
+        code_description: xDescription
+        sort_order: xSort order
+        the_code: xCode
+
+      follow_up_element:
+        core_path: xCore data element
+        condition: xCondition
+
+      group_element:
+        name: xGroup name
+
+      section_element:
+        name: xSection text
+        description: xInstructions
+        help_text: xHelp text
+
+      value_element:
+        name: xValue name
+        code: xCode
+
+      value_set_element:
+        name: xValue set name
+
+      question:
+        question_text: xQuestion text
+        short_name: xShort name
+        style: xStyle
+        help_text: xHelp text
+        export_column_id: xCDC export column
+        data_type: xData type
+
+      question_element:
+        is_active: xIs active?
+
+      form:
+        name: xName
+        short_name: xShort name
+        event_type: xShow when event type is
+        disease_id: xShow when disease is
+        jurisdiction_id: xShow when jurisdiction is
+        description: xDescription
+
+      loinc_code:
+        loinc_code: xLOINC code
+        test_name: xTest name
+        common_test_type_id: xCommon test type
+        scale_id: xScale
+        organism_id: xOrganism
+        diseases: xDiseases
+
+      organism:
+        organism_name: xOrganism name
+        diseases: xDiseases
+
+      role:
+        role_name: xRole name
+
+      role_membership:
+        jurisdiction_id: xJurisdiction
+        role_id: xRole
+
+      privileges_role:
+        privilege_id: xPrivilege
+
+      staged_message:
+        hl7_message: xHL7 Message
+
+      user:
+        uid: xUID
+        user_name: xUser name
+        first_name: xFirst name
+        last_name: xLast name
+        given_name: xGiven name
+        generational_qualifer: xGenerational qualifier
+        initials: xInitials
+        statue: xStatus
+
+    models:
+      address: xAddress
+      after_core_field_element: xAfter Core Field Element
+      age_info: xAge Info
+      answer: xAnswer
+      associated_jurisdiction: xAssociated Jurisdiction
+      attachment: xAttachment
+      avr_group: xAVR Group
+      before_core_field_element: xBefore Core Field Element
+      cdc_export: xCDC Export
+      clinician: xClinician
+      code_name: xCode Name
+      code: xCode
+      common_test_type: xCommon Test Type
+      common_test_types_disease: xCommon Test Types Disease
+      contact_event: xContact Event
+      core_field_element_container: xCore Field Element Container
+      core_field_element: xCore Field Element
+      core_field: xCore Field
+      core_view_element_container: xCore View Element Container
+      core_view_element: xCore View Element
+      csv_field: xCSV Field
+      diagnostic_facility: xDiagnostic Facility
+      disease_event: xDisease Event
+      disease: xDisease
+      diseases_loinc_code: xDiseases LOINC Code
+      diseases_organism: xDiseases Organism
+      email_address: xEmail Address
+      encounter_event: xEncounter Event
+      entity: xEntity
+      event_queue: xEvent Queue
+      event: xEvent
+      export_column: xExport Column
+      export_conversion_value: xExport Conversion Value
+      export_disease_group: xExport Disease Group
+      export_name: xExport Name
+      export_predicate: xExport Predicate
+      external_code: xExternal Code
+      follow_up_element: xFollow Up Element
+      form_base_element: xForm Base Element
+      form_element: xForm Element
+      form: xForm
+      form_reference: xForm Reference
+      group_element: xGroup Element
+      hospitalization_facility: xHospitalization Facility
+      hospitals_participation: xHospitals Participation
+      human_event: xHuman Event
+      interested_party: xInterested Party
+      interested_place: xInterested Place
+      investigator_view_element_container: xInvestigator View Element Container
+      jurisdiction: xJurisdiction
+      lab: xLab
+      lab_result: xLab Result
+      loinc_code: xLOINC Code
+      morbidity_event: xMorbidity Event
+      note: xNote
+      organism: xOrganism
+      participation: xParticipation
+      participations_contact: xParticipations Contact
+      participations_encounter: xParticipations Encounter
+      participations_place: xParticipations Place
+      participations_risk_factor: xParticipations Risk Factor
+      participations_treatment: xParticipations Treatment
+      person_entity: xPerson Entity
+      person: xPerson
+      place_entity: xPlace Entity
+      place_event: xPlace Event
+      place: xPlace
+      privilege: xPrivilege
+      privileges_role: xPrivilege Role
+      question_element: xQuestion Element
+      question: xQuestion
+      questions: xQuestions
+      reporter: xReporter
+      reporting_agency: xReporting Agency
+      reporting_agency_type: xReporting Agency Type
+      role_membership: xRole Membership
+      role: xRole
+      section_element: xSection Element
+      staged_message: xStaged Message
+      staged_observation: xStaged Observation
+      task: xTask
+      telephone: xTelephone
+      user: xUser
+      value_element: xValue Element
+      value_set_element: xValue Set Element
+      view_element: xView Element
+
+      # lies! :one and :other key make error_messages_for work when an
+      # object_name isn't passed.
+      one: ''
+      other: ''

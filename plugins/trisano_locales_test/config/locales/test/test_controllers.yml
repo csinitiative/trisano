@@ -1,0 +1,301 @@
+test:
+
+  no_admin_rights: "xYou do not have administrative rights"
+  no_view_privs_for_jurisdiction: "xYou do not have view privileges for this jurisdiction"
+  no_create_privs_for_jurisdiction: "xYou do not have create privileges for this jurisdiction"
+  no_update_privs_for_jurisdiction: "xYou do not have update privileges for this jurisdiction"
+  no_uid_present: "xInternal application error: No UID is present. Please contact your administrator."
+  user_not_found: "xInternal application error: User not found. Please contact your administrator."
+  account_not_avaliable: "xThis account is not currently available. Please contact your administrator."
+  application_error: "xApplication Error"
+  an_error_occurred: "xAn error occurred while your request was being processed."
+  provide_feedback: "xProvide feedback"
+
+  # Generic controller
+  could_not_complete_request: "xTriSano could not complete the last request. Contact your system administrator."
+  method_not_supported: "xMethod not supported."
+
+  # Generic form element
+  deletion_handled_by_form_elements: "xDeletion handled by form elements."
+
+  # AVR groups
+  avr_group_successfully_created: "xAVR group was successfully created."
+  avr_group_successfully_updated: "xAVR group was successfully updated."
+
+  # CDC export
+  cdc_export_error: "xCDC export failed. This frequently occurs because an out-of-state event was inadvertently included in the cdc export or the value being exported does not have an export value. Please examine the specified event and try again. {{message}}"
+  invalid_date_format: "xInvalid date format"
+
+  # Common test type
+  common_test_type_successfully_created: "xCommon test type was successfully created."
+  common_test_type_successfully_updated: "xCommon test type was successfully updated."
+  common_test_type_successfully_deleted: "xCommon test type was successfully deleted."
+  common_test_type_could_not_be_deleted: "xCommon test type could not be deleted. It may already be associated with a lab result."
+
+  # Contact events
+  contact_event_successfully_created: "xContact event was successfully created."
+  contact_event_successfully_updated: "xContact event was successfully updated."
+  contact_event_no_index: "xContacts can only be listed from the morbidity event show page of individuals who have contacts."
+  contact_event_no_new: "xContacts can only be created from within a morbidity event."
+  contact_event_no_create: "xContacts can only be created from within a morbidity event."
+  contact_saved: "xContact saved."
+  contact_not_saved: "xContact event not saved: {{messages}}"
+  could_not_promote_to_morbidity: "xCould not promote to morbidity event."
+  promoted_to_morbidity: "xContact successfully promoted"
+
+  # Core field configurations
+  core_field_configuration_successfully_created: "xCore field configuration was successfully created."
+  core_field_configuration_successfully_updated: "xCore field configuration was successfully updated."
+
+  # Core fields
+  core_field_successfully_created: "xCore field was successfully created."
+  core_field_successfully_updated: "xCore field was successfully updated."
+  unable_to_display_core_field_form: "xUnable to display the core field form at this time."
+
+  # Core tab configurations
+  core_tab_configuration_successfully_created: "xCore tab configuration was successfully created."
+  core_tab_configuration_successfully_updated: "xCore tab configuration was successfully updated."
+
+  # Core view elements
+  unable_to_display_core_tab_form: "xUnable to display the core tab form at this time."
+
+  # Diseases
+  disease_successfully_created: "xDisease was successfully created."
+  disease_successfully_updated: "xDisease was successfully updated."
+  
+  # Encounter events
+  encounter_event_created: "xEncounter event was successfully created."
+  encounter_event_updated: "xEncounter event was successfully updated."
+  encounter_event_no_index: "xEncounters can only be listed from the morbidity event show page of cases that have encounters."
+  encounter_event_no_new: "xEncounters can only be created from within a morbidity event."
+  encounter_event_no_create: "xEncounters can only be created from within a morbidity event."
+  encounter_saved: "xEncounter saved."
+  encounter_not_saved: "xEncounter event not saved: {{messages}}"
+
+  # Event attachments
+  event_attachement_created: "xAttachment was successfully created."
+  event_attachement_updated: "xAttachment was successfully updated."
+  event_attachement_deleted: "xAttachment was successfully deleted."
+  failed_to_delete_event_attachment: "xFailed to delete attachment."
+
+  #Event forms
+  no_add_remove_forms_privs: "xYou do not have rights to add/remove forms."
+  no_remove_forms_privs: "xYou do not have rights to remove forms"
+  no_forms_were_selected_for_addition: "xNo forms were selected for addition to this event."
+  no_forms_were_selected_for_removal: "xNo forms were selected for removal from this event."
+  forms_in_use_successfully_updated: "xThe list of forms in use was successfully updated."
+  unable_to_remove_forms: "xUnable to remove forms from this event"
+
+  # Event queue
+  event_queue_created: "xEvent queue was successfully created."
+  event_queue_updated: "xEvent queue was successfully updated."
+  
+  # Event tasks
+  event_task_created: "xTask was successfully created."
+  event_task_updated: "xTask was successfully updated."
+  could_not_update_task: "xCould not update task."
+
+  # Events
+  action_not_avaliable: "xAction not available."
+  successfully_marked_as_deleted: "xThe event was successfully marked as deleted."
+  error_marking_event_as_deleted: "xAn error occurred marking the event as deleted."
+  unable_to_route_cmr: "xUnable to route CMR. {{message}}"
+  unable_to_route_cmr_no_edit_priv: "xUnable to route CMR. A user with update privileges will need to fix the event. {{message}}"
+  event_successfully_routed: "xEvent successfully routed."
+  event_successfully_routed_no_privs: "xEvent successfully routed, but you have insufficent privileges to view it in it's new jurisdiction."
+  illegal_state_transition: "xIllegal State Transition"
+  unable_to_change_cmr_state: "xUnable to change state of CMR."
+  unable_to_change_state_no_edit_privs: "xUnable to change state of CMR. A user with update privileges will need to fix the event."
+  no_update_privs_for_jurisdiction: "xYou do not have update privileges for this jurisdiction."
+  no_event_create_privs: "xYou do not have privileges to create an event."
+  no_event_view_privs: "xYou do not have privileges to view events."
+
+  # Export columns
+  export_column_created: "xExport Column was successfully created."
+  export_column_updated: "xExport Column was successfully updated."
+
+  # Export conversion values
+  export_conversion_value_created: "xExport Conversion Value was successfully created."
+  export_conversion_value_updated: "xExport Conversion Value was successfully updated."
+
+  # External codes
+  external_code_created: "xCode was successfully created."
+  external_code_updated: "xCode was successfully updated."
+  external_code_deleted: "xCode was successfully deleted."
+  could_not_find_code_names: "xCould not find Code Names."
+  could_not_find_code_name_for_name: "xCould not find Code Name for '{{name}}.'"
+  could_not_find_code_name_for_name_and_code: "xCould not find Code Name for '{{name}}, {{code}}.'"
+  code_modification_failed: "xCode modification failed."
+  code_creation_failed: "xCode creation failed."
+  code_deletion_failed: "xCode deletion failed."
+  code_restoration_successful: "xCode was successfully restored."
+  code_restoration_failed: "xCode was successfully restored."
+
+  # Follow up elements
+  follow_up_element_created: "xFollow up was successfully created."
+  follow_up_element_updated: "xFollow up was successfully updated."
+  unable_to_display_follow_up_element_form: "xUnable to display the follow up form at this time."
+
+  # Form elements
+  error_during_delete: "xAn error occurred during the deletion process."
+  error_during_filtering: "xAn error occurred during the filtering process."
+
+  # Forms
+  form_created: "xForm was successfully created."
+  form_updated: "xForm was successfully updated."
+  not_a_template_form: "xThis form is not a template form."
+  form_copy_successful: "xForm was successfully copied."
+  form_copy_failed: "xForm copy failed."
+  form_publish_successful: "xForm was successfully published."
+  form_publish_failed: "xUnable to publish the form."
+  form_push_successful: "xForm was successfully pushed to events"
+  form_push_failed: "xUnable to push the form"
+  form_deactivation_successful: "xForm was successfully deactivated"
+  form_deactivation_failed: "xUnable to deactivate the form"
+  form_rollback_failed: "xUnable to roll back the form. Please contact your administrator."
+  form_export_failed: "xUnable to export the form."
+  navigate_to_form_to_import: "xPlease navigate to a file to import."
+  form_import_failed: "xUnable to import the form. {{message}}."
+  reordering_failed: "xAn error occurred during the reordering process."
+  library_copy_failed: "xUnable to copy {{type}} to library."
+  element_copy_failed: "xUnable to copy element to form."
+  open_library_failed: "xUnable to open the library."
+
+  # Group elements
+  group_created: "xGroup was successfully created."
+  group_updated: "xGroup was successfully updated."
+  unable_to_create_group: "xUnable to create the group at this time."
+  unable_to_display_group_element_form: "xUnable to display the group form at this time."
+
+  # Ibis
+  invalid_ibis_date_format: "xInvalid date format."
+
+  # Jurisdiction
+  jurisdiction_created: "xJurisdiction was successfully created."
+  jurisdiction_updated: "xJurisdiction was successfully updated."
+
+  # Library elements
+  navigate_to_library_import_file: "xPlease navigate to a library export file to import."
+  library_import_successful: "xSuccessfully imported the library elements."
+  library_import_failed: "xUnable to import the library elements. {{message}}"
+  library_export_failed: "xUnable to export the form library. {{message}}"
+
+  # LOINC Codes
+  loinc_code_created: "xLOINC code was successfully created."
+  loinc_code_updated: "xLOINC code was successfully updated."
+  loinc_code_deleted: "xLOINC code was successfully deleted."
+  
+
+  # Morbidity events
+  cmr_created: "xCMR was successfully created."
+  cmr_updated: "xCMR was successfully updated."
+  cmr_saved: "xCMR saved."
+  morbidity_event_not_saved: "xMorbidity Event not saved: {{message}}"
+  unable_to_process_search: "xUnable to process search. Is birth date a valid date?"
+  too_many_cmrs: "xTriSano cannot process more then 100 cmrs per page."
+
+  # Organisms
+  organism_created: "xOrganism was successfully created."
+  organism_updated: "xOrganism was successfully updated."
+  
+  # People
+  person_created: "xPerson was successfully created."
+  person_updated: "xPerson was successfully updated."
+  no_people_management_privs: "xYou do not have privileges to manage People."
+  too_many_people: "xTriSano cannot process more then 100 people per page."
+
+  # Place exposures
+  place_event_created: "xPlace event was successfully created."
+  place_event_updated: "xPlace event was successfully updated."
+  no_direct_place_event_access: "xPlace exposures cannot be accessed directly."
+  no_direct_place_event_creation: "xPlace exposures cannot be created directly."
+  place_event_saved: "xExposure event saved."
+  place_event_not_saved: "xExposure Event not saved: {{message}}"
+
+  # Places
+  place_created: "xPlace was successfully created."
+  place_updated: "xPlace was successfully updated."
+  no_place_management_privs: "xYou do not have privileges to manage Places."
+
+  # Question elements
+  question_element_created: "xQuestion was successfully created."
+  question_element_updated: "xQuestion was successfully updated."
+  form_questions_successfully_updated: "xForm questions were successfully updated."
+  unable_to_process_conditional_logic: "xUnable to process conditional logic for follow up questions."
+  unable_to_display_question_element_form: "xUnable to display the question element form at this time."
+
+  # Roles
+  role_created: "xRole was successfully created."
+  role_updated: "xRole was successfully updated."
+
+  # Search
+  no_view_event_privs_in_any_jurisdiction: "xYou do not have view permissions in any jurisdiction."
+  invalid_birth_date_format: "xInvalid birth date format"
+  invalid_entered_on_start_date_format: "xInvalid entered-on start date format"
+  invalid_entered_on_end_date_format: "xInvalid entered-on end date format"
+  problem_with_search_criteria: "xThere was a problem with your search criteria"
+  event_search_type_morb: xMorbidity Event (CMR)
+  event_search_type_contact: xContact Event
+
+  # Sections
+  section_created: "xSection was successfully created."
+  section_updated: "xSection was successfully updated."
+  unable_to_display_section_element_form: "xUnable to display the section form at this time."
+
+  # Staged messages
+  staged_message_successfully_created: "xStaged message was successfully created."
+  staged_message_successfully_updated: "xStaged message was successfully updated."
+  could_not_discard_message_event: "xCould not discard message event. {{message}}"
+  staged_message_discarded: "xStaged message was discarded."
+  existing: "xexisting"
+  new: "xnew"
+  message_assignment_successful: "xStaged message was successfully assigned to {{msg_string}} event. <br/> {{note}}"
+  message_assignment_failed: "xCould not assign message to {{msg_string}} event. {{message}}"
+  staged_message_search_failed: "xSearch failed. Make sure the date range is valid."
+  no_manage_staged_message_privs: "xYou do not have privileges to manage staged messages"
+  no_create_or_modify_staged_message_privs: "xYou do not have privileges to create/modify a staged message"
+
+  # Tasks
+  task_successfully_created: "xTask was successfully created."
+  task_successfully_updated: "xTask was successfully updated."
+  task_update_failed: "xCould not update task"
+
+  # Users
+  user_successfully_created: "xUser was successfully created."
+  user_successfully_updated: "xUser was successfully updated."
+  shortcuts_successfully_updated: "xShortcuts successfully updated"
+  shortcuts_update_failed: "xShortcuts update failed"
+
+  # Value elements
+  unable_to_display_value_element_form: "xUnable to display the value element form at this time."
+  value_successfully_updated: "xValue was successfully updated."
+
+  # Value sets
+  unable_to_display_value_set_element_form: "xUnable to display the value set form at this time."
+  unable_to_toggle_value: "xUnable to toggle the value at this time."
+
+  # View elements
+  unable_to_display_view_form: "xUnable to display the tab form at this time."
+  unable_to_create_new_tab: "xUnable to create new tab."
+    
+  logger:
+    unauthorized_admin_access_by: "xUnauthorized access to the Admin Console by {{uid}}"
+    using_user_in_session: "xUsing user set in session"
+    using_user_in_env_variable: "xUsing TriSano user found in {{auth_src_env}} environment variable"
+    using_user_in_header: "xUsing TriSano user found in {{auth_src_header}} http header"
+    no_uid_present: "xNo UID is present"
+    attempting_to_load_user: "xAttempting to load user with a UID of {{uid}}"
+    user_not_found: "xUser not found by uid: {{uid}}"
+    no_uid_present: "xNo UID is present"
+    login_attempt_with_disabled_uid: "xLogin attempt with disabled UID {{uid}}"
+    user_loaded: "xUser loaded: {{uid}}"
+
+    cdc_export_error: "xCDC Export Failed"
+    
+    
+
+    
+    
+    
+
+    
