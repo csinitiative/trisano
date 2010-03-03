@@ -22,16 +22,16 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
-  View Contact Event: <%= h(patient.full_name) %>
+  <%= t('view_contact_event', :name => h(patient.full_name)) %>
 <% end %>
 
 <% content_for :name do %>
   <table class='list'>
     <tr>
       <th class='forminformation'>Contact Name</th>
-      <th>Disease</th>
-      <th>Jurisdiction</th>
-      <th>Status</th>
+      <th><%= t('disease') %></th>
+      <th><%= t('jurisdiction') %></th>
+      <th><%= t('status') %></th>
     </tr>
     <%= render :partial => @event, :locals => {:from_index => false} %>
   </table>
@@ -42,12 +42,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% fields_for(setup_human_event_tree(@event), :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
   <% tabs = []
-  tabs << %w(demographic_tab Demographic)
-  tabs << %w(clinical_tab Clinical)
-  tabs << %w(lab_info_tab Laboratory)
-  tabs << %w(epi_tab Epidemiological)
-  tabs << %w(investigation_tab Investigation)
-  tabs << %w(notes_tab Notes)
+  tabs << ['demographic_tab', t('demographic')]
+  tabs << ['clinical_tab', t('clinical')]
+  tabs << ['lab_info_tab', t('lab')]
+  tabs << ['epi_tab', t('epi')]
+  tabs << ['investigation_tab', t('investigation')]
+  tabs << ['notes_tab', t('event_notes')]
 %>
 
   <% tabbed_content(tabs, @tab_index) do %>

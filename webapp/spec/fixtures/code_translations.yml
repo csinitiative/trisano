@@ -1,0 +1,92 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+investigation_status_unknown:
+  id: 1701
+  code_id: 1701
+  code_description: "Unknown"
+  locale: en
+
+investigation_status_nyo:
+  id: 1702
+  code_id: 1702
+  code_description: "Not Yet Open"
+  locale: en
+
+investigation_status_open:
+  id: 1703
+  code_id: 1703
+  code_description: "Open"
+  locale: en
+
+investigation_status_closed:
+  id: 1704
+  code_id: 1704
+  code_description: "Closed"
+  locale: en
+
+# >>> These look like legacy codes, should probably be removed
+event_type_ons:
+  id: 2001
+  code_id: 2001
+  code_description: "ONS"
+  locale: en
+
+event_type_diag:
+  id: 2002
+  code_id: 2002
+  code_description: "Diag"
+  locale: en
+
+event_type_lt:
+  id: 2003
+  code_id: 2003
+  code_description: "LT"
+  locale: en
+
+event_type_rc:
+  id: 2004
+  code_id: 2004
+  code_description: "RC"
+  locale: en
+
+event_type_rs:
+  id: 2005
+  code_id: 2005
+  code_description: "RS"
+  locale: en
+
+event_type_un:
+  id: 2006
+  code_id: 2006
+  code_description: "RS"
+  locale: en
+
+place_type_hospital:
+  id: 2201
+  code_id: 2201
+  code_description: "Hospital / ICP"
+  locale: en
+
+place_type_jurisdiction:
+  id: 2202
+  code_id: 2202
+  code_description: "Jurisdiction"
+  locale: en
+
+place_type_lab:
+  id: 2203
+  code_id: 2203
+  code_description: "Laboratory"
+  locale: en
+
+place_type_clinic:
+  id: 2204
+  code_id: 2204
+  code_description: "Clinic / Doctor's Office"
+  locale: en
+
+place_type_other:
+  id: 2206
+  code_id: 2206
+  code_description: "Other"
+  locale: en

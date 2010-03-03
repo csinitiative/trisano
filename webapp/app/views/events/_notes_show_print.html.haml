@@ -3,26 +3,26 @@
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 - if @event.notes.empty?
-  %h3 No notes have been recorded for this event
+  %h3= t 'no_notes'
 - else
-  - if print_options.include?('All') || (print_options.include?('Clinical Notes') && print_options.include?('Administrative Notes'))
+  - if print_options.include?(t 'all') || (print_options.include?(t 'clinical_notes') && print_options.include?(t 'administrative_notes'))
     - notes = @event.notes
-  - elsif print_options.include?('Clinical Notes')
+  - elsif print_options.include?(t 'clinical_notes')
     - notes = @event.notes.clinical
-  - elsif print_options.include?('Administrative Notes')
+  - elsif print_options.include?(t 'administrative_notes')
     - notes = @event.notes.admin
 
   - for note in notes
     .three-valued-row
       .left
-        %span.print-label User:
+        %span.print-label=ct 'user'
         %span.print-value= h(note.user.best_name)
       .left
-        %span.print-label Note type:
+        %span.print-label= ct 'note_type'
         %span.print-value= h(note.note_type.humanize) unless note.note_type.blank?
       .left
-        %span.print-label Date note created:
-        %span.print-value= h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
+        %span.print-label= ct 'date_note_created'
+        %span.print-value= h(ld(note.created_at, {:format => :notes}))
 
     %br
     %span.print-value
@@ -34,16 +34,16 @@
     %hr
 
   -# For lack of a better place
-  - if print_options.include?('Clinical Notes')
+  - if print_options.include?(t 'clinical_notes')
     %span.subsection-header
-      Event Attachments
+      =t 'event_attachments'
     - unless @event.attachments.empty?
       - for attachment in @event.attachments
-        %span.print-label File Name:
+        %span.print-label= ct 'file_name'
         %span.print-value=h(attachment.filename)
-        %span.print-label Category:
+        %span.print-label= ct 'category'
         %span.print-value=h(attachment.category.humanize)
-        %span.print-label Location:
+        %span.print-label= ct 'location'
         %span.print-value=h(event_attachment_url(@event, attachment))
     - else
-      %span No attachments
+      %span=t 'no_attachments'

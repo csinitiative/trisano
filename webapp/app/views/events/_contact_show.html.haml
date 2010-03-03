@@ -25,10 +25,10 @@
 
     %div.horiz{:style => 'width: 15%'}
       %span.horiz
-        = label_tag "Name"
+        = label_tag t("name")
         = h(person.last_comma_first)
       %span.horiz
-        = label_tag "Phone"
+        = label_tag t("phone")
         -unless contact_phone.nil?
           %span= h(contact_phone.simple_format)
 
@@ -48,7 +48,7 @@
           = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
       - else
         %span.horiz
-          = f.label :_delete, "Remove"
+          = f.label :_delete
           = f.check_box :_delete
 
       = f.label('&nbsp;')

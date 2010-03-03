@@ -17,6 +17,9 @@
 
 puts "Loading codes"
 
+# DEBT: this file could use some clean-up. Maybe even move code
+# loading into models.
+
 code_names = YAML::load_file "#{RAILS_ROOT}/db/defaults/code_names.yml"
 # Hash used by the code loading logic to shortcut external lookup  
 @quick_external = {}
@@ -39,19 +42,25 @@ codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/codes.yml"
 # Can't simply delete all and insert as the delete may trigger a FK constraint
 Code.transaction do
   codes.each do |code|
-    if(@quick_external[code['code_name']])
+    begin
+      if(@quick_external[code['code_name']])
         c = ExternalCode.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
-                                                              :the_code => code['the_code'], 
-                                                              :code_description => code['code_description'],
-                                                              :sort_order => code['sort_order'])
-    else
+                                                                      :the_code => code['the_code'], 
+                                                                      :code_description => code['code_description'],
+                                                                      :sort_order => code['sort_order'])
+      else
         c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
                                                               :the_code => code['the_code'], 
                                                               :code_description => code['code_description'],
                                                               :sort_order => code['sort_order'])
+      end
+      c.attributes = code unless c.new_record?
+      c.save!
+    rescue
+      puts code.inspect
+      puts CodeTranslation.all.inspect
+      raise
     end
-    c.attributes = code unless c.new_record?
-    c.save!
   end
 end
 
@@ -78,3 +87,4 @@ load_codes(ExternalCode, codes)
 
 codes = YAML::load_file "#{RAILS_ROOT}/db/defaults/contact_types.yml"
 load_codes(ExternalCode, codes)
+

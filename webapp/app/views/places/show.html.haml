@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Place Detail
+  =t 'place_detail'
 
 - content_for :tools do
-  = link_to '< Back to Places', places_path
+  = link_to t('back_to', :name => t('places_normal_case')), places_path
   %p
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Place
+        =t "place"
       %th
       %th
       %tr
@@ -46,4 +46,4 @@
         %td
           =h(@place_entity.place.formatted_place_descriptions)
         %td.tools
-          ="#{link_to 'Edit', edit_place_path(@place_entity)}&nbsp;|&nbsp;Show"
+          ="#{link_to t('edit'), edit_place_path(@place_entity)}&nbsp;|&nbsp;#{t'show'}"

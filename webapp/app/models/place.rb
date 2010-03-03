@@ -2,29 +2,34 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Place < ActiveRecord::Base
-  belongs_to :entity 
-  has_and_belongs_to_many :place_types, 
+  belongs_to :entity
+  has_and_belongs_to_many :place_types,
     :foreign_key => 'place_id',
-    :class_name => 'Code', 
-    :join_table => 'places_types', 
-    :association_foreign_key => 'type_id', 
+    :class_name => 'Code',
+    :join_table => 'places_types',
+    :association_foreign_key => 'type_id',
     :order => 'code_description'
 
   validates_presence_of :name
+  validates_each :name, :if => :is_unassigned_jurisdiction? do |record, attr, value|
+    if unassigned = self.unassigned_jurisdiction
+      record.errors.add(attr, :unassigned_is_special) unless unassigned == record
+    end
+  end
   validates_presence_of :short_name, :if => :is_a_jurisdiction?
 
   class << self
@@ -41,11 +46,7 @@ class Place < ActiveRecord::Base
 
     def jurisdictions
       jurisdictions = self.all_by_place_code('J')
-
-      # Pull 'Unassigned' out and place it on top.
-      unassigned = jurisdictions.find { |jurisdiction| jurisdiction.name == "Unassigned" }
-      jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
-      jurisdictions
+      pull_unassigned_and_put_it_on_top(jurisdictions)
     end
 
     def jurisdiction_by_name(name)
@@ -72,7 +73,7 @@ class Place < ActiveRecord::Base
                 role_memberships,
                 privileges_roles,
                 privileges,
-                entities, 
+                entities,
                 places
         WHERE
                 users.id = role_memberships.user_id
@@ -87,14 +88,12 @@ class Place < ActiveRecord::Base
         AND
                 users.id = '#{user_id}'
         AND
-                privileges.priv_name = '#{privilege.to_s}' 
+                privileges.priv_name = '#{privilege.to_s}'
         ORDER BY
                 places.name"
 
       jurisdictions = find_by_sql(query)
-      unassigned = jurisdictions.find { |jurisdiction| jurisdiction.name == "Unassigned" }
-      jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
-      jurisdictions
+      pull_unassigned_and_put_it_on_top(jurisdictions)
     end
 
     def agency_type_codes
@@ -122,7 +121,7 @@ class Place < ActiveRecord::Base
     def diagnostic_types
       place_types(diagnostic_type_codes)
     end
-    
+
     def epi_types
       place_types(epi_type_codes)
     end
@@ -132,7 +131,7 @@ class Place < ActiveRecord::Base
     end
 
     def place_types(type_codes)
-      Code.active.find(:all, 
+      Code.active.find(:all,
         :conditions => ['code_name = ? AND the_code IN (?)', 'placetype', type_codes])
     end
 
@@ -152,6 +151,22 @@ class Place < ActiveRecord::Base
         )
       end
     end
+
+    def unassigned_jurisdiction
+      self.first({
+          :joins => [:place_types, :entity],
+          :conditions => ["name = ? AND codes.the_code = ? AND codes.code_name = ?",
+            "Unassigned",
+            Code.jurisdiction_place_type.the_code,
+            "placetype"]
+        })
+    end
+
+    def pull_unassigned_and_put_it_on_top(jurisdictions)
+      unassigned = jurisdictions.find { |jurisdiction| jurisdiction.read_attribute(:name) == "Unassigned" }
+      jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
+      jurisdictions
+    end
   end
 
   def place_descriptions
@@ -162,10 +177,33 @@ class Place < ActiveRecord::Base
     place_descriptions.to_sentence
   end
 
+  # The unassigned jurisdiction is the only place with a translated name, so
+  # we have overriden the name getter to go to the locale configs for the
+  # correct translation to display.
+  def name
+    if is_unassigned_jurisdiction?
+      I18n.translate('unassigned_jurisdiction_name')
+    else
+      read_attribute(:name)
+    end
+  end
+
+  def short_name
+    if is_unassigned_jurisdiction?
+      I18n.translate('unassigned_jurisdiction_name')
+    else
+      read_attribute(:short_name)
+    end
+  end
+
+  def is_unassigned_jurisdiction?
+    is_a_jurisdiction? && self.read_attribute(:name) == "Unassigned"
+  end
+
   private
 
   def is_a_jurisdiction?
     self.place_type_ids.include?(Code.jurisdiction_place_type_id)
   end
-  
+
 end

@@ -28,25 +28,25 @@
   %table.list
     %tr
       %th.forminformation
-        Code Information
+        =t "code_information"
       %th
     %tr
       %td
         .tools
-          %b Type:
+          %b=ct "type"
           = h(@external_code.code_name)
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Edit Code
+        =t "edit_code"
     %tr
       %td
         - form_for(:external_code, :url => create_code_path(@external_code.code_name), :builder => ExtendedFormBuilder) do |code_form|
           = code_form.hidden_field :code_name
           %span.vert-break
-            %label Code
+            =code_form.label :the_code
             = code_form.text_field :the_code, :size => 20, :maxlength => 20
           = render("external_codes/#{@code_name.code_name}/form", :code_form => code_form) rescue render("external_codes/form", :code_form => code_form)
-          = code_form.submit "Create"
+          = code_form.submit t("create")

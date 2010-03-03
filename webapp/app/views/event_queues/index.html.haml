@@ -21,13 +21,13 @@
 /- content_for :tools do
 
 - content_for :tools_two do
-  = button_to("Create new event queue", new_event_queue_path, :id => 'create_event_queue')
+  = button_to(t('create_new_event_queue'), new_event_queue_path, :id => 'create_event_queue')
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Event Queues
+        =t('event_queues')
       %th
     - for event_queue in @event_queues
       %tr.roll
@@ -38,8 +38,8 @@
             = h(event_queue.jurisdiction.place.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Show', event_queue
+            = link_to t('show'), event_queue
             |
-            = link_to 'Edit', edit_event_queue_path(event_queue)
+            = link_to t('edit'), edit_event_queue_path(event_queue)
             |
-            = link_to 'Delete', event_queue_path(event_queue), :method => :delete
+            = link_to t('delete'), event_queue_path(event_queue), :method => :delete

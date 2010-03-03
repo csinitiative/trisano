@@ -13,18 +13,18 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%span.subsection-header Age
+%span.subsection-header=t('age')
 -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
   -core_element_print :birth_date, person_form, :horiz do
-    %span.print-label Birth date:
-    %span.print-value=h(person.birth_date)
+    %span.print-label=ct('birth_date')
+    %span.print-value=ld(person.birth_date)
   -core_element_print :approximate_age_no_birthday, person_form, :horiz do
     -if !person.birth_date.blank?
-      %span.print-label Age:
+      %span.print-label=ct('age')
       %span.print-value=h(calculate_age(person.birth_date))
     -elsif !person.approximate_age_no_birthday.blank?
-      %span.print-label Approximage age:
+      %span.print-label=ct('approx_age')
       %span.print-value=h(person.approximate_age_no_birthday)
   -core_element_print :age_at_onset, person_form, :vert do
-    %span.print-label Age at onset:
+    %span.print-label=ct('age_at_onset')
     %span.print-value=h(@event.age_info)

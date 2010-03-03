@@ -21,7 +21,7 @@ class FormsController < AdminController
     @forms = Form.find(:all, :conditions => {:is_template => true}, :order => "name ASC")
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @forms }
     end
   end
@@ -30,7 +30,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
     @form.structure_valid?
     if not @form.is_template
-      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("not_a_template_form"), :event => nil }, :layout => true, :status => 403 and return
     end
   end
 
@@ -38,7 +38,7 @@ class FormsController < AdminController
     @form = Form.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @form }
     end
   end
@@ -46,7 +46,7 @@ class FormsController < AdminController
   def edit
     @form = Form.find(params[:id])
     if not @form.is_template
-      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("not_a_template_form"), :event => nil }, :layout => true, :status => 403 and return
     end
   end
 
@@ -55,7 +55,7 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.save_and_initialize_form_elements
-        flash[:notice] = 'Form was successfully created.'
+        flash[:notice] = t("form_created")
         format.html { redirect_to(@form) }
         format.xml  { render :xml => @form, :status => :created, :location => @form }
       else
@@ -72,11 +72,11 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.save
-        flash[:notice] = "Form was successfully copied."
-        format.html { render :template => 'forms/edit' }
+        flash[:notice] = t("form_copy_successful")
+        format.html { redirect_to(edit_form_path(@form)) }
         format.xml  { render :xml => @form, :status => :created, :location => @form }
       else
-        flash[:error] = "Form copy failed"
+        flash[:error] = t("form_copy_failed")
         format.html { redirect_to(@form) }
         format.xml  { render :xml => @form.errors, :status => :unprocessable_entity }
       end
@@ -89,7 +89,7 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.update_attributes(params[:form])
-        flash[:notice] = 'Form was successfully updated.'
+        flash[:notice] = t("form_updated")
         format.html { redirect_to(@form) }
         format.xml  { head :ok }
       else
@@ -113,7 +113,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
     @form.structure_valid?
     if not @form.is_template
-      render :partial => "events/permission_denied", :locals => { :reason => "This form id is not a template form", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("not_a_template_form"), :event => nil }, :layout => true, :status => 403 and return
     end
   end
   
@@ -122,12 +122,12 @@ class FormsController < AdminController
 
     if @form.publish
       respond_to do |format|
-        flash[:notice] = "Form was successfully published"
+        flash[:notice] = t("form_publish_successful")
         format.html { redirect_to forms_path }
         format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
     else
-      flash[:error] = "Unable to publish the form"
+      flash[:error] = t("form_publish_failed")
       respond_to do |format|
         format.html { render :template => "forms/builder" }
         format.js   do
@@ -143,12 +143,12 @@ class FormsController < AdminController
 
     if @form.push
       respond_to do |format|
-        flash[:notice] = "Form was successfully pushed to events"
+        flash[:notice] = t("form_push_successful")
         format.html { redirect_to forms_path }
         format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
     else
-      flash[:error] = "Unable to push the form"
+      flash[:error] = t("form_push_failed")
       respond_to do |format|
         format.html { redirect_to forms_path }
         format.js   do
@@ -164,12 +164,12 @@ class FormsController < AdminController
 
     if @form.deactivate
       respond_to do |format|
-        flash[:notice] = "Form was successfully deactivated"
+        flash[:notice] = t("form_deactivation_successful")
         format.html { redirect_to forms_path }
         format.js   { render(:update) {|page| page.redirect_to forms_path} }
       end
     else
-      flash[:error] = "Unable to deactivate the form"
+      flash[:error] = t("form_deactivation_failed")
       respond_to do |format|
         format.html { redirect_to forms_path }
         format.js   do
@@ -188,7 +188,7 @@ class FormsController < AdminController
       @form = @rolled_back_form
       redirect_to(builder_path(@form))
     else
-      flash[:error] = 'Unable to roll back the form. Please contact your administrator.'
+      flash[:error] = t("form_rollback_failed")
       redirect_to forms_path
     end
   end
@@ -201,7 +201,7 @@ class FormsController < AdminController
       send_file export_file_path
       #head :ok    # Makes RSpec happy with rails 2.3, but breaks behavior in browser
     else
-      error_message = "Unable to export the form."
+      error_message = t("form_export_failed")
       error_message << " #{@form.errors["base"]}" unless @form.errors.empty?
       flash[:error] = error_message
       redirect_to forms_path
@@ -210,7 +210,7 @@ class FormsController < AdminController
   
   def import
     if params[:form].nil? || params[:form][:import].respond_to?(:empty?)
-      flash[:error] = 'Please navigate to a file to import.'
+      flash[:error] = t("navigate_to_form_to_import")
       redirect_to forms_path
       return
     end
@@ -219,7 +219,7 @@ class FormsController < AdminController
       @form = Form.import(params[:form][:import])
       redirect_to(@form)
     rescue Exception => ex
-      flash[:error] = "Unable to import the form. #{ex.message}."
+      flash[:error] = t("form_import_failed", :message => ex.message)
       redirect_to forms_path
     end
   end
@@ -233,7 +233,7 @@ class FormsController < AdminController
       @form = Form.find(@section.form_id)
     else
       @rjs_errors = @section.errors
-      flash[:error] = 'An error occurred during the reordering process.'
+      flash[:error] = t("reordering_failed")
       render :template => 'rjs-error'
     end
   end
@@ -252,7 +252,7 @@ class FormsController < AdminController
       @library_elements = FormElement.library_roots
       render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.class.name }
     else
-      flash[:error] = "Unable to copy #{@question_element.class.name.humanize} to library."
+      flash[:error] = t("library_copy_failed", :type => @question_element.class.human_name)
       render :template => 'rjs-error'
     end
   end
@@ -265,7 +265,7 @@ class FormsController < AdminController
       @form = Form.find(@form_element.form_id)
     else
       @rjs_errors = @form_element.errors
-      flash[:error] = "Unable to copy element to form."
+      flash[:error] = t("element_copy_failed")
       render :template => 'rjs-error'
     end
   end
@@ -275,7 +275,7 @@ class FormsController < AdminController
       @library_elements = FormElement.library_roots
       @type = params[:type].blank? ? "question_element" : params[:type]
     rescue Exception => ex
-      flash[:error] = "Unable to open the library."
+      flash[:error] = t("open_library_failed")
       render :template => 'rjs-error'
     end
   end

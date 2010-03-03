@@ -25,7 +25,7 @@ end
 
 When /^I answer all core field config questions$/ do
   # Also fill in one address field so the address will show up in show mode
-  @browser.type("#{@form.event_type}[address_attributes][street_number]", "12")
+  @browser.type("#{@form.event_type}[address_attributes][street_number]", "12") if ["morbidity_event", "contact_event", "place_event"].include? @form.event_type
   
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|

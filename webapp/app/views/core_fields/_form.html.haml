@@ -16,10 +16,10 @@
 %table.list
   %tr
     %th.forminformation
-      Edit Core Field
+      =t('edit_core_field')
     %th
   %tr
-    %td
+    %td{:colspan => 2}
       %span{ :class => "vert" }
         = f.label(:help_text)
         ~ f.text_area(:help_text)

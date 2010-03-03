@@ -37,6 +37,7 @@ class StagedMessage < ActiveRecord::Base
       }
     end
 
+    # TODO make these named scopes, for readability
     def find_by_search(criteria)
       with_last_name_starting criteria[:last_name] do
         with_first_name_starting criteria[:first_name] do
@@ -95,22 +96,22 @@ class StagedMessage < ActiveRecord::Base
     begin
       hl7
     rescue
-      errors.add :hl7_message, "could not be parsed"
+      errors.add :hl7_message, :parse_error
       return
     end
 
-    errors.add :hl7_message, "is missing the header" if self.message_header.nil?
+    errors.add :hl7_message, :missing_header if self.message_header.nil?
 
     # If any of these are missing, the parser sets them all to nil :(
     if self.observation_request.nil? || self.observation_request.tests.empty? || self.patient.nil?
-      errors.add :hl7_message, "is missing one or more of the following segments: PID, OBR, or OBX"
+      errors.add :hl7_message, :missing_segment
       return
     end
 
-    errors.add :hl7_message, "No last name provided for patient." if self.patient.patient_last_name.blank?
+    errors.add :hl7_message, :missing_last_name if self.patient.patient_last_name.blank?
 
     self.observation_request.tests.each do |test|
-      errors.add :hl7_message, "OBX segment #{test.set_id} does not contain a LOINC code." if test.loinc_code.blank?
+      errors.add :hl7_message, :missing_loinc, :segment => test.set_id if test.loinc_code.blank?
     end
   end
 
@@ -132,8 +133,8 @@ class StagedMessage < ActiveRecord::Base
   end
 
   def assigned_event=(event)
-    raise(ArgumentError, "Cannot associate labs with #{event.class}") unless event.respond_to?('labs')
-    raise("Staged message is already assigned to an event.") if self.state == self.class.states[:assigned]
+    raise(ArgumentError, I18n.translate('cannot_associate_labs_with', :event_class => event.class)) unless event.respond_to?('labs')
+    raise(I18n.translate('staged_message_is_already_assigned')) if self.state == self.class.states[:assigned]
 
     begin
       event.add_labs_from_staged_message(self)
@@ -190,12 +191,12 @@ class StagedMessage < ActiveRecord::Base
       end
     end
     event.build_jurisdiction unless event.jurisdiction
-    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
     event
   end
 
   def discard
-    raise "Message is already assigned to an event." if self.state == self.class.states[:assigned]
+    raise(I18n.translate('staged_message_is_already_assigned')) if self.state == self.class.states[:assigned]
     self.state = self.class.states[:discarded]
     self.save!
   end

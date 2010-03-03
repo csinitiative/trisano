@@ -44,7 +44,7 @@ namespace :trisano do
     TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] ||= '~/projects/trisano'
     TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] ||= '~/trisano-dist'
 
-    def core_release_tasks
+    def core_release_tasks(delete_war = true)
       t = Time.now
       tformated = t.strftime("%m-%d-%Y-%I%M%p")
       filename = "trisano-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar.gz"
@@ -64,7 +64,7 @@ namespace :trisano do
         File.delete("./webapp/#{trisano_war_file}")
         puts "deleted ./webapp/#{trisano_war_file}"
       end
-      if File.file? "./distro/#{trisano_war_file}"
+      if File.file? "./distro/#{trisano_war_file}" and delete_war
         File.delete("./distro/#{trisano_war_file}")
         puts "deleted ./distro/#{trisano_war_file}"
       end
@@ -204,6 +204,14 @@ namespace :trisano do
       puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
       ruby "-S rake trisano:deploy:create_db_config"
       core_release_tasks
+    end
+
+    desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
+    task :prod_release  do
+      puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
+      ruby "-S rake trisano:deploy:create_db_config"
+      ruby "-S rake -f ../webapp/Rakefile trisano:distro:package_app"
+      core_release_tasks(false)
     end
 
     desc "package production .war file with demo/testing data, include database dump, scripts, and configuration files in a .tar"

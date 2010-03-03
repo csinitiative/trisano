@@ -75,13 +75,12 @@ describe 'CMR pagination' do
     @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_selector']", "label=#{@queue_name}-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load
   end
 
-
-  it 'should not display pagination' do 
+  it 'should not display pagination' do
     @browser.is_element_present("//a[@class='next_page']").should be_false
   end
 
@@ -93,22 +92,21 @@ describe 'CMR pagination' do
     @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_selector']", "label=#{@queue_name}-UtahCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load
-    @browser.is_element_present("//a[@class='next_page']").should be_true    
+    @browser.is_element_present("//a[@class='next_page']").should be_true
   end
 
   it 'should re-paginate to 50 per page' do
     @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load
     @browser.click "link=Change View"
-    @browser.add_selection "//div[@id='change_view']//select[@id='queues_']", "label=#{@queue_name}-UtahCounty"
+    @browser.add_selection "//div[@id='change_view']//select[@id='queues_selector']", "label=#{@queue_name}-UtahCounty"
     @browser.select "//select[@id='per_page']", "label=50"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load
     @browser.is_element_present("//a[@class='next_page']").should be_false
-    @browser.is_element_present("//a[text()='Route to Local Health Depts.']").should be_false
   end
 end
     

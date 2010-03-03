@@ -18,15 +18,20 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe UserTasksController do
+  before do
+    mock_user = mock(User)
+    mock_user.stub!(:is_entitled_to?).and_return(true)
+    User.stub!(:current_user).and_return(mock_user)
+  end
 
   describe "handling ajax GET /user/1/tasks" do
-    
+
     def do_xhr
       user = mock('mock user')
       controller.should_receive(:load_user)
       controller.should_receive(:find_user)
       xhr :get, :index
-    end    
+    end
 
     it 'should respond to xhr requests' do
       do_xhr
@@ -37,7 +42,7 @@ describe UserTasksController do
       do_xhr
       response.should render_template('tasks/_list.html.haml')
     end
-      
+
   end
 
   describe "handling ajax PUT /user/1/tasks/1" do
@@ -49,7 +54,7 @@ describe UserTasksController do
       @tasks.should_receive(:find).and_return(@task)
       @task.should_receive(:update_attributes).and_return(true)
       controller.should_receive(:load_user)
-      User.stub!(:find).and_return(@user)      
+      User.stub!(:find).and_return(@user)
       put :update, :task => {}
     end
 
@@ -66,7 +71,7 @@ describe UserTasksController do
       do_put
       flash[:notice].should eql("Task was successfully updated.")
     end
-    
+
   end
 end
 

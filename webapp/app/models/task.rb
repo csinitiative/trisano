@@ -24,7 +24,11 @@ class Task < ActiveRecord::Base
 
   class << self
     def status_array
-      [["Pending", "pending"], ["Complete", "complete"], ["Not applicable", "not_applicable"]]
+      [
+        [I18n.t('task_statuses.pending'), "pending"],
+        [I18n.t('task_statuses.complete'), "complete"],
+        [I18n.t('task_statuses.not_applicable'), "not_applicable"]
+      ]
     end
 
     def valid_statuses
@@ -32,7 +36,12 @@ class Task < ActiveRecord::Base
     end
 
     def interval_array
-      [["Daily", "day"], ["Weekly", "week"], ["Monthly", "month"], ["Yearly", "year"]]
+      [
+        [I18n.t('task_intervals.day'), "day"],
+        [I18n.t('task_intervals.week'), "week"],
+        [I18n.t('task_intervals.month'), "month"],
+        [I18n.t('task_intervals.year'), "year"]
+      ]
     end
 
     def valid_intervals
@@ -42,9 +51,11 @@ class Task < ActiveRecord::Base
 
   validates_presence_of :user_id, :name
   validates_length_of :name, :maximum => 255, :allow_blank => true
-  validates_inclusion_of :status, :in => self.valid_statuses, :message => "is not valid"
-  validates_date :due_date
-  validates_date :until_date, :allow_nil => true
+  validates_inclusion_of :status, :in => self.valid_statuses, :message => :is_not_valid
+  validates_date  :due_date, 
+                  :on_or_before => lambda { 2.years.from_now.to_date },
+                  :on_or_before_message => :due_date_range
+  validates_date :until_date, :allow_blank => true
 
   before_validation :set_status
   before_save :create_note
@@ -57,20 +68,15 @@ class Task < ActiveRecord::Base
     self.category.code_description unless self.category.nil?
   end
 
-  # simplifies sorting
   def user_name
     self.user.best_name unless self.user.blank?
   end
 
   def validate
-    unless (self.due_date.blank?)
-      self.errors.add(:due_date, "must fall within the next two years") unless(self.due_date <= 2.years.from_now.to_date)
-    end
-
     validate_task_assignment
     validate_repeating_task_attributes
   end
-  
+
   def disease_name
     self.safe_call_chain(:event, :disease_event, :disease, :disease_name)
   end
@@ -93,18 +99,32 @@ class Task < ActiveRecord::Base
     return if self.event.nil?
     if new_record?
       if !child_task && !self.notes.blank?
-        note = "Task created.\n\nName: #{self.name}\nDescription: #{self.notes}"
-        note << "\n\nRepeats every #{self.repeating_interval.to_s.downcase} until #{self.until_date.to_s}" if should_repeat?
+        note = I18n.translate("system_notes.task_created", :name => self.name, :notes => self.notes, :locale => I18n.default_locale)
+        
+        if should_repeat?
+          note << "\n\n"
+          note << I18n.translate("system_notes.task_repeats",
+            :repeating_interval => self.repeating_interval.to_s.downcase,
+            :until_date => self.until_date.to_s,
+            :locale => I18n.default_locale
+          )
+        end
+        
         self.event.add_note(note, "clinical")
       end
     else
       existing_task = Task.find(self.id)
       unless existing_task.status == self.status
-        self.event.add_note("Task status change.\n\n'#{self.name}' changed from #{existing_task.status.humanize unless existing_task.status.nil?} to #{self.status.humanize unless self.status.nil?}", "clinical")
+        self.event.add_note(I18n.translate("system_notes.task_status_change",
+            :name => self.name,
+            :existing_status => existing_task.status.humanize,
+            :new_status => self.status.humanize,
+            :locale => I18n.default_locale
+          ), "clinical")
       end
     end
   end
-  
+
   def set_status
     self.status = "pending" if new_record?
   end
@@ -114,17 +134,19 @@ class Task < ActiveRecord::Base
       begin
         self.repeating_task_id = self.id
         self.save
-        date = self.due_date + 1.send(self.repeating_interval)
+        next_due_time = self.due_date + 1.send(self.repeating_interval)
+        next_due_date = next_due_time.to_date
 
-        while (date <= self.until_date.to_date)
+        while (next_due_date <= self.until_date.to_date)
           task = clone_for_repeating
-          task.due_date = date
+          task.due_date = next_due_date
           task.save
-          date += 1.send(self.repeating_interval)
+          next_due_time += 1.send(self.repeating_interval)
+          next_due_date = next_due_time.to_date
         end
       rescue Exception => ex
         logger.error ex
-        self.errors.add_to_base("Unable to create repeating tasks.")
+        self.errors.add_to_base(:repeating_task_failure)
         return false
       end
     end
@@ -132,19 +154,19 @@ class Task < ActiveRecord::Base
 
   def validate_task_assignment
     unless self.user_id.blank?
-      task_assignee_ids = User.default_task_assignees.collect(&:id)      
-      self.errors.add_to_base("Insufficient privileges for task assignment.") unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
+      task_assignee_ids = User.default_task_assignees.collect(&:id)
+      self.errors.add_to_base(:insufficient_privileges) unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
     end
   end
 
   def validate_repeating_task_attributes
-    self.errors.add_to_base("A repeating task requires an interval and an until date.") if ( (!self.repeating_interval.blank? && self.until_date.blank?) ||  (self.repeating_interval.blank? && !self.until_date.blank?) )
+    self.errors.add_to_base(:repeating_task_invalid) if ( (!self.repeating_interval.blank? && self.until_date.blank?) ||  (self.repeating_interval.blank? && !self.until_date.blank?) )
 
     if should_repeat?
-      self.errors.add(:repeating_interval, "The task interval is invalid") unless(Task.valid_intervals.include?(self.repeating_interval.to_s))
-      self.errors.add(:until_date, "date must fall within the next two years") unless(self.until_date.to_time <= 2.years.from_now)
+      self.errors.add(:repeating_interval, :invalid) unless(Task.valid_intervals.include?(self.repeating_interval.to_s))
+      self.errors.add(:until_date, :out_of_range) unless(self.until_date.to_time <= 2.years.from_now)
       unless self.due_date.blank?
-        self.errors.add(:until_date, "date must come after the original due date") unless(self.until_date.to_time > self.due_date)
+        self.errors.add(:until_date, I18n.translate('task_repeat_date_must_be_after_due_date')) unless(self.until_date.to_time > self.due_date)
       end
     end
   end

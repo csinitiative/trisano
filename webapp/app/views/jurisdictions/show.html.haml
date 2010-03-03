@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Jurisdiction Detail
+  =t 'jurisdiction_detail'
 
 - content_for :tools do
-  = link_to '< Back to Jurisdictions', jurisdictions_path
+  = link_to t('back_to', :name => t('jurisdictions')), jurisdictions_path
   %p
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Jurisdiction
+        =t 'jurisdiction'
       %th
       %tr
         %td.forminformation
@@ -34,7 +34,7 @@
             = h(@jurisdiction.place.short_name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_jurisdiction_path(@jurisdiction)
+            = link_to t('edit'), edit_jurisdiction_path(@jurisdiction)
             |
-            Show
+            =t 'show'
 

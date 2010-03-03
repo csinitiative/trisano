@@ -57,7 +57,7 @@ class CommonTestType < ActiveRecord::Base
   end
 
   def check_for_lab_results
-    raise DestroyNotAllowedError.new("#{self} already associated with lab results") unless self.lab_results.empty?
+    raise DestroyNotAllowedError.new(I18n.t("common_test_type_associated_with_lab_results", :name => self)) unless self.lab_results.empty?
   end
 
   class DestroyNotAllowedError < Exception; end

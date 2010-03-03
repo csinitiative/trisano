@@ -73,14 +73,15 @@ describe 'Form Builder Admin Delete Element Functionality' do
   it 'should create an investigatable cmr and answer form questions' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @patient_disease, "Bear River Health Department").should be_true
     edit_cmr(@browser).should be_true
-    
-    @browser.is_text_present(@tab_name).should be_true
-    @browser.is_text_present(@section_name).should be_true
-    @browser.is_text_present(@question_text).should be_true
-    @browser.is_text_present(@value_set_value_one).should be_true
-    @browser.is_text_present(@value_set_value_two).should be_true
-    @browser.is_text_present(@patient_last_name_before_question_text).should be_true
-    @browser.is_text_present(@patient_last_name_after_question_text).should be_true
+
+    html_source = @browser.get_html_source
+    html_source.include?(@tab_name).should be_true
+    html_source.include?(@section_name).should be_true
+    html_source.include?(@question_text).should be_true
+    html_source.include?(@value_set_value_one).should be_true
+    html_source.include?(@value_set_value_two).should be_true
+    html_source.include?(@patient_last_name_before_question_text).should be_true
+    html_source.include?(@patient_last_name_after_question_text).should be_true
   end
   
   it 'should delete questions, tabs, sections, value sets and core fields' do
@@ -94,18 +95,19 @@ describe 'Form Builder Admin Delete Element Functionality' do
     delete_core_field_config(@browser, "Patient last name").should be_true
     
     publish_form(@browser)
-    click_nav_cmrs(@browser)
-    click_resource_edit(@browser, "cmrs", @cmr_last_name)
+    create_basic_investigatable_cmr(@browser, @cmr_last_name, @patient_disease, "Bear River Health Department").should be_true
+    edit_cmr(@browser).should be_true
   end
   
   it 'should not find info related to delete questions' do
-    @browser.is_text_present(@tab_name).should be_false
-    @browser.is_text_present(@section_name).should be_false
-    @browser.is_text_present(@question_text).should be_false
-    @browser.is_text_present(@value_set_value_one).should be_false
-    @browser.is_text_present(@value_set_value_two).should be_false
-    @browser.is_text_present(@patient_last_name_before_question_text).should be_false
-    @browser.is_text_present(@patient_last_name_after_question_text).should be_false    
+    html_source = @browser.get_html_source
+    html_source.include?(@tab_name).should be_false
+    html_source.include?(@section_name).should be_false
+    html_source.include?(@question_text).should be_false
+    html_source.include?(@value_set_value_one).should be_false
+    html_source.include?(@value_set_value_two).should be_false
+    html_source.include?(@patient_last_name_before_question_text).should be_false
+    html_source.include?(@patient_last_name_after_question_text).should be_false
   end
     
 end

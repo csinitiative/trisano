@@ -36,6 +36,12 @@ Given /^I already have a published form$/ do
   @published_form = @form.publish
 end
 
+Given /^I already have a form with the name "([^\"]*)"$/ do |name|
+  @form = create_form('Morbidity event', name, name.underscore, 'African Tick Bite Fever')
+end
+
+
+
 #
 # Basic navigation
 #

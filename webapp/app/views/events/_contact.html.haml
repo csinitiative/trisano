@@ -39,22 +39,27 @@
 
         - unless f.object.new_record?
           %span.horiz
-            = f.label :_delete, "Remove"
+            = f.label :_delete
             = f.check_box :_delete
 
       - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |tel_form|
         %span.vert
           = error_messages_for :object => tel_form.object
           - core_element :entity_location_type_id, tel_form, :horiz do
-            = tel_form.label(:entity_location_type_id, "Phone Type")
+            = tel_form.label(:entity_location_type_id)
             = tel_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
-          %span.horiz
-            = tel_form.label(:area_code)
-            = tel_form.core_text_field(:area_code, {:size => 3, :maxlength => 3})
+          -if Telephone.use?(:country_code)
+            %span.horiz
+              = tel_form.label(:country_code)
+              = tel_form.core_text_field(:country_code, {:size => 3})
+          -if Telephone.use?(:area_code)
+            %span.horiz
+              = tel_form.label(:area_code)
+              = tel_form.core_text_field(:area_code, {:size => 3})
           %span.horiz
             = tel_form.label(:phone_number)
             = tel_form.core_text_field(:phone_number, {:size => 8})
           %span.horiz
             = tel_form.label(:extension)
-            = tel_form.core_text_field(:extension, {:size => 6, :maxlength => 6})
+            = tel_form.core_text_field(:extension, {:size => 6})
       %hr

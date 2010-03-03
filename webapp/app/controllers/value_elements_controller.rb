@@ -31,7 +31,7 @@ class ValueElementsController <  AdminController
       @value_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the section form  at this time.'
+      flash[:error] = t("unable_to_display_value_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -61,7 +61,7 @@ class ValueElementsController <  AdminController
     @value_element = ValueElement.find(params[:id])
 
     if @value_element.update_and_validate(params[:value_element])
-      flash[:notice] = 'Value was successfully updated.'
+      flash[:notice] = t("value_successfully_updated")
       @form = Form.find(@value_element.form_id)
     else
       render :action => "edit"

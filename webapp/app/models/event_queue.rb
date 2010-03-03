@@ -35,11 +35,12 @@ class EventQueue < ActiveRecord::Base
 
   def fix_up_events
     Event.find(:all, :conditions => "event_queue_id = #{self.id}").each do |event|
-      note = "Event queue '#{self.queue_name}' has been deleted. Event has been moved out of that queue."
+      note = I18n.translate("system_notes.event_queue_deleted", :queue_name => self.queue_name, :locale => I18n.default_locale)
 
       begin
         event.reset
-        note += " Event has not yet been accepted for investigation and should be reassigned."
+        note << " "
+        note << I18n.translate("system_notes.event_needs_reassignment", :locale => I18n.default_locale)
       rescue
       end
 

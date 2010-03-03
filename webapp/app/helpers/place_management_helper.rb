@@ -16,66 +16,26 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module PlaceManagementHelper
-  def render_merge_hidden_fields
-    # PLUGIN_HOOK -render_merge_hidden_fields()
-  end
-
-  def render_merge_place
-    # PLUGIN_HOOK -render_merge_place()
-    yield
-  end
-
-  def render_place_management_list
-    place_list = ""
-    place_list << render_merge_place do
-      result = ""
-      unless @place_entities.nil? || @place_entities.empty?
-        result << "<table cellpadding='0' cellspacing='0' border='0' id='entity_search_results'>"
-        result << "<tr style='text-align: left'>"
-        result << "<th>Place Name</th><th>Address</th><th>Place Type</th><th>Actions</th>"
-
-        @place_entities.each do |place_entity|
-          unless is_merge_entity(place_entity) || place_entity.place.place_type_ids.include?(Code.jurisdiction_place_type_id)
-            result << "<tr class='search-active tabular'>"
-            result << "<td>#{h place_entity.place.name}</td>"
-            result << "<td>#{render_place_address(place_entity)}</td>"
-            result << "<td>#{render_place_types(place_entity)}</td>"
-            result << "<td>#{render_place_actions(place_entity)}</td>"
-            result << "</tr>"
-          end
-        end
-
-        result << "</table>"
-      end
-      result
-    end
-    
-    place_list
-  end
-
-  private
 
   def render_place_address(place_entity)
     result = ""
     first_line = ""
     second_line = ""
     address = place_entity.canonical_address
-        
-    unless address.nil?
-      first_line << "#{h address.street_number} " unless address.street_number.blank?
-      first_line << "#{h address.street_name} " unless address.street_name.blank?
-      first_line << "#{h address.unit_number}" unless address.unit_number.blank?
+    return if address.nil?
 
-      second_line << "#{h address.city} " unless address.city.blank?
-      second_line << "#{h address.county.code_description} " unless address.county.nil?
-      second_line << "#{h address.state.code_description} " unless address.state.nil?
-      second_line << "#{h address.postal_code}"
+    first_line << "#{h address.street_number} " unless address.street_number.blank?
+    first_line << "#{h address.street_name} " unless address.street_name.blank?
+    first_line << "#{h address.unit_number}" unless address.unit_number.blank?
 
-      result << first_line unless first_line.empty?
-      result << "<br/>" if (!first_line.empty? && !second_line.empty?)
-      result << second_line unless second_line.empty?
-    end
+    second_line << "#{h address.city} " unless address.city.blank?
+    second_line << "#{h address.county.code_description} " unless address.county.nil?
+    second_line << "#{h address.state.code_description} " unless address.state.nil?
+    second_line << "#{h address.postal_code}"
 
+    result << first_line unless first_line.empty?
+    result << "<br/>" if (!first_line.empty? && !second_line.empty?)
+    result << second_line unless second_line.empty?
     result
   end
 
@@ -90,12 +50,12 @@ module PlaceManagementHelper
   end
 
   def render_place_actions(place_entity)
-    link_to("Edit", edit_place_path(place_entity))
-  end
-
-  def is_merge_entity(place_entity)
-    # PLUGIN_HOOK -is_merge_entity(place_entity)
-    return false
+    result = link_to_unless_current t('edit'), edit_place_path(place_entity)
+    @extension_action_links.inject(result) do |result, link_proc|
+      link_def = link_proc.call(place_entity)
+      link = link_to_unless_current(link_def[:description], link_def[:link], link_def[:options])
+      result + "&nbsp;|&nbsp;" + link
+    end
   end
 
 end

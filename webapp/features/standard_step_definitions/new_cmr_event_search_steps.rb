@@ -64,8 +64,22 @@ end
 
 When /^I search for last_name = "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
-  fill_in "last_name", :with => last_name 
+  fill_in "last_name", :with => last_name
   click_button "Search"
+end
+
+When /^I search for:$/i do |search_fields|
+  visit event_search_cmrs_path
+  in_fields(search_fields) do |field, value|
+    fill_in field, :with => value
+  end
+  click_button "Search"
+end
+
+Then /^I should see the following values:$/i do |field_values|
+  in_fields(field_values) do |field, value|
+    field_labeled(field).value.should == value
+  end
 end
 
 When /^I search for last_name = "([^\"]*)" for people entities$/ do |last_name|
@@ -145,11 +159,11 @@ Then /^I should see results for both records$/ do
   response.should have_selector("table.list") do |table|
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
-      tr.should contain("Morbidity event")
+      tr.should contain("Morbidity Event")
     end
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
-      tr.should contain("Contact event")
+      tr.should contain("Contact Event")
     end
   end
 end
@@ -158,7 +172,7 @@ Then /^I should see both the CMR and the entity/ do
   response.should have_selector("table.list") do |table|
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
-      tr.should contain("Morbidity event")
+      tr.should contain("Morbidity Event")
     end
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
@@ -171,10 +185,10 @@ end
 Then /^I should see results for just the morbidity event$/ do
   response.should have_selector("table.list") do |table|
     table.should have_selector("tr") do |tr|
-      tr.should contain("Morbidity event")
+      tr.should contain("Morbidity Event")
     end
   end
-  response.should_not contain("Encounter event")
+  response.should_not contain("Encounter Event")
 end
 
 Then /^the disease should show as 'private'$/ do
@@ -185,11 +199,11 @@ end
 Then /^I should see two morbidity events under one name$/ do
   response.should have_selector("table.list tr:nth-child(2)") do |tr|
     tr.should contain("Jones")
-    tr.should contain("Morbidity event")
+    tr.should contain("Morbidity Event")
   end
   response.should have_selector("tr:nth-child(3)") do |tr|
     tr.should_not contain("Jones")
-    tr.should contain("Morbidity event")
+    tr.should contain("Morbidity Event")
   end
 end
 
@@ -205,5 +219,13 @@ Then /^I should see the following results:$/ do |results|
     response.should have_selector("table > tr:nth-child(#{i+2}) > td:nth-child(1)") { |td|
       td.inner_text.should =~ /#{result[0]}, #{result[1]}/
     }
+  end
+end
+
+def in_fields(table)
+  table.hashes.each do |hash|
+    hash.each do |field, value|
+      yield(field, value)
+    end
   end
 end

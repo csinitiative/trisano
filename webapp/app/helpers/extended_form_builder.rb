@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
@@ -25,13 +25,13 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(attribute, options)
     end
   end
-  
+
   def core_calendar_date_select(attribute, options = {}, event =nil)
     core_follow_up(attribute, options, event) do |attribute, options|
       calendar_date_select(attribute, options)
     end
   end
-  
+
   def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
     core_follow_up(attribute, html_options, event) do |attribute, html_options|
       options[:include_blank] = true unless options[:include_blank] == false
@@ -67,12 +67,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @ret
   end
 
-  # TODO: refactor me! 
-  def dynamic_question(form_elements_cache, question_element, event, index, html_options = {}) 
+  # TODO: refactor me!
+  def dynamic_question(form_elements_cache, question_element, event, index, html_options = {})
     id = html_options[:id]
     result = ""
     question = question_element.question
-    
+
     if question.is_multi_valued?
       if form_elements_cache.children(question_element).empty?
         return ""
@@ -83,7 +83,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         end
       end
     end
-    
+
     index = @object.id.nil? ? index : @object.id
     html_options[:index] = index
 
@@ -122,7 +122,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
       select(:text_answer, select_values, {}, html_options)
     when :check_box
-      
+
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}[new_checkboxes]"
         field_index = question.id.to_s
@@ -130,7 +130,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         field_name = @object_name
         field_index = index.to_s
       end
-      
+
       i = 0
       name = field_name + "[" + field_index + "][check_box_answer][]"
       get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value_hash|
@@ -139,7 +139,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
       check_boxes += @template.hidden_field_tag(name, "")
     when :radio_button
-      
+
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}[new_radio_buttons]"
         field_index = question.id.to_s
@@ -147,20 +147,20 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         field_name = @object_name
         field_index = index.to_s
       end
-      
+
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
-      
+
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value_hash|
-        
+
         html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onclick] = select_answer_event if follow_ups
-        
+
         unless question_element.export_column.blank?
           cdc_attributes << {:id => html_options[:id], :export_conversion_value_id => value_hash[:export_conversion_value_id]}
         end
-        
-        radio_buttons += @template.radio_button_tag(name, value_hash[:value], @object.radio_button_answer.include?(value_hash[:value]), html_options) + value_hash[:value]        
+
+        radio_buttons += @template.radio_button_tag(name, value_hash[:value], @object.radio_button_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
       end
       radio_buttons += @template.hidden_field_tag(name, "")
     when :date
@@ -170,7 +170,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :phone
       html_options[:size] = 14
       html_options[:onchange] = text_answer_event if follow_ups
-      text_field(:text_answer, html_options) + "&nbsp;<small>10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999</small>"
+      text_field(:text_answer, html_options) + "&nbsp;<small>#{I18n.t(:phone_answer_format_msg)}</small>"
     end
 
     if question.data_type == :check_box || question.data_type == :radio_button
@@ -179,12 +179,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       unless question_element.export_column.blank?
         export_conv_field_name = field_name + "[#{field_index}]" + '[export_conversion_value_id]'
         export_conv_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'export_conversion_value_id'
-        result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id) 
+        result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id)
         result += rb_export_js(cdc_attributes, export_conv_field_id)
       end
     else
       result += @template.content_tag(:label) do
-        CGI::escapeHTML(sanitize(question.question_text, :tags => %w(br))).untaint
+        sanitize(question.question_text, :tags => %w(br))
       end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
@@ -192,7 +192,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         if question.data_type == :drop_down
           export_conv_field_name = object_name + "[#{index}]" + '[export_conversion_value_id]'
           export_conv_field_id = object_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{index}_" + 'export_conversion_value_id'
-          result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id) 
+          result += "\n" + @template.hidden_field_tag(export_conv_field_name, export_conversion_value_id(event, question), :id => export_conv_field_id)
           result += dd_export_js(cdc_attributes, export_conv_field_id, id)
         else
           result += "\n" + hidden_field(:export_conversion_value_id, :index => index, :value => question_element.export_column.export_conversion_values.first.id )
@@ -200,29 +200,29 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
     end
 
-    result << follow_up_spinner_for(id)
-    
+    result << follow_up_spinner_for(:id => id)
+
     result
   end
 
   def get_values(form_elements_cache, question_element)
     form_elements_cache.children(form_elements_cache.children(question_element).find { |child| child.is_a?(ValueSetElement) }).collect { |value| {:value => value.name, :export_conversion_value_id => value.export_conversion_value_id} }
   end
-  
+
   def core_path
     core_path = @options[:core_path] || @object_name.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
     return if core_path.nil?
     CorePath[core_path]
   end
 
-  private
-
   def core_follow_up(attribute, options = {}, event = nil)
-    change_event = core_follow_up_event(attribute, event)
-    options[:onchange] = change_event unless change_event.blank?    
-    spinner = change_event.blank? ? '' : follow_up_spinner_for(core_path[attribute])
-    field = block_given? ? yield(attribute, options) : ''
-    field + spinner
+    returning [] do |result|
+      unless follow_ups_for(attribute, event).empty?
+        options[:onchange] = core_follow_up_event(attribute, event)
+        result << follow_up_spinner_for(attribute)
+      end
+      result.unshift(yield(attribute, options)) if block_given?
+    end.join
   end
 
   # DEBT:  Get rid of / dry this up someday
@@ -231,24 +231,46 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return cn.external
   end
 
-  def core_follow_up_event(attribute, event)
-    return if  (event.nil? || event.form_references.nil?) 
-    result = ""
-
-    unless (core_path.nil?)
-      event.form_references.each do |form_reference|
-        if (form_reference.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}").size > 0)
-          result = "sendCoreConditionRequest('#{process_core_condition_path}', this, '#{event.id}', '#{core_path[attribute]}');"
-          break
-        end
+  def follow_ups_for(attribute, event)
+    return [] unless core_path && event.try(:form_references)
+    returning [] do |follow_ups|
+      event.form_references.each do |fr|
+        follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}")
       end
-    end
-    return result
+    end.flatten
   end
 
-  def follow_up_spinner_for(id)
-    '&nbsp;' * 2 + @template.image_tag('redbox_spinner.gif', :id => "#{id}_spinner", :alt => 'Working...', :size => '16x16', :style => 'display: none;')
-  end    
+  def core_follow_up_event(attribute, event, value_attribute = nil)
+    this_or_node = value_attribute ? "$('#{core_path[value_attribute].underscore}')" : 'this'
+    returning "" do |js|
+      js << "sendCoreConditionRequest("
+      js <<   "'#{process_core_condition_path}',"
+      js <<   " #{this_or_node},"
+      js <<   "'#{event.id}',"
+      js <<   "'#{core_path[attribute]}',"
+      js <<   "'#{core_path[attribute].underscore}_spinner'"
+      js <<   ");"
+    end
+  end
+
+  def follow_up_spinner_for(*args)
+    options = args.extract_options!
+    options.symbolize_keys!
+    attribute = args.first
+    spinner_id = (options[:id] || core_path[attribute].underscore) + "_spinner"
+    returning "" do |result|
+      result << '&nbsp;' * 2
+      result << @template.image_tag('redbox_spinner.gif',
+                                    :id => spinner_id,
+                                    :alt => 'Working...',
+                                    :size => '16x16',
+                                    :style => 'display: none;')
+    end
+  end
+
+  def default_spinner_id(attribute)
+    "#{core_path[attribute].underscore}_spinner"
+  end
 
   def conversion_id_for(question_element, value_from)
     question_element.export_column.export_conversion_values.each do |conversion_value|
@@ -262,7 +284,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @template.on_loaded_or_eval do
       radio_buttons.collect do |radio_button|
         <<-JS
-        $('#{radio_button[:id]}').observe('click', function() { 
+        $('#{radio_button[:id]}').observe('click', function() {
         $('#{id}').writeAttribute('value', '#{radio_button[:export_conversion_value_id]}') });
         JS
       end.join
@@ -305,8 +327,12 @@ class CorePath
     @path
   end
 
-  private 
-  
+  def underscore
+    @path.gsub('[', '_').gsub(']', '')
+  end
+
+  private
+
   def initialize(base)
     @path = base
   end

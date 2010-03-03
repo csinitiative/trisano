@@ -51,7 +51,7 @@ describe Form do
     it 'should exist' do
       @form.short_name = nil
       @form.save_and_initialize_form_elements.should_not be_true
-      @form.errors.on(:short_name).should be_true
+      @form.errors.on(:short_name).should == "can't be blank"
     end
 
     it 'should be unique across active templates' do
@@ -59,9 +59,10 @@ describe Form do
 
       form2 = Form.new
       form2.name = "Test Form"
+      form2.short_name = "test_form"
       form2.event_type = 'morbidity_event'
       form2.save_and_initialize_form_elements.should be_nil
-      form2.errors.on(:short_name).should be_true
+      form2.errors.on(:short_name).should == "is already being used by another active form."
     end
 
     it 'should replace spaces w/ underscores' do
@@ -84,7 +85,7 @@ describe Form do
       @form.should_not be_short_name_editable
       @form.short_name = 'changed'
       @form.save_and_initialize_form_elements
-      @form.errors.on(:short_name).should_not be_nil
+      @form.errors.on(:short_name).should == "can't be changed once the form has been published"
     end
 
     it 'should be copied to the published versions of the form' do
@@ -294,8 +295,10 @@ describe Form do
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
       section = mock(SectionElement)
       section.stub!(:name).and_return('Something Else')
+      section.stub!(:read_attribute).with(:type).and_return('SectionElement')
       default_tab = mock(ViewElement)
-      default_tab.stub!(:name).and_return('Default View')                  
+      default_tab.stub!(:name).and_return('Default View')
+      default_tab.stub!(:read_attribute).with(:type).and_return('ViewElement')
       result = yield(default_tab, section) if block_given?
       container = OpenStruct.new(:all_children => result)
       form.should_receive(:investigator_view_elements_container).and_return(container)      
@@ -728,7 +731,7 @@ describe Form do
     end
 
     it "should append '_copy' to the short name" do
-      @copied_form.short_name.should eql(@original_form.short_name + '_copy')
+      @copied_form.short_name.should eql(@original_form.short_name + '_Copy')
     end
 
     it "should try to generate a unique short name" do

@@ -32,4 +32,44 @@ module SearchHelper
     str_array.collect { |str| str.to_i } unless str_array.nil?
   end
 
+  def gender_select_search_tag(genders, name = :gender)
+    returning "" do |result|
+      result << label_tag(name, t(name))
+      result << select_tag(name, gender_select_search_options(genders, name))
+    end
+  end
+
+  def gender_select_search_options(genders, param_name = :gender)
+    container = genders.map { |g| [g.code_description, g.id.to_s] }
+    container.unshift [nil,nil]
+    options_for_select container, params[param_name]
+  end
+
+  def search_result_full_name(record)
+    returning "" do |full_name|
+      full_name << record['last_name']
+      full_name << ", #{record['first_name']}" unless record['first_name'].blank?
+      full_name << record['middle_name'] if record['middle_name']
+    end.strip
+  end
+
+  def search_result_event_path(event)
+    event.type =~ /morbidity/i ? cmr_path(event) : contact_event_path(event)
+  end
+
+  def search_result_link_id(event)
+    type = event.type =~ /morbidity/i ? "cmr" : "contact"
+    "show-#{type}-link-#{event.id}"
+  end
+
+  def link_to_search_result_event(text, event)
+    link_to(text,
+            search_result_event_path(event),
+            :id => search_result_link_id(event))
+  end
+
+  def search_result_class(event)
+    event['deleted_at'].nil? ? 'search-active' : 'search-inactive'
+  end
+
 end

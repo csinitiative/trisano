@@ -20,22 +20,22 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% place_name = @event.interested_place.place_entity.place.name %>
 
 <% content_for :title do %>
-  View Place Event: <%=h(place_name) %>
+  <%=  t "view_place_event", :place => h(place_name) %>
 <% end %>
 
 <% content_for :name do %>
   <table class='list'>
     <tr>
-      <th class='forminformation'>Place Name</th>
-      <th>Assigned Jurisidiction</th>
-      <th>Original Patient</th>
+      <th class='forminformation'><%= t 'place_name' %></th>
+      <th><%= t 'assigned_jurisdiction' %></th>
+      <th><%= t 'original_patient' %></th>
     </tr>
     <tr>
       <td class='forminformation'>
         <% place_name(@event) do %>
           <%=h(place_name) %>
         <% end %>
-        <small>Date: <%= @event.event_onset_date %></small>
+        <small>Date: <%= ld(@event.event_onset_date) %></small>
         <div class='tools'>
           <%= basic_place_event_controls(@event) %>
         </div>

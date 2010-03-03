@@ -123,22 +123,8 @@ describe "/dashboard/index.html.haml" do
       response.should_not have_tag("td select[onchange*=complete]")
     end
 
-    it 'should render field data for tasks' do
-      render 'dashboard/index.html.haml'
-      @values.each do |key, value|
-        unless key == :status
-          response.should have_tag("td", :text => value)        
-        else
-          response.should have_tag("td select") do
-            with_tag("option[selected=selected]", :text => 'Pending')
-          end
-        end
-      end
-      response.should have_tag("td", :text => 'Default User')
-    end
-
     describe 'and with sort params' do
-      
+
       %w(name due_date notes category_name priority user_name).each do |meth|
         it "should sort tasks by ##{meth}" do
           params[:tasks_ordered_by] = meth
@@ -156,7 +142,7 @@ describe "/dashboard/index.html.haml" do
 
       it 'should have a link for changing settings' do
         render 'dashboard/index.html.haml'
-        response.should have_tag("a[onclick*=Effect.BlindDown('task_view_settings')]")
+        response.should have_tag("a[onclick*=Effect.toggle('task_view_settings')]")
       end 
     end
 
@@ -233,7 +219,7 @@ describe "/dashboard/index.html.haml" do
       @event = mock_model(Event)
       @jurisdiction = mock_model(Jurisdiction, :secondary_entity_id => '1')
       @event.stub!(:all_jurisdictions).and_return([@jurisdiction])
-      
+
       @values = {
         :name          => 'First task',
         :due_date      => Date.today,

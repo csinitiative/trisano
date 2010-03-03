@@ -54,7 +54,7 @@ module TrisanoContactsHelper
   # To navigate to a contact from the morbidity event
   # TODO: Add multiples support
   def edit_contact_event(browser)
-    browser.click "link=Edit contact event"
+    browser.click "link=Edit Contact"
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Edit Contact Event"))
   end

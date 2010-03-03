@@ -16,10 +16,10 @@
 %fieldset.form
 
   - if @event.notes.empty?
-    %h3 No notes have been recorded for this event
+    %h3=t('no_notes')
   - else
     %br
-    %b Notes
+    %b=t('event_notes')
     = render :partial => 'event_notes/filter_nav', :locals => { :notes => @event.notes, :mode => 'show' }
     = render(:partial => 'event_notes/list', :locals => { :notes => notes })
 

@@ -14,13 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Tasks
+  = t('event_tasks')
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
 
 #existing-tasks
   %h2
-    Existing Tasks
+    =t('existing_tasks')
   #tasks
     = render(:partial => 'tasks/list', :locals => { :task_owner => @event })

@@ -80,4 +80,8 @@ describe ParticipationsEncounter do
     end
   end
 
+  it 'should not allow for an encounter date in the future' do
+    @pe.update_attributes(:encounter_date => Date.tomorrow)
+    @pe.errors.on(:encounter_date).should == "must be on or before " + Date.today.to_s
+  end
 end

@@ -1,43 +1,43 @@
-%h3 Before creating a new morbidity event, please search for the person in question.
+%h3=t('before_create')
 - form_tag event_search_cmrs_path, :method => :get do
   %span.horiz
-    = label_tag :last_name
+    = label_tag :last_name, t('last_name')
     = text_field_tag :last_name, params[:last_name]
 
   %span.horiz
-    = label_tag :first_name
+    = label_tag :first_name, t('first_name')
     = text_field_tag :first_name, params[:first_name]
 
   %span.horiz
-    = label_tag :birth_date
+    = label_tag :birth_date, t('birth_date')
     = text_field_tag :birth_date, params[:birth_date]
 
   %span.horiz
     = label_tag "&nbsp;"
-    = submit_tag "Search"
+    = submit_tag t('search_normal_case')
 
   %span.vert
     = label_tag "&nbsp;"
-    = labeled_check_box_tag :use_starts_with_search
+    = labeled_check_box_tag :use_starts_with_search, t('use_starts_with')
 
   %span.vert-break
 
 %br
 - if defined? @results
   -if @results.empty?
-    %b No results
+    %b=t('no_results')
   -else
     %table.list
       %tr
-        %th Name
-        %th Birth Date
-        %th Gender
-        %th Event Type
-        %th Jurisdiction
-        %th Created Date
-        %th Disease
-        %th CMR  Actions
-        %th Entity Actions
+        %th=t('name')
+        %th=t('birth_date')
+        %th=t('gender')
+        %th=t('event_type')
+        %th=t('jurisdiction')
+        %th=t('created_date')
+        %th=t('disease')
+        %th=t('cmr_actions')
+        %th=t('entity_actions')
       - previous_entity_id = nil
       - for result in @results do
         - includes_event = !result['event_id'].blank?
@@ -52,51 +52,53 @@
           - previous_entity_id = current_entity_id
         - else
           - output_name = false
-        
+
         - if includes_event
           - jurisdictions = pg_array(result['secondary_jurisdictions']) << result['jurisdiction_entity_id']
           - can_update = User.current_user.is_entitled_to_in?(:update_event, jurisdictions)
           - can_view   = User.current_user.is_entitled_to_in?(:view_event,   jurisdictions)
 
         %tr{:class => result_class, :id => "entity_#{result['entity_id']}"}
-          %td 
+          %td
             - if output_name
               = "#{h(result['last_name'])}, #{h(result['first_name'])}"
             - else
-              %i &nbsp;&nbsp;Same as above
+              %i
+                &nbsp;&nbsp;
+                =t 'same_as_above'
           %td
-            = h(result['birth_date']) if output_name
+            = ld(result['birth_date']) if output_name
           %td
             = h(result['birth_gender']) if output_name
           %td
             - if includes_event
-              = h(result['event_type'].underscore.humanize)
+              = t(result['event_type'].underscore)
             - else
-              %i None
+              %i=t 'none'
           %td
-            = h(result['jurisdiction_short_name']) if includes_event
+            = h(i18n_jurisdiction_short_name(result['jurisdiction_short_name'])) if includes_event
           %td
-            = h(result['event_onset_date']) if includes_event
+            = ld(result['event_onset_date']) if includes_event
           %td
             - if includes_event
               - if can_update || can_view
                 = h(result['disease_name'])
               - else
-                Private
-          %td 
+                =t 'private'
+          %td
             - if includes_event
               - edit_path = result['event_type'] == 'MorbidityEvent' ? edit_cmr_path(result['event_id']) : edit_contact_event_path(result['event_id'])
               - view_path = result['event_type'] == 'MorbidityEvent' ? cmr_path(result['event_id']) : contact_event_path(result['event_id'])
               - if can_update
-                = link_to("Edit", edit_path)
+                = link_to(t('edit'), edit_path)
                 |
-              = link_to "Show", view_path
+              = link_to t('show'), view_path
           %td
             - if output_name && User.current_user.is_entitled_to?(:create_event)
-              = link_to('Create and edit CMR using this person', cmrs_path(:from_person => result['entity_id'], :return => true), :method => :post)
+              = link_to(t('create_cmr_this_person'), cmrs_path(:from_person => result['entity_id'], :return => true), :method => :post)
     = will_paginate @results
-  
+
 - if defined? @people or defined? @results
   %br
-  - if User.current_user.is_entitled_to?(:create_event)  
-    = link_to("Start a CMR with the criteria you searched on", new_cmr_path(:from_search => "1", :first_name => @first_name, :last_name => @last_name, :birth_date => @birth_date), {:id => "start_cmr"})
+  - if User.current_user.is_entitled_to?(:create_event)
+    = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})

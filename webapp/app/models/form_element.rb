@@ -125,7 +125,7 @@ class FormElement < ActiveRecord::Base
       transaction do
         library_element = FormElement.find(lib_element_id)
         if (library_element.class.name == "ValueSetElement" && !can_receive_value_set?)
-          errors.add_to_base("Can't complete copy. A question can only have one value set")
+          errors.add(:base, :failed_copy)
           raise
         end
         self.add_child(copy_children(library_element, nil, self.form_id, self.tree_id, false))
@@ -174,7 +174,7 @@ class FormElement < ActiveRecord::Base
       else
         raise Exception.new("No type specified for a from library filter") if options[:type].blank?
         if (options[:type] == :question_element)
-          FormElement.find(:all, 
+          FormElement.find(:all,
             :conditions => ["form_id IS NULL AND type = ? AND form_elements.id IN (SELECT form_element_id FROM questions WHERE question_text ILIKE ?)", options[:type].to_s.camelcase, "%#{options[:filter_by]}%"],
             :include => [:question]
           )
@@ -190,7 +190,7 @@ class FormElement < ActiveRecord::Base
     structural_errors = form.structural_errors
     unless structural_errors.empty?
       structural_errors.each do |error|
-        errors.add_to_base(error)
+        errors.add(:base, error)
       end
       raise errors.full_messages.join("\n")
     end
@@ -201,7 +201,7 @@ class FormElement < ActiveRecord::Base
     unless structural_errors.empty?
       if (element_for_errors)
         structural_errors.each do |error|
-          element_for_errors.errors.add_to_base(error)
+          element_for_errors.errors.add(:base, error)
         end
       end
       raise structural_errors.inspect
@@ -214,16 +214,16 @@ class FormElement < ActiveRecord::Base
   def structural_errors
     structural_errors = []
 
-    structural_errors << "Multiple root elements were detected" if FormElement.find_by_sql("select id from form_elements where tree_id = #{self.tree_id} and parent_id is null").size > 1
+    structural_errors << :multiple_roots if FormElement.find_by_sql("select id from form_elements where tree_id = #{self.tree_id} and parent_id is null").size > 1
 
-    structural_errors << "Overlap was detected in the form element structure" if FormElement.find_by_sql("
+    structural_errors << :overlap if FormElement.find_by_sql("
       select result, count(*) from (SELECT lft as result FROM form_elements where tree_id = #{self.tree_id}
       UNION ALL SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as elements
       group by result
       having count(*) > 1;"
     ).size > 0
 
-    structural_errors << "Gaps were detected in the form element structure" if FormElement.find_by_sql("
+    structural_errors << :structure_gaps if FormElement.find_by_sql("
       select l.result + 1 as start
       from (SELECT lft as result FROM form_elements where tree_id = #{self.tree_id}
       UNION SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as l
@@ -231,15 +231,15 @@ class FormElement < ActiveRecord::Base
       UNION SELECT rgt FROM form_elements where tree_id = #{self.tree_id} order by result) as r on l.result + 1 = r.result
       where r.result is null;"
     ).size > 1
-    
-    structural_errors << "Orphaned elements were detected" if FormElement.find_by_sql("
+
+    structural_errors << :orphans if FormElement.find_by_sql("
       select id from form_elements where tree_id = #{self.tree_id} and parent_id not in (select id from form_elements where tree_id = #{self.tree_id});"
     ).size > 0
-    
-    structural_errors << "Nesting structure is corrupt" if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where tree_id = #{self.tree_id} and lft >= rgt;").size > 0
+
+    structural_errors << :corrupt_nesting if FormElement.find_by_sql("select id, type, name, lft, rgt from form_elements where tree_id = #{self.tree_id} and lft >= rgt;").size > 0
     structural_errors
   end
-  
+
   def can_receive_value_set?
     begin
       if (self.class.name == "QuestionElement")
@@ -248,7 +248,7 @@ class FormElement < ActiveRecord::Base
         return false unless (existing_value_set.nil?)
       end
     rescue Exception => ex
-      self.errors.add_to_base("An error occurred checking the parent for existing value set children")
+      self.errors.add(:base, :parent_exception)
       return nil
     end
     return true
@@ -261,7 +261,7 @@ class FormElement < ActiveRecord::Base
         return "#{external_code.code_name}#{@@export_lookup_separator}#{external_code.the_code}"
       rescue Exception => ex
         logger.error ex
-        raise "The external code for the condition on #{self.core_path} could not be found."
+        raise(I18n.translate('form_element_could_not_find_external_code', :core_path => self.core_path))
       end
     end
   end
@@ -280,7 +280,7 @@ class FormElement < ActiveRecord::Base
           identifier = self.name
         end
         logger.error ex
-        raise "The export column and/or disease group for the #{element_type} '#{identifier}' could not be found."
+        raise(I18n.translate('form_element_export_column_or_disease_group_not_found', :element_type => element_type, :identifier => identifier))
       end
     end
   end
@@ -292,10 +292,10 @@ class FormElement < ActiveRecord::Base
         export_column = ExportColumn.find(export_conversion_value.export_column_id, :include => :export_disease_group)
         return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}#{@@export_lookup_separator}#{export_conversion_value.value_from}#{@@export_lookup_separator}#{export_conversion_value.value_to}"
       rescue
-        message = "The conversion value, export column, or disease group could not be found for the value element '#{self.name}.'"
+        message = I18n.translate('form_element_something_not_found_for_value_element', :name => self.name)
 
         if self.form_id.blank?
-          message << " The library element at fault is the #{self.root.class.name.underscore.humanize} "
+          message << " #{I18n.translate('form_element_library_element_at_fault', :name => self.root.class.human_name)} "
           if self.root.class.name == "QuestionElement"
             message << "'#{self.root.question.question_text}'."
           else

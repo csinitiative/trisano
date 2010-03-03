@@ -44,7 +44,7 @@ Feature: Edit short names on form questions
     When I go to the form's edit questions page (version 1)
       And I change the "Who?" question's short name to "what"
       And I press "Update"
-    Then I should see "'what' is already used in this form"
+    Then I should see "Short name 'what' has already been taken"
       And I should get a 400 response
 
   Scenario: Clear short names from questions

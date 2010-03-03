@@ -27,6 +27,10 @@ Given(/^I am logged in as a manager$/) do
   log_in_as("lhd_manager")
 end
 
+Given(/^I am logged in as a lhd manager$/) do
+  log_in_as("lhd_manager")
+end
+
 Given(/^I am logged in as an investigator$/) do
   log_in_as("investigator")
 end
@@ -109,4 +113,25 @@ end
 Then /^selecting "([^\"]*)" is disabled$/ do |locator|
   field = field_labeled locator
   field.should be_disabled
+end
+
+Then /^"([^\"]*)" should be selected for "([^\"]*)"$/ do |value, field|
+  p field_labeled(field)
+  field_labeled(field).element.search(".//option[@selected = 'selected']").inner_html.should =~ /#{value}/
+end
+
+Then /^I should see (an|a) "([^\"]*)" tab$/ do |a, tab|
+  response.should have_xpath("//ul[@class='yui-nav']/li/a/em[text()='#{tab}']")
+end
+
+
+#
+# define tag behavior
+#
+Before('@ignore_plugin_renderers') do
+  ApplicationController.ignore_plugin_renderers = true
+end
+
+After('@ignore_plugin_renderers') do
+  ApplicationController.ignore_plugin_renderers = false
 end

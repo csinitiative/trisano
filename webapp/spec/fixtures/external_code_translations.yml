@@ -1,0 +1,362 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+case_status_unknown:
+  external_code_id: 1801
+  code_description: "Unknown"
+  locale: en
+
+case_status_confirmed:
+  external_code_id: 1802
+  code_description: "Confirmed"
+  locale: en
+
+case_status_probable:
+  external_code_id: 1803
+  code_description: "Probable"
+  locale: en
+
+case_status_suspect:
+  external_code_id: 1804
+  code_description: "Suspect"
+  locale: en
+
+case_status_notcase:
+  external_code_id: 1805
+  code_description: "Not Case"
+  locale: en
+
+case_status_chroniccarrier:
+  external_code_id: 1806
+  code_description: "Chronic Carrier"
+  locale: en
+
+case_status_discarded:
+  external_code_id: 1807
+  code_description: "Discarded"
+  locale: en
+
+case_status_oos:
+  external_code_id: 1808
+  code_description: "Out of state"
+  locale: en
+
+#################################
+
+gender_male:
+  external_code_id: 1
+  code_description: "Male"
+  locale: en
+
+gender_female:
+  external_code_id: 2
+  code_description: "Female"
+  locale: en
+
+gender_unknown:
+  external_code_id: 3
+  code_description: "Unknown"
+  locale: en
+
+ethnicity_hispanic:
+  external_code_id: 101
+  code_description: "Hispanic or Latino"
+  locale: en
+
+ethnicity_non_hispanic:
+  external_code_id: 102
+  code_description: "Not Hispanic or Latino"
+  locale: en
+
+ethnicity_other:
+  external_code_id: 103
+  code_description: "Other"
+  locale: en
+
+ethnicity_unknown:
+  external_code_id: 104
+  code_description: "Unknown"
+  locale: en
+
+race_white:
+  external_code_id: 201
+  code_description: "White"
+  locale: en
+
+race_black:
+  external_code_id: 202
+  code_description: "Black / African-American"
+  locale: en
+
+race_indian:
+  external_code_id: 203
+  code_description: "American Indian"
+  locale: en
+
+race_asian:
+  external_code_id: 204
+  code_description: "Asian"
+  locale: en
+
+race_alaskan:
+  external_code_id: 205
+  code_description: "Alaskan Native"
+  locale: en
+
+race_hawaiian:
+  external_code_id: 206
+  code_description: "Native Hawaiian / Pacific Islander"
+  locale: en
+
+race_unknown:
+  external_code_id: 207
+  code_description: "Unknown"
+  locale: en
+
+language_english:
+  external_code_id: 301
+  code_description: "English"
+  locale: en
+
+language_spanish:
+  external_code_id: 302
+  code_description: "Spanish"
+  locale: en
+
+state_utah:
+  external_code_id: 1001
+  code_description: "Utah"
+  locale: en
+
+state_alabama:
+  external_code_id: 1002
+  code_description: "Alabama"
+  locale: en
+
+state_alaska:
+  external_code_id: 1003
+  code_description: "Alaska"
+  locale: en
+
+state_arizona:
+  external_code_id: 1004
+  code_description: "Arizona"
+  locale: en
+
+state_arkansas:
+  external_code_id: 1005
+  code_description: "Arkansas"
+  locale: en
+
+county_salt_lake:
+  external_code_id: 1101
+  code_description: "Salt Lake"
+  locale: en
+
+county_summit:
+  external_code_id: 1102
+  code_description: "Summit"
+  locale: en
+
+
+county_oos:
+  external_code_id: 1103
+  code_description: "Out of state"
+  locale: en
+
+district_alpine:
+  external_code_id: 1201
+  code_description: "Alpine"
+  locale: en
+
+district_beaver:
+  external_code_id: 1202
+  code_description: "Beaver"
+  locale: en
+
+yesno_unknown:
+  external_code_id: 1401
+  code_description: "Unknown"
+  locale: en
+
+yesno_yes:
+  external_code_id: 1402
+  code_description: "Yes"
+  locale: en
+
+yesno_no:
+  external_code_id: 1403
+  code_description: "No"
+  locale: en
+
+yesno_maybe:
+  external_code_id: 1404
+  code_description: "Maybe"
+  locale: en
+
+specimen_blood:
+  external_code_id: 1501
+  code_description: "Blood"
+  locale: en
+
+specimen_urine:
+  external_code_id: 1502
+  code_description: "Urine"
+  locale: en
+
+specimen_stool:
+  external_code_id: 1503
+  code_description: "Stool"
+  locale: en
+
+specimen_tissue:
+  external_code_id: 1504
+  code_description: "Tissue"
+  locale: en
+
+imported_from_unknown:
+  external_code_id: 2101
+  code_description: "Unknown"
+  locale: en
+
+imported_from_utah:
+  external_code_id: 2102
+  code_description: "Acquired in-state"
+  locale: en
+
+imported_from_other_country:
+  external_code_id: 2103
+  code_description: "Outside U.S."
+  locale: en
+
+imported_from_other_state:
+  external_code_id: 2104
+  code_description: "Other U.S. State"
+  locale: en
+
+telephonelocationtype_unknown:
+  external_code_id: 2105
+  code_description: "Unknown"
+  locale: en
+
+telephonelocationtype_home:
+  external_code_id: 2106
+  code_description: "Home"
+  locale: en
+
+
+telephonelocationtype_work:
+  external_code_id: 2107
+  code_description: "Work"
+  locale: en
+
+
+telephonelocationtype_mobile:
+  external_code_id: 2108
+  code_description: "Mobile"
+  locale: en
+
+
+## Contact dispositions codes
+
+contactdispositiontype_ooj:
+  external_code_id: 2200
+  code_description: 'Out of jurisdiction'
+  locale: en
+
+
+contactdispositiontype_not_infected:
+  external_code_id: 2201
+  code_description: "Not Infected"
+  locale: en
+
+
+## Contact type codes
+
+contact_type_sexual:
+  external_code_id: 2250
+  code_description: 'Sexual'
+  locale: en
+
+
+contact_type_household:
+  external_code_id: 2251
+  code_description: "Household"
+  locale: en
+
+
+## age type codes
+
+age_type_days:
+  external_code_id: 2300
+  code_description: "days"
+  locale: en
+
+age_type_weeks:
+  external_code_id: 2301
+  code_description: "weeks"
+  locale: en
+
+age_type_months:
+  external_code_id: 2302
+  code_description: "months"
+  locale: en
+
+age_type_years:
+  external_code_id: 2303
+  code_description: "years"
+  locale: en
+
+age_type_unknown:
+  external_code_id: 2304
+  code_description: "unknown"
+  locale: en
+
+test_type_neg:
+  external_code_id: 2400
+  code_description: "Negative"
+  locale: en
+
+test_type_pos:
+  external_code_id: 2401
+  code_description: "Confirmed / Positive"
+  locale: en
+
+test_type_rr:
+  external_code_id: 2402
+  code_description: "Repeatedly reactive"
+  locale: en
+
+test_status_final:
+  external_code_id: 2501
+  code_description: "Final"
+  locale: en
+
+test_status_pending:
+  external_code_id: 2502
+  code_description: "Pending"
+  locale: en
+
+test_status_prelim:
+  external_code_id: 2503
+  code_description: "Preliminary result"
+  locale: en
+
+loinc_scale_ord:
+  external_code_id: 2600
+  code_description: "Ordinal"
+  locale: en
+
+loinc_scale_nom:
+  external_code_id: 2601
+  code_description: "Nominal"
+  locale: en
+
+loinc_scale_qn:
+  external_code_id: 2602
+  code_description: "Quantitative"
+  locale: en
+
+loinc_scale_ordqn:
+  external_code_id: 2603
+  code_description: "Ordinal or Quantitative"
+  locale: en

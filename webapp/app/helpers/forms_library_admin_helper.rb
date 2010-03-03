@@ -67,7 +67,7 @@ module FormsLibraryAdminHelper
       haml_concat "&nbsp;"
       haml_concat element.question.short_name
       haml_concat "&nbsp;&nbsp;"
-      haml_concat element.question.data_type_before_type_cast.humanize
+      haml_concat I18n.t("question_data_types.#{element.question.data_type_before_type_cast}")
 
       element.children do |child|
         haml_concat "&nbsp;&nbsp;Value Set:&nbsp;&nbsp;#{child.name}: " if child.is_a? ValueSetElement

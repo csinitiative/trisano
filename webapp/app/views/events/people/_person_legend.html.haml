@@ -16,8 +16,8 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %legend 
-  Person Information
+  =t('person_info')
   %span{:id => 'person_info_hide', :onClick => "Element.hide('person_form'); Element.hide('person_info_hide'); Element.show('person_info_show'); return false;"}
-    [Hide]
+    ="[#{t('hide')}]"
   %span{:id => 'person_info_show', :onClick => "Element.show('person_form'); Element.hide('person_info_show'); Element.show('person_info_hide'); return false;", :style => "display: none;"}
-    [Show]
+    ="[#{t('show')}]"

@@ -54,13 +54,13 @@ describe 'Form Builder Admin Follow-Up Functionality' do
   it 'should handle adding follow-ups to core fields and form builder questions.' do
     create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions").should be_true
 
-    add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text", :short_name => get_random_word})
+    add_question_to_view(@browser, "Default View", {:question_text => @question_for_follow_up, :data_type => "Single line text", :short_name => "1"})
     add_follow_up_to_question(@browser, @question_for_follow_up, @follow_up_condition)
-    add_question_to_follow_up(@browser, "Follow up, Condition: <b>#{@follow_up_condition}</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
+    add_question_to_follow_up(@browser, "Follow up, Condition: <b>#{@follow_up_condition}</b>", {:question_text => @follow_up_question_text, :data_type => "Single line text", :short_name => "2"})
 
-    add_core_field_config(@browser, "Outbreak")
-    add_core_follow_up_to_after_core_field(@browser, "Outbreak", "  #{@core_follow_up_condition}  ", "Outbreak")
-    add_question_to_follow_up(@browser, "Core follow up, <b>#{@core_follow_up_condition}</b>", {:question_text => @core_follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
+    add_core_field_config(@browser, "Event name")
+    add_core_follow_up_to_after_core_field(@browser, "Event name", "  #{@core_follow_up_condition}  ", "Event name")
+    add_question_to_follow_up(@browser, "Core follow up, <b>#{@core_follow_up_condition}</b>", {:question_text => @core_follow_up_question_text, :data_type => "Single line text", :short_name => "3"})
 
     publish_form(@browser)
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease, "Bear River Health Department")
@@ -68,7 +68,7 @@ describe 'Form Builder Admin Follow-Up Functionality' do
 
   it "should add an event name with extra whitespace and capitalization" do
     edit_cmr(@browser)
-    @browser.is_text_present(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
 
     # Enter the answer that meets the follow-up condition, but with a different case and extra padding
     click_core_tab(@browser, INVESTIGATION)
@@ -83,28 +83,28 @@ describe 'Form Builder Admin Follow-Up Functionality' do
     click_core_tab(@browser, INVESTIGATION) # Kluge to get the spinner to show up
     sleep 1
 
-    @browser.is_text_present(@follow_up_question_text).should be_true
+    @browser.get_html_source.include?(@follow_up_question_text).should be_true
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
     save_cmr(@browser)
     click_core_tab(@browser, INVESTIGATION)
-    @browser.is_text_present(@follow_up_answer).should be_true
+    @browser.get_html_source.include?(@follow_up_answer).should be_true
   end
 
   it "should add an event name with extra whitespace and capitalization" do
     edit_cmr(@browser)
-    @browser.is_text_present(@core_follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@core_follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition, but with a different case and extra padding
     click_core_tab(@browser, ADMIN)
-    watch_for_core_field_spinner('outbreak_name') do
-      @browser.type("morbidity_event[outbreak_name]", "       eVentName          ")
+    watch_for_core_field_spinner('event_name') do
+      @browser.type("morbidity_event[event_name]", "       eVentName          ")
     end
 
-    @browser.is_text_present(@core_follow_up_question_text).should be_true
+    @browser.get_html_source.include?(@core_follow_up_question_text).should be_true
     answer_investigator_question(@browser, @core_follow_up_question_text, @core_follow_up_answer)
     save_cmr(@browser)
     click_core_tab(@browser, ADMIN)
-    @browser.is_text_present(@core_follow_up_answer).should be_true
+    @browser.get_html_source.include?(@core_follow_up_answer).should be_true
   end
 
 end

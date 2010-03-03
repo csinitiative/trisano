@@ -16,19 +16,19 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Demographics
+  %legend=t 'demographics'
 
   -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |p|
     %div.data_demographics
       -core_element :birth_gender_id, p, :horiz do
-        =p.label(:birth_gender)
+        =p.label(:birth_gender_id)
         %span.data_birth_gender=p.dropdown_code_field(:birth_gender_id, 'gender', {}, {}, event)
       -core_element :ethnicity_id, p, :horiz do
-        =p.label(:ethnicity)
+        =p.label(:ethnicity_id)
         %span.data_ethnicity=p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event)
       %span.horiz
-        =f.label(:race)
+        =f.label(:race_ids)
         %span.data_race=f.multi_select_code_field(:race_ids, 'race', {}, {})
       -core_element :primary_language_id, p, :horiz do 
-        =p.label(:primary_language) 
+        =p.label(:primary_language_id) 
         %span.data_primary_language=p.dropdown_code_field(:primary_language_id, 'language', {}, {}, event)

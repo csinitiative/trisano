@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -32,7 +32,7 @@ describe PlaceEvent do
           }
         }
       },
-      :jurisdiction_attributes => { 
+      :jurisdiction_attributes => {
         :secondary_entity_id => 1
       }
     }
@@ -46,7 +46,7 @@ describe PlaceEvent do
 
     describe "When event has one place exposure and a disease" do
       fixtures :users
-      
+
       before(:each) do
         mock_user
         @user = users(:default_user)
@@ -103,7 +103,7 @@ describe PlaceEvent do
       new_place_address.county_id.should == canonical_address.county_id
       new_place_address.postal_code.should == canonical_address.postal_code
     end
-    
+
     it "should not have an address if the place entity does not have canonical address" do
       event = Factory.create(:morbidity_event)
       place_entity = Factory.create(:place_entity)
@@ -133,5 +133,5 @@ describe PlaceEvent do
     end
 
   end
-  
+
 end

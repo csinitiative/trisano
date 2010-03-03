@@ -49,7 +49,7 @@ describe 'Form Builder Admin Push Functionality' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease, @jurisdiction)
     edit_cmr(@browser)
     save_cmr(@browser)
-    @browser.is_text_present(@first_form_name).should be_true
+    @browser.get_html_source.include?(@first_form_name).should be_true
   end
   
   it 'should create and publish a second form' do
@@ -61,20 +61,20 @@ describe 'Form Builder Admin Push Functionality' do
   it 'existing CMR should not have the second form before the push' do
     click_nav_cmrs(@browser)
     click_resource_edit(@browser, "cmrs", @cmr_last_name)
-    @browser.is_text_present(@second_form_name).should be_false
+    @browser.get_html_source.include?(@second_form_name).should be_false
   end
   
   it 'should push second form' do
     click_nav_forms(@browser)
     click_resource_edit(@browser, "forms", @second_form_name)
     click_push_form(@browser, @second_form_name).should be_true
-    @browser.is_text_present("Form was successfully pushed to events").should be_true
+    @browser.get_html_source.include?("Form was successfully pushed to events").should be_true
   end
   
   it 'existing CMR should have the second form after the push' do
     click_nav_cmrs(@browser)
     click_resource_edit(@browser, "cmrs", @cmr_last_name)
-    @browser.is_text_present(@second_form_name).should be_true
+    @browser.get_html_source.include?(@second_form_name).should be_true
   end
   
 end

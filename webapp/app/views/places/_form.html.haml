@@ -17,11 +17,11 @@
   %table.list
     %tr
       %th.forminformation
-        Edit Place
+        =t "edit_place"
     %tr
       %td
         %span{ :class => "horiz" }
-          = p.label(:name, "Name")
+          = p.label(:name)
           = p.text_field(:name, :size => 25, :maxlength => 250)
         %span{ :class => "horiz" }
           = exposed_type_selector(p)
@@ -31,7 +31,7 @@
   %table.list
     %tr
       %th.forminformation
-        Edit Address
+        =t "edit_address"
     %tr
       %td
 
@@ -50,19 +50,19 @@
         %br{:clear => "all"}
 
         %span{ :class => "horiz" }
-          = ca.label(:city, "City")
+          = ca.label(:city)
           = ca.text_field(:city, {:size => 30, :maxlength=> 255})
 
         %span{ :class => "horiz" }
-          = ca.label(:state_id, "State")
+          = ca.label(:state_id)
           = ca.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {})
 
         %span{ :class => "horiz" }
-          = ca.label(:county_id, "County")
+          = ca.label(:county_id)
           = ca.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {})
 
         %span{ :class => "horiz" }
-          = ca.label(:postal_code, "Zip code")
+          = ca.label(:postal_code)
           = ca.text_field(:postal_code, {:size => 7, :maxlength=> 10})
 
    

@@ -15,15 +15,15 @@
 
 %fieldset
   %legend 
-    Clinical Information
-    %span{:id => 'clinical_info_hide', :onClick => "Element.hide('clinical'); Element.hide('clinical_info_hide'); Element.show('clinical_info_show'); return false;"} [Hide]
-    %span{:id => 'clinical_info_show', :onClick => "Element.show('clinical'); Element.hide('clinical_info_show'); Element.show('clinical_info_hide'); return false;", :style => "display: none;"} [Show]
+    =t('clinical_info')
+    %span{:id => 'clinical_info_hide', :onClick => "Element.hide('clinical'); Element.hide('clinical_info_hide'); Element.show('clinical_info_show'); return false;"}=t('hide')
+    %span{:id => 'clinical_info_show', :onClick => "Element.show('clinical'); Element.hide('clinical_info_show'); Element.show('clinical_info_hide'); return false;", :style => "display: none;"}=t('show')
 
   %div{ :id => 'clinical', :class => 'clinical', :style => "clear: both;"}
     =# Needed for the Ajax links on lab tab to work
     = hidden_field_tag('encounter_event_disease_event_attributes_disease_id', @event.try(:disease_event).disease_id)
 
-    %label Disease:
+    %label="#{t('disease')}:"
     = @event.try(:disease_event).try(:disease).try(:disease_name)
     = render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event }
 

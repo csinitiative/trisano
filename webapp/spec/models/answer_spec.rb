@@ -76,18 +76,6 @@ describe Answer do
     @answer.text_answer.should == '2009-01-21'
   end
 
-  it 'a DD-MM-YYYY date should fail validation' do
-    @answer.question.data_type = 'date'
-    @answer.text_answer = '21-01-2009'
-    @answer.should_not be_valid
-  end
-
-  it 'a YYYY-MM-DD date should fail validation' do
-    @answer.question.data_type = 'date'
-    @answer.text_answer = '1987-1-12'
-    @answer.should_not be_valid
-  end
-
   describe 'when saving an answer to a multi-valued question' do
 
     before(:each) do

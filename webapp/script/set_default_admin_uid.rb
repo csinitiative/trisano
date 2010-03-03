@@ -21,10 +21,5 @@ config = YAML::load_file "../distro/config.yml"
 puts "Setting default administrator UID to #{@default_admin_uid}"
 
 RoleMembership.transaction do
-  unassigned_jurisdiction = Place.jurisdiction_by_name('Unassigned')
-  admin_role = Role.find_by_role_name("Administrator")
-  user = User.find_or_create_by_uid(@default_admin_uid)
-  user.user_name = @default_admin_uid
-  user.update_attributes(:role_membership_attributes => [{ :role_id => admin_role.id, :jurisdiction_id => unassigned_jurisdiction.id }])
-  user.save!
+  User.set_default_admin_uid(@default_admin_uid)
 end

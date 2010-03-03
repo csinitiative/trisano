@@ -72,8 +72,6 @@ describe 'Creating a new cmr from an existing patient' do
   it 'should show patient information changes in original cmr' do
     @browser.click('link=SEARCH')
     @browser.wait_for_page_to_load
-    @browser.click('link=Event Search')
-    @browser.wait_for_page_to_load
     @browser.type('name', @last_name)
     @browser.click("//input[@type='submit']")
     @browser.wait_for_page_to_load

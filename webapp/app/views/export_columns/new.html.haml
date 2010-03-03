@@ -14,12 +14,12 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create Export Column
+  =t 'create_export_column'
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Export Columns', export_columns_path
+  = link_to t('back_to', :name => t('export_columns')), export_columns_path
   %p
 
 = error_messages_for :export_column
@@ -28,4 +28,4 @@
 
   = render :partial => 'form', :locals => { :f => f, :editing => false }
 
-  = f.submit "Create"
+  = f.submit t("create")

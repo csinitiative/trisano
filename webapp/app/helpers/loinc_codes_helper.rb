@@ -2,12 +2,12 @@ module LoincCodesHelper
 
   def loinc_code_tools(loinc_code)
     haml_tag :div, :class => 'tools' do
-      haml_concat link_to_unless_current('Show', loinc_code)
+      haml_concat link_to_unless_current(t('show'), loinc_code)
       haml_concat "&nbsp;|&nbsp;"
-      haml_concat link_to_unless_current('Edit', edit_loinc_code_path(loinc_code))
+      haml_concat link_to_unless_current(t('edit'), edit_loinc_code_path(loinc_code))
       if current_page_is_loinc_page? loinc_code
         haml_concat "&nbsp;|&nbsp;"
-        haml_concat link_to('Delete', loinc_code, :method => :delete, :confirm => 'Are you sure?')
+        haml_concat link_to(t('delete'), loinc_code, :method => :delete, :confirm => t('are_you_sure'))
       end
     end
   end

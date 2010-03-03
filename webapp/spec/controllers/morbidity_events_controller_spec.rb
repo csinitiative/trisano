@@ -118,7 +118,7 @@ describe MorbidityEventsController do
 
     it "should render the public 404 page" do
       do_get
-      response.should render_template("#{RAILS_ROOT}/public/404.html")
+      response.should render_template("#{RAILS_ROOT}/public/404.en.html")
     end
 
   end
@@ -241,7 +241,7 @@ describe MorbidityEventsController do
       @jurisdiction.stub!(:secondary_entity_id).and_return(1)
 
       @primary_jurisdiction = mock_model(Place)
-      @primary_jurisdiction.stub!(:name).and_return('Not Unassigned')
+      @primary_jurisdiction.stub!(:is_unassigned_jurisdiction?).and_return(false)
 
       @event = mock_model(MorbidityEvent, :to_param => "1")
       @event.stub!(:jurisdiction).and_return(@jurisdiction)
@@ -295,19 +295,6 @@ describe MorbidityEventsController do
       end
     end
 
-    describe "with failed routing" do
-      def do_route_event
-        Event.should_receive(:find).and_return(@event)
-        request.env['HTTP_REFERER'] = "/some_path"
-        @event.should_receive(:halted?).and_return false
-        post :jurisdiction, :id => "1", :jurisdiction_id => "2"
-      end
-
-      it "should redirect to where the user came from" do
-        do_route_event
-        response.should redirect_to("http://test.host/some_path")
-      end
-    end
   end
 
   describe "handling STATE actions /events/1/state" do
@@ -387,24 +374,6 @@ describe MorbidityEventsController do
       end
     end
 
-    describe "with a failed state change" do
-      def do_change_state
-        mock_user
-        @event = mock_event        
-                
-        User.stub!(:current_user).and_return(@user)
-        @event.should_receive(:a_status)
-        @event.should_receive(:save).and_return(false)
-        @event.should_receive(:attributes=)
-        Event.should_receive(:find).with("1").and_return(@event)
-        post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
-      end
-
-      it "should redirect to the event index page" do
-        do_change_state
-        response.should redirect_to(cmrs_path)
-      end
-    end
   end
   
   describe "handling successful POST /cmrs/1/soft_delete with update entitlement" do

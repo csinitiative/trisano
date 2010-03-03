@@ -20,6 +20,6 @@
   - remote_form_for(question_element, {}, :loading => "$('edit_question_submit_#{@question_element.id}').disabled = 'disabled';" ) do |f|
     = render :partial => 'form', :locals => { :f => f, :export_columns => @export_columns }
     %p
-      = f.submit("Update", :id => "edit_question_submit_#{@question_element.id}")
+      = f.submit(t("update"), :id => "edit_question_submit_#{@question_element.id}")
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('question-mods-#{@question_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.id}'), { duration: 0.1 })"
+      = link_to_function t("close"), "$('question-mods-#{@question_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@question_element.id}'), { duration: 0.1 })"

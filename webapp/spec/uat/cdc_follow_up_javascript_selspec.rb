@@ -27,13 +27,12 @@ describe 'CDC export follow ups' do
   end
 
   it 'should add mumps form and core cdc follow up to cdc output' do
-    @browser.click("link=FORMS")
-    @browser.wait_for_page_to_load
-    @browser.click("//input[@value='Create new form']")
+    click_nav_forms(@browser).should be_true
+    @browser.click("//input[@value='Create New Form']")
     @browser.wait_for_page_to_load
     @browser.type("//input[@id='form_name']", "mumpy #{get_unique_name(1)}")
     @browser.type("//input[@id='form_short_name']", "mumpy #{get_unique_name(1)}")
-    @browser.select("//select[@id='form_event_type']", "Morbidity event")
+    @browser.select("//select[@id='form_event_type']", "Morbidity Event")
     @browser.check("//input[@id='Mumps']")
     @browser.click("//input[@value='Create']")
     @browser.wait_for_page_to_load

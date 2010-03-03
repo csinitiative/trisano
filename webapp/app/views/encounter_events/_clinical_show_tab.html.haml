@@ -14,6 +14,6 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend Clinical Information
+  %legend=t('clinical_info')
 
   = render :partial => 'events/treatments_show', :locals => { :f => f, :event => @event }

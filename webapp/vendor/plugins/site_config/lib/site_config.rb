@@ -1,8 +1,11 @@
 SITE_CONFIG = YAML::load(File.open("#{RAILS_ROOT}/config/site_config.yml")).with_indifferent_access
 
-def config_option(p, env = nil) 
-	env ||= RAILS_ENV
-	raise "No configuration for environment \"#{env}\"" if SITE_CONFIG[env].nil?	
-	inherit_env = SITE_CONFIG[env]["inherit"]
-	SITE_CONFIG[env][p] || (inherit_env && config_option(p, inherit_env))
+def config_option(p, env = RAILS_ENV)
+  config_options(env)[p]
+end
+
+def config_options(env = RAILS_ENV)
+  raise "No configuration for environment \"#{env}\"" unless env_config = SITE_CONFIG[env]
+  super_env = env_config[:inherit] ? config_options(env_config[:inherit]) : {}
+  super_env.merge(env_config).with_indifferent_access
 end

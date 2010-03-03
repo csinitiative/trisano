@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Add Event Task
+  =t('add_event_task')
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
@@ -22,7 +22,7 @@
 #new-task-form
 
   %h2
-    New Task
+    =t('new_task')
 
   = error_messages_for :task
 
@@ -31,7 +31,7 @@
 
     %br{ :clear => 'all' }
     %br
-    = f.submit "Create", :disable_with => "Creating..."
+    = f.submit t('create'), :disable_with => t('creating')
 
 %br
 
@@ -39,6 +39,6 @@
 
 #existing-tasks
   %h2
-    Existing Tasks
+    =t('existing_tasks')
   #tasks
     = render(:partial => 'tasks/list', :locals => { :task_owner => @event })

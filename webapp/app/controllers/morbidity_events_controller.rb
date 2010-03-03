@@ -2,29 +2,30 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class MorbidityEventsController < EventsController
   include EventsHelper
 
+  # Debt: I don't think this is needed anymore
   before_filter :capture_old_attributes, :only => [:update]
 
   def index
     return unless index_processing
 
     respond_to do |format|
-      format.html # { render :template => "events/index" }
+      format.html
       format.xml  { render :xml => @events }
       format.csv
     end
@@ -47,7 +48,7 @@ class MorbidityEventsController < EventsController
     prepopulate unless params[:from_search].nil?
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @event }
     end
   end
@@ -67,7 +68,7 @@ class MorbidityEventsController < EventsController
       org_event.copy_event(@event, components || []) # Copy instead of clone to make sure contacts become morbs
 
       # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
-      @event.add_note("Event derived from " + ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) )) if components && !components.empty?
+      @event.add_note(t("system_notes.event_derived_from", :locale => I18n.default_locale, :link => ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) ))) if components && !components.empty?
     elsif params[:from_person]
       person = PersonEntity.find(params[:from_person])
       @event.copy_from_person(person)
@@ -75,16 +76,10 @@ class MorbidityEventsController < EventsController
       @event.attributes = params[:morbidity_event]
     end
 
-    # Commented out the 'if prod' test because I don't think we need it anymore. If Selenium tests start to fail, uncomment this
-    # Allow for test scripts and developers to jump directly to the "under investigation" state
-    # if RAILS_ENV == 'production'
-    #   @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
-    # end
-
-    @event.primary_jurisdiction.name == "Unassigned" ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
+    @event.primary_jurisdiction.is_unassigned_jurisdiction? ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
 
     unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have create priveleges in this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
@@ -96,18 +91,17 @@ class MorbidityEventsController < EventsController
         end
         @event.reload
         @event.try(:address).try(:establish_canonical_address)
-        flash[:notice] = 'CMR was successfully created.'
+        flash[:notice] = t("cmr_created")
         format.html {
-          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            redirect_to(edit_cmr_url(@event) + query_str)
+            redirect_to edit_cmr_url(@event, @query_params)
           else
-            redirect_to(cmr_url(@event) + query_str)
+            redirect_to cmr_url(@event, @query_params)
           end
         }
         format.xml  { render :xml => @event, :status => :created, :location => @event }
       else
-        format.html { render :action => "new" }
+        format.html { render :action => "new", :status => :unprocessable_entity }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
       end
     end
@@ -120,7 +114,7 @@ class MorbidityEventsController < EventsController
     @event.attributes = params[:morbidity_event]
 
     # Assume that "save & exits" represent a 'significant' update
-    @event.add_note("Edited event") unless go_back
+    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     respond_to do |format|
       if @event.save
@@ -128,21 +122,20 @@ class MorbidityEventsController < EventsController
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
-        flash[:notice] = 'CMR was successfully updated.'
-        format.html { 
-          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+        flash[:notice] = t("cmr_updated")
+        format.html {
           if go_back
-            redirect_to(edit_cmr_url(@event) + query_str)
+            redirect_to edit_cmr_url(@event, @query_params)
           else
-            redirect_to(cmr_url(@event) + query_str)
+            redirect_to cmr_url(@event, @query_params)
           end
         }
         format.xml  { head :ok }
-        format.js   { render :inline => "CMR saved.", :status => :created }
+        format.js   { render :inline => t("cmr_saved"), :status => :created }
       else
-        format.html { render :action => "edit" }
+        format.html { render :action => "edit", :status => :unprocessable_entity }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => "Morbidity Event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+        format.js   { render :inline => t("morbidity_event_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity }
       end
     end
   end
@@ -153,33 +146,18 @@ class MorbidityEventsController < EventsController
 
   def event_search
     unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return
     end
 
-    if params[:last_name] || params[:first_name] || params[:birth_date] # Tests to see if any params are supplied in query string.
-
-      # For passing on to new_cmr
-      @last_name = params[:last_name]
-      @first_name = params[:first_name]
-      @birth_date = params[:birth_date]
-
-      # Tests to see if params are supplied but empty
-      if @last_name.blank? && @first_name.blank? && @birth_date.blank?
-        @results = []
-      else
-        @birth_date.blank? ? birth_date = nil : birth_date = @birth_date
-        params[:page].blank? ? page = 1 : page = params[:page]
-        begin
-          if params[:use_starts_with_search]
-            @results = HumanEvent.search_by_name_and_birth_date_using_starts_with(params[:last_name], params[:first_name], birth_date, {:page_size => 50, :page => page})
-          else
-            @results = HumanEvent.search_by_name_and_birth_date(params[:last_name] + " " + params[:first_name], birth_date, {:page_size => 50, :page => page})
-          end
-        rescue
-          logger.error $!.message
-          flash.now[:error] = 'Unable to process search. Is birth date a valid date?'
-        end
-      end
+    begin
+      return unless [:last_name, :first_name, :birth_date].any? {|p| !params[p].blank?}
+      page = params[:page].blank? ? 1 : params[:page]
+      @results = HumanEvent.find_by_name_and_bdate({:page_size => 50, :page => page}.merge(params))
+    rescue Exception => e
+      logger.error(e)
+      # shouldn't the logger do the backtrace for me?
+      logger.debug(e.backtrace.join("\n"))
+      flash.now[:error] = t("unable_to_process_search")
     end
   end
 
@@ -195,7 +173,7 @@ class MorbidityEventsController < EventsController
   end
 
   private
-  
+
   def prepopulate
     @event = setup_human_event_tree(@event)
     # Perhaps include a message if we know the names were split out of a full text search
@@ -208,14 +186,14 @@ class MorbidityEventsController < EventsController
     @event.jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
   end
-  
+
   def capture_old_attributes
     @old_attributes = @event.attributes
   end
 
   def index_processing
     if params[:per_page].to_i > 100
-      render :text => 'TriSano cannot process more then 100 cmrs per page', :layout => 'application', :status => 400
+      render :text => t("too_many_cmrs"), :layout => 'application', :status => 400
       return false
     end
 
@@ -234,7 +212,7 @@ class MorbidityEventsController < EventsController
         :per_page => params[:per_page]
       )
     rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404
       return false
     end
     return true

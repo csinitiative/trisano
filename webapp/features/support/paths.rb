@@ -19,7 +19,7 @@ def path_to(page_name)
   case page_name
 
   when /the homepage/i
-    root_path
+    home_path
 
   when /the dashboard page/i
     home_path
@@ -42,6 +42,12 @@ def path_to(page_name)
   when /the show CMR page/i
     cmr_path @event
 
+  when /the CMR show page/i
+    cmr_path @event
+
+  when /the export CMR as csv page/i
+    export_single_cmr_path @event, :format => 'csv'
+
   when /edit the CMR/i
     edit_cmr_path @event
 
@@ -60,11 +66,17 @@ def path_to(page_name)
   when /the first CMR place\'s edit page/i
     edit_place_event_path(@event.place_child_events.first)
 
+  when /the form builder page/i
+    builder_path(@form)
+
   when /the add and remove forms page/i
     event_forms_path(@event)
 
   when /the "([^\"]*)" form details page/i
     form_path Form.templates.find_by_name($1)
+
+  when /the "([^\"]*)" edit form page/i
+    edit_form_path(Form.find_by_name($1))
 
   when /the form\'s edit questions page \(version ([\d]+)\)/i:
     @published_form = @form.published_versions.find_by_version($1)
@@ -187,8 +199,24 @@ def path_to(page_name)
 
   when /the AVR group edit page/
     edit_avr_group_path(@avr_group)
-    
+
+  when /the edit "([^\"]*)" role page/i
+    edit_role_path(Role.find_by_role_name($1))
+
+  when /the CMR search page/i
+    search_cmrs_path
+
+  when /the people search page/i
+    people_path
+
+  when /the places search page/i
+    places_path
+
   else
-    raise "Can't find mapping from \"#{page_name}\" to a path."
+    ifnone = lambda { raise "Can't find mapping from \"#{page_name}\" to a path." }
+    path_name = @@extension_path_names.find(ifnone) do |p|
+      @match_data = Regexp.new(p[:page_name]).match(page_name)
+    end
+    instance_eval(&path_name[:path])
   end
 end

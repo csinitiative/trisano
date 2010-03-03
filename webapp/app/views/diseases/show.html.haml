@@ -14,22 +14,22 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Disease Detail
+  =t('disease_detail')
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Diseases', diseases_path
+  = link_to t('back_to', :name => t('diseases')), diseases_path
   %p
 
 - content_for :tools_two do
-  = button_to("Create new disease", {:action => "new"}, { :method => :get })
+  = button_to(t('create_new_disease'), {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Disease
+        =t('disease')
       %th
       %tr
         %td.forminformation
@@ -38,56 +38,56 @@
 
           %span{ :class => "horiz" }
             %b
-              Status
+              = t('status')
             %br
-            = @disease.active? ? 'Active' :  'Inactive'
+            = @disease.active? ? t('active') :  t('inactive')
 
           %span{ :class => "horiz" }
             %b
-              CDC/NETSS code
+              =t('cdc_netss_code')
             %br
             = h(@disease.cdc_code)
 
           %span{ :class => "horiz" }
             %b
-              Sent to CDC when event status is:
+              = t('cdc_send_status')
             %br
             = h(@disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', '))
 
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_disease_path(@disease)
+            = link_to t('edit'), edit_disease_path(@disease)
             |
-            Show
+            = t('show')
   %table.list
     %tr
       %th.forminformation{:style => "width: 5%"}
-        Lead-in Questions
+        = t('lead_in_questions')
       %th
     %tr
       %td{:style => "width: 5%"}
-        Contact
+        = t('contact')
       %td
         =h @disease.contact_lead_in
     %tr
       %td{:style => "width: 5%"}
-        Place
+        = t('place')
       %td
         =h @disease.place_lead_in
     %tr
       %td{:style => "width: 5%"}
-        Treatment
+        = t('treatment')
       %td
         =h @disease.treatment_lead_in
 
   %table.list
     %tr
       %th.forminformation
-        CDC Export Columns
+        =t('cdc_export_columns')
     %tr
       %td.forminformation
         - if @disease.export_columns.empty?
-          %span No CDC export columns configured
+          %span= t('no_cdc_export_columns_configured')
         - else
           %ul
             - @disease.export_columns.sort_by {|ec| ec.export_column_name}.each do |export_column|
@@ -97,11 +97,11 @@
   %table.list
     %tr
       %th.forminformation
-        AVR Groups
+        = t('avr_groups')
     %tr
       %td.forminformation
         - if @disease.avr_groups.empty?
-          %span No AVR groups configured
+          %span=t ('no_avr_groups_configured')
         - else
           %ul
             - @disease.avr_groups.each do |avr_group|
@@ -111,11 +111,11 @@
   %table.list
     %tr
       %th.forminformation{ :colspan => (@disease.loinc_codes.empty? ? 1 : 5) }
-        LOINC Codes
+        =t('loinc_codes')
     -if @disease.loinc_codes.empty?
       %tr
         %td.forminformation
-          %span No LOINC codes configured
+          %span=t('no_loinc_codes_configured')
     -else
       -@disease.loinc_codes.each do |loinc_code|
         %tr.roll
@@ -124,11 +124,11 @@
   %table.list
     %tr
       %th.forminformation{ :colspan => (@disease.organisms.empty? ? 1 : 2) }
-        Organisms
+        =t('organisms')
     -if @disease.organisms.empty?
       %tr
         %td.forminformation
-          %span No Organisms configured
+          %span=t('no_organisms_configured')
     -else
       -@disease.organisms.each do |organism|
         %tr.roll
@@ -137,11 +137,11 @@
   %table.list
     %tr
       %th.forminformation{ :colspan => (@disease.common_test_types.empty? ? 1 : 2) }
-        Common Test Types
+        =t('common_test_types')
     -if @disease.common_test_types.empty?
       %tr
         %td.forminformation
-          %span No common test types configured
+          %span=t('no_common_test_types_configured')
     -else
       -@disease.common_test_types.each do |common_test_type|
         %tr.roll

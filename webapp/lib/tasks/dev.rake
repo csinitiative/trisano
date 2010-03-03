@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'rake'
@@ -68,26 +68,26 @@ namespace :trisano do
       Rake::Task["trisano:dev:load_codes_and_defaults"].invoke
       Rake::Task["db:test:prepare"].invoke
     end
-    
+
     # may be able to delete this - 24-oct-08: build box no longer using
     desc "full rebuild of all databases for the build server"
     task :db_rebuild_full_for_build  => ['trisano:deploy:stoptomcat', 'db_rebuild_full'] do
     end
-    
+
     desc "update locale configs"
     task :update_locale_configs => [:update_dev_locale_config, :update_test_locale_config] do
     end
-    
+
     desc "update dev locale config"
     task :update_dev_locale_config do
       update_locale_config
     end
-    
+
     desc "update test locale config"
     task :update_test_locale_config do
       update_locale_config("trisano_test")
     end
-    
+
     def update_locale_config()
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"UPDATE pg_ts_cfg SET LOCALE = current_setting('lc_collate') WHERE ts_name = 'default'\"") do |ok, res|
         if ! ok
@@ -110,13 +110,13 @@ namespace :trisano do
     task :load_defaults do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/set_default_admin_uid.rb"
+      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_loinc_codes.rb #{RAILS_ROOT}/db/defaults/loinc_codes_to_common_test_types.csv"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_diseases.rb #{RAILS_ROOT}/db/defaults/diseases.yml"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_disease_export_statuses.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_csv_defaults.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb"
     end
 
     desc "Load test/demo data"
@@ -124,10 +124,14 @@ namespace :trisano do
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
     end
 
+    desc "Resets the database for cuke runs"
+    task :db_reset do
+      ruby "-S rake db:test:prepare"
+    end
+
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
-    task :feature_prep do
-      ruby "-S rake db:test:prepare"
+    task :feature_prep => ["trisano:dev:db_reset"] do
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/set_default_admin_uid.rb"
@@ -146,5 +150,5 @@ namespace :trisano do
     end
 
   end
-  
+
 end

@@ -22,11 +22,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 </script>
 
 <% content_for :title do %>
-  Edit Encounter Event
+  <%= t('edit_thing', :name => t('encounter_event')) %>
 <% end %>
 
 <% content_for :name do %>
-  Encounter, <%= h(@event.participations_encounter.encounter_date) %>
+  Encounter <%= h(@event.participations_encounter.encounter_date) %>
   <span style='position: absolute; right: 0;'>
     <%= original_patient_controls(@event) %>
   </span>
@@ -37,7 +37,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :tools do %>
-  <%= link_to_function('Show', "send_url_with_tab_index('#{encounter_event_path(@event)}')") %>
+  <%= link_to_function(t('show'), "send_url_with_tab_index('#{encounter_event_path(@event)}')") %>
 <% end %>
 
 <% @form_index = 0 %>
@@ -49,11 +49,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% form_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
   <% tabs = []
-  tabs << %w(encounter_tab Encounter)
-  tabs << %w(clinical_tab Clinical)
-  tabs << %w(lab_info_tab Laboratory)
-  tabs << %w(investigation_tab Investigation)
-  tabs << %w(notes_tab Notes)
+  tabs << ['encounter_tab', t('encounter')]
+  tabs << ['clinical_tab', t('clinical')]
+  tabs << ['lab_info_tab', t('lab')]
+  tabs << ['investigation_tab', t('investigation')]
+  tabs << ['notes_tab', t(:event_notes)]
 %>
 
   <% tabbed_content(tabs, @tab_index) do %>

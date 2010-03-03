@@ -21,11 +21,11 @@ class PeopleController < ApplicationController
     return unless index_processing
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People" }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs") }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
-      format.html # { render :template => "people/index" }
+      format.html
       format.xml  { render :xml => @people }
       format.csv
     end
@@ -35,17 +35,15 @@ class PeopleController < ApplicationController
     @person = PersonEntity.find(params[:id])
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
     end
-    
+
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @person }
     end
   end
 
-  # GET /people/new
-  # GET /people/new.xml
   def new
     @person = PersonEntity.new
     @person.person = Person.new
@@ -54,11 +52,11 @@ class PeopleController < ApplicationController
     @person.email_addresses << EmailAddress.new
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @person }
     end
   end
@@ -79,12 +77,10 @@ class PeopleController < ApplicationController
     end
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
     end
   end
 
-  # POST /people
-  # POST /people.xml
   def create
     go_back = params.delete(:return)
     
@@ -93,12 +89,12 @@ class PeopleController < ApplicationController
     @person.update_attributes(params[:person_entity])
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
     end
     
     respond_to do |format|
       if @person.save
-        flash[:notice] = 'Person was successfully created.'
+        flash[:notice] = t("person_created")
         format.html { 
           if go_back
             redirect_to(edit_person_url(@person))
@@ -125,12 +121,12 @@ class PeopleController < ApplicationController
     @person = PersonEntity.find(params[:id])
 
     unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => "You do not have privileges to manage People", :person => @person }, :layout => true, :status => 403 and return
+      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
     end
 
     respond_to do |format|
       if @person.update_attributes(params[:person_entity])
-        flash[:notice] = 'Person was successfully updated.'
+        flash[:notice] = t("person_updated")
         format.html {
           if go_back
             redirect_to(edit_person_url(@person))
@@ -154,7 +150,7 @@ class PeopleController < ApplicationController
   
   def index_processing
     if params[:per_page].to_i > 100
-      render :text => 'TriSano cannot process more then 100 people per page', :layout => 'application', :status => 400
+      render :text => t("too_many_people"), :layout => 'application', :status => 400
       return false
     end
 
@@ -172,7 +168,7 @@ class PeopleController < ApplicationController
         :per_page => params[:per_page]
       )
     rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404
       return false
     end
     return true

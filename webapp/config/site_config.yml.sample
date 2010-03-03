@@ -1,8 +1,40 @@
 base:
   bi_server_url: http://localhost:18080/pentaho/Home
+  # Uncommenting help_url will display HELP link (defaults to wiki help)
+  help_url: https://wiki.csinitiative.com/display/trisw/Help
   auth_allow_user_switch: false
   # Displays user switch below footer on mouseover
   auth_allow_user_switch_hidden: false
+  # Uncommenting google_api_key will turn on google maps and geocode features, if not using the premier acct.
+  #google_api_key: ABQIAAAAo4YnME-vPXWNSkpYMt_0oxSVimV7G6dhrQkR9OVUux8Cu6qgXBQnOd8sgchiXpy5cIzq5sf8Ufz4LQ
+  # Uncommenting google_client_id will turn on google maps and geocode features, preferred method
+  #google_client_id: gme-collabsw
+  # Channel indicates the customer or deployment for tracking purposes
+  #google_channel: developer
+  # API 2 & 3 are supported, anything other than 3 defaults to 2
+  #google_api_version: 3
+
+  # Customize the way telephone numbers are displayed and validated
+  telephone:
+    phone_number: "^(\d{3})-?(\d{4})$"
+    phone_number_format: "%s-%s"
+    area_code: "^(\d{3})$"
+    area_code_format: "(%s)"
+    use_area_code: true
+    extension: "^(\d{1,6})$"
+
+  # Customize to include country codes
+    use_country_code: true
+    country_code: "^(\d{1,3})$"
+    country_code_format: "+%s"
+
+  # Configure the format of a phone number in custom forms created in formbuilder
+  answer:
+    phone: "^\d{3}-\d{3}-\d{4}$"
+
+  locale:
+    # Configure user locale switching
+    allow_switching: true
 
 development:
   inherit: base
@@ -13,8 +45,10 @@ test:
   inherit: base
   auth_src_env: TRISANO_UID
   auth_allow_user_switch: true
-  
+  max_search_results: 50
+
 production:
   inherit: base
-  #auth_src_header: HTTP_UID # CA SiteMinder
-  #auth_src_env: REMOTE_USER # Apache basic auth
+  locale:
+    # Configure user locale switching (off in production, by default)
+    allow_switching: false

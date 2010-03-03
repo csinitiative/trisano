@@ -23,7 +23,7 @@
       = render :partial => 'form', :locals => { :f => f }
 
       %p
-        = f.submit("Create", :id => "create_value_submit_#{@value_element.parent_element_id}")
+        = f.submit(t("create"), :id => "create_value_submit_#{@value_element.parent_element_id}")
         &nbsp;&nbsp;
-        = link_to_function "Close", "$('value-mods-#{@value_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-mods-#{@value_element.parent_element_id}'), { duration: 0.1 })"
+        = link_to_function t("close"), "$('value-mods-#{@value_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-mods-#{@value_element.parent_element_id}'), { duration: 0.1 })"
 

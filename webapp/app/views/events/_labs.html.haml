@@ -17,16 +17,16 @@
   - if labs.empty?
     %fieldset.form
       %legend
-        Labs
+        =t 'labs'
       %h3
-        No lab results have been recorded for this event
+        =t 'no_lab_results'
   - else
     %table.list
       %tr
-        %th Lab name
-        %th Test type
-        %th Test result
-        %th Specimen
+        %th=t 'lab_name'
+        %th=t 'test_type'
+        %th=t 'test_result'
+        %th=t 'specimen'
 
       - for lab in labs
         - for lab_result in lab.lab_results
@@ -37,11 +37,11 @@
               %td
                 %b= h(lab.place_entity.place.name)
                 %br
-                = link_to('Electronic Lab Report', staged_message_path(lab_result.staged_message)) if lab_result.staged_message
+                = link_to(t('electronic_lab_report'), staged_message_path(lab_result.staged_message)) if lab_result.staged_message
               %td
                 %b= h(lab_result.test_type.try(:common_name))
                 %br
-                Organism: 
+                =ct('organism')
                 %b= h(lab_result.organism.try(:organism_name))
               %td
                 - no_result = true
@@ -51,31 +51,32 @@
                   %br
                 - unless lab_result.result_value.blank?
                   - no_result = false
-                  Result value:
+                  =ct('result_value')
                   %b= h(lab_result.result_value)
                 - unless lab_result.units.blank?
                   - no_result = false
-                  Units:
+                  =t ct('units')
                   %b= h(lab_result.units)
                   %br
                 - if no_result
-                  %b No result
+                  %b=t 'no_result'
                   %br
-                Reference range:
+                = ct('reference_range')
                 %b= h(lab_result.reference_range)
                 %br
-                Test status:
+                =ct('test_status')
                 %b= h(l(lab_result.test_status))
               %td
-                Source:
+                = ct('source')
                 %b= h(l(lab_result.specimen_source))
                 %br
-                Collected on:
-                %b= h(lab_result.collection_date)
-                &nbsp;Tested on:
-                %b= h(lab_result.lab_test_date)
+                = ct('collected_on')
+                %b= ld(lab_result.collection_date)
+                &nbsp;
+                = ct('tested_on')
+                %b= ld(lab_result.lab_test_date)
                 %br
-                Sent to state lab:
+                = ct('sent_to_state_lab')
                 %b= h(l(lab_result.specimen_sent_to_state))
 
             %tr

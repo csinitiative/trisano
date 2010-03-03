@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  ="Add LOINC Codes to Common Test Type"
+  =t('add_loinc_codes_to_common_test_types')
 
 -content_for :tools do
-  =link_to h('< Back to Common Test Types'), common_test_types_path
+  =link_to h(t('back_to_common_test_types')), common_test_types_path
   %p
 
 =render :partial => 'summary', :locals => {:common_test_type => @common_test_type}
@@ -27,15 +27,15 @@
     %table.list
       %tr
         %th
-          Remove
+          = t('remove')
         %th.forminformation
-          LOINC Code
+          = t('loinc_code')
         %th
-          Test Name
+          = t('common_test_name')
       -if @common_test_type.loinc_codes.empty?
         %tr
           %td{:colspan => '3'}
-            No associated LOINC Codes
+            = t('no_loinc_codes')
       -else
         -@common_test_type.loinc_codes.each do |loinc_code|
           %tr.roll
@@ -49,20 +49,20 @@
               %span.test_name
                 = h(loinc_code.test_name)
     %span.vert-break
-      =submit_tag "Remove"
+      =submit_tag t('remove')
 
-%h3 Search for available LOINC codes
+%h3= t('search_for_loinc_codes')
 -form_tag loinc_codes_common_test_type_path(@common_test_type), :method => :get do
   %span.vert
-    =label_tag :loinc_code_search_loinc_code, 'Loinc code'
+    =label_tag :loinc_code_search_loinc_code, t('loinc_code')
     =text_field_tag :loinc_code_search_loinc_code, params[:loinc_code_search_loinc_code]
   %span.horiz
-    =label_tag :loinc_code_search_test_name, 'Test name'
+    =label_tag :loinc_code_search_test_name, t('common_test_name')
     =text_field_tag :loinc_code_search_test_name, params[:loinc_code_search_test_name], :size => 40
 
   %span.horiz
     =label_tag "&nbsp;"
-    =submit_tag "Search", :name => :do
+    =submit_tag t('search_button'), :name => :do
 
 %span.vert-break
   &nbsp;
@@ -76,13 +76,13 @@
         %table.list
           %tr
             %th
-              Add
+              = t('add')
             %th.forminformation
-              LOINC Code
+              = t('loinc_code')
             %th
-              Test Name
+              = t('activerecord.attributes.loinc_code.test_name')
             %th
-              Associated With
+              = t('associated_with')
           -@loinc_codes.each do |loinc_code|
             %tr.roll
               %td
@@ -99,5 +99,5 @@
                   %span.associated-common-test
                     =link_to_associated_common_test_type loinc_code
         %span.vert
-          =submit_tag "Add"
+          =submit_tag t('add')
 

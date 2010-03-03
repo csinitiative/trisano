@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 #rot
@@ -18,13 +18,13 @@
     %table.list
       %tr
         %th
-          Privileges
-      - for p in @role.privileges_roles
+          =t 'privileges'
+      - for p in @role.privileges.sort_by(&:name)
         %tr
           %td
             .formname
-              = h(p.privilege.priv_name)
+              = h(p.name)
             .tools
-              = h(p.privilege.description)
+              = h(p.description)
   - else
-    No privileges
+    =t 'no_privileges'

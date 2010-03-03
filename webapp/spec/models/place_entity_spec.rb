@@ -72,7 +72,7 @@ describe PlaceEntity do
             "lab_results_attributes"=>{
               "0"=>{
                 "test_type_id"=>1, "reference_range"=>"",
-                "specimen_source_id"=>"", "collection_date"=>"", "lab_test_date"=>"", "specimen_sent_to_state_id"=>""
+                "specimen_source_id"=>"", "collection_date"=> nil, "lab_test_date"=> nil, "specimen_sent_to_state_id"=>""
               }
             }
           }
@@ -107,85 +107,94 @@ describe PlaceEntity do
     end
 
     it "should find places that have been utilized as hospitalization facilities if a matching name is used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 0
 
       with_event(@event_hash) do |event|
-        PlaceEntity.all_by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 1
+        PlaceEntity.by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 1
       end
     end
 
     it "should not find places that have been utilized as hospitalization facilities if a matching name is not used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
+        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
       end
     end
 
     it "should find places that have been utilized as diagnostic facilities if a matching name is used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 1
+        PlaceEntity.by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 1
       end
     end
 
     it "should not find places that have been utilized as diagnostic facilities if a matching name is not used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
+        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
       end
     end
 
     it "should find places that have been utilized as labs if a matching name is used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 1
+        PlaceEntity.by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 1
       end
     end
 
     it "should not find places that have been utilized as labs if a matching name is not used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
+        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
       end
     end
 
     it "should find places that have been utilized as place exposures if a matching name is used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 1
+        PlaceEntity.by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 1
       end
     end
 
     it "should not find places that have been utilized as place exposures if a matching name is not used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
+        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
       end
     end
 
     it "should find places that have been utilized as labs if a matching name is used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 1
+        PlaceEntity.by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 1
       end
     end
 
     it "should not find places that have been utilized as labs if a matching name is not used" do
-      PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
+      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
 
       with_event(@event_hash) do
-        PlaceEntity.all_by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
+        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
       end
     end
 
+    it "should be able to exclude an entity from a search result" do
+      pe_count = PlaceEntity.count
+
+      with_event(@event_hash) do |event|
+        PlaceEntity.count.should == pe_count + 4
+        PlaceEntity.exclude_entity(event.reporting_agency.place_entity).count.should == pe_count + 3
+        PlaceEntity.by_name_and_participation_type({:name => "Reporters", :participation_type => "ReportingAgency"}).exclude_entity(event.reporting_agency.place_entity).size.should == 0
+      end
+    end
   end
 
 end
@@ -195,6 +204,8 @@ describe PlaceEntity do
   describe "using jurisdiction named scopes" do
 
     before(:each) do
+      @base_count = PlaceEntity.jurisdictions.size
+
       @jurisdiction_one = Factory.create(:place_entity)
       @jurisdiction_one.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
 
@@ -227,7 +238,7 @@ describe PlaceEntity do
       PlaceEntity.active_jurisdictions.excluding_unassigned.size.should == 2
       PlaceEntity.active_jurisdictions.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
     end
-    
+
   end
 
 end

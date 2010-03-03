@@ -16,11 +16,11 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Role < ActiveRecord::Base
-  
+
   has_many :role_memberships, :dependent => :delete_all
   has_many :users, :through => :role_memberships
-  
-  has_many :privileges_roles
+
+  has_many :privileges_roles, :dependent => :delete_all
   has_many :privileges, :through => :privileges_roles
 
   validates_presence_of :role_name

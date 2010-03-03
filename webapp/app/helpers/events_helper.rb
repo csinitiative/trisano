@@ -1,4 +1,3 @@
-
 # Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -20,31 +19,55 @@ require 'csv'
 require 'ostruct'
 
 module EventsHelper
+  extensible_helper
+
+  def hide
+    return "[#{t 'hide'}]"
+  end
+
+  def show
+    return "[#{t 'show'}]"
+  end
+  def ct(*args)
+    return t('colon_after', :text => t(*args))
+  end
 
   def core_element(attribute, form_builder, css_class, &block)
-    concat_core_field(:edit, :before, attribute, form_builder, block)
+    concat_core_field(:edit, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    yield
-    render_core_field_help_text(attribute, form_builder, block)
+    if renderer = core_element_renderers[form_builder.core_path[attribute].to_s]
+      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
+    else
+      block.call
+    end
+    concat(render_core_field_help_text(attribute, form_builder, @event))
     concat("</span>")
-    concat_core_field(:edit, :after, attribute, form_builder, block)
+    concat_core_field(:edit, :after, attribute, form_builder)
   end
 
   def core_element_show(attribute, form_builder, css_class, &block)
-    concat_core_field(:show, :before, attribute, form_builder, block)
+    concat_core_field(:show, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    yield
-    render_core_field_help_text(attribute, form_builder, block)
+    if renderer = core_element_show_renderers[form_builder.core_path[attribute].to_s]
+      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
+    else
+      block.call
+    end
+    concat(render_core_field_help_text(attribute, form_builder, @event))
     concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
-    concat_core_field(:show, :after, attribute, form_builder, block)
+    concat_core_field(:show, :after, attribute, form_builder)
   end
 
   def core_element_print(attribute, form_builder, css_class, &block)
-    concat_core_field(:print, :before, attribute, form_builder, block)
+    concat_core_field(:print, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    yield
+    if renderer = core_element_show_renderers[form_builder.core_path[attribute].to_s]
+      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
+    else
+      block.call
+    end
     concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
-    concat_core_field(:print, :after, attribute, form_builder, block)
+    concat_core_field(:print, :after, attribute, form_builder)
   end
 
   def render_investigator_view(view, f, form=nil)
@@ -133,7 +156,7 @@ module EventsHelper
           when 'encounter_event'
             lab_result_form_new_encounter_event_path(:prefix => prefix)
           end
- 
+
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
@@ -157,38 +180,38 @@ module EventsHelper
   end
 
   def warning_banner
-    content_tag(:p, "You have accessed an out-of-jurisdiction event. Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')} if access was unintentional.  Access has been logged.", :class => 'banner-warning')
+    content_tag(:p, t(:out_of_jurisdiction_access, :link => link_to(t(:please_exit), home_path, :style => 'color: white; text-decoration: underline;')), :class => 'banner-warning')
   end
 
   def basic_contact_event_controls(event, from_index=false)
-    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-    can_view =  User.current_user.is_entitled_to_in?(:view_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    can_update =  User.current_user.can_update?(event)
+    can_view =  User.current_user.can_view?(event)
 
     controls = ""
-    controls << link_to('Show', contact_event_path(event)) if from_index && can_view
+    controls << link_to(t(:show), contact_event_path(event)) if from_index && can_view
     if can_update
       controls << " | " unless controls.blank?
       if from_index
-        controls <<  link_to('Edit', edit_contact_event_path(event))
+        controls <<  link_to(t(:edit), edit_contact_event_path(event))
       else
-        controls <<  link_to_function('Edit', "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
+        controls <<  link_to_function(t(:edit), "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
       end
     end
     if can_view
       controls << " | " unless controls.blank?
-      controls << link_to_function("Print", nil) do |page|
+      controls << link_to_function(t(:print), nil) do |page|
         page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
       end
     end
     if event.deleted_at.nil? && can_update
       controls << " | " unless controls.blank?
-      controls << link_to('Delete', soft_delete_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+      controls << link_to(t(:delete), soft_delete_contact_event_path(event), :method => :post, :confirm => t(:are_you_sure), :id => 'soft-delete')
     end
     if !from_index && can_update
       controls << " | " unless controls.blank?
-      controls << link_to('Add Task', new_event_task_path(event))
-      controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
-      controls << " | " << link_to('Promote to CMR', event_type_contact_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'event-type')
+      controls << link_to(t(:add_task), new_event_task_path(event))
+      controls << " | " << link_to(t(:add_attachment), new_event_attachment_path(event))
+      controls << " | " << link_to(t(:promote_to_cmr), event_type_contact_event_path(event), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
     end
 
     controls
@@ -200,96 +223,127 @@ module EventsHelper
     controls = ""
 
     if can_update
-      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_place_event_path(event)}')")
+      controls << link_to_function(t(:edit), "send_url_with_tab_index('#{edit_place_event_path(event)}')")
       if event.deleted_at.nil?
-        controls <<  " | " << link_to('Delete', soft_delete_place_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+        controls <<  " | " << link_to(t(:delete), soft_delete_place_event_path(event), :method => :post, :confirm => t(:are_you_sure), :id => 'soft-delete')
       end
     end
 
     controls
+  end
+
+  def action_controls(event)
+    returning "" do |controls|
+      event.allowed_transitions.each do |transition|
+        case transition
+        when :accept, :reject, :approve, :reopen, :close
+          controls << radio_button_tag(
+            h(transition.to_s),
+            h(transition.to_s),
+            false,
+            :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
+          controls << t(transition)
+        when :complete, :complete_and_close
+          controls << submit_tag(
+            t(transition),
+            :id => "investigation_complete_btn",
+            :type => "button",
+            :onclick => state_routing_js(:value => transition.to_s))
+        end
+      end
+    end
+  end
+
+  def assignment_controls(event)
+    returning "" do |controls|
+      event.allowed_transitions.each do |transition|
+        case transition
+        when :assign_to_queue
+          event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
+          controls << "<div>#{ct(:assign_to_queue)}&nbsp;"
+          controls << select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
+        when :assign_to_investigator
+          investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
+          controls << "<div>#{ct(:assign_to_investigator)}&nbsp;"
+          controls << select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
+        end
+      end
+    end
   end
 
   def state_controls(event)
     return "" if event.new? or (event.is_a?(ContactEvent) && event.not_routed?) or event.closed? or event.rejected_by_lhd?
 
-    routing_controls = ""
-    action_controls = ""
-    event.allowed_transitions.each do |transition|
-      case transition
-      when :accept, :reject, :approve, :reopen, :close
-        action_controls << radio_button_tag(h(transition.to_s),
-          h(transition.to_s),
-          false,
-          :onclick => state_routing_js(:confirm => transition == :reject && event.assigned_to_lhd?))
-        action_controls << h(transition.to_s.titleize)
-      when :assign_to_queue
-        event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
-        routing_controls << "<div>Assign to queue:&nbsp;"
-        routing_controls << select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
-      when :assign_to_investigator
-        investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
-        routing_controls << "<div>Assign to investigator:&nbsp;"
-        routing_controls << select_tag("morbidity_event[investigator_id]", "<option value=""></option>" + options_from_collection_for_select(investigators, :id, :best_name, event['investigator_id']), :onchange => state_routing_js(:value => h(transition.to_s)), :id => 'morbidity_event__investigator_id', :style => "display: inline") + "</div>"
-      when :complete, :complete_and_close
-        action_controls << submit_tag(h(transition.to_s.titleize), :id => "investigation_complete_btn", :type => "button", :onclick => state_routing_js(:value => transition.to_s))
+    routing_controls = assignment_controls(event)
+    action_controls = action_controls(event)
+
+    returning "" do |controls|
+      if action_controls.blank? && routing_controls.blank?
+        controls << "<span style='color: gray'>#{t(:insufficient_privs_transition)}</span>" if action_controls.blank?
+      else
+        controls << routing_form_tag(:state, event, :id => "state_change") do
+          returning "" do |form|
+            form << hidden_field_tag("morbidity_event[workflow_action]", '')
+            form << "#{ct(:brief_note)} #{text_field_tag("morbidity_event[note]", '')}"
+            form << "<br/> #{ct(:action_required)} #{action_controls} <br/>" unless action_controls.blank?
+            form << routing_controls
+          end
+        end
       end
     end
-
-    if action_controls.blank? && routing_controls.blank?
-      controls = "<span style='color: gray'>Insufficient privileges to transition this event</span>" if action_controls.blank?
-    else
-      controls = %Q[
-        #{form_tag(state_cmr_path(event))}
-        #{hidden_field_tag("morbidity_event[workflow_action]", '')}
-        Brief note: #{text_field_tag("morbidity_event[note]", '')}
-      ]
-      controls << "<br/> Action required: #{action_controls} <br/>" unless action_controls.blank?
-      controls << routing_controls
-      controls << "</form>"
-    end
-    controls
   end
 
   def jurisdiction_routing_control(event)
-    controls = ""
-    if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
-      controls << link_to_function('Route to Local Health Depts.', nil) do |page|
-        page["routing_controls_#{h(event.id)}"].visual_effect :appear, :duration => 0.5
+    returning "" do |controls|
+      if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
+        controls << link_to_function(t('route_to_local'), nil) do |page|
+          page["routing_controls_#{h(event.id)}"].visual_effect :appear, :duration => 0.5
+        end
+        controls << "<div id='routing_controls_#{h(event.id)}' style='display: none; position: relative'>"
+        controls << "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
+
+        jurisdictions = Place.jurisdictions
+        controls << routing_form_tag(:jurisdiction, event) do
+          returning "" do |form|
+            form << "<span>#{ct(:investigating_jurisdiction)} &nbsp;</span>"
+            form << select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
+
+            form << "<br />#{ct(:also_grant_access)}"
+            form << "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
+            form << "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
+            jurisdictions.each do | jurisdiction |
+              form << "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
+            end
+            form << "</div></div>"
+
+            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("note", '')}</div><br/>"
+            form << submit_tag(t(:route_event), :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
+          end
+        end
+
+        controls << link_to_function(t("close"), "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })")
+        controls << "</div>"
+        controls << "</div>"
+      else
+        controls << "<span style='color: gray'>#{t(:routing_disabled)}</span>"
       end
-      controls << "<div id='routing_controls_#{h(event.id)}' style='display: none; position: relative'>"
-      controls << "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
-      jurisdictions = Place.jurisdictions
-      controls << form_tag(jurisdiction_cmr_path(event))
-      controls << "<span>Investigating jurisdiction: &nbsp;</span>"
-      controls << select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
-      controls << "<br />Also grant access to:"
-
-      controls << "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
-      controls << "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
-
-      jurisdictions.each do | jurisdiction |
-        controls << "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
-      end
-
-      controls << "</div></div>"
-      controls << "<div style='position: absolute; right: 15px'>Brief note: #{text_field_tag("note", '')}</div><br/>"
-      controls << submit_tag("Route Event", :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
-
-      controls << "</form>"
-      controls << link_to_function("Close", "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })")
-      controls << "</div>"
-      controls << "</div>"
-    else
-      controls << "<span style='color: gray'>Routing disabled</span>"
     end
-    controls
+  end
+
+  def routing_form_tag(action, event, options={}, &block)
+    path_meth = event.is_a?(MorbidityEvent) ? "#{action.to_s}_cmr_path" : "#{action.to_s}_contact_event_path"
+    returning "" do |form|
+      form << form_tag(send(path_meth, event), options)
+      form << block.call if block_given?
+      form << "</form>" if block_given?
+    end
   end
 
   def state_routing_js(options = {})
     value = "'#{h(options[:value])}'" if options[:value]
     confirm = options[:confirm]
     js = []
-    js << 'if(confirm("Are you sure?")) {' if confirm
+    js << "if(confirm(\"#{t(:are_you_sure)}\")) {" if confirm
     js << "$(this.form).getInputs('hidden', 'morbidity_event[workflow_action]').reduce().setValue(#{value || '$F(this)'});"
     js << 'this.form.submit();'
     js << '}' if confirm
@@ -306,32 +360,32 @@ module EventsHelper
 
   def show_and_edit_event_links(event)
     return if event.new_record?
+    show_and_edit_links[event.class.name][event]
+  end
 
-    jurisdiction_ids = @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
-    can_show =  User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids)
-    can_edit =  User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids)
-    show_bar = can_show && can_edit
+  def show_and_edit_links
+    Hash[
+         "MorbidityEvent", lambda { |event| links_to_show_and_edit(event, :show_cmr, :edit_cmr, :cmr_path, :edit_cmr_path) },
+         "ContactEvent"  , lambda { |event| links_to_show_and_edit(event, :show_contact, :edit_contact) },
+         "PlaceEvent"    , lambda { |event| links_to_show_and_edit(event, :show_place, :edit_place) },
+         "EncounterEvent", lambda { |event| links_to_show_and_edit(event, :show_encounter, :edit_encounter) }
+        ]
+  end
 
-    out = ""
-    case event.class.name
-    when "MorbidityEvent"
-      out << link_to("Show CMR", cmr_path(event), {:id => "show-event-#{event.id}"}) if can_show
-      out << " | " if show_bar
-      out << link_to("Edit CMR", edit_cmr_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
-    when "ContactEvent"
-      out << link_to("Show Contact", contact_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
-      out << " | " if show_bar
-      out << link_to("Edit Contact", edit_contact_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
-    when "PlaceEvent"
-      out << link_to("Show Place", place_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
-      out << " | " if show_bar
-      out << link_to("Edit Place", edit_place_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
-    when "EncounterEvent"
-      out << link_to("Show Encounter", encounter_event_path(event), {:id => "show-event-#{event.id}"}) if can_show
-      out << " | " if show_bar
-      out << link_to("Edit Encounter", edit_encounter_event_path(event), {:id => "edit-event-#{event.id}"}) if can_edit
-    end
-    out
+
+  def links_to_show_and_edit(event, show_text, edit_text, *args)
+    options =   args.extract_options!
+    show_meth = args.first || "#{event.class.name.underscore}_path"
+    edit_meth = args.last  || "edit_#{event.class.name.underscore}_path"
+    user = User.current_user
+    returning [] do |out|
+      if user.can_view?(event)
+        out << link_to(t(show_text, options), send(show_meth, event), {:id => "show-event-#{event.id}"})
+      end
+      if user.can_update?(event)
+        out << link_to(t(edit_text, options), send(edit_meth, event), {:id => "edit-event-#{event.id}"})
+      end
+    end.join("&nbsp;|&nbsp;")
   end
 
   # Test type select list for Ajaxy add of new lab result
@@ -390,8 +444,8 @@ module EventsHelper
       end
     end
     unless no_more
-      more = CommonTestType.new(:common_name => "More choices...")
-      more.id = 0  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
+      more = CommonTestType.new(:common_name => t(:more_choices))
+      more.id = -1  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
       opts += [more]
     end
     opts
@@ -448,8 +502,8 @@ module EventsHelper
       end
     end
     unless no_more
-      more = Organism.new(:organism_name => "More choices...")
-      more.id = 0  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
+      more = Organism.new(:organism_name => t(:more_choices))
+      more.id = -1  # Otherwise, id is nil and the HTML OPTION value is the empty string, which conflicts with the blank value
       opts += [more]
     end
     opts
@@ -612,12 +666,17 @@ module EventsHelper
 
   def original_patient_controls(event)
     disease = event.safe_call_chain(:parent_event, :disease_event, :disease, :disease_name)
-    ERB.new(<<-HELPER_ERB).result(binding)
-      <div>
-        Parent Patient: <%= link_to_parent event %>
-        <%= " | <span style='font-size: 12px; font-weight: light;'>#{h disease}</span>" unless disease.blank? %>
-      </div>
-    HELPER_ERB
+    returning "" do |result|
+      result << "<div>"
+      result << ct(:parent_patient)
+      result << "&nbsp;"
+      result << link_to_parent(event)
+      unless disease.blank?
+        result << "&nbsp;|&nbsp;"
+        result << "<span style='font-size: 12px; font-weight: light;'>#{h disease}</span>"
+      end
+      result << "</div>"
+    end
   end
 
   def link_to_parent(event)
@@ -633,14 +692,10 @@ module EventsHelper
     (association_collection.empty? || association_collection.first.new_record?) ? false :true
   end
 
-  private
-
-  def concat_core_field(mode, before_or_after, attribute, form_builder, block)
+  def concat_core_field(mode, before_or_after, attribute, form_builder)
     return if  (@event.nil? || @event.form_references.nil?)
-    # concat("#{form_builder.object_name}[#{attribute}]", block.binding)
     @event.form_references.each do |form_reference|
-      core_path = form_builder.core_path.to_s
-      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{core_path}[#{attribute}]")
+      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.core_path[attribute].to_s}")
       configs.each do |config|
         element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
 
@@ -731,7 +786,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[Show]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{sanitize(h(element.description).gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
 
       section_children = form_elements_cache.children(element)
 
@@ -746,7 +801,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render section element (#{element.id})"
+      return t(:could_not_render, :what => t(:section_element), :id => element.id)
     end
   end
 
@@ -765,7 +820,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render group element (#{element.id})"
+      return t(:could_not_render, :what => t(:group_element), :id => element.id)
     end
   end
 
@@ -777,10 +832,10 @@ module EventsHelper
 
   def render_help_text(element)
     if element.is_a?(QuestionElement)
-      return if element.question.nil?
+      return "" if element.question.nil?
       help_text = element.question.help_text
     else
-      return if element.help_text.blank?
+      return "" if element.nil? || element.help_text.blank?
       help_text = element.help_text
     end
 
@@ -792,13 +847,11 @@ module EventsHelper
     result << "<span id='#{h(identifier)}_help_text_#{h(element.id)}' style='display: none;'>#{simple_format(sanitize(help_text, :tags => %w(br)))}</span>"
   end
 
-  def render_core_field_help_text(attribute, form_builder, block)
-    if @event
-      core_path = form_builder.core_path[attribute].to_s
-      core_field = @event.class.exposed_attributes[core_path]
-      help = render_help_text(core_field[:model]) if core_field
-      concat(help) if help
-    end
+  def render_core_field_help_text(attribute, form_builder, event)
+    return "" unless event
+    core_path = form_builder.core_path[attribute].to_s
+    core_field = CoreField.event_fields(event)[core_path]
+    core_field ? render_help_text(core_field) : ""
   end
 
   def render_investigator_question(form_elements_cache, element, f)
@@ -865,7 +918,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render follow up element (#{element.id})"
+      return t(:could_not_render, :what => t(:follow_up_element), :id => element.id)
     end
   end
 
@@ -895,7 +948,6 @@ module EventsHelper
 
       if (include_children || ajax_render)
         questions = form_elements_cache.children(element)
-
         if questions.size > 0
           questions.each do |child|
             result << render_investigator_element(form_elements_cache, child, f)
@@ -908,7 +960,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render core follow up element (#{element.id})"
+      return t(:could_not_render, :what => t(:core_follow_up_element), :id => element.id)
     end
   end
 
@@ -948,7 +1000,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render section element (#{element.id})"
+      return t(:could_not_render, :what => t(:section_element), :id => element.id)
     end
   end
 
@@ -970,7 +1022,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render group element (#{element.id})"
+      return t(:could_not_render, :what => t(:group_element), :id => element.id)
     end
   end
 
@@ -1000,7 +1052,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not show question element (#{element.id})"
+      return t(:could_not_render, :what => t(:group_element), :id => element.id)
     end
   end
 
@@ -1027,7 +1079,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render follow up element (#{element.id})"
+      return t(:could_not_render, :what => t(:follow_up_element), :id => element.id)
     end
   end
 
@@ -1074,7 +1126,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render core follow up element (#{element.id})"
+      return t(:could_not_render, :what => t(:core_follow_up_element), :id => element.id)
     end
   end
 
@@ -1123,7 +1175,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render group element (#{element.id})<br/>"
+      return t(:could_not_render, :what => t(:group_element), :id => element.id)
     end
   end
 
@@ -1151,7 +1203,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not show question element (#{element.id})<br/>"
+      return t(:could_not_render, :thing => t(:question_element), :id => element.id)
     end
   end
 
@@ -1178,7 +1230,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render follow up element (#{element.id})<br/>"
+      return t(:could_not_render, :thing => t(:follow_up_element), :id => element.id) + "<br/>"
     end
   end
 
@@ -1215,7 +1267,7 @@ module EventsHelper
       return result
     rescue
       logger.warn($!.message)
-      return "Could not render core follow up element (#{element.id})<br/>"
+      return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id) + "<br/>"
     end
   end
 
@@ -1255,7 +1307,7 @@ module EventsHelper
 
   def live_search(label, options = {})
     options[:search_field] ||= 'search_field'
-    options[:alt]          ||= 'Searching...'
+    options[:alt]          ||= t(:searching)
     options[:indicator]    ||= options[:search_field] + '_spinner'
     options[:update]       ||= options[:search_field] + '_choices'
     options[:param_name]   ||= options[:select] if options[:select]
@@ -1263,7 +1315,7 @@ module EventsHelper
     options[:url]          ||= {:controller => "morbidity_events", :action => "auto_complete_for_#{options[:search_field]}"}
     options[:results]      ||= options[:search_field] + '_results'
     options[:insertion_point] ||= 'Insertion.Bottom'
-    options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
+    options[:after_update_element_url] ||= {:controller => "moridity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
     options[:after_update_element]     ||= live_search_callback(:update => options[:results], :insertion_point => options[:insertion_point],
       :url => options[:after_update_element_url])
     <<-HTML
@@ -1279,26 +1331,6 @@ module EventsHelper
   def extract_auto_complete_options(options)
     allowed = [:select, :param_name, :update, :indicator, :method, :url, :after_update_element, :min_chars, :frequency]
     Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
-  end
-
-  def render_geocode_section(address_form, event, street_number, street_name, unit_number, city, state, postal_code)
-    # PLUGIN_HOOK - render_geocode_section()
-  end
-
-  def render_geocode_form_section(address_form, event)
-    # PLUGIN_HOOK - render_geocode_form_section()
-  end
-
-  def render_geocode_cmr_contacts(event)
-    # PLUGIN_HOOK - render_geocode_cmr_contacts()
-  end
-
-  def render_geocode_search(cmrs)
-    # PLUGIN_HOOK - render_geocode_search()
-  end
-
-  def render_geocode_places(event, places)
-    # PLUGIN_HOOK - render_geocode_search()
   end
 
   def alert_if_changed(form)

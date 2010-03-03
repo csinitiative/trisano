@@ -14,16 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Queue Admin
+  =t('event_queue_admin')
 
 - content_for :name do
-  Edit 
+  =t('edit')
   = h(@event_queue.queue_name)
 
 - content_for :tools do
-  = link_to 'Show', @event_queue
+  = link_to t('show'), @event_queue
   |
-  = link_to 'Back', event_queues_path
+  = link_to t('back'), event_queues_path
 
 = error_messages_for :event_queue
 
@@ -31,4 +31,4 @@
 
   = render :partial => 'form', :locals => { :f => f }
 
-  = f.submit "Update"
+  = f.submit t('update')

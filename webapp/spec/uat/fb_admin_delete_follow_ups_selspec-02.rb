@@ -27,6 +27,7 @@ describe 'Form Builder Admin Delete Follow-Up Functionality' do
     @question_for_follow_up = get_unique_name(2)  << " question fud-uat"
     @follow_up_question_text = get_unique_name(2)  << " fu question fud-uat"
     @core_follow_up_question_text = get_unique_name(2)  << " core fu question fud-uat"
+    @patient_disease = get_random_disease
   end
   
   after(:all) do
@@ -35,10 +36,11 @@ describe 'Form Builder Admin Delete Follow-Up Functionality' do
     @question_for_follow_up = nil
     @follow_up_question_text = nil
     @core_follow_up_question_text = nil
+    @patient_disease = nil
   end
   
   it 'should handle core follow-ups.' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "Hantavirus infection", "All Jurisdictions").should be_true
+    create_new_form_and_go_to_builder(@browser, @form_name, @patient_disease, "All Jurisdictions").should be_true
     
     add_core_follow_up_to_view(@browser, "Default View", "Code: Female (gender)", "Patient birth gender")
     add_question_to_follow_up(@browser, "Core follow up, Code condition: Female (gender)", {:question_text => @core_follow_up_question_text, :data_type => "Single line text", :short_name => get_random_word})
@@ -51,20 +53,20 @@ describe 'Form Builder Admin Delete Follow-Up Functionality' do
     delete_follow_up(@browser, "Follow up, Condition: <b>Yes</b>").should be_true
     
     publish_form(@browser)
-    create_basic_investigatable_cmr(@browser, @cmr_last_name, "Hantavirus infection", "Bear River Health Department")
+    create_basic_investigatable_cmr(@browser, @cmr_last_name, @patient_disease, "Bear River Health Department")
     edit_cmr(@browser)
 
     # Enter the answer that meets the core follow-up condition
     add_demographic_info(@browser, { :birth_gender => "Female" })
     click_core_tab(@browser, "Investigation") # This click triggers the onChange that triggers the condition processing
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
-    @browser.is_text_present(@core_follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@core_follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition
     answer_investigator_question(@browser, @question_for_follow_up, "Yes")
     @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
     sleep(2) # Replace this with something better -- need to make sure the round trip to process condition has happened
-    @browser.is_text_present(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
 
   end
 end

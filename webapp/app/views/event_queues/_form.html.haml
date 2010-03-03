@@ -16,16 +16,14 @@
 %table.list
   %tr
     %th.forminformation
-      Event Queue
+      =t('event_queue')
   %tr
     %td
       - @event_queue.queue_name = @event_queue.queue_name.gsub(/-.+/, "") if @event_queue.queue_name
-      %label
-        Queue Name:
-      = f.text_field :queue_name
+      =f.label :queue_name
+      =f.text_field :queue_name
       %p
 
-      %label
-        Jurisdiction:
-      = f.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name,  {})
+      =f.label :jurisdiction_id
+      =f.collection_select(:jurisdiction_id, Place.find(:all, :conditions => ["entity_id IN (?)", User.current_user.admin_jurisdiction_ids], :order => "name ASC"), :entity_id, :name,  {})
       %p

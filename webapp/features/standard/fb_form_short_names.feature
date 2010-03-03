@@ -11,7 +11,7 @@ Feature: Active forms must have unique short names
     When I navigate to the new form view
     And I enter a form name of Lipsom
     And I enter a form short name of lipsom_form
-    And I select a form event type of Morbidity event
+    And I select a form event type of Morbidity Event
     And I check the disease African Tick Bite Fever
 
     Then I should be able to create the new form and see the form name Lipsom
@@ -24,7 +24,7 @@ Feature: Active forms must have unique short names
 
     When I navigate to the new form view
     And I enter a form name of Lipsom
-    And I select a form event type of Morbidity event
+    And I select a form event type of Morbidity Event
     And I check the disease African Tick Bite Fever
     And I press "Create"
 
@@ -37,7 +37,7 @@ Feature: Active forms must have unique short names
     When I navigate to the new form view
     And I enter a form name of Lipsom
     And I re-enter the duplicate short name
-    And I select a form event type of Morbidity event
+    And I select a form event type of Morbidity Event
     And I check the disease African Tick Bite Fever
     And I press "Create"
 
@@ -50,7 +50,7 @@ Feature: Active forms must have unique short names
     When I navigate to the new form view
     And I enter a form name of Lipsom
     And I re-enter the duplicate short name
-    And I select a form event type of Morbidity event
+    And I select a form event type of Morbidity Event
     And I check the disease African Tick Bite Fever
 
     Then I should be able to create the new form and see the form name Lipsom

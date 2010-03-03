@@ -19,16 +19,16 @@ module MorbidityEventsHelper
 
   def morbidity_event_tabs
     tabs = []
-    tabs << %w(demographic_tab Demographic)
-    tabs << %w(clinical_tab Clinical)
-    tabs << %w(lab_info_tab Laboratory)
-    tabs << %w(contacts_tab Contacts)
-    tabs << %w(encounters_tab Encounters)
-    tabs << %w(epi_tab Epidemiological)
-    tabs << %w(reporting_tab Reporting)
-    tabs << %w(investigation_tab Investigation)
-    tabs << %w(notes_tab Notes)
-    tabs << %w(administrative_tab Administrative)
+    tabs << ['demographic_tab', t('demographic')]
+    tabs << ['clinical_tab', t('clinical')]
+    tabs << ['lab_info_tab', t('laboratory')]
+    tabs << ['contacts_tab', t('contacts')]
+    tabs << ['encounters_tab', t('encounters')]
+    tabs << ['epi_tab', t('epi')]
+    tabs << ['reporting_tab', t('reporting')]
+    tabs << ['investigation_tab', t('investigation')]
+    tabs << ['notes_tab', t('event_notes')]
+    tabs << ['administrative_tab', t('administrative')]
     tabs
   end
 
@@ -38,40 +38,40 @@ module MorbidityEventsHelper
     can_create =  User.current_user.is_entitled_to_in?(:create_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
 
     controls = ""
-    controls << link_to('Show', cmr_path(event)) if from_index && can_view
+    controls << link_to(t('show'), cmr_path(event)) if from_index && can_view
     if can_update
       controls << " | " unless controls.blank?
       if from_index
-        controls << link_to('Edit', edit_cmr_path(event))
+        controls << link_to(t('edit'), edit_cmr_path(event))
       else
-        controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_cmr_path(event)}')")
+        controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_cmr_path(event)}')")
       end
     end
     if can_view
       controls << " | " unless controls.blank?
-      controls << link_to_function("Print", nil) do |page|
+      controls << link_to_function(t("print"), nil) do |page|
         page["printing_controls_#{event.id}"].visual_effect :appear, :duration => 0.0
       end
     end
     if event.deleted_at.nil? && can_update
       controls << " | " unless controls.blank?
-      controls << link_to('Delete', soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+      controls << link_to(t('delete'), soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
     end
     if !from_index
       if can_update
         controls << " | " unless controls.blank?
-        controls << link_to('Add Task', new_event_task_path(event))
-        controls << " | " << link_to('Add Attachment', new_event_attachment_path(event))
+        controls << link_to(t('add_task'), new_event_task_path(event))
+        controls << " | " << link_to(t('add_attachment'), new_event_attachment_path(event))
       end
       if can_view
         controls << " | " unless controls.blank?
-        controls << link_to_function('Export to CSV', nil) do |page|
+        controls << link_to_function(t('export_to_csv'), nil) do |page|
           page[:export_options].visual_effect :appear
         end
       end
       if can_create
         controls << " | " unless controls.blank?
-        controls << link_to_function('Create a new event from this one') do |page|
+        controls << link_to_function(t('create_new_event_from_this_one')) do |page|
           page[:copy_cmr_options].visual_effect :appear
         end
       end
@@ -100,5 +100,26 @@ module MorbidityEventsHelper
         });
       </script>
     JS
+  end
+
+  def export_options_form(path)
+    form_tag(path, :method => :post, :onsubmit => "Effect.Fade('export_options', { duration: 0.3 })", :id => 'export_options_form') do
+      # When the export_options "window" is open we may be looking at a restricted view (in fact, that's all there is in the search screen)
+      # based on an earlier GET.  We need to capture the previous GETs paramaters (which are also in the current GET) and hide them in this
+      # form
+      params.delete(:controller)
+      params.delete(:commit)
+      params.delete(:action)
+      params.each_pair do |key, value|
+        if value.is_a?(Array)
+          value.each do |value_element|
+            concat(hidden_field_tag("#{h(key)}[]", h(value_element)))
+          end
+        else
+          concat(hidden_field_tag(h(key), h(value)))
+        end
+      end
+      yield
+    end
   end
 end

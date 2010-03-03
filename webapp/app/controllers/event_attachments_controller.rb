@@ -33,7 +33,7 @@ class EventAttachmentsController < ApplicationController
       :filename => @attachment.filename,
       :disposition => 'attachment')
   rescue
-    render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+    render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
   end
 
   def new
@@ -46,7 +46,7 @@ class EventAttachmentsController < ApplicationController
 
     respond_to do |format|
       if @attachment.save
-        flash[:notice] = 'Attachment was successfully created.'
+        flash[:notice] = t("event_attachement_created")
         format.html {redirect_to request.env["HTTP_REFERER"] }
       else
         format.html { render :action => "new" }
@@ -60,7 +60,7 @@ class EventAttachmentsController < ApplicationController
       @attachment.destroy
       respond_to do |format|
         format.html do
-          flash[:notice] = 'Attachment was successfully deleted.'
+          flash[:notice] = t("event_attachement_deleted")
           redirect_to request.env["HTTP_REFERER"]
         end
         format.js
@@ -69,7 +69,7 @@ class EventAttachmentsController < ApplicationController
       logger.error $!.message
       respond_to do |format|
         format.html do 
-          flash[:error] = 'Failed to delete attachment.'
+          flash[:error] = t("failed_to_delete_event_attachment")
           redirect_to request.env["HTTP_REFERER"]
         end
         format.js do
@@ -79,7 +79,7 @@ class EventAttachmentsController < ApplicationController
               if (spinner != null) {
                 spinner.hide();
               }
-              alert('Failed to delete attachment');
+              alert('#{t("failed_to_delete_event_attachment")}');
             JAVASCRIPT
           end
         end

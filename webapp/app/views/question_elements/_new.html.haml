@@ -17,23 +17,23 @@
   = error_messages_for :question_element
   %div{:id => "new-question-form", :class => 'fb-inplace-form'}
 
-    %h4 Add a new question
+    %h4=t 'add_new_question'
     - remote_form_for(@question_element, {}, :loading => "$('create_question_submit_#{@reference_element.id}').disabled = 'disabled';" ) do |f|
 
       = render :partial => 'form', :locals => { :f => f }
 
       - unless @export_columns.empty?
         %p
-          %label CDC export column
+          =f.label :export_column_id
           =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
-        %label Data type
+        =q.label :data_type
         = q.select(:data_type, Question.data_type_array, {:include_blank => true})
       %p
-        = f.submit("Create", :id => "create_question_submit_#{@reference_element.id}")
+        = f.submit(t("create"), :id => "create_question_submit_#{@reference_element.id}")
         &nbsp;&nbsp;
-        = link_to_function "Close", "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
+        = link_to_function t("close"), "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
 
   = render :partial => "forms/library", :locals => {:direction => :from_library, :type => :question_element}
 

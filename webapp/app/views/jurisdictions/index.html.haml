@@ -14,16 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Jurisdiction Management
+  =t 'jurisdiction_management'
 
 - content_for :tools_two do
-  = button_to("Create new jurisdiction", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_jurisdiction"), {:action => "new"}, { :method => :get })
 
 #jurisdictions
   %table.list
     %tr
       %th.forminformation
-        Jurisdictions
+        =t 'jurisdictions'
       %th
     - @jurisdictions.each do |jurisdiction|
       %tr.roll
@@ -39,7 +39,7 @@
                   %span.data_jurisdiction_short_name=h(jurisdiction.place.short_name)
         %td
           .tools{:style => "position: absolute; right: 50px;"}
-            =link_to("Edit", edit_jurisdiction_path(jurisdiction))
+            =link_to(t("edit"), edit_jurisdiction_path(jurisdiction))
             |
-            =link_to("Show", jurisdiction_path(jurisdiction))
+            =link_to(t("show"), jurisdiction_path(jurisdiction))
 

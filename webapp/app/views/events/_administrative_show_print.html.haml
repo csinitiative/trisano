@@ -14,72 +14,72 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %span.section-header
-  Administrative Information
+  =t('admin_info')
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 %span{:class => "horiz"}
-  %span.print-label Record number
+  %span.print-label=ct('record_number')
   %span.print-value= h(@event.record_number)
 
 %span{:class => "vert"}
-  %span.print-label Date record created
-  %span.print-value= h(@event.event_onset_date)
+  %span.print-label=ct('date_record_created')
+  %span.print-value= ld(@event.event_onset_date)
 
 %span{:class => "horiz"}
-  %span.print-label MMWR year
+  %span.print-label=ct('mmwr_year')
   %span.print-value= h(@event.MMWR_year)
 
 %span{:class => "vert"}
-  %span.print-label MMWR week
+  %span.print-label=ct('mmwr_week')
   %span.print-value= h(@event.MMWR_week)
 
 %span{:class => "vert"}
-  %span.print-label Jurisdiction of Residence
+  %span.print-label=ct('jurisdiction_of_residence')
   - if @event.address
     - address = @event.address
     - if address && address.county && address.county.jurisdiction
       - jurisdiction_name = address.county.jurisdiction.name
-    %span.print-value= jurisdiction_name.blank? ? 'Not Applicable' : h(jurisdiction_name)
+    %span.print-value= jurisdiction_name.blank? ? t('not_applicable') : h(jurisdiction_name)
 
 %span.subsection-header
-  Case / Outbreak
+  =t 'case_outbreak'
 - core_element_print :lhd_case_status_id, event_form, :horiz do
-  %span.print-label LHD case status:
+  %span.print-label=ct('lhd_case_status')
   %span.print-value= h(l(@event.lhd_case_status)) || '&nbsp;'
 - core_element_print :state_case_status_id, event_form, :vert do
-  %span.print-label State case status:
+  %span.print-label=ct('state_case_status')
   %span.print-value= h(l(@event.state_case_status)) || '&nbsp;'
 - core_element_print :outbreak_associated_id, event_form, :horiz do
-  %span.print-label Outbreak associated:
+  %span.print-label=ct('outbreak_associated')
   %span.print-value= h(l(@event.outbreak_associated)) || '&nbsp;'
 - core_element_print :outbreak_name, event_form, :vert do
-  %span.print-label Outbreak name:
+  %span.print-label=ct 'Outbreak name'
   %span.print-value= h(@event.outbreak_name) || '&nbsp;'
 
 %span.subsection-header
-  Investigation
+  =t 'investigation'
 - event_form.fields_for(:jurisdiction, :builder => ExtendedFormBuilder) do |j|
   - core_element_print :secondary_entity_id, j, :horiz do
-    %span.print-label Jurisdiction responsible for investigation:
+    %span.print-label=ct 'responsible_jurisdiction'
     %span.print-value= h(@event.jurisdiction.secondary_entity.place.name) unless @event.jurisdiction.nil?
   - core_element_print :workflow_state, event_form, :vert do
-    %span.print-label Event status:
+    %span.print-label= ct 'event_status'
     %span.print-value= h(@event.state_description) || '&nbsp;'
   - core_element_print :investigation_started_date, event_form, :horiz do
-    %span.print-label Date investigation started:
-    %span.print-value= h(@event.investigation_started_date) || '&nbsp;'
+    %span.print-label=ct 'date_investigation_started'
+    %span.print-value= ld(@event.investigation_started_date)
   - core_element_print :investigation_completed_LHD_date, event_form, :vert do
-    %span.print-label Date invesitgation completed:
-    %span.print-value= h(@event.investigation_completed_LHD_date) || '&nbsp;'
+    %span.print-label= ct 'date_investigation_completed'
+    %span.print-value= ld(@event.investigation_completed_LHD_date)
 
 %span.subsection-header
-  Auditing
+  =t('auditing')
 - core_element_print :event_name, event_form, :horiz do
-  %span.print-label Event name:
+  %span.print-label=t('event_name')
   %span.print-value= h(@event.event_name) || '&nbsp;'
 - core_element_print :review_completed_by_state_date, event_form, :horiz do
-  %span.print-label Date review completed by state:
-  %span.print-value= h(@event.review_completed_by_state_date) || '&nbsp;'
+  %span.print-label=ct('date_review_completed_by_state')
+  %span.print-value= h(ld(@event.review_completed_by_state_date)) || '&nbsp;'
 - core_element_print :acuity, event_form, :vert do
-  %span.print-label Acuity:
+  %span.print-label=ct 'acuity'
   %span.print-value= h(@event.acuity) || '&nbsp;'

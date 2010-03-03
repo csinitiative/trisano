@@ -14,48 +14,48 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  User Detail
+  =t 'user_detail'
 
 /- content_for :name do
 /  User details:  
 /  = @user.user_name
 
 - content_for :tools do
-  = link_to '< Back to Users', users_path
+  = link_to t('back_to', :name => t('users')), users_path
   %p
 
 - content_for :tools_two do
-  = button_to("Create new user", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_user"), {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        User
+        =t 'user'
       %th
       %tr
         %td.forminformation
           .tools
             = h("#{@user.first_name} #{@user.last_name}")
           .formname
-            UID:
+            = ct 'uid'
             = h(@user.uid)
           .tools
-            Username:
+            =ct 'username'
             = h(@user.user_name)
             %br
-            Given Name:
+            =ct 'given_name'
             = h(@user.given_name)
             %br
-            Initials:
+            =ct 'initials'
             = h(@user.initials)
             - if @user.disabled?
               %br
-              This account has been disabled
+              =t 'disabled_account_desc'
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_user_path(@user)
+            = link_to t('edit'), edit_user_path(@user)
             |
-            Show
+            = t 'show'
 
 = render :partial => 'roles'

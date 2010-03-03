@@ -13,19 +13,19 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- if event.interested_party.treatments.empty?
-  %h3 No treatments have been recorded for this event
+- if event.interested_party.treatment_ids.compact.empty?
+  %h3=t 'no_treatments', :thing => 'event'
 - else
   %table.list
     %tr
-      %th Treatment Given
-      %th Treatment
-      %th Date of Treatment
-      %th Date Treatment Stopped
+      %th=t('activerecord.attributes.participations_treatment.treatment_given_yn_id')
+      %th=t('activerecord.attributes.participations_treatment.treatment')
+      %th=t('activerecord.attributes.participations_treatment.treatment_date')
+      %th=t('activerecord.attributes.participations_treatment.stop_treatment_date')
 
     - for treatment in event.interested_party.treatments
       %tr
         %td= h(l(treatment.treatment_given_yn))
         %td= h(treatment.treatment)
-        %td= h(treatment.treatment_date)
-        %td= h(treatment.stop_treatment_date)
+        %td= ld(treatment.treatment_date)
+        %td= ld(treatment.stop_treatment_date)

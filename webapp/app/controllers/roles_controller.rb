@@ -18,52 +18,43 @@
 class RolesController < AdminController
   skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
   
-  # GET /roles
-  # GET /roles.xml
   def index
     @roles = Role.find(:all)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @roles }
     end
   end
 
-  # GET /roles/1
-  # GET /roles/1.xml
   def show
     @role = Role.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @role }
     end
   end
 
-  # GET /roles/new
-  # GET /roles/new.xml
   def new
     @role = Role.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @role }
     end
   end
 
-  # GET /roles/1/edit
   def edit
     @role = Role.find(params[:id])
   end
 
-  # POST /roles
-  # POST /roles.xml
   def create
     @role = Role.new(params[:role])
 
     respond_to do |format|
       if @role.save
-        flash[:notice] = 'Role was successfully created.'
+        flash[:notice] = t("role_created")
         format.html { redirect_to(@role) }
         format.xml  { render :xml => @role, :status => :created, :location => @role }
       else
@@ -79,15 +70,13 @@ class RolesController < AdminController
     end
   end
 
-  # PUT /roles/1
-  # PUT /roles/1.xml
   def update
     params[:role][:privileges_role_attributes] ||= {}
     @role = Role.find(params[:id])
 
     respond_to do |format|
       if @role.update_attributes(params[:role])
-        flash[:notice] = 'Role was successfully updated.'
+        flash[:notice] = t("role_updated")
         format.html { redirect_to(@role) }
         format.xml  { head :ok }
       else
@@ -97,9 +86,6 @@ class RolesController < AdminController
     end
   end
 
-
-  # DELETE /roles/1
-  # DELETE /roles/1.xml
   def destroy
     @role = Role.find(params[:id])
     @role.destroy

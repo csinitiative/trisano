@@ -70,6 +70,10 @@ Given /^a morbidity event with "([^\"]*)" set to "([^\"]*)"$/ do |field, value|
   @event_to_match.save!
 end
 
+When /^I search for events with the following criteria:$/ do |criteria|
+  visit(search_cmrs_path(search_criteria(criteria.hashes.first)))
+end
+
 #
 # Whens
 #
@@ -93,3 +97,15 @@ Then /^I should receive 1 matching record$/ do
   response.should have_xpath("//a[@id='show-cmr-link-#{@event_to_match.id}']")
 end
 
+Then /^I should see "([^\"]*)" in the search results$/ do |text|
+  response.should have_xpath("//table[@id='search_results']//td[contains(text(), '#{text}')]")
+end
+
+Then /^I should see max_search_results records returned$/i do
+  count = config_option(:max_search_results).to_i
+  response.should have_xpath("//*[count(tr[@class='search-active'])=#{count}]")
+end
+
+def search_criteria(hash)
+  {:last_name => ''}.merge(hash)
+end

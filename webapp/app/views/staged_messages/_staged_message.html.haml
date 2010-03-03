@@ -17,44 +17,44 @@
   %td
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
-        %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;DOB #{h staged_message.patient.birth_date||'Unknown'}"
-        %p= "Specimen: #{h staged_message.observation_request.specimen_source}"
-        %p= "Collected: #{h staged_message.observation_request.collection_date}"
+        %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
+        %p= t "specimen_source_is", :source => h(staged_message.observation_request.specimen_source)
+        %p= t "collected_on_date", :date =>ld(staged_message.observation_request.collection_date)
         %p
           %small= h staged_message.message_header.sending_facility
         %div.tools
           -if (staged_message.state == StagedMessage.states[:pending]) || (staged_message.state == StagedMessage.states[:unprocessable])
-            = link_to 'Similar Events', event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
+            = link_to t('similar_events'), event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
             = " | "
             - form_tag(discard_staged_message_path(staged_message), :style => "display: inline", :id => "discard_#{staged_message.id}") do
               = hidden_field_tag('staged_message_id', staged_message.id)
-              = link_to_function("Discard", "this.parentNode.submit()")
+              = link_to_function(t("discard"), "this.parentNode.submit()")
           %p
-            State:
+            = ct('state')
             - if staged_message.state == StagedMessage.states[:assigned]
               - event = staged_message.assigned_event
               - event_path = event.is_a?(MorbidityEvent) ? cmr_path(event) : contact_event_path(event)
-              = link_to(staged_message.state.humanize, event_path)
+              = link_to(t("staging_area_states.#{staged_message.state.downcase}"), event_path)
             - else
-              = staged_message.state.humanize
+              = t("staging_area_states.#{staged_message.state.downcase}")
             &nbsp;&nbsp;
             %span.hoverable
               %b
-                Notes
-                %span= h(staged_message.note || "None")
+                =t :staged_message_notes
+                %span= h(staged_message.note || t("none"))
               = " | "
               %b
-                Raw
+                =t 'raw'
                 %span= h(staged_message.hl7_message)
 
       .results
         %table
           %tr
-            %th Test Date
-            %th LOINC code
-            %th Test Type
-            %th Result
-            %th Units
-            %th Status
-            %th Reference Range
+            %th=t 'test_date'
+            %th=t 'loinc_code'
+            %th=t 'test_type'
+            %th=t 'result'
+            %th=t 'units'
+            %th=t 'status'
+            %th=t 'reference_range'
           =render staged_message.observation_request.tests

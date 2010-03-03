@@ -21,74 +21,72 @@
   %br
   .left
     %i
-      Printed
-      = Date.today.strftime("%B %d, %Y")
+      =t 'printed', :date => Date.today.strftime("%B %d, %Y")
   .right
     %i
-      Current Investigator:
-      = @event.investigator.blank? ? "Unassigned" : @event.investigator.best_name 
+      =t 'current_investigator', :name => @event.investigator.blank? ? t("unassigned") : @event.investigator.best_name
     
 .sub-header
   .left
-    = (@event.disease.nil? || @event.disease.disease.nil?) ? "Disease not specified" : @event.disease.disease.disease_name
+    = (@event.disease.nil? || @event.disease.disease.nil?) ? t("disease_not_specified") : @event.disease.disease.disease_name
   .right
-    Confidential Case Report
+    =t('confidential_case_report')
 
 - fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form|
 
   - patient_entity = @event.interested_party.person_entity
   - if @event.deleted_at
-    .deleted-event Event Deleted
+    .deleted-event=t('event_deleted')
 
-  - unless (@print_options & ['Demographic', 'All']).empty?
+  - unless (@print_options & [t('demographic'), t('all')]).empty?
     #demographic
       = render :partial => 'events/demographic_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Demographics" }
 
-  - unless (@print_options & ['Clinical', 'All']).empty?
+  - unless (@print_options & [t('clinical'), t('all')]).empty?
     .brak#clinical
       = render :partial => 'events/clinical_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Clinical" }
 
-  - unless (@print_options & ['Laboratory', 'All']).empty?
+  - unless (@print_options & [t('laboratory'), t('all')]).empty?
     .brak#laboratory
       = render :partial => 'events/laboratory_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Laboratory" }
 
-  - unless (@print_options & ['Contacts', 'All']).empty?
+  - unless (@print_options & [t('contacts'), t('all')]).empty?
     .brak#contacts
       = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
 
-  - unless (@print_options & ['Encounters', 'All']).empty?
+  - unless (@print_options & [t('encounters'), t('all')]).empty?
     .brak#encounters
       = render :partial => 'events/encounters_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Encounters" }
 
-  - unless (@print_options & ['Epidemiological', 'All']).empty?
+  - unless (@print_options & [t('epidemiological'), t('all')]).empty?
     .brak#epidemiological
       = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }
 
-  - unless (@print_options & ['Reporting', 'All']).empty?
+  - unless (@print_options & [t('reporting'), t('all')]).empty?
     #reporting
       = render :partial => 'events/reporting_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Reporting" }
 
-  - unless (@print_options & ['Administrative', 'All']).empty?
+  - unless (@print_options & [t('administrative'), t('all')]).empty?
     #administrative
       = render :partial => 'events/administrative_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Administrative" }
 
-  - unless (@print_options & ['Investigation', 'All']).empty?
+  - unless (@print_options & [t('investigation'), t('all')]).empty?
     .brak#investigation
       = render :partial => 'events/investigation_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
 
-  - unless (@print_options & ['Clinical Notes', 'Administrative Notes', 'All']).empty?
+  - unless (@print_options & [t('clinical_notes'), t('administrative_notes'), t('all')]).empty?
     .brak#notes
       = render :partial => 'events/notes_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity, :print_options => @print_options }
   
-  - unless (@print_options & ['Contacts', 'All']).empty?
+  - unless (@print_options & [t('contacts'), t('all')]).empty?
     #contact-reports
       - for @event in @event.contact_child_events.active
         .brak

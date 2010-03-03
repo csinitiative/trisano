@@ -20,7 +20,7 @@
   = f.text_field(:name, :size => 20)
 
 %span{ :class => "vert" }
-  = f.label(:notes, "Description")
+  = f.label(:notes)
   = f.text_area(:notes, :rows => 5, :cols => 50)
 
 - unless @task.new_record?
@@ -34,16 +34,16 @@
 
 %span{ :class => "vert" }
   = f.label(:priority)
-  = f.select(:priority, [["Low", "low"], ["Medium", "medium"], ["High", "high"]], {:include_blank => true})
+  = f.select(:priority, [[t('low'), "low"], [t('medium'), "medium"], [t('high'), "high"]], {:include_blank => true})
 
 %span{ :class => "vert" }
   = f.label(:due_date)
   = f.calendar_date_select(:due_date, {:year_range => 0.years.from_now...2.years.from_now})
 
   - if @task.new_record?
-    repeat
+    = t('repeat')
     = f.select(:repeating_interval, Task.interval_array, {:include_blank => true})
-    until
+    = t('until')
     = f.calendar_date_select(:until_date, {:year_range => 0.years.from_now...2.years.from_now})
 
 - if User.current_user.is_entitled_to?(:assign_task_to_user)

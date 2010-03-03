@@ -15,18 +15,18 @@
 
 %fieldset.form
   %legend
-    Event Attachments
+    =t('event_attachments')
 
   - unless attachments.empty?
     #task-message{ :align => 'center' }
     %table.list
       %thead
         %tr
-          %th File name
-          %th Category
-          %th Content type
-          %th Size
-          %th Uploaded
+          %th=t('file_name')
+          %th=t('category')
+          %th=t('content_type')
+          %th=t('size')
+          %th=t('uploaded')
           %th &nbsp;
       %tbody
         - for attachment in attachments
@@ -36,7 +36,7 @@
                 =h attachment.filename
             %td
               %span.category
-                =h attachment.category.humanize
+                =h t("attachment_types.#{attachment.category}")
             %td
               %span.content_type
                 =h attachment.content_type
@@ -45,17 +45,17 @@
                 =h attachment.size
             %td
               %span.updated_at
-                =h attachment.updated_at
+                =ld(attachment.updated_at)
             %td
               - jurisdiction_ids = attachment.event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
               - if User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids )
-                = link_to("Open", event_attachment_path(attachment.event, attachment))
+                = link_to(t('open'), event_attachment_path(attachment.event, attachment))
               - if User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids )
                 |
                 = delete_attachment(attachment)
                 = attachment_spinner(attachment)
 
   - else
-    %span No attachments
+    %span=t('no_attachments')
 
 %br

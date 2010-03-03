@@ -18,7 +18,7 @@
 class EncounterEventsController < EventsController
 
   def index
-    render :text => "Encounters can only be listed from the morbidity event show page of cases that have encounters.", :status => 405
+    render :text => t("encounter_event_no_index"), :status => 405
   end
 
   def show
@@ -29,39 +29,37 @@ class EncounterEventsController < EventsController
   end
 
   def new
-    render :text => "Encounters can only be created from within a morbidity event.", :status => 405
+    render :text => t("encounter_event_no_new"), :status => 405
   end
 
   def edit
   end
 
   def create
-    render :text => "Encounters can only be created from within a morbidity event.", :status => 405
+    render :text => t("encounter_event_no_create"), :status => 405
   end
 
   def update
     go_back = params.delete(:return)
-    @event.add_note("Edited event") unless go_back
+    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     respond_to do |format|
       @event.validate_against_bday = true
       if @event.update_attributes(params[:encounter_event])
-        flash[:notice] = 'Encounter event was successfully updated.'
+        flash[:notice] = t("encounter_event_updated")
         format.html {
-          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
           if go_back
-            redirect_to(edit_encounter_event_url(@event) + query_str)
+            redirect_to edit_encounter_event_url(@event, @query_params)
           else
-            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
-            redirect_to(encounter_event_url(@event) + query_str)
+            redirect_to encounter_event_url(@event, @query_params)
           end
         }
         format.xml  { head :ok }
-        format.js   { render :inline => "Encounter saved.", :status => :created }
+        format.js   { render :inline => t("encounter_saved"), :status => :created }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => "Encounter event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+        format.js   { render :inline => t("encounter_not_saved", :messages => @event.errors.full_messages), :status => :unprocessable_entity }
       end
     end
   end

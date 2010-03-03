@@ -14,13 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Form:
+  =ct 'form'
   = h @form.name
 
 - content_for :tools do
-  = link_to 'Forms', forms_path
+  = link_to t('forms'), forms_path
   |
-  Detail View
+  =t('detail_view')
   %p
 
 - content_for :tools_two do
@@ -30,11 +30,11 @@
   %table.list
     %tr
       %th.forminformation
-        Form Information
-      %th Diseases
-      %th Jurisdiction
-      %th Event Type
-      %th Short Name
+        =t 'form_information'
+      %th=t 'diseases'
+      %th=t 'jurisdiction'
+      %th=t 'event_type'
+      %th=t 'short_name'
     %tr
       %td.forminformation
         .formname
@@ -43,22 +43,22 @@
         .description
           = h @form.description
         .tools
-          = link_to 'Builder', builder_path(@form)
+          = link_to t('builder'), builder_path(@form)
           |
-          = link_to 'Details', form_path(@form)
+          = link_to t('details'), form_path(@form)
           |
           -if @form.is_template
-            = link_to 'Edit', edit_form_path(@form)
+            = link_to t('edit'), edit_form_path(@form)
       %td
         %ul
           - @form.diseases.each do |disease|
             %li.diseaselist= h disease.disease_name
       %td
-        = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.place.name
+        = h @form.jurisdiction.nil? ? t("all") : @form.jurisdiction.place.name
       %td
         = h @form.event_type.humanize
         .status
-          = h @form.status
+          = h(t("form_statuses.#{@form.status.downcase.gsub(" ", "_")}"))
       %td
         = h @form.short_name
 

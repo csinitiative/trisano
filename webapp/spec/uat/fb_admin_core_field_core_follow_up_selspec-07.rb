@@ -66,7 +66,7 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
 
     save_cmr(@browser)
     click_core_tab(@browser, "Investigation")
-    @browser.is_text_present(@follow_up_answer).should be_true
+    @browser.get_html_source.include?(@follow_up_answer).should be_true
     edit_cmr(@browser)
 
     # Enter an answer that does not meet the follow-up condition
@@ -75,7 +75,7 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
 
     save_cmr(@browser)
     click_core_tab(@browser, "Investigation")
-    @browser.is_text_present(@follow_up_answer).should be_false
+    @browser.get_html_source.include?(@follow_up_answer).should be_false
   end
 end
 

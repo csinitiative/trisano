@@ -196,7 +196,22 @@ module ActiveSupport #:nodoc:
       #   'Café périferôl'.mb_chars.index('ô') #=> 12
       #   'Café périferôl'.mb_chars.index(/\w/u) #=> 0
       def index(needle, offset=0)
-        index = @wrapped_string.index(needle, offset)
+        wrapped_offset = self.first(offset).wrapped_string.length
+        index = @wrapped_string.index(needle, wrapped_offset)
+        index ? (self.class.u_unpack(@wrapped_string.slice(0...index)).size) : nil
+      end
+
+      # Returns the position _needle_ in the string, counting in
+      # codepoints, searching backward from _offset_ or the end of the
+      # string. Returns +nil+ if _needle_ isn't found.
+      #
+      # Example:
+      #   'Café périferôl'.mb_chars.rindex('é') #=> 6
+      #   'Café périferôl'.mb_chars.rindex(/\w/u) #=> 13
+      def rindex(needle, offset=nil)
+        offset ||= length
+        wrapped_offset = self.first(offset).wrapped_string.length
+        index = @wrapped_string.rindex(needle, wrapped_offset)
         index ? (self.class.u_unpack(@wrapped_string.slice(0...index)).size) : nil
       end
 
@@ -305,7 +320,7 @@ module ActiveSupport #:nodoc:
       # Example:
       #   'Café'.mb_chars.reverse.to_s #=> 'éfaC'
       def reverse
-        chars(self.class.u_unpack(@wrapped_string).reverse.pack('U*'))
+        chars(self.class.g_unpack(@wrapped_string).reverse.flatten.pack('U*'))
       end
 
       # Implements Unicode-aware slice with codepoints. Slicing on one point returns the codepoints for that
@@ -621,6 +636,7 @@ module ActiveSupport #:nodoc:
         def tidy_bytes(string)
           string.split(//u).map do |c|
             c.force_encoding(Encoding::ASCII) if c.respond_to?(:force_encoding)
+
             if !ActiveSupport::Multibyte::VALID_CHARACTER['UTF-8'].match(c)
               n = c.unpack('C')[0]
               n < 128 ? n.chr :

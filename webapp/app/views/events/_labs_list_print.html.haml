@@ -15,7 +15,7 @@
 
 - ran = nil
 - unless association_recorded?(event.labs)
-  %b{ :style => 'font-size: 11px' }="No labs have been recorded for this #{h(event.class.name.underscore.humanize.downcase)}"
+  %b{ :style => 'font-size: 11px' }=t('no_labs', :thing => h(event.class.name.underscore.humanize.downcase))
 - else
   - for lab in event.labs
     - for lab_result in lab.lab_results
@@ -24,59 +24,59 @@
           %br
           %hr
         .left
-          %span.print-label Lab name:
+          %span.print-label=ct('lab_name')
           %span.print-value
           = h(lab.place_entity.place.name)
         .three-valued-row
           .left
-            %span.print-label Test type:
+            %span.print-label=ct('test_type')
             %span.print-value
               = h(lab_result.test_type.try(:common_name))
           .left
-            %span.print-label Test result:
+            %span.print-label=ct('test_result')
             %span.print-value
               = h(l(lab_result.test_result))
           .right
-            %span.print-label Organism:
+            %span.print-label=ct('organism')
             %span.print-value
               = h(lab_result.organism.try(:organism_name))
         .three-valued-row
           .left
-            %span.print-label Result value:
+            %span.print-label=ct('result_value')
             %span.print-value
               = h(lab_result.result_value)
           .left
-            %span.print-label Units:
+            %span.print-label=ct('units')
             %span.print-value
               = h(lab_result.units)
           .right
-            %span.print-label Reference range:
+            %span.print-label=ct('reference_range')
             %span.print-value
               = h(lab_result.reference_range)
         .three-valued-row
           .left
-            %span.print-label Test status:
+            %span.print-label=ct('test_status')
             %span.print-value
               = h(l(lab_result.test_status))
           .left
-            %span.print-label Specimen source:
+            %span.print-label=ct('specimen_source')
             %span.print-value
               = h(l(lab_result.specimen_source))
           .right
-            %span.print-label Collection date:
+            %span.print-label=ct('collection_date')
             %span.print-value
-              = h(lab_result.collection_date)
+              = ld(lab_result.collection_date)
         .three-valued-row
           .left
-            %span.print-label Specimen sent to state lab:
+            %span.print-label=ct('specimen_sent_to_state_lab')
             %span.print-value
               = h(l(lab_result.specimen_sent_to_state))
           .left
-            %span.print-label Lab test date:
+            %span.print-label=ct('lab_test_date')
             %span.print-value
-              = h(lab_result.lab_test_date)
+              = ld(lab_result.lab_test_date)
           .right
-            %span.print-label Comment:
+            %span.print-label=ct('comment')
             %span.print-value
               = h(lab_result.comment)
     - ran = 1

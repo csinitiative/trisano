@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Person
+  =t "edit_person"
 
 /- content_for :name do
 
@@ -22,26 +22,26 @@
   = save_buttons(@person)
 
 - content_for :tools do
-  = link_to '&lt; Back to People', people_path
+  = link_to t('back_to', :name => t('people_normal_case')), people_path
   %p
 
 #rot
   %table.list
     %th.forminformation
-      Person
+      =t 'person'
     %th
     %tr
       %td
         .tools{:style => "position: absolute; right: 15px;"}
-          Edit
+          =t 'edit'
           |
-          = link_to 'Show', person_path(@person)
+          = link_to t('show'), person_path(@person)
 
 #rot
   = error_messages_for :object => [@person]
 
   - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder, :html => {:name => 'edit_person_entity'}) do |pe|
     = render :partial => 'form', :locals => { :f => pe, :person_data => @person }
-    = pe.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;"
+    = pe.submit t("save_and_exit"), :style => "display: none", :onclick => "this.disabled=true;"
 
 = alert_if_changed(@person)

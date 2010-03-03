@@ -31,13 +31,13 @@
 %div.existing_clinician{:style => 'margin-top: 20px; clear: both;'}
   = person_form.hidden_field(:secondary_entity_id)
   %span.horiz
-    %label Last Name
+    %label=t 'activerecord.attributes.person.last_name'
     = h(person.last_name)
   %span.horiz
-    %label First Name
+    %label=t 'activerecord.attributes.person.first_name'
     = h(person.first_name) || "&nbsp;"
   %span.horiz
-    %label Middle Name
+    %label=t 'activerecord.attributes.person.middle_name'
     = h(person.middle_name) || "&nbsp;"
   %span.horiz
     %label Telephone
@@ -51,5 +51,5 @@
       = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
   - else
     %span.horiz
-      = person_form.label :_delete, "Remove:"
+      = person_form.label :_delete
       = person_form.check_box :_delete

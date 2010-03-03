@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/spec_helper'
  
 describe 'disease admin lead in questions' do
   
-   # $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @cmr_last_name = get_unique_name(1)  << " da-uat"
@@ -56,9 +56,9 @@ describe 'disease admin lead in questions' do
   end
   
   it 'should display lead in questions in show mode' do
-    @browser.is_text_present(@contact_lead_in).should be_true
-    @browser.is_text_present(@place_lead_in).should be_true
-    @browser.is_text_present(@treatment_lead_in).should be_true
+    @browser.get_html_source.include?(@contact_lead_in).should be_true
+    @browser.get_html_source.include?(@place_lead_in).should be_true
+    @browser.get_html_source.include?(@treatment_lead_in).should be_true
   end
   
   it 'should display lead in questions in print mode' do
@@ -72,9 +72,10 @@ describe 'disease admin lead in questions' do
     
   it 'should display lead in questions in edit mode' do
     edit_cmr(@browser)
-    @browser.is_text_present(@contact_lead_in).should be_true
-    @browser.is_text_present(@place_lead_in).should be_true
-    @browser.is_text_present(@treatment_lead_in).should be_true
+    html_source = @browser.get_html_source
+    html_source.include?(@contact_lead_in).should be_true
+    html_source.include?(@place_lead_in).should be_true
+    html_source.include?(@treatment_lead_in).should be_true
   end
 
 end

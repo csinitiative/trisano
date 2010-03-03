@@ -2,37 +2,35 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ContactEventsController < EventsController
 
   def index
-    render :text => "Contacts can only be listed from the morbidity event show page of individuals who have contacts.", :status => 405
+    render :text => t("contact_event_no_index"), :status => 405
   end
 
   def show
-    # @event initialized in can_view? filter
-
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @event }
       format.print { @print_options = params[:print_options] || [] }
     end
   end
 
   def new
-    render :text => "Contacts can only be created from within a morbidity event.", :status => 405
+    render :text => t("contact_event_no_new"), :status => 405
   end
 
   def edit
@@ -40,33 +38,31 @@ class ContactEventsController < EventsController
   end
 
   def create
-    render :text => "Contacts can only be created from within a morbidity event.", :status => 405
+    render :text => t("contact_event_no_create"), :status => 405
   end
 
   def update
     go_back = params.delete(:return)
-    
+
     # Assume that "save & exits" represent a 'significant' update
-    @event.add_note("Edited event") unless go_back
+    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
-        flash[:notice] = 'Contact event was successfully updated.'
-        format.html { 
-          query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
+        flash[:notice] = t("contact_event_successfully_updated")
+        format.html {
           if go_back
-            redirect_to(edit_contact_event_url(@event) + query_str)
+            redirect_to edit_contact_event_url(@event, @query_params)
           else
-            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
-            redirect_to(contact_event_url(@event) + query_str)
+            redirect_to contact_event_url(@event, @query_params)
           end
         }
         format.xml  { head :ok }
-        format.js   { render :inline => "Contact saved.", :status => :created }
+        format.js   { render :inline => t("contact_saved"), :status => :created }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => "Contact event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+        format.js   { render :inline => t("contact_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity }
       end
     end
   end
@@ -76,9 +72,9 @@ class ContactEventsController < EventsController
     original_address = @event.parent_event.address
     #JSON to pass.  We shan't use a loop because we don't want all members.
     if original_address
-      response.headers['X-JSON'] = 
+      response.headers['X-JSON'] =
         "{street_number: \"" + original_address.street_number.to_s +
-        "\", street_name: \"" + original_address.street_name + 
+        "\", street_name: \"" + original_address.street_name +
         "\", unit_number: \"" + original_address.unit_number.to_s +
         "\", city: \"" + original_address.city +
         "\", state_id: \"" + original_address.state_id.to_s +
@@ -93,11 +89,12 @@ class ContactEventsController < EventsController
   end
 
   def event_type
-    if m_event = @event.promote_to_morbidity_event    
+    if m_event = @event.promote_to_morbidity_event
+      flash[:notice] = t(:promoted_to_morbidity)
       redirect_to cmr_path(m_event)
     else
-      flash[:error] = 'Could not promote to morbidity event.'
-      render :action => "show"
+      flash.now[:error] = t("could_not_promote_to_morbidity")
+      render :action => :edit, :status => :bad_request
     end
   end
 end

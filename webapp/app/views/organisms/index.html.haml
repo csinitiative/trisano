@@ -17,13 +17,13 @@
   List Organisms
 
 -content_for :tools_two do
-  =button_to("Create New Organism", new_organism_path, { :method => :get })
+  =button_to(t("create_new_organism"), new_organism_path, { :method => :get })
 
 #rot
   %table.list#organisms
     %tr
       %th.forminformation<
-        Organism Name
+        =t 'organism_name'
       %th<
         &nbsp;
       -@organisms.each do |organism|

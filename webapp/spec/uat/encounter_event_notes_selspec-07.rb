@@ -47,21 +47,21 @@ describe 'Encounter event notes' do
     @browser.type('css=input[id$=participations_encounter_attributes_encounter_date]', @date)
     @browser.type('css=textarea[id$=participations_encounter_attributes_description]', @description)
     save_cmr(@browser)
-    @browser.is_text_present("2009-03-10").should be_true
-    @browser.is_text_present(@description).should be_true
+    @browser.get_html_source.include?("2009-03-10").should be_true
+    @browser.get_html_source.include?(@description).should be_true
   end
 
   it 'should add an admin note and a clinical note to the encounter' do
-    @browser.click("link=Edit encounter event")
+    @browser.click("link=Edit Encounter")
     @browser.wait_for_page_to_load($load_time)
 
-    add_note(@browser, @admin_note, { :is_admin => true })
+    enter_note(@browser, @admin_note, { :is_admin => true })
     save_and_continue(@browser)
-    add_note(@browser, @clinical_note)
+    enter_note(@browser, @clinical_note)
     save_and_continue(@browser)
     
-    @browser.is_text_present(@admin_note).should be_true
-    @browser.is_text_present(@clinical_note).should be_true
+    @browser.get_html_source.include?(@admin_note).should be_true
+    @browser.get_html_source.include?(@clinical_note).should be_true
   end
 
   it "should filter notes for encounter events in edit mode" do

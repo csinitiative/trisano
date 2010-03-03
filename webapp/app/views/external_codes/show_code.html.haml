@@ -14,24 +14,24 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  =  "#{h(@code_name.description)} - #{h(@external_code.the_code)} - Code Detail"
+  =  "#{h(@code_name.description)} - #{h(@external_code.the_code)} - #{t 'code_detail'}"
 
 /- content_for :name do
 /=  "Code details: #{h(@external_code.code_description)}"
 
 - content_for :tools do
-  = link_to '&lt; Back to Codes', index_code_path(@code_name.code_name)
+  = link_to t('back_to', :name => t('codes')), index_code_path(@code_name.code_name)
   .horiz
   %p
 
 - content_for :tools_two do
-  = button_to "New #{h(@code_name.description)} Code", new_code_path(@code_name.code_name)
+  = button_to t("new_code", :type => h(@code_name.description)), new_code_path(@code_name.code_name)
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Code Information
+        =t 'code_information'
       %th
     %tr
       %td
@@ -40,20 +40,20 @@
         .tools
           = h(@external_code.code_description)
           %br
-          %b Code Type:
+          %b=ct 'code_type'
           = h(@external_code.code_name)
           %br 
-          %b Status:
-          = @external_code.deleted? ? 'Delete on ' + h(@external_code.deleted_at.to_s) : 'Active'
+          %b=ct 'status'
+          = @external_code.deleted? ? t('deleted_on', :date => ld(@external_code.deleted_at).to_s) : t('active')
           -# Be careful of command-line injection
           = render("external_codes/#{@code_name.code_name}/details") rescue render("external_codes/details")
       %td
         .tools{:style => "position: absolute; right: 15px;"}
           - if @external_code.deleted?
-            = link_to "Undelete", soft_undelete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really restore code?"
+            = link_to t("undelete"), soft_undelete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really restore code?"
           - else
-            = link_to "Edit", edit_code_path(@external_code.code_name, @external_code.the_code)
+            = link_to t("edit"), edit_code_path(@external_code.code_name, @external_code.the_code)
             |
             Show
             |
-            = link_to "Delete", soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really delete code?"
+            = link_to t("delete"), soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really delete code?"

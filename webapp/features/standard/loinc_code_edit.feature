@@ -17,7 +17,7 @@ Feature: Editing loinc codes
     And I fill in "Loinc code" with "636-9"
     And I press "Update"
 
-    Then I should see "Loinc code was successfully updated"
+    Then I should see "LOINC code was successfully updated"
     And I should see "636-9"
     And I should not see "636-6"
 
@@ -48,12 +48,12 @@ Feature: Editing loinc codes
     And I press "Update"
 
     Then I should not see "Loinc code was successfully updated"
-    And I should see "Loinc code has already been taken"
+    And I should see "LOINC code has already been taken"
 
     When I fill in "Loinc code" with "50000-1"
     And I press "Update"
 
-    Then I should see "Loinc code was successfully updated"
+    Then I should see "LOINC code was successfully updated"
     And I should see "50000-1"
 
   Scenario: Edit a Loinc with a nominal scale

@@ -61,12 +61,6 @@ class ExternalCode < ActiveRecord::Base
     telephone_location_types.collect{|code| code.id}
   end
 
-  def self.age_type(age_description)
-    with_scope(:find => {:conditions => "code_name='age_type'"}) do
-      active.find(:first, :conditions => "code_description='#{age_description.to_s}'")
-    end
-  end
-
   def self.confirmed
     find :first, :conditions => "code_name = 'case' AND the_code = 'C'"
   end
@@ -103,9 +97,10 @@ class ExternalCode < ActiveRecord::Base
   # using an array in a condition was failing
   def self.find_codes_for_autocomplete(condition, limit=10)
     return [] if condition.nil?
-    condition = sanitize_sql(["%s", condition.downcase])
-    limit = sanitize_sql(["%s", limit])
-    find_by_sql("SELECT * FROM external_codes WHERE deleted_at IS NULL AND LOWER(code_description) LIKE '#{condition}%' ORDER BY code_description LIMIT #{limit};")
+    find(:all,
+         :conditions => ['deleted_at IS NULL AND code_description ILIKE ?', condition + '%'],
+         :order => 'code_description',
+         :limit => limit)
   end
 
   def self.find_cases(*args)

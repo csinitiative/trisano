@@ -400,11 +400,9 @@
  COMMENT ON COLUMN people.entity_id IS 'The entity record for this person';
  COMMENT ON COLUMN people.ethnicity_id IS NULL;
  COMMENT ON COLUMN people.first_name IS NULL;
- COMMENT ON COLUMN people.first_name_soundex IS NULL;
  COMMENT ON COLUMN people.food_handler_id IS NULL;
  COMMENT ON COLUMN people.id IS 'Primary key';
  COMMENT ON COLUMN people.last_name IS NULL;
- COMMENT ON COLUMN people.last_name_soundex IS 'Soundex value used for searching by name';
  COMMENT ON COLUMN people.live IS NULL;
  COMMENT ON COLUMN people.middle_name IS NULL;
  COMMENT ON COLUMN people.next_ver IS NULL; -- TODO: Unused?
@@ -412,7 +410,6 @@
  COMMENT ON COLUMN people.previous_ver IS NULL; -- TODO
  COMMENT ON COLUMN people.primary_language_id IS NULL;
  COMMENT ON COLUMN people.updated_at IS NULL;
- COMMENT ON COLUMN people.vector IS NULL; -- TODO
 
  COMMENT ON TABLE people_races IS 'Links patients with races, allowing patients to be of multiple races';
  COMMENT ON COLUMN people_races.created_at IS NULL;

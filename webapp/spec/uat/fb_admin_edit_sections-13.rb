@@ -26,7 +26,7 @@ describe 'Form Builder Admin Edit Section Functionality' do
     @cmr_last_name = get_unique_name(2) << " se-uat"
     @section_name = get_unique_name(2)  << " section se-uat"
     @question_text = get_unique_name(2)  << " question se-uat"
-    @edited_section_name = get_unique_name(2)  << " section se-uat"
+    @edited_section_name = get_unique_name(2)  << " edited se-uat"
   end
   
   after(:all) do
@@ -43,14 +43,14 @@ describe 'Form Builder Admin Edit Section Functionality' do
     add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
     edit_section(@browser, @section_name, @edited_section_name)
     
-    publish_form(@browser)
+    publish_form(@browser).should be_true
   end
   
   it 'should show edited sections on a new cmr' do  
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "Hepatitis C, acute", "Bear River Health Department")
     edit_cmr(@browser)
     @browser.is_text_present(@section_name).should be_false
-    @browser.is_text_present(@edited_section_name).should be_true
+    @browser.get_html_source.include?(@edited_section_name).should be_true
   end
 
 end

@@ -16,7 +16,7 @@
 %table.list
   %tr
     %th.forminformation{:colspan => '2'}
-      Associated Diseases
+      =t 'associated_diseases'
   %tr
     %td
       %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
@@ -26,15 +26,15 @@
 
   %tr
     %th.forminformation{:colspan => '2'}
-      Edit Export Column
+      =t 'edit_export_column'
   %tr
     %td{:colspan => '2'}
       %span{ :class => "horiz" }
-        = f.label(:name, "Descriptive Name")
+        = f.label(:name)
         = f.text_field(:name)
 
       %span{ :class => "horiz" }
-        = f.label(:export_column_name, "CDC Column Name")
+        = f.label(:export_column_name)
         - if @export_column.type_data == "CORE"
           = h(@export_column.export_column_name)
         - else
@@ -42,10 +42,10 @@
 
       %span{ :class =>  "horiz" }
         - unless editing
-          = f.label(:export_disease_group, "Disease group (empty if all)")
+          = f.label(:export_disease_group)
           = f.collection_select(:export_disease_group_id, ExportDiseaseGroup.find(:all), :id, :name, :include_blank => true)
         - else
-          %label Disease Group
+          = f.label(:export_disease_group_show)
           = @export_column.export_disease_group.nil? ? "All Diseases" : h(@export_column.export_disease_group.name)
 
       %br.vert-break
@@ -53,26 +53,26 @@
 
       - cp_colm_names = ExportColumn.type_data_array
       %span{ :class =>  "horiz" }
-        = f.label(:type_data, "Data source")
+        = f.label(:type_data)
         = f.collection_select(:type_data, cp_colm_names, :last, :first, :class => 'required')
 
       -# Copied over from views/question_elements/_new.html.haml
       - fb_colm_names = [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]]
       %span{ :class =>  "horiz" }
-        = f.label(:data_type, "Data type")
+        = f.label(:data_type)
         = f.collection_select(:data_type, fb_colm_names, :last, :first, :include_blank => true)
 
       %span{ :class => "horiz" }
-        = f.label(:table_name, "Table name (if source is Core Data)")
+        = f.label(:table_name)
         = f.text_field(:table_name)
 
       %span{ :class => "horiz" }
-        = f.label(:column_name, "Column name (if source is Core Data)")
+        = f.label(:column_name)
         = f.text_field(:column_name)
 
       - req_colm_names = [["Yes", "Y"], ["No", "N"]]
       %span{ :class =>  "horiz" }
-        = f.label(:is_required, "Required")
+        = f.label(:is_required)
         = f.collection_select(:is_required, req_colm_names, :last, :first)
 
       %br.vert-break

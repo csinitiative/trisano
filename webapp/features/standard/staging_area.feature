@@ -32,9 +32,9 @@ Feature: Staging Electronic Messages
     And  I should see value "Collected: 2009-03-19" in the message header
     And  I should see value "ARUP LABORATORIES" in the message header
 
-    And  I should see value "Hepatitis Be Antigen" under label "Test Type"
+    And  I should see value "Hepatitis Be Antigen" under label "Test type"
     And  I should see value "Positive" under label "Result"
-    And  I should see value "Negative" under label "Test Type"
+    And  I should see value "Negative" under label "Test type"
     And  I should see value "2009-03-21" under label "Test Date"
 
   Scenario: Searching for matching events when none exist

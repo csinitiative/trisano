@@ -16,30 +16,25 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EncounterEvent < HumanEvent
-  
+
   after_create do |encounter|
     parent_event = encounter.parent_event
     encounter.build_disease_event(parent_event.disease_event.attributes) unless parent_event.disease_event.nil?
     encounter.build_jurisdiction(parent_event.jurisdiction.attributes) unless parent_event.jurisdiction.nil?
     encounter.build_interested_party(parent_event.interested_party.attributes) unless parent_event.interested_party.nil?
     encounter.build_disease_event(parent_event.disease_event.attributes) unless parent_event.disease_event.nil?
-    encounter.add_note("Encounter event created.")
+    encounter.add_note(I18n.translate("system_notes.encounter_event_created", :locale => I18n.default_locale))
   end
 
   class << self
     def core_views
       [
-        ["Encounter", "Encounter"],
-        ["Clinical", "Clinical"],
-        ["Laboratory", "Laboratory"]
+        [I18n.t('core_views.encounter'), "Encounter"],
+        [I18n.t('core_views.clinical'), "Clinical"],
+        [I18n.t('core_views.laboratory'), "Laboratory"]
       ]
     end
   end
-
-  # Hack.  We want the validation to fire only when being saved directly as an encounter event, not
-  # indirectly as part of a morbidity event.  Morbs will check encounters directly.  This value is
-  # set in the controller
-  attr_accessor :validate_against_bday
 
   # If you're wondering why calling #destroy on a contact event isn't deleting the record, this is why.
   # Override destroy to soft-delete record instead.  This makes it easier to work with :autosave.
@@ -57,8 +52,8 @@ class EncounterEvent < HumanEvent
     base_errors = {}
     return unless bdate = self.interested_party.person_entity.person.birth_date
     if (date = self.participations_encounter.encounter_date.try(:to_date)) && (date < bdate)
-      self.participations_encounter.errors.add(:encounter_date, "cannot be earlier than birth date")
-      base_errors['encounter'] = "Encounter date(s) precede birth date"
+      self.participations_encounter.errors.add(:encounter_date, :before_bday)
+      base_errors['encounter'] = :before_bday
     end
 
     unless base_errors.empty?

@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Demographics
+  %legend=t 'demographics'
   -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |person_form|
     %div.data_demographics
       -core_element_show :birth_gender_id, person_form, :horiz do
@@ -26,5 +26,5 @@
       -core_element_show :ethnicity_id, person_form, :horiz do
         =person_form.label(:ethnicity_id)
         %span.data_ethnicity=h(person.ethnicity_description)
-      %label Race
+      =f.label :race_ids
       %span.data_race=h(person.race_description)

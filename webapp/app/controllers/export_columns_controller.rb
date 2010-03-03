@@ -19,9 +19,9 @@ class ExportColumnsController < AdminController
 
   def index
     @export_columns = ExportColumn.find(:all, 
-                                        :include => ['export_disease_group', 'export_name'], 
-                                        :conditions => "export_names.export_name = 'CDC'", 
-                                        :order => "export_disease_groups.name, export_columns.name ASC")
+      :include => ['export_disease_group', 'export_name'],
+      :conditions => "export_names.export_name = 'CDC'",
+      :order => "export_disease_groups.name, export_columns.name ASC")
   end
 
   def show
@@ -41,7 +41,7 @@ class ExportColumnsController < AdminController
     @export_column.export_name = ExportName.find(:first, :conditions => "export_name = 'CDC'") 
 
     if @export_column.save
-      flash[:notice] = 'Export Column was successfully created.'
+      flash[:notice] = t("export_column_created")
       redirect_to(@export_column)
     else
       render :action => "new"
@@ -54,7 +54,7 @@ class ExportColumnsController < AdminController
     
     
     if @export_column.update_attributes(params[:export_column])
-      flash[:notice] = 'Export Column was successfully updated.'
+      flash[:notice] = t("export_column_updated")
       redirect_to(@export_column)
     else
       render :action => "edit"

@@ -18,13 +18,13 @@
 class HospitalsParticipation < ActiveRecord::Base
   belongs_to :particpations
 
-  validates_date :admission_date, :allow_nil => true
-  validates_date :discharge_date, :allow_nil => true
+  validates_date :admission_date, :allow_blank => true,
+                                  :on_or_before => lambda { Date.today } # Admission date cannot be in the future.
+
+  validates_date :discharge_date, :allow_blank => true,
+                                  :on_or_before => lambda { Date.today }, # Discharge date cannot be in the future.
+                                  :on_or_after => :admission_date # Cannot be discharged before you were admitted.
+
   validates_length_of :medical_record_number, :maximum => 255, :allow_blank => true
-  def validate
-    if !admission_date.blank? && !discharge_date.blank?
-      errors.add(:discharge_date, "cannot precede admission date") if discharge_date.to_date < admission_date.to_date
-    end
-  end
 
 end

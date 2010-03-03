@@ -27,6 +27,15 @@ class Questions
       new form
     end
 
+    def self_and_descendants_from_active_record
+      [self]
+    end
+
+    def human_name(options = {})
+      default = self.name.humanize
+      I18n.t(default, {:scope => [:activerecord, :models], :count => 1, :default => default}.merge(options))
+    end
+
     def human_attribute_name(attr)
       if attr =~ /\d+_(.*$)/
         $1.humanize.capitalize
@@ -62,10 +71,13 @@ class Questions
           question.short_name = attr[:short_name]
           record_question_errors(question) unless question.save
         end
-        raise 'Errors saving short names' unless valid?
+        raise(I18n.translate('errors_saving_short_names')) unless valid?
       end
     rescue
-      ActiveRecord::Base.logger.error $!.message
+      ActiveRecord::Base.logger.error $!
+      if errors.empty?
+        self.errors.add(:base, I18n.t(:unexpected_error, :scope => t_scope(:base)))
+      end
       false
     else
       true
@@ -78,7 +90,8 @@ class Questions
   end
 
   def validate
-    Question.find_by_sql([<<-SQL, @form.id, @form.id]).each {|q| errors.add(field_name(q), "'#{q.short_name}' is already used in this form")}
+    scope = t_scope(:short_name)
+    Question.find_by_sql([<<-SQL, @form.id, @form.id]).each {|q| errors.add(field_name(q), I18n.t(:taken, :scope => scope, :short_name => q.short_name))}
       SELECT questions.id, questions.short_name FROM questions
         JOIN form_elements ON questions.form_element_id = form_elements.id
        WHERE EXISTS (SELECT 'x' FROM questions i
@@ -113,5 +126,14 @@ class Questions
 
   def field_name(question)
     "#{question.id}_short_name"
+  end
+
+  # since we're not really an AR
+  def t_scope(*additional_scope)
+    returning [] do |scope|
+      scope << [:activerecord, :errors, :models, :questions, :attributes]
+      scope << additional_scope
+      scope.flatten!
+    end
   end
 end

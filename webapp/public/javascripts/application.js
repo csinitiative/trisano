@@ -15,7 +15,7 @@ FormWatch.prototype = {
    confirmExit : function(ev) {
       this.newcontents = this.form.serialize();
       if ((this.formcontents != this.newcontents) && !(this.submitted)) {
-         ev.returnValue = "The contents of the form have changed but have not been saved.";
+        ev.returnValue = i18n.t('form_changed');
       }
    }
 }
@@ -35,13 +35,18 @@ function toggle_investigator_forms(id_to_show) {
 
     $(id_to_hide).hide();
     $(id_to_show).show();
-
 }
 
 function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
     if (typeof spinner_id == "undefined")
         spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
-    new Ajax.Request(path + '?question_element_id=' + question_element_id +'&response=' + element.value + '&event_id=' + event_id, {
+    if (path.indexOf('?') < 0) { path = path + "?"; }
+    queryParams = path.toQueryParams();
+    queryParams.question_element_id = question_element_id;
+    queryParams.response = element.value;
+    queryParams.event_id = event_id;
+    if (window.location.toString().toQueryParams().locale) { queryParams.locale = window.location.toString().toQueryParams().locale; }
+    new Ajax.Request(path.sub(/\?.*/, '') + '?' + $H(queryParams).toQueryString(), {
         asynchronous: true,
         evalScripts:  true,
         onCreate:     function() {
@@ -56,7 +61,13 @@ function sendConditionRequest(path, element, event_id, question_element_id, spin
 function sendCoreConditionRequest(path, element, event_id, core_path, spinner_id) {
     if (typeof spinner_id == "undefined")
         spinner_id = core_path + '_spinner';
-    new Ajax.Request(path +'?core_path=' + core_path + '&response=' + element.value + '&event_id=' + event_id, {
+    if (path.indexOf('?') < 0) { path = path + "?"; }
+    queryParams = path.toQueryParams();
+    queryParams.core_path = core_path;
+    queryParams.response = element.value;
+    queryParams.event_id = event_id;
+    if (window.location.toString().toQueryParams().locale) { queryParams.locale = window.location.toString().toQueryParams().locale; }
+    new Ajax.Request(path.sub(/\?.*/, '') + '?' + $H(queryParams).toQueryString(), {
         asynchronous: true,
         evalScripts:  true,
         onCreate:     function() {
@@ -114,7 +125,12 @@ function checkNameSearchFields(field) {
 
 function build_url_with_tab_index(url) {
     if (!(window.myTabs === undefined)) {
-        url = url + "?tab_index=" + myTabs.get("activeIndex");
+        if (url.indexOf('?') < 0) {
+          url = url + "?";
+        }
+        queryParams = $H(url.toQueryParams());
+        queryParams.set("tab_index", myTabs.get("activeIndex"));
+        url = url.sub(/\?.*/, '') + "?" + queryParams.toQueryString();
     }
     return url;
 }
@@ -129,20 +145,21 @@ function add_tab_index_to_action(form) {
 }
 
 function post_and_return(form_id) {
-    form = document.getElementById(form_id);
-    form.action = build_url_with_tab_index(form.action);
-    form.action += form.action.match(/\?/) ? "" : "?"
-    form.action = form.action + "&return=true";
-    formWatcher.submitted = true;
-    form.submit();
+  form = document.getElementById(form_id);
+  form.action = build_url_with_tab_index(form.action);
+  form.action += form.action.match(/\?/) ? "" : "?";
+  form.action = form.action + "&return=true";
+  formWatcher.submitted = true;
+  form.submit();
 }
 
 function post_and_exit(form_id) {
-    form = document.getElementById(form_id);
-    form.action = build_url_with_tab_index(form.action);
-    form.action += form.action.match(/\?/) ? "" : "?"
-    formWatcher.submitted = true;
-    form.submit();
+  form = document.getElementById(form_id);
+  url = build_url_with_tab_index(form.action);
+  queryParams = url.toQueryParams();
+  form.action = url;
+  formWatcher.submitted = true;
+  form.submit();
 }
 
 function toggle_strike_through(element_id) {
@@ -172,10 +189,11 @@ function toggle_save_buttons(state) {
     });
 }
 
-function contact_parent_address(id) {
-  new Ajax.Request('../../contact_events/copy_address/' + id, {
+function contact_parent_address(path) {
+  new Ajax.Request(path, {
     asynchronous: true,
     evalScripts:  true,
+    method:       'get',
     onComplete: function(transport, json) {
       $H(json).each(function(pair) {
         $('contact_event_address_attributes_' + pair.key).value = pair.value;
@@ -184,9 +202,9 @@ function contact_parent_address(id) {
   });
 }
 
-function shortcuts_init(path) {
-  this.root = path;
-  new Ajax.Request(path + 'users/shortcuts', {
+function shortcuts_init(home_path, shortcuts_path) {
+  this.root = home_path;
+  new Ajax.Request(shortcuts_path, {
     method:      'get',
     asynchronous: true,
     evalScripts:  true,
@@ -200,11 +218,11 @@ function shortcuts_init(path) {
 
 function shortcut_set(target) {
   var ele = $('user_shortcut_settings_' + target);
-  var prev = ele.previous()
+  var prev = ele.previous();
   ele.style.display = "none";
-  prev.innerHTML = ele.value || "Undefined";
+  prev.innerHTML = ele.value || i18n.t('undefined');
   prev.style.display = "inline";
-  
+
   $$('input[type=text]').each(function(box) { if (box.style.display == "inline") return; });
 
   document.onkeydown = function (e) {
@@ -215,7 +233,7 @@ function shortcut_set(target) {
     submit_shortcuts(KeyCode.translate_event(e));
   };
 
-  document.onkeypress = null; 
+  document.onkeypress = null;
   document.onkeyup = null;
 }
 
@@ -233,7 +251,7 @@ function submit_shortcuts()
           inline = true;
       });
       if (dirty && inline)
-          alert('Please resolve all conflicts before saving.');
+        alert(i18n.t('unresolved_conflicts'));
     }
 }
 
@@ -249,7 +267,7 @@ function change_shortcut(ele) {
       e.preventDefault();
 
     var key = KeyCode.translate_event(e);
-   
+
     if (!(key.shift || key.alt || key.ctrl || key.meta)) {
       var ary = $$('input[type=text]');
 
@@ -311,9 +329,14 @@ function check_conflicts() {
 }
 
 function focus_first() {
+    if (typeof(myTabs) != "undefined" && typeof(myTabs.get('activeTab')) != "undefined") {
+        activeTab = myTabs.get('activeTab').get('contentEl');
+    } else {
+        activeTab = $('main-content');
+    }
     YAHOO.util.Dom.getElementsBy(function(el) {
-        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A') && (el.type != "hidden");
-      }, '', (typeof(myTabs) != "undefined" ? myTabs.get('activeTab').get('contentEl') : $('main-content')))[0].focus();
+      return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A') && (el.type != "hidden");
+    }, '', activeTab)[0].focus();
 }
 
 function focus_init() {
@@ -322,8 +345,31 @@ function focus_init() {
     myTabs.addListener("activeIndexChange", focus_first);
 }
 
-function get_lab_options(select_list, url) {
-  if (select_list.options[select_list.selectedIndex].text == "More choices...") {
-    new Ajax.Updater(select_list,  url, {asynchronous:true, method: 'get'})
+function getLabOptions(select_list, url) {
+  if (select_list.options[select_list.selectedIndex].value == "-1") {
+    new Ajax.Updater(select_list,  url, {asynchronous:true, method: 'get'});
   }
+}
+
+function useGoogleApi(action) {
+  if (Trisano.Geo.initialized) {
+    action();
+  } else {
+    loadGoogleApi({ onSuccess: action });
+  }
+}
+
+ function loadGoogleApi(options) {
+   loadScript(Trisano.Geo.scriptSrc);
+   options.onSuccess = options.onSuccess || Prototype.K;
+   new PeriodicalExecuter(function(pe) {
+     if (Trisano.Geo.initialized) {
+       options.onSuccess();
+       pe.stop();
+     }
+   }, 0.2);
+ }
+
+function googleMapsLoaded() {
+  googleMapsInit();
 }

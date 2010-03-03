@@ -19,20 +19,33 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ParticipationsPlace do
   describe 'date of exposure' do
-    
+    before(:each) do
+      @pp = ParticipationsPlace.create
+    end
+   
     it 'should be valid if nil' do
-      pp = ParticipationsPlace.create
-      pp.should be_valid
+      @pp.should be_valid
     end
 
     it 'should accept valid dates' do
-      pp = ParticipationsPlace.create(:date_of_exposure => 'August 8, 2008')
-      pp.should be_valid
+      @pp.update_attributes(:date_of_exposure => '2009-08-07')
+      @pp.errors.on(:date_of_exposure).should be_nil
     end
 
     it 'should not accept invalid dates' do
-      pp = ParticipationsPlace.create(:date_of_exposure => 'not valid')
-      pp.should_not be_valid
+      @pp.update_attributes(:date_of_exposure => 'not valid')
+      @pp.errors.on(:date_of_exposure).should == "is not a valid date"
+    end
+
+    it 'should be valid for exposure dates in the past' do
+      @pp.update_attributes(:date_of_exposure => Date.yesterday)
+      @pp.should be_valid
+      @pp.errors.on(:date_of_exposure).should be_nil
+    end
+
+    it 'should not be valid for exposure dates in the future' do
+      @pp.update_attributes(:date_of_exposure => Date.tomorrow)
+      @pp.errors.on(:date_of_exposure).should == "must be on or before " + Date.today.to_s
     end
   end
 

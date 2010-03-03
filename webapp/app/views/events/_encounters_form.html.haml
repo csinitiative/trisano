@@ -16,9 +16,9 @@
 
 %fieldset
   %legend 
-    Encounter Information
-    %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter_child_events'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"} [Hide]
-    %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter_child_events'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"} [Show]
+    =t "encounter_info"
+    %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter_child_events'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"}= hide
+    %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter_child_events'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"}= show
 
   - unless f.object.new_record?
 
@@ -29,21 +29,21 @@
       - blank_encounter = EncounterEvent.new
       - blank_encounter.build_participations_encounter
 
-      %p= add_record_link f, :encounter_child_events, "Add an encounter", :object => blank_encounter, :partial => "events/encounter"
+      %p= add_record_link f, :encounter_child_events, t("add_encounter"), :object => blank_encounter, :partial => "events/encounter"
 
   - else
-    No encounters
+    =t 'no_encounters', :thing => 'event'
 
   %fieldset.form
     %legend
-      Encounter notes
+      =t 'encounter_notes'
 
     - unless @event.encounter_child_events.first.new_record?
 
       - for encounter in @event.encounter_child_events
         - pe = encounter.participations_encounter
-        %h3="Encounter on #{h pe.encounter_date}"
+        %h3=t('encounter_on', :date => ld(pe.encounter_date))
         = render(:partial => 'event_notes/list', :locals => { :notes => encounter.notes })
 
     - else
-      %h3 No encounter notes have been recorded for this event
+      %h3= t 'no_encounter_notes'

@@ -2,18 +2,18 @@ module CommonTestTypesHelper
 
   def common_test_type_tools(common_test_type)
     haml_tag :div, :class => 'tools' do
-      haml_concat link_to_unless_current('Show', common_test_type)
+      haml_concat link_to_unless_current(t('show'), common_test_type)
       haml_concat "|"
-      haml_concat link_to_unless_current('Edit', edit_common_test_type_path(common_test_type))
+      haml_concat link_to_unless_current(t('edit'), edit_common_test_type_path(common_test_type))
       if current_page_is_common_test_type_page? common_test_type
         haml_concat "|"
-        haml_concat link_to_unless_current('LOINC Codes', loinc_codes_common_test_type_path(common_test_type))
+        haml_concat link_to_unless_current(t('loinc_codes'), loinc_codes_common_test_type_path(common_test_type))
         haml_concat "|"
         haml_concat link_to_if(common_test_type.lab_results.empty?,
-                               'Delete',
+                               t('delete'),
                                common_test_type_path(common_test_type),
                                :method => :delete,
-                               :confirm => 'Are you sure?')
+                               :confirm => t('are_you_sure'))
       end
     end
   end

@@ -16,22 +16,24 @@
 %table.list
   %tr
     %th.forminformation
-      = if (event.is_a? MorbidityEvent or event.is_a? EncounterEvent) then "Patient Name" elsif event.is_a? ContactEvent then "Contact Name" else "Place Name" end
-    %th Jurisdictions
+      = if (event.is_a? MorbidityEvent or event.is_a? EncounterEvent) then t("patient_name") elsif event.is_a? ContactEvent then t("contact_name") elsif event.is_a? PlaceEvent then t("place_name") else event.class.name.underscore.humanize end
+    %th=t 'jurisdictions'
     %th
   %tr
     - if event.is_a? PlaceEvent
       - name = event.interested_place.place_entity.place.name
-    - else
+    - elsif event.is_a? HumanEvent
       - patient = event.interested_party.person_entity.person
       - name = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
+    - else
+      - name = event.event_name unless event.event_name.nil?
 
     %td.forminformation
       .patientname
         = h(name)
       %small
-        Date:
-        = h(event.event_onset_date)
+        =ct 'date_word'
+        =ld(event.event_onset_date)
     %td
       %b
         = h(event.primary_jurisdiction.short_name)

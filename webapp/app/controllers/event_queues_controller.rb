@@ -14,52 +14,43 @@
 # If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EventQueuesController < AdminController
-  # GET /event_queues
-  # GET /event_queues.xml
   def index
     @event_queues = EventQueue.find(:all, :include => :jurisdiction, :conditions => ["event_queues.jurisdiction_id IN (?)",  User.current_user.jurisdiction_ids_for_privilege(:administer)])
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @event_queues }
     end
   end
 
-  # GET /event_queues/1
-  # GET /event_queues/1.xml
   def show
     @event_queue = EventQueue.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @event_queue }
     end
   end
 
-  # GET /event_queues/new
-  # GET /event_queues/new.xml
   def new
     @event_queue = EventQueue.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @event_queue }
     end
   end
 
-  # GET /event_queues/1/edit
   def edit
     @event_queue = EventQueue.find(params[:id])
   end
 
-  # POST /event_queues
-  # POST /event_queues.xml
   def create
     @event_queue = EventQueue.new(params[:event_queue])
 
     respond_to do |format|
       if @event_queue.save
-        flash[:notice] = 'Event queue was successfully created.'
+        flash[:notice] = t("event_queue_created")
         format.html { redirect_to(@event_queue) }
         format.xml  { render :xml => @event_queue, :status => :created, :location => @event_queue }
       else
@@ -69,14 +60,12 @@ class EventQueuesController < AdminController
     end
   end
 
-  # PUT /event_queues/1
-  # PUT /event_queues/1.xml
   def update
     @event_queue = EventQueue.find(params[:id])
 
     respond_to do |format|
       if @event_queue.update_attributes(params[:event_queue])
-        flash[:notice] = 'Event queue was successfully updated.'
+        flash[:notice] = t("event_queue_updated")
         format.html { redirect_to(@event_queue) }
         format.xml  { head :ok }
       else
@@ -86,8 +75,6 @@ class EventQueuesController < AdminController
     end
   end
 
-  # DELETE /event_queues/1
-  # DELETE /event_queues/1.xml
   def destroy
     @event_queue = EventQueue.find(params[:id])
     @event_queue.destroy

@@ -1,47 +1,35 @@
 #export_options{:style => "display: none; width: 40%; position: relative"}
   %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
-    %b Include these repeating aspects in the export:
+    %b=ct('include_repeating_aspects')
     %br
-    - form_tag(path, :method => :post, :onsubmit => "Effect.Fade('export_options', { duration: 0.3 })") do
-      -# When the export_options "window" is open we may be looking at a restricted view (in fact, that's all there is in the search screen)
-      -# based on an earlier GET.  We need to capture the previous GETs paramaters (which are also in the current GET) and hide them in this
-      -# form
-      - params.delete(:controller)
-      - params.delete(:commit)
-      - params.delete(:action)
-      - params.each_pair do |key, value|
-        - if value.is_a?(Array)
-          - value.each do |value_element|
-            = hidden_field_tag("#{h(key)}[]", h(value_element))
-        - else
-          = hidden_field_tag(h(key), h(value))
+    -export_options_form(path) do
       %label.horiz
         = check_box_tag("export_options[]", "contacts", false, :onclick => "$('contact_code_field_options').toggle();")
-        %span Contacts
+        %span=t'contacts'
       %label.horiz
         = check_box_tag("export_options[]", "places", false, :onclick => "$('place_code_field_options').toggle();")
-        %span Place Exposures
+        %span=t 'place_exposures'
       %label.horiz
         = check_box_tag("export_options[]", "labs", false, :onclick => "$('lab_code_field_options').toggle();")
-        %span Lab Results
+        %span=t 'lab_results'
       %label.vert-break
         = check_box_tag("export_options[]", "treatments", false, :onclick => "$('treatment_code_field_options').toggle();")
-        %span Treatments
-      %b Additional Options:
+        %span= t 'treatments'
+      %b= ct 'additional_options'
       %br
       %label.vert-break
         = check_box_tag("export_options[]", "use_short_names")
-        %span Use Short Column Names
-      %b Codes and Descriptions:      
+        %span= t 'use_short_column_names'
+      %b= ct 'codes_and_descriptions'
       %div{:style => 'width: 30em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
         %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
           #morbidity_code_field_options
             %table
               %thead
                 %tr
-                  %th CMR Field
-                  %th Description
-                  %th Code
+                  %th= t 'cmr_field'
+                  %th= t 'description'
+                  %th= t 'code'
               %tbody
                 - CsvField.morbidity_event_code_fields.each do |field|
                   %tr
@@ -52,9 +40,9 @@
             %table
               %thead
                 %tr
-                  %th Contact Field
-                  %th Description
-                  %th Code
+                  %th=t 'contact_field'
+                  %th=t 'description'
+                  %th=t 'code'
               %tbody
                 - CsvField.contact_event_code_fields.each do |field|
                   %tr
@@ -65,9 +53,9 @@
             %table
               %thead
                 %tr
-                  %th Place Field
-                  %th Description
-                  %th Code
+                  %th= t'place_field'
+                  %th= t 'description'
+                  %th= t 'code'
               %tbody
                 - CsvField.place_event_code_fields.each do |field|
                   %tr
@@ -78,9 +66,9 @@
             %table
               %thead
                 %tr
-                  %th Lab Field
-                  %th Description
-                  %th Code
+                  %th=t 'lab_field'
+                  %th=t 'description'
+                  %th=t 'code'
               %tbody
                 - CsvField.lab_code_fields.each do |field|
                   %tr
@@ -91,9 +79,9 @@
             %table
               %thead
                 %tr
-                  %th Treatment Field
-                  %th Description
-                  %th Code
+                  %th= t 'treatment_field'
+                  %th= t 'description'
+                  %th= t'code'
               %tbody
                 - CsvField.treatment_code_fields.each do |field|
                   %tr
@@ -103,7 +91,7 @@
           = set_options_availability
       -# This div is needed to keep IE from drawing a button as wide as the form.
       %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
-        = submit_tag("Export", :id => "export_btn")
+        = submit_tag(t("export"), :id => "export_btn")
     %p.vert-break
       %br
-      = link_to_function "Close", "Effect.Fade('export_options', { duration: 0.3 })"
+      = link_to_function t("close"), "Effect.Fade('export_options', { duration: 0.3 })"

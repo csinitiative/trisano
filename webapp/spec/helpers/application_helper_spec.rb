@@ -18,7 +18,14 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ApplicationHelper do
-  
+
+  describe "ApplicationHelper#localize_or_default" do
+    it "should handle strings that can't be parsed gracefully" do
+      helper.localize_or_default("432fsdfsdf").should  == "&nbsp;"
+    end
+
+  end
+
   it "should determine replacement elements for a library admin action" do
     question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :question => question)
@@ -62,7 +69,7 @@ describe ApplicationHelper do
   it "should determine replacement elements for a core field child" do
     form_base_element = FormBaseElement.create(:tree_id => "1")
     core_field_element_container = CoreFieldElementContainer.create(:tree_id => "1")
-     question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
+    question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
     question_element = QuestionElement.create(:tree_id => "1", :form_id => 1, :question => question)
     
     form_base_element.add_child(core_field_element_container)
@@ -77,5 +84,10 @@ describe ApplicationHelper do
   it "should format date correctly" do
     helper.format_date(Time.parse('8/21/2002')).should eql('August 21, 2002')
   end
-  
+
+  it "should raise an Argument error when ld is passed too many args" do
+    lambda do
+      helper.ld(1, 2, 3, 'bzzzz')
+    end.should raise_error(ArgumentError, 'wrong number of arguments: (4 for 3)')
+  end
 end

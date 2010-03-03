@@ -21,10 +21,24 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :export_conversion_value
 
+  class << self
+    def regexp(field)
+      Regexp.compile(answer_options[field] || '')
+    end
+
+    def answer_options
+      (@answer_options ||= config_options[:answer]).with_indifferent_access
+    end
+
+    def answer_options=(options)
+      @answer_options = options
+    end
+  end
+
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required
-  validates_format_of :text_answer, :with => /^\d{3}-\d{3}-\d{4}$/, :message => 'Phone number must include area code and seven digit number', :allow_blank => true, :if => :is_phone
-  validates_date :date_answer, :if => :is_date, :allow_nil => true
+  validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
+  validates_date :date_answer, :if => :is_date, :allow_blank => true
 
   def self.export_answers(*args)
     args = [:all] if args.empty?
@@ -44,7 +58,7 @@ class Answer < ActiveRecord::Base
   end
 
   def date_answer
-    ActiveRecord::ConnectionAdapters::Column.send("string_to_date", text_answer)
+    ValidatesTimeliness::Parser.parse(text_answer, :date)
   end
 
   def date_answer_before_type_cast

@@ -21,7 +21,7 @@ class GroupElementsController <  AdminController
     @group_elements = GroupElement.find(:all)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @group_elements }
     end
   end
@@ -30,7 +30,7 @@ class GroupElementsController <  AdminController
     @group_elements = GroupElement.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @group_elements }
     end
   end
@@ -42,7 +42,7 @@ class GroupElementsController <  AdminController
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the group form  at this time.'
+      flash[:error] = t("unable_to_display_group_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -58,7 +58,7 @@ class GroupElementsController <  AdminController
     if @group_element.save_and_add_to_form
       @library_elements = FormElement.roots(:conditions => ["form_id IS NULL"])
     else
-      flash[:error] = 'Unable to create the group at this time.'
+      flash[:error] = t("unable_to_create_group")
       @group_element = post_transaction_refresh(@group_element, params[:group_element])
       render :template => 'rjs-error'
     end
@@ -69,7 +69,7 @@ class GroupElementsController <  AdminController
 
     respond_to do |format|
       if @group_element.update_attributes(params[:group_element])
-        flash[:notice] = 'Group was successfully updated.'
+        flash[:notice] = t("group_updated")
         format.html { redirect_to(@group_element) }
         format.xml  { head :ok }
       else

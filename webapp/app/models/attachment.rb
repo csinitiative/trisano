@@ -21,7 +21,11 @@ class Attachment < ActiveRecord::Base
 
   class << self
     def category_array
-      [["Correspondence", "correspondence"], ["Laboratory results", "lab"], ["Letter", "letter"], ["X-ray", "x-ray"]]
+      [
+        [I18n.t('attachment_types.correspondence'), "correspondence"],
+        [I18n.t('attachment_types.lab'), "lab"],
+        [I18n.t('attachment_types.letter'), "letter"],
+        [I18n.t('attachment_types.x-ray'), "x-ray"]]
     end
 
     def valid_categories

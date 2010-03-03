@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - unless association_recorded?(event.interested_party.treatments)
-  %b{ :style => 'font-size: 11px' }="No treatments have been recorded for this #{h(event.class.name.underscore.humanize.downcase)}"
+  %b{ :style => 'font-size: 11px' }=t('no_treatments', :thing => h(event.class.name.underscore.humanize.downcase))
 - else
   .three-valued-row
     .short
-      %span.print-label Treatment Given
+      %span.print-label= ct('treatment_given')
     .short
-      %span.print-label Treatment
+      %span.print-label= ct('treatment')
     .short
-      %span.print-label Treatment Date
+      %span.print-label= ct('treatment_date')
     .right
-      %span.print-label Stop Treatment Date
+      %span.print-label= ct('stop_treatment_date')
     %br
     - for treatment in event.interested_party.treatments
       .three-valued-row
@@ -33,6 +33,6 @@
         .short
           %span.print-value= h(treatment.treatment)
         .short
-          %span.print-value= h(treatment.treatment_date)
+          %span.print-value= ld(treatment.treatment_date)
         .right
-          %span.print-value= h(treatment.stop_treatment_date)
+          %span.print-value= ld(treatment.stop_treatment_date)

@@ -21,7 +21,7 @@ class DiseasesController < AdminController
     @diseases = Disease.find(:all, :order => "disease_name ASC")
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @diseases }
     end
   end
@@ -30,7 +30,7 @@ class DiseasesController < AdminController
     @disease = Disease.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @disease }
     end
   end
@@ -39,7 +39,7 @@ class DiseasesController < AdminController
     @disease = Disease.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @disease }
     end
   end
@@ -53,7 +53,7 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.save
-        flash[:notice] = 'Disease was successfully created.'
+        flash[:notice] = t("disease_successfully_created")
         format.html { redirect_to(@disease) }
         format.xml  { render :xml => @disease, :status => :created, :location => @disease }
       else
@@ -73,7 +73,7 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.update_attributes params[:disease]
-        flash[:notice] = 'Disease was successfully updated.'
+        flash[:notice] = t("disease_successfully_updated")
         format.html { redirect_to(@disease) }
       else
         format.html { render :action => 'edit' }

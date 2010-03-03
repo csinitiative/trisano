@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Jurisdiction
+  =t 'edit_jurisdiction'
 
 - content_for :tools do
-  = link_to '< Back to Jurisdictions', jurisdictions_path
+  = link_to t('back_to', :name => t('jurisdictions')), jurisdictions_path
   %p
   
 #jurisdiction_info
   %table.list
     %tr
       %th.forminformation
-        Jurisdiction
+        =t 'jurisdiction'
       %th
       %tr
         %td.forminformation
@@ -34,9 +34,9 @@
             = h(@jurisdiction.place.short_name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            =t 'edit'
             |
-            = link_to('Show', jurisdiction_path(@jurisdiction))
+            = link_to(t('show'), jurisdiction_path(@jurisdiction))
 
 #jurisdiction_form
   = error_messages_for :object => @jurisdiction.place
@@ -45,4 +45,4 @@
 
     = render :partial => 'form', :locals => { :f => f, :jurisdiction => @jurisdiction}
 
-    = f.submit "Update"
+    = f.submit t("update")

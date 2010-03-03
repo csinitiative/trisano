@@ -14,14 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %span.subsection-header
-  Name
+  = t('name')
 -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
   -core_element_print :last_name, person_form, :horiz do
-    %span.print-label Last Name
+    %span.print-label= ct('last_name')
     %span.print-value=h(person.last_name)
   -core_element_print :first_name, person_form, :horiz do
-    %span.print-label First Name:
+    %span.print-label= ct('first_name')
     %span.print-value=h(person.first_name)
   -core_element_print :middle_name, person_form, :vert do
-    %span.print-label Middle Name:
+    %span.print-label= ct('middle_name')
     %span.print-value=h(person.middle_name)

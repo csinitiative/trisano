@@ -5,7 +5,7 @@ Feature: Managing contacts on events
 
   Scenario: Adding and removing contacts in new mode
     Given I am logged in as a super user
-    And a contact event exists
+    And there is a contact event
 
     When I navigate to the new event page and start a simple event
     And I add an existing contact
@@ -25,7 +25,7 @@ Feature: Managing contacts on events
   Scenario: Adding contacts in edit mode
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
-    And a contact event exists
+    And there is a contact event
 
     When I navigate to the event edit page
     And I add an existing contact

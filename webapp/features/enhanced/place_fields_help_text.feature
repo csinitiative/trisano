@@ -6,7 +6,7 @@ Feature: Place event, viewing core field help text
   Scenario: Viewing place event help text
     Given I am logged in as a super user
     And all core field configs for a place event have help text
-    And a morbidity event exists
+    And a basic morbidity event exists
     And there is a place on the event named Jimmy's Pool
 
     And I am on the place event edit page

@@ -41,7 +41,7 @@ describe 'form builder invalid core field configs' do
   it 'should change the form to a contact form.' do
     @browser.click("link=Edit")
     @browser.wait_for_page_to_load($load_time)
-    edit_form_and_go_to_builder(@browser,:event_type => "Contact event").should be_true
+    edit_form_and_go_to_builder(@browser,:event_type => "Contact Event").should be_true
   end
   
   it 'should mark existing core field as invalid' do

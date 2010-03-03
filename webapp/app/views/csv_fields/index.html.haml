@@ -14,38 +14,38 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  CSV Export Columns
+  = t('csv_export_columns')
 
 #rot
   %table.list{:id => 'morbidity_event_fields'}
     %tr
       %th.forminformation
-        Long Name
+        = t('long_name')
       %th
-        Short Name
+        = t('short_name')
     %tr
       %td{:colspan => 2}
         .formname
-          Morbidity Event Fields
+          = t('morbidity_event_fields')
     = render @morbidity_event_fields
-    %tr
+    %trl
       %td{:colspan => 2}
         .formname
-          Contact Event Fields
+          = t('contact_event_fields')
     = render @contact_event_fields
     %tr
       %td{:colspan => 2}
         .formname
-          Place Event Fields
+          = t('place_event_fields')
     = render @place_event_fields
     %tr
       %td{:colspan => 2}
         .formname
-          Lab Fields
+          = t('lab_fields')
     = render @lab_fields
     %tr
       %td{:colspan => 2}
         .formname
-          Treatment Fields
+          = t('treatment_fields')
     = render @treatment_fields
           

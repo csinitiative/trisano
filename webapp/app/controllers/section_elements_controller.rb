@@ -21,7 +21,7 @@ class SectionElementsController <  AdminController
     @section_elements = SectionElement.find(:all)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @section_elements }
     end
   end
@@ -30,7 +30,7 @@ class SectionElementsController <  AdminController
     @section_elements = SectionElement.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @section_elements }
     end
   end
@@ -41,7 +41,7 @@ class SectionElementsController <  AdminController
       @section_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the section form  at this time.'
+      flash[:error] = t("unable_to_display_section_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -71,7 +71,7 @@ class SectionElementsController <  AdminController
     @section_element = SectionElement.find(params[:id])
 
     if @section_element.update_and_validate(params[:section_element])
-      flash[:notice] = 'Section was successfully updated.'
+      flash[:notice] = t("section_updated")
       @form = Form.find(@section_element.form_id)
     else
       render :action => "edit"

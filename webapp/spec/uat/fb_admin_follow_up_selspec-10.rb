@@ -48,7 +48,7 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
     
     edit_cmr(@browser)
-    @browser.is_text_present(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition
     click_core_tab(@browser, INVESTIGATION)
@@ -62,7 +62,7 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     answer_investigator_question(@browser, @original_question_text, "No match")
     @browser.click("link=#{@form_name}")
     sleep(1)
-    @browser.is_text_present(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
     
     # Back to a match, enter follow up answer and submit
     answer_investigator_question(@browser, @original_question_text, "Yes")
@@ -71,11 +71,11 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     answer_investigator_question(@browser, @follow_up_question_text, @follow_up_answer)
 
     save_cmr(@browser)    
-    @browser.is_text_present(@follow_up_answer).should be_true
+    @browser.get_html_source.include?(@follow_up_answer).should be_true
     
     print_cmr(@browser).should be_true
-    @browser.is_text_present(@follow_up_question_text).should be_true
-    @browser.is_text_present(@follow_up_answer).should be_true 
+    @browser.get_html_source.include?(@follow_up_question_text).should be_true
+    @browser.get_html_source.include?(@follow_up_answer).should be_true
     @browser.close()
     @browser.select_window 'null'
     
@@ -84,11 +84,11 @@ describe 'Form Builder Admin Standard Follow-Up Functionality' do
     answer_investigator_question(@browser, @original_question_text, "No match")
     @browser.click("link=#{@form_name}")
     save_cmr(@browser)    
-    @browser.is_text_present(@follow_up_answer).should be_false
+    @browser.get_html_source.include?(@follow_up_answer).should be_false
     
     print_cmr(@browser).should be_true
-    @browser.is_text_present(@follow_up_question_text).should be_false
-    @browser.is_text_present(@follow_up_answer).should be_false 
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_answer).should be_false
     @browser.close()
     @browser.select_window 'null'
     

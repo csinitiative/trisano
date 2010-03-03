@@ -14,42 +14,42 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Search for Staged Messages
+  =t 'search_for_staged_messages'
 
 -content_for :tools do
-  =link_to h('< Back to Staged Messages'), staged_messages_path
+  = link_to h(t('back_to', :name => t('staged_messages'))), staged_messages_path
   %p
 
 -form_tag search_staged_messages_path, :method => :get do
   %span.vert
-    =label_tag :last_name
+    =label_tag :last_name, t('last_name')
     =text_field_tag :last_name, params[:last_name]
   %span.horiz
-    =label_tag :first_name
+    =label_tag :first_name, t('first_name')
     =text_field_tag :first_name, params[:first_name]
   %span.vert
-    =label_tag :laboratory
+    =label_tag :laboratory, t('laboratory')
     =text_field_tag :laboratory, params[:laboratory]
   %span.horiz
-    =label_tag :test_type
+    =label_tag :test_type, t('test_type')
     =text_field_tag :test_type, params[:test_type]
   .vert
-    =label_tag 'Collection date range:'
+    =label_tag ct('collection_date_range')
     %span.vert
-      =label_tag :start_date
+      =label_tag :start_date, t('start_date')
       =calendar_date_select_tag :start_date, params[:start_date]
     %span.horiz
-      =label_tag :end_date
+      =label_tag :end_date, t('end_date')
       =calendar_date_select_tag :end_date, params[:end_date]
   %span.vert
     =label_tag "&nbsp;"
-    =submit_tag "Search", :name => :do
+    =submit_tag t("search_normal_case"), :name => :do
 
 %p.vert-break &nbsp;
 
 -if defined? @staged_messages
   -if @staged_messages.empty?
-    %strong There are no messages for this search
+    %strong= t 'no_staged_message_search_results'
   -else
     #rot
       %table.list

@@ -14,34 +14,34 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Disease Detail
+  =t 'edit_disease'
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Diseases', diseases_path
+  = link_to t('back_to', :name => t('diseases')), diseases_path
   %p
 
 - content_for :tools_two do
-  = button_to("Create new disease", {:action => "new"}, { :method => :get })
+  = button_to(t('create_new', :name => t('diseases')), {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Disease
+        =t('disease')
       %th
       %tr
         %td.forminformation
           .formname
             = h(@disease.disease_name)
           .tools
-            = @disease.active? ? 'Active' :  'Inactive'
+            = @disease.active? ? t('active') :  t('inactive')
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            =t 'edit'
             |
-            = link_to 'Show', @disease
+            = link_to t('show'), @disease
 #rot
   = error_messages_for :disease
 
@@ -49,4 +49,4 @@
 
     = render :partial => 'form', :locals => { :f => f }
 
-    = f.submit "Update"
+    = f.submit t('update')

@@ -17,28 +17,28 @@
   %tr
     %th
       %span.forminformation
-        Edit Disease
+        =t('edit_disease')
       %span{ :style => "position: absolute; right: 15px;" }
         = show_hide_disease_section_link
   %tr
     %td
       %span.vert-break
-        = f.label(:disease_name, "Disease name")
+        = f.label(:disease_name)
         = f.text_field(:disease_name)
         %label{:for => 'disease_active', :style => 'display: inline'}
           = f.check_box(:active)
-          Active?
+          =t('active?')
 
       %span.vert-break
-        = f.label(:contact_lead_in, "Contact lead-in question")
+        = f.label(:contact_lead_in)
         = f.text_area(:contact_lead_in, {:cols => 50, :rows => 5})
 
       %span.vert-break
-        = f.label(:place_lead_in, "Place lead-in question")
+        = f.label(:place_lead_in)
         = f.text_area(:place_lead_in, {:cols => 50, :rows => 5})
 
       %span.vert-break
-        = f.label(:treatment_lead_in, "Treatment lead-in question")
+        = f.label(:treatment_lead_in)
         = f.text_area(:treatment_lead_in, {:cols => 50, :rows => 5})
   %tr
     %th
@@ -50,11 +50,11 @@
   %tr
     %td
       %span.vert-break
-        = f.label(:cdc_code, "CDC/NETSS code")
+        = f.label(:cdc_code)
         = f.text_field(:cdc_code)
 
       %span
-        = f.label(:case_id, "CDC/NETSS export disease when case is:")
+        = f.label(:case_id)
 
       = scroll_pane do
         - ExternalCode.find_cases(:all).each do |code|
@@ -63,13 +63,13 @@
   %tr
     %th
       %span.forminformation
-        AVR Groups
+        =t('avr_groups')
       %span{ :style => "position: absolute; right: 15px;" }
         = show_hide_disease_section_link
   %tr
     %td
       %span
-        = f.label("AVR Groups:")
+        = f.label(t('avr_groups'))
 
       = scroll_pane do
         - AvrGroup.all(:order => "name ASC").each do |avr_group|

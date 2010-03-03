@@ -73,7 +73,8 @@ describe 'Updating a task' do
         :task_user_id => 'state_manager'
       }).should be_true
 
-    show_cmr(@browser)
+    @browser.click "link=Show CMR"
+    @browser.wait_for_page_to_load($load_time)
 
     is_text_present_in(@browser, "tasks", @task_name).should be_false
     is_text_present_in(@browser, "tasks", @task_notes).should be_false

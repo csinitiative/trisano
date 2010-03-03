@@ -5,7 +5,7 @@ Feature: Web API People Client
 
   Scenario: Viewing existing person entity
     Given I have a known person entity
-    
+
     When I visit the person show page
 
     Then I should find the value "Robert" in "data_first_name"
@@ -67,10 +67,9 @@ Feature: Web API People Client
 
   Scenario: Edit person entity
     Given I have a known person entity
-
-    When I visit the people edit page
-    And I fill out the form field "person_entity[person_attributes][last_name]" with "Bourne-Thompson"
-    And I press "Save & Exit"
-    And I search people by "last_name" with "Bourne-Thompson"
-
-    Then I should find the value "Bourne-Thompson" in "data_last_name"
+     When I visit the people edit page
+      And I fill out the form field "person_entity[person_attributes][last_name]" with "Bourne-Thompson"
+      And I press "Save & Exit"
+     Then I should see "Person was successfully updated"
+     When I search people by "last_name" with "Bourne-Thompson"
+     Then I should find the value "Bourne-Thompson" in "data_last_name"

@@ -40,7 +40,7 @@ describe 'form builder investigation form for places' do
   end
   
   it 'should create a new form' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "Diphtheria", "All Jurisdictions", "Place event").should be_true
+    create_new_form_and_go_to_builder(@browser, @form_name, "Diphtheria", "All Jurisdictions", "Place Event").should be_true
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
   end
     
@@ -50,19 +50,19 @@ describe 'form builder investigation form for places' do
     edit_cmr(@browser).should be_true
     add_place(@browser, {:name => @place_name})
     save_cmr(@browser).should be_true
-    click_link_by_order(@browser, "edit-place-event", 1)
+    click_link_by_order(@browser, "edit-event", 1)
     @browser.wait_for_page_to_load($load_time)
   end
   
   it 'should have the investigation form' do
-    @browser.is_text_present(@form_name).should be_true
-    @browser.is_text_present(@question_text).should be_true
+    @browser.get_html_source.include?(@form_name).should be_true
+    @browser.get_html_source.include?(@question_text).should be_true
   end
     
   it 'should allow answers to be saved' do
     answer_investigator_question(@browser, @question_text, @answer).should be_true
     save_place_event(@browser).should be_true
-    @browser.is_text_present(@answer).should be_true
+    @browser.get_html_source.include?(@answer).should be_true
   end
   
 end

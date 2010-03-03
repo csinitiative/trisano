@@ -63,13 +63,13 @@ describe StagedMessage do
   it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
     m.should_not be_valid
-    m.errors.full_messages.first.should =~ /No last name provided for patient/
+    m.errors.on(:hl7_message).should == 'No last name provided for patient.'
   end
 
   it "should not be valid if there's no no loinc code" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_loinc_code])
     m.should_not be_valid
-    m.errors.full_messages.first.should =~ /does not contain a LOINC code/
+    m.errors.on(:hl7_message).should =~ /^OBX segment \d+ does not contain a LOINC code.$/
   end
 
   it 'should respond to hl7' do
@@ -101,7 +101,7 @@ describe StagedMessage do
     it 'should contain a message header' do
       @staged_message = StagedMessage.new(:hl7_message => 'junk')
       @staged_message.should_not be_valid
-      @staged_message.errors.on(:hl7_message).should be_true
+      @staged_message.errors.on(:hl7_message).should == ['is missing the header', 'is missing one or more of the following segments: PID, OBR, or OBX']
     end
 
   end

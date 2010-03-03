@@ -18,7 +18,7 @@
 %html
   %head
     %title
-      TriSano:
+      =ct 'trisano_title'
       = yield :title
 
     = stylesheet_link_tag 'grid'
@@ -32,6 +32,8 @@
     = javascript_include_tag 'effects'
     = javascript_include_tag 'dragdrop'
     = javascript_include_tag 'controls'
+    = javascript_include_tag 'trisano_i18n'
+    = javascript_include_tag "translations_#{I18n.locale.to_s}"
     = javascript_include_tag 'application'
     = javascript_include_tag 'sniffer'
     = javascript_include_tag 'yahoo-dom-event'
@@ -41,66 +43,33 @@
     = javascript_include_tag 'element-beta-min'
     = javascript_include_tag 'tabview-min'
     = javascript_include_tag 'patch_inplaceeditor_1-8-1'
+    - javascript_include_renderers.each do |js|
+      = javascript_include_tag js[:path]
 
-    = render_geocode_js_includes
-
-    =embedded_javascripts
+    = embedded_javascripts
 
     / Calendar
     = calendar_date_select_includes
+    = localized_calendar_date_select_variables
 
-  %body.yui-skin-sam{:onload=>render_onload_event}
+  %body.yui-skin-sam
+    - dom_loaded do
+      = "shortcuts_init('#{home_path}', '#{shortcuts_path}');"
+      = "focus_init();"
+      - dom_loaded_javascripts.each do |js|
+        = js
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
         .left
-          .horiz
-            %a{:href => home_path, :id => 'logo'}
-              = image_tag("logo.png", :border => 0)
-          .horiz
-            = render_system_message
+          =render_main_logo
         .right
           .areas
-            - if User.current_user.is_entitled_to?(:create_event)
-              = link_to 'NEW CMR', event_search_cmrs_path
-              |
-
-            - can_manage_staging_area = User.current_user.is_entitled_to?(:manage_staged_message)
-            - can_write_staged_message = User.current_user.is_entitled_to?(:write_staged_message)
-            - if can_manage_staging_area || can_write_staged_message
-              = link_to 'STAGING AREA', staged_messages_path, :rel => "http://trisano.org/relation/staged_messages"
-              |
-
-            - if User.current_user.is_entitled_to?(:view_event)
-              = link_to 'EVENTS', cmrs_path_with_defaults
-              |
-              = link_to 'SEARCH', search_cmrs_path
-              |
-
-            - if User.current_user.is_entitled_to?(:manage_entities)
-              = link_to 'PEOPLE', people_path
-              |
-              = link_to 'PLACES', places_path
-              |
-
-            - if User.current_user.is_entitled_to?(:access_avr)
-              = link_to 'AVR', config_option(:bi_server_url), :popup => true
-              |
-
-            - if User.current_user.is_admin?
-              = link_to 'ADMIN', admin_path
-              |
-
-            = link_to 'SETTINGS', settings_path
-            = render_help_link
+            =render_main_menu
           .user
-            - if config_option(:auth_allow_user_switch) == true and !config_option(:auth_allow_user_switch_hidden)
-              - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
-              - form_tag(url_for(:controller => "events", :action => "change_user"), :id => "switch_user") do
-                %span{:id => "user_name"}= current_user_name + ":"
-                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onchange => "this.form.submit()", :style => "display: inline")
-            - else
-              = current_user_name
+            -if User.current_user
+              =render_user_tools(User.current_user)
+
     #bar
       .container
         .left.areas_title

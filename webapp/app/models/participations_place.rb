@@ -17,5 +17,6 @@
 
 class ParticipationsPlace < ActiveRecord::Base
   has_one :place_event
-  validates_date :date_of_exposure, :allow_nil => true
+  validates_date :date_of_exposure, :allow_blank => true,
+                                    :on_or_before => lambda { Date.today } # Date of exposure cannot be in the future
 end

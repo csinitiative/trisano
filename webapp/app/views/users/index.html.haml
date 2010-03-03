@@ -13,13 +13,13 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  Users
+  =t 'users'
 
 /- content_for :name do
 /  Users
 
 -content_for :tools do
-  =link_to_toggle_sort_tools "Change sorting"
+  =link_to_toggle_sort_tools t("change_sorting")
 
 - content_for :tools_two do
   = button_to("Create new user", {:action => "new"}, { :method => :get })
@@ -27,25 +27,25 @@
 .vert-break{:id => 'sort-tools', :style => 'display: none;'}
   -form_tag users_path, :method => :get do
     %span.horiz
-      =label_tag  :sort_by
+      =label_tag(:sort_by, t(:sort_by))
       =user_sort_by_select_tag
     %span.horiz
-      =label_tag  :sort_direction, 'Direction'
-      =select_tag :sort_direction, options_for_select([['Ascending', 'ASC'], ['Descending', 'DESC']], params[:sort_direction] || 'ASC')
+      =label_tag(:sort_direction, t(:sort_direction))
+      =select_tag :sort_direction, options_for_select([[t(:ascending), 'ASC'], [t(:descending), 'DESC']], params[:sort_direction] || 'ASC')
     %span.horiz
       =label_tag  '&nbsp;'
-      =submit_tag "Sort", :name => 'do'
+      =submit_tag t(:sort), :name => 'do'
     %span.horiz
       =label_tag  '&nbsp;'
-      =link_to_toggle_sort_tools "Close"
+      =link_to_toggle_sort_tools t("close")
 
 .vert-break#rot
   %table.list
     %tr
       %th.forminformation
-        Users
+        =t 'users'
       %th
-        Status
+        =t 'status'
       %th
     - for user in @users
       %tr.roll
@@ -53,7 +53,7 @@
           .tools
             = link_to(h("#{user.first_name} #{user.user_name}"), user)
           .formname
-            UID:
+            =ct 'uid'
             = link_to h(user.uid), user
           .tools
             = h(user.user_name)
@@ -61,9 +61,9 @@
             -# = link_to('Delete', user, :confirm => 'Are you sure?', :method => :delete)
         %td
           %span.user-status
-            =h user.status.titleize
+            =h(t("user_statuses.#{user.status.downcase}"))
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_user_path(user)
+            = link_to t('edit'), edit_user_path(user)
             |
-            = link_to 'Show', user
+            = link_to t('show'), user

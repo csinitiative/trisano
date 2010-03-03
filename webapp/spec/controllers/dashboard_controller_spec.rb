@@ -74,7 +74,7 @@ describe DashboardController do
     
     it "should redirect to 500 error page" do
       get :index
-      response.response_code.should == 500
+      response.response_code.should == 403
     end
     
   end

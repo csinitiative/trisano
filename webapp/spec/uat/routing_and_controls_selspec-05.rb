@@ -17,7 +17,7 @@
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-# $dont_kill_browser = true
+$dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -70,71 +70,71 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.wait_for_page_to_load($load_time)
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
     @browser.is_text_present("Event successfully routed.").should be_true
-    @browser.is_text_present("Routing is cool!").should be_true
+    @browser.get_html_source.include?("Routing is cool!").should be_true
   end
 
   it "should allow for accepting or rejecting a remote routing assignent" do
     @browser.is_checked("name=morbidity_event[workflow_action]").should be_false
-    @browser.is_text_present("Assigned to Local Health Dept.").should be_true
+    @browser.get_html_source.include?("Assigned to Local Health Dept.").should be_true
   end
 
   it "should set event to 'accepted' when 'accept' is clicked and add note" do
     @browser.type("morbidity_event[note]", "This is a note.")
     @browser.click("accept_accept")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Accepted by Local Health Dept.").should be_true
-    @browser.is_text_present("Accepted by Central Utah Public Health Department.").should be_true
-    @browser.is_text_present("This is a note.").should be_true
+    @browser.get_html_source.include?("Accepted by Local Health Dept.").should be_true
+    @browser.get_html_source.include?("Accepted by Central Utah Public Health Department.").should be_true
+    @browser.get_html_source.include?("This is a note.").should be_true
   end
 
   it "should allow routing to an investigator queue" do
-    @browser.is_text_present('Assign to queue:').should be_true
+    @browser.get_html_source.include?('Assign to queue:').should be_true
     @browser.select "morbidity_event__event_queue_id", "label=Enterics-UtahCounty"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Event successfully routed").should be_true
+    @browser.get_html_source.include?("Event successfully routed").should be_true
   end
 
   it "should allow for accepting or rejecting a local routing assignent" do
-    @browser.is_text_present('Queue:  Enterics-UtahCounty').should be_true
+    @browser.get_html_source.include?('<b>Enterics-UtahCounty</b>').should be_true
     @browser.is_checked("name=morbidity_event[workflow_action]").should be_false
   end
 
   it "should set event to 'under investigation' when 'accept' is clicked" do
     @browser.click("accept_accept")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Under Investigation").should be_true
+    @browser.get_html_source.include?("Under Investigation").should be_true
     @browser.is_element_present("//table[@class='list']//div[@id='investigator_info']//*[text() = 'default_user']").should be_true
-    @browser.is_text_present("Event successfully routed").should be_true
+    @browser.get_html_source.include?("Event successfully routed").should be_true
   end
 
   it "should set event to 'investigation complete' when 'mark investigation complete' is clicked" do
     @browser.click("investigation_complete_btn")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Investigation Complete").should be_true
-    @browser.is_text_present("Completed investigation.").should be_true
+    @browser.get_html_source.include?("Investigation Complete").should be_true
+    @browser.get_html_source.include?("Completed investigation.").should be_true
   end
 
   it "should allow for accepting or rejecting a locally completed investigation" do
-    @browser.is_text_present("Reopen").should be_true
-    @browser.is_text_present("Approve").should be_true
+    @browser.get_html_source.include?("Reopen").should be_true
+    @browser.get_html_source.include?("Approve").should be_true
   end
 
   it "should set event to 'Approved by LHD' when 'accept' is clicked" do
     @browser.click("approve_approve")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Approved by Local Health Dept.").should be_true
-    @browser.is_text_present("Event successfully routed").should be_true
+    @browser.get_html_source.include?("Approved by Local Health Dept.").should be_true
+    @browser.get_html_source.include?("Event successfully routed").should be_true
   end
 
   it "should allow for accepting or rejecting a remotely completed investigation" do
-    @browser.is_text_present("Reopen").should be_true
-    @browser.is_text_present("Approve").should be_true
+    @browser.get_html_source.include?("Reopen").should be_true
+    @browser.get_html_source.include?("Approve").should be_true
   end
 
   it "should set event to 'Approved by State' when 'accept' is clicked" do
     @browser.click("approve_approve")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Approved by State").should be_true
+    @browser.get_html_source.include?("Approved by State").should be_true
   end
 
   it "should allow for secondary jurisdictions" do
@@ -152,7 +152,7 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.get_selected_label('jurisdiction_id').should == "Unassigned"
 
     # Status should be unchanged too
-    @browser.is_text_present("New").should be_true
+    @browser.get_html_source.include?("New").should be_true
 
     # Should see new jurisdictions
     @browser.is_element_present("//table[@class='list']//div[@id='secondary_jurisdictions']//small[contains(text(), 'Davis County')]").should be_true
@@ -200,8 +200,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.get_selected_label('jurisdiction_id').should == "Central Utah"
 
     switch_user(@browser, "surveillance_mgr").should be_true
-    @browser.is_text_present("Routing disabled").should be_true
-    @browser.is_text_present("Insufficient privileges to transition this event").should be_true
+    @browser.get_html_source.include?("Routing disabled").should be_true
+    @browser.get_html_source.include?("Insufficient privileges to transition this event").should be_true
   end
 
   it "should deny access altogether when entitlements are outside any jurisdiction." do
@@ -224,11 +224,11 @@ describe 'Sytem functionality for routing and workflow' do
     add_role(@browser, { :role => "Investigator", :jurisdiction => "Central Utah Public Health Department"})
     @browser.click "user_submit"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('User was successfully created.').should be_true
-    @browser.is_text_present(@uid).should be_true
-    @browser.is_text_present(@uname).should be_true
-    @browser.is_text_present("Investigator").should be_true
-    @browser.is_text_present("Central Utah Public Health Department").should be_true
+    @browser.get_html_source.include?('User was successfully created.').should be_true
+    @browser.get_html_source.include?(@uid).should be_true
+    @browser.get_html_source.include?(@uname).should be_true
+    @browser.get_html_source.include?("Investigator").should be_true
+    @browser.get_html_source.include?("Central Utah Public Health Department").should be_true
   end
 
   it 'should be able to route a cmr to an individual investigator' do
@@ -245,17 +245,16 @@ describe 'Sytem functionality for routing and workflow' do
 
     @browser.click("accept_accept")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present("Accepted by Local Health Dept.").should be_true
+    @browser.get_html_source.include?("Accepted by Local Health Dept.").should be_true
 
-    @browser.is_text_present('Assign to investigator:').should be_true
+    @browser.get_html_source.include?('Assign to investigator:').should be_true
     @browser.select "morbidity_event__investigator_id", "label=#{@uname}"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present("Investigator:  #{@uname}").should be_true
-    @browser.is_text_present("Event successfully routed").should be_true
+    @browser.get_html_source.include?("Event successfully routed").should be_true
 
-    @browser.is_text_present("Assign to queue").should be_true
-    @browser.is_text_present("Assigned to Investigator").should be_true
+    @browser.get_html_source.include?("Assign to queue").should be_true
+    @browser.get_html_source.include?("Assigned to Investigator").should be_true
   end
 
   it "should allow for filtering the view" do
@@ -279,8 +278,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "event_queue_submit"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present('Event queue was successfully created.').should be_true
-    @browser.is_text_present('JoeInvestigator').should be_true
+    @browser.get_html_source.include?('Event queue was successfully created.').should be_true
+    @browser.get_html_source.include?('JoeInvestigator').should be_true
 
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => @person_2})
@@ -296,16 +295,16 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should be_true
-    @browser.is_text_present(@person_2).should_not be_true
+    @browser.get_html_source.include?(@person_1).should be_true
+    @browser.get_html_source.include?(@person_2).should_not be_true
 
     @browser.click "link=Change View"
     @browser.add_selection "//select[@id='queues_selector']", "label=JoeInvestigator-SummitCounty"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should_not be_true
+    @browser.get_html_source.include?(@person_1).should_not be_true
+    @browser.get_html_source.include?(@person_2).should_not be_true
 
     # By state
     @browser.click "link=Change View"
@@ -313,16 +312,16 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should be_true
+    @browser.get_html_source.include?(@person_1).should_not be_true
+    @browser.get_html_source.include?(@person_2).should be_true
 
     @browser.click "link=Change View"
     @browser.add_selection "//div[@id='change_view']//select[@id='states_selector']", "label=Assigned to Investigator"
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should be_true
-    @browser.is_text_present(@person_2).should_not be_true
+    @browser.get_html_source.include?(@person_1).should be_true
+    @browser.get_html_source.include?(@person_2).should_not be_true
 
     @browser.click "link=Change View"
 
@@ -333,8 +332,8 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should_not be_true
+    @browser.get_html_source.include?(@person_1).should_not be_true
+    @browser.get_html_source.include?(@person_2).should_not be_true
 
     # By investigator
     @browser.click "link=Change View"
@@ -342,14 +341,14 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "change_view_btn"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@uname).should be_true
+    @browser.get_html_source.include?(@uname).should be_true
     @browser.get_xpath_count("//table[@class='list']//tr").should == "2"
 
     @browser.click "link=EVENTS"
     @browser.wait_for_page_to_load($load_time)
 
-    @browser.is_text_present(@person_1).should_not be_true
-    @browser.is_text_present(@person_2).should_not be_true
+    @browser.get_html_source.include?(@person_1).should_not be_true
+    @browser.get_html_source.include?(@person_2).should_not be_true
   end
 
 end

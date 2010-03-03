@@ -21,3 +21,16 @@ require 'faker'
 Factory.define :question_element do |qe|
   qe.question { |q| q.association(:question_single_line_text) }
 end
+
+Factory.define :core_field_element do |cfe|
+  cfe.core_path { Factory.next(:core_path) }
+  cfe.name      { Factory.next(:core_field_element_name) }
+end
+
+Factory.sequence :core_field_element_name do |n|
+  "#{Faker::Lorem.words(3)} #{n}"
+end
+
+Factory.sequence :core_path do |n|
+  "morbidity_event[test_path#{n}]"
+end

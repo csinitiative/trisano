@@ -26,7 +26,7 @@ class EventFormsController < ApplicationController
         User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }) ||
           User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id })
       )
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add/remove forms", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_add_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
     event_type = @event.class.name.underscore
@@ -44,21 +44,21 @@ class EventFormsController < ApplicationController
   def create
 
     unless (User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }))
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to add forms", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_add_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
     forms_to_add = params[:forms_to_add] || []
     if forms_to_add.empty? 
-      flash[:error] = 'No forms were selected for addition to this event.'
+      flash[:error] = t("no_forms_were_selected_for_addition")
     else
       begin
         @event.add_forms(forms_to_add)
       rescue ArgumentError, ActiveRecord::RecordNotFound
-        render :file => "#{RAILS_ROOT}/public/422.html", :layout => 'application', :status => 422 and return
+        render :file => static_error_page_path(422), :layout => 'application', :status => 422 and return
       rescue RuntimeError
-        render :file => "#{RAILS_ROOT}/public/500.html", :layout => 'application', :status => 500 and return
+        render :file => static_error_page_path(500), :layout => 'application', :status => 500 and return
       else
-        flash[:notice] = 'The list of forms in use was successfully updated.'
+        flash[:notice] = t("forms_in_use_successfully_updated")
       end
     end
     redirect_to event_forms_path(@event)
@@ -67,17 +67,17 @@ class EventFormsController < ApplicationController
   def destroy
 
     unless (User.current_user.is_entitled_to_in?(:remove_form_from_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }))
-      render :partial => "events/permission_denied", :locals => { :reason => "You do not have rights to remove forms", :event => nil }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
     forms_to_remove = params[:forms_to_remove] || []
     if forms_to_remove.empty?
-      flash[:error] = 'No forms were selected for removal from this event.'
+      flash[:error] = t("no_forms_were_selected_for_removal")
     else
       if @event.remove_forms(forms_to_remove)
-        flash[:notice] = 'The list of forms in use was successfully updated.'
+        flash[:notice] = t("forms_in_use_successfully_updated")
       else
-        flash[:error] = 'Unable to remove forms from this event'
+        flash[:error] = t("unable_to_remove_forms")
       end
     end
     redirect_to event_forms_path(@event)
@@ -89,7 +89,7 @@ class EventFormsController < ApplicationController
     begin
       @event = Event.find(params[:event_id])
     rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
     end
   end
 end

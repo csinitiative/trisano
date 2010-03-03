@@ -71,7 +71,8 @@ describe 'Marking a task as completed or as not applicable' do
   end
 
   it 'should mark the task as complete from the CMR edit page' do
-    edit_cmr(@browser)
+    @browser.click("link=Edit CMR")
+    @browser.wait_for_page_to_load($load_time)
     update_task_status(@browser, "Complete")
     @browser.get_html_source.include?("task-complete").should be_true
   end
@@ -82,7 +83,8 @@ describe 'Marking a task as completed or as not applicable' do
   end
 
   it 'should mark the task as complete from the CMR show page' do
-    show_cmr(@browser)
+    @browser.click("link=Show")
+    @browser.wait_for_page_to_load($load_time)
     update_task_status(@browser, "Complete")
     @browser.get_html_source.include?("task-complete").should be_true
   end

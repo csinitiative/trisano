@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Forms
+  =t('event_forms')
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
@@ -24,18 +24,18 @@
 
 #forms_in_use
   #rot
-    %h2="Forms in use"
+    %h2=t('forms_in_use')
     - if @event.form_references.size > 0
       - form_for(:event_form, :url => { :action => "destroy", :event_id => @event.id }) do |f|
         %table.list
           %tr
             %th.forminformation
-              Form Information
-            %th Diseases
-            %th Jurisdiction
-            %th Event Type
+              =t('form_information')
+            %th=t('diseases')
+            %th=t('jurisdiction')
+            %th=t('event_type')
             - if can_remove
-              %th Remove from event
+              %th=t('remove_from_event')
           - for form in @forms_in_use
             %tr.roll
               %td.forminformation
@@ -50,7 +50,7 @@
                     %li.diseaselist
                       = h disease.disease_name
               %td
-                = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
+                = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
               %td
                 = h form.event_type.humanize
               - if can_remove
@@ -58,28 +58,28 @@
                   = check_box_tag("forms_to_remove[]", form.id, false, :id => "forms_to_remove_#{form.id}")
         - if can_remove
           %br
-          = submit_tag("Remove Forms", { :id => 'remove_forms', :confirm => "Are you sure? Removing a form will also remove all answers to questions on that form." })
+          = submit_tag(t('remove_forms'), { :id => 'remove_forms', :confirm => t('confirm_remove_form') })
     -else
       %em
-        None in use.
+        =t('none_in_use')
 
 
 #forms_available
   #rot
     %br
     %hr{:style => 'color: #090; background-color: #090; height: 2px'}
-    %h2="Forms available for use"
+    %h2=t('forms_available')
     - if @forms_available.size > 0
       - form_for(:event_form) do |f|
         %table.list
           %tr
             %th.forminformation
-              Form Information
-            %th Diseases
-            %th Jurisdiction
-            %th Event Type
+              =t('form_information')
+            %th=t('diseases')
+            %th=t('jurisdiction')
+            %th=t('event_type')
             - if can_add
-              %th Add to Event
+              %th=t('add_to_event')
             - for form in @forms_available
               %tr.roll
                 %td.forminformation
@@ -94,7 +94,7 @@
                       %li.diseaselist
                         = h disease.disease_name
                 %td
-                  = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
+                  = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
                 %td
                   = h form.event_type.humanize
                 - if can_add
@@ -103,6 +103,6 @@
 
         - if can_add
           %br
-          = submit_tag("Add Forms", :id => "add_forms")
+          = submit_tag(t('add_forms'), :id => "add_forms")
     - else
-      %em All forms in use
+      %em=t('all_forms_in_use')

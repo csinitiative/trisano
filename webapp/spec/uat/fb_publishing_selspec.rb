@@ -33,7 +33,7 @@ describe 'Publishing a form with a short name that is already active' do
     click_deactivate_form(@browser, @form_one_name).should be_true
 
     # try to re-use the short name
-    create_new_form_and_go_to_builder(@browser, @form_two_name, "African Tick Bite Fever", "All Jurisdictions", "Morbidity event", @form_one_name).should be_true
+    create_new_form_and_go_to_builder(@browser, @form_two_name, "African Tick Bite Fever", "All Jurisdictions", "Morbidity Event", @form_one_name).should be_true
     publish_form(@browser).should be_true
 
     #now go back and try to publish to deactivated form

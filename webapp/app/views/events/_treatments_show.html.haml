@@ -15,7 +15,7 @@
 
 %fieldset.form
   %legend
-    Treatments
+    =t 'treatments'
 
   - unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
     = h @event.disease_event.disease.treatment_lead_in

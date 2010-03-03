@@ -23,10 +23,10 @@ When /^I fill in enough (.+) data to enable all core fields to show up in show m
   
   # Lab name and type for contact and morbidity events
   if event_type == "morbidity_event" || event_type == "contact_event"
-    add_lab_result(@browser, { :lab_name => "Labby", :lab_test_type => CommonTestType.first.common_name })
+    common_test_type = CommonTestType.first.nil? ? CommonTestType.create(:common_name => "Common Test Type") : CommonTestType.first
+    add_lab_result(@browser, { :lab_name => "Labby", :lab_test_type => common_test_type.common_name })
   end
 end
-
 
 Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_type, mode|
   html_source = @browser.get_html_source

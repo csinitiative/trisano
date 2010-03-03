@@ -25,17 +25,17 @@ module EventCalendarHelper
 
     next_year = (@month == 12) ? @year+1 : @year
     previous_year = (@month == 1) ? @year-1 : @year
-    
+
     result << calendar(:year => @year,
       :month => @month,
       :abbrev => (0..-1),
       :previous_month_text => link_to(
-        "<< #{Date::MONTHNAMES[previous_month]}",
+        "<< #{translated_month_names[previous_month]}",
         :action => :calendar,
         :month => previous_month,
         :year => previous_year),
       :next_month_text => link_to(
-        "#{Date::MONTHNAMES[next_month]} >>",
+        "#{translated_month_names[next_month]} >>",
         :action => :calendar,
         :month => next_month,
         :year => next_year)
@@ -49,7 +49,7 @@ module EventCalendarHelper
 
       task_details = ""
       task_details << "<ul>" unless tasks_on_day.empty?
-      
+
       tasks_on_day.each do |task|
 
         case task.status
@@ -60,7 +60,7 @@ module EventCalendarHelper
         when
           task_style = "task-list-na"
         end
-        
+
         task_details << "<li class='#{task_style}'>"
 
         if task.priority == "high"
@@ -68,7 +68,7 @@ module EventCalendarHelper
         elsif task.priority == "low"
           task_details << "&darr;"
         end
-        
+
         task_details << "#{link_to(task.name, edit_event_task_path(task.event, task))}"
         task_details << ", <i>#{task.category.code_description}</i>" unless task.category.blank?
         task_details << "</li>"
@@ -77,7 +77,7 @@ module EventCalendarHelper
       task_details << "</ul>" unless tasks_on_day.empty?
 
       ["#{d.mday}<br/><br/>#{task_details}"]
-      
+
     end
 
     result

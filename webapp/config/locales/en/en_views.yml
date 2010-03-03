@@ -1,0 +1,948 @@
+
+en:
+  include_repeating_aspects: "Include these repeating aspects in the export"
+  trisano_title: "TriSano"
+  edit: "Edit"
+  show: "Show"
+  delete: 'Delete'
+  edit_thing: 'Edit {{name}}'
+  add_thing: 'Add {{name}}'
+  new_thing: 'New {{name}}'
+  back_to: '< Back to {{name}}'
+  create_new: 'Create new {{name}}'
+  events: "EVENTS"
+  search: "SEARCH"
+  search_normal_case: "Search"
+  welcome_message: "Welcome to TriSano"
+  new_cmr: "NEW CMR"
+  people: "PEOPLE"
+  places: "PLACES"
+  settings: "SETTINGS"
+  staging_area: "STAGING AREA"
+  avr: "AVR"
+  admin: "ADMIN"
+  submit: 'Submit'
+  submit_query: 'Submit Query'
+  update: 'Update'
+  back: 'Back'
+  investigative_info: 'Investigative Information'
+  demographic_info: 'Demographic Information'
+  jurisdictions: 'Jurisdictions'
+  unspecified: 'Unspecified'
+
+  please_exit: 'Please exit'
+  assigned_jurisdiction: 'Assigned Jurisdiction'
+  jurisdictions_with_access: 'Jurisidctions with Access'
+  permission_denied: "PERMISSION DENIED"
+  out_of_jurisdiction_access: "You have accessed an out-of-jurisdiction event. {{link}} if access was unintentional.  Access has been logged."
+
+  event_tasks: "Event Tasks"
+  tasks: "Tasks"
+  change_filter: "Change filter"
+  view_on_calendar: "View on calendar"
+
+  trisano_full_name: "CSI TriSano&reg; Enterprise Edition 2.0.7"
+  trisano_ce: "TriSano&reg; 2.1"
+  trisano_support: "Support"
+  about: "About"
+  user_feedback: "User Feedback"
+  web: "web"
+  email: "email"
+  help: "HELP"
+  license: "License"
+  collaborate: "Collaborate"
+  copyright: "Copyright © 2009 Collaborative Software Foundation"
+
+  before_create: "Before creating a new morbidity event, please search for the person in question."
+  use_starts_with: "Use starts with search"
+  no_results: "No results"
+  start_a_cmr: "Start a CMR with the criteria you searched on"
+  created_date: "Created date"
+
+  cmr_actions: "CMR Actions"
+  entity_actions: "Entity Actions"
+  create_cmr_this_person: 'Create and edit CMR using this person'
+  patient_name: "Patient Name"
+  contact_name: "Contact Name"
+  place_name: "Place Name"
+  or: "or"
+  brief_note: Brief note
+  action_required: Action required
+#Admin view
+  admin_dashboard: 'Admin Dashboard'
+  system_configuration: 'System Configuration'
+  manage_users: "Manage Users"
+  manage_roles: "Manage Roles"
+  manage_jurisdictions: "Manage Jurisdictions"
+  manage_diseases: "Manage Disease Information"
+  manage_queues: 'Manage Event Routing Queues'
+  manage_help_text: 'Add Help Text to Core Fields'
+  manage_system_codes: 'Manage System Codes'
+  configure_cdc_export: 'Configure System for CDC Export'
+  configure_csv_export: 'Configure System for CSV Export'
+  send_system_message: 'Send System Messages'
+  manage_avr_groups: 'Manage AVR Groups'
+  lab_management: 'Lab Management'
+  manage_common_test_types: 'Manage Common Test Types'
+  manage_loinc_codes: 'Manage LOINC Codes'
+  manage_organisms: 'Manage Organisms'
+  export_event_info: 'Export Event Information'
+  cdc_export: 'CDC Export'
+  ibis_export: 'IBIS Export'
+  disease_forms: 'Disease Specific Forms'
+  manage_forms: 'Manage Forms'
+  manage_form_library: 'Manage Form Library'
+#AVR groups
+  show_avr_group: 'Show AVR Group'
+  back_to_avr_groups: '< Back to AVR Groups'
+  avr_group: 'AVR Group'
+  avr_groups: 'AVR Groups'
+  create_avr_group: 'Create AVR Group'
+  create_new_avr_group: 'Create new AVR Group'
+  edit_avr_group: 'Edit AVR Group'
+#cdc_events
+  private: 'Private'
+  cdc_export: 'CDC Export'
+  current_mmwr_week_is: 'The current MMWR week is {{mmwr_week}} ({{start_date}} - {{end_date}})'
+  generate_export_for: 'Generate CDC Export File for:'
+  weekly_cdc_report: 'The weekly CDC report'
+  mmwr_weeks_encompassed: 'The MMWR weeks encompassed by the entered dates (yyyy-mm-dd):'
+  mmwr_weeks_included: 'Includes the current ({{current_week}}) and previous ({{previous_week}}) MMWR weeks, encompassing {{start_date}} through {{end_date}}'
+  cdc_export_note: "Note, weekly reports may not span MMWR years. If the entered dates span MMWR years (e.g.: 2008-12-15 through 2009-01-15) the start date will be changed to MMWR week 1 of the end date's year."
+  start_date: 'Start Date'
+  end_date: 'End Date'
+  annual_summary: 'The annual CDC summary report for the year:'
+#common test types
+  show_test_type: 'Show a Common Test Type'
+  back_to_common_test_types: '< Back to Common Test Types'
+  diseases: 'Diseases'
+  create_new_common_test_type: 'Create New Common Test Type'
+  create_common_test_type: 'Create a Common Test Type'
+  add_loinc_codes_to_common_test_types: 'Add LOINC Codes to Common Test Type'
+  remove: 'Remove'
+  loinc_code: 'LOINC Code'
+  common_test_name: 'Test Name'
+  no_loinc_codes: 'No associated LOINC Codes'
+  search_for_loinc_codes: 'Search for LOINC Codes'
+  no_records_found: 'No records found'
+  add: 'Add'
+  associated_with: 'Associated With'
+  list_common_test_types: 'List Common Test Types'
+  common_name: 'Common Name'
+  edit_common_test_type: 'Edit a Common Test Type'
+  common_test_type: 'Common Test Type'
+# contact_events
+  view_contact_event: 'View Contact event: {{name}}'
+  edit_contact_event: 'Edit Contact event: {{name}}'
+  jurisdiction: 'Jurisdiction'
+  status: 'Status'
+  demographic: 'Demographic'
+  clinical: 'Clinical'
+  laboratory: 'Laboratory'
+  epi: 'Epidemiological'
+  investigation: 'Investigation'
+  clinical_notes: 'Clinical Notes'
+  administrative_notes: 'Administrative Notes'
+  administrative: 'Administrative'
+  all: 'All'
+  print: 'Print'
+  close: 'Close'
+  print_options: 'Print Options'
+  epi_info: 'Epidemiological Information'
+  contact_oriented: 'Contact Oriented'
+  other: 'Other'
+  hide: 'Hide'
+  search_button: 'Search'
+  save_and_exit: 'Save & Exit'
+  other_data_1: 'Other data 1'
+  other_data_2: 'Other data 2'
+  disease_not_specified: 'Disease not specified'
+  confidential_case_report_for: 'Confidential Case Report ({{type}})'
+  contact: 'Contact'
+  event_deleted: 'Event Deleted'
+  contact_info: 'Contact Information'
+  elevated_to_morbidity_events: 'Elevated to morbidity events'
+  cmr_contacts: 'CMR Contacts'
+  parent_cmr: 'Parent CMR'
+  parent_patient: Parent Patient
+  not_elevated: "Not yet elevated to morbidity events"
+
+#core_field_elements
+  add_core_field: 'Add Core Field'
+  no_core_fields: 'No core fields are available. Use existing core field configurations.'
+#core_fields
+  edit_core_field: 'Edit Core Field'
+  back_to_core_fields: '< Back to Core Fields'
+  core_field: 'Core Field'
+  core_fields: 'Core Fields'
+  morbidity_event_fields: 'Morbidity Event Fields'
+  contact_event_fields: 'Contact Event Fields'
+  place_event_fields: 'Place Event Fields'
+  core_fields_detail: 'Core Fields Detail'
+  create: 'Create'
+  add_core_tab: 'Add Core Tab'
+  add_tab_text: 'Add Tab Text'
+#csv_fields
+  csv_export_columns: 'CSV Export Columns'
+  long_name: 'Long Name'
+  short_name: 'Short name'
+  lab_fields: 'Laboratory Fields'
+  treatment_fields: 'Treatment Fields'
+#dashboard
+  calendar: 'Calendar'
+  pending: 'Pending'
+  complete: 'Complete'
+  complete_and_close: 'Complete and Close'
+  not_applicable: 'Not applicable'
+  show_past_tasks: 'Show tasks for the last {{days}} (leave blank for all overdue tasks).'
+  show_future_tasks: 'Show tasks for the next {{days}} (leave blank for all pending tasks).'
+  leave_blank_def: 'Leaving a field blank shows all tasks in that direction.'
+  disease_filter: 'Disease Filter'
+  users_filter: 'Users Filter'
+  jurisdictions_filter: 'Jurisdictions Filter'
+  status_filter: 'Status Filter'
+#diseases
+  cdc_netss_code: 'CDC/NETSS code'
+  cdc_code: 'CDC code'
+  cdc_send_status: 'Sent to CDC when event status is:'
+  disease: 'Disease'
+  disease_detail: 'Disease Detail'
+  create_new_disease: 'Create new disease'
+  lead_in_questions: 'Lead-in Questions'
+  cdc_export_columns: 'CDC Export Columns'
+  no_cdc_export_columns_configured: 'No CDC export columns configured'
+  no_avr_groups_configured: 'No AVR groups configured'
+  no_loinc_codes_configured: 'No LOINC codes configured'
+  organisms: 'Organisms'
+  no_organisms_configured: 'No Organisms configured'
+  common_test_types: 'Common Test Types'
+  no_common_test_types_configured: 'No common test types configured'
+  create_disease: 'Create Disease'
+  active: 'Active'
+  active?: 'Active?'
+  inactive: 'Inactive'
+  edit_disease: Edit disease
+  cdc_send_case: 'CDC/NETSS export disease when case is:'
+#Encounter events
+  view_encounter_event: 'View Encounter Event: {{date}}'
+  encounter_on: 'Encounter on {{date}}'
+  encounter: 'Encounter'
+  patient: 'Patient'
+  encounter_event: 'Encounter Event'
+  encounter_info: 'Encounter Information'
+  investigator: 'Investigator'
+  location: "Location"
+  clinical_info: 'Clinical Information'
+  add_encounter: 'Add an encounter'
+  encounter_date: 'Encounter date'
+
+#Event attachments
+  event_attachment: 'Event Attachment'
+  event_attachments: 'Event Attachments'
+  attachment: 'Attachment'
+  existing_attachments: 'Existing Attachments'
+  file_name: 'File name'
+  category: 'Category'
+  content_type: 'Content type'
+  size: 'Size'
+  uploaded: 'Uploaded'
+  open: 'Open'
+  no_attachments: 'No attachments'
+
+#event_forms
+  event_forms: 'Event Forms'
+  forms_in_use: 'Forms in Use'
+  form_information: 'Form Information'
+  event_type: 'Event Type'
+  remove_from_event: 'Remove from event'
+  confirm_remove_form: "Are you sure? Removing a form will also remove all answers to questions on that form."
+  none_in_use: 'None in use.'
+  forms_available: 'Forms available for use'
+  all_forms_in_use: 'All forms in use'
+  add_forms: 'Add Forms'
+  remove_forms: 'Remove Forms'
+  add_to_event: 'Add to Event'
+  search_existing_clinician: "Search for an existing clinician"
+  add_clinician: "Add a clinician"
+  search_existing_diagnostic_facility: "Search for an existing diagnostic facility"
+  add_diagnostic_facility: "Add a diagnostic facility"
+  diagnostic_types: "Place types"
+  lab: "Lab"
+  add_new_lab_result: "Add a new lab result to this lab"
+  add_contact: "Add a contact"
+  search_existing_place: "Search for an existing place"
+  add_place_exposure: "Add a place exposure"
+
+#event_notes
+  no_notes: 'No notes have been recorded for this event'
+  event_notes: 'Notes'
+  new_record_no_notes: 'New record:  No existing notes.'
+  earlier_notes: 'Earlier notes'
+#event_queues
+  event_queue: 'Event Queue'
+  event_queues: 'Event Queues'
+  event_queue_admin: 'Event Queue Admin'
+  create_new_event_queue: 'Create new event queue'
+  create_event_queue: 'Create event queue'
+  event_queue_detail: 'Event Queue Detail'
+  queue_name: 'Queue name'
+#event_tasks
+  add_event_task: 'Add Event Task'
+  new_task: 'New Task'
+  creating: 'Creating...'
+  existing_tasks: 'Existing Tasks'
+  description: 'Description'
+  low: 'Low'
+  medium: 'Medium'
+  high: 'High'
+  repeat: 'repeat'
+  until: 'until'
+  task: 'Task'
+#events.people
+  person_info: 'Person Information'
+  telephone: 'Telephone'
+  Email: 'Email'
+  event_info: 'Event Info'
+  demographics: 'Demographics'
+  birth_gender: 'Birth gender'
+  primary_language: 'Primary language'
+  ethnicity: 'Ethnicity'
+  race: 'Race'
+  birth_date: 'Birth date'
+  age: 'Age'
+  approx_age: 'Approximate age'
+  age_at_onset: 'Age at onset'
+  look_up_address: 'Look Up Address'
+  street_number: 'Street number'
+  street: 'Street name'
+  unit_number: 'Unit number'
+  city: 'City'
+  state: 'State'
+  zip: 'Zip code'
+  county: 'County'
+  district: 'District'
+  place_info: 'Place Information'
+  show_map_of_results: 'Show Map of Results'
+#places
+  create_new_place: "Create new place"
+  place_management: "Place management"
+  place_name: "Place name"
+  participation_type: "Participation type"
+  none: "None"
+  cancel: "Cancel"
+  select: "Select"
+  place_name: "Place name"
+  address: "Address"
+  place_type: "Place type"
+  date_of_exposure: "Date of exposure"
+  actions: "Actions"
+  no_place_exposures: "No place exposures have been recorded for this {{thing}}"
+  place_name_and_address: 'Place Name & Address'
+  show_map_of_places: 'Show Map of Places'
+#people
+  name: "Name"
+  last_name: "Last name"
+  first_name: "First name"
+  middle_name: "Middle name"
+  birth_date: "Birth date"
+  gender: "Gender"
+  people_normal_case: "People"
+#reporting
+  reporting_information: "Reporting Information"
+  reporting_agency: "Reporting Agency"
+  OR: "OR"
+  add_reporting_agency: "Add a new reporting agency"
+  reporter: "Reporter"
+  reported_dates: "Reported Dates"
+  search_reporting_agency: "Search for an existing reporting agancy"
+  reporter_last_name: "Reporter last name"
+  reporter_first_name: "Reporter first name"
+  reporting_agency_name: "Reporting agency name"
+  agency_name: 'Agency name'
+  types: 'Types'
+  results_reported_to_clinician_date: 'Results reported to clinician date'
+  first_reported_to_public_health_date: 'Date first reported to public health'
+  area_code: "Area code"
+  phone_number: "Phone number"
+  extension: 'Extension'
+  agency_phone: 'Agency phone'
+  
+#telephones
+  extension_abbrev: "Ext."
+#clinicians
+  phone: "Phone"
+  clinicians: "Clinicians"
+  no_clinicians_for_event: "No clinicians have been recorded for this event"
+# health facilities
+  no_hospitalized_health_facilities: "No hospitalized health facilities have been recorded for this event"
+  hospitalized_health_facilities: "Hospitalized Health Facilities"
+# diagnosing facility
+  diagnostic_facilities: "Diagnostic Facilities"
+  no_diagnosing_health_facilities: "No diagnosing health facilities have been recorded for this event"
+  diagnosing_health_facility: "Diagnosing health facility"
+  type: "Type"
+#treatments
+  no_treatments: "No treatments have been recorded for this {{thing}}"
+  treatments: "Treatments"
+  treatment_given: 'Treatment Given'
+  treatment: 'Treatment'
+  treatment_date: 'Treatment Date'
+  stop_treatment_date: 'Stop Treatment Date'
+  add_treatment: "Add a Treatment"
+  
+#encounters
+  no_encounters: "No encounters have been recorded for this {{thing}}"
+  encounter_on: "Encounter on {{date}}"
+  encounter_specific_treatments: "Encounter-specific treatments"
+  encounter_specific_labs: "Encounter-specific Labs"
+  encounters: "Encounters"
+  encounter_treatments: "Encounter Treatments"
+  encounter_labs: "Encounter Labs"
+  encounter_forms: "Encounter Forms"
+  no_encounter_notes: 'No encounter notes have been recorded for this event'
+  add_encounter: "Add a new encounter"
+  encounter_notes: "Encounter Notes"
+  
+#exposures
+  food_handler: "Food handler"
+  healthcare_worker: "Healthcare worker"
+  group_living: "Group living"
+  day_care_association: "Day care association"
+  occupation: "Occupation"
+  imported_from: "Imported from"
+  risk_factors: "Risk factors"
+  risk_factors_notes: "Risk factors notes"
+  other_data: "Other data"
+  place_exposures: "Place Exposures"
+#labs
+  no_labs: "No labs have been recorded for this {{thing}}"
+  colon_after: "{{text}}:"
+  no_result: "No result"
+  organism: "Organism"
+  result_value: "Result value"
+  units: "Units"
+  reference_range: "Reference range"
+  test_status: "Test status"
+  source: "Source"
+  collected_on: "Collected on"
+  tested_on: "Tested on"
+  sent_to_state_lab: "Sent to state lab"
+  laboratory_information: "Laboratory Information"
+  lab_name: "Lab name"
+  test_type: "Test type"
+  test_result: "Test result"
+  no_lab_results: "No lab results have been recorded for this event"
+  labs: "Labs"
+  specimen: "Specimen"
+  specimen_sent_to_state_lab: "Specimen sent to state lab"
+  specimen_source: "Specimen source"
+  lab_test_date: "Lab test date"
+  collection_date: "Collection date"
+  comment: "Comment"
+  original_report: "Original report"
+  electronic_lab_report: "Electronic lab report"
+  add_new_lab: "Add a new lab"
+
+#event admin
+  admin_info: "Administrative Information"
+  record_number: "Record number"
+  date_record_created: "Date record created"
+  mmwr_year: "MMWR year"
+  mmwr_week: "MMWR week"
+  jurisdiction_of_residence: "Jurisdiction of residence"
+  responsible_jurisdiction: "Jurisdiction responsible for investigation"
+  lhd_case_status: "LHD case status"
+  state_case_status: "State case status"
+  outbreak_associate: "Outbreak associated"
+  outbreak_name: "Outbreak_name"
+  event_status: "Event status"
+  date_investigation_started: "Date investigation started"
+  date_investigation_completed: "Date investigation completed"
+  event_name: "Event name"
+  date_review_completed_by_state: "Date review completed by state"
+  acuity: "Acuity"
+  auditing: "Auditing"
+  case_outbreak: "Case / Outbreak"
+  tracking_info: "Tracking Information"
+
+#Clinical
+  onset_date: "Onset date"
+  date_diagnosed: "Date diagnosed"
+  hospitalized: "Hospitalized"
+  died: "Died"
+  date_of_death: "Date of death"
+  pregnant: "Pregnant"
+  pregnancy_due_date: "Pregnancy due date"
+  diagnosing_health_facilities: "Diagnosing health facilities"
+  hospitalized_health_facility: "Hospitalized health facility"
+  admission_date: "Admission date"
+  discharge_date: "Discharge date"
+
+#Contacts
+  no_contacts: "No contacts have been recorded for this {{thing}}"
+  contacts: "Contacts"
+  contact_type: "Contact type"
+  disposition: "Disposition"
+  this_patient_is_a_contact_of: "This patient is a contact of"
+  copy_from_original_patient: "Copy From Original Patient"
+#Notes
+  user: 'User'
+  note_type: "Note type"
+  date_note_created: "Date note created"
+  administrative_ntoes: 'Administrative Notes'
+  notes: "Notes"
+#Attachments
+  file_name: "File name"
+  category: "Category"
+  location: "Location"
+  attachments: "Attachments"
+
+  #Investigation
+  investigative_info: "Investigative Information"
+  forms: "Forms"
+  add_remove_forms: "Add/Remove forms for this event"
+
+  dev_mode_note: "NOTE: THESE FIELDS ARE ONLY VISIBLE IN DEVELOPMENT MODE"
+
+# form builder
+  confirm_remove_element: 'This action will delete this element and all children elements. Please confirm.'
+  add_section_to: 'Add section to {{thing}}'
+  add_question_to: 'Add question to {{thing}}'
+  add_follow_up_to: 'Add follow up to {{thing}}'
+  add_follow_up: 'Add follow up'
+  add_value_set: 'Add value set'
+  add_value: 'Add value'
+  edit_value_set: 'Edit value set'
+  spinner_alt: 'Working...'
+  fb_no_cdc_columns: "No core export columns have been associated with this form's diseases"
+  publishing: 'Publishing...'
+  publish: 'Publish'
+  could_not_render: 'Could not render {{thing}} ({{id}})'
+  view_element: 'view element'
+  core_view_element: 'core view element'
+  core_field_element: 'core field element'
+  before_configuration: 'Before configuration'
+  before_core_field: 'before core field element'
+  after_core_field: 'after core field element'
+  section_element: 'section element'
+  group_element: group element
+  follow_up_element: follow up element
+  core_follow_up_elment: core follow up element
+  question_element: question element
+  question: 'question'
+  condition: 'Condition'
+  code_condition: 'Code condition'
+  follow_up_on: "Follow up, {{thing}}"
+  core_follow_up_on: "Core follow up, {{thing}}"
+  question_element: 'question element'
+  next_item: ', {{item}}'
+  invalid_core_field_path_is: "Invalid core field path is: {{thing}}"
+  core_data_element: "Core data element: {{thing}}"
+  follow_up_element: "follow up element"
+  blank: 'Blank'
+  value_element: 'value element'
+  value_set_element: 'value set element'
+  master_copy: 'master copy'
+  element: 'element'
+  cdc_export_question: "CDC export question"
+  form_created_at: 'Form created'
+  form_last_updated: 'Form last updated'
+  elements_last_updated: 'Elements last updated'
+  published_versions: 'Published Versions'
+  no_published_versions: 'No published versions.'
+  version: "Version"
+  published: "Published"
+  form_metedata: "Form Metadata"
+  add_to_cdc_export: "Add to CDC export"
+  activate: 'Activate'
+  inactivate: 'Inactivate'
+  form_metadata: 'Form Metadata'
+
+  #export_columns
+  export_column_detail: "Export Column Detail"
+  export_columns: "Export Columns"
+  create_new_export_column: "Create new Export Column"
+  edit_export_column: "Edit Export Column"
+  column_conversion_values: 'Column Conversion Values'
+  add_conversion_value: "Add a conversion value"
+  associated_diseases: "Associated Diseases"
+  export_column: "Export Column"
+  create_export_column: "Create Export Column"
+  descriptive_name: "Descriptive Name"
+  cdc_name: "CDC Name"
+  disease_group: "Disease Group"
+  not_specified: "not specified"
+  edit_export_column_detail: "Edit Export Column Detail"
+  sort_order: "Sort Order"
+  formbuilder: "Formbuilder"
+  core: "Core"
+  system_generated: "System Generated"
+
+  #export_conversion_values
+  create_export_conversion_value: "Create Export Conversion Value"
+  export_conversion_value: "Export Conversion Value"
+  convert_it_to: "Convert it to"
+  convert_to: "Convert {{from_value}} to {{to_value}}"
+
+  #external_codes
+  choose_one: "Choose One"
+  none_selected: "None Selected"
+  new_code: "New {{type}} Code"
+  codes: "Codes"
+  code_information: "Code Information"
+  code_type: "Code Type"
+  undelete: "Undelete"
+  deleted_on: "Deleted on {{date}}"
+  edit_code: "Edit Code"
+  confirm_restore: "Really restore code?"
+  confirm_delete: "Really delete code?"
+  x_codes: "{{x}} Codes"
+  list_of_codes: "List of Codes"
+  code_detail: "Code Detail"
+  list_codes: "List Codes"
+  list: "list"
+  code_name: "Code Name"
+  the_code: "The Code"
+
+  #ibis_export
+  ibis_description: "Generate an IBIS export file for events created, updated, or deleted between the entered dates, inclusive (yyyy-mm-dd):"
+
+  #jurisdictions
+  jurisdiction_detail: "Jurisdiction Detail"
+  edit_jurisdiction: "Edit Jurisdiction"
+  jurisdiction_management: "Jurisdiction Management"
+  create_new_jurisdiction: "Create New Jurisdiction"
+  #loinc codes
+  create_new_loinc_code: "Create New LOINC Code"
+  scale: "Scale"
+  test_name: "Test Name"
+  list_loinc_codes: "List LOINC Codes"
+  show_loinc_code: "Show a LOINC Code"
+  loinc_codes: "LOINC Codes"
+  create_loinc_code: "Create a LOINC Code"
+  edit_loinc_code: 'Edit LOINC Code'
+  edit_a_loinc_code: 'Edit a LOINC Code'
+
+  show_contacts_map: "Show Contacts Map"
+
+  #morbidity_events
+  create_new_event_from_this_one: "Create a new event from this one"
+  export_to_csv: "Export to CSV"
+  add_attachment: "Add Attachment"
+  add_task: "Add Task"
+  route_to_local: 'Route to Local Health Depts.'
+  reporting: "Reporting"
+  list_morbidity_events: "List Morbidity Events"
+  export_all_to_csv: "Export all to CSV"
+  change_view: "Change View"
+  create_new_morbidity_report: "Create New Morbidity Report"
+  queues: "Queues"
+  queue: "Queue"
+  investigators: "Investigators"
+  do_not_show_deleted_records: "Do not show deleted records"
+  set_as_default_view: "Set as default view"
+  items_per_page: "Items per page"
+  shallow_copy_of: "Create a new event for {{name}} that is otherwise unrelated to the current event."
+  copies_demographics_only: "Copies demographic information only."
+  deep_copy_of: "Create a new event for {{name}} that is closely related to the current event."
+  create_and_edit_deep_copy: "Create and Edit Deep Copy"
+  create_and_edit_shallow_copy: "Create and Edit Shallow Copy"
+  shallow_copy: "Shallow Copy"
+  deep_copy: "Deep Copy"
+  also_copy: 'Along with demographic information also copy'
+  clinical_information_without_disease: 'Clinical information (without disease)'
+  labs_and_lab_results: 'Labs and lab results'
+  disease_forms_and_answers: Disease forms and answers
+  use_short_column_names: 'Use Short Column Names'
+  codes_and_descriptions: 'Codes and Descriptions'
+  lab_results: "Lab Results"
+  additional_options: "Additional Options"
+  code: "Code"
+  export: "Export"
+  cmr_field: "CMR Field"
+  events_normal_case: "Events"
+  edit_morbidity_event_of: "Edit morbidity event: {{name}}"
+  morbidity_event: "Morbidity Event"
+  same_as_above: "Same as above"
+  new_cmr_normal_case: "New CMR"
+  new_morbidity_event: "New Morbidity Event"
+  view_morbidity_event_of: "View Morbidity Event: {{name}}"
+  view_morbidity_event: "View Morbidity Event"
+  create_new_morbidity_report: "Create New Morbidity Report"
+  events_normal_case: "Events"
+  printed: "Printed {{date}}"
+  current_investigator: "Current Investigator: {{name}}"
+  confidential_case_report: "Confidential Case Report"
+  unassigned: "Unassigned"
+  promote_to_cmr: Promote to CMR
+  assign_to_queue: Assign to queue
+  assign_to_investigator: Assign to investigator
+  insufficient_privs_transition: Insufficient privileges to transition this event
+  investigating_jurisdiction: Investigating jurisdiction
+  accept: Accept
+  reject: Reject
+  approve: Approve
+  reopen: Reopen
+  also_grant_access: Also grant access to
+  route_event: Route event
+  routing_disabled: Routing disabled
+  more_choices: More choices...
+
+  #Organisms
+  show_an_organism: "Show an Organism"
+  no_diseases_configured: "No diseases configured"
+  create_an_organism: "Create an Organism"
+  edit_organism: "Edit Organism"
+  organism_name: "Organism Name"
+  create_new_organism: "Create New Organism"
+
+  #People
+  create_new_person: "Create new person"
+  clear_search_criteria: "Clear Search Criteria"
+  person_name: "Person Name"
+  people_normal_case: "People"
+  person: "Person"
+  person_information: "Person Information"
+  create_person: "Create Person"
+  add_an_email_address: "Add an Email Address"
+  edit_person: "Edit Person"
+  person_detail: "Person Detail"
+  
+  #Place events
+  view_place_event: "View Place Event"
+  assigned_jurisdiction: "Assigned Jurisdiction"
+  original_patient: "Original Patient"
+  edit_place_event: "Edit Place Event: {{place}}"
+  places_normal_case: "Places"
+  place_detail: "Place Detail"
+  edit_place: "Edit Place"
+  edit_address: "Edit Address"
+  place: "Place"
+
+  #Roles
+  roles: "Roles"
+  role: "Role"
+  create_role: "Create Role"
+  edit_role: "Edit Role"
+  create_new_role: "Create New Role"
+  no_roles: "No roles."
+  privileges: "Privileges"
+  add_privilege: "Add Privilege"
+  edit_privileges: "Edit Privileges"
+
+  #Search
+  event_search: "Event Search"
+  show_hide_name_criteria: "Show | Hide Name Criteria"
+  show_hide_other_criteria: "Show | Hide All Other Criteria"
+  show_hide_demographic_criteria: "Show | Hide Demographic Criteria"
+  show_hide_clinical_criteria: "Show | Hide Clinical Criteria"
+  show_hide_event_criteria: "Show | Hide Event Criteria"
+  show_hide_epi_and_reporting_criteria: "Show | Hide Epi and Reporting Criteria"
+  no_search_results: 'Your search returned no results.'
+  uses_soundex: 'Uses Soundex and allows for first-/last-name transposition'
+  ignore_fts: 'Full-text search ignored when using starts-with search'
+  starts_with_first_name: "Starts-with first name"
+  starts_with_last_name: "Starts-with last name"
+  full_text_name: "Full-text name"
+  sent_to_cdc: "Sent to CDC"
+  entered_on_date_range: 'Entered-on date range (mm/dd/yyyy)'
+  jurisdiction_of_investigation: "Jurisdiction of investigation"
+  first_reported_date_range: 'First reported to public health date range (mm/dd/yyyy)'
+  data_export_size_message: "Your data export request exceeds the allowed size limit for a real-time request.  Please decrease the size of your data request or submit a Remedy ticket to receive an offline export file via email.  Please include the details of your request (search criteria used and data fields to be exported) in the Remedy ticket."
+  searching: Searching...
+  event_search_results:
+    morbidity_event: CMR
+    contact_event: Contact
+
+  #staging_area
+  no_staged_messages: "There are no messages in the {{state}} state"
+  staged_messages: "Staged Messages"
+  create_staged_message: "Create a staged message"
+  staged_message: "Staged Message"
+  message_details: "Message Details"
+  new_staged_message: "New Staged Message"
+  no_staged_message_search_results: "There are no messages for this search"
+  collection_date_range: "Collection date range"
+  search_for_staged_messages: 'Search for Staged Messages'
+  search_normal_case: "Search"
+  specimen_source_is: "Specimen: {{source}}"
+  collected_on_date: "Collected: {{date}}"
+  test_date: "Test Date"
+  result: "Result"
+  similar_events: "Similar Events"
+  discard: "Discard"
+  raw: "Raw"
+  create_cmr_from_message: "Create a CMR from this message"
+  dob: "DOB"
+  staging_area_states:
+    pending: Pending
+    assigned: Assigned
+    unprocessable: Unprocessable
+    discarded: Discarded
+
+  #tasks
+  no_tasks: "No tasks"
+  due_date: 'Due&nbsp;date'
+  assigned_to: 'Assigned&nbsp;to'
+  date_word: 'Date'
+  edit_event: "Edit&nbsp;event"
+  edit_task: "Edit&nbsp;task"
+  calendar_view: "Calendar&nbsp;view"
+
+  #users
+  uid: "UID"
+  user_name: User name
+  change_sorting: "Change Sorting"
+  sort_by: Sort by
+  sort_direction: Direction
+  ascending: Ascending
+  descending: Descending
+  sort: Sort
+  users: "Users"
+  disabled_account_desc: "This account has been disabled"
+  username: "Username"
+  given_name: "Given Name"
+  initials: "Initials"
+  create_user: "Create User"
+  edit_user: "Edit User"
+  disable_access: "Disable access to the system"
+  add_role: "Add Role"
+  edit_roles: "Edit Roles"
+  user_detail: "User Detail"
+  create_new_user: "Create New User"
+  configure_shortcuts: "Configure Shortcuts"
+  keyboard_shortcuts: "Keyboard Shortcuts"
+  update_shortcuts: "Update Shortcuts"
+  navigation: "Navigation"
+  edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
+  user_settings: "User Settings"
+  priority: "Priority"
+
+  #forms
+  create_new_form: "Create New Form"
+  upload: "Upload"
+  builder: "Builder"
+  details: "Details"
+  copy: "Copy"
+  form_id: "Form ID: {{form_id}}"
+  form_specific:
+    element:
+      one: '1 element'
+      other: '{{count}} elements'
+    question:
+      one: '1 question'
+      other: '{{count}} questions'
+    cdc_export_question:
+      one: '1 CDC export question'
+      other: '{{count}} CDC export questions'
+    event:
+      one: '1 event'
+      other: '{{count}} events'
+  fix_short_names: "Fix short names"
+  applies_to_x_events: "Applies to {{x}}"
+  x_elements_with_core_fields: "{{x}} with ties to core fields"
+  push: "Push"
+  deactivate: "Deactivate"
+  form: "Form"
+  detail_view: "Detail View"
+  edit_form: "Edit Form"
+  all_jurisdictions: "All Jurisdictions"
+  contact_event: "Contact Event"
+  place_event: "Place Event"
+  create_form: "Create Form"
+  invalid_form_structure: 'Form structure is invalid.'
+  wait_message: 'This may take a few minutes.'
+  form_builder: 'Form Builder'
+  add_tab: 'Add Tab'
+  add_core_tab_config: 'Add Core Tab Config'
+  add_core_field_config: 'Add Core Field Config'
+  open_library: 'Open Library'
+  rollback_form: 'Roll form back to last good published version.'
+  select_library_group: 'Select a group to copy to'
+  add_element_from_library: 'Add an element from the library'
+  show_all_groups: "Show all groups"
+  search_for_elements: "Search for elements"
+  library_administration: "Library Administration"
+  questions: "Questions"
+  value_sets: "Value Sets"
+  add_follow_up: "Add follow up"
+  follow_up: "Follow Up"
+  yes_true: "Yes"
+  no_false: "No"
+  add_new_question: "Add a new question"
+  short_names: "Short Names"
+  data_type: "Data Type"
+  Master_Copy: "Master Copy"
+  add_new_group: "Add a new group"
+  import_form_library: "Import form library:"
+  export_form_library: "Export form library"
+  manage_form_library: "Manage form library"
+  add_new_section: "Add a new section"
+  edit_existing_section: "Edit existing section"
+  phone_answer_format_msg: 10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999
+  form_statuses:
+    not_published: 'Not Published'
+    published: 'Published'
+    inactive: 'Inactive'
+    archived: 'Archived'
+    live: 'Live'
+    invalid: 'Invalid'
+
+  #participations
+  hospitalization: "Hospitalization"
+  treatment: "Treatment"
+  risk_factor: "Risk factor"
+  disease: "Disease"
+  lab_result: "Lab result"
+  exposure: "Exposure"
+
+  add_telephone: "Add a Telephone"
+
+  show_cmr: "Show CMR"
+  edit_cmr: "Edit CMR"
+  show_contact: "Show&nbsp;Contact"
+  edit_contact: "Edit&nbsp;Contact"
+  show_place: "Show Place"
+  edit_place: "Edit Place"
+  show_encounter: "Show Encounter"
+  edit_encounter: "Edit Encounter"
+  strike_through: "Strike Through"
+  start_over: "Start Over"
+  date_or_year_of_birth: "Date or year of birth (mm/dd/yyyy or yyyy)"
+  investigated_by: "Investigated by"
+  are_you_sure: "Are you sure?"
+  merge: "Merge"
+  merge_into: "Merge into {{name}}"
+  show_hide_details: "&nbsp;Show&nbsp;|&nbsp;Hide&nbsp;Details&nbsp;"
+  copy_to_library: "Copy to library"
+  no_group: "No Group"
+
+#Staged messages
+  staged_message_notes: "Notes"
+  assign_new_cmr: "Assign to new CMR using this person"
+  assign_lab_result: "Assign lab result"
+
+  trisano:
+    privileges:
+      add_form_to_event: "Add forms to events"
+      administer: "Administer"
+      create_event: "Create events"
+      view_event: "View events"
+      update_event: "Update events"
+      route_event_to_any_lhd: "Route events to an local health department"
+      accept_event_for_lhd: "Accept events for local health department"
+      route_event_to_investigator: "Route events to investigators"
+      accept_event_for_investigation: "Accept events for investigation"
+      investigate_event: "Investigate events"
+      approve_event_at_lhd: "Approve event at local health department"
+      approve_event_at_state: "Approve event at state"
+      assign_task_to_user: "Assign tasks to users"
+      remove_form_from_event: "Remove forms from events"
+      access_avr: "Access AVR"
+      manage_staged_message: "Manage staged messages"
+      write_staged_message: "Create staged messages"
+      manage_entities: "Manage entities"
+      # Debt: move merge translations to plugin
+      merge_people: "Merge people"
+      merge_places: "Merge places"
+

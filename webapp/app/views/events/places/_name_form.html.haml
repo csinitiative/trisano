@@ -16,7 +16,7 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Place Name
+  %legend=t('place_name')
 
   -f.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
     = error_messages_for :object => p.object
@@ -24,7 +24,7 @@
       =p.label(:name)
       =h(p.object.name)
     -core_element :place_type_id, p, :horiz do
-      =p.label(:place_type_ids, 'Types')
+      =p.label(:place_type_ids)
       =h(p.object.formatted_place_descriptions)
 
   -event_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |p|

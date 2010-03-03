@@ -16,9 +16,9 @@
 - content_for :title do
   Editing Staged Message
 
-= link_to h('<< Back'), staged_messages_path 
+= link_to h(t('back_to', :name => t('staged_messages'))), staged_messages_path
 |
-= link_to 'Show', @staged_message
+= link_to t('show'), @staged_message
 
 - form_for(@staged_message) do |f|
   = f.error_messages
@@ -26,4 +26,4 @@
   = render :partial => 'form', :locals => {:f => f}
 
   %p
-    = f.submit 'Update'
+    = f.submit t('update')

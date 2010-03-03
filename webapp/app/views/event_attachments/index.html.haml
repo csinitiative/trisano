@@ -15,14 +15,14 @@
 
 
 - content_for :title do
-  Event Attachments
+  =t('event_attachments')
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
 
 #existing-attachments
   %h2
-    Existing Attachments
+    =t('existing_attachments')
   #attachments
     = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
 

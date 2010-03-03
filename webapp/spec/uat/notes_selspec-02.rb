@@ -41,7 +41,7 @@ describe 'Associating notes with an event.' do
   end
 
   it "should allow adding one clinical note" do
-    add_note(@browser, "My first clinical note.")
+    enter_note(@browser, "My first clinical note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     note_count(@browser).should == 2
@@ -49,7 +49,7 @@ describe 'Associating notes with an event.' do
   end
 
   it "should allow adding one admin note" do
-    add_note(@browser, "My first admin note.", { :is_admin => true })
+    enter_note(@browser, "My first admin note.", { :is_admin => true })
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
     note_count(@browser).should == 3
@@ -92,20 +92,20 @@ describe 'Associating notes with an event.' do
     add_contact(@browser, { :last_name => "Jones"})
     add_place(@browser, { :name => "PS 207" })
     save_cmr(@browser)
-    @browser.click "edit-contact-event"
+    @browser.click "link=Edit Contact"
     @browser.wait_for_page_to_load $load_time 
 
-    @browser.is_text_present("Contact event created.").should be_true
-    add_note(@browser, "My first clinical, contact note.")
+    @browser.get_html_source.include?("Contact event created.").should be_true
+    enter_note(@browser, "My first clinical, contact note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first clinical, contact note.").should be_true
+    @browser.get_html_source.include?("My first clinical, contact note.").should be_true
     note_count(@browser).should eql(2)
 
-    add_note(@browser, "My first admin, contact note.", :is_admin => true)
+    enter_note(@browser, "My first admin, contact note.", :is_admin => true)
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first admin, contact note.").should be_true
+    @browser.get_html_source.include?("My first admin, contact note.").should be_true
 
     note_count(@browser).should eql(3)
     note_count(@browser, "Administrative").should eql(2)
@@ -131,19 +131,19 @@ describe 'Associating notes with an event.' do
 
     @browser.click("link=Smith")
     @browser.wait_for_page_to_load $load_time 
-    @browser.click "edit-place-event"
+    @browser.click "link=Edit Place"
     @browser.wait_for_page_to_load $load_time
 
-    @browser.is_text_present("Place event created.").should be_true
-    add_note(@browser, "My first clinical, place note.")
+    @browser.get_html_source.include?("Place event created.").should be_true
+    enter_note(@browser, "My first clinical, place note.")
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first clinical, place note.").should be_true
+    @browser.get_html_source.include?("My first clinical, place note.").should be_true
 
-    add_note(@browser, "My first admin, place note.", :is_admin => true)
+    enter_note(@browser, "My first admin, place note.", :is_admin => true)
     save_and_continue(@browser)
     @browser.is_element_present("css=DIV#existing-notes").should be_true
-    @browser.is_text_present("My first admin, place note.").should be_true
+    @browser.get_html_source.include?("My first admin, place note.").should be_true
 
     note_count(@browser).should eql(3)
     note_count(@browser, "Administrative").should eql(2)

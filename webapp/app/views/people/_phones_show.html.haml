@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Telephone / Email
+  %legend= "#{t 'telephone'}/#{t 'email'}"
   %div.data_telephones
     =render :partial => 'people/show_telephone', :collection => f.object.telephones
   %div.data_email_addresses

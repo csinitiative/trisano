@@ -14,30 +14,30 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Export Conversion Value
+  =t "Edit Export Conversion Value"
 
 - content_for :name do
   = h(@export_column.name)
 
 - content_for :tools do
-  = link_to "< Back to export column", export_column_path(@export_column)
+  = link_to t("back_to", :name => "export column"), export_column_path(@export_column)
   %p
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Export Conversion Value
+        =t "export_conversion_value"
       %th
       %tr
         %td.forminformation
           .formname
-            = "Convert #{h(@export_conversion_value.value_from)} to #{h(@export_conversion_value.value_to)}"
+            = t "convert_to", :from_value => h(@export_conversion_value.value_from), :to_value => h(@export_conversion_value.value_to)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            =t "edit"
             |
-            = link_to('Delete', export_column_export_conversion_value_path(@export_column, @export_conversion_value), :method => :delete)
+            = link_to(t('delete'), export_column_export_conversion_value_path(@export_column, @export_conversion_value), :method => :delete)
 #rot
   = error_messages_for :export_conversion_value
 
@@ -45,4 +45,4 @@
 
     = render :partial => 'form', :locals => { :f => f, :editing => true }
 
-    = f.submit "Update"
+    = f.submit t("update")

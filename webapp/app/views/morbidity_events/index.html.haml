@@ -14,25 +14,25 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  List Morbidity Events
+  =t 'list_morbidity_events'
 
 - content_for :tools do
   - unless @events.empty?
-    = link_to_function('Export All to CSV', nil) do |page|
+    = link_to_function(t('export_all_to_csv'), nil) do |page|
       - page[:export_options].visual_effect :appear
     = "|"
-  = link_to_function('Change View', nil) do |page|
+  = link_to_function(t('change_view'), nil) do |page|
     - page[:change_view].visual_effect :slide_down
 
 - content_for :tools_two do
-  = new_cmr_button "Create New Morbidity Report"
+  = new_cmr_button t("create_new_morbidity_report")
 
 = render :partial => "export_options", :locals => { :path => export_cmrs_path(:format => 'csv') }
 
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
-      %label Events
+      %label=t 'events'
 
       -# Contacts and events have slightly different workflows.  Get the union of the two.
       - events = MorbidityEvent.get_states_and_descriptions
@@ -46,24 +46,24 @@
 
       = select_tag("states[]", options_from_collection_for_select(events, :workflow_state, :description), :size => 5, :multiple => true, :id => "states_selector")
     %span.horiz
-      %label Queues
+      %label=t 'queues'
       - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
       = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true, :id => "queues_selector")
-    %label Investigators
+    %label=t 'investigators'
     - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
     = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true, :id => "investigators_selector")
-    %label Diseases
+    %label=t 'diseases'
     = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true, :id => "diseases_selector")
-    %label Items per page
+    %label=t 'items_per_page'
     - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{h(c)}</option>"}.join
     = select_tag('per_page', page_options)
     %br
     = check_box_tag("do_not_show_deleted")
-    = "Do not show deleted records&nbsp;&nbsp;"
+    = t("do_not_show_deleted_records") + "&nbsp;&nbsp;"
     = check_box_tag("set_as_default_view")
-    = "Set as default view&nbsp;&nbsp;"
-    = submit_tag("Change View", :id => "change_view_btn")
-  = link_to_function "Close", "Effect.BlindUp('change_view')"
+    = t("set_as_default_view") + "&nbsp;&nbsp;"
+    = submit_tag(t("change_view"), :id => "change_view_btn")
+  = link_to_function t("close"), "Effect.BlindUp('change_view')"
 %p
 
 #rot
@@ -72,13 +72,13 @@
       - query_params = request.query_parameters
       - query_params.delete('commit')
       %th.forminformation
-        = link_to("Patient Name", cmrs_path(query_params.merge(:sort_order => 'patient')))
+        = link_to(t("patient_name"), cmrs_path(query_params.merge(:sort_order => 'patient')))
       %th
-        = link_to("Disease", cmrs_path(query_params.merge(:sort_order => 'disease')))
+        = link_to(t("disease"), cmrs_path(query_params.merge(:sort_order => 'disease')))
       %th
-        = link_to("Jurisdiction", cmrs_path(query_params.merge(:sort_order => 'jurisdiction')))
+        = link_to(t("jurisdiction"), cmrs_path(query_params.merge(:sort_order => 'jurisdiction')))
       %th
-        = link_to("Status", cmrs_path(query_params.merge(:sort_order => 'status')))
+        = link_to(t("status"), cmrs_path(query_params.merge(:sort_order => 'status')))
 
       - @events.each do |event|
         - if event.is_a? ContactEvent

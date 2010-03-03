@@ -14,13 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %span.section-header
-  Encounters
+  =t('encounters')
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => f }
 
 - core_element_print :encounters, f, :vert do
   - ran = nil
   - unless association_recorded?(@event.encounter_child_events)
-    %b{ :style => 'font-size: 11px' }="No encounters have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
+    %b{ :style => 'font-size: 11px' }=t('no_encounters', :thing => h(@event.class.name.underscore.humanize.downcase))
   - else
     - for encounter in @event.encounter_child_events
       - encounter_event_data = encounter.participations_encounter
@@ -28,31 +28,31 @@
         - unless ran.nil?
           %hr
           %br
-        %b="Encounter on #{h(encounter_event_data.encounter_date)}"
+        %b=t('encounter_on', :date => ld(encounter_event_data.encounter_date))
         .three-valued-row
           .left
-            %span.print-label Investigator:
+            %span.print-label=ct('investigator')
             %span.print-value
               =h(encounter_event_data.user.best_name)
           .left
-            %span.print-label Description:
+            %span.print-label=ct('description')
             %span.print-value
               =h(encounter_event_data.description)
           .left
-            %span.print-label Location:
+            %span.print-label=ct('location')
             %span.print-value
               =h(encounter_event_data.encounter_location_type)
       
       %span.subsection-header
-        Encounter Treatments
+        =t('encounter_treatments')
       = render :partial => 'events/treatments_list_print.html.haml', :locals => { :event => encounter }
 
       %span.subsection-header
-        Encounter Labs
+        =t('encounter_labs')
       = render :partial => 'events/labs_list_print.html.haml', :locals => { :event => encounter }
 
       %span.subsection-header
-        Encounter Forms
+        =t('encounter_forms')
       = render :partial => 'events/forms_print.html.haml', :locals => { :event => encounter }
       
       %br

@@ -18,7 +18,7 @@
     %table.list
       %tr
         %th
-          Roles
+          =t 'roles'
       - for rm in @user.role_memberships
         %tr
           %td
@@ -27,4 +27,4 @@
             .tools
               = h(rm.role.role_name.capitalize)
   - else
-    No roles.
+    =t 'no_roles'

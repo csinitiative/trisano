@@ -48,14 +48,14 @@ describe Question do
     @question.data_type = "not_good_pie"
     @question.should_not be_valid
     @question.errors.size.should == 1
-    @question.errors.on(:data_type).should_not be_nil
+    @question.errors.on(:data_type).should == "is invalid"
   end
 
   it 'should produce an error if the shortname is not present' do
     @question.short_name = ""
     @question.should_not be_valid
     @question.errors.size.should == 1
-    @question.errors.on(:short_name).should_not be_nil
+    @question.errors.on(:short_name).should == "can't be blank"
   end
 
   it 'should be valid with any of the valid data types' do

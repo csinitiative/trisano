@@ -1,18 +1,18 @@
 - content_for :title do
-  PERMISSION DENIED
+  =t 'permission_denied'
 
-= content_tag(:p, reason + ". Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')
+= content_tag(:p, reason + ". #{link_to(t('please_exit'), home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')
 
 -if defined?(event) && event
   %b
-    Assigned Jurisdiction:
+    = ct('assigned_jurisdiction')
   %br
   = event.primary_jurisdiction.name
   %br
   %br
 
   %b 
-    Jurisdictions with Access:
+    = ct 'jurisdictions_with_access'
   - for participation in event.all_jurisdictions
     %br
     = participation.secondary_entity.place.name

@@ -32,8 +32,8 @@ $dont_kill_browser = true
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', @last_name)
     @browser.type "//input[@id='morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date']", Date.today.years_ago(13).strftime("%m/%d/%Y")
     save_cmr(@browser).should be_true
-    @browser.is_text_present(@last_name).should be_true
-    @browser.is_text_present(Date.today.years_ago(13).strftime("%Y-%m-%d"))
+     @browser.get_html_source.include?(@last_name).should be_true
+     @browser.get_html_source.include?(Date.today.years_ago(13).strftime("%Y-%m-%d"))
   end
   
   it 'should save the contact information' do
@@ -43,7 +43,7 @@ $dont_kill_browser = true
     sleep(1)
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", "Costello"
     save_cmr(@browser).should be_true
-    @browser.is_text_present('Costello').should be_true
+     @browser.get_html_source.include?('Costello').should be_true
   end
 
   it 'should save the street name' do
@@ -67,22 +67,6 @@ $dont_kill_browser = true
     click_core_tab(@browser, "Clinical")
     @browser.select 'morbidity_event_disease_event_attributes_disease_id', 'label=AIDS'
     save_cmr(@browser).should be_true
-  end
-
-  it 'should save the lab result' do
-    edit_cmr(@browser).should be_true
-    click_core_tab(@browser, "Laboratory")
-    sleep 3
-    watch_for_spinner("div[id=labs] img[id$=lab_spinner]") do
-      @browser.type_keys("//div[@id='labs']/div[@class='lab'][1]//input[contains(@name, 'name')]", 'Lab')
-    end
-    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'lab_result_text')]", "Positive"
-    @browser.type "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//input[contains(@name, 'test_type')]", "Culture"
-    @browser.select "//div[@id='labs']/div[@class='lab'][1]//div[contains(@class, 'lab_result')][1]//select[contains(@name, 'specimen_source')]", "label=Animal head"
-
-    save_cmr(@browser).should be_true
-    @browser.is_text_present('Animal head').should be_true
-    @browser.is_text_present('Positive').should be_true
   end
   
   it 'should save the treatment info' do
@@ -110,23 +94,13 @@ $dont_kill_browser = true
   end
   
   it 'should still have all the data present' do
-    @browser.is_text_present(@last_name).should be_true
-    @browser.is_text_present('Junglewood Court').should be_true
-    @browser.is_text_present('(801) 581-1234').should be_true
-    
-    click_core_tab(@browser, "Clinical")
-    @browser.is_text_present('AIDS').should be_true
-    @browser.is_text_present('Leaches').should be_true
-    
-    click_core_tab(@browser, "Laboratory")
-    @browser.is_text_present('Animal head').should be_true
-    
-    click_core_tab(@browser, "Administrative")
-    @browser.is_text_present('Test Event').should be_true
+    html_source = @browser.get_html_source
+    html_source.include?(@last_name).should be_true
+    html_source.include?('Junglewood Court').should be_true
+    html_source.include?('(801) 581-1234').should be_true
+    html_source.include?('AIDS').should be_true
+    html_source.include?('Leaches').should be_true
     @browser.is_element_present("//div[@id='administrative_tab']/fieldset/fieldset[4]/span[3]/label[text()='Acuity']").should be_true
-    @browser.is_text_present("Extra Keen")
-    
-    click_core_tab(@browser, "Contacts")
-    @browser.is_text_present('Costello').should be_true
+    html_source.include?('Costello').should be_true
   end
 end

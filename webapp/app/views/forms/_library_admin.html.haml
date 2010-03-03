@@ -19,13 +19,13 @@
     %table
       %tr
         %td
-          %b Library Administration
+          %b=t 'library_administration'
       %tr
         %td.tools
-          = link_to_remote("Questions", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+          = link_to_remote(t("questions"), :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
           |
-          = link_to_remote("Value sets", :url => {:controller => "forms", :action => "library_admin", :type => "value_set_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
+          = link_to_remote(t("value_sets"), :url => {:controller => "forms", :action => "library_admin", :type => "value_set_element"}, :method => :get, :html => {:id => 'fb-open-library-admin'})
           |
-          = link_to_function "Close", "Effect.BlindUp($('library-admin-container'), { duration: 0.1 })", :id => 'fb-close-library-admin'     
+          = link_to_function t("close"), "Effect.BlindUp($('library-admin-container'), { duration: 0.1 })", :id => 'fb-close-library-admin'
   %hr
   = render_library_admin(@type)

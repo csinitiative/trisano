@@ -11,11 +11,8 @@ groucho_marx:
   birth_gender_id: 1
   ethnicity_id: 103
   primary_language_id: 302
-  last_name_soundex: <%= Text::Soundex.soundex("Marx") %>
-  first_name_soundex: <%= Text::Soundex.soundex("Groucho") %>
   updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
-  vector: "'g620':3 'm620':4 'marx':2 'groucho':1"
 
 phil_silvers_cur:
   id: 3
@@ -28,11 +25,8 @@ phil_silvers_cur:
   birth_gender_id: 1
   ethnicity_id: 103
   primary_language_id: 301
-  last_name_soundex: <%= Text::Soundex.soundex("Silvers") %>
-  first_name_soundex: <%= Text::Soundex.soundex("Phil") %>
   updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
-  vector: "'p400':3 'phil':1 's416':4 'silver':2"
 
 marks_for_event:
   age_type_id: 
@@ -40,7 +34,6 @@ marks_for_event:
   entity_id: !str 86
   primary_language_id: !str 301
   ethnicity_id: !str 103
-  first_name_soundex: K640
   approximate_age_no_birthday: 
   updated_at: <%= Time.now.to_s :db %>
   birth_gender_id: !str 1
@@ -49,9 +42,7 @@ marks_for_event:
   first_name: Karl
   id: !str 4
   birth_date: !str 1977-02-17
-  last_name_soundex: M620
   created_at: <%= Time.now.to_s :db %>
-  vector: '''k640'':3 ''karl'':1 ''m620'':4 ''mark'':2'
 
 johnson_on_marks_event:
   age_type_id: 
@@ -59,7 +50,6 @@ johnson_on_marks_event:
   entity_id: !str 87
   primary_language_id: 
   ethnicity_id: 
-  first_name_soundex: J500
   approximate_age_no_birthday: 
   updated_at: <%= Time.now.to_s :db %>
   birth_gender_id: 
@@ -68,9 +58,7 @@ johnson_on_marks_event:
   first_name: John
   id: !str 5
   birth_date: 
-  last_name_soundex: J525
   created_at: <%= Time.now.to_s :db %>
-  vector: '''j500'':3 ''j525'':4 ''john'':1 ''johnson'':2'
 
 lab_guy:
   id: 6

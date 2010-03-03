@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 # Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -17,29 +19,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module LayoutHelper
-
-  def render_geocode_js_includes
-    # PLUGIN_HOOK - render_geocode_js_includes()
-  end
-
-  def render_onload_event
-    # PLUGIN_HOOK - render_onload_event()
-
-    return %{ shortcuts_init('#{home_path}');
-              focus_init(); }
-  end
-
-  def render_help_link
-    # PLUGIN_HOOK - render_help_link()
-  end
-
-  def render_system_message
-    # PLUGIN_HOOK - render_system_message()
-  end
+  extensible_helper
 
   def render_footer
-    # PLUGIN_HOOK - render_footer()
-
     result = ""
 
     result << "<div class='footlogo'>"
@@ -47,21 +29,21 @@ module LayoutHelper
     result << "</div>"
     result << "<div class='foottext'>"
     result << "<div class='top'>"
-    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+2.1+Release+Notes'>TriSano™ 2.1</a>"
+    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+2.1+Release+Notes'>#{t('trisano_ce')}</a>"
     result << "</div>"
     result << "<div class='bottom'>"
-    result << "<a href='http://www.trisano.org/collaborate/'>Collaborate</a>"
+    result << "<a href='http://www.trisano.org/collaborate/'>#{t('collaborate')}</a>"
     result << "&nbsp;|&nbsp;"
-    result << "User Feedback (<a href='http://groups.google.com/group/trisano-user'>web</a>, <a href='mailto:trisano-user@googlegroups.com'>email</a>)"
+    result << "#{t('user_feedback')} (<a href='http://groups.google.com/group/trisano-user'>#{t('web')}</a>, <a href='mailto:trisano-user@googlegroups.com'>#{t 'email'}</a>)"
     result << "&nbsp;|&nbsp;"
-    result << "<a href='http://www.trisano.org'>About</a>"
+    result << "<a href='http://www.trisano.org'>#{t('about')}</a>"
     result << "&nbsp;|&nbsp;"
-    result << "<a href='http://www.trisano.org/collaborate/licenses/'>License</a>"
+    result << "<a href='http://www.trisano.org/collaborate/licenses/'>#{t('license')}</a>"
     result << "&nbsp;|&nbsp;"
-    result << "<a href='http://github.com/csinitiative/trisano/tree/master'>Source</a>"
+    result << "<a href='http://github.com/csinitiative/trisano/tree/master'>#{t('source')}</a>"
     result << "</div>"
     result << "<div class='bottom'>"
-    result << "Copyright © 2009 Collaborative Software Foundation"
+    result << t('copyright')
     result << "</div>"
     result << "</div>"
 
@@ -82,4 +64,78 @@ module LayoutHelper
     JS
   end
 
+  def render_main_logo
+    returning "" do |result|
+      result << '<div class="horiz">'
+      result << link_to(
+        image_tag('logo.png', :border => 0),
+        home_path, :id => 'logo')
+      result << '</div>'
+    end
+  end
+
+  def render_main_menu
+    links = main_menu_items.collect do |item|
+      item[:options] ||= {}
+      text = item[:t] ? t(*item[:t]) : item[:text]
+      link_to(text, item[:link], item[:options])
+    end
+    links.join("&nbsp;|&nbsp;")
+  end
+
+  def main_menu_items
+    return MenuArray.new unless user = User.current_user
+    returning MenuArray.new do |items|
+      if user.is_entitled_to? :create_event
+        items << {:link => event_search_cmrs_path, :t => :new_cmr}
+      end
+      if user.is_entitled_to? :manage_staged_message, :write_staged_message
+        items << {
+          :link => staged_messages_path,
+          :t => :staging_area,
+          :options => {:rel => "http://trisano.org/relation/staged_messages"}}
+      end
+      if user.is_entitled_to? :view_event
+        items << {:link => cmrs_path_with_defaults, :t => :events}
+        items << {:link => search_cmrs_path, :t => :search}
+      end
+      if user.is_entitled_to? :manage_entities
+        items << {:link => people_path, :t => :people}
+        items << {:link => places_path, :t => :places}
+      end
+      if user.is_entitled_to? :access_avr
+        items << {
+          :link => config_option(:bi_server),
+          :t => :avr,
+          :options => {:popup => true}}
+      end
+      if user.is_admin?
+        items << {:link => admin_path, :t => :admin}
+      end
+      items << {:link => settings_path, :t => :settings}
+    end
+  end
+
+  def render_user_tools(user)
+    if allow_user_switching?
+      change_user_url = url_for(:controller => :events, :action => :change_user)
+      returning "" do |result|
+        result << form_tag(change_user_url, :id => 'switch_user', :style => 'display: inline')
+        result << "<span id='user_name'>#{current_user_name}:</span>"
+        result << select_tag("user_id", options_for_user_select(user), :onchange => 'this.form.submit()', :style => 'display: inline')
+        result << "</form>"
+      end
+    else
+      current_user_name
+    end
+  end
+
+  def allow_user_switching?
+    config_option(:auth_allow_user_switch) and not config_option(:auth_allow_user_switch_hidden)
+  end
+
+  def options_for_user_select(user)
+    users = User.all(:order => 'user_name').map {|u| [u.user_name, u.uid]}
+    options_for_select(users, user.uid)
+  end
 end

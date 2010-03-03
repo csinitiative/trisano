@@ -14,45 +14,44 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  CDC Export
+  =t('cdc_export')
 
 %h2
   - current_mmwr = Mmwr.new
   - previous_mmwr = Mmwr.new(Date.today - 7)
-  = "The current MMWR week is #{h(current_mmwr.mmwr_week)}"
-  = "(#{h(current_mmwr.mmwr_week_range.start_date)} &ndash; #{h(current_mmwr.mmwr_week_range.end_date)})"
-
+  = t('current_mmwr_week_is', :mmwr_week => h(current_mmwr.mmwr_week), :start_date => h(current_mmwr.mmwr_week_range.start_date), :end_date => h(current_mmwr.mmwr_week_range.end_date))
+  
 - format_string = '%A, %B %d, %Y'
 
-%h3 Generate CDC Export File for:
+%h3= t('generate_export_for')
 
 %ul.with_bullets
   %li
-    = link_to "The weekly CDC report", formatted_current_week_cdc_events_path("dat"), :id => "cdc_weekly_report"
+    = link_to t('weekly_cdc_report'), formatted_current_week_cdc_events_path("dat"), :id => "cdc_weekly_report"
     %br
-    ="Includes the current (#{h(current_mmwr.mmwr_week)}) and previous (#{h(previous_mmwr.mmwr_week)}) MMWR weeks, encompassing #{h(previous_mmwr.mmwr_week_range.start_date.strftime(format_string))} through #{h(current_mmwr.mmwr_week_range.end_date.strftime(format_string))}"
+    =t('mmwr_weeks_included', :current_week => h(current_mmwr.mmwr_week), :previous_week => h(previous_mmwr.mmwr_week), :start_date => h(previous_mmwr.mmwr_week_range.start_date.strftime(format_string)), :end_date => h(current_mmwr.mmwr_week_range.end_date.strftime(format_string)))
   %hr
 
   %li
-    The MMWR weeks encompassed by the entered dates (yyyy-mm-dd):
-    %p Note, weekly reports may not span MMWR years. If the entered dates span MMWR years (e.g.: 2008-12-15 through 2009-01-15) the start date will be changed to MMWR week 1 of the end date's year.
+    =t('mmwr_weeks_encompassed')
+    %p= t('cdc_export_note')
     - form_tag(formatted_by_range_cdc_events_path("dat"), :method => :get) do
       .horiz
-        %label Start Date 
+        %label=t('start_date')
         = text_field_tag("start_date")
       .horiz
-        %label End Date
+        %label=t('end_date')
         = text_field_tag("end_date")
-        = submit_tag("Submit")
+        = submit_tag(t('submit'))
 
     %br
     %br
   %hr
 
   %li
-    The annual CDC summary report for the year:
+    = t('annual_summary')
     - form_tag(formatted_current_ytd_cdc_events_path("dat"), :method => :get) do
       .horiz
         = text_field_tag("mmwr_year", Date.today.year, :size => 4)
-        = submit_tag("Submit")
+        = submit_tag(t('submit'))
 

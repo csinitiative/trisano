@@ -2,57 +2,93 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
 
 describe EventsHelper do
-
   include ApplicationHelper
+  include EventsHelperSpecHelper
 
-  describe "the state_controls method" do
+  describe "jurisdiction routing controls" do
 
-    describe "when the event state is 'asssigned to LHD'" do
-      before(:each) do
-        mock_user
-        mock_event
-        @event_1.stub!(:event_status).and_return("ASGD-LHD")
-        @jurisdiction = mock_model(Place)
-        @jurisdiction.stub!(:entity_id).and_return(1)
-        User.stub!(:current_user).and_return(@user)
+    before do
+      @current_user = Factory.create(:privileged_user)
+      add_privileges_for(@current_user)
+    end
+
+    describe "for morbidity events" do
+      before do
+        @event = Factory.build(:morbidity_event)
+        @event.jurisdiction.build(:secondary_entity_id => @current_user.role_memberships.first.jurisdiction_id)
+        @event.save!
       end
 
-      describe "and the user is allowed to accept an event" do
-        before(:each) do
-          @user.stub!(:is_entitled_to_in?).and_return(true)
-        end
-
-        it "should return a properly constructed form that posts to the morbidity event's controller's state action" do
-          pending "There are serious difficulties testing Haml helpers in RSpec.  Pending till figured out."
-          form = state_controls(@event_1, @jurisdiction)
-          # form test here
-          # radio button test here
-        end
-
-      end
-
-      describe "when the user is not allowed to accept an event" do
+      it "should submit jurisdiction changes to cmr controller" do
+        controls = helper.jurisdiction_routing_control(@event)
+        controls.should =~ /action=[\"|\']\/cmrs/
       end
     end
 
-    # Repeat the above pattern as new state transitions are implemented
+    describe "for contact events" do
+      before do
+        @event = Factory.build(:contact_event)
+        @event.jurisdiction.build(:secondary_entity_id => @current_user.role_memberships.first.jurisdiction_id)
+        @event.save!
+      end
+
+      it "should submit jurisdiction changes to the contact controller" do
+        controls = helper.jurisdiction_routing_control(@event)
+        controls.should =~ /action=[\"|\']\/contact_events/
+      end
+    end
+
+  end
+
+  describe "the state_controls method" do
+
+    before do
+      @current_user = Factory(:privileged_user)
+      add_privileges_for(@current_user)
+    end
+
+    describe "when a morb event state is 'asssigned to LHD'" do
+      before(:each) do
+        @event = Factory.create(:morbidity_event)
+        login_as_super_user
+        @event.assign_to_lhd(User.current_user.role_memberships.first.jurisdiction_id, [])
+      end
+
+      it "should return a properly constructed form that posts to the morbidity event's controller's state action" do
+        form = helper.state_controls(@event)
+        form.should =~ /action=[\"|\']\/cmrs\/\d+\/state/
+      end
+    end
+
+    describe "when a contact event state is 'asssigned to LHD'" do
+      before(:each) do
+        @event = Factory.create(:contact_event)
+        login_as_super_user
+        @event.assign_to_lhd(User.current_user.role_memberships.first.jurisdiction_id, [])
+      end
+
+      it "should return a properly constructed form that posts to the morbidity event's controller's state action" do
+        form = helper.state_controls(@event)
+        form.should =~ /action=[\"|\']\/contact_events\/\d+\/state/
+      end
+    end
   end
 
   describe "original patient controls" do
@@ -101,5 +137,36 @@ describe EventsHelper do
     end
 
   end
- 
+
+  describe 'rendering' do
+    it "should render core field help text" do
+      @core_field = CoreField.create!({ :event_type => :morbidity_event,
+                                        :key => "morbidity_event[test_attribute]",
+                                        :help_text => "Here is some help text"})
+      @event = Factory.create(:morbidity_event)
+      @fb = mock
+      @fb.stub!(:core_path).and_return(:test_attribute => "morbidity_event[test_attribute]")
+      helper.render_core_field_help_text(:test_attribute, @fb, @event).should =~ /Here is some help text/i
+    end
+  end
+
+  describe "show and edit event links" do
+
+    it "for Morbidity events" do
+      assert_event_links(:morbidity_event, 'Show CMR', 'Edit CMR')
+    end
+
+    it "for Contact events" do
+      assert_event_links(:contact_event, 'Show Contact', 'Edit Contact')
+    end
+
+    it "for Place events" do
+      assert_event_links(:place_event, 'Show Place', 'Edit Place')
+    end
+
+    it "for Encounter events" do
+      assert_event_links(:encounter_event, 'Show Encounter', 'Edit Encounter')
+    end
+
+  end
 end

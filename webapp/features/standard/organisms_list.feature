@@ -14,12 +14,12 @@ Feature: Listing organisms
         | Legionella      |
     When I go to the organisms index page
     Then I should see the following organisms:
-        | Organism Name   | Actions      |
-        | Arbovirus       | Show,Edit    |
-        | E. Coli         | Show,Edit    |
-        | Influenza A     | Show,Edit    |
-        | Influenza B     | Show,Edit    |
-        | Legionella      | Show,Edit    |
+        | Organism Name |            |
+        | Arbovirus     | Show Edit  |
+        | E. Coli       | Show Edit  |
+        | Influenza A   | Show Edit  |
+        | Influenza B   | Show Edit  |
+        | Legionella    | Show Edit  |
 
   Scenario: An investigator tries to list organisms
     Given I am logged in as an investigator

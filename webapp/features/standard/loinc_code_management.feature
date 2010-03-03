@@ -40,7 +40,7 @@ Feature: Supporting LOINC codes for lab results
     Then I should see "20000-0"
     And I should not see "20003-0"
 
-    When I follow "2"
+    When I follow "Next"
     Then I should not see "20000-0"
     And I should see "20003-0"
 
@@ -52,6 +52,6 @@ Feature: Supporting LOINC codes for lab results
     When I go to edit the loinc code
     And I follow "Delete"
 
-    Then I should see "Loinc code was successfully deleted"
+    Then I should see "LOINC code was successfully deleted"
     And I should not see "636-9"
     And I should be on the loinc code index page

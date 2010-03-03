@@ -20,10 +20,10 @@
     %table
       %tr
         %td
-          %b Add Core Field
+          %b= t('add_core_field')
       %tr
         %td.tools
           = link_to_function "Close", "$('core-field-builder-mods').down('form').reset(); Effect.BlindUp($('core-field-builder-mods'), { duration: 0.1 })"
 = f.select(:core_path, @available_core_fields, {:include_blank => true}, {:style => 'width: 185px'})
 - unless @available_core_fields.empty?
-  = f.submit("Create", :id => 'create_core_field_submit')
+  = f.submit(t('create'), :id => 'create_core_field_submit')

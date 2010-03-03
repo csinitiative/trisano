@@ -1,22 +1,22 @@
 %fieldset
-  %legend Reporting Information
+  %legend=t 'reporting_information'
 
   %fieldset.form
-    %legend Reporting Agency
+    %legend=t 'reporting_agency'
     - event_form.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |agency_form|
       - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |entity_form|
         - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
           - core_element_show :name, place_form, :horiz do
-            = place_form.label(:name, 'Agency name')
+            = place_form.label(:name, t('reporting_agency_name'))
             = h(place_form.object.name)
           %span.horiz
-            = label_tag('Types')
+            = label_tag t('activerecord.attributes.reporting_agency.agency_types')
             = h(place_form.object.formatted_place_descriptions)
-          = label_tag('Agency phone')
+          = label_tag(t('agency_phone'))
           = h(entity_form.object.primary_phone.simple_format)
 
   %fieldset.form
-    %legend Reporter
+    %legend=t 'reporter'
     - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
       - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
         - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
@@ -31,9 +31,14 @@
 
         - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
         - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
-          - core_element_show :area_code, phone_fields, :horiz do
-            = phone_fields.label(:area_code)
-            = h(phone_fields.object.area_code)
+          -if Telephone.use?(:country_code)
+            - core_element_show :country_code, phone_fields, :horiz do
+              = phone_fields.label(:country_code)
+              = h(phone_fields.object.country_code)
+          -if Telephone.use?(:area_code)
+            - core_element_show :area_code, phone_fields, :horiz do
+              = phone_fields.label(:area_code)
+              = h(phone_fields.object.area_code)
           - core_element_show :phone_number, phone_fields, :horiz do
             = phone_fields.label(:phone_number)
             = h(phone_number(phone_fields.object.phone_number)) if phone_fields.object.phone_number
@@ -42,10 +47,10 @@
             = h(phone_fields.object.extension)
 
   %fieldset.form
-    %legend Reported Dates
+    %legend=t 'reported_dates'
     - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
       = event_form.label(:results_reported_to_clinician_date)
-      = h(@event.results_reported_to_clinician_date) || '&nbsp;'
+      = ld(@event.results_reported_to_clinician_date)
     - core_element_show :first_reported_PH_date, event_form, :horiz do
-      = event_form.label(:first_reported_PH_date, 'Date first reported to public health')
-      = h(@event.first_reported_PH_date) || '&nbsp;'
+      = event_form.label(:first_reported_PH_date)
+      = ld(@event.first_reported_PH_date)

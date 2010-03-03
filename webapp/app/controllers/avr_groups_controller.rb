@@ -20,7 +20,7 @@ class AvrGroupsController < AdminController
     @avr_group = AvrGroup.new(params[:avr_group])
 
     if @avr_group.save
-      flash[:notice] = 'AVR group was successfully created.'
+      flash[:notice] = t("avr_group_successfully_created")
       redirect_to(@avr_group)
     else
       render :action => "new"
@@ -31,7 +31,7 @@ class AvrGroupsController < AdminController
     @avr_group = AvrGroup.find(params[:id])
 
     if @avr_group.update_attributes(params[:avr_group])
-      flash[:notice] = 'AVR group was successfully updated.'
+      flash[:notice] = t("avr_group_successfully_updated")
       redirect_to(@avr_group)
     else
       render :action => "edit"

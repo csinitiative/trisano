@@ -6,13 +6,16 @@ require File.dirname(__FILE__) + "/../config/environment" unless defined?(RAILS_
 require 'spec/autorun'
 require 'spec/rails'
 require 'spec/custom_matchers'
+require 'nokogiri'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
- 
+
 # Load up factories
-Dir.glob(File.expand_path(File.dirname(__FILE__) + "/../spec/factories/*.rb")) {|f| require f}
+Dir[File.join(File.dirname(__FILE__), '..', '{spec,vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
+  require f
+end
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -23,6 +26,7 @@ Spec::Runner.configure do |config|
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 
   config.include(CustomMatchers)
+
   # == Fixtures
   #
   # You can declare fixtures for each example_group like this:
@@ -53,7 +57,7 @@ Spec::Runner.configure do |config|
   # config.mock_with :rr
   #
   # == Notes
-  # 
+  #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
 
   config.after(:each) {
@@ -92,10 +96,11 @@ def mock_user
   @user.stub!(:event_view_settings).and_return(nil)
   @user.stub!(:best_name).and_return("Johnny Johnson")
   @user.stub!(:disabled?).and_return(false)
+  @user.stub!(:destroyed?).and_return(false)
 
   @role_membership = mock_model(RoleMembership)
   @role = mock_model(Role)
-  
+
   @role.stub!(:role_name).and_return("administrator")
   @role_membership.stub!(:role).and_return(@role)
   @role_membership.stub!(:jurisdiction).and_return(@jurisdiction)
@@ -108,20 +113,20 @@ def mock_user
   @jurisdiction.stub!(:place).and_return(@place)
   @place.stub!(:name).and_return("Southeastern District")
   @place.stub!(:entity_id).and_return("1")
-  
+
   @user.stub!(:role_memberships).and_return([@role_membership])
   @user.stub!(:admin_jurisdiction_ids).and_return([75])
   @user.stub!(:is_entitled_to_in?).and_return(true)
   @user.stub!(:new_record?).and_return(false)
-  
+
   @user
 end
 
 def mock_event
-  
+
   event = mock_model(MorbidityEvent)
   person = mock_person_entity
-  
+
   imported_from = mock_model(ExternalCode)
   state_case_status =mock_model(ExternalCode)
   lhd_case_status =mock_model(ExternalCode)
@@ -131,12 +136,12 @@ def mock_event
   pregnant = mock_model(ExternalCode)
   specimen_source = mock_model(ExternalCode)
   specimen_sent_to_state = mock_model(ExternalCode)
-  
+
   disease_event = mock_model(DiseaseEvent)
   disease = mock_model(Disease)
   lab_result = mock_model(LabResult)
   answer = mock_model(Answer)
-  
+
   jurisdiction = mock_model(Jurisdiction)
   interested_party = mock_model(InterestedParty)
   lab = mock_model(Lab)
@@ -148,7 +153,7 @@ def mock_event
   disease.stub!(:treatment_lead_in).and_return("")
   disease.stub!(:place_lead_in).and_return("")
   disease.stub!(:contact_lead_in).and_return("")
-    
+
   imported_from.stub!(:code_description).and_return('Utah')
   state_case_status.stub!(:code_description).and_return('Confirmed')
   lhd_case_status.stub!(:code_description).and_return('Confirmed')
@@ -156,12 +161,12 @@ def mock_event
   hospitalized.stub!(:code_description).and_return('Yes')
   died.stub!(:code_description).and_return('No')
   pregnant.stub!(:code_description).and_return('No')
-  
+
   jurisdiction.stub!(:secondary_entity_id).and_return(75)
 
   interested_party.stub!(:primary_entity).and_return(1)
   interested_party.stub!(:person_entity).and_return(person)
-   
+
   disease_event.stub!(:disease_id).and_return(1)
   disease_event.stub!(:hospital_id).and_return(13)
   disease_event.stub!(:hospitalized).and_return(hospitalized)
@@ -174,18 +179,18 @@ def mock_event
   disease_event.stub!(:disease_onset_date).and_return("2008-02-13")
   disease_event.stub!(:pregnant_id).and_return(1401)
   disease_event.stub!(:pregnancy_due_date).and_return("")
-    
+
   specimen_source.stub!(:code_description).and_return('Tissue')
   specimen_sent_to_state.stub!(:code_description).and_return('Yes')
-    
+
   lab_result.stub!(:specimen_source_id).and_return(1501)
   lab_result.stub!(:specimen_source).and_return(specimen_source)
   lab_result.stub!(:collection_date).and_return("2008-02-14")
   lab_result.stub!(:lab_test_date).and_return("2008-02-15")
-    
+
   lab_result.stub!(:specimen_sent_to_state_id).and_return(1401)
   lab_result.stub!(:specimen_sent_to_state).and_return(specimen_sent_to_state)
-  
+
   event.stub!(:all_jurisdictions).and_return([jurisdiction])
   event.stub!(:labs).and_return([lab])
   event.stub!(:diagnosing_health_facilities).and_return([diagnostic])
@@ -269,3 +274,13 @@ def mock_person_entity
 end
 
 require File.join(File.dirname(__FILE__), 'rails_ext') unless ActiveRecord::Base.respond_to? :_find_by_sql_with_capture
+
+# load other spec helpers
+Dir[File.join(RAILS_ROOT, 'spec', 'spec_helpers', '*.rb')].each do |f|
+  require f
+end
+
+# now look for trisano plugin spec helpers
+Dir[File.join(RAILS_ROOT, 'vendor', 'trisano', '*', 'spec', 'spec_helpers', '*.rb')].each do |f|
+  require f
+end

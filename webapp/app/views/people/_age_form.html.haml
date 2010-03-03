@@ -16,21 +16,20 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Age
+  %legend=t 'age'
 
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
     %div.data_age_info
       -core_element :birth_date, p, :horiz do
-        =p.label(:birth_data, "Date of Birth")
-        %span.data_birth_date=p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event )
+        =p.label :birth_date
+        %span.data_birth_date
+          =p.core_calendar_date_select(:birth_date, {:year_range => 100.years.ago..0.years.from_now}, event_form.try(:object) )
       -core_element :approximate_age_no_birthday, p, :horiz do
-        =p.label(:approximate_age_no_birthday, "Age")
-        %span.data_approximate_age_no_birthday=p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event)
-      -if event
+        =p.label :approximate_age_no_birthday
+        %span.data_approximate_age_no_birthday
+          =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event_form.try(:object))
+      -if event_form
         -core_element :age_at_onset, p, :horiz do
-          -if @event.errors.on(:age_at_onset)
-            .fieldWithErrors
-              =p.label(:age_at_onset, 'Age at onset')
-          -else
-            =p.label(:age_at_onset, 'Age at onset')
-          %span.data_age_at_onset=h(@event.age_info)
+          =event_form.label :age_at_onset
+          %span.data_age_at_onset
+            =h(event_form.object.age_info)

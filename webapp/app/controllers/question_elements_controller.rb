@@ -43,7 +43,8 @@ class QuestionElementsController <  AdminController
       @export_columns = export_columns(@reference_element.form.disease_ids)
     rescue Exception => ex
       logger.info ex
-      flash[:error] = 'Unable to display the new question form.'
+
+      flash[:error] = t("unable_to_display_question_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -73,7 +74,7 @@ class QuestionElementsController <  AdminController
     @question_element = QuestionElement.find(params[:id])
 
     if @question_element.update_and_validate(params[:question_element])
-      flash[:notice] = 'Question was successfully updated.'
+      flash[:notice] = t("question_element_updated")
       @form = Form.find(@question_element.form_id)
     else
       render :action => "edit"
@@ -82,7 +83,7 @@ class QuestionElementsController <  AdminController
   end
 
   def destroy
-    render :text => 'Deletion handled by form elements.', :status => 405
+    render :text => t("deletion_handled_by_form_elements"), :status => 405
   end
     
   def process_condition
@@ -92,7 +93,7 @@ class QuestionElementsController <  AdminController
       @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex
-      flash[:error] = 'Unable to process conditional logic for follow up questions.'
+      flash[:error] = t("unable_to_process_conditional_logic")
       @error_message_div = "follow-up-error"
       render :template => 'rjs-error'
     end

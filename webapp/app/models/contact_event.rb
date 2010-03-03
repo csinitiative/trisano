@@ -22,18 +22,19 @@ class ContactEvent < HumanEvent
   supports :attachments
   
   before_create do |contact|
-    contact.add_note("Contact event created.")
+    contact.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale))
   end
 
   workflow do
-    state :not_routed, :meta => {:description => 'Not Participating in Workflow', :note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
+    state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
+      :note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
       promote_to_cmr
       assign_to_lhd
     end
-    state :new, :meta => {:note_text => '"Event created for jurisdiction #{self.primary_jurisdiction.name}."'} do
+    state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
       assign_to_lhd
     end
-    state :assigned_to_lhd, :meta => {:description => 'Assigned to Local Health Dept.'} do
+    state :assigned_to_lhd, :meta => {:description => I18n.translate('workflow.assigned_to_lhd')} do
       # Won't work in jruby 1.2 because of this: https://fisheye.codehaus.org/browse/JRUBY-3490
       # Reimplement when fixed. Also see contact_event.rb and workaround in lib/workflow_helper.rb
       #
@@ -45,19 +46,19 @@ class ContactEvent < HumanEvent
       accept_by_lhd :accept
       reject_by_lhd :reject
     end
-    state :accepted_by_lhd, :meta => {:description => 'Accepted by Local Health Dept.'} do
+    state :accepted_by_lhd, :meta => {:description => I18n.translate('workflow.accepted_by_lhd')} do
       assign_to_lhd
       assign_to_queue
       assign_to_investigator
       investigate
     end 
-    state :rejected_by_lhd, :meta => {:description => "Rejected by Local Health Dept."} do
+    state :rejected_by_lhd, :meta => {:description => I18n.translate('workflow.rejected_by_lhd')} do
       on_entry do |prior_state, triggering_event, *event_args|
-        self.route_to_jurisdiction(Place.jurisdiction_by_name("Unassigned"))
+        self.route_to_jurisdiction(Place.unassigned_jurisdiction)
       end
       assign_to_lhd
     end
-    state :assigned_to_queue, :meta => {:description => 'Assigned to Queue'} do
+    state :assigned_to_queue, :meta => {:description => I18n.translate('workflow.assigned_to_queue')} do
       # Commented out becuase UT is using queues not as a place for investigators to pull work from, but to route a case
       # to a 'program' (department, e.g. STDs).  And then a program manager routes to an individual.  I'm  not deleting
       # this code, 'cause I'd like to ressurect it some day.
@@ -72,7 +73,7 @@ class ContactEvent < HumanEvent
       assign_to_queue
       assign_to_investigator
     end
-    state :assigned_to_investigator, :meta => {:description => 'Assigned to Investigator'} do
+    state :assigned_to_investigator, :meta => {:description => I18n.translate('workflow.assigned_to_investigator')} do
       on_entry do |prior_state, triggering_event, *event_args|
         # An event can be assigned to an investigator at any time; clear out settings from earlier an earlier pass through the flow, if any.
         undo_workflow_side_effects
@@ -84,7 +85,7 @@ class ContactEvent < HumanEvent
       assign_to_investigator
       # need a way to reset state if an event queue goes away.
       event :reset, :transitions_to => :accepted_by_lhd do
-        halt! "Investigator already assigned" unless investigator.nil?
+        halt!(I18n.t("investigator_already_assigned")) unless investigator.nil?
       end
     end
     state :under_investigation do
@@ -136,10 +137,10 @@ class ContactEvent < HumanEvent
   class << self
     def core_views
       [
-        ["Demographics", "Demographics"], 
-        ["Clinical", "Clinical"], 
-        ["Laboratory", "Laboratory"], 
-        ["Epidemiological", "Epidemiological"]
+        [I18n.t('core_views.demographics'), "Demographics"],
+        [I18n.t('core_views.clinical'), "Clinical"],
+        [I18n.t('core_views.laboratory'), "Laboratory"],
+        [I18n.t('core_views.epidemiological'), "Epidemiological"]
       ]
     end
   end
@@ -151,11 +152,11 @@ class ContactEvent < HumanEvent
   end
 
   def promote_to_morbidity_event
-    raise "Cannot promote an unsaved contact to a morbidity event" if self.new_record?
+    raise(I18n.t("cannot_promote_unsaved_contact")) if self.new_record?
 
     # In case the contact is in a state that doesn't exist for a morb
     if self.not_routed?
-      if self.primary_jurisdiction.name == 'Unassigned'
+      if self.primary_jurisdiction.is_unassigned_jurisdiction?
         self.promote_as_new
       else
         self.promote_as_accepted
@@ -168,7 +169,7 @@ class ContactEvent < HumanEvent
       jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
       self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
     end
-    self.add_note("Event changed from contact event to morbidity event")
+    self.add_note(I18n.translate("system_notes.event_changed_from_contact_to_morbidity", :locale => I18n.default_locale))
 
     if self.save
       self.freeze
@@ -184,5 +185,5 @@ class ContactEvent < HumanEvent
     # When we get a story asking for it, this is where we will copy over the (now poorly named) participations_contacts info to a new event.
     # That is, disposition etc.
   end
-  
+
 end

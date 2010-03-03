@@ -5,7 +5,7 @@ Feature: Managing clinicians on events
     
   Scenario: Adding and removing clinicians in new mode
     Given I am logged in as a super user
-    And a clinician exists
+    And there is a clinician
 
     When I navigate to the new event page and start a simple event
     And I add an existing clinician
@@ -24,7 +24,7 @@ Feature: Managing clinicians on events
     
   Scenario: Adding clinicians in edit mode
     Given I am logged in as a super user
-    And a clinician exists
+    And there is a clinician
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
     When I navigate to the event edit page

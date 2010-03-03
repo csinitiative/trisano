@@ -18,22 +18,22 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
 <fieldset>
-  <legend>Clinical Information
-    <span id='disease_info_hide' onClick="Element.hide('disease_info_form'); Element.hide('disease_info_hide'); Element.show('disease_info_show'); return false;">[Hide]</span>
-    <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;">[Show]</span>
+  <legend><%= t 'clinical_info' %>
+    <span id='disease_info_hide' onClick="Element.hide('disease_info_form'); Element.hide('disease_info_hide'); Element.show('disease_info_show'); return false;"><%= hide %> </span>
+    <span id='disease_info_show' onClick="Element.show('disease_info_form'); Element.hide('disease_info_show'); Element.show('disease_info_hide'); return false;" style="display: none;"><%= show %></span>
   </legend>
   <div id ='disease_info_form'>
-    
+
     <fieldset class="form">
-      <legend>Disease</legend>
+      <legend><%= t 'disease' %></legend>
       <%= error_messages_for :object => @event.disease_event %>
       <% f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d| %>
         <% core_element :disease_id, d, :horiz do %>
-          <%= d.label(:disease_id, "Disease") %>
+          <%= d.label(:disease_id) %>
           <%= d.collection_select(:disease_id, Disease.find_active(:all, :order => 'disease_name ASC'), :id, :disease_name, {:include_blank => true}) %>
         <% end %>
         <% core_element :disease_onset_date, d, :horiz do %>
-          <%= d.label(:disease_onset_date, "Onset date") %>
+          <%= d.label(:disease_onset_date) %>
           <%= d.calendar_date_select(:disease_onset_date, :year_range => 100.years.ago..0.years.from_now) %>
         <% end %>
         <% core_element :date_diagnosed, d, :horiz do %>
@@ -41,19 +41,19 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <%= d.calendar_date_select(:date_diagnosed, :year_range => 100.years.ago..0.years.from_now) %>
         <% end %>
       </fieldset>
-    
+
       <fieldset class="form">
-        <legend>Hospitalized Health Facilities</legend>
+        <legend><%= t 'hospitalized_health_facilities' %></legend>
         <div id="hospitalization_facilities">
           <% core_element :hospitalized_id, d, :vert do %>
-            <%= d.label(:hospitalized_id, "Hospitalized") %>
+            <%= d.label(:hospitalized_id) %>
             <%= d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event) %>
           <% end %>
           <% f.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hospital_fields| %>
             <%= render :partial => "events/hospital", :locals => { :f => hospital_fields } %>
           <% end %>
         </div>
-      
+
         <%- blank_hospital = HospitalizationFacility.new %>
         <%- blank_hospital.build_hospitals_participation %>
         <p style="clear: both;"> <%= add_record_link f, :hospitalization_facilities, "Add a Hospitalization Facility", :object => blank_hospital, :partial => 'events/hospital' %></p>
@@ -61,7 +61,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     </fieldset>
 
     <fieldset class="form">
-      <legend>Status</legend>
+      <legend><%= t 'status' %></legend>
         <%= error_messages_for :object => f.object.interested_party.risk_factor %>
       <% f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d| %>
         <% core_element :died_id, d, :horiz do %>
@@ -96,12 +96,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <%= render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event } %>
 
     <fieldset class="form">
-      <legend>Clinicians</legend>
+      <legend><%= t 'clinicians' %></legend>
       <%= render :partial => "events/clinicians_form", :locals => {:event_form => f} %>
     </fieldset>
 
     <fieldset class="form">
-      <legend>Diagnostic Facilities</legend>
+      <legend><%= t 'diagnostic_facilities' %></legend>
       <%= render :partial => "events/diagnostics_form", :locals => {:event_form => f} %>
     </fieldset>
 

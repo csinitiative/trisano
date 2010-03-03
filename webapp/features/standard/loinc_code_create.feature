@@ -27,7 +27,7 @@ Feature: Creating new loinc codes
     When I go to the new loinc code page
       And I fill in "Loinc code" with "13954-3"
       And I press "Create"
-    Then I should see "Loinc code has already been taken"
+    Then I should see "LOINC code has already been taken"
 
   Scenario: An administrator can create a loinc and associate it with one organism
     Given I am logged in as a super user

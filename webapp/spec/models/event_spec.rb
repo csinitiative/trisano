@@ -295,6 +295,17 @@ describe MorbidityEvent do
       end
     end
 
+    describe "that has been invalidated by a code change" do
+      before do
+        DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}'",
+                                ['event_id = ?', @event.id])
+      end
+
+      it "should not route event in an invalid state" do
+        @event.route_to_jurisdiction(entities(:Davis_County)).should == false
+      end
+    end
+
     describe "with secondary jurisdictional assignment" do
 
       describe "adding jurisdictions" do
@@ -622,26 +633,6 @@ describe MorbidityEvent do
       end
 
       it 'should use the earliest lab collection date' do
-        @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] },
-          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.months_ago(18) } ] } ]
-        with_event do |event|
-          event.labs.count.should == 2
-          event.age_info.age_at_onset.should == 12
-        end
-      end
-
-      it 'should use the lab test date' do
-        @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] } ]
-        with_event do |event|
-          event.labs.count.should == 1
-          event.age_info.age_at_onset.should == 13
-        end
-      end
-
-      it 'should use the earliet lab test date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
             "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
@@ -1471,13 +1462,6 @@ describe MorbidityEvent do
     fixtures :entities, :places
 
     before(:each) do
-      # a little hack because PG adapters don't consistently escape single quotes
-      begin
-        PostgresPR
-        @oreilly_string = "o\\\\'reilly"
-      rescue
-        @oreilly_string = "o''reilly"
-      end
       @event_hash = {
         "interested_party_attributes" => {
           "person_entity_attributes" => {
@@ -1490,11 +1474,6 @@ describe MorbidityEvent do
           "secondary_entity_id" => entities(:Davis_County).id
         }
       }
-    end
-
-    it 'should include soundex codes for fulltext search' do
-      where_clause, x, y = Event.generate_event_search_where_clause(:fulltext_terms => "davis o'reilly", :jurisdiction_ids => [entities(:Davis_County).id])
-      where_clause.should =~ /'davis \| #@oreilly_string \| #{'davis'.to_soundex.downcase} \| #{"o'reilly".to_soundex.downcase}'/
     end
 
     describe 'searching for cases by disease' do
@@ -1515,6 +1494,17 @@ describe MorbidityEvent do
 
       it 'should ignore empty disease arrays' do
         Event.find_by_criteria(:diseases => [], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 3
+      end
+    end
+
+    describe "finding by criteria" do
+      before { login_as_super_user }
+      after  { logout }
+
+      it "should accept a limit for returned results" do
+        11.times { searchable_event!(:morbidity_event, 'Jones') }
+        results = Event.find_by_criteria(:event_type => 'MorbidityEvent', :limit => "10")
+        results.size.should == 10
       end
     end
 

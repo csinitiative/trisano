@@ -33,10 +33,43 @@ describe LabResult do
   it "should be valid with only test type" do
     @lab_result.should be_valid
   end
+  
+  it "should be valid if test date precedes collection date" do
+    params = {:collection_date => Date.yesterday,
+              :lab_test_date => Date.today}
+
+    @lab_result.update_attributes(params)
+    @lab_result.should be_valid
+    @lab_result.errors.on(:lab_test_date).should be_nil
+  end
 
   it "should not be valid if test date precedes collection date" do
-    @lab_result.collection_date = Date.parse("06/16/08")
-    @lab_result.lab_test_date = Date.parse("06/15/08")
-    @lab_result.should_not be_valid
+    params = {:collection_date => Date.today,
+              :lab_test_date => Date.yesterday}
+
+    @lab_result.update_attributes(params)
+    @lab_result.errors.on(:lab_test_date).should == "must be on or after " + Date.today.to_s
+  end
+  
+  it "should be valid for collection dates in the past" do
+    @lab_result.update_attributes(:collection_date => Date.yesterday)
+    @lab_result.should be_valid
+    @lab_result.errors.on(:collection_date).should be_nil
+  end
+
+  it "should not allow collection dates in the future" do
+    @lab_result.update_attributes(:collection_date => Date.tomorrow)
+    @lab_result.errors.on(:collection_date).should == "must be on or before " + Date.today.to_s
+  end
+  
+  it "should be valid for lab test dates in the past" do
+    @lab_result.update_attributes(:lab_test_date => Date.yesterday)
+    @lab_result.should be_valid
+    @lab_result.errors.on(:lab_test_date).should be_nil
+  end
+  
+  it "should not allow lab test dates in the future" do
+    @lab_result.update_attributes(:lab_test_date => Date.tomorrow)
+    @lab_result.errors.on(:lab_test_date).should == "must be on or before " + Date.today.to_s
   end
 end

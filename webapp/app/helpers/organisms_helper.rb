@@ -2,9 +2,9 @@ module OrganismsHelper
 
   def organism_tools(organism)
     haml_tag :div, :class => 'tools' do
-      haml_concat link_to_unless_current('Show', organism)
+      haml_concat link_to_unless_current(t('show'), organism)
       haml_concat "&nbsp;|&nbsp;"
-      haml_concat link_to_unless_current('Edit', edit_organism_path(organism))
+      haml_concat link_to_unless_current(t('edit'), edit_organism_path(organism))
     end
   end
 

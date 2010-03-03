@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Place
+  =t 'edit_place'
 
 - content_for :tools do
-  = link_to '< Back to Places', places_path
+  = link_to t('back_to', :name => t('places_normal_case')), places_path
   %p
   
 #rot
   %table.list
     %tr
       %th.forminformation
-        Place
+        =t 'place'
       %th
       %tr
         %td.forminformation
@@ -34,13 +34,13 @@
             = h(@place_entity.place.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            =t 'edit'
             |
-            = link_to('Show', place_path(@place_entity))
+            = link_to(t('show'), place_path(@place_entity))
 
 #rot
   = error_messages_for :place_entity
 
   - form_for(@place_entity, :url => place_path(@place_entity), :html => { :method => :put }) do |f|
     = render :partial => 'form', :locals => { :f => f, :place_entity => @place_entity }
-    = f.submit "Update"
+    = f.submit t("update")

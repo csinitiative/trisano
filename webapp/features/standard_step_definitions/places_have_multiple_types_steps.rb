@@ -20,15 +20,15 @@ When /^I enter a last name of (.+)$/ do |last_name|
 end
 
 When /^I select School and Laboratory types for the diagnostic facility$/ do
-  fill_in "morbidity_event_diagnostic_facilities_attributes_2_place_entity_attributes_place_attributes_name", :with => "DiagPlace"
-  check "morbidity_event_diagnostic_facilities_attributes__2__place_entity_attributes__place_attributes_place_type_S"
-  check "morbidity_event_diagnostic_facilities_attributes__2__place_entity_attributes__place_attributes_place_type_L"
+  fill_in "morbidity_event_diagnostic_facilities_attributes_0_place_entity_attributes_place_attributes_name", :with => "DiagPlace"
+  check "morbidity_event_diagnostic_facilities_attributes__0__place_entity_attributes__place_attributes_place_type_S"
+  check "morbidity_event_diagnostic_facilities_attributes__0__place_entity_attributes__place_attributes_place_type_L"
 end
 
 When /^I select Pool and Daycare types for the place exposure$/ do
-  fill_in "morbidity_event_place_child_events_attributes_5_interested_place_attributes_place_entity_attributes_place_attributes_name", :with => "EpiPlace"
-  check "morbidity_event_place_child_events_attributes__5__interested_place_attributes__place_entity_attributes__place_attributes_place_type_P"
-  check "morbidity_event_place_child_events_attributes__5__interested_place_attributes__place_entity_attributes__place_attributes_place_type_DC"
+  fill_in "morbidity_event_place_child_events_attributes_0_interested_place_attributes_place_entity_attributes_place_attributes_name", :with => "EpiPlace"
+  check "morbidity_event_place_child_events_attributes__0__interested_place_attributes__place_entity_attributes__place_attributes_place_type_P"
+  check "morbidity_event_place_child_events_attributes__0__interested_place_attributes__place_entity_attributes__place_attributes_place_type_DC"
 end
 
 When /^I select Public and Other types for the reporting agency$/ do

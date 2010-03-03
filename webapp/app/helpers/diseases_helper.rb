@@ -18,7 +18,7 @@
 module DiseasesHelper
 
   def show_hide_disease_section_link
-    link_to_function '[&nbsp;Show&nbsp;|&nbsp;Hide&nbsp;Details&nbsp;]' do |page|
+    link_to_function "[#{t 'show_hide_details'}]" do |page|
       page << "$(this).up().up().up().next().toggle()"
     end
   end

@@ -42,7 +42,7 @@ class JurisdictionsController < AdminController
     @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
 
     if @jurisdiction.save
-      flash[:notice] = 'Jurisdiction was successfully created.'
+      flash[:notice] = t("jurisdiction_created")
       redirect_to(jurisdiction_url(@jurisdiction))
     else
       render :action => "new"
@@ -53,7 +53,7 @@ class JurisdictionsController < AdminController
     @jurisdiction = PlaceEntity.jurisdictions.excluding_unassigned.find(params[:id])
 
     if @jurisdiction.update_attributes(params[:jurisdiction])
-      flash[:notice] = 'Jurisdiction was successfully updated.'
+      flash[:notice] = t("jurisdiction_updated")
       redirect_to(jurisdiction_url(@jurisdiction))
     else
       render :action => "edit"

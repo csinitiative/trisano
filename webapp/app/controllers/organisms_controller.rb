@@ -20,7 +20,7 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.save
-        flash[:notice] = 'Organism was successfully created'
+        flash[:notice] = t("organism_created")
         format.html { redirect_to @organism  }
       else
         format.html { render :action => :new, :status => :bad_request }
@@ -33,7 +33,7 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.update_attributes params[:organism]
-        flash[:notice] = 'Organism was successfully updated.'
+        flash[:notice] = t("organism_updated")
         format.html { redirect_to @organism }
       else
         format.html { render :action => :edit, :status => :bad_request }

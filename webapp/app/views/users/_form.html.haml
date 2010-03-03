@@ -16,11 +16,11 @@
 %table.list
   %tr
     %th.forminformation
-      Edit User
+      =t 'edit_user'
   %tr
     %td
       %span{ :class => "horiz" }
-        = f.label(:uid, "UID")
+        = f.label(:uid)
         = f.text_field(:uid, :size => 25, :maxlength => 50)
       %span.vert-break
         = f.label(:user_name)
@@ -41,21 +41,21 @@
         = f.label(:initials)
         = f.text_field(:initials, :size => 8, :maxlength => 8)
       %span.vert-break
-        = f.label(:status)
+        = f.label(:status, t('status'))
         = f.select :status, User.status_array
-        %i Disable access to the system
+        %i=t 'disable_access'
 
       %p
 
 %table.list
   %tr
     %th.forminformation
-      Edit Roles
+      =t 'edit_roles'
     %th
   %tr#add_role_memberships
     %td
       .tools
-        = add_role_link "Add Role"
+        = add_role_link t("add_role")
     %td
       &nbsp;
   = render :partial => 'role', :collection => @user.role_memberships

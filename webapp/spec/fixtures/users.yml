@@ -9,7 +9,7 @@ default_user:
   initials: 
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
   status: "active"
-
+  
 admin_user:
   id: 2
   uid:
@@ -21,7 +21,7 @@ admin_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: ['Willy Wonka']\n:states: "
   status: "active"
-
+  
 update_cmr_user:
   id: 3
   uid:
@@ -33,7 +33,7 @@ update_cmr_user:
   initials:
   event_view_settings:
   status: "active"
-
+  
 view_cmr_user:
   id: 4
   uid:
@@ -45,7 +45,7 @@ view_cmr_user:
   initials:
   event_view_settings:
   status: "active"
-
+  
 update_davis_user:
   id: 5
   uid:
@@ -57,7 +57,7 @@ update_davis_user:
   initials:
   event_view_settings:
   status: "active"
-
+  
 disabledd_user:
   id: 6
   uid: disabled_user
@@ -69,3 +69,4 @@ disabledd_user:
   initials:
   event_view_settings:
   status: "disabled"
+  

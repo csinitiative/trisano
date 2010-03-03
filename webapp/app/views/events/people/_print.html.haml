@@ -19,7 +19,7 @@
   - active_patient_form.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |primary_form|
 
     %fieldset
-      %legend Person Information
+      %legend=t('person_info')
       = render :partial => 'events/people/name_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form }
       = render :partial => 'events/people/address_print.html.haml', :locals => {:address => @event.address, :f => event_form}
       = render :partial => 'events/people/age_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form}

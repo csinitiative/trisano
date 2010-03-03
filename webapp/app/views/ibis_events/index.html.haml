@@ -14,14 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  IBIS Export
+  =t 'ibis_export'
 
-%p Generate an IBIS export file for events created, updated, or deleted between the entered dates, inclusive (yyyy-mm-dd):
+%p=t 'ibis_description'
 - form_tag(by_range_ibis_events_path(:format => :xml), :method => :get) do
   .horiz
-    %label Start Date 
+    %label=t('start_date')
     = text_field_tag("start_date")
   .horiz
-    %label End Date
+    %label=t('end_date')
     = text_field_tag("end_date")
-    = submit_tag("Submit")
+    = submit_tag(t("submit"))

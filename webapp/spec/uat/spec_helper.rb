@@ -43,6 +43,8 @@ Spec::Runner.configure do |config|
 
   trisano_url = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
   trisano_url = trisano_url.sub("//", "//utah:arches@")
+
+  RAILS_ROOT = File.dirname(__FILE__) + "/../../"
   
   config.before(:all) do
     @browser = Selenium::SeleniumDriver.new($rc_server, $rc_port, "*firefox",trisano_url, 10000)
@@ -68,4 +70,3 @@ Spec::Runner.configure do |config|
   end
 
 end
-  

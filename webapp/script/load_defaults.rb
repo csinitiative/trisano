@@ -71,7 +71,7 @@ end
 end
 
 # Privileges are represented as an array of strings
-
+puts "Loading privileges"
 privileges = YAML::load_file "#{RAILS_ROOT}/db/defaults/privileges.yml"
 Privilege.transaction do
   privileges.each do |privilege|
@@ -83,14 +83,16 @@ end
 # Roles are represented as a hash. The keys are role names and the values are arrays of privs
 roles = YAML::load_file "#{RAILS_ROOT}/db/defaults/roles.yml"
 
+puts "Loading roles"
 Role.transaction do
   # Note: Technically privileges have associated jurisdictions, we are ignoring that for the time being.
   roles.each_pair do |role_name, privs|
     r = Role.find_or_initialize_by_role_name(:role_name => role_name)
-    r.privileges_roles.clear
     privs.each do |priv|
-      p = Privilege.find_by_priv_name(priv)
-      r.privileges_roles.build('privilege_id' => p.id)
+      unless r.privileges.any? { |p| p.priv_name == priv }
+        p = Privilege.find_by_priv_name(priv)
+        r.privileges_roles.build('privilege_id' => p.id)
+      end
     end
     r.save!
   end

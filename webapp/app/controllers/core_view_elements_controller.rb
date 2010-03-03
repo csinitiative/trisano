@@ -31,7 +31,7 @@ class CoreViewElementsController <  AdminController
       @available_core_views = @core_view_element.available_core_views
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the core tab form  at this time.'
+      flash[:error] = t("unable_to_display_core_tab_form")
       render :template => 'rjs-error'
     end
   end
@@ -45,7 +45,7 @@ class CoreViewElementsController <  AdminController
     
     respond_to do |format|
       if @core_view_element.save_and_add_to_form
-        flash[:notice] = 'Core tab configuration was successfully created.'
+        flash[:notice] = t("core_tab_configuration_successfully_created")
         format.xml  { render :xml => @core_view_element, :status => :created, :location => @core_view_element }
         format.js { @form = Form.find(@core_view_element.form_id)}
       else

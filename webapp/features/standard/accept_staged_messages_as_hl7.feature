@@ -27,8 +27,8 @@ Feature: Accept Staged Messages as HL7
    
    When I visit the staged message show page
 
-   Then I should see value "HIV-1 Antibody Confirm, Western Blot" under label "Test Type"
-   And I should see value "Negative" under label "Reference Range"
+   Then I should see value "HIV-1 Antibody Confirm, Western Blot" under label "Test type"
+   And I should see value "Negative" under label "Reference range"
    
   Scenario: Posting a valid HL7 staged message
     Given I am logged in as a super user

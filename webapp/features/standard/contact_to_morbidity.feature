@@ -14,11 +14,11 @@ Feature: Promoting Contact Events to Morbidity Events
 
   Scenario: Contact changed and user redirected
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
-    And there is a contact on the event named Jones
-    And I am logged in as a super user
-
-    When I promote Jones to a morbidity event
-    Then I should be viewing the show morbidity event for Jones page
+      And there is a contact on the event named Jones
+      And I am logged in as a super user
+     When I promote Jones to a morbidity event
+     Then I should be viewing the show morbidity event for Jones page
+      And I should see "Contact successfully promoted"
 
   Scenario: Promoted morbidity event displays parent and disease forms
     Given a published disease form called MA1 for morbidity events with Mumps
@@ -30,7 +30,7 @@ Feature: Promoting Contact Events to Morbidity Events
     When I promote Jones to a morbidity event
     Then the morbidity event should have disease forms for MA1 and CA1
     And the new morbidity event should show Smith as the parent
-    
+
   Scenario: Parent morbiditity event shows Jones as being promoted
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
     And there is a contact on the event named Jones
@@ -38,3 +38,12 @@ Feature: Promoting Contact Events to Morbidity Events
 
     When I promote Jones to a morbidity event
     Then the parent CMR should show the child as an elevated contact
+
+  Scenario: Promoting a contact that has becom invalid
+    Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
+      And there is a contact on the event named Jones
+      And the contact disease onset date is invalid
+      And I am logged in as a super user
+     When I promote Jones to a morbidity event
+     Then I should see "Could not promote to morbidity event"
+      And I should see "Onset date must be on or before"

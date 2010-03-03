@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create AVR Group
+  =t('create_avr_group')
 
 - content_for :tools do
-  = link_to '< Back to AVR Groups', avr_groups_path
+  = link_to t('back_to_avr_groups'), avr_groups_path
   %p
 
   = render :partial => 'form', :locals => {:avr_group => @avr_group}

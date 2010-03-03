@@ -14,14 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend Encounter-specific Treatments
+  %legend=t 'encounter_specific_treatments'
 
   - unless event.encounter_child_events.first.new_record?
 
     - for encounter in event.encounter_child_events
       - pe = encounter.participations_encounter
-      %h4="Encounter on #{h pe.encounter_date}"
+      %h4=t "encounter_on", :date => ld(h(pe.encounter_date))
       = render :partial => "events/treatments_list", :locals => { :event => encounter }
 
   - else
-    %h3 No encounters have been recorded for this event
+    %h3=t 'no_encounters', :thing => 'event'

@@ -3,50 +3,50 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  People
+  =t "people_normal_case"
 
 - content_for :tools_two do
-  = button_to("Create new person", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_person"), {:action => "new"}, { :method => :get })
 
 - content_for :tools do
-  = link_to '&lt; Clear Search Criteria', people_path
+  = link_to "&lt; #{t('clear_search_criteria')}", people_path
   %p
 
 - form_tag people_path, :method => :get do
   %span.horiz
-    = label_tag :last_name
+    = label_tag :last_name, t("last_name")
     = text_field_tag :last_name, params[:last_name]
 
   %span.horiz
-    = label_tag :first_name
+    = label_tag :first_name, t("first_name")
     = text_field_tag :first_name, params[:first_name]
 
   %span.horiz
-    = label_tag :birth_date
+    = label_tag :birth_date, t("birth_date")
     = text_field_tag :birth_date, params[:birth_date]
 
   %span.horiz
-    %label Items per page
+    %label=t "items_per_page"
     - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
     =select_tag('per_page', page_options)
 
   %span.horiz
     = label_tag "&nbsp;"
-    = submit_tag "Search"
+    = submit_tag t("search")
 
   %span.vert
     = label_tag "&nbsp;"
-    = labeled_check_box_tag :use_starts_with_search
+    = labeled_check_box_tag :use_starts_with_search, t("use_starts_with")
 
   = render_merge_person_hidden_fields
 

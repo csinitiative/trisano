@@ -20,14 +20,17 @@ require 'faker'
 
 Factory.define :morbidity_event do |e|
   e.association :interested_party
-  e.association :jurisdiction
-  e.association :disease_event
+  e.jurisdiction { Factory.build(:jurisdiction) }
 end
 
 Factory.define :contact_event do |e|
   e.association :interested_party
   e.association :jurisdiction
   e.association :disease_event
+  e.association :parent_event, :factory => :morbidity_event
+end
+
+Factory.define :encounter_event do |e|
   e.association :parent_event, :factory => :morbidity_event
 end
 
@@ -69,7 +72,7 @@ Factory.define :place do |p|
 end
 
 Factory.define :person_entity do |pe|
-  pe.association :person
+  pe.person { Factory.build(:person) }
   pe.email_addresses { |email_addresses| [email_addresses.association(:email_address)] }
 end
 
@@ -84,6 +87,7 @@ end
 Factory.define :interested_party do |ip|
   ip.association :person_entity
   ip.association :risk_factor, :factory => :participations_risk_factor
+  ip.treatments {|treatments| [treatments.association(:participations_treatment)]}
 end
 
 Factory.define :interested_place do |ip|
@@ -94,8 +98,12 @@ Factory.define :participations_risk_factor do |rf|
   rf.occupation { Factory.next(:occupation) }
 end
 
+Factory.define :participations_treatment do |pt|
+  pt.treatment { Factory.next(:treatment_name) }
+end
+
 Factory.define :jurisdiction do |j|
-  j.association :place_entity
+  j.place_entity { create_jurisdiction_entity }
 end
 
 Factory.define :address do |a|
@@ -135,17 +143,27 @@ Factory.define :question_single_line_text, :parent => :question do |q|
   q.data_type 'single_line_text'
 end
 
-Factory.define :user do |u|
-  u.uid { Factory.next(:uid) }
-  u.user_name { Factory.next(:user_name) }
-  u.status 'active'
-end
-
 Factory.define :task do |t|
   t.name { Factory.next(:task_name) }
-  t.association :event, :factory => :morbidity_event
+  t.due_date Date.tomorrow
   t.association :user
-  t.due_date DateTime.now
+end
+
+Factory.define :event_with_task, :parent => :morbidity_event do |event|
+  event.after_build do |event|
+    Factory(:task, :event => event, :child_task => false)
+  end
+  event.after_create do |event|
+    event.reload
+  end
+end
+
+Factory.define :event_with_disease_event, :parent => :morbidity_event do |event|
+  event.association :disease_event
+end
+
+Factory.define :note do |n|
+  n.note "New note"
 end
 
 Factory.define :avr_group do |t|
@@ -204,14 +222,6 @@ Factory.sequence :long_name do |n|
   "#{Faker::Lorem.words(3)} #{n}"
 end
 
-Factory.sequence :user_name do |n|
-  "#{n}_#{Faker::Lorem.words(1)}"
-end
-
-Factory.sequence :uid do |n|
-  "#{n}"
-end
-
 Factory.sequence :task_name do |n|
   "task_name_#{n}"
 end
@@ -220,3 +230,60 @@ Factory.sequence :avr_group_name do |n|
   "avr_group_name_#{n}"
 end
 
+Factory.sequence :treatment_name do |n|
+  "Potion Number #{n}"
+end
+
+def create_diagnostic_facility!(name)
+  create_place!(:diagnostic, name)
+end
+
+def create_reporting_agency!(name)
+  create_place!(:agency, name)
+end
+
+def create_place_exposure!(name)
+  place_event = Factory.build(:place_event)
+  the_code = Place.epi_type_codes.first
+  type = Code.find_or_create_by_code_name_and_the_code('placetype', the_code)
+  place = place_event.interested_place.place_entity.place
+  place.name = name
+  place.place_types << type
+  place_event.save!
+end
+
+def create_place!(type, name)
+  place_entity = Factory.build(:place_entity)
+  place_entity.place.name = name
+  the_code = Place.send("#{type.to_s}_type_codes").first
+  type = Code.find_or_create_by_code_name_and_the_code('placetype', the_code)
+  place_entity.place.place_types << type
+  place_entity.save!
+end
+
+def create_contact!(name)
+  contact_event = Factory.build(:contact_event)
+  person = contact_event.interested_party.person_entity.person
+  person.last_name = name
+  contact_event.save!
+end
+
+def searchable_event!(type, last_name)
+  returning Factory.build(type) do |event|
+    event.update_attributes!({
+        :jurisdiction_attributes => {
+          :secondary_entity_id => Place.unassigned_jurisdiction.try(:entity_id)},
+        :interested_party_attributes => {
+          :person_entity_attributes => {
+            :person_attributes => {
+              :last_name => last_name}}}})
+  end
+end
+
+def searchable_person!(last_name)
+  returning Factory.build(:person_entity) do |person|
+    person.update_attributes!({
+        :person_attributes => {
+          :last_name => last_name}})
+  end
+end

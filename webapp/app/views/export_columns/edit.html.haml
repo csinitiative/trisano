@@ -14,22 +14,22 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Export Column Detail
+  =t'edit_export_column_detail'
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Export Columns', export_columns_path
+  = link_to t('back_to', :name => t('export_columns')), export_columns_path
   %p
   
 - content_for :tools_two do
-  = button_to("Create new export column", new_export_column_path, { :method => :get })
+  = button_to(t("create_new_export_column"), new_export_column_path, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Export Column
+        =t 'export_column'
       %th
       %tr
         %td.forminformation
@@ -37,11 +37,11 @@
             = h(@export_column.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            =t 'edit'
             |
-            = link_to 'Show', @export_column
+            = link_to t('show'), @export_column
             |
-            = link_to('Delete', export_column_path(@export_column), :method => :delete)
+            = link_to(t('delete'), export_column_path(@export_column), :method => :delete)
 #rot
   = error_messages_for :export_column
 
@@ -49,4 +49,4 @@
 
     = render :partial => 'form', :locals => { :f => f, :editing => true }
 
-    = f.submit "Update"
+    = f.submit t("update")

@@ -47,7 +47,7 @@ describe 'Encounter event forms' do
 
   it "should create a basic form for encounter events" do
     @browser.open "/trisano"
-    create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions", "Encounter event")
+    create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions", "Encounter Event")
     add_question_to_view(@browser, "Default View", { 
         :question_text => @question_text,
         :data_type => 'Single line text',
@@ -65,30 +65,30 @@ describe 'Encounter event forms' do
     @browser.type('css=input[id$=participations_encounter_attributes_encounter_date]', @date)
     @browser.type('css=textarea[id$=participations_encounter_attributes_description]', @description)
     save_cmr(@browser)
-    @browser.is_text_present("2009-03-10").should be_true
-    @browser.is_text_present(@description).should be_true
+    @browser.get_html_source.include?("2009-03-10").should be_true
+    @browser.get_html_source.include?(@description).should be_true
   end
 
   it 'should add the encounter event form to it' do
-    @browser.click("link=Edit encounter event")
+    @browser.click("link=Edit Encounter")
     @browser.wait_for_page_to_load($load_time)
 
     add_form_to_event(@browser, @form_name).should be_true
-    @browser.click("link=Edit")
+    @browser.click("link=Edit Encounter")
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present(@form_name).should be_true
-    @browser.is_text_present(@question_text).should be_true
+    @browser.get_html_source.include?(@form_name).should be_true
+    @browser.get_html_source.include?(@question_text).should be_true
   end
 
     it 'should receive answers to disease-specific questions' do
       answer_investigator_question(@browser, @question_text, @question_answer)
       save_and_exit(@browser)
-      @browser.is_text_present(@question_text).should be_true
-      @browser.is_text_present(@question_answer).should be_true
+      @browser.get_html_source.include?(@question_text).should be_true
+      @browser.get_html_source.include?(@question_answer).should be_true
     end
-  
+
     it "should create another basic form for encounter events" do
-      create_new_form_and_go_to_builder(@browser, @second_form_name, @disease, "All Jurisdictions", "Encounter event").should be_true
+      create_new_form_and_go_to_builder(@browser, @second_form_name, @disease, "All Jurisdictions", "Encounter Event").should be_true
       add_question_to_view(@browser, "Default View", {
           :question_text => @second_question_text,
           :data_type => 'Single line text',
@@ -96,15 +96,15 @@ describe 'Encounter event forms' do
         }).should be_true
       publish_form(@browser).should be_true
     end
-  
+
     it 'should be possible for admins to push a form to an encounter event' do
       click_nav_forms(@browser).should be_true
       click_push_form(@browser, @second_form_name).should be_true
       click_nav_cmrs(@browser).should be_true
       click_resource_edit(@browser, 'cmrs', @cmr_last_name).should be_true
-      @browser.click("link=Edit encounter event")
+      @browser.click("link=Edit Encounter")
       @browser.wait_for_page_to_load($load_time)
-      @browser.is_text_present(@second_form_name).should be_true
-      @browser.is_text_present(@second_question_text).should be_true
+      @browser.get_html_source.include?(@second_form_name).should be_true
+      @browser.get_html_source.include?(@second_question_text).should be_true
     end
 end

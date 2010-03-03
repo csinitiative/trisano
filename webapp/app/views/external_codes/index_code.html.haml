@@ -14,20 +14,20 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  = "#{h(@code_name.description)} Codes"
+  = t "x_codes", :x => h(@code_name.description)
 
 - content_for :tools do
   .horiz#rot
-    = link_to '&lt; Back to List of Codes', codes_path
+    = link_to t('back_to', :name => t('list_of_codes')), codes_path
 
 - content_for :tools_two do
-  = button_to "New #{h(@code_name.description)} Code", new_code_path(@code_name.code_name)
+  = button_to  t("new_code", :type => h(@code_name.description)), new_code_path(@code_name.code_name)
 
 .vert#rot
   %table.list
     %tr
       %th.forminformation{ :colspan => 2 }
-        = "#{h(@code_name.description)} Codes"
+        =t 'x_codes', :x => h(@code_name.description)
     - for code in @external_codes
       %tr.roll
         %td.forminformation
@@ -35,16 +35,16 @@
             %div{ :class => code.deleted? ? 'deleted' : nil }
               = link_to h(code.code_description), show_code_path(code.code_name, code.the_code)
           .tools
-            The Code:
+            = ct 'the_code'
             = h(code.the_code)
             %br
             - if code.deleted?
-              = link_to "Undelete", soft_undelete_code_path(code.code_name, code.the_code), :confirm => "Really restore code?" 
+              = link_to t("undelete"), soft_undelete_code_path(code.code_name, code.the_code), :confirm => t('confirm_restore')
             - else
-              = link_to "Delete", soft_delete_code_path(code.code_name, code.the_code), :confirm => "Really delete code?"
+              = link_to t("delete"), soft_delete_code_path(code.code_name, code.the_code), :confirm => t('confirm_delete')
         %td
           - unless code.deleted?
             .tools{:style => "position: absolute; right: 15px;"}
-              = link_to "Show", show_code_path(code.code_name, code.the_code)
+              = link_to t("show"), show_code_path(code.code_name, code.the_code)
               |
-              = link_to "Edit", edit_code_path(code.code_name, code.the_code)
+              = link_to t("edit"), edit_code_path(code.code_name, code.the_code)

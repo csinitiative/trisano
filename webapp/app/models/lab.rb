@@ -20,7 +20,7 @@ class Lab < Participation
   has_many   :lab_results, :foreign_key => :participation_id, :order => 'created_at ASC', :dependent => :destroy
 
   before_destroy do |lab|
-    lab.event.add_note("Lab and all its results deleted")
+    lab.event.add_note(I18n.translate("system_notes.lab_and_results_deleted", :locale => I18n.default_locale))
   end
 
   accepts_nested_attributes_for :lab_results, 

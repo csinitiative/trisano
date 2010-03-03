@@ -18,20 +18,20 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
 <% content_for :title do %>
-  View Encounter Event: <%= h(@event.participations_encounter.encounter_date) %>
+  <%= t('view_encounter_event', :date => h(@event.participations_encounter.encounter_date)) %>
 <% end %>
 
 <% content_for :name do %>
   <table class='list'>
     <tr>
-      <th class='forminformation'>Encounter</th>
-      <th>Disease</th>
-      <th>Jurisdiction</th>
-      <th>Patient</th>
+      <th class='forminformation'><%= t('encounter') %></th>
+      <th><%= t('disease') %></th>
+      <th><%= t('jurisdiction') %></th>
+      <th><%= t('patient') %></th>
     </tr>
     <tr>
       <td class='forminformation'>
-        Encounter on <%= @event.participations_encounter.encounter_date %>
+        <%=  t('encounter_on', :date => ld(@event.participations_encounter.encounter_date)) %>
         <div class='tools'>
           <%= basic_encounter_event_controls(@event, false) %>
         </div>
@@ -52,11 +52,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% fields_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
   <%  @event_form = event_form %>
   <% tabs = []
-  tabs << %w(encounter_tab Encounter)
-  tabs << %w(clinical_tab Clinical)
-  tabs << %w(lab_info_tab Laboratory)
-  tabs << %w(investigation_tab Investigation)
-  tabs << %w(notes_tab Notes)
+  tabs << ['encounter_tab', t('encounter')]
+  tabs << ['clinical_tab', t('clinical')]
+  tabs << ['lab_info_tab', t('lab')]
+  tabs << ['investigation_tab', t('investigation')]
+  tabs << ['notes_tab', t('event_notes')]
 %>
 
   <% tabbed_content(tabs, @tab_index) do %>
@@ -86,6 +86,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       </p>
     </div>
   <% end %>
-  <%= event_form.submit "Save & Exit", :style => "display: none", :onclick => "this.disabled=true;" %>
+  <%= event_form.submit t('save_and_exit'), :style => "display: none", :onclick => "this.disabled=true;" %>
 
 <% end %>

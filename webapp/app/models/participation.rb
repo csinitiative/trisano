@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Participation < ActiveRecord::Base
@@ -29,9 +29,9 @@ class Participation < ActiveRecord::Base
       add_merge_error unless secondary_entity.deleted_at.nil?
     end
   end
-  
+
   private
-  
+
   def associate_longitudinal_data
     if event.try(:address)
       event.address.update_attribute(:entity_id, primary_entity_id)
@@ -57,21 +57,19 @@ class Participation < ActiveRecord::Base
   # Establishes a base error message for the merge race condition error. Sub-classes can override for a more
   # specific error message.
   def add_merge_error
-    base_message = "has been merged into another entity and is no longer available for use on events. Actions you can take: Attempt to remove the entity or switch to show mode to view the replacement entity."
-
     if self.respond_to?(:place_entity)
-      add_place_specific_merge_error(base_message)
+      add_place_specific_merge_error(:merge_race_error)
     else
-      errors.add_to_base(base_message)
+      errors.add(:base, :merge_race_error)
     end
   end
 
   def add_place_specific_merge_error(base_message)
     if self.place_entity.place.nil?
-        errors.add_to_base(base_message)
+        errors.add(:base, base_message)
       else
         errors.add("#{self.place_entity.place.name}", base_message)
       end
   end
-  
+
 end

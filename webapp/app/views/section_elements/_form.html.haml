@@ -16,13 +16,13 @@
 = f.hidden_field :parent_element_id
 
 %p
-  %label Section text
-  = f.text_field :name
+  =f.label :name
+  =f.text_field :name
 
   %p
-    %label Instructions
+    =f.label :description
     =f.text_area :description, :rows => 10
 
   %p
-    %label Help Text
+    =f.label :help_text
     =f.text_area :help_text, :rows => 10

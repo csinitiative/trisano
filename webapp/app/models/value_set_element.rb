@@ -30,15 +30,15 @@ class ValueSetElement < FormElement
     begin
       parent_element = FormElement.find(parent_element_id)
       unless parent_element.can_receive_value_set?
-        self.errors.add_to_base("A question can only have one value set")
+        self.errors.add_to_base(:too_many_value_sets)
         return nil
       end
     rescue Exception => ex
-      self.errors.add_to_base("An error occurred checking the parent for existing value set children")
+      self.errors.add_to_base(:bad_parent)
       return nil
     end
-    
+
     super
   end
-  
+
 end

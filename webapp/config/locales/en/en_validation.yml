@@ -1,0 +1,226 @@
+en:
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:   "1 error prohibited this {{model}} from being saved"
+          other:  "{{count}} errors prohibited this {{model}} from being saved"
+        # The variable :count is also available
+        body: "There were problems with the following fields:"
+
+      # The values :model, :attribute and :value are always available for interpolation
+      # The value :count is available when applicable. Can be used for pluralization.
+      messages:
+        inclusion: "is not included in the list"
+        exclusion: "is reserved"
+        invalid: "is invalid"
+        confirmation: "doesn't match confirmation"
+        accepted: "must be accepted"
+        empty: "can't be empty"
+        blank: "can't be blank"
+        too_long: "is too long (maximum is {{count}} characters)"
+        too_short: "is too short (minimum is {{count}} characters)"
+        wrong_length: "is the wrong length (should be {{count}} characters)"
+        taken: "has already been taken"
+        not_a_number: "is not a number"
+        greater_than: "must be greater than {{count}}"
+        greater_than_or_equal_to: "must be greater than or equal to {{count}}"
+        equal_to: "must be equal to {{count}}"
+        less_than: "must be less than {{count}}"
+        less_than_or_equal_to: "must be less than or equal to {{count}}"
+        odd: "must be odd"
+        even: "must be even"
+        # Append your own errors here or at the model/attributes scope.
+        is_not_valid: "is not valid"
+        precede_birth_date: "{{thing}} date(s) precede birth date"
+        cannot_precede_birth_date: "cannot be earlier than birth date"
+        merge_race_errors: "has been merged into another entity and is no longer available for use on events. Actions you can take: Attempt to remove the entity or switch to show mode to view the replacement entity."
+
+      models:
+        # Overrides default messages
+        interested_place:
+          attributes:
+            base:
+              no_place_name: "No name has been supplied for this place."
+
+        value_set_element:
+          attributes:
+            base:
+              too_many_value_sets: "A question can only have one value set"
+              bad_parent: "An error occurred checking the parent for existing value set children"
+
+        lab_result:
+          attributes:
+            lab_test_date:
+              precedes_collection_date: "cannot precede collection date"
+
+        telephone:
+          attributes:
+            base:
+              all_blank: "At least one telephone field must have a value"
+            phone_number:
+              format: "must not be blank and must be 7 digits with an optional dash (e.g.5551212 or 555-1212)"
+            area_code:
+              format: "must be 3 digits"
+            extension:
+              format: "must have 1 to 6 digits"
+
+        staged_message:
+          attributes:
+            hl7_message:
+              parse_error: "could not be parsed"
+              missing_header: "is missing the header"
+              missing_segment: "is missing one or more of the following segments: PID, OBR, or OBX"
+              missing_last_name: "No last name provided for patient."
+              missing_loinc: "OBX segment {{segment}} does not contain a LOINC code."
+
+        loinc_code:
+          attributes:
+            loinc_code:
+              invalid: "is invalid (should be nnnnn-n)"
+
+        form:
+          attributes:
+            base:
+              invalid_base_element: "Form base element is invalid"
+              investigator_view_type: "Investigator view element container is the wrong type"
+              core_view_type: "Core view element container is the wrong type"
+              core_field_type: "Core field element container is the wrong type"
+              incorrect_top_level: "Form does not contain the correct top-level containers"
+              deactivate_unpublished: "A form must have a status of 'Published' in order to be deactivated."
+              rollback_unpublished: "Only forms with published versions can be rolled back"
+              no_diseases: "There are no diseases associated with this form."
+              publishing_error: "An error occurred while pushing the form."
+              initialization_error: "An error occurred initializing form elements"
+            short_name:
+              in_use: "is already being used by another active form."
+              immutable: "can't be changed once the form has been published"
+
+        task:
+          attributes:
+            base:
+              repeating_task_failure: "Unable to create repeating tasks."
+              repeating_task_invalid: "A repeating task requires an interval and an until date."
+              insufficient_privileges: "Insufficient privileges for task assignment."
+            due_date:
+              due_date_range: "must fall within the next two years"
+            repeating_interval:
+              invalid: "The task interval is invalid"
+            until_date:
+              out_of_range: "date must fall within the next two years"
+
+        hospitalization_facility:
+          attributes:
+            base:
+              blank_hospitalization_facility: "Hospitalization Facility can not be blank if hospitalization dates or medical record number are given."
+
+        hospitals_participation:
+          attributes:
+            discharge_date:
+              precedes_admission_date: "cannot precede admission date"
+
+        encounter_event:
+          attributes:
+            base:
+              before_bday: "Encounter date(s) precede birth date"
+
+        participations_encounter:
+          attributes:
+            encounter_date:
+              before_bday: "cannot be earlier than birth date"
+
+        core_field_element:
+          attributes:
+            base:
+              blank_core_path: "Core path is required."
+
+        disease_event:
+          attributes:
+            date_diagnosed:
+              precedes_onset: "cannot precede onset date"
+
+        questions:
+          attributes:
+            base:
+              unexpected_error: "Error updating short names. Please contact your administrator"
+            short_name:
+              taken: "'{{short_name}}' has already been taken"
+
+        human_event:
+          attributes:
+            base:
+              invalid_case_status: "Local or state case status must be '{{status}}' or blank for an event with a {{attr}} of '{{value}}'"
+            age_at_onset:
+              less_than: "is negative. This is usually caused by an incorrect onset date or birth date."
+
+        address:
+          attributes:
+            base:
+              all_blank: "At least one address field must have a value"
+
+        place_event:
+          attributes:
+            base:
+              precede_birth_date: "{{thing}} date(s) precede patient's birth date"
+            date_of_exposure:
+              cannot_precede_birth_date: "cannot be earlier then patient's birth date"
+
+        form_element:
+          attributes:
+            base:
+              incorrect_top_level: "Form does not contain the correct top-level containers"
+              invalid_base_element: "Form base element is invalid"
+              failed_copy: "Can't complete copy. A question can only have one value set"
+              multiple_roots: "Multiple root elements were detected"
+              overlap: "Overlap was detected in the form element structure"
+              structure_gaps: "Gaps were detected in the form element structure"
+              orphans: "Orphaned elements were detected"
+              corrupt_nesting: "Nesting structure is corrupt"
+              parent_exception: "An error occurred checking the parent for existing value set children"
+              investigator_view_type: "Investigator view element container is the wrong type"
+              core_view_type: "Core view element container is the wrong type"
+              core_field_type: "Core field element container is the wrong type"
+
+        question_element:
+          attributes:
+            base:
+              short_name_taken: "The short name entered is already in use on this form. Please choose another."
+              invalid_state: "The question element is not in a valid state for saving."
+
+        interested_party:
+          attributes:
+            base:
+              nil_person: "No information has been supplied for the interested party."
+
+        export_column:
+          attributes:
+            base:
+              data_type_required: "Data Type required if Data Source is {{source}}"
+              table_name_blank: "Table Name must be blank if Data Source is {{source}}"
+              column_name_blank: "Column Name must be blank if Data Source is {{source}}"
+              table_name_required: "Table Name required if Data Source is {{source}}"
+              column_name_required: "Column Name required if Data Source is {{source}}"
+              data_type_blank: "Data Type must be blank if Data Source is {{source}}"
+        user:
+          attributes:
+            status:
+              valid_status: "can only be {{status}}"
+
+        place:
+          attributes:
+            name:
+              unassigned_is_special: "'Unassigned' is special for jurisdictions. Please choose a different name."
+
+        entity:
+          attributes:
+            base:
+              incomplete: "Entity information is not complete.  Most likely you are adding phone or address information without a name"
+
+        answer:
+          attributes:
+            text_answer:
+              format: 'Phone number must include area code and seven digit number'
+
+      attributes:
+        # Overrides model and default messages.

@@ -321,11 +321,11 @@ module Export
         if event_date.blank?
           '999999'
         else
-          if event_date.kind_of? Date
-            event_date.strftime('%y%m%d')
-          else
-            Date.parse(event_date).strftime('%y%m%d')
+          unless event_date.kind_of? Date
+            event_date = Date.parse(event_date)
           end
+          # the cdc specifies this date, so no localization
+          event_date.strftime('%y%m%d')
         end
       end
 

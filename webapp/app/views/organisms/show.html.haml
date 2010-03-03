@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Show an Organism
+  =t 'show_an_organism'
 
 -content_for :tools do
-  =link_to h('< Back to Organisms'), organisms_path
+  =link_to h(t('back_to', :name => t('organisms'))), organisms_path
   %p
 
 =render :partial => 'summary', :locals => {:organism => @organism}
@@ -25,11 +25,11 @@
 %table.list
   %tr
     %th.forminformation{ :colspan => (@organism.loinc_codes.empty? ? 1 : 5) }
-      Loinc codes
+      =t('loinc_codes')
   -if @organism.loinc_codes.empty?
     %tr
       %td.forminformation
-        %span No Loinc codes configured
+        %span= t('no_loinc_codes_configured')
   -else
     -@organism.loinc_codes.each do |loinc|
       %tr.roll
@@ -37,11 +37,11 @@
 %table.list
   %tr
     %th.forminformation{ :colspan => (@organism.diseases.empty? ? 1 : 3) }
-      Diseases
+      =t('diseases')
   -if @organism.diseases.empty?
     %tr
       %td.forminformation
-        %span No diseases configured
+        %span=t 'no_diseases_configured'
   -else
     -@organism.diseases.each do |disease|
       %tr.roll

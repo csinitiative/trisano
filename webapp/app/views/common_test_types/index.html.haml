@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  List Common Test Types
+  = t('list_common_test_types')
 
 - content_for :tools_two do
-  = button_to("Create New Common Test Type", new_common_test_type_path, { :method => :get })
+  = button_to(t('create_new_common_test_type'), new_common_test_type_path, { :method => :get })
 
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Common Name
+        = t('common_name')
       %th
         &nbsp;
       - @common_test_types.each do |common_test_type|

@@ -3,22 +3,22 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
 %fieldset
   %legend
-    Contact Information
-    %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"} [Hide]
-    %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"} [Show]
+    =t 'contact_info'
+    %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"}= hide
+    %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"}= show
 
   - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
     = h @event.disease.disease.contact_lead_in
@@ -29,7 +29,7 @@
   - core_element :contacts, f, 'vert-break' do
 
     = text_field_tag('contact_search_name')
-    = button_to_remote('Search', :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();")
+    = button_to_remote(t('search_button'), :method => :get, :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();")
     = image_tag('redbox_spinner.gif', :id => 'contact-search-spinner', :style => "height: 16px; width: 16px; display: none;")
     %div#contact_search_results
 
@@ -41,19 +41,19 @@
         - else
           = render :partial => "events/contact_show", :locals => { :f => c }
 
-      %p{:style => 'clear: both;'}= add_record_link f, :contact_child_events, "Add a contact", :object => blank_contact, :partial => "events/contact"
-    = render_geocode_cmr_contacts(@event)
+      %p{:style => 'clear: both;'}= add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => "events/contact"
+    =render_extensions :cmr_contacts_extension_renderers
 
     - unless @event.morbidity_child_events.empty?
-      #morbidity_child_events  
+      #morbidity_child_events
         %fieldset
-          %legend CMR Contacts 
-          %i Elevated to morbidity Events
+          %legend=t 'cmr_contacts'
+          %i=t 'elevated_to_morbidity_events'
           = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
 
     - if @event.parent_event
       #morbidity_parent_event
         %fieldset
-          %legend Parent CMR 
-          %i This patient is a contact of
+          %legend=t 'parent_cmr'
+          %i=t('this_patient_is_a_contact_of')
           = render :partial => 'events/contacts_show', :locals => { :contacts => [@event.parent_event] }

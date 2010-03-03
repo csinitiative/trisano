@@ -1,31 +1,20 @@
 # -*- coding: utf-8 -*-
 Then /^I should see the following tasks:$/ do |expected_tasks|
-  t = table element_at("#task-list").to_table
-  t.map_headers!(t.headers[0] => 'Due Date',
-                 t.headers[1] => 'Name',
-                 t.headers[2] => 'Description',
-                 t.headers[3] => 'Category',
-                 t.headers[4] => 'Priority',
-                 t.headers[5] => 'Assigned to',
-                 t.headers[6] => 'Status')
-  t.headers.each do |column|
-    t.map_column!(column) do |value|
-      v = value.gsub([0xA0].pack('U'), ' ').gsub('&nbsp;', ' ').strip
-      if v.blank?
-        nil
-      else
-        v
-      end
-    end
+  columns = lambda do |e|
+    [
+     e.css('th:nth-child(1) a', 'td:nth-child(1)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(2) a', 'td:nth-child(2)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(3) a', 'td:nth-child(3)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(4) a', 'td:nth-child(4)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(5) a', 'td:nth-child(5)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(6) a', 'td:nth-child(6)').text.gsub("\302\240", ' ').strip,
+     e.css('th:nth-child(7) a', 'option[selected]').text.gsub("\302\240", ' ').strip
+    ]
   end
-  t.map_column! 'Status' do |value|
-    Nokogiri::HTML("<html>#{value}</html>").xpath("//option[@selected='selected']").text()
-  end
-  expected_tasks.map_column! 'Due Date' do |value|
-    value.downcase == 'today' ? Date.today.to_s : value
-  end
-
-  expected_tasks.diff! t
+  html = tableish("#task-list tr", columns)
+  # need a better way to check for today
+  html[1][0] = 'Today' if Date.parse(html[1][0]) == Date.today
+  expected_tasks.diff! html
 end
 
 Then /^I should not see any tasks$/ do

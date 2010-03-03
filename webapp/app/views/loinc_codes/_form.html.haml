@@ -5,12 +5,12 @@
     %table.list
       %tr
         %th.forminformation
-          Edit LOINC Code
+          =t 'edit_loinc_code'
 
       %tr
         %td
           %span.vert
-            =f.label      :loinc_code, 'LOINC code'
+            =f.label      :loinc_code
             =f.text_field :loinc_code, :size => 20
           %span.horiz
             =f.label      :test_name
@@ -19,14 +19,14 @@
             =f.label      :common_test_type_id
             =f.select     :common_test_type_id, select_options_common_test_types, :include_blank => true
           %span.horiz
-            =f.label      :scale_id, "Scale"
+            =f.label      :scale_id
             =f.select     :scale_id, select_options_loinc_scales
           %span.horiz
-            =f.label      :organism_id, "Organism"
+            =f.label      :organism_id
             =f.select     :organism_id, select_options_organisms, {:include_blank => true}, :disabled => !loinc_code.can_have_organism?
           =f.observe :scale_id, :function => update_organism_select(f)
           %span.vert
-            %label Diseases
+            =f.label      :diseases
             =scroll_pane do
               -disease_check_boxes f.object_name, loinc_code.disease_ids
     %span.vert

@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Forms
+  =t 'forms'
 
 - content_for :tools_two do
-  = button_to("Create new form", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_form"), {:action => "new"}, { :method => :get })
 
 - form_tag({:action => 'import'}, :multipart => true) do
   %table{:width => '100%'}
@@ -25,18 +25,18 @@
       %td{:align => 'right', :width => '100%'}
         = file_field 'form', 'import'
       %td
-        = button_to("Upload", {}, { :type => "submit" })
+        = button_to(t("upload"), {}, { :type => "submit" })
   %br
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Form Information
-      %th Diseases
-      %th Jurisdiction
-      %th Event Type
-      %th Short Name
+        =t 'form_information'
+      %th=t 'diseases'
+      %th=t 'jurisdiction'
+      %th=t 'event_type'
+      %th=t 'short_name'
     - for form in @forms
       %tr.roll
         %td.forminformation
@@ -46,30 +46,30 @@
           .description
             = h form.description
           .tools
-            = link_to 'Builder', builder_path(form)
+            = link_to t('builder'), builder_path(form)
             |
-            = link_to 'Details', form_path(form)
+            = link_to t('details'), form_path(form)
             |
-            = link_to 'Edit', edit_form_path(form), :id => "edit_form_#{form.id}"
+            = link_to  t('edit'), edit_form_path(form), :id => "edit_form_#{form.id}"
             |
-            = link_to 'Copy', copy_form_path(form), :method => :post, :id => "copy_form_#{form.id}"
+            = link_to t('copy'), copy_form_path(form), :method => :post, :id => "copy_form_#{form.id}"
             |
-            = link_to 'Export', export_form_path(form), :method => :post, :id => "export_form_#{form.id}"
+            = link_to t('export'), export_form_path(form), :method => :post, :id => "export_form_#{form.id}"
             - if form.status == "Published"
               |
-              = link_to 'Push', push_form_path(form), :method => :post
+              = link_to t('push'), push_form_path(form), :method => :post
               |
-              = link_to 'Deactivate', deactivate_form_path(form), :method => :post
+              = link_to t('deactivate'), deactivate_form_path(form), :method => :post
         %td
           %ul
             - form.diseases.each do |disease|
               %li.diseaselist
                 = h disease.disease_name
         %td
-          = h form.jurisdiction.nil? ? "All" : form.jurisdiction.place.name
+          = h form.jurisdiction.nil? ? t("all") : form.jurisdiction.place.name
         %td
           = h form.event_type.humanize
           .status
-            = h form.status
+            = h(t("form_statuses.#{form.status.downcase.gsub(" ", "_")}"))
         %td
           = h form.short_name

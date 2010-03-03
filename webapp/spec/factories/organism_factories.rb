@@ -28,7 +28,7 @@ Factory.define(:organism) do |o|
   o.organism_name { Factory.next(:organism_name) }
 end
 
-Factory.define(:scale_code, :class => ExternalCode) do |sc|
+Factory.define(:scale_code, :class => 'external_code') do |sc|
   sc.code_name "loinc_scale"
   sc.the_code "Ord"
   sc.code_description "Ordinal"

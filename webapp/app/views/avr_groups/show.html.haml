@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Show AVR Group
+  =t('show_avr_group')
 
 -content_for :tools do
-  =link_to h('< Back to AVR Groups'), avr_groups_path
+  =link_to h(t('back_to_avr_groups')), avr_groups_path
   %p
 
 .vert-break#rot
   %table.list
     %tr
       %th.forminformation
-        AVR Group
+        =t('avr_group')
       %th
         &nbsp;
     %tr
@@ -34,6 +34,6 @@
           &nbsp;
       %td
         .tools{:style => "position: absolute; right: 15px;"}
-          = link_to 'Edit', edit_avr_group_path(@avr_group)
+          = link_to t('edit'), edit_avr_group_path(@avr_group)
           |
-          Show
+          =t('show')

@@ -20,15 +20,15 @@
 - core_element_print :places, event_form, :vert do
   
   -unless association_recorded?(@event.place_child_events)
-    %b{ :style => 'font-size: 11px' }="No place exposures have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
+    %b{ :style => 'font-size: 11px' }=t('no_place_exposures', :thing => h(@event.class.name.underscore.humanize.downcase))
   -else
     .three-valued-row
       .left
-        %span.print-label Place Name & Address
+        %span.print-label=ct('place_name_and_address')
       .left
-        %span.print-label Place Type
+        %span.print-label=ct('place_type')
       .right
-        %span.print-label Date of Exposure
+        %span.print-label=ct('date_of_exposure')
       -@event.place_child_events.each do |pe|
         -place_entity = pe.interested_place.place_entity
         -place = place_entity.place
@@ -39,6 +39,6 @@
           .left
             %span.print-value=h(place.formatted_place_descriptions)
           .right
-            %span.print-value=h(format_date(pe.participations_place.date_of_exposure))
+            %span.print-value=ld(pe.participations_place.date_of_exposure)
   %br
           

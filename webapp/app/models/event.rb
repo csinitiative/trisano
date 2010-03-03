@@ -18,6 +18,7 @@
 class Event < ActiveRecord::Base
   include Blankable
   include TaskFilter
+  include EventSearch
   include Export::Cdc::EventRules
 
   before_create :set_record_number
@@ -25,7 +26,7 @@ class Event < ActiveRecord::Base
   after_create :attempt_form_assignment_on_create
 
   if RAILS_ENV == "production"
-    attr_protected :workflow_state 
+    attr_protected :workflow_state
   end
 
   composed_of :age_info, :mapping => [%w(age_at_onset age_at_onset), %w(age_type_id age_type_id)]
@@ -37,7 +38,7 @@ class Event < ActiveRecord::Base
   belongs_to :state_case_status, :class_name => 'ExternalCode'
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
 
-  has_one :jurisdiction
+  has_one :jurisdiction, :dependent => :destroy
 
   has_many :associated_jurisdictions,
     :order => 'created_at ASC',
@@ -45,8 +46,7 @@ class Event < ActiveRecord::Base
 
   has_many :all_jurisdictions, :class_name => 'Participation',
     :conditions => ["participations.type IN ('Jurisdiction', 'AssociatedJurisdiction')"],
-    :order => 'created_at ASC',
-    :dependent => :destroy
+    :order => 'created_at ASC'
 
   has_one :disease_event, :order => 'created_at ASC', :dependent => :delete
 
@@ -81,12 +81,9 @@ class Event < ActiveRecord::Base
     end
   end
 
-  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id' do
-    def active(reload=false)
-      @active_events = nil if reload
-      @active_events ||= Event.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
-    end
-  end
+  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id'
+  named_scope :active, :conditions => ['deleted_at IS NULL']
+  named_scope :morbs_or_contacts, :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)]
 
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
@@ -159,32 +156,23 @@ class Event < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 25
 
-  class << self
-    def participation_code(description)
-      Code.find_by_code_name_and_code_description('participant', description).id
-    end
+  # Hack.  We want the some validations to fire only when being saved
+  # directly, not indirectly as part of a morbidity event.  Morbs will
+  # check related events explicitly.  This value should be set in the
+  # controller, if it is being used
+  attr_accessor :validate_against_bday
 
-    # A hash that provides a basic field index for the event forms. It maps the event form
-    # attribute keys to some metadata that is used to drive core field and core follow-up
-    # configurations in form builder.
-    #
-    # Names do not have to match the field name on the form views. Names are used to
-    # drive the drop downs for core field and core follow up configurations. So more context
-    # can be given to these names than might appear on the actual event forms, because in
-    # drop down in form builder, 'Last name' isn't going to be enough information for the user.
-    def exposed_attributes
-      CoreField.event_fields(self.to_s.underscore)
-    end
+  class << self
 
     def active_ibis_records(start_date, end_date)
       # New: Record has not been sent to IBIS, record has a disease, record has not been soft-deleted
       where_clause = <<-WHERE
         events.type = 'MorbidityEvent'
         AND events.deleted_at IS NULL
-        AND disease_events.disease_id IS NOT NULL 
+        AND disease_events.disease_id IS NOT NULL
         AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
       WHERE
-      Event.find(:all, 
+      Event.find(:all,
         :include => [:disease_event, :address],
         :conditions => [where_clause, start_date, end_date, start_date, end_date]) 
     end
@@ -239,198 +227,6 @@ class Event < ActiveRecord::Base
       Event.update_all('sent_to_ibis=true', ['id IN (?)', event_ids])
     end
 
-    def generate_event_search_where_clause(options)
-      fulltext_terms = []
-      order_by_clause = "type DESC, last_name, first_name ASC"
-      issue_query = false
-
-      if options[:event_type].blank?
-        where_clause = " (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
-      else
-        issue_query = true
-        where_clause = " events.type = " + sanitize_sql_for_conditions(["'%s'", options[:event_type]]).untaint
-      end
-
-      if !options[:diseases].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += " disease_id IN (" + options[:diseases].collect{|id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")"
-      end
-
-      if !options[:gender].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-
-        if options[:gender] == "Unspecified"
-          # Debt:  The 'AND event_id IS NOT NULL' is kind of a hack.  Will do until this query is examined more closely.
-          where_clause += "birth_gender_id IS NULL"
-        else
-          where_clause += "birth_gender_id = " + sanitize_sql_for_conditions(["%d", options[:gender]]).untaint
-        end
-      end
-
-      if !options[:workflow_state].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "workflow_state = " + sanitize_sql_for_conditions(["'%s'", options[:workflow_state]]).untaint
-      end
-
-      if !options[:city].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "city ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:city]]).untaint 
-      end
-
-      if !options[:county].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "county_id = " + sanitize_sql_for_conditions(["%d", options[:county]])
-      end
-
-      if !options[:jurisdiction_ids].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")"
-      else
-        where_clause += " AND " unless where_clause.empty?
-        allowed_jurisdiction_ids =  User.current_user.jurisdictions_for_privilege(:view_event).collect   {|j| j.entity_id}
-        allowed_jurisdiction_ids += User.current_user.jurisdictions_for_privilege(:update_event).collect {|j| j.entity_id}
-        allowed_ids_str = allowed_jurisdiction_ids.uniq.collect {|j| sanitize_sql_for_conditions(["%d", j]).untaint}.join(',')
-
-        unless allowed_ids_str.blank?
-          where_clause += "(jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ")"
-          where_clause += " OR associated_jurisdictions_events.secondary_entity_id IN (" + allowed_ids_str + ") )"
-        end
-      end
-
-      # Debt: The UI shows the user a format to use. Something a bit more robust
-      # could be in place.
-      if !options[:birth_date].blank?
-        if (options[:birth_date].size == 4 && options[:birth_date].to_i != 0)
-          issue_query = true
-          where_clause += " AND " unless where_clause.empty?
-          where_clause += "EXTRACT(YEAR FROM birth_date) = " + sanitize_sql_for_conditions(["'%s'",options[:birth_date]]).untaint
-        else
-          issue_query = true
-          where_clause += " AND " unless where_clause.empty?
-          where_clause += "birth_date = " + sanitize_sql_for_conditions(["'%s'", options[:birth_date]]).untaint
-        end
-      end
-
-      # Problem?
-      if !options[:entered_on_start].blank? || !options[:entered_on_end].blank?
-        issue_query = true
-        where_clause += " AND " unless where_clause.empty?
-
-        if !options[:entered_on_start].blank? && !options[:entered_on_end].blank?
-          where_clause += "events.created_at BETWEEN " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_start]]).untaint +
-            " AND " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_end]]).untaint
-        elsif !options[:entered_on_start].blank?
-          where_clause += "events.created_at > " +  sanitize_sql_for_conditions(["'%s'", options[:entered_on_start]]).untaint
-        else
-          where_clause += "events.created_at < " + sanitize_sql_for_conditions(["'%s'", options[:entered_on_end]]).untaint
-        end
-      end
-
-      ph_start = options[:first_reported_PH_date_start]
-      ph_end = options[:first_reported_PH_date_end]
-      if !ph_start.blank? || !ph_end.blank?
-        issue_query = true
-        ph_start = sanitize_sql_for_conditions(["'%s'", ph_start]).untaint unless ph_start.blank?
-        ph_end   = sanitize_sql_for_conditions(["'%s'", ph_end]).untaint unless ph_end.blank?
-        where_clause += " AND "
-        if !ph_start.blank? && !ph_end.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" BETWEEN #{ph_start} AND #{ph_end}"
-        elsif !ph_end.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" <= #{ph_end}"
-        elsif !ph_start.blank?
-          where_clause += "\"events\".\"first_reported_PH_date\" >= #{ph_start}"
-        end
-      end
-
-      [{:field => :record_number, :table => :events},
-        {:field => :pregnant_id, :table => :participations_risk_factors}].each do |attr|
-        field = attr[:field]
-        table = attr[:table].to_s
-
-        if not options[field].blank?
-          issue_query = true
-          where_clause += " AND #{table}.#{field.to_s} = #{sanitize_sql_for_conditions(["'%s'", options[field]]).untaint}"
-        end
-      end
-
-      [{:field => :state_case_status_ids, :table => :events},
-        {:field => :lhd_case_status_ids, :table => :events},
-        {:field => :investigator_ids, :table => :events}].each do |attr|
-        field = attr[:field]
-        table = attr[:table].to_s
-
-        if not options[field].blank?
-          issue_query = true
-          where_clause += " AND #{table}.#{field.to_s.chop} IN (" + options[field].collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint}.join(',') + ")" 
-          # where_clause += "jurisdictions_events.secondary_entity_id IN (" + options[:jurisdiction_ids].collect{ |id| sanitize_sql_for_conditions(["%d", id])}.untaint.join(',') + ")"
-        end
-      end
-
-      [{:field => :other_data_1, :table => :events},
-        {:field => :other_data_2, :table => :events}].each do |attr|
-        field = attr[:field]
-        table = attr[:table].to_s
-
-        if not options[field].blank?
-          issue_query = true
-          where_clause += " AND #{table}.#{field.to_s} ILIKE #{sanitize_sql_for_conditions(["'%s%%'", options[field]]).untaint}"
-        end
-      end
-
-      if not options[:sent_to_cdc].blank?
-        issue_query = true
-        if true.to_s == options[:sent_to_cdc]
-          where_clause += " AND events.sent_to_cdc = true"
-        else
-          where_clause += " AND (events.sent_to_cdc = false OR events.sent_to_cdc is NULL)"
-        end
-      end
-
-      # Debt: The sql_term building is duplicated in Person. Where do you
-      # factor out code common to models? Also, it may be that we don't
-      # need two different search avenues (CMR and People).
-      if !options[:sw_last_name].blank? || !options[:sw_first_name].blank?
-
-        issue_query = true
-
-        where_clause += " AND " unless where_clause.empty?
-
-        if !options[:sw_last_name].blank?
-          where_clause += "last_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:sw_last_name]]).untaint
-        end
-
-        if !options[:sw_first_name].blank?
-          where_clause += " AND " unless options[:sw_last_name].blank?
-          where_clause += "first_name ILIKE " + sanitize_sql_for_conditions(["'%s%%'", options[:sw_first_name]]).untaint
-        end
-
-      elsif !options[:fulltext_terms].blank?
-        issue_query = true
-        soundex_codes = []
-        raw_terms = options[:fulltext_terms].split(" ")
-
-        raw_terms.each do |word|
-          soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << word.sub(",", "").downcase
-        end
-
-        fulltext_terms << soundex_codes unless soundex_codes.empty?
-        sql_terms = fulltext_terms.join(" | ")
-        sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
-
-        where_clause += " AND " unless where_clause.empty?
-        where_clause += "vector @@ to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})"
-        order_by_clause = " ts_rank(vector, #{sql_terms}) DESC, last_name, first_name ASC;"
-      end
-      [where_clause, order_by_clause, issue_query]
-    end
-    
     def ibis_export_sql
       sql = <<-SQL
         SELECT
@@ -500,6 +296,7 @@ class Event < ActiveRecord::Base
       sql <<  yield
       sql << "order by events.id;"
     end
+
   end
 
   def deleted?
@@ -521,15 +318,35 @@ class Event < ActiveRecord::Base
   end
 
   def primary_jurisdiction
-    safe_call_chain(:jurisdiction, :place_entity, :place)
+    if new_record?
+      self.jurisdiction.try(:place_entity).try(:place)
+    else
+      eager_jurisdictions.select do |j|
+        j['type'] == 'Jurisdiction'
+      end.first.try(:place_entity).try(:place)
+    end
   end
 
   def secondary_jurisdictions
-    associated_jurisdictions.collect { |j| j.place_entity.place }
+    if new_record?
+      self.associated_jurisdictions.map {|j| j.try(:place_entity).try(:place)}
+    else
+      eager_jurisdictions.select{|j| j['type'] == 'AssociatedJurisdiction'}.map do |j|
+        j.place_entity.try(:place)
+      end
+    end
   end
 
   def jurisdiction_of_investigation
     primary_jurisdiction
+  end
+
+  def jurisdiction_entity_ids
+    Set.new(eager_jurisdictions.map(&:secondary_entity_id))
+  end
+
+  def eager_jurisdictions
+    all_jurisdictions(:include => {:place_entity => :place})
   end
 
   def disease
@@ -578,16 +395,16 @@ class Event < ActiveRecord::Base
     Event.transaction do
       unless (forms_to_add.all? do |form_id|
             form = Form.find(form_id)
-            
+
             if existing_template_ids.detect {|template_id| template_id == form.template_id }
               # A version of this form already exists as a reference, just return true to make the forms_to_add.all? above happy
               true
             else
               self.form_references.create(:form_id => form_id, :template_id => form.template_id)
             end
-            
+
           end)
-        raise "Unable to process new forms"
+        raise I18n.translate('unable_to_process_new_forms')
       end
     end
   end
@@ -601,7 +418,7 @@ class Event < ActiveRecord::Base
       form_ids.each do |form_id|
         form_reference = FormReference.find_by_event_id_and_form_id(self.id, form_id)
         if form_reference.nil?
-          raise "Missing form reference."
+          raise I18n.translate('missing_form_reference')
         else
           question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
           question_ids = question_elements.collect { |element| element.question.id}
@@ -612,7 +429,7 @@ class Event < ActiveRecord::Base
       return true
     end
   rescue Exception => ex
-    logger.warn "Could not remove a form from an event: #{ex.message}."
+    I18nLogger.warn("could_not_remove_form_from_event", :message => ex.message)
     return nil
   end
 
@@ -625,7 +442,7 @@ class Event < ActiveRecord::Base
   def transactional_soft_delete
     if self.deleted_at.nil?
       self.deleted_at = Time.new
-      self.add_note("Event deleted")
+      self.add_note(I18n.translate('system_notes.event_deleted', :locale => I18n.default_locale))
       self.save!
       self.child_events.each { |child| child.transactional_soft_delete }
       true
@@ -658,45 +475,6 @@ class Event < ActiveRecord::Base
     answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
   end
 
-  def self.find_by_criteria(*args)
-    options = args.extract_options!
-
-    return if !options[:event_type].blank? && !['MorbidityEvent', 'ContactEvent'].include?(options[:event_type])
-
-    where_clause, order_by_clause, issue_query = Event.generate_event_search_where_clause(options)
-
-    if issue_query || !options[:event_type].blank?
-      search_sql = <<SEARCH
-        SELECT DISTINCT
-               events.id AS id, events.type AS type, events.deleted_at AS deleted_at,
-               events.record_number AS record_number, events.workflow_state AS workflow_state,
-               people.last_name AS last_name, people.first_name AS first_name,
-               people.middle_name AS middle_name, people.birth_date AS birth_date,
-               people_gender.code_description AS birth_gender, people.vector AS vector,
-               diseases.disease_name AS disease_name,
-               addresses.city AS city, counties_addresses.code_description AS county,
-               places.short_name AS jurisdiction, disease_events.disease_onset_date AS onset_date
-        FROM events
-        INNER JOIN participations interested_party ON interested_party.event_id = events.id AND (interested_party.type = 'InterestedParty' )
-        INNER JOIN entities ON entities.id = interested_party.primary_entity_id AND (entities.entity_type = 'PersonEntity' )
-        INNER JOIN people ON people.entity_id = entities.id
-        LEFT OUTER JOIN external_codes people_gender ON people_gender.id = people.birth_gender_id
-        LEFT OUTER JOIN participations_risk_factors ON participations_risk_factors.participation_id = interested_party.id
-        LEFT OUTER JOIN addresses ON addresses.event_id = events.id
-        LEFT OUTER JOIN external_codes counties_addresses ON counties_addresses.id = addresses.county_id
-        LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
-        LEFT OUTER JOIN diseases ON diseases.id = disease_events.disease_id
-        INNER JOIN participations jurisdictions_events ON jurisdictions_events.event_id = events.id AND (jurisdictions_events.type = 'Jurisdiction' )
-        INNER JOIN entities place_entities_participations ON place_entities_participations.id = jurisdictions_events.secondary_entity_id
-          AND (place_entities_participations.entity_type = 'PlaceEntity' )
-        INNER JOIN places ON places.entity_id = place_entities_participations.id
-        LEFT OUTER JOIN participations associated_jurisdictions_events ON associated_jurisdictions_events.event_id = events.id
-          AND (associated_jurisdictions_events.type = 'AssociatedJurisdiction' )
-SEARCH
-      search_sql += " WHERE #{where_clause}"
-      Event.find_by_sql("SELECT * FROM (#{search_sql}) AS whatever ORDER BY #{order_by_clause}")
-    end
-  end
 
   # Indicates whether an event supports tasks. Generally used by the UI in shared partials
   # to determine whether task-specific layout should be included.
@@ -726,10 +504,10 @@ SEARCH
   end
 
   def copy_event(new_event, event_components)
-    new_event.event_name = "Copy of #{self.event_name}" if self.event_name
+    new_event.event_name = "#{I18n.translate('copy_of', :locale => I18n.default_locale)} #{self.event_name}" unless self.event_name.blank?
     new_event.build_jurisdiction
-    new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
-    new_event.workflow_state = 'accepted_by_lhd' unless new_event.primary_jurisdiction.name == "Unassigned"
+    new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
+    new_event.workflow_state = 'accepted_by_lhd' unless new_event.primary_jurisdiction.is_unassigned_jurisdiction?
     new_event.acuity = self.acuity
 
     if event_components.include?("clinical")
@@ -804,7 +582,7 @@ SEARCH
 
 
   private
-  
+
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
 

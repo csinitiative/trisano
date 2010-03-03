@@ -1,0 +1,18 @@
+-content_for :title do
+  =t(:update_default_locale, :scope => trisano_locale_scope)
+
+-content_for :tools_two do
+  =button_to_function t(:update), "$('edit_default_locale').submit();"
+
+-form_tag(default_locale_path, :method => :put, :id => 'edit_default_locale') do
+  =error_messages_for :default_locale
+  #rot
+    %table.list
+      =render :partial => 'locale_headers'
+      %tr
+        %td
+          .formname
+            =select_tag :short_name, locale_options(@default_locale.to_sym)
+        =render :partial => 'read_only_fields'
+
+

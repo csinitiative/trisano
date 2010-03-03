@@ -3,21 +3,21 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+-# Huge Debt: We need to unify this with 'events/people/_address_show.html.haml'.
 %fieldset.form
-  %legend
-    Address 
+  %legend=t 'address'
   -if not address.nil? and not address.new_record?
-    - f.fields_for(address, :builder => ExtendedFormBuilder) do |address_form|
+    -f.fields_for(address, :builder => ExtendedFormBuilder) do |address_form|
       %div.data_address
         -core_element_show :street_number, address_form, :horiz do
           =address_form.label(:street_number)
@@ -33,9 +33,9 @@
           %span.data_city=h(address.city)
         -core_element_show :state_id, address_form, :horiz do
           =address_form.label(:state)
-          %span.data_state=h(l(address.state)) 
+          %span.data_state=h(l(address.state))
         -core_element_show :postal_code, address_form, :horiz do
-          =address_form.label(:postal_code, "Zip code")
+          =address_form.label(:postal_code,t("zip"))
           %span.data_postal_code=h(address.postal_code)
         -core_element_show :county_id, address_form, :horiz do
           =address_form.label(:county)
@@ -46,4 +46,4 @@
             -jurisdiction_name = address.county.jurisdiction.name
           %span.data_jurisdiction_name=h(jurisdiction_name.blank? ? '' : jurisdiction_name)
 
-      = render_geocode_section(address_form, nil, address.street_number, address.street_name, address.unit_number, address.city, address.state.try(:code_description), address.postal_code)
+      =render_extensions :address_extension_renderers, :address_form => address_form, :read_only_address => address_form.object

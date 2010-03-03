@@ -47,18 +47,18 @@ class LibraryElementsController < AdminController
 
   def import
     if params[:import].blank?
-      flash[:error] = 'Please navigate to a library export file to import.'
+      flash[:error] = t("navigate_to_library_import_file")
       render :action => 'index'
       return
     end
 
     begin
       Form.import_library(params[:import])
-      flash[:notice] = 'Successfully imported the library elements.'
+      flash[:notice] = t("library_import_successful")
       redirect_to library_elements_path
     rescue Exception => ex
       logger.debug ex.backtrace
-      flash[:error] = "Unable to import the library elements. #{ex.message}"
+      flash[:error] = t("library_import_failed", :message => ex.message)
       redirect_to library_elements_path
     end
   end
@@ -72,7 +72,7 @@ class LibraryElementsController < AdminController
       return
     rescue Exception => ex
       logger.debug ex.backtrace
-      error_message = "Unable to export the form library. #{ex.message}"
+      error_message = t("library_export_failed", :message => ex.message)
       flash[:error] = error_message
       redirect_to library_elements_path
     end

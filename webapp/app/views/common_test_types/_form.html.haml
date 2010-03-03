@@ -19,7 +19,7 @@
     %table.list
       %tr
         %th.forminformation
-          Edit Common Test Type
+          = t('edit_common_test_type')
 
       %tr
         %td
@@ -28,7 +28,8 @@
             =f.label      :common_name
             =f.text_field :common_name
           %span.vert
-            %label Diseases
+            %label
+              =t('diseases')
             -scroll_pane do
               -disease_check_boxes f.object_name, common_test_type.disease_ids
 

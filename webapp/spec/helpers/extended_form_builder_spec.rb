@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -42,10 +42,10 @@ def configure_drop_downs
 end
 
 def shared_tests
-  it "#{@xhr_request ? 'should not' : 'should'} delay execution until the dom loads" do    
+  it "#{@xhr_request ? 'should not' : 'should'} delay execution until the dom loads" do
     @result.send(@xhr_request ? :should_not : :should) =~ /document.observe\('dom:loaded', function\(\) \{.*\}/m
   end
-  
+
   it 'should wrap script in a script tag' do
     @result.should =~ /<script type="text\/javascript">.*<\/script>/m
   end
@@ -57,7 +57,7 @@ def radio_button_tests
     @result.should =~ /\$\('1'\).observe\('click', function\(\) \{/
     @result.should =~ /\$\('2'\).observe\('click', function\(\) \{/
   end
-  
+
   it 'should write the conversion value to the "id" field for each observer' do
     @result.should =~ /\$\('test_id'\).writeAttribute\('value', '200'\)/
     @result.should =~ /\$\('test_id'\).writeAttribute\('value', '201'\)/
@@ -76,7 +76,7 @@ def drop_down_tests
 end
 
 
-describe ExtendedFormBuilder, 'radio button export js' do  
+describe ExtendedFormBuilder, 'radio button export js' do
 
   describe 'during an html request' do
 
@@ -94,9 +94,9 @@ describe ExtendedFormBuilder, 'radio button export js' do
 end
 
 describe ExtendedFormBuilder, 'drop down export js' do
-  
+
   describe 'during an html request' do
-    
+
     before(:each) do
       @xhr_request = false
       configure_request
@@ -108,10 +108,10 @@ describe ExtendedFormBuilder, 'drop down export js' do
     drop_down_tests
 
   end
-    
+
 end
 
-describe ExtendedFormBuilder, 'radio button export js' do  
+describe ExtendedFormBuilder, 'radio button export js' do
 
   describe 'during an ajax request' do
 
@@ -129,20 +129,19 @@ describe ExtendedFormBuilder, 'radio button export js' do
 end
 
 describe ExtendedFormBuilder, 'drop down export js' do
-  
+
   describe 'during an html request' do
-    
+
     before(:each) do
       @xhr_request = true
       configure_request
       configure_drop_downs
     end
-    
+
     shared_tests
 
     drop_down_tests
 
   end
-    
+
 end
-  

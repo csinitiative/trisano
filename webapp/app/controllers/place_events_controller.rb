@@ -17,7 +17,7 @@
 
 class PlaceEventsController < EventsController
   def index
-    render :text => "Place exposures cannot be accessed directly.", :status => 405
+    render :text => t("no_direct_place_event_access"), :status => 405
   end
 
   def show
@@ -30,7 +30,7 @@ class PlaceEventsController < EventsController
   end
 
   def new
-    render :text => "Place exposures cannot be created directly.", :status => 405
+    render :text => t("no_direct_place_event_creation"), :status => 405
   end
 
   def edit
@@ -38,30 +38,30 @@ class PlaceEventsController < EventsController
   end
 
   def create
-    render :text => "Place exposures cannot be created directly.", :status => 405
+    render :text => t("no_direct_place_event_creation"), :status => 405
   end
 
   def update
     go_back = params.delete(:return)
-    @event.add_note("Edited event") unless go_back
+    @event.add_note(t("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     respond_to do |format|
+      @event.validate_against_bday = true
       if @event.update_attributes(params[:place_event])
-        flash[:notice] = 'Place event was successfully updated.'
+        flash[:notice] = t("place_event_updated")
         format.html {
           if go_back
             render :action => "edit"
           else
-            query_str = @tab_index ? "?tab_index=#{@tab_index}" : ""
-            redirect_to(place_event_url(@event) + query_str)
+            redirect_to place_event_url(@event, @query_params)
           end
         }
         format.xml  { head :ok }
-        format.js   { render :inline => "Exposure event saved.", :status => :created }
+        format.js   { render :inline => t("place_event_saved"), :status => :created }
       else
         format.html { render :action => 'edit' }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => "Exposure Event not saved: <%= @event.errors.full_messages %>", :status => :unprocessable_entity }
+        format.js   { render :inline => t("place_event_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity }
       end
     end
   end

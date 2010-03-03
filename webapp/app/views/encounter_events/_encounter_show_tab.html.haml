@@ -15,22 +15,22 @@
 
 %fieldset
   %legend 
-    Encounter Information
+    =t('encounter_info')
     
   %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
 
     - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
 
       %span.horiz
-        =pe_fields.label(:user_id, "Investigator")
+        =pe_fields.label(:user_id)
         =h @event.participations_encounter.user.best_name
 
       %span.horiz
         =pe_fields.label(:encounter_date)
-        =h @event.participations_encounter.encounter_date
+        =ld(@event.participations_encounter.encounter_date)
 
       %span.horiz
-        =pe_fields.label(:encounter_location_type, "Location")
+        =pe_fields.label(:encounter_location_type)
         =h @event.participations_encounter.encounter_location_type.humanize
 
       %span.vert

@@ -94,7 +94,13 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :view_elements
 
-  map.resources :form_elements, :member => { :to_library => :post }, :member => { :from_library => :post }
+  map.resources :form_elements, {
+    :member => {
+      :to_library => :post,
+      :from_library => :post,
+      :update_export_column => :post
+    }
+  }
 
   map.resources :follow_up_elements
 
@@ -124,7 +130,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :contact_events,
     :member => {
       :soft_delete => :post,
-      :event_type => :post
+      :event_type => :post,
+      :copy_address => :get,
+      :jurisdiction => :post,
+      :state => :post
     },
     :new => {
       :lab_form => :get,
@@ -185,8 +194,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :jurisdictions
 
   map.resources :avr_groups
-
-  map.js 'js/:action.js', :controller => 'js', :format => 'js'
 
   # The priority is based upon order of creation: first created -> highest priority.
 

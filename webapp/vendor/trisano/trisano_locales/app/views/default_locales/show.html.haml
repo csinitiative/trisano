@@ -1,0 +1,12 @@
+-content_for :title do
+  =t('default_locale', :scope => trisano_locale_scope)
+
+#rot
+  %table.list
+    =render :partial => 'locale_headers'
+    %tr
+      %td
+        .formname
+          =h(@default_locale.locale_name)
+      =render :partial => 'read_only_fields'
+

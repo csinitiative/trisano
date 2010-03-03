@@ -15,61 +15,68 @@
 
 %fieldset
   %legend 
-    Reporting Information
-    %span{:id => 'reporting_hide', :onClick => "Element.hide('reporting_agencies'); Element.hide('reporting_hide'); Element.show('reporting_show'); return false;"} [Hide]
-    %span{:id => 'reporting_show', :onClick => "Element.show('reporting_agencies'); Element.hide('reporting_show'); Element.show('reporting_hide'); return false;", :style => "display: none;"} [Show]
+    =t('reporting_information')
+    %span{:id => 'reporting_hide', :onClick => "Element.hide('reporting_agencies'); Element.hide('reporting_hide'); Element.show('reporting_show'); return false;"}="[#{t('hide')}]"
+    %span{:id => 'reporting_show', :onClick => "Element.show('reporting_agencies'); Element.hide('reporting_show'); Element.show('reporting_hide'); return false;", :style => "display: none;"}="[#{t('show')}]"
 
   #reporting_agencies
     %fieldset.form
-      %legend Reporting Agency
+      %legend=t('reporting_agency')
       - f.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |ra|
         - if ra.object.new_record?
-          = live_search('Search for a Reporting Agency', :search_field => 'reporting_agency_search', :select => 'place_name', :insertion_point => "None")
-          &nbsp; OR &nbsp;
-          = add_reporting_agency_link('Add a new reporting agency', ra)
+          = live_search(t('search_reporting_agency'), :search_field => 'reporting_agency_search', :select => 'place_name', :insertion_point => "None")
+          &nbsp;
+          =t('OR')
+          &nbsp;
+          = add_reporting_agency_link(t('add_reporting_agency'), ra)
           %hr
         #reporting_agency
           #reporting_agency_search_results
             = render(:partial => 'events/reporting_agency', :locals => {:f => ra})
 
     %fieldset.form
-      %legend Reporter
+      %legend=t('reporter')
       #reporter
         - f.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
           - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
             - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
               = error_messages_for :object => p.object
               - core_element :last_name, p, :horiz do
-                = p.label(:last_name, "Reporter last name")
+                = p.label(:last_name, t('reporter_last_name'))
                 = p.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, @event)
               - core_element :first_name, p, :horiz do
-                = p.label(:first_name, "Reporter first name")
+                = p.label(:first_name, t('reporter_first_name'))
                 = p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, @event)
-        
+
             - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
             - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
-              - core_element :area_code, phone_fields, :horiz do
-                = phone_fields.label(:area_code)
-                = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3}, @event)
+              -if Telephone.use?(:country_code)
+                - core_element :country_code, phone_fields, :horiz do
+                  = phone_fields.label(:country_code)
+                  = phone_fields.core_text_field(:country_code, {:size => 3}, @event)
+              -if Telephone.use?(:area_code)
+                - core_element :area_code, phone_fields, :horiz do
+                  = phone_fields.label(:area_code)
+                  = phone_fields.core_text_field(:area_code, {:size => 3}, @event)
               - core_element :phone_number, phone_fields, :horiz do
                 = phone_fields.label(:phone_number)
                 = phone_fields.core_text_field(:phone_number, {:size => 8}, @event)
               - core_element :extension, phone_fields, :horiz do
                 = phone_fields.label(:extension)
-                = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event)
+                = phone_fields.core_text_field(:extension, {:size => 6}, @event)
 
           - unless r.object.new_record?
             %span.horiz
-              = r.label :_delete, "Remove"
+              = r.label :_delete
               = r.check_box :_delete
 
     %fieldset.form
-      %legend Reported Dates
+      %legend=t('reported_dates')
       #reported_dates
         %span.vert-break
         - core_element :results_reported_to_clinician_date, f, :horiz do
           = f.label(:results_reported_to_clinician_date)
           = f.calendar_date_select(:results_reported_to_clinician_date, :year_range => 5.years.ago..0.years.from_now)
         - core_element :first_reported_PH_date, f, :horiz do
-          = f.label(:first_reported_PH_date, "Date first reported to public health")
+          = f.label(:first_reported_PH_date)
           = f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now)

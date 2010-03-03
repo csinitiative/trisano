@@ -49,8 +49,13 @@ class Code < ActiveRecord::Base
 
   def self.jurisdiction_place_type_id
     safe_table_access do
-      @@jurisdiction_place_type ||= find_by_code_name_and_the_code 'placetype', 'J'
-      @@jurisdiction_place_type.id if @@jurisdiction_place_type
+      jurisdiction_place_type.id if jurisdiction_place_type
+    end
+  end
+
+  def self.jurisdiction_place_type
+    safe_table_access do
+      @@jurisdiction_place_type ||= find_jurisdiction_place_type
     end
   end
 
@@ -74,6 +79,10 @@ class Code < ActiveRecord::Base
     ensure
       nil
     end
+  end
+
+  def self.find_jurisdiction_place_type
+    find_by_code_name_and_the_code 'placetype', 'J'
   end
 
   def deleted?

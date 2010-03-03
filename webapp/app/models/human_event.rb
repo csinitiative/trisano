@@ -2,21 +2,22 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEvent < Event
   include Export::Cdc::HumanEvent
+  extend NameAndBirthdateSearch
 
   validates_length_of :parent_guardian, :maximum => 255, :allow_blank => true
 
@@ -24,7 +25,7 @@ class HumanEvent < Event
     :allow_nil => true,
     :greater_than_or_equal_to => 0,
     :only_integer => true,
-    :message => 'is negative. This is usually caused by an incorrect onset date or birth date.'
+    :message => :less_than
 
   validates_date :event_onset_date
 
@@ -58,13 +59,13 @@ class HumanEvent < Event
   accepts_nested_attributes_for :interested_party
   accepts_nested_attributes_for :hospitalization_facilities,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && attrs["hospitals_participation_attributes"].all? { |k, v| v.blank? } } 
+    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && attrs["hospitals_participation_attributes"].all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :clinicians,
     :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.has_key?("person_entity_attributes") && attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| if v == 'clinician' then true else v.blank? end } }
   accepts_nested_attributes_for :diagnostic_facilities,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs.has_key?("place_entity_attributes") && attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? } } 
+    :reject_if => proc { |attrs| attrs.has_key?("place_entity_attributes") && attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :labs,
     :allow_destroy => true,
     :reject_if => proc { |attrs| rewrite_attrs(attrs) }
@@ -89,74 +90,6 @@ class HumanEvent < Event
       return false
     end
 
-    def search_by_name_and_birth_date(name, bdate, options={})
-      find_by_name_bdate(name, bdate, options)
-    end
-
-    def search_by_name(name)
-      find_by_name_bdate(name)
-    end
-
-    def search_by_name_and_birth_date_using_starts_with(last_name, first_name, bdate, options={})
-      validate_bdate(bdate)
-
-      where_clause = []
-      where_clause << "people.last_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", last_name.strip]).untaint}" unless last_name.blank?
-      where_clause << "people.first_name ILIKE #{sanitize_sql_for_conditions(["'%s%%%%'", first_name.strip]).untaint}" unless first_name.blank?
-      where_clause << bdate_where_clause(bdate, where_clause.size > 0) if bdate
-
-      order_by_clause = []
-      order_by_clause << "people.last_name" unless last_name.blank?
-      order_by_clause << "people.first_name" unless first_name.blank?
-      order_by_clause << "people.birth_date" if bdate
-      order_by_clause << "events.event_id DESC"
-
-      select = name_and_bdate_sql(where_clause.join(" AND "), order_by_clause.join(", "))
-
-      find_or_paginate_by_sql(select, options)
-    end
-
-    def find_by_name_bdate(name, bdate=nil, options={})
-      return [] if name.blank? and bdate.blank?
-
-      # Throw an exception early if birth date not parseable
-      validate_bdate(bdate)
-
-      soundex_codes = []
-      fulltext_terms = []
-
-      sql_terms = nil
-      unless name.blank?
-        raw_terms = name.split(" ")
-
-        raw_terms.each do |word|
-          soundex_codes << word.to_soundex.downcase unless word.to_soundex.nil?
-          fulltext_terms << word.downcase.sub(",", "")
-        end
-
-        fulltext_terms << soundex_codes unless soundex_codes.empty?
-        sql_terms = fulltext_terms.join(" | ")
-        sql_terms = sanitize_sql_for_conditions(["'%s'", sql_terms]).untaint
-      end
-
-      where_clause = ""
-      where_clause += "people.vector @@ to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})" if sql_terms
-      if bdate
-        where_clause += " AND" if sql_terms
-        where_clause += bdate_where_clause(bdate, sql_terms)
-      end
-
-      order_by_clause = ""
-      order_by_clause << "people.birth_date, " if bdate
-      order_by_clause << "ts_rank(people.vector, to_tsquery(#{Utilities::sanitize_for_tsquery(sql_terms)})) DESC," if sql_terms
-      order_by_clause << "people.entity_id, "
-      order_by_clause << " events.event_id DESC"
-
-      select = name_and_bdate_sql(where_clause, order_by_clause)
-
-      find_or_paginate_by_sql(select, options)
-    end
-
     def get_allowed_queues(query_queues)
       system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
       queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
@@ -171,7 +104,7 @@ class HumanEvent < Event
     end
 
     def state_description(state)
-      new.states(state).meta[:description] || state.to_s.titleize
+      I18n.translate(state, :scope => [:workflow])
     end
 
     def find_all_for_filtered_view(options = {})
@@ -196,7 +129,7 @@ class HumanEvent < Event
         queue_ids, queue_names = get_allowed_queues(options[:queues])
 
         if queue_ids.empty?
-          raise 'No queue ids returned'
+          raise(I18n.translate('no_queue_ids_returned'))
         else
           where_clause << " AND event_queue_id IN (#{ queue_ids.map { |q| sanitize_sql_for_conditions(["'%s'", q]).untaint }.join(',') })"
         end
@@ -279,9 +212,9 @@ class HumanEvent < Event
                     events
                     LEFT JOIN participations p
                         ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-                    LEFT JOIN entities pe 
+                    LEFT JOIN entities pe
                         ON pe.id = p.secondary_entity_id
-                    LEFT JOIN places 
+                    LEFT JOIN places
                         ON places.entity_id = pe.id
                 GROUP BY events.id
             ) sec_juris ON (sec_juris.event_id = events.id)
@@ -315,7 +248,7 @@ class HumanEvent < Event
       real_select << "WHERE (#{where_clause})\n" unless where_clause.blank?
       real_select << "ORDER BY #{order_by_clause}"
 
-      find_options = { 
+      find_options = {
         :page          => options[:page],
         :total_entries => row_count
       }
@@ -326,94 +259,6 @@ class HumanEvent < Event
     rescue Exception => ex
       logger.error ex
       raise ex
-    end
-
-    private
-
-    def validate_bdate(bdate)
-      if bdate.is_a? String
-        parsed = ParseDate.parsedate(bdate)
-        raise 'Invalid birthdate' unless parsed[0] and parsed[1] and parsed[2]
-      end
-    end
-
-    def bdate_where_clause(bdate, allow_null_bdates=false)
-      where_clause = "("
-      where_clause += " people.birth_date = #{sanitize_sql_for_conditions(["'%s'", bdate]).untaint}"
-      where_clause += " OR people.birth_date IS NULL" if allow_null_bdates
-      where_clause += ")"
-    end
-
-    def name_and_bdate_sql(where_clause, order_by_clause)
-      select = <<-SQL
-        SELECT
-          people.entity_id,
-          people.last_name,
-          people.first_name,
-          people.birth_date,
-          people.birth_gender,
-          events.event_id,
-          events.event_type,
-          events.event_onset_date,
-          events.disease_name,
-          events.jurisdiction_short_name,
-          events.jurisdiction_entity_id,
-          events.secondary_jurisdictions,
-          events.deleted_at
-        FROM (
-          SELECT
-            entities.id AS entity_id,
-            people.first_name AS first_name,
-            people.last_name AS last_name,
-            people.birth_date AS birth_date,
-            people.vector AS vector,
-            external_codes.code_description AS birth_gender
-          FROM entities
-          INNER JOIN people ON people.entity_id = entities.id AND (entities.entity_type = 'PersonEntity') AND (entities.deleted_at IS NULL)
-          LEFT OUTER JOIN external_codes ON people.birth_gender_id = external_codes.id AND (external_codes.code_name = 'gender')
-        ) as people
-        LEFT OUTER JOIN (
-          SELECT
-            events.id AS event_id,
-            events.type AS type,
-            events.event_onset_date AS event_onset_date,
-            events."type" AS event_type,
-            events.deleted_at AS deleted_at,
-            participations.primary_entity_ID as entity_id,
-            diseases.disease_name AS disease_name,
-            jurisdiction_entities.id AS jurisdiction_entity_id,
-            jurisdiction_places.short_name AS jurisdiction_short_name,
-            sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions
-          FROM events
-          INNER JOIN participations ON participations.event_id = events.id AND (participations."type" = 'InterestedParty' )
-          LEFT OUTER JOIN disease_events ON disease_events.event_id = events.id
-          LEFT OUTER JOIN diseases ON disease_events.disease_id = diseases.id
-          INNER JOIN participations AS jurisdictions ON jurisdictions.event_id = events.id AND (jurisdictions.type = 'Jurisdiction')
-          INNER JOIN entities AS jurisdiction_entities ON jurisdiction_entities.id = jurisdictions.secondary_entity_id AND (jurisdiction_entities.entity_type = 'PlaceEntity')
-          INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
-          LEFT JOIN (
-            SELECT
-              events.id AS event_id,
-              ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
-            FROM
-              events
-            LEFT JOIN participations p ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-            GROUP BY events.id
-          ) sec_juris ON (sec_juris.event_id = events.id)
-        ) as events
-        ON people.entity_id = events.entity_id
-        WHERE (#{where_clause})
-        AND ( (events."type" != 'EncounterEvent' OR events."type" IS NULL) )
-        ORDER BY #{order_by_clause}
-      SQL
-    end
-
-    def find_or_paginate_by_sql(select, options={})
-      if options[:page_size] && options[:page]
-        self.paginate_by_sql [select], :page => options[:page], :per_page => options[:page_size]
-      else
-        self.find_by_sql select
-      end
     end
 
   end
@@ -430,10 +275,8 @@ class HumanEvent < Event
     )
   end
 
-  def definitive_lab_result
-    # CDC calculations expect one lab result.  Choosing the most recent to be it
-    return nil if lab_results.empty?
-    self.lab_results.sort_by { |lab_result| lab_result.collection_date || Date.parse("01/01/0000") }.last
+  def definitive_lab_collection_date
+    labs.collect{|l| l.lab_results.collect{|r| r.collection_date}}.flatten.compact.sort.first
   end
 
   def set_primary_entity_on_secondary_participations
@@ -451,7 +294,7 @@ class HumanEvent < Event
   def copy_from_person(person)
     self.build_jurisdiction
     self.build_interested_party
-    self.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.jurisdiction_by_name("Unassigned")).entity
+    self.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
     self.interested_party.primary_entity_id = person.id
     self.interested_party.person_entity = person
     self.address = person.canonical_address
@@ -459,7 +302,7 @@ class HumanEvent < Event
 
   # Perform a shallow (event_coponents = nil) or deep (event_components != nil) copy of an event.
   # Can't simply do a single clone or a series of clones because there are some attributes we need
-  # to leave behind, certain relationships that need to be severed, and we need to make a copy of 
+  # to leave behind, certain relationships that need to be severed, and we need to make a copy of
   # the address for longitudinal purposes.
   def copy_event(new_event, event_components)
     super(new_event, event_components)
@@ -472,7 +315,7 @@ class HumanEvent < Event
     new_event.parent_guardian = self.parent_guardian
     new_event.other_data_1 = self.other_data_1
     new_event.other_data_2 = self.other_data_2
-    
+
     return unless event_components   # Shallow, demographics only, copy
 
     # If event_components is not nil, then continue on with a deep copy
@@ -523,10 +366,13 @@ class HumanEvent < Event
   end
 
   def state_description
-    current_state.meta[:description] || state.to_s.titleize
+    I18n.t(state, :scope => [:workflow])
   end
 
+  # Debt: some stuff here gets written to the database, and some still
+  # requires the event to be saved.
   def route_to_jurisdiction(jurisdiction, secondary_jurisdiction_ids=[], note="")
+    return false unless valid?
     primary_changed = false
 
     jurisdiction_id = jurisdiction.to_i if jurisdiction.respond_to?('to_i')
@@ -539,7 +385,7 @@ class HumanEvent < Event
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == self.jurisdiction.secondary_entity_id
         proposed_jurisdiction = PlaceEntity.find(jurisdiction_id) # Will raise an exception if record not found
-        raise "New jurisdiction is not a jurisdiction" unless Place.jurisdictions.include?(proposed_jurisdiction.place)
+        raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless Place.jurisdictions.include?(proposed_jurisdiction.place)
         self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
         self.add_note note
         primary_changed = true
@@ -562,12 +408,12 @@ class HumanEvent < Event
         applicable_forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
         self.add_forms(applicable_forms)
       end
-      
+
       reload # Any existing references to this object won't see these changes without this
     end
     return primary_changed
-  end  
-  
+  end
+
   # transitions that are allowed to be rendered by this user
   def allowed_transitions
     current_state.events.select do |event|
@@ -588,21 +434,13 @@ class HumanEvent < Event
     when :assigned_to_lhd
       attrs[:investigator_id] = nil
       attrs[:event_queue_id]  = nil
-    # Commented out becuase UT is using queues not as a place for investigators to pull work from, but to route a case
-    # to a 'program' (department, e.g. STDs).  And then a program manager routes to an individual.  I'm  not deleting
-    # this code, 'cause I'd like to ressurect it some day.
-    #
-    # when :assigned_to_queue
-    #   attrs[:investigator_id] = nil
-    # when :assigned_to_investigator
-    #   attrs[:event_queue_id] = nil
     end
 
     self.update_attributes(attrs)
   end
 
   def add_labs_from_staged_message(staged_message)
-    raise ArgumentError, "#{staged_message.class} is not a valid staged message" unless staged_message.respond_to?('message_header')
+    raise(ArgumentError, I18n.translate('not_a_valid_staged_message', :staged_message => staged_message.class)) unless staged_message.respond_to?('message_header')
 
     # All tests have a scale type.  The scale type is well known and is part of the standard LOINC code data given in the SCALE_TYP
     # field. TriSano keeps the scale type in the loinc_codes table scale column.
@@ -655,10 +493,10 @@ class HumanEvent < Event
     diseases = Set.new
     obr.tests.each do | obx |
       loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
-      raise StagedMessage::UnknownLoincCode, "LOINC code, #{obx.loinc_code}, is unknown to TriSano." if loinc_code.nil?
+      raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if loinc_code.nil?
 
       common_test_type = loinc_code.common_test_type
-      raise StagedMessage::UnlinkedLoincCode, "LOINC code, #{obx.loinc_code}, is known but not linked to a common test type." if common_test_type.nil?
+      raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
 
       scale_type = loinc_code.scale.the_code
       result_hash = {}
@@ -695,15 +533,13 @@ class HumanEvent < Event
         end
       end
 
-      specimen_source = ExternalCode.find_by_sql([%Q{ SELECT id FROM external_codes WHERE code_name = 'specimen' AND code_description ILIKE ? }, obr.specimen_source]).first
-      specimen_source_id = specimen_source ? specimen_source['id'] : nil
       begin
         lab_hash = {
           "test_type_id"       => common_test_type.id,
           "collection_date"    => obr.collection_date,
           "lab_test_date"      => obx.observation_date,
           "reference_range"    => obx.reference_range,
-          "specimen_source_id" => specimen_source_id,
+          "specimen_source_id" => obr.specimen_source.id,
           "staged_message_id"  => staged_message.id,
           "units"              => obx.units,
           "test_status_id"     => obx.trisano_status_id,
@@ -714,7 +550,7 @@ class HumanEvent < Event
         raise StagedMessage::BadMessageFormat, error.message
       end
       i += 1
-      self.add_note("ELR with test type \"#{obx.test_type}\" assigned to event.")
+      self.add_note(I18n.translate("system_notes.elr_with_test_type_assigned", :test_type => obx.test_type, :locale => I18n.default_locale))
     end
     self.labs_attributes = [ lab_attributes ]
 
@@ -722,14 +558,14 @@ class HumanEvent < Event
     unless self.disease_event  # Don't overwrite disease if already there.
       case diseases.size
       when 0
-        staged_message.note = "#{staged_message.note}No LOINC code maps to a disease. "
+        staged_message.note = "#{staged_message.note} #{I18n.translate('no_loinc_code_maps_to_disease', :locale => I18n.default_locale)} "
       when 1
         disease_event = DiseaseEvent.new
         disease_event.disease = diseases.to_a.first
         self.build_disease_event(disease_event.attributes)
-        staged_message.note = "#{staged_message.note}Event's disease set to " + disease_event.disease.disease_name
+        staged_message.note = "#{staged_message.note} #{I18n.translate('event_disease_set_to', :disease_name => disease_event.disease.disease_name, :locale => I18n.default_locale)} "
       else
-        staged_message.note = "#{staged_message.note}LOINC code(s) map to multiple diseases: " + diseases.collect { |d| d.disease_name }.join('; ') + ". "
+        staged_message.note = "#{staged_message.note} #{I18n.translate('loinc_code_maps_to_multiple_diseases', :locale => I18n.default_locale)}" + diseases.collect { |d| d.disease_name }.join('; ') + ". "
       end
     end
 
@@ -749,7 +585,7 @@ class HumanEvent < Event
   def resolve_onset_date
     safe_call_chain(:disease_event, :disease_onset_date) ||
       safe_call_chain(:disease_event, :date_diagnosed)   ||
-      labs.collect{|l| l.lab_results.collect{|r| r.collection_date}}.flatten.compact.sort.first ||
+      definitive_lab_collection_date ||
       self.first_reported_PH_date   ||
       self.created_at.try(:to_date) ||
       Date.today
@@ -758,9 +594,9 @@ class HumanEvent < Event
   def validate
     county_code = self.address.try(:county).try(:the_code)
     if county_code == "OS" &&
-        (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) || 
+        (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) ||
          ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
-      errors.add_to_base("Local or state case status must be '#{ExternalCode.out_of_state.code_description}' or blank for an event with a #{:county} of '#{self.address.county.code_description}'")
+      errors.add(:base, :invalid_case_status, :status => ExternalCode.out_of_state.code_description, :attr => I18n.t(:county).downcase, :value => self.address.county.code_description)
     end
 
     return if self.interested_party.nil?
@@ -770,58 +606,58 @@ class HumanEvent < Event
     self.hospitalization_facilities.each do |hf|
 
       if (date = hf.hospitals_participation.try(:admission_date).try(:to_date)) && (date < bdate)
-        hf.hospitals_participation.errors.add(:admission_date, "cannot be earlier than birth date") 
-        base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
+        hf.hospitals_participation.errors.add(:admission_date, :cannot_precede_birth_date)
+        base_errors['hospitals'] = [:precede_birth_date, {:thing => I18n.t(:hospitalization)}]
       end
       if (date = hf.hospitals_participation.try(:discharge_date).try(:to_date)) && (date < bdate)
-        hf.hospitals_participation.errors.add(:discharge_date, "cannot be earlier than birth date")
-        base_errors['hospitals'] = "Hospitalization date(s) precede birth date"
+        hf.hospitals_participation.errors.add(:discharge_date, :cannot_precede_birth_date)
+        base_errors['hospitals'] = [:precede_birth_date, { :thing => I18n.t(:hospitalization) }]
       end
     end
     self.interested_party.treatments.each do |t|
       if (date = t.treatment_date.try(:to_date)) && (date < bdate)
-        t.errors.add(:treatment_date, "cannot be earlier than birth date")
-        base_errors['treatments'] = "Treatment date(s) precede birth date"
+        t.errors.add(:treatment_date, :cannot_precede_birth_date)
+        base_errors['treatments'] = [:precede_birth_date, { :thing => I18n.t(:treatment) }]
       end
       if (date = t.stop_treatment_date.try(:to_date)) && (date < bdate)
-        t.errors.add(:stop_treatment_date, "cannot be earlier than birth date")
-        base_errors['treatments'] = "Treatment date(s) precede birth date"
+        t.errors.add(:stop_treatment_date, :cannot_precede_birth_date)
+        base_errors['treatments'] = [:precede_birth_date, { :thing => I18n.t(:treatment) }]
       end
     end
     risk_factor = self.interested_party.risk_factor
     if (date = risk_factor.try(:pregnancy_due_date).try(:to_date)) && (date < bdate)
-      risk_factor.errors.add(:pregnancy_due_date, "cannot be earlier than birth date")
-      base_errors['risk_factor'] = "Risk factor date(s) precede birth date"
+      risk_factor.errors.add(:pregnancy_due_date, :cannot_precede_birth_date)
+      base_errors['risk_factor'] = [:precede_birth_date, { :thing => I18n.t(:risk_factor) }]
     end
     if (date = self.disease_event.try(:disease_onset_date).try(:to_date)) && (date < bdate)
-      self.disease_event.errors.add(:disease_onset_date, "cannot be earlier than birth date")
-      base_errors['disease'] = "Disease date(s) precede birth date"
+      self.disease_event.errors.add(:disease_onset_date, :cannot_precede_birth_date)
+      base_errors['disease'] = [:precede_birth_date, { :thing => I18n.t(:disease) }]
     end
     if (date = self.disease_event.try(:date_diagnosed).try(:to_date)) && (date < bdate)
-      self.disease_event.errors.add(:date_diagnosed, "cannot be earlier than birth date")
-      base_errors['disease'] = "Disease date(s) precede birth date"
+      self.disease_event.errors.add(:date_diagnosed, :cannot_precede_birth_date)
+      base_errors['disease'] = [:precede_birth_date, { :thing => I18n.t(:disease) }]
     end
     self.labs.each do |l|
       l.lab_results.each do |lr|
         if (date = lr.collection_date.try(:to_date)) && (date < bdate)
-          lr.errors.add(:collection_date, "cannot be earlier than birth date")
-          base_errors['labs'] = "Lab result date(s) precede birth date"
+          lr.errors.add(:collection_date, :cannot_precede_birth_date)
+          base_errors['labs'] = [:precede_birth_date, { :thing => I18n.t(:lab_result) }]
         end
         if (date = lr.lab_test_date.try(:to_date)) && (date < bdate)
-          lr.errors.add(:lab_test_date, "cannot be earlier than birth date")
-          base_errors['labs'] = "Lab result date(s) precede birth date"
+          lr.errors.add(:lab_test_date, :cannot_precede_birth_date)
+          base_errors['labs'] = [:precede_birth_date, { :thing => I18n.t(:lab_result) }]
         end
       end
     end
     if (date = self.results_reported_to_clinician_date.try(:to_date)) && (date < bdate)
-      self.errors.add(:results_reported_to_clinician_date, "cannot be earlier than birth date")
+      self.errors.add(:results_reported_to_clinician_date, :cannot_precede_birth_date)
     end
     if (date = self.first_reported_PH_date.try(:to_date)) && (date < bdate)
-      self.errors.add(:first_reported_PH_date, "cannot be earlier than birth date")
+      self.errors.add(:first_reported_PH_date, :cannot_precede_birth_date)
     end
 
     unless base_errors.empty? && self.errors.empty?
-      base_errors.values.each { |msg| self.errors.add_to_base(msg) }
+      base_errors.values.each { |msg| self.errors.add(:base, *msg) }
     end
   end
 end

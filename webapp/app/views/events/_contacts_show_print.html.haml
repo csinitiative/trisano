@@ -15,7 +15,7 @@
 
 
 %span.section-header
-  Contacts
+  =t 'contacts'
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => f }
 
 = h @event.safe_call_chain(:disease_event, :disease, :contact_lead_in)
@@ -23,7 +23,7 @@
 - core_element_print :contacts, f, :vert do
   - ran = nil
   - unless association_recorded?(@event.contact_child_events.active)
-    %b{ :style => 'font-size: 11px' }="No contacts have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
+    %b{ :style => 'font-size: 11px' }=t 'no_contacts', :thing => h(@event.class.name.underscore.humanize.downcase)
   - else
     - for contact in @event.contact_child_events.active
       - contact_entity = contact.interested_party.person_entity
@@ -38,44 +38,44 @@
           %hr
         .three-valued-row
           .left
-            %span.print-label Last Name:
+            %span.print-label= ct 'last_name'
             %span.print-value
               = h(person.last_name)
           .left
-            %span.print-label First Name:
+            %span.print-label= ct 'first_name'
             %span.print-value
               = h(person.first_name)
           .right
-            %span.print-label Middle Name:
+            %span.print-label= ct 'middle_name'
             %span.print-value
               = h(person.middle_name)
 
       #address
         .three-valued-row
           .left
-            %span.print-label Address:
+            %span.print-label= ct 'address'
             - unless address.nil?
               %span.print-value
                 = "#{h(address.street_number)} #{h(address.street_name)}" + ((not address.unit_number.blank?) ? ", Unit #{h(address.unit_number)}" : "")
           .left
-            %span.print-label City:
+            %span.print-label= ct 'city'
             - unless address.nil?
               %span.print-value
                 = h(address.city)
           .right
-            %span.print-label State:
+            %span.print-label= ct 'state'
             - unless address.nil?
               %span.print-value
                 = h(l(address.state))
 
         .three-valued-row
           .left
-            %span.print-label County:
+            %span.print-label= ct 'county'
             - unless address.nil?
               %span.print-value
                 = h(l(address.county))
           .left
-            %span.print-label Zip code:
+            %span.print-label= ct 'zip'
             - unless address.nil?
               %span.print-value
                 = h(address.postal_code)
@@ -84,12 +84,12 @@
         .three-valued-row
           .left
             %span.print-label
-              Disposition:
+              =ct 'disposition'
             %span.print-value
               = h(contact_event_data.disposition.code_description) if contact_event_data and contact_event_data.disposition
           .left
             %span.print-label
-              Contact Type:
+              =ct 'contact_type'
             %span.print-value
               = h(contact_event_data.contact_type.code_description) if contact_event_data and contact_event_data.contact_type
 

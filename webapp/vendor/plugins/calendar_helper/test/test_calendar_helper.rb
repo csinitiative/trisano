@@ -7,7 +7,7 @@ require 'flexmock/test_unit'
 
 # require 'action_controller'
 # require 'action_controller/assertions'
-# require 'active_support/inflector'
+require 'active_support'
 
 class CalendarHelperTest < Test::Unit::TestCase
 

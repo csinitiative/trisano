@@ -59,7 +59,8 @@ describe 'Adding a repeating task to a CMR' do
   end
 
   it 'should display the tasks in edit mode' do
-    edit_cmr(@browser)
+    @browser.click "link=Edit CMR"
+    @browser.wait_for_page_to_load($load_time)
     num_times_text_appears(@browser, @task_name).should == 8 # Includes the one in the notes
   end
 

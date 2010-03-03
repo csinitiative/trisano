@@ -3,18 +3,18 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Address
+  %legend=t('address')
   -f.fields_for(:address, :builder => ExtendedFormBuilder) do |address_form|
     -core_element_show :street_number, address_form, :horiz do
       =address_form.label(:street_number)
@@ -30,15 +30,15 @@
       =h(address_form.object.city)
     -core_element_show :state_id, address_form, :horiz do
       =address_form.label(:state)
-      =l(address_form.object.state) 
+      =l(address_form.object.state)
     -core_element_show :postal_code, address_form, :horiz do
-      =address_form.label(:postal_code, "Zip code")
+      =address_form.label(:postal_code, t('zip'))
       =h(address_form.object.postal_code)
     -core_element_show :county_id, address_form, :horiz do
       =address_form.label(:county)
-      =l(address_form.object.county) 
+      =l(address_form.object.county)
     -core_element_show :district, address_form, :horiz do
       =address_form.label(:district)
       =l(address_form.object.district)
 
-    = render_geocode_section(address_form, nil, address_form.object.street_number, address_form.object.street_name, address_form.object.unit_number, address_form.object.city, address_form.object.state.try(:code_description), address_form.object.postal_code)
+    =render_extensions :address_extension_renderers, :address_form => address_form, :read_only_address => address_form.object

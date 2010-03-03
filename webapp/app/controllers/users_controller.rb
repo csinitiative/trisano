@@ -18,8 +18,6 @@
 class UsersController < AdminController
   skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
   
-  # GET /users
-  # GET /users.xml
   def index
     @users = User.all :order => {
       'uid ASC'        => 'uid ASC',
@@ -31,46 +29,39 @@ class UsersController < AdminController
     }["#{params[:sort_by]} #{params[:sort_direction]}"] || 'uid ASC'
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @users }
     end
   end
 
-  # GET /users/1
-  # GET /users/1.xml
   def show
     @user = User.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.xml  { render :xml => @user }
     end
   end
 
-  # GET /users/new
-  # GET /users/new.xml
   def new
     @user = User.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.xml  { render :xml => @user }
     end
   end
 
-  # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
   end
 
-  # POST /users
-  # POST /users.xml
   def create
     @user = User.new(params[:user])
 
     respond_to do |format|
       if @user.save
-        flash[:notice] = 'User was successfully created.'
+        flash[:notice] = t("user_successfully_created")
         format.html { redirect_to(@user) }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
@@ -80,14 +71,12 @@ class UsersController < AdminController
     end
   end
 
-  # GET /users/shortcuts
   def shortcuts
     @user = User.current_user
     response.headers['X-JSON'] = @user.shortcut_settings.to_json
     head :ok
   end
   
-  # GET /users/shortcuts/edit
   def shortcuts_edit
     @user = User.current_user
     respond_to do |format|
@@ -95,15 +84,14 @@ class UsersController < AdminController
     end
   end
   
-  # PUT /users/shortcuts
   def shortcuts_update
     @user = User.current_user
 
     respond_to do |format|
       if @user.update_attribute(:shortcut_settings, params[:user][:shortcut_settings])
-        flash[:notice] = 'Shortcuts successfully updated'
+        flash[:notice] = t("shortcuts_successfully_updated")
       else
-        flash[:error] = 'Shortcuts update failed'
+        flash[:error] = t("shortcuts_update_failed")
       end
     format.html { render :action => "shortcuts_edit" }
     end
@@ -115,15 +103,13 @@ class UsersController < AdminController
     end
   end
 
-  # PUT /users/1
-  # PUT /users/1.xml
   def update
     params[:user][:role_membership_attributes] ||= {}
     @user = User.find(params[:id])
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        flash[:notice] = 'User was successfully updated.'
+        flash[:notice] = t("user_successfully_updated")
         format.html { redirect_to(@user) }
         format.xml  { head :ok }
       else
@@ -134,20 +120,8 @@ class UsersController < AdminController
   end
 
 
-  # DELETE /users/1
-  # DELETE /users/1.xml
   def destroy
-    # Delete the following line when deleting users is allowed
-    render :text => 'Deleting users is not yet implemented.', :status => 405
-
-    # Uncomment and verify the following lines to enable user deletion
-    # @user = User.find(params[:id])
-    # @user.destroy
-    #
-    # respond_to do |format|
-    #   format.html { redirect_to(users_url) }
-    #   format.xml  { head :ok }
-    # end
+    head :method_not_allowed
   end
 
 end

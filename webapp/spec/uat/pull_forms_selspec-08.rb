@@ -29,49 +29,21 @@ describe 'Pulling forms into an event' do
 
   it 'should create a morbidity anthrax form' do
     create_new_form_and_go_to_builder(@browser, @morb_anthrax_1, "Anthrax", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => "Morb Anthrax 1 Question 1", :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => "Morb Anthrax 1 Question 1", :data_type => "Single line text", :short_name => "1"})
     publish_form(@browser).should be_true
   end
 
   it 'should create another morbidity anthrax form' do
     create_new_form_and_go_to_builder(@browser, @morb_anthrax_2, "Anthrax", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => "Morb Anthrax 2 Question 1", :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => "Morb Anthrax 2 Question 1", :data_type => "Single line text", :short_name => "2"})
     publish_form(@browser).should be_true
   end
 
   it 'should create a morbidity malaria form' do
     create_new_form_and_go_to_builder(@browser, @morb_malaria_1, "Malaria", "All Jurisdictions")
-    add_question_to_view(@browser, "Default View", {:question_text => "Morb Malaria 1 Question 1", :data_type => "Single line text"})
+    add_question_to_view(@browser, "Default View", {:question_text => "Morb Malaria 1 Question 1", :data_type => "Single line text", :short_name => "3"})
     publish_form(@browser).should be_true
   end
-
-# Debt: Dest contacts and places too
-=begin
-  it 'should create a contact anthrax form' do
-    create_new_form_and_go_to_builder(@browser, "Contact Anthrax 1", "Anthrax", "All Jurisdictions", "Contact event")
-    add_question_to_view(@browser, "Default View", {:question_text => "Contact Anthrax 1 Question 1", :data_type => "Single line text"})
-    publish_form(@browser).should be_true
-  end
-
-  it 'should create a contact malaria form' do
-    create_new_form_and_go_to_builder(@browser, "Contact Malaria 1", "Malaria", "All Jurisdictions", "Contact event")
-    add_question_to_view(@browser, "Default View", {:question_text => "Contact Malaria 1 Question 1", :data_type => "Single line text"})
-    publish_form(@browser).should be_true
-  end
-
-  it 'should create a contact anthrax form' do
-    create_new_form_and_go_to_builder(@browser, "Place Anthrax 1", "Anthrax", "All Jurisdictions", "Place event")
-    add_question_to_view(@browser, "Default View", {:question_text => "Place Anthrax 1 Question 1", :data_type => "Single line text"})
-    publish_form(@browser).should be_true
-  end
-
-  it 'should create a contact malaria form' do
-    create_new_form_and_go_to_builder(@browser, "Place Malaria 1", "Malaria", "All Jurisdictions", "Place event")
-    add_question_to_view(@browser, "Default View", {:question_text => "Place Malaria 1 Question 1", :data_type => "Single line text"})
-    publish_form(@browser).should be_true
-  end
-
-=end
 
   it "should create a CMR with no disease" do
     create_simplest_cmr(@browser, get_unique_name(1))
@@ -98,16 +70,4 @@ describe 'Pulling forms into an event' do
     @browser.is_element_present("//div[@id='forms_in_use']//tr[2]").should be_true
   end
 
-  # Create CMR with Anthrax
-  # Validare 2 forms plus 1 available
-  # Add form validate
-  #
-  # Create CMR with Anthrax, contact, and place
-  # Edit contact
-  # validate 1 + 1
-  # add form and validate
-  #
-  # Edit place
-  # Validate 1 + 1
-  # add form and validate
 end

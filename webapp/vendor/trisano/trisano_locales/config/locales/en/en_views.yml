@@ -1,0 +1,11 @@
+en:
+
+  trisano_locales:
+    manage_locale_link: "Manage Locale"
+    default_locale: "Default Locale"
+    system_modified: "System modified"
+    current_locale: "Current Locale"
+    changed_by: "Modified by"
+    updated_at: "Last Modified"
+    update_default_locale: "Change Default Locale"
+    successful_update: "Default locale was successfully updated"

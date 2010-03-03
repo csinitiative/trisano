@@ -26,7 +26,7 @@ class HospitalizationFacility < Participation
   def validate
     super
     if !hospitals_participation.nil? and place_entity.nil?
-      errors.add_to_base("Hospitalization Facility can not be blank if hospitalization dates or medical record number are given.")
+      errors.add_to_base(:blank_hospitalization_facility)
     end
   end
 

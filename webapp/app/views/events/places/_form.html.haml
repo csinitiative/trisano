@@ -1,41 +1,41 @@
 -# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
--# 
+-#
 -# This file is part of TriSano.
--# 
--# TriSano is free software: you can redistribute it and/or modify it under the 
--# terms of the GNU Affero General Public License as published by the 
--# Free Software Foundation, either version 3 of the License, or 
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the
+-# terms of the GNU Affero General Public License as published by the
+-# Free Software Foundation, either version 3 of the License, or
 -# (at your option) any later version.
--# 
--# TriSano is distributed in the hope that it will be useful, but 
--# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
--# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+-#
+-# TriSano is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
 -# for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along 
+-#
+-# You should have received a copy of the GNU Affero General Public License along
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend Place Information
+  %legend=t('place_info')
   %span{:id => 'place_info_hide', :onClick => "Element.hide('place_form'); Element.hide('place_info_hide'); Element.show('place_info_show'); return false;"}
-    [Hide]
+    ="[#{t('hide')}]"
   %span{:id => 'place_info_show', :onClick => "Element.show('place_form'); Element.hide('place_info_show'); Element.show('place_info_hide'); return false;", :style => "display: none;"}
-    [Show]
+    ="[#{t('show')}]"
   %div{:id => 'place_form'}
 
     -f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
-      - ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+      -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
 
-        = render :partial => 'events/places/name_form', :locals => {:f => pe, :event_form => f}
+        =render :partial => 'events/places/name_form', :locals => {:f => pe, :event_form => f}
 
         -# Remember, the object tree is initialized by the form to have blank records wherever there are no records
-        - if @event.address.new_record?
-          = render :partial => 'people/address_form', :locals => {:f => f, :event => @event }
+        -if @event.address.new_record?
+          =render :partial => 'people/address_form', :locals => {:f => f, :event => @event }
         -else
-          = render :partial => 'events/places/address_show', :locals => {:f => f}
+          =render :partial => 'events/places/address_show', :locals => {:f => f}
 
-        - if pe.object.primary_phone.new_record?
-          = render :partial => 'people/phones_form', :locals => {:f => pe}        
-        - else
-          = render :partial => 'people/phones_show', :locals => {:f => pe}
+        -if pe.object.primary_phone.new_record?
+          =render :partial => 'people/phones_form', :locals => {:f => pe}
+        -else
+          =render :partial => 'people/phones_show', :locals => {:f => pe}
 

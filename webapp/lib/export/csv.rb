@@ -2,18 +2,18 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.# 
+# You should have received a copy of the GNU Affero General Public License
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.#
 
 require 'csv'
 
@@ -21,8 +21,8 @@ module Export
   module Csv
 
     # To follow along:  We may be asked to export a single event or multiple events.  Top level events can
-    # be either morbidity events, contact events or a mix of both (ideally sorted first by event type).  
-    # For morbidities and contacts we need to output labs and treatments, if any, on separate lines.  Also, 
+    # be either morbidity events, contact events or a mix of both (ideally sorted first by event type).
+    # For morbidities and contacts we need to output labs and treatments, if any, on separate lines.  Also,
     # for morbidities only we need to output any contact or place (exposure) events associated with the event.
     def Csv.export(events, options={}, &proc)
       events = [events] unless events.respond_to?(:each)
@@ -157,7 +157,7 @@ module Export
       # A root-level event is either a morbidity or a contact, not a place
       def output_body(event)
         # A contact's only contact is the original patient
-        num_contacts    = exporting_contacts? ? event.contact_child_events.active(true).size : 0
+        num_contacts    = exporting_contacts? ? event.child_events.morbs_or_contacts.active.size : 0
         #contacts don't have places
         num_places      = event.is_a?(MorbidityEvent) && exporting_places? ? event.place_child_events.active(true).size : 0
         num_lab_results = exporting_labs? ? event.lab_results.size : 0
@@ -167,7 +167,7 @@ module Export
         # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
         # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
         loop_event = event
-        loop_ctr.times do |ctr| 
+        loop_ctr.times do |ctr|
           csv_row = event_values(loop_event).map { |value| value.to_s.gsub(/,/,' ') }
 
           # Blank out the main event for successive rows, but not the ID
@@ -204,11 +204,11 @@ module Export
 
             if exporting_contacts?
               if ctr < num_contacts
-                contact_event = event.contact_child_events.active[ctr]
+                contact_event = event.child_events.morbs_or_contacts.active[ctr]
               else
                 contact_event = ContactEvent.new
               end
-              csv_row += event_values(contact_event).map { |value| value.to_s.gsub(/,/,' ') }
+              csv_row += event_values(contact_event, :contact_event_fields).map { |value| value.to_s.gsub(/,/,' ') }
             end
           end
 
@@ -216,9 +216,9 @@ module Export
         end
       end
 
-      def event_values(event)
+      def event_values(event, csv_fields_meth = nil)
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-          event_data(event).collect do |event_datum|
+          event_data(event, csv_fields_meth).collect do |event_datum|
             begin
               value = event.instance_eval(event_datum.last).to_s
               if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
@@ -239,7 +239,7 @@ module Export
       end
 
       def lab_values(lab_result)
-        lab_data.collect do |lab_datum| 
+        lab_data.collect do |lab_datum|
           begin
             lab_result.instance_eval(lab_datum.last)
           rescue Exception => ex
@@ -249,7 +249,7 @@ module Export
       end
 
       def treatment_values(treatment)
-        treatment_data.collect do |treatment_datum| 
+        treatment_data.collect do |treatment_datum|
           begin
             treatment.instance_eval(treatment_datum.last)
           rescue Exception => ex
@@ -258,9 +258,9 @@ module Export
         end
       end
 
-      def event_data(event_or_class)
+      def event_data(event_or_class, csv_fields_meth = nil)
         clazz = event_or_class.is_a?(Class) ? event_or_class : event_or_class.class
-        meth = "#{clazz.to_s.underscore}_fields"
+        meth = csv_fields_meth || "#{clazz.to_s.underscore}_fields"
         event_data = CsvField.send(meth).map do |csv_field|
           [csv_field.send(short_or_long_name), script_for(csv_field)]
         end
@@ -283,7 +283,7 @@ module Export
       end
 
       def lab_data
-        CsvField.lab_fields.map do |csv_field| 
+        CsvField.lab_fields.map do |csv_field|
           [csv_field.send(short_or_long_name), script_for(csv_field)]
         end
       end

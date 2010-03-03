@@ -16,3 +16,5 @@
 - "manage_staged_message"
 - "write_staged_message"
 - "manage_entities"
+- "merge_people"
+- "merge_places"

@@ -15,7 +15,7 @@
 
 
 - content_for :title do
-  Add Event Attachment
+  =t('add_thing', :name => t('event_attachment'))
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
@@ -23,7 +23,7 @@
 #new-attachment-form
 
   %h2
-    New Attachment
+    = t('new_thing', :name => t('attachment'))
 
   = error_messages_for :attachment
 
@@ -32,7 +32,7 @@
 
     %br{ :clear => 'all' }
     %br
-    = f.submit "Create"
+    = f.submit t('create')
 
 %br
 
@@ -40,6 +40,6 @@
 
 #existing-attachments
   %h2
-    Existing Attachments
+    = t('existing_attachments')
   #attachments
     = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })

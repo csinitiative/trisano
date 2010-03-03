@@ -14,9 +14,9 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - if @event.notes.empty?
-  %b New record:  No existing notes.
+  %b=t('new_record_no_notes')
 - else
-  %b Earlier notes
+  %b=t 'earlier_notes'
   = render :partial => 'event_notes/filter_nav', :locals => { :notes => @event.notes, :mode => 'edit' }
 
   #existing-notes
@@ -37,19 +37,19 @@
               - unless note.note_type.blank?
                 %span{ :class => 'note-type' }
                   = h("#{note.note_type.humanize} ")
-              = h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
+              = ld(note.created_at, {:format => :notes})
           %td
             -# Not building on the builder object referenced with 'f' because this partial can be redrawn with Ajax
             - fields_for("#{h(@event.class.name.underscore)}[notes_attributes][#{h(note.id)}]", note, :builder => ExtendedFormBuilder) do |note_fields|
               = note_fields.hidden_field :id
               %div{:style => "position: absolute; right: 30px;"}
                 %small
-                  Strike Through
+                  =t "strike_through"
                   = note_fields.check_box :struckthrough, :onclick => "toggle_strike_through('note_#{note.id}')"
         %tr
           %td
             = render_note_body note
           %td
         - if no_saved_notes
-          %b No notes have been recorded for this event
+          %b=t('no_notes')
 %br{:clear => 'all' }

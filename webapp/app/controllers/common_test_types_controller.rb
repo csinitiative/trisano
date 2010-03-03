@@ -34,10 +34,11 @@ class CommonTestTypesController < AdminController
   def loinc_codes
     @common_test_type = CommonTestType.find(params[:id])
 
-    if params[:do] == "Search"
-      @loinc_codes = LoincCode.search_unrelated_loincs(@common_test_type,
-                                                       :test_name  => params[:loinc_code_search_test_name],
-                                                       :loinc_code => params[:loinc_code_search_loinc_code])
+    unless params[:do].blank?
+      @loinc_codes = LoincCode.search_unrelated_loincs(
+        @common_test_type,
+        :test_name  => params[:loinc_code_search_test_name],
+        :loinc_code => params[:loinc_code_search_loinc_code])
     end
   end
 
@@ -46,7 +47,7 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       if @common_test_type.save
-        flash[:notice] = 'Common test type was successfully created.'
+        flash[:notice] = t("common_test_type_successfully_created")
         format.html { redirect_to(@common_test_type) }
       else
         format.html { render :action => "new" }
@@ -62,7 +63,7 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       if @common_test_type.update_attributes(params[:common_test_type])
-        flash[:notice] = 'Common test type was successfully updated.'
+        flash[:notice] = t("common_test_type_successfully_updated")
         format.html { redirect_to(@common_test_type) }
       else
         format.html { render :action => "edit" }
@@ -78,11 +79,11 @@ class CommonTestTypesController < AdminController
     respond_to do |format|
       begin
         @common_test_type.update_loinc_code_ids :add => added_loincs, :remove => removed_loincs
-        flash[:notice] = 'Common test type was successfully updated.'
+        flash[:notice] = t("common_test_type_successfully_updated")
         format.html { redirect_to loinc_codes_common_test_type_path(@common_test_type) }
       rescue
         logger.error($!.message)
-        flash.now[:error] = "TriSano could not complete the last request. Contact your system administrator"
+        flash.now[:error] = t("could_not_complete_request")
         format.html { render :action => :loinc_codes, :status => 500 }
       end
     end
@@ -94,15 +95,15 @@ class CommonTestTypesController < AdminController
     respond_to do |format|
       begin
         @common_test_type.destroy
-        flash[:notice] = 'Common test type was successfully deleted.'
+        flash[:notice] = t("common_test_type_successfully_deleted")
         format.html { redirect_to common_test_types_path }
       rescue CommonTestType::DestroyNotAllowedError => e
         logger.error(e.message)
-        flash.now[:error] = "Common test type could not be deleted. It may already be associated with a lab result"
+        flash.now[:error] = t("common_test_type_could_not_be_deleted")
         format.html { render :action => 'show', :status => 500 }
       rescue
         logger.error($!.message)
-        flash.now[:error] = "TriSano could not complete the last request. Please contact your system administrator."
+        flash.now[:error] = t("could_not_complete_request")
         format.html { render :action => 'show', :status => 500 }
       end
     end

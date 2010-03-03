@@ -6,7 +6,7 @@ Feature: Contact event, viewing core field help text
   Scenario: Viewing contact event help text
     Given I am logged in as a super user
     And all core field configs for a contact event have help text
-    And a morbidity event exists
+    And a basic morbidity event exists
     And there is a contact on the event named Contacto
 
     When I am on the contact event edit page

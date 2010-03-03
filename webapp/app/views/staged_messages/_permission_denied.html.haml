@@ -1,3 +1,3 @@
 - content_for :title do
-  PERMISSION DENIED
-= content_tag(:p, reason + ". Please #{link_to('exit', home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')
+  =t 'permission_denied'
+= content_tag(:p, reason + ". #{link_to(t('please_exit'), home_path, :style => 'color: white; text-decoration: underline;')}.", :class => 'banner-warning')

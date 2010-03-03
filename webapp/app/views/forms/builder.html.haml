@@ -18,23 +18,23 @@
   = h @form.name
 
 - content_for :tools do
-  = link_to 'Forms', forms_path
+  = link_to t('forms'), forms_path
   |
   Builder
   %p
 
 - content_for :tools_two do
-  = button_to("Create new form", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_form"), {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Form Information
-      %th Diseases
-      %th Jurisdiction
-      %th Event Type
-      %th Short Name
+        = t 'form_information'
+      %th=t 'diseases'
+      %th=t 'jurisdiction'
+      %th=t 'event_type'
+      %th=t 'short_name'
       %tr
         %td.forminformation
           .formname
@@ -43,31 +43,31 @@
           .description
             = h @form.description
           .tools
-            = link_to 'Builder', builder_path(@form)
+            = link_to t('builder'), builder_path(@form)
             |
-            = link_to 'Details', form_path(@form)
+            = link_to t('details'), form_path(@form)
             |
-            = link_to 'Edit', edit_form_path(@form)
+            = link_to t('edit'), edit_form_path(@form)
             |
-            = link_to 'Copy', copy_form_path(@form), :method => :post
+            = link_to t('copy'), copy_form_path(@form), :method => :post
             |
-            = link_to 'Export', export_form_path(@form), :method => :post
-            - if @form.status == "Published"
+            = link_to t('export'), export_form_path(@form), :method => :post
+            - if(@form.status == "Published")
               |
-              = link_to 'Push', push_form_path(@form), :method => :post
+              = link_to t('push'), push_form_path(@form), :method => :post
               |
-              = link_to 'Deactivate', deactivate_form_path(@form), :method => :post
+              = link_to t('deactivate'), deactivate_form_path(@form), :method => :post
         %td
           %ul
             - @form.diseases.each do |disease|
               %li.diseaselist= h disease.disease_name
         %td
-          = h @form.jurisdiction.nil? ? "All" : @form.jurisdiction.place.name
+          = h @form.jurisdiction.nil? ? t("all") : @form.jurisdiction.place.name
         %td
           = h @form.event_type.humanize
           %br
           .status
-            = h @form.status
+            = h(t("form_statuses.#{@form.status.downcase.gsub(" ", "_")}"))
             &nbsp;
             - if @form.errors.empty?
               = publish_form_button
@@ -78,23 +78,23 @@
     %ul.horizontal
       %li
         #button.formname
-          Form Builder
+          =t 'form_builder'
       %li
         #button.press
           %span
-            = link_to_remote("Add Tab", :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
+            = link_to_remote(t("add_tab"), :url => {:controller => "view_elements", :action => "new", :form_element_id => @form.investigator_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-tab', :id => 'add-tab'})
       %li
         #button.press
           %span
-            = link_to_remote("Add Core Tab Config", :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
+            = link_to_remote(t("add_core_tab_config"), :url => {:controller => "core_view_elements", :action => "new", :form_element_id => @form.core_view_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-tab', :id => 'add-core-tab'})
       %li
         #button.press
           %span
-            = link_to_remote("Add Core Field Config", :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
+            = link_to_remote(t("add_core_field_config"), :url => {:controller => "core_field_elements", :action => "new", :form_element_id => @form.core_field_elements_container.id}, :method => :get, :html => {:class => 'fb-add-core-field', :id => 'add-core-field'})
       %li
         #button.press
           %span
-            = link_to_remote("Open library", :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
+            = link_to_remote(t("open_library"), :url => {:controller => "forms", :action => "library_admin", :type => "question_element"}, :method => :get, :html => {:class => 'fb-open-library-admin', :id => 'open-library-admin'})
 
   #builder-mods
   #core-builder-mods
@@ -115,11 +115,11 @@
     - else
       %br
       %span{:style => 'color:#CC0000; font-weight: bold'}
-        Form structure is invalid.
+        =t 'invalid_form_structure'
       %ul
         - @form.errors.each do |k, v|
           %li{:style => 'color:#CC0000; font-weight: bold'}
             = v
       %br
-      = link_to 'Roll form back to last good published version.', form_rollback_path(@form)
-      &nbsp;(This may take a few minutes.)
+      = link_to t('rollback_form'), form_rollback_path(@form)
+      ="&nbsp;(#{t('wait_message')})"

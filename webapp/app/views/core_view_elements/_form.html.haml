@@ -20,10 +20,10 @@
     %table
       %tr
         %td
-          %b Add Core Tab
+          %b= t('add_core_tab')
       %tr
         %td.tools
-          = link_to_function "Close", "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"
+          = link_to_function t('close'), "$('core-builder-mods').down('form').reset(); Effect.BlindUp($('core-builder-mods'), { duration: 0.1 })"
 = f.select(:name, @available_core_views, {:include_blank => true}, {:style => 'width: 185px'}) 
 - unless @available_core_views.empty?
-  = f.submit("Create", :id => 'create_core_view_submit')
+  = f.submit(t('create'), :id => 'create_core_view_submit')

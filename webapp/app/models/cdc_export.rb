@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 class CdcExport < ActiveRecord::Base
 
@@ -37,13 +37,13 @@ class CdcExport < ActiveRecord::Base
       END_WHERE_CLAUSE
 
       events = Event.find_by_sql(modified_record_sql + where_clause)
-      events.map!{ |event| event.extend(Export::Cdc::Record) }     
+      events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
     end
 
     def annual_cdc_export(mmwr_year)
       events = Event.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
-      events.map!{ |event| event.extend(Export::Cdc::Record) }     
+      events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
     end
 
@@ -98,7 +98,7 @@ class CdcExport < ActiveRecord::Base
       sql = <<-SQL
        SELECT
          e.id,
-         e.state_case_status_id, 
+         e.state_case_status_id,
          de.disease_onset_date,
          de.date_diagnosed,
          diseases.cdc_code,
@@ -108,7 +108,7 @@ class CdcExport < ActiveRecord::Base
          e."MMWR_week",
          e.record_number,
          e.age_at_onset,
-         age_type_codes.the_code AS age_at_onset_type,         
+         age_type_codes.the_code AS age_at_onset_type,
          p.birth_date,
          sex_conversions.value_to as sex,
          praces.races,
@@ -121,26 +121,26 @@ class CdcExport < ActiveRecord::Base
          disease_answers.value_tos,
          disease_answers.start_positions,
          disease_answers.lengths,
-         disease_answers.data_types,         
+         disease_answers.data_types,
          form_references_counter.core_field_export_count,
-         form_ids_accumulator.form_ids AS disease_form_ids         
+         form_ids_accumulator.form_ids AS disease_form_ids
         FROM events e
         INNER JOIN disease_events de ON e.id = event_id
         INNER JOIN participations ip ON (ip.event_id = e.id AND ip.type='InterestedParty')
-        INNER JOIN people p ON p.entity_id = ip.primary_entity_id 
-        INNER JOIN 
+        INNER JOIN people p ON p.entity_id = ip.primary_entity_id
+        INNER JOIN
         (
           SELECT d.cdc_code, c.disease_id, c.external_code_id FROM diseases_external_codes c
            JOIN diseases d on c.disease_id = d.id
           WHERE d.cdc_code is not null
         ) diseases ON (diseases.disease_id = de.disease_id AND e.state_case_status_id = diseases.external_code_id)
         LEFT JOIN external_codes age_type_codes ON e.age_type_id = age_type_codes.id
-        LEFT JOIN external_codes sex_codes ON p.birth_gender_id = sex_codes.id        
+        LEFT JOIN external_codes sex_codes ON p.birth_gender_id = sex_codes.id
         LEFT JOIN
         (
           SELECT z.value_from, z.value_to FROM export_columns sex_columns
           JOIN export_conversion_values z ON sex_columns.id = z.export_column_id
-          WHERE sex_columns.export_column_name='SEX' 
+          WHERE sex_columns.export_column_name='SEX'
             AND sex_columns.type_data='CORE'
             AND export_disease_group_id IS NULL
         ) sex_conversions ON sex_codes.the_code = sex_conversions.value_from
@@ -155,33 +155,33 @@ class CdcExport < ActiveRecord::Base
         ) case_status_conversions ON state_case_status.the_code = case_status_conversions.value_from
         LEFT JOIN addresses ON e.id = addresses.event_id
         LEFT JOIN external_codes county_codes ON addresses.county_id = county_codes.id
-        LEFT JOIN 
+        LEFT JOIN
         (
           SELECT value_from, value_to FROM export_columns county_columns
           JOIN export_conversion_values county_conv ON county_columns.id = county_conv.export_column_id
           WHERE county_columns.export_column_name='COUNTY'
             AND county_columns.type_data='CORE'
-            AND export_disease_group_id IS NULL          
+            AND export_disease_group_id IS NULL
         ) county_conversions ON county_codes.the_code = county_conversions.value_from
         LEFT JOIN external_codes imported_from_codes ON e.imported_from_id = imported_from_codes.id
-        LEFT JOIN 
+        LEFT JOIN
         (
           SELECT value_from, value_to FROM export_columns imported_columns
           JOIN export_conversion_values imported_conv ON imported_columns.id = imported_conv.export_column_id
           WHERE imported_columns.export_column_name='IMPORTED'
             AND imported_columns.type_data='CORE'
-            AND export_disease_group_id IS NULL          
+            AND export_disease_group_id IS NULL
         ) imported_from_conversions ON imported_from_codes.the_code = imported_from_conversions.value_from
         LEFT JOIN external_codes outbreak_codes ON e.outbreak_associated_id = outbreak_codes.id
-        LEFT JOIN 
+        LEFT JOIN
         (
           SELECT value_from, value_to FROM export_columns outbreak_columns
           JOIN export_conversion_values outbreak_conv ON outbreak_columns.id = outbreak_conv.export_column_id
           WHERE outbreak_columns.export_column_name='OUTBREAK'
             AND outbreak_columns.type_data='CORE'
-            AND export_disease_group_id IS NULL          
+            AND export_disease_group_id IS NULL
         ) outbreak_conversions ON outbreak_codes.the_code = outbreak_conversions.value_from
-        LEFT JOIN 
+        LEFT JOIN
         (
           SELECT pr.entity_id, ARRAY_ACCUM(race_conversions.value_to) AS races FROM people pr
           LEFT JOIN people_races ON pr.entity_id = people_races.entity_id
@@ -199,7 +199,7 @@ class CdcExport < ActiveRecord::Base
         (
           SELECT zzz.value_from, zzz.value_to FROM export_columns ethnic_columns
           JOIN export_conversion_values zzz ON ethnic_columns.id = zzz.export_column_id
-          WHERE ethnic_columns.export_column_name='ETHNICITY' 
+          WHERE ethnic_columns.export_column_name='ETHNICITY'
             AND ethnic_columns.type_data='CORE'
             AND ethnic_columns.export_disease_group_id IS NULL
         ) ethnic_conversions ON ethnic_codes.the_code = ethnic_conversions.value_from
@@ -227,17 +227,17 @@ class CdcExport < ActiveRecord::Base
         (
           SELECT
            ee.id as event_id,
-           ARRAY_ACCUM(disease_answers.text_answer) as text_answers, 
+           ARRAY_ACCUM(disease_answers.text_answer) as text_answers,
            ARRAY_ACCUM(disease_answers.value_to) as value_tos,
            ARRAY_ACCUM(disease_answers.start_position) as start_positions,
            ARRAY_ACCUM(disease_answers.length_to_output) as lengths,
            ARRAY_ACCUM(disease_answers.data_type) as data_types
           FROM events ee
           INNER JOIN disease_events ON ee.id = disease_events.event_id
-          INNER JOIN 
+          INNER JOIN
           (
-            SELECT 
-             eee.id as event_id, 
+            SELECT
+             eee.id as event_id,
              answers.text_answer,
              v.value_to,
              c.start_position,

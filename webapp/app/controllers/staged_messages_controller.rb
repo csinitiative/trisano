@@ -20,39 +20,30 @@ class StagedMessagesController < ApplicationController
   before_filter :can_manage, :only => [:index, :show, :discard, :event_search, :event]
   before_filter :can_write, :only => [:new, :create, :edit, :update, :destroy]
 
-  # GET /lab_messages
-  # GET /lab_messages.xml
   def index
     @selected = StagedMessage.states.has_value?(params[:message_state]) ? @selected = params[:message_state] : @selected = StagedMessage.states[:pending]
     @staged_messages = StagedMessage.paginate_by_state(@selected, :order => "created_at DESC", :page => params[:page], :per_page => 10)
   end
 
-  # GET /staged_messages/1
-  # GET /staged_messages/1.xml
   def show
     @staged_message = StagedMessage.find(params[:id])
   end
 
-  # GET /staged_messages/new
-  # GET /staged_messages/new.xml
   def new
     @staged_message = StagedMessage.new
   end
 
-  # GET /staged_messages/1/edit
   def edit
     @staged_message = StagedMessage.find(params[:id])
   end
 
-  # POST /staged_messages
-  # POST /staged_messages.xml
   def create
     @staged_message = StagedMessage.new(params[:staged_message])
     @staged_message.hl7_message ||= request.body.read if request.format == :hl7
 
     respond_to do |format|
       if @staged_message.save
-        flash[:notice] = 'Staged message was successfully created.'
+        flash[:notice] = t("staged_message_successfully_created")
         format.html { redirect_to(@staged_message) }
         format.hl7  { head :created, :location => @staged_message }
       else
@@ -68,15 +59,13 @@ class StagedMessagesController < ApplicationController
     @staged_message = StagedMessage.find(params[:id])
 
     if @staged_message.update_attributes(params[:staged_message])
-      flash[:notice] = 'Staged message was successfully updated.'
+      flash[:notice] = t("staged_message_successfully_updated")
       redirect_to(@staged_message)
     else
       render :action => "edit"
     end
   end
 
-  # DELETE /staged_messages/1
-  # DELETE /staged_messages/1.xml
   def destroy
     @staged_message = StagedMessage.find(params[:id])
     @staged_message.destroy
@@ -89,10 +78,10 @@ class StagedMessagesController < ApplicationController
     begin
       @staged_message.discard
     rescue
-      flash[:error] = "Could not discard message event. #{$!}"
+      flash[:error] = t("could_not_discard_message_event", :message => $!)
       redirect_to(staged_message_path(@staged_message))
     else
-      flash[:notice] = "Staged message was discarded."
+      flash[:notice] = t("staged_message_discarded")
       redirect_to(staged_messages_url)
     end
   end
@@ -101,7 +90,9 @@ class StagedMessagesController < ApplicationController
     @staged_message = StagedMessage.find(params[:id])
     if params[:name]
       dob = begin Date.parse(params[:birth_date]) || nil rescue nil end
-      @results = HumanEvent.search_by_name_and_birth_date(params[:name], dob)
+      @results = HumanEvent.find_by_name_and_bdate(
+        :fulltext_terms => params[:name],
+        :birth_date => dob)
     end
   end
 
@@ -111,17 +102,17 @@ class StagedMessagesController < ApplicationController
 
       if params[:event_id]
         event = Event.find(params[:event_id])
-        msg_string = "existing"
+        msg_string = t("existing")
       else
         event = staged_message.new_event_from(params[:entity_id])
-        msg_string = "new"
+        msg_string = t("new")
       end
 
       staged_message.assigned_event = event
     rescue
-      flash[:error] = "Could not assign message to #{msg_string} event. #{$!}"
+      flash[:error] = t("message_assignment_failed", :msg_string => msg_string, :message => $!)
     else
-      flash[:notice] = "Staged message was successfully assigned to #{msg_string} event. <br/> #{staged_message.note}"
+      flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :note => staged_message.note)
     end
     redirect_to(staged_message_path(staged_message))
   end
@@ -131,7 +122,7 @@ class StagedMessagesController < ApplicationController
       begin
         @staged_messages = StagedMessage.find_by_search params
       rescue
-        flash.now[:error] = "Search failed. Make sure the date range is valid"
+        flash.now[:error] = t("staged_message_search_failed")
       end
     end
   end
@@ -140,13 +131,13 @@ class StagedMessagesController < ApplicationController
 
   def can_manage
     unless User.current_user.is_entitled_to?(:manage_staged_message)
-      render :partial => 'permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to manage staged messages" }, :status => :forbidden and return
+      render :partial => 'permission_denied', :layout => true, :locals => { :reason => t("no_manage_staged_message_privs") }, :status => :forbidden and return
     end
   end
 
   def can_write
     unless User.current_user.is_entitled_to?(:write_staged_message)
-      render :partial => 'permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to create/modify a staged message" }, :status => :forbidden and return
+      render :partial => 'permission_denied', :layout => true, :locals => { :reason =>  t("no_create_or_modify_staged_message_privs")}, :status => :forbidden and return
     end
   end
  

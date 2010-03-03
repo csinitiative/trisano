@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Create an Organism
+  =t 'create_an_organism'
 
 -content_for :tools do
-  =link_to h('< Back to Organisms'), organisms_path
+  =link_to h(t('back_to', :name => t('organisms'))), organisms_path
   %p
 
 =render :partial => 'form',    :locals => {:organism => @organism}

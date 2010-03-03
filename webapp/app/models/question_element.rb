@@ -103,7 +103,7 @@ class QuestionElement < FormElement
 
   def validate
     if question_element_state.nil?
-      self.errors.add_to_base("The question element is not in a valid state for saving.")
+      self.errors.add_to_base(:invalid_state)
     else
       validate_question_short_name_uniqueness unless self.question_element_state == :copying_question_to_library
     end
@@ -150,7 +150,7 @@ class QuestionElement < FormElement
     existing_question_elements = FormElement.find(:all, :conditions => conditions)
 
     if (existing_question_elements.detect { |element| element.question.short_name == self.question.short_name })
-      self.errors.add_to_base("The short name entered is already in use on this form. Please choose another.")
+      self.errors.add(:base, :short_name_taken)
     end
   end
 

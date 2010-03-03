@@ -30,14 +30,15 @@ describe Code do
     @code.code_name = 'test'
     @code.the_code = 'TEST'
     @code.code_description = 'Test Code'
+    @code.save!
     @code.should be_valid
-    @code.save.should be_true
   end
 
   describe 'Jurisdiction place type' do
     fixtures :codes
     it 'should exist' do
       Code.jurisdiction_place_type_id.should_not be_nil
+      Code.jurisdiction_place_type.should_not be_nil
     end
   end
 end

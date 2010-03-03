@@ -9,7 +9,7 @@ Feature: Form builders can delete questions, value sets and groups from the libr
     And a Morbidity event form exists
     And the question "Example Question?" is in the library
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Library Administration"
+    And I click the "Open Library" link and wait to see "Library Administration"
     And I delete the question element
     Then the text "Example Question?" should disappear
 
@@ -19,7 +19,7 @@ Feature: Form builders can delete questions, value sets and groups from the libr
     And a Morbidity event form exists
     And the question "Example Question?" in group "Example Group" is in the library
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Example Group"
+    And I click the "Open Library" link and wait to see "Example Group"
     And I delete the question element
     Then the text "Example Question?" should disappear
 
@@ -33,8 +33,8 @@ Feature: Form builders can delete questions, value sets and groups from the libr
       | No         |  2   |
       | Maybe      |  9   |
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Library Administration"
-    And I click the "Value sets" link and wait to see "Example Value Set"
+    And I click the "Open Library" link and wait to see "Library Administration"
+    And I click the "Value Sets" link and wait to see "Example Value Set"
     And I delete the value set element
     Then the text "Example Value Set" should disappear
 
@@ -48,8 +48,8 @@ Feature: Form builders can delete questions, value sets and groups from the libr
       | No         |  2   |
       | Maybe      |  9   |
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Library Administration"
-    And I click the "Value sets" link and wait to see "Example Value Set"
+    And I click the "Open Library" link and wait to see "Library Administration"
+    And I click the "Value Sets" link and wait to see "Example Value Set"
     And I should see "Example Group"
     And I delete the value set element
     Then the text "Example Value Set" should disappear
@@ -60,7 +60,7 @@ Feature: Form builders can delete questions, value sets and groups from the libr
     And a Morbidity event form exists
     And the question "Example Question?" in group "Example Group" is in the library
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Example Group"
+    And I click the "Open Library" link and wait to see "Example Group"
     And I delete the group element
     Then the text "Example Group" should disappear
     And I should not see "Example Question?"
@@ -75,8 +75,8 @@ Feature: Form builders can delete questions, value sets and groups from the libr
       | No         |  2   |
       | Maybe      |  9   |
     When I go to the Builder interface for the form
-    And I click the "Open library" link and wait to see "Library Administration"
-    And I click the "Value sets" link and wait to see "Example Value Set"
+    And I click the "Open Library" link and wait to see "Library Administration"
+    And I click the "Value Sets" link and wait to see "Example Value Set"
     And I delete the group element
     Then the text "Example Group" should disappear
     And I should not see "Example Value Set"

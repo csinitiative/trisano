@@ -17,22 +17,22 @@
   = error_messages_for :object => f.object
   %span{:class => "horiz"}
     - core_element :treatment_given_yn_id, f, :horiz do
-      = f.label(:treatment_given_yn_id, "Treatment given")
+      = f.label :treatment_given_yn_id
       = f.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
-      
+
     - core_element :treatment, f, :horiz do
-      = trisano_auto_complete(f, :treatment, "Treatment", {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
+      = trisano_auto_complete(f, :treatment, nil, {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
 
     - core_element :treatment_date, f, :horiz do
-      = f.label(:treatment_date, 'Date of Treatment')
+      = f.label :treatment_date
       = f.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
 
     - core_element :stop_treatment_date, f, :horiz do
-      = f.label(:stop_treatment_date, 'Date Treatment Stopped')
+      = f.label :stop_treatment_date
       = f.core_calendar_date_select(:stop_treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
 
     %span.horiz
       - unless f.object.new_record?
-        = f.label :_delete, "Remove:"
+        = f.label :_delete
         = f.check_box :_delete
 %hr

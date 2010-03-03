@@ -72,6 +72,79 @@ Given /^the event is assigned to user "([^\"]*)"$/ do |user_id|
   @event.save!
 end
 
+Given /^the patient is named "([^\"]*)"$/i do |last_name|
+  @patient = @event.interested_party.person_entity.person
+  @patient.last_name = last_name
+  @patient.save!
+end
+
+Given /^the patient was born on "([^\"]*)"$/i do |date|
+  birth_date = Date.parse(date)
+  @patient = @event.interested_party.person_entity.person
+  @patient.birth_date = birth_date
+  @patient.save!
+end
+
+Given /^the event is in "([^\"])*" county$/i do |county|
+  county = ExternalCode.counties.find(:first, :conditions => {:code_description => county})
+  if @event.address
+    @event.address.county = county
+  else
+    @event.build_address(:county => county)
+  end
+  @event.save!
+end
+
+Given /^the event is in the city of "([^\"]*)"$/ do |city|
+  if @event.address
+    @event.address.city = city
+  else
+    @event.build_address(:city => city)
+  end
+  @event.save!
+end
+
+Given /^the disease is "([^\"]*)"$/i do |disease_name|
+  disease = Disease.find_or_create_by_disease_name(disease_name)
+  disease.update_attributes! :active => true
+  @event.build_disease_event(:disease => disease)
+  @event.save!
+end
+
+Given /^the disease onset date is "([^\"]*)"/i do |date|
+  @onset_date = Date.parse(date)
+  @event.disease_event.disease_onset_date = @onset_date
+  @event.save!
+end
+
+Given /^the contact disease onset date is invalid$/ do
+  invalidate_disease_onset_date(@contact_event)
+end
+
+Given /^the event disease onset date is invalid$/ do
+  invalidate_disease_onset_date(@event)
+end
+
+Given /^I am not able to update events$/ do
+  User.current_user.roles.each do |role|
+    role.privileges.each do |priv|
+      priv.delete if priv.priv_name == 'update_event'
+    end
+  end
+end
+
+Given /^the event is routed to "([^\"]*)"$/ do |short_name|
+  jurisdiction_id = Place.find_by_short_name(short_name).entity_id
+  @event.assign_to_lhd(jurisdiction_id, [])
+  @event.save!
+end
+
+Given /^the contact is routed to "([^\"]*)"$/ do |short_name|
+  jurisdiction_id = Place.find_by_short_name(short_name).entity_id
+  @contact_event.assign_to_lhd(jurisdiction_id, [])
+  @contact_event.save!
+end
+
 When /^I visit the events index page$/ do
   visit cmrs_path({})
 end
@@ -96,6 +169,11 @@ When(/^I navigate to the contact event show page$/) do
   visit contact_event_path(@event)
 end
 
+When /^I "([^\"]*)" the routed event$/ do |action|
+  set_hidden_field "morbidity_event[workflow_action]", :to => action.downcase
+  submit_form "state_change"
+end
+
 Then /^the CMR should look deleted$/ do
   response.should have_xpath("//div[@class='patientname-inactive']")
 end
@@ -118,4 +196,32 @@ end
 
 Then /^I should have a note that says "([^\"]*)"$/ do |text|
   response.should have_xpath("//div[@id='existing-notes']//p[contains(text(), '#{text}')]")
+end
+
+Then /^I should have a (.*) error message box$/i do |div_class|
+  div_class = div_class.strip.gsub(' ', '_')
+  response.should have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation'][1]")
+  response.should_not have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation'][2]")
+end
+
+Then /^I should not have a (.*) error message box$/i do |div_class|
+  div_class = div_class.strip.gsub(' ', '_')
+  response.should_not have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation']")
+end
+
+Then /^I should have a (.*) error message containing "([^\"]*)"$/i do |div_class, message_part|
+  div_class = div_class.strip.gsub(' ', '_')
+  response.should have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation']/ul/li[contains(text(),\"#{message_part}\")]")
+  response.should_not have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation']/ul/li[contains(text(),\"#{message_part}\")][2]")
+end
+
+Then /^jurisdiction "([^\"]*)" should be selected$/ do |jurisdiction|
+  response.should have_xpath("//select[contains(@id, 'jurisdiction_attributes')]/option[text()='#{jurisdiction}' and @selected='selected']")
+end
+
+Given /^max_search_results \+ 1 basic (.*) events/i do |event_type|
+  count = config_option(:max_search_results).to_i
+  count.to_i.times do |i|
+    create_basic_event(event_type, get_random_word, "African Tick Bite Fever", "Unassigned")
+  end
 end

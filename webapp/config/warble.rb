@@ -8,10 +8,10 @@ Warbler::Config.new do |config|
   # config.staging_dir = "tmp/war"
 
   # Application directories to be included in the webapp.
-  config.dirs = %w(app config lib vendor tmp)
+  config.dirs = %w(app config lib vendor db tmp script)
 
   # Additional files/directories to include, above those in config.dirs
-  # config.includes = FileList["db"]
+  config.includes = FileList["Rakefile"]
 
   # Additional files/directories to exclude
 
@@ -36,7 +36,7 @@ Warbler::Config.new do |config|
   # overwrite the value
   # config.gems = ["activerecord-jdbc-adapter", "jruby-openssl"]
   # config.gems << "tzinfo"
-  config.gems = ["hoe", "hpricot", "rest-open-uri", "logging", "json_pure", "rubyzip", "mislav-will_paginate", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter', 'haml', 'rack', 'ruby-hl7']
+  config.gems = ["mechanize","hoe", "ci_reporter","hpricot", "rest-open-uri", "logging", "little-plugger", "json_pure", "rubyzip", "mislav-will_paginate", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter', 'haml', 'rack', 'ruby-hl7', 'freshy_filter_chain','validates_timeliness']
   config.gems << 'rails'
 
   # Include gem dependencies not mentioned specifically

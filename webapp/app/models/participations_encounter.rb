@@ -23,7 +23,14 @@ class ParticipationsEncounter < ActiveRecord::Base
 
   class << self
     def location_type_array
-      [["Clinic", "clinic"], ["Home", "home"], ["Phone", "phone"], ["School", "school"], ["Work", "work"], ["Other", "other"]]
+      [
+        [I18n.t('encounter_location_types.clinic'), "clinic"],
+        [I18n.t('encounter_location_types.home'), "home"],
+        [I18n.t('encounter_location_types.phone'), "phone"],
+        [I18n.t('encounter_location_types.school'), "school"],
+        [I18n.t('encounter_location_types.work'), "work"],
+        [I18n.t('encounter_location_types.other'), "other"]
+      ]
     end
 
     def valid_location_types
@@ -32,7 +39,7 @@ class ParticipationsEncounter < ActiveRecord::Base
   end
 
   validates_presence_of :encounter_date, :user, :encounter_location_type
-  validates_date :encounter_date
+  validates_date :encounter_date, :on_or_before => lambda { Date.today }
   validates_inclusion_of :encounter_location_type, :in => self.valid_location_types, :message => "is not valid"
-
+ 
 end

@@ -28,7 +28,7 @@ class LabResult < ActiveRecord::Base
   after_create :generate_task
 
   before_destroy do |lab_result|
-    lab_result.participation.event.add_note("Lab result deleted")
+    lab_result.participation.event.add_note(I18n.translate("system_notes.lab_result_deleted", :locale => I18n.default_locale))
   end
 
   validates_presence_of :test_type_id
@@ -36,17 +36,15 @@ class LabResult < ActiveRecord::Base
   validates_length_of :units, :maximum => 50, :allow_blank => true
   validates_length_of :reference_range, :maximum => 255, :allow_blank => true
 
-  validates_date :collection_date, :allow_nil => true
-  validates_date :lab_test_date, :allow_nil => true
+  validates_date :collection_date,  :allow_blank => true,
+                                    :on_or_before => lambda { Date.today }
+
+  validates_date :lab_test_date, :allow_blank => true,
+                                 :on_or_before => lambda { Date.today } , #Lab test date cannot be in the future
+                                 :on_or_after => :collection_date # Lab test must come after collection date
 
   def lab_name
     participation.secondary_entity.place.name unless participation.nil?
-  end
-
-  def validate
-    if !collection_date.blank? && !lab_test_date.blank?
-      errors.add(:lab_test_date, "cannot precede collection date") if lab_test_date.to_date < collection_date.to_date
-    end
   end
 
   def generate_task

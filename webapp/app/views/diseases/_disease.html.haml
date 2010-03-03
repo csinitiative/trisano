@@ -20,24 +20,24 @@
 
     %span{ :class => "horiz" }
       %b
-        Status
+        =t('status')
       %br
-      = disease.active? ? 'Active' :  'Inactive'
+      = disease.active? ? t('active') :  t('inactive')
 
     %span{ :class => "horiz" }
       %b
-        CDC/NETSS code
+        =t('cdc_netss_code')
       %br
       = h(disease.cdc_code)
 
     %span{ :class => "horiz" }
       %b
-        Sent to CDC when event status is:
+        =t('cdc_send_status')
       %br
       = h(disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', '))
 
   %td
     .tools
-      =link_to_unless_current 'Edit', edit_disease_path(disease)
+      =link_to_unless_current t('edit'), edit_disease_path(disease)
       |
-      =link_to_unless_current 'Show', disease
+      =link_to_unless_current t('show'), disease

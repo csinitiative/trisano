@@ -18,12 +18,14 @@
 class SearchController < ApplicationController
   include Blankable
 
+  helper_method :max_search_results
+
   def index
   end
 
   def cmrs
     unless User.current_user.is_entitled_to?(:view_event)
-      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => "You do not have privileges to view events" }, :status => 403 and return
+      render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return
     end
 
     flash[:error] = ""
@@ -31,18 +33,21 @@ class SearchController < ApplicationController
 
     @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
     if @jurisdictions.nil?
-      error_details << "You do not have view permissions in any jurisdiction"
+      error_details << t("no_view_event_privs_in_any_jurisdiction")
     end
 
     @first_name = ""
     @middle_name = ""
     @last_name = ""
     @birth_date = ""
-    @event_types = [ {:name => "Morbidity Event (CMR)", :value => "MorbidityEvent"}, {:name => "Contact Event", :value => "ContactEvent"} ]
-    @diseases = Disease.find(:all, :order => "disease_name")
-    @genders = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'")
 
-    @genders << ExternalCode.new(:id => "U", :the_code => "U", :code_description => "Unspecified", :code_name => "gender")
+    @event_types = [{:name => I18n.t(:event_search_type_morb),    :value => "MorbidityEvent"},
+                    {:name => I18n.t(:event_search_type_contact), :value => "ContactEvent"}]
+
+    @diseases = Disease.find(:all, :order => "disease_name")
+
+    @genders = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'")
+    @genders << Struct.new(:id, :code_description).new('Unspecified', t(:unspecified))
 
     @workflow_states = MorbidityEvent.get_states_and_descriptions
 
@@ -59,7 +64,7 @@ class SearchController < ApplicationController
               @birth_date = parse_american_date(params[:birth_date])
             end
           rescue
-            error_details << "Invalid birth date format"
+            error_details << t("invalid_birth_date_format")
           end
         end
 
@@ -67,7 +72,7 @@ class SearchController < ApplicationController
           begin
             entered_on_start = parse_american_date(params[:entered_on_start])
           rescue
-            error_details << "Invalid entered-on start date format"
+            error_details << t("invalid_entered_on_start_date_format")
           end
         end
 
@@ -75,7 +80,7 @@ class SearchController < ApplicationController
           begin
             entered_on_end = parse_american_date(params[:entered_on_end], 1)
           rescue
-            error_details << "Invalid entered-on end date format"
+            error_details << t("invalid_entered_on_end_date_format")
           end
         end
 
@@ -103,7 +108,8 @@ class SearchController < ApplicationController
                                        :first_reported_PH_date_end => params[:first_reported_PH_date_end],
                                        :investigator_ids => params[:investigator_ids],
                                        :other_data_1 => params[:other_data_1],
-                                       :other_data_2 => params[:other_data_2]
+                                       :other_data_2 => params[:other_data_2],
+                                       :limit => max_search_results
                                        )
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
@@ -115,7 +121,7 @@ class SearchController < ApplicationController
 
       end
     rescue Exception => ex
-      flash[:error] = "There was a problem with your search criteria"
+      flash[:error] = t("problem_with_search_criteria")
 
       # Debt: Error display details are pretty weak. Good enough for now.
       if (!error_details.empty?)
@@ -174,4 +180,8 @@ class SearchController < ApplicationController
     (Date.strptime(date, american_date) + offset).to_s
   end
 
+  def max_search_results
+    max_limit = config_option(:max_search_results).to_i
+    max_limit <= 0 ? 500 : max_limit
+  end
 end

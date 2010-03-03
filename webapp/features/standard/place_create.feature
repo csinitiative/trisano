@@ -24,6 +24,6 @@ Feature: Editing places
     And I check "Pool"
     And I press "Create"
     Then I should be on the places page
-    And I should see "Place name can't be blank"
+    And I should see "Name can't be blank"
 
 

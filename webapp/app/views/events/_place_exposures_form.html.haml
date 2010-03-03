@@ -14,7 +14,7 @@
 -#
 -# You should have received a copy of the GNU Affero General Public License 
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-%legend Place Exposures
+%legend=t 'place_exposures'
 
 = h @event.safe_call_chain(:disease_event, :disease, :place_lead_in)
 
@@ -22,7 +22,7 @@
 - core_element :places, f, 'vert-break' do
 
   %div{:id => 'place_child_events'}
-    = live_search('Search for an existing place', :search_field => 'places_search', :results => 'live_search_places', :select => 'place_name', :event_type => f.object_name)
+    = live_search(t('search_existing_place'), :search_field => 'places_search', :results => 'live_search_places', :select => 'place_name', :event_type => f.object_name)
 
     -# Currently we don't allow editing place information (because changing it for one event will change it for all).
     -# This will change soon, and when it does we can undo this.
@@ -43,6 +43,8 @@
     - blank_place.interested_place.place_entity.build_place
     - blank_place.interested_place.place_entity.build_canonical_address
 
-    = add_record_link f, :place_child_events, "Add a Place Exposure", :object => blank_place, :partial => "events/place_exposure"
-    - pl_geocode = render_geocode_places(f.object, f.object.place_child_events)
-    = (pl_geocode !~ /Show/ ? "" : " | " + pl_geocode) unless pl_geocode.nil?
+    = add_record_link f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure"
+    -# bah, this is ugly
+    -extensions = render_extensions :cmr_place_exposure_extensions
+    =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"
+

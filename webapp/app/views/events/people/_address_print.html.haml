@@ -15,29 +15,29 @@
 
 -unless address.nil?
   %span.subsection-header
-    Address
+    =t('address')
   -f.fields_for(:address, address, :builder => ExtendedFormBuilder) do |address_form|
     -core_element_print :street_number, address_form, :horiz do
-      %span.print-label Street number:
+      %span.print-label=ct('street_number')
       %span.print-value=h(address.street_number)
     -core_element_print :street_name, address_form, :horiz do
-      %span.print-label Street name:
+      %span.print-label=ct('street')
       %span.print-value=h(address.street_name)
     -core_element_print :unit_number, address_form, :horiz do
-      %span.print-label Unit number:
+      %span.print-label=ct('unit_number')
       %span.print-value=h(address.unit_number)
     -core_element_print :city, address_form, :horiz do
-      %span.print-label City
+      %span.print-label=ct('city')
       %span.print-value=h(address.city)
     -core_element_print :state_id, address_form, :horiz do
-      %span.print-label State
+      %span.print-label=ct('state')
       %span.print-value=h(l(address.state))
     -core_element_print :postal_code, address_form, :horiz do
-      %span.print-label Zip code:
+      %span.print-label=ct('zip')
       %span.print-value=h(address.postal_code)
     -core_element_print :county_id, address_form, :horiz do
-      %span.print-label County:
+      %span.print-label=ct('county')
       %span.print-value=h(l(address.county))
     -core_element_print :district, address_form, :vert do
-      %span.print-label District:
+      %span.print-label=ct('district')
       %span.print-value=h(l(address.district))

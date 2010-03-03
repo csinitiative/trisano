@@ -14,12 +14,12 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create Disease
+  =t('create_disease')
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Diseases', diseases_path
+  = link_to t('back_to',:name => t('diseases')), diseases_path
   %p
 
 = error_messages_for :disease
@@ -28,4 +28,4 @@
 
   = render :partial => 'form', :locals => { :f => f }
 
-  = f.submit "Create"
+  = f.submit t('create')

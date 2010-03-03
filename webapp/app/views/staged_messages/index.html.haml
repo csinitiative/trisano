@@ -14,16 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Staged Messages
+  =t 'staged_messages'
 
 -content_for :tools do
-  =link_to 'Search', search_staged_messages_path
+  =link_to t('search'), search_staged_messages_path
   %p
 
-= link_to('Create a staged message', new_staged_message_path, :rel => "http://trisano.org/relation/staged_messages_new") if User.current_user.is_entitled_to?(:write_staged_message)
+= link_to(t('create_staged_message'), new_staged_message_path, :rel => "http://trisano.org/relation/staged_messages_new") if User.current_user.is_entitled_to?(:write_staged_message)
 
 - form_tag(staged_messages_path, :style => "display: inline", :method => :get) do
-  = select_tag("message_state", options_for_select(StagedMessage.states.values, @selected), :id => 'message_state', :onchange => "this.form.submit();", :style => "position: absolute; right: 0px")
+  = select_tag("message_state", options_for_select(StagedMessage.states.values.collect {|v| [I18n.t("staging_area_states.#{v.downcase}"), v]}, @selected), :id => 'message_state', :onchange => "this.form.submit();", :style => "position: absolute; right: 0px")
 
 %p &nbsp;
 
@@ -36,4 +36,4 @@
   %br
   = will_paginate @staged_messages
 - else
-  = "There are no messages in the #{@selected.downcase} state"
+  = t 'no_staged_messages', :state => @selected.downcase

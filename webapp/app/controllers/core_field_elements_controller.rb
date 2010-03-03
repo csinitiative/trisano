@@ -31,7 +31,7 @@ class CoreFieldElementsController < ApplicationController
       @available_core_fields = @core_field_element.available_core_fields
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the core field form  at this time.'
+      flash[:error] = t("unable_to_display_core_field_form")
       render :template => 'rjs-error'
     end
   end
@@ -45,7 +45,7 @@ class CoreFieldElementsController < ApplicationController
     
     respond_to do |format|
       if @core_field_element.save_and_add_to_form
-        flash[:notice] = 'Core field configuration was successfully created.'
+        flash[:notice] = t("core_field_configuration_successfully_created")
         format.xml  { render :xml => @core_field_element, :status => :created, :location => @core_field_element }
         format.js { @form = Form.find(@core_field_element.form_id)}
       else

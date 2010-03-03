@@ -3,19 +3,20 @@ Feature: Web API Cmrs Client
   To create and modify morbidity reports programmatically
   An interface is needed that can be integrated into code
 
+  @ignore_plugin_renderers
   Scenario: Create CMR
     Given the following active diseases:
       | Disease name |
       | AIDS         |
     When I visit the cmrs new page
-    
+
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "David"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][middle_name]" with "Ryan"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][last_name]" with "Black"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][birth_date]" with "11-10-1980"
     And I fill out the form field "morbidity_event[parent_guardian]" with "Gerard Black"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][approximate_age_no_birthday]" with "28"
-    And I select "Male" from "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][birth_gender_id]" 
+    And I select "Male" from "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][birth_gender_id]"
     And I select "Unknown" from "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][ethnicity_id]"
     And I select "White" from "morbidity_event[interested_party_attributes][person_entity_attributes][race_ids][]"
     And I select "English" from "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][primary_language_id]"
@@ -30,7 +31,7 @@ Feature: Web API Cmrs Client
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][telephones_attributes][0][area_code]" with "724"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][telephones_attributes][0][phone_number]" with "5882300"
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][telephones_attributes][0][extension]" with "23"
-    And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][1][email_address]" with "foo@bar.com"
+    And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][email_addresses_attributes][0][email_address]" with "foo@bar.com"
     And I select "AIDS" from "morbidity_event[disease_event_attributes][disease_id]"
     And I fill out the form field "morbidity_event[disease_event_attributes][disease_onset_date]" with "1-1-2000"
     And I fill out the form field "morbidity_event[disease_event_attributes][date_diagnosed]" with "1-2-2000"
@@ -47,13 +48,13 @@ Feature: Web API Cmrs Client
     And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment]" with "MyTreatment"
     And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_date]" with "1-6-2000"
     And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][stop_treatment_date]" with "1-7-2000"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][first_name]" with "Sam"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][middle_name]" with "R"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][person_attributes][last_name]" with "Burke"
-    And I select "Home" from "morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][entity_location_type_id]"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][area_code]" with "703"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][phone_number]" with "2654321"
-    And I fill out the form field "morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][extension]" with "808"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][first_name]" with "Sam"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][middle_name]" with "R"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][last_name]" with "Burke"
+    And I select "Home" from "morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][entity_location_type_id]"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][area_code]" with "703"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][phone_number]" with "2654321"
+    And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][extension]" with "808"
     # No test data yet for this
     #And I fill out the form field "morbidity_event[labs_attributes][3][place_entity_attributes][place_attributes][name]" with "Acme Lab"
     #And I fill out the form field "morbidity_event[labs_attributes][3][lab_results_attributes][0][test_type_id]" with ""
@@ -67,16 +68,16 @@ Feature: Web API Cmrs Client
     #And I fill out the form field "morbidity_event[labs_attributes][3][lab_results_attributes][0][lab_test_date]" with "1-10-2000"
     #And I fill out the form field "morbidity_event[labs_attributes][3][lab_results_attributes][0][specimen_sent_to_state_id]" with ""
     #And I fill out the form field "morbidity_event[labs_attributes][3][lab_results_attributes][0][comment]" with "Sample comment"
-    And I fill out the form field "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "Jen"
-    And I fill out the form field "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][person_attributes][last_name]" with "Dubbs"
-    And I select "Other" from "morbidity_event[contact_child_events_attributes][4][participations_contact_attributes][disposition_id]"
-    And I select "Other" from "morbidity_event[contact_child_events_attributes][4][participations_contact_attributes][contact_type_id]"
-    And I select "Home" from "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][telephones_attributes][0][entity_location_type_id]"
-    And I fill out the form field "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][telephones_attributes][0][area_code]" with "412"
-    And I fill out the form field "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][telephones_attributes][0][phone_number]" with "2652222"
-    And I fill out the form field "morbidity_event[contact_child_events_attributes][4][interested_party_attributes][person_entity_attributes][telephones_attributes][0][extension]" with "98"
+    And I fill out the form field "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "Jen"
+    And I fill out the form field "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][person_attributes][last_name]" with "Dubbs"
+    And I select "Other" from "morbidity_event[contact_child_events_attributes][0][participations_contact_attributes][disposition_id]"
+    And I select "Other" from "morbidity_event[contact_child_events_attributes][0][participations_contact_attributes][contact_type_id]"
+    And I select "Home" from "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][telephones_attributes][0][entity_location_type_id]"
+    And I fill out the form field "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][telephones_attributes][0][area_code]" with "412"
+    And I fill out the form field "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][telephones_attributes][0][phone_number]" with "2652222"
+    And I fill out the form field "morbidity_event[contact_child_events_attributes][0][interested_party_attributes][person_entity_attributes][telephones_attributes][0][extension]" with "98"
     And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][food_handler_id]"
-    And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][healthcare_worker_id]" 
+    And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][healthcare_worker_id]"
     And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][group_living_id]"
     And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][day_care_association_id]"
     And I fill out the form field "morbidity_event[interested_party_attributes][risk_factor_attributes][occupation]" with "Pizza Delivery Guy"

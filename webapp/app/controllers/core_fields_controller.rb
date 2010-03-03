@@ -18,8 +18,9 @@
 class CoreFieldsController < ApplicationController
 
   def index
-    @core_fields = CoreField.find(:all, :order => 'event_type, name')
-
+    @core_fields = CoreField.find(:all, :order => 'event_type')
+    @core_fields = @core_fields.sort_by(&:name)
+    
     respond_to do |format|
       format.html
       format.xml  { render :xml => @core_fields }
@@ -48,7 +49,7 @@ class CoreFieldsController < ApplicationController
 
     respond_to do |format|
       if @core_field.update_attributes(params[:core_field])
-        flash[:notice] = 'Core field  was successfully updated.'
+        flash[:notice] = t("core_field_successfully_updated")
         format.html { redirect_to(@core_field) }
         format.xml  { head :ok }
       else

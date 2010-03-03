@@ -213,13 +213,14 @@ end
 def validate_investigator_rendering  
   create_basic_investigatable_cmr(@browser, @cmr_last_name, "African Tick Bite Fever", "Bear River Health Department")
   edit_cmr(@browser)
-  @browser.is_text_present(@question_to_delete_text).should be_true
-  @browser.is_text_present(@question_to_edit_text).should be_true
-  @browser.is_text_present(@question_to_inactivate_text).should be_true
-  @browser.is_text_present(@question_to_edit_modified_text).should be_false
-  @browser.is_text_present(@user_defined_tab_text).should be_true
-  @browser.is_text_present(@user_defined_tab_section_text).should be_true
-  @browser.is_text_present(@user_defined_tab_question_text).should be_true
+  html_source = @browser.get_html_source
+  html_source.include?(@question_to_delete_text).should be_true
+  html_source.include?(@question_to_edit_text).should be_true
+  html_source.include?(@question_to_inactivate_text).should be_true
+  html_source.include?(@question_to_edit_modified_text).should be_false
+  html_source.include?(@user_defined_tab_text).should be_true
+  html_source.include?(@user_defined_tab_section_text).should be_true
+  html_source.include?(@user_defined_tab_question_text).should be_true
 end
 
 def navigate_to_form_edit

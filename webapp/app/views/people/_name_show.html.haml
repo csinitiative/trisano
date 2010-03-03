@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset.form
-  %legend Name
+  %legend= t 'name'
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
     %div.data_name
       -core_element_show :last_name, person_form, :horiz do
@@ -29,5 +29,5 @@
 
       -if !event_form.nil?
         -core_element_show :parent_guardian, event_form, :horiz do
-          =event_form.label(:parent_guardian, "Parent/Guardian")
+          =event_form.label :parent_guardian
           %span.data_parent_guardian=h(event.parent_guardian)

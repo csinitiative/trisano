@@ -18,14 +18,14 @@
   %table.list
     %tr
       %th.forminformation
-        Edit Jurisdiction
+        =t 'edit_jurisdiction'
     %tr
       %td
         %span{ :class => "vert" }
-          = p.label(:name, "Name")
+          = p.label :name
           = p.text_field(:name, :size => 25, :maxlength => 250)
 
         %span{ :class => "vert" }
-          = p.label(:short_name, "Short name")
+          = p.label :short_name
           = p.text_field(:short_name, :size => 25, :maxlength => 250)
-        
+

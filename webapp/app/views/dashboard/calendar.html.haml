@@ -14,16 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Calendar
+  = t('calendar')
 
 = event_calendar
 
 %br
 
 %ul
-  %li{ :class => "task-list-pending", :style => "display: inline;"} Pending
-  %li{ :class => "task-list-complete", :style => "display: inline;"} Complete
-  %li{ :class => "task-list-na", :style => "display: inline;"} Not applicable
+  %li{ :class => "task-list-pending", :style => "display: inline;"}= t('pending')
+  %li{ :class => "task-list-complete", :style => "display: inline;"}= t('complete')
+  %li{ :class => "task-list-na", :style => "display: inline;"}= t('not_applicable')
 
 %br
 %br

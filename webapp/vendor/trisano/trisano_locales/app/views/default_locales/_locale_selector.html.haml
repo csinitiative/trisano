@@ -1,0 +1,4 @@
+.language{:style => 'display: inline'}
+  %form{:action => url_for(params), :method => :get, :style => 'display: inline', :id => 'select-locale'}
+    =locale_label_tag
+    =locale_select_tag({:style => "display: inline"})

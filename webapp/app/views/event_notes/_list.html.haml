@@ -25,8 +25,8 @@
         %small
           - unless note.note_type.blank?
             %span{ :class => 'note-type' }
-              = h("#{note.note_type.humanize} ")
-          = h(note.created_at.strftime("%a, %b %d, %Y at %I:%M %p"))
+              = t(note.note_type)
+          = ld(note.created_at, {:format => :notes})
       %td
     %tr
       %td

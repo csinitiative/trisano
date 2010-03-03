@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Entity < ActiveRecord::Base
@@ -22,7 +22,7 @@ class Entity < ActiveRecord::Base
   has_many :email_addresses, :order => "updated_at"
   has_many :addresses
 
-  has_one :canonical_address, :foreign_key => "entity_id", :class_name => "Address", :conditions => "event_id IS NULL"
+  has_one :canonical_address, :foreign_key => "entity_id", :class_name => "Address", :conditions => {:event_id => nil}
   has_one :place
   has_one :person
 
@@ -31,16 +31,21 @@ class Entity < ActiveRecord::Base
 
   attr_protected :entity_type
 
+  named_scope :exclude_deleted, :conditions => "deleted_at is NULL"
+  named_scope :exclude_entity, lambda { |entity|
+    { :conditions => ["entities.id != ?", entity] }
+  }
+
   def formatted_address
     addr = canonical_address || addresses.first
-    addr.blank? ? "" : addr.formatted_address 
+    addr.blank? ? "" : addr.formatted_address
   end
 
   def primary_phone
-    self.telephones.first 
+    self.telephones.first
   end
 
   def validate
-    errors.add_to_base("information is not complete.  Most likely you are adding phone or address information without a name") if (person.nil? and place.nil?)
+    errors.add(:base, :incomplete) if (person.nil? and place.nil?)
   end
 end

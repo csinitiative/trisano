@@ -14,23 +14,23 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Event Queue Detail
+  =t('event_queue_detail')
 
 /- content_for :name do
 
 - content_for :tools do
   /= link_to 'Edit', edit_event_queue_path(@event_queue)
-  = link_to '< Back to Event Queues', event_queues_path
+  = link_to t('back_to', :name => t('event_queues')), event_queues_path
   %p
   
 - content_for :tools_two do
-  = button_to("Create new event queue", new_event_queue_path)
+  = button_to(t('create_new_event_queue'), new_event_queue_path)
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Event Queue
+        =t('event_queue')
       %th
       %tr
         %td.forminformation
@@ -40,6 +40,6 @@
             = h(@event_queue.jurisdiction.place.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_event_queue_path(@event_queue)
+            = link_to t('edit'), edit_event_queue_path(@event_queue)
             |
-            = link_to 'Delete', event_queue_path(@event_queue), :method => :delete
+            = link_to t('delete'), event_queue_path(@event_queue), :method => :delete

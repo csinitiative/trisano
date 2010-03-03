@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Edit a LOINC Code
+  =t 'edit_a_loinc_code'
 
 -content_for :tools do
-  =link_to h('< Back to LOINC Codes'), loinc_codes_path
+  =link_to h(t('back_to', :name => t('loinc_codes'))), loinc_codes_path
   %p
 
 =render :partial => 'summary', :locals => {:loinc_code => @loinc_code}

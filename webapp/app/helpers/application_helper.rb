@@ -19,6 +19,52 @@
 module ApplicationHelper
   include PostgresFu
 
+  # Returns a localized date or, if date is nil, the default value.
+  #
+  # The following returns the date, formatted to the default format,
+  # or a non-breaking space if the date is nil:
+  #
+  #   localize_or_default(some_date)
+  #
+  # To change the default, pass in a second argument:
+  #
+  #   localize_or_default(some_date, "No date specified")
+  #
+  # The last argument is an optional hash that will be passed on to
+  # i18n.localize as options. So, to change the format of the date:
+  #
+  #   localize_of_default(some_date, :format => :short)
+  #
+  def localize_or_default(date_or_string, *args)
+    raise ArgumentError, "wrong number of arguments: (#{args.size + 1} for 3)" if args.size > 2
+
+    options = args.extract_options!
+    default = args.first || "&nbsp;"
+    begin
+      date = date_or_string.is_a?(String) ? Date.parse(date_or_string) : date_or_string
+    rescue
+      date = nil
+    end
+    date ? I18n.l(date, options) : default
+  end
+  alias :ld :localize_or_default
+
+  def localized_calendar_date_select_variables
+    <<-JS
+      <script type="text/javascript">
+        Date.weekdays = $w("#{I18n.translate(:'date.abbr_day_names').join(' ')}");
+        Date.months = $w("#{(I18n.translate(:'date.month_names')[1..-1].join(' '))}");
+
+        _translations = {
+          "OK" : "#{I18n.t('calendar_date_select.ok')}",
+          "Now" : "#{I18n.t('calendar_date_select.now')}",
+          "Today" : "#{I18n.t('calendar_date_select.today')}",
+          "Clear" : "#{I18n.t('calendar_date_select.clear')}"
+        }
+      </script>
+    JS
+  end
+
   def l(lookup_field)
     lookup_field.nil? ? nil : lookup_field.code_description
   end
@@ -125,10 +171,10 @@ module ApplicationHelper
     concat(
       javascript_tag("var myTabs = new YAHOO.widget.TabView('cmr_tabs'); myTabs.set('activeIndex', #{focus_tab});") +
 
-      content_tag(:span, "[Disable Tabs]", :id => 'disable_tabs', :onClick => "myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); [#{tabs_string}].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;") +
-      content_tag(:span, "[Enable Tabs]", :id => 'enable_tabs', :onClick => "myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); [#{tabs_string},'enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;", :style => 'display: none;') +
+        content_tag(:span, "[Disable Tabs]", :id => 'disable_tabs', :onClick => "myTabs.removeClass('yui-navset'); myTabs.removeClass('yui-content'); [#{tabs_string}].each(Element.show); Element.hide('disable_tabs'); Element.hide('tabs'); Element.show('enable_tabs');return false;") +
+        content_tag(:span, "[Enable Tabs]", :id => 'enable_tabs', :onClick => "myTabs.addClass('yui-navset'); myTabs.addClass('yui-content'); [#{tabs_string},'enable_tabs'].each(Element.hide); Element.show('disable_tabs'); Element.show('tabs'); myTabs.set('activeIndex',0); return false;", :style => 'display: none;') +
 
-      content_tag(:div, :id => "cmr_tabs", :class => "yui-navset") do
+        content_tag(:div, :id => "cmr_tabs", :class => "yui-navset") do
         content_tag(:ul, :id => "tabs", :class => "yui-nav") do
           line_items = ""
           tabs.each do |tab|
@@ -138,7 +184,7 @@ module ApplicationHelper
           end
           line_items
         end +
-        content_tag(:div, :class => "yui-content") do
+          content_tag(:div, :class => "yui-content") do
           capture(&block)
         end
       end)
@@ -155,7 +201,7 @@ module ApplicationHelper
   def save_buttons(event)
     form_id = get_form_id(event)
 
-   content_for :enable_save_buttons do
+    content_for :enable_save_buttons do
       content = "&nbsp;&nbsp;" + link_to_function("Enable Save Buttons", "toggle_save_buttons('on')", :onmouseout => "UnTip()", :onmouseover => "TagToTip('save_button_help', FADEOUT, 500, FADEIN, 500)")
       content += "<div id='save_button_help' style='display: none;'>Click here to enable the save buttons if they are grayed out when they shouldn't be.</div>"
     end
@@ -188,7 +234,7 @@ module ApplicationHelper
     else
       form_id = "edit_#{event_type}_#{event.id}"
     end
-   end
+  end
 
   # If this is an html request, then the script will be run when the
   # dom finishes loading. If it's an Ajax request, then the script
@@ -244,8 +290,27 @@ module ApplicationHelper
   end
 
   def create_or_update_button(ar_obj)
-    button_text = ar_obj.new_record? ? "Create" : "Update"
+    button_text = ar_obj.new_record? ? t("create") : t("update")
     submit_tag button_text
   end
 
+  def dom_loaded
+    concat("<script type='text/javascript'>\n")
+    concat("  document.observe('dom:loaded', function() {\n")
+    yield if block_given?
+    concat("  });\n")
+    concat("</script>\n")
+  end
+
+  def render_extensions(*args)
+    locals = args.extract_options!
+    returning "" do |result|
+      args.each do |meth|
+        send(meth).each do |partial_def|
+          partial_def[:locals] = locals.merge(partial_def[:locals] || {})
+          result << render(partial_def)
+        end
+      end
+    end
+  end
 end

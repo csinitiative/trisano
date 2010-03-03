@@ -14,12 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend
-    Epidemiological Information
+  %legend= t('epi_info')
 
   %fieldset{:class => 'form'}
-    %legend
-      Contact Oriented
+    %legend= t('contact_oriented')
     
     - event_form.fields_for(:interested_party, @event.interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
       - active_patient_form.fields_for(:risk_factor, @event.interested_party.risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
@@ -44,7 +42,7 @@
           = h(@event.safe_call_chain(:interested_party, :risk_factor, :occupation))
 
   %fieldset.form
-    %legend Other
+    %legend= t('other')
     - event_form.fields_for(:interested_party, @event.interested_party, :builder => ExtendedFormBuilder) do |interested_party|
       - interested_party.fields_for(:risk_factor, @event.interested_party.risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
         - core_element_show :imported_from_id, event_form, :horiz do
@@ -60,9 +58,9 @@
           = h(@event.safe_call_chain(:interested_party, :risk_factor, :risk_factors_notes))
           
         - core_element_show :other_data_1, event_form, :horiz do
-          = event_form.label(:other_data_1, 'Other data')
+          = event_form.label(:other_data_1)
           = h(@event.other_data_1)
 
         - core_element_show :other_data_2, event_form, :horiz do
-          = event_form.label(:other_data_2, '&nbsp;')
+          = event_form.label(:other_data_2)
           = h(@event.other_data_2)

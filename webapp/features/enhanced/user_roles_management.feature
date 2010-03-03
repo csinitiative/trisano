@@ -32,7 +32,7 @@ Feature: Managing user roles
 
     Then I should see "User was successfully updated"
     And I should not see "Bear River Health Department"
-    And I should not see "Investigator"
+    And I should see "No roles."
 
   @clean_user
   Scenario: Removing a new role w/out updating

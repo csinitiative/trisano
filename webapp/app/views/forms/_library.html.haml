@@ -16,12 +16,12 @@
 %div{:id => "library-container"}
   %div{:id => "library-header"}
     - if direction == :to_library
-      %h4 Select a group to copy to
+      %h4=t'select_library_group'
     - else
-      %h4 Add an element from the library
+      %h4=t 'add_element_from_library'
       
     %label
-      Search for elements: 
+      =ct 'search_for_elements'
       = text_field_tag :lib_filter
 
     = observe_field(:lib_filter, :frequency => 0.5, :update => "library-element-list-#{@reference_element.id}", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction, :type => type }, :with => "'filter_by='+encodeURIComponent(value)")
@@ -31,4 +31,4 @@
       = render :partial => 'forms/library_elements', :locals => {:direction => direction, :type => type}
 
   %small
-    = link_to_remote("Show all groups", :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction, :type => type }, :update => "library-element-list-#{@reference_element.id}")
+    = link_to_remote(t("show_all_groups"), :url => { :controller => 'form_elements', :action => 'filter_elements', :reference_element_id => @reference_element.id, :direction => direction, :type => type }, :update => "library-element-list-#{@reference_element.id}")

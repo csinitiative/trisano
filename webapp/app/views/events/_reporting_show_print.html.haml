@@ -14,18 +14,18 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %span.section-header
-  Reporting Information
+  =t('reporting_information')
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
 - event_form.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |agency_form|
   - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |entity_form|
     - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
       - core_element_print :name, place_form, :horiz do
-        %span.print-label Agency name:
+        %span.print-label=ct('agency_name')
         %span.print-value= h(place_form.object.name)
-        %span.print-label Types:
+        %span.print-label= ct('types')
         %span.print-value= h(place_form.object.formatted_place_descriptions)
-        %span.print-label Agency Phone:
+        %span.print-label= ct('agency_phone')
         %span.print-value= h(entity_form.object.primary_phone.simple_format)
 
 - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
@@ -34,28 +34,33 @@
 
       %br
       - core_element_print :first_name, p, :horiz do
-        %span.print-label First name:
+        %span.print-label=ct('first_name')
         %span.print-value= h(p.object.first_name)
       - core_element_print :last_name, p, :horiz do
-        %span.print-label Last name:
+        %span.print-label=ct('last_name')
         %span.print-value= h(p.object.last_name)
 
     - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
     - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
-      - core_element_print :area_code, phone_fields, :horiz do
-        %span.print-label Area code:
-        %span.print-value= h(phone_fields.object.area_code)
+      -if Telephone.use?(:country_code)
+        - core_element_print :country_code, phone_fields, :horiz do
+          %span.print-label=ct('country_code')
+          %span.print-value= h(phone_fields.object.country_code)
+      -if Telephone.use?(:area_code)
+        - core_element_print :area_code, phone_fields, :horiz do
+          %span.print-label=ct('area_code')
+          %span.print-value= h(phone_fields.object.area_code)
       - core_element_print :phone_number, phone_fields, :horiz do
-        %span.print-label Phone number:
+        %span.print-label=ct('phone_number')
         %span.print-value= h(phone_fields.object.phone_number)
       - core_element_print :extension, phone_fields, :horiz do
-        %span.print-label Extension:
+        %span.print-label=ct('extension')
         %span.print-value= h(phone_fields.object.extension)
 
     %br
     - core_element_print :results_reported_to_clinician_date, event_form, :horiz do
-      %span.print-label Results reported to clinician date:
-      %span.print-value= h(@event.results_reported_to_clinician_date) || '&nbsp;'
+      %span.print-label=ct('results_reported_to_clinician_date')
+      %span.print-value= ld(@event.results_reported_to_clinician_date)
     - core_element_print :first_reported_PH_date, event_form, :vert do
-      %span.print-label Date first reported to public health:
-      %span.print-value= h(@event.first_reported_PH_date)
+      %span.print-label=ct('first_reported_to_public_health_date')
+      %span.print-value= ld(@event.first_reported_PH_date)

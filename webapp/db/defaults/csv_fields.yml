@@ -175,7 +175,7 @@ csv_field_00022:
   short_name: 
   use_code: 
   event_type: morbidity_event
-csv_field_00136: 
+csv_field_oranism_name: 
   sort_order: 25
   export_group: lab
   long_name: lab_organism

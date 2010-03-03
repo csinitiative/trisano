@@ -57,7 +57,7 @@ class FormElementsController <  AdminController
       end
     else
       @rjs_errors = @form_element.errors
-      flash[:error] = 'An error occurred during the deletion process.'
+      flash[:error] = t("error_during_delete")
       render :template => 'rjs-error'
     end
   end
@@ -70,7 +70,7 @@ class FormElementsController <  AdminController
       render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym, :type => params[:type].to_sym}
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'An error occurred during the filtering process.'
+      flash[:error] = t("error_during_filtering")
       render :template => 'rjs-error'
     end
   end

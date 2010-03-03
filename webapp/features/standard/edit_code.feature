@@ -36,16 +36,16 @@ Feature: Editing system codes
     And I am logged in as a super user
 
     When I navigate to the code list for code name "bogus"
-    Then I should see "Couldn't find"
+    Then I should see "Could not find"
 
     When I navigate to the code edit for code name "gender" and the code "bogus"
-    Then I should see "Couldn't find"
+    Then I should see "Could not find"
 
     When I navigate to the code edit for code name "bogus" and the code "more_bogus"
-    Then I should see "Couldn't find"
+    Then I should see "Could not find"
 
     When I navigate to the code edit for code name "bogus" and the code "NEW"
-    Then I should see "Couldn't find"
+    Then I should see "Could not find"
  
   Scenario: Excercise code creation, editing and deletion
 #  Scenario: Creating a new code

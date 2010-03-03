@@ -23,8 +23,9 @@ class InterestedPlace < Participation
 
   def validate
     super
-    if self.place_entity.place.nil?
-      errors.add_to_base("No name has been supplied for this place.")
+    if self.try(:place_entity).try(:place).nil?
+      #TODO this validationmay be redundant. investigate removing
+      errors.add_to_base(:no_place_name)
     end
   end
 end

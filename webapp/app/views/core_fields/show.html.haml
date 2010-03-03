@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Core Fields Detail
+  = t('core_fields_detail')
 
 - content_for :tools do
-  = link_to h('< Back to Core Fields'), core_fields_path
+  = link_to h(t('back_to_core_fields')), core_fields_path
   %p
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Core Field
+        =t('core_field')
       %th
       %tr
         %td.forminformation
@@ -34,6 +34,6 @@
             = simple_format(h(@core_field.help_text))
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_core_field_path(@core_field)
+            = link_to t('edit'), edit_core_field_path(@core_field)
             |
-            Show
+            = t('show')

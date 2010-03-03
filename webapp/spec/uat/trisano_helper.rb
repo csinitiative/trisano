@@ -32,6 +32,7 @@ module TrisanoHelper
   INVESTIGATION = "Investigation"
   NOTES = "Notes"
   ADMIN = "Administrative"
+  OUTBREAK = "Outbreak"
   
   # Tabs for place events
   PLACE = "Place"
@@ -61,7 +62,8 @@ module TrisanoHelper
     REPORTING => "reporting_tab",
     NOTES => 'notes_tab',
     ADMIN => "administrative_tab",
-    PLACE => "place_tab"
+    PLACE => "place_tab",
+    OUTBREAK => "outbreak_tab"
   }
 
   def wait_for_element_present(name, browser=nil)
@@ -183,7 +185,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("New Morbidity Event") and
         browser.is_text_present("New CMR") and
-        browser.is_element_present("link=Back to list") and
+        browser.is_element_present("link=< Back to list") and
         browser.is_element_present("disable_tabs"))
   end
   
@@ -210,11 +212,15 @@ module TrisanoHelper
         browser.is_text_present("Event Type") and
         browser.is_element_present("//input[@value='Upload']") and
         browser.is_element_present("//input[@id='form_import']") and
-        browser.is_element_present("//input[@value='Create new form']")
+        browser.is_element_present("//input[@value='Create New Form']")
     )
   end
   
   def click_nav_admin(browser)
+    unless browser.is_element_present("link=ADMIN")
+      @browser.open "/trisano/cmrs"
+      @browser.wait_for_page_to_load($load_time)
+    end
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Admin Dashboard"))
@@ -223,8 +229,8 @@ module TrisanoHelper
   def edit_cmr(browser)
     browser.click "link=Edit"
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Person Information") and
-        browser.is_text_present("Street number"))
+    return(browser.get_html_source.include?("Person Information") and
+        browser.get_html_source.include?("Street number"))
   end
 
   def show_cmr(browser)
@@ -252,7 +258,7 @@ module TrisanoHelper
   end
   
   # Clicks the print button and points the browser at the print window.
-  # 
+  #
   # To close the window after inspecting it, do something like the following:
   # @browser.close()
   # @browser.select_window 'null'
@@ -265,10 +271,12 @@ module TrisanoHelper
     
     wait_for_element_present("//div[contains(@id, 'printing_controls')]")
     browser.click "print_all"
+    browser.get_eval("selenium.browserbot.findElement(\"//form[contains(@action, 'print')]\").target='doit';")
+    browser.open_window("", "doit");
     browser.click "print_btn"
-    browser.wait_for_pop_up '_blank', $load_time
-    browser.select_window '_blank'
-    return(browser.is_text_present('Utah Public Health'))
+    browser.wait_for_pop_up("doit", $load_time)
+    browser.select_window("doit")
+    return(browser.get_html_source.include?('Confidential Case Report') && browser.get_html_source.include?('Printed'))
   end
 
   def navigate_to_people_search(browser)
@@ -302,12 +310,7 @@ module TrisanoHelper
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
     if (id > 0)
-      if (resource == "cmrs")
-        browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
-      else
-        browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
-      end
-      
+      browser.click "//a[contains(@href, '/trisano/" + resource + "/" + id.to_s + "/edit')]"
       browser.wait_for_page_to_load "30000"
       return 0
     else
@@ -317,7 +320,7 @@ module TrisanoHelper
   
   def click_resource_show(browser, resource, name)
     id = get_resource_id(browser, name)
-    if id > 0 
+    if id > 0
       browser.click "//a[contains(@onclick, '/trisano/" + resource + "/" + id.to_s + "')]"
       browser.wait_for_page_to_load "30000"
       return 0
@@ -357,7 +360,7 @@ module TrisanoHelper
   end
 
   def watch_for_core_field_spinner(core_field, browser=@browser, &proc)
-    css_selector = %Q{img[id$="[#{core_field}]_spinner"]}
+    css_selector = %Q{img[id$="#{core_field}_spinner"]}
     watch_for_spinner(css_selector, browser, &proc)
   end
 
@@ -435,7 +438,7 @@ module TrisanoHelper
   def get_unique_name(words=1)
     if words > 1000
       words = 1000
-    else 
+    else
       if words < 1
         words = 1
       end
@@ -448,7 +451,7 @@ module TrisanoHelper
   end
   
   def num_times_text_appears(browser, text)
-    browser.get_body_text.scan(/#{text}/).size
+    browser.get_html_source.scan(/#{text}/).size
   end
   
   def assert_tab_contains_question(browser, tab_name, question_text, html_source=nil)
@@ -477,7 +480,7 @@ module TrisanoHelper
       "morbidity_event_active_patient__person_middle_name" => get_unique_name(1),
       "morbidity_event_active_patient__person_birth_date" => "1/1/1974",
       "morbidity_event_active_patient__person_approximate_age_no_birthday" => "22",
-      "morbidity_event_active_patient__person_date_of_death" => "1/1/1974",      
+      "morbidity_event_active_patient__person_date_of_death" => "1/1/1974",
       "morbidity_event_active_patient__person_birth_gender_id" => "Female",
       "morbidity_event_active_patient__person_ethnicity_id" => "Not Hispanic or Latino",
       "morbidity_event_active_patient__person_primary_language_id" => "Hmong",
@@ -674,7 +677,7 @@ module TrisanoHelper
 
   def add_diagnostic_facility(browser, attributes)
     click_core_tab(browser, CLINICAL)
-    browser.click "link=Add a Diagnostic Facility"
+    browser.click "link=Add a diagnostic facility"
     sleep(1)
     browser.type("//div[@id='diagnostic_facilities']//div[@class='diagnostic']//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:name])
     browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
@@ -686,7 +689,7 @@ module TrisanoHelper
 
   def add_hospital(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
-    browser.click "link=Add a Hospital" unless index == 1
+    browser.click "link=Add a Hospitalization Facility" unless index == 1
     sleep(1)
     browser.select("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:name]}")
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_admission_date')]", attributes[:admission_date]) if attributes[:admission_date]
@@ -733,7 +736,6 @@ module TrisanoHelper
     browser.click("link=Add a new lab result") unless lab_index == 1
     sleep(1)
     browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:lab_name]) if attributes[:lab_name]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, 'test_type_id')]", "label=#{attributes[:lab_test_type]}") if attributes[:lab_test_type]
     browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
@@ -999,7 +1001,7 @@ module TrisanoHelper
 
   def assert_tooltip_exists(browser, tool_tip_text)
     browser.is_element_present("//img[contains(@src, 'help.png')]").should be_true
-    browser.is_text_present(tool_tip_text).should be_true
+    browser.get_html_source.include?(tool_tip_text).should be_true
     browser.is_visible("//span[contains(@id,'_help_text')]").should be_false
     browser.is_visible("//div[@id='WzTtDiV']").should be_false
     browser.mouse_over("//a[contains(@id,'_help_text')]")

@@ -39,7 +39,7 @@ class ExportConversionValuesController < AdminController
     @export_conversion_value = ExportConversionValue.new(params[:export_conversion_value])
 
     if (@export_column.export_conversion_values << @export_conversion_value)
-      flash[:notice] = 'Export Conversion Value was successfully created.'
+      flash[:notice] = t("export_conversion_value_created")
       redirect_to export_column_url(@export_column)
     else
       render :action => "new"
@@ -50,7 +50,7 @@ class ExportConversionValuesController < AdminController
     @export_conversion_value = @export_column.export_conversion_values.find(params[:id])
     
     if @export_conversion_value.update_attributes(params[:export_conversion_value])
-      flash[:notice] = 'Export Conversion Value was successfully updated.'
+      flash[:notice] = t("export_conversion_value_updated")
       redirect_to export_column_url(@export_column)
     else
       render :action => "edit"

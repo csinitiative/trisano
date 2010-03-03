@@ -15,18 +15,18 @@
 
 %fieldset
   %legend
-    Investigative Information
-    %span{:id => 'investigate_info_hide', :onClick => "Element.hide('investigate_info'); Element.hide('investigate_info_hide'); Element.show('investigate_info_show'); return false;"} [Hide]
-    %span{:id => 'investigate_info_show', :onClick => "Element.show('investigate_info'); Element.hide('investigate_info_show'); Element.show('investigate_info_hide'); return false;", :style => "display: none;"} [Show]
+    =t 'investigative_info'
+    %span{:id => 'investigate_info_hide', :onClick => "Element.hide('investigate_info'); Element.hide('investigate_info_hide'); Element.show('investigate_info_show'); return false;"}=hide
+    %span{:id => 'investigate_info_show', :onClick => "Element.show('investigate_info'); Element.hide('investigate_info_show'); Element.show('investigate_info_hide'); return false;", :style => "display: none;"}=show
 
   %div{:id => "investigate_info"}
     
     %fieldset.list-of-forms.form
       %legend
-        Forms in Use
+        =t 'forms_in_use'
       - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
         %p 
-          %em None
+          %em=t 'none'
       - else
         %ul{:id => "investigation_form_list", :style => 'margin-bottom: 10px'}
           - form_count = 0
@@ -40,52 +40,51 @@
             %li
               = h("#{form_reference.form.name} (core only)")
               %small= "&nbsp;v. #{h(form_reference.form.version)}"
-      = link_to("Add/Remove forms for this event", event_forms_path(@event)) unless @event.new_record?
+      = link_to(t("add_remove_forms"), event_forms_path(@event)) unless @event.new_record?
 
     %fieldset.form
       %legend
-        Forms
-      
+        =t 'forms'
+
       %div{:id => 'investigation_form'}
-        %td{:width => '80%', :align => 'left', :valign => 'top'}
-          - form_count = 0
-          - for form_reference in @event.investigation_form_references
-            - form_count += 1
-            - form = form_reference.form
-            - display_style = (form_count == 1) ? "inline" : "none"
-            
-            %div{:id => "form_investigate_#{h(form.id)}", :style => "display: #{h(display_style)}; vertical-align: top"}
-              %span{:class => 'investigator-form-title'}
-                = h(form_reference.form.name)
-              %br{:clear => 'all'}
-              - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
-                - has_multiple_user_defined_tabs = true
-                %script{:type => "text/javascript"}
-                  = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{h(form.id)}\");"
-                %div{:id => "user_defined_tabs_#{h(form.id)}", :class => "yui-navset"}
-                  %ul{:id => "user_defined_tab_list_#{h(form.id)}", :class => "yui-nav"}
-                    -  view_count = 0
-                    - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
-                      - view_count += 1
-                      - if view_count == 1
-                        %li{:class => "selected"}
-                          %a{:href => "#ut_#{h(view.id)}"}
-                            %em
-                              = h(view.name)
-                      - else
-                        %li
-                          %a{:href => "#ut_#{h(view.id)}"}
-                            %em
-                              = h(view.name)
-                  %div{:class => "yui-content"}
-                    - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
-                      %div{:id => "ut_#{h(view.id)}"}
-                        = render_investigator_view(view, f, form)
-              - else
-                = render_investigator_view(form.investigator_view_elements_container.children[0], f, form)
-            
-              %br{:clear => "all"}
-              %div{:align => "right"}
-                %small
-                  Version 
-                  = h(form_reference.form.version)
+        - form_count = 0
+        - for form_reference in @event.investigation_form_references
+          - form_count += 1
+          - form = form_reference.form
+          - display_style = (form_count == 1) ? "inline" : "none"
+
+          %div{:id => "form_investigate_#{h(form.id)}", :style => "display: #{h(display_style)}; vertical-align: top"}
+            %span{:class => 'investigator-form-title'}
+              = h(form_reference.form.name)
+            %br{:clear => 'all'}
+            - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
+              - has_multiple_user_defined_tabs = true
+              %script{:type => "text/javascript"}
+                = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{h(form.id)}\");"
+              %div{:id => "user_defined_tabs_#{h(form.id)}", :class => "yui-navset"}
+                %ul{:id => "user_defined_tab_list_#{h(form.id)}", :class => "yui-nav"}
+                  -  view_count = 0
+                  - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+                    - view_count += 1
+                    - if view_count == 1
+                      %li{:class => "selected"}
+                        %a{:href => "#ut_#{h(view.id)}"}
+                          %em
+                            = h(view.name)
+                    - else
+                      %li
+                        %a{:href => "#ut_#{h(view.id)}"}
+                          %em
+                            = h(view.name)
+                %div{:class => "yui-content"}
+                  - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+                    %div{:id => "ut_#{h(view.id)}"}
+                      = render_investigator_view(view, f, form)
+            - else
+              = render_investigator_view(form.investigator_view_elements_container.children[0], f, form)
+
+            %br{:clear => "all"}
+            %div{:align => "right"}
+              %small
+                =t 'version'
+                = h(form_reference.form.version)

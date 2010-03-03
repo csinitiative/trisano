@@ -60,7 +60,7 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     click_core_tab(@browser, DEMOGRAPHICS)
     @browser.is_element_present("//img[contains(@id, 'birth_gender_id')]").should be_false
     add_demographic_info(@browser, { :birth_gender => "Female" })
-    @browser.is_text_present(@core_follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@core_follow_up_question_text).should be_false
     click_core_tab(@browser, "Investigation")
 
     # Enter the answer that meets the core follow-up condition after the edit
@@ -74,7 +74,7 @@ describe 'Form Builder Admin Edit Follow-Up Functionality' do
     #watch_for_answer_spinner(@question_for_follow_up) do
     #  @browser.click("link=#{@form_name}") # A bit of a kluge. Clicking this link essential generates the onChange needed to process the follow-up logic
     #end
-    @browser.is_text_present(@follow_up_question_text).should be_false
+    @browser.get_html_source.include?(@follow_up_question_text).should be_false
     
     # Enter the answer that meets the follow-up condition after the edit
     answer_investigator_question(@browser, @question_for_follow_up, "No")

@@ -45,7 +45,7 @@ describe HumanEvent, 'associations'  do
     it { should accept_nested_attributes_for(:hospitalization_facilities) }
     it { should accept_nested_attributes_for(:diagnostic_facilities) }
     it { should accept_nested_attributes_for(:clinicians) }
-  
+
     describe "destruction is allowed properly" do
       fixtures :events
 
@@ -150,7 +150,7 @@ describe HumanEvent, 'age at onset'  do
 
   it 'should be saved, along w/ an age type' do
     with_human_event do |event|
-      event.safe_call_chain(:interested_party, :person_entity, :person).birth_date = 20.years.ago
+      event.safe_call_chain(:interested_party, :person_entity, :person).birth_date = 20.years.ago.to_date
       event.save!
       event.age_info.age_at_onset.should_not == nil
       event.age_info.age_type.should_not == nil
@@ -164,7 +164,7 @@ describe HumanEvent, 'age at onset'  do
       event.send(:set_age_at_onset)
       event.save
       event.should_not be_valid
-      event.errors.on(:age_at_onset).should_not be_nil
+      event.errors.on(:age_at_onset).should == "is negative. This is usually caused by an incorrect onset date or birth date."
     end
   end
 end
@@ -461,6 +461,7 @@ describe HumanEvent, 'validating out of state patients' do
     @event.lhd_case_status = nil
     @event.state_case_status = external_codes(:case_status_confirmed)
     @event.should_not be_valid
+    @event.errors.on(:base).should == "Local or state case status must be 'Out of state' or blank for an event with a county of 'Out of state'"
   end
 
 end

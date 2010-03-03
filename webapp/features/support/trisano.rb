@@ -31,7 +31,6 @@ def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
     event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types(jurisdiction || "Unassigned", 'J', true).first.entity_id)
     event.add_note("Dummy Note")
     event.save!
-    event
   end
 end
 
@@ -121,6 +120,19 @@ def lab_attributes(values)
       }
     }
   }
+end
+
+def add_path_to(page_name, path_str=nil, &path_proc)
+  Cucumber::Rails::World.class_eval do
+    @@extension_path_names << {
+      :page_name => page_name,
+      :path => path_str || path_proc
+    }
+  end
+end
+
+def invalidate_disease_onset_date(event)
+  DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}'", ['event_id = ?', event.id])
 end
 
 # A dirty, filthy hack because succ! seems to be broken in JRuby on 64

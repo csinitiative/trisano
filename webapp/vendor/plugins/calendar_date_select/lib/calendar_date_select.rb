@@ -145,6 +145,12 @@ class CalendarDateSelect
           nil
         end
 
+      unless options[:value].nil?
+        translated = I18n.t([:month_names, :abbr_month_names], :scope => :date).flatten.compact
+        original = (Date::MONTHNAMES + Date::ABBR_MONTHNAMES).compact
+        original.each_with_index { |name, i| options[:value].gsub!(name, translated[i]) }
+      end
+
       tag = ActionView::Helpers::InstanceTag.new(object, method, self, options.delete(:object))
       calendar_date_select_output(
         tag.to_input_field_tag( (calendar_options[:hidden] || calendar_options[:embedded]) ? "hidden" : "text", options), 

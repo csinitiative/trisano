@@ -2,24 +2,25 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Place do
 
-  fixtures :places, :places_types, :entities
+  fixtures :places, :entities, :places_types
+
 
   before(:each) do
     @place = Place.new
@@ -50,16 +51,39 @@ describe Place do
       end
 
     end
-    
+
   end
 
   describe "finding exising places" do
-    fixtures :codes, :places, :places_types
-    
+    fixtures :codes, :places
+
     it "should be able to find 'Unassigned' jurisdiction by name" do
       Place.jurisdiction_by_name('Unassigned').should_not be_nil
     end
 
+    it "should be able to find 'Unassigned' jurisdiction by with the helper" do
+      unassigned_jurisdiction = Place.unassigned_jurisdiction
+      unassigned_jurisdiction.should_not be_nil
+      unassigned_jurisdiction.name.should == "Unassigned"
+    end
+  end
+
+  describe "when listing jurisdictions" do
+
+    after(:all) do
+      I18n.locale = :en
+    end
+
+    it "should be able to place 'Unassigned' at the top of the list" do
+      jurisdictions = put_unassigned_at_the_bottom(Place.jurisdictions)
+      Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "Unassigned"
+    end
+
+    it "should be able to place 'xUnassigned' at the top of the list in the test locale" do
+      I18n.locale = :test
+      jurisdictions = put_unassigned_at_the_bottom(Place.jurisdictions)
+      Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "xUnassigned"
+    end
   end
 
   describe "class method" do
@@ -125,14 +149,69 @@ describe Place do
       @place = Place.new(:name => 'Metroid')
       @place.place_types << codes(:place_type_hospital)
       @place.place_types << codes(:place_type_lab)
+      @place.save!
     end
 
     it 'should make a valid description' do
-      @place.save
       @place.place_types.size.should == 2
       @place.formatted_place_descriptions.should == 'Hospital / ICP and Laboratory'
     end
+  end
 
+  describe 'place codes i18n' do
+    before do
+      @place_type1 = Factory.create(:place_type, :code_description => 'one')
+      @place_type1.code_translations.build(:locale => 'test', :code_description => 'Zed')
+      @place_type1.save!
+
+      @place_type2 = Factory.create(:place_type, :code_description => 'two')
+      @place_type2.code_translations.build(:locale => 'test', :code_description => 'Dead')
+      @place_type2.save!
+
+      @place = Factory.build(:place)
+      @place.place_types << @place_type1
+      @place.place_types << @place_type2
+      @place.save!
+    end
+
+    after do
+      I18n.locale = :en
+    end
+
+    it 'should sort place types based on translated code description' do
+      @place.reload
+      @place.place_types.all(:order => 'code_description').collect(&:code_description).should == ['one', 'two']
+      I18n.locale = :test
+      @place.reload
+      @place.place_types.all(:order => 'code_description').collect(&:code_description).should == ['Dead', 'Zed']
+    end
+
+  end
+
+  describe "'Unassigned' is special for jurisdiction places" do
+    before do
+      Place.delete_all
+      PlaceEntity.delete_all
+      ActiveRecord::Base.connection.execute("DELETE FROM places_types;")
+
+      @unassigned = create_jurisdiction_entity(:place_attributes => {
+                                                 :name => 'Unassigned',
+                                                 :short_name => 'Unassigned'})
+    end
+
+    after { Fixtures.reset_cache }
+
+    it "should not be possible to create a second 'Unassigned' jurisdiction" do
+      Place.jurisdiction_by_name('Unassigned').should_not be_nil
+      place = Place.create(:name => 'Unassigned', :place_type_ids => [Code.jurisdiction_place_type_id])
+      place.errors.on(:name).should == "'Unassigned' is special for jurisdictions. Please choose a different name."
+    end
+  end
+
+  def put_unassigned_at_the_bottom(jurisdictions)
+    unassigned = jurisdictions.find { |jurisdiction| jurisdiction.read_attribute(:name) == "Unassigned" }
+    jurisdictions.insert(jurisdictions.size-1, jurisdictions.delete(unassigned))
+    jurisdictions
   end
 
 end

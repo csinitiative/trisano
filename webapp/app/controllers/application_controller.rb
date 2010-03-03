@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Filters added to this controller apply to all controllers in the application.
@@ -21,32 +22,54 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 
+  before_filter :load_user
+  before_filter :prep_extensions
+
+  helper_method :static_error_page_path
+  helper_method :core_element_renderers, :core_element_show_renderers
+  helper_method :javascript_include_renderers, :dom_loaded_javascripts
+  helper_method :address_extension_renderers
+  helper_method :cmr_contacts_extension_renderers, :cmr_place_exposure_extensions
+  helper_method :search_extensions
+
+  class << self
+    def ignore_plugin_renderers?
+      @ignore_special_renderers ||= false
+    end
+
+    def ignore_plugin_renderers=(value)
+      @ignore_special_renderers = value
+    end
+  end
+
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
 
-  # Commented out by Pete Lacey to allow for auto_complete. http://dev.rubyonrails.org/ticket/10059
+  # Commented out to allow for auto_complete. http://dev.rubyonrails.org/ticket/10059
   # There are other # ways to resolve this, but going big guns for now.
   #
   # protect_from_forgery # :secret => '2d3bed8e7cbfb7957951219c8ef78101'
 
-  before_filter :load_user
-
   protected
+
+  # preparing as a place for plugins to hook
+  def default_url_options(options={})
+    {}
+  end
 
   # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
   def can_view_event?
     @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :partial => 'events/permission_denied', :locals => { :reason => "You do not have view privileges for this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
+      render :partial => 'events/permission_denied', :locals => { :reason => t("no_view_privs_for_jurisdiction"), :event => @event }, :layout => true, :status => 403 and return
     end
-
   end
 
   # Debt: Used by nested resources of events, so it assumes the event id is in the params as event_id
   def can_update_event?
     @event ||= Event.find(params[:event_id])
     unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      render :partial => 'events/permission_denied', :locals => { :reason => "You do not have update privileges for this jurisdiction", :event => @event }, :layout => true, :status => 403 and return
+      render :partial => 'events/permission_denied', :locals => { :reason => t("no_update_privs_for_jurisdiction"), :event => @event }, :layout => true, :status => 403 and return
     end
   end
 
@@ -55,7 +78,7 @@ class ApplicationController < ActionController::Base
     begin
       @event = Event.find(params[:event_id])
     rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
     end
   end
 
@@ -69,18 +92,18 @@ class ApplicationController < ActionController::Base
     auth_src_header = config_option(:auth_src_header)
 
     if !session[:user_id].nil?
-      logger.info "Using user set in session"
+      I18nLogger.info("logger.using_user_in_session")
       load_user_by_uid(session[:user_id])
     elsif !auth_src_env.blank?
-      logger.info "Using TriSano user found in #{auth_src_env} environment variable"
+      I18nLogger.info("logger.using_user_in_env_variable", :auth_src_env => auth_src_env)
       load_user_by_uid(ENV[auth_src_env])
     elsif !auth_src_header.blank?
-      logger.info "Using TriSano user found in #{auth_src_header} http header"
+      I18nLogger.info("logger.using_user_in_header", :auth_src_header => auth_src_header)
       load_user_by_uid(request.headers[auth_src_header])
     else
-      logger.info "No UID is present"
+      I18nLogger.info("logger.no_uid_present")
       log_request_info
-      render :text => "Internal application error: No UID is present. Please contact your administrator.", :status => 500
+      render :text => t("no_uid_present"), :status => 403
       return
     end
   end
@@ -88,51 +111,38 @@ class ApplicationController < ActionController::Base
   def load_user_by_uid(uid)
 
     if uid.blank?
-      logger.info "No UID is present"
+      I18nLogger.info("logger.no_uid_present")
       log_request_info
-      render :text => "Internal application error: No UID is present. Please contact your administrator.", :status => 500
+      render :text => t("no_uid_present"), :status => 403
       return
     end
 
-    logger.info "Attempting to load user with a UID of " + uid
+    I18nLogger.info("logger.attempting_to_load_user", :uid => uid)
     User.current_user = User.find_by_uid(uid)
 
     if User.current_user.nil?
-      logger.info "User not found by uid: " + uid
+      I18nLogger.info("logger.user_not_found", :uid => uid)
       log_request_info
-      render :text => "Internal application error: User not found. Please contact your administrator.", :status => 500
+      render :text => t("user_not_found"), :status => 403
       return
     end
 
     if User.current_user.disabled?
-      logger.info "Login attempt with disabled UID " +  uid
+      I18nLogger.info("logger.login_attempt_with_disabled_uid", :uid => uid)
       log_request_info
-      render :text => "This account is not currently available. Please contact your administrator."
+      render :text => t("account_not_avaliable")
       return
     end
 
-    logger.info "User loaded: " + User.current_user.uid
+    I18nLogger.info("logger.user_loaded", :uid => User.current_user.uid)
     User.current_user
   end
 
   def log_request_info
     thread_id = Thread.current.object_id
     request.env.each do |key, value|
-
       logger.info "#{thread_id} -- #{key}: #{value}"
     end
-  end
-
-  def rescue_action_in_public(exception)
-    # The following can be made to render the 500.html view once we upgrade Rails.
-    # Issue with rendering error pages w/Tomcat WAR deployments in pre-Rails 2.1:
-    #   http://www.ruby-foru​m.com/topic/167228
-
-    render :text => "<html><body bgcolor='#ededed'><br/><table bgcolor='#000000' width='500' cellspacing='1' cellpadding='10' align='center'>
-<tr bgcolor='#ffffff'><td style='font-family: verdana, sans-serif'><h2>TriSano</h2><hr/><h3>Application Error</h3>
-<p style='font-size: 12px'>An error occurred while your request was being processed.</p><br/><hr/>
-<b style='font-size: 12px'><a href='https://wiki.csinitiative.com/display/tri/Feedback' style='font-size: 12px'>Provide feedback</a></b>
-</td></tr></table></body></html>"
   end
 
   # Kluge to get around the fact that Rails does not reset objects in
@@ -147,5 +157,76 @@ class ApplicationController < ActionController::Base
     end
     obj
   end
+
+  def prep_extensions
+    @extension_action_links = []
+  end
+
+  # optional renderers for replacing core fields.
+  # Debt: Probably should move API bits into their own module
+  # PLUGIN_API
+
+  def core_element_renderers
+    return {} if ApplicationController.ignore_plugin_renderers?
+    @core_element_renderers ||= {}
+  end
+
+  def core_element_show_renderers
+    return {} if ApplicationController.ignore_plugin_renderers?
+    @core_element_show_renderers ||= {}
+  end
+
+  # PLUGIN_API render for add javascript_include_tags
+  def javascript_include_renderers
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @javascript_include_renderers ||= []
+  end
+
+  # javascript included in this array will be executed on dom:loaded
+  def dom_loaded_javascripts
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @dom_loaded_javascripts ||= []
+  end
+
+  # enhancements for address partials
+  def address_extension_renderers
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @address_extension_renderers ||= []
+  end
+
+  def cmr_contacts_extension_renderers
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @cmr_contacts_extension_renderers ||= []
+  end
+
+  def cmr_place_exposure_extensions
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @cmr_place_exposure_extensions ||= []
+  end
+
+  def search_extensions
+    return [] if ApplicationController.ignore_plugin_renderers?
+    @search_extensions ||= []
+  end
+
+  private
+
+  # Accepts an error code (403, 404, etc.) and returns a path to a static HTML
+  # file.
+  def static_error_page_path(error)
+    locale_specific_path = "#{RAILS_ROOT}/public/#{error}.#{I18n.locale.to_s}.html"
+    default_path = "#{RAILS_ROOT}/public/#{error}.html"
+    default_500_path = "#{RAILS_ROOT}/public/500.html"
+
+    if File.exists?(locale_specific_path)
+      return locale_specific_path
+    elsif File.exists?(default_path)
+      return default_path
+    else
+      return default_500_path
+    end
+
+  end
+
 
 end

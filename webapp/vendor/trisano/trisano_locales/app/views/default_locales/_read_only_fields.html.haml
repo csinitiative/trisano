@@ -1,0 +1,6 @@
+%td
+  =h(@default_locale.user.try(:best_name) || t(:system_modified, :scope => trisano_locale_scope))
+%td
+  =@default_locale.updated_at ? localize(@default_locale.updated_at) : t(:never_modified, :scope => trisano_locale_scope)
+%td
+  =default_locale_tools

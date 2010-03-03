@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create Event Queue
+  =t('create_event_queue')
 
 /- content_for :name do
 
 - content_for :tools do
-  = link_to '< Back to Event Queues', event_queues_path
+  = link_to t('back_to', :name => t('event_queues')), event_queues_path
   %p
 
 = error_messages_for :event_queue
 
 -form_for(@event_queue) do |f|
   = render :partial => "form", :locals => {:f => f}
-  = f.submit "Create"
+  = f.submit t('create')
 

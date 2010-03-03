@@ -36,15 +36,20 @@
       %span.vert
         - cf.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
           %span.horiz
-            = phone_fields.label(:entity_location_type_id, "Phone type")
+            = phone_fields.label :entity_location_type_id
             = phone_fields.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
-          %span.horiz
-            = phone_fields.label(:area_code)
-            = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3})
+          -if Telephone.use?(:country_code)
+            %span.horiz
+              = phone_fields.label(:country_code)
+              = phone_fields.core_text_field(:country_code, {:size => 3})
+          -if Telephone.use?(:area_code)
+            %span.horiz
+              = phone_fields.label(:area_code)
+              = phone_fields.core_text_field(:area_code, {:size => 3})
           %span.horiz
             = phone_fields.label(:phone_number)
             = phone_fields.core_text_field(:phone_number, {:size => 8})
           %span.horiz
             = phone_fields.label(:extension)
-            = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6})
+            = phone_fields.core_text_field(:extension, {:size => 6})
       %hr

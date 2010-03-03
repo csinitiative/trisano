@@ -37,7 +37,7 @@ Feature: Managing diagnosing facilities on events
     
   Scenario: Adding and removing diagnosing facilities for a contact
     Given I am logged in as a super user
-    And a contact event exists
+    And there is a contact event
     
     When I am on the contact event edit page
     And I add an existing diagnosing facility

@@ -1,0 +1,11 @@
+test:
+
+  trisano_locales:
+    manage_locale_link: "xManage Locale"
+    default_locale: "xDefault Locale"
+    system_modified: "xSystem modified"
+    current_locale: "xCurrent Locale"
+    changed_by: "xModified by"
+    updated_at: "xLast Modified"
+    update_default_locale: "xChange Default Locale"
+    successful_update: "xDefault locale was successfully updated"

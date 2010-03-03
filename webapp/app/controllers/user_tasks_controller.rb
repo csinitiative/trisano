@@ -19,11 +19,9 @@ class UserTasksController < ApplicationController
 
   before_filter :find_user
 
-  # we only respond to an ajax request.
   def index
     respond_to do |format|
       format.js do
-        #Hmmmmm. Why do I have to add the .html.haml onto the partial?
         render :partial => "tasks/list.html.haml", :locals => {:task_owner => @user}
       end
     end
@@ -32,11 +30,10 @@ class UserTasksController < ApplicationController
   def update
     @task = @user.tasks.find(params[:id])
     
-    # Updates currently only come in through a simple status-changing Ajax call
     if @task.update_attributes(params[:task])
-      flash[:notice] = 'Task was successfully updated.'
+      flash[:notice] = t("task_successfully_updated")
     else
-      flash[:error] = 'Could not update task.'
+      flash[:error] = t("task_update_failed")
     end
     
   end
@@ -47,7 +44,7 @@ class UserTasksController < ApplicationController
     begin
       @user = User.find(params[:user_id])
     rescue
-      render :file => "#{RAILS_ROOT}/public/404.html", :layout => 'application', :status => 404 and return
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
     end
   end
 end

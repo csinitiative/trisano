@@ -15,11 +15,11 @@
 
 %fieldset
   %legend
-    Investigative Information
+    =t 'investigative_info'
 
   %fieldset.list-of-forms.form
     %legend
-      Forms in Use
+      =t 'forms_in_use'
     - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
       %p 
         %em None
@@ -39,7 +39,7 @@
     = link_to("Add/Remove forms for this event", event_forms_path(@event))
 
   %fieldset.form
-    %legend Forms
+    %legend= t"forms"
 
     %div{:id => 'investigation_form'}
       %table{:width => '100%', :cellpadding => '3', :cellspacing => '0'}
@@ -86,5 +86,5 @@
                 %br{:clear => "all"}
                 %div{:align => "right"}
                   %small
-                    Version 
+                    =t "version "
                     = h(form_reference.form.version)

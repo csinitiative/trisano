@@ -13,7 +13,7 @@ Feature: Forms can be created
     When I navigate to the new form view
     And I enter a form name of ATBF
     And I enter a form short name of ATBF
-    And I select a form event type of Morbidity event
+    And I select a form event type of Morbidity Event
     And I check the disease African Tick Bite Fever
 
     Then I should be able to create the new form and see the form name ATBF

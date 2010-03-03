@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %div{:id => "diagnostic_facilities"}
-  = live_search('Search for an existing diagnostic facility', :search_field => 'diagnostics_search', :results => 'live_search_diagnostics', :select => 'place_name', :event_type => event_form.object_name)
+  = live_search(t('search_existing_diagnostic_facility'), :search_field => 'diagnostics_search', :results => 'live_search_diagnostics', :select => 'place_name', :event_type => event_form.object_name)
 
   - event_form.fields_for(:diagnostic_facilities, :builder => ExtendedFormBuilder) do |diagnostic_fields|
     -# Currently we don't allow editing diagnostic information (because changing it for one event will change it for all).
@@ -33,5 +33,5 @@
 
   %p{:style => "clear: both;"}
     %br
-    = add_record_link event_form, :diagnostic_facilities, "Add a Diagnostic Facility", :object => blank_diagnostic, :partial => 'events/diagnostic'
+    = add_record_link event_form, :diagnostic_facilities, t("add_diagnostic_facility"), :object => blank_diagnostic, :partial => 'events/diagnostic'
 

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -69,14 +69,14 @@ describe TaskFilter do
       end
 
     end
-    
+
     describe 'with only look back set' do
       it 'should show old tasks that fall within the filter' do
         create_task(:due_date => 1.day.ago) do |event, task|
           event.filter_tasks(:look_back => '3').size.should == 1
         end
       end
-      
+
       it 'should not show old tasks that fall outside the filter' do
         create_task(:due_date => 3.days.ago) do |event, task|
           event.filter_tasks(:look_back => '1').size.should == 0
@@ -106,7 +106,7 @@ describe TaskFilter do
 
     end
 
-  end  
+  end
 
   describe 'with no disease filter applied' do
     before(:each) do
@@ -117,7 +117,7 @@ describe TaskFilter do
     it 'should show tasks for all diseases' do
       @user.filter_tasks.size.should == 2
     end
- 
+
   end
 
   describe 'with disease filter applied' do
@@ -155,13 +155,13 @@ describe TaskFilter do
       tasks.include?(@user_two_task).should be_true
       tasks.size.should == 2
     end
-    
+
     it 'should show tasks of users that can be assigned to by current user' do
       tasks = @user.filter_tasks(:users => ['1', '2', '3'])
       tasks.include?(@user_one_task).should be_true
       tasks.include?(@user_two_task).should be_true
       tasks.size.should == 2
-    end      
+    end
   end
 
   describe 'with jurisdiction filter applied' do
@@ -198,9 +198,9 @@ describe TaskFilter do
       @completed_task.update_attribute(:status, 'complete')
       @na_task        = create_task
       @na_task.update_attribute(:status, 'not_applicable')
-      @pending_task   = create_task      
+      @pending_task   = create_task
     end
-    
+
     it 'should exclude completed tasks' do
       tasks = @user.filter_tasks(:task_statuses => ['pending', 'not_applicable'])
       tasks.include?(@na_task).should be_true
@@ -208,7 +208,7 @@ describe TaskFilter do
       tasks.include?(@completed_task).should_not be_true
       tasks.size.should == 2
     end
-      
+
     it 'should exclude N/A tasks' do
       tasks = @user.filter_tasks(:task_statuses => ['pending', 'complete'])
       tasks.include?(@na_task).should_not be_true
@@ -233,7 +233,7 @@ describe TaskFilter do
       create_task(:event => @chicken_pox_event, :name => 'Done it', :due_date => 1.day.ago)
       create_task(:event => @anthrax_event, :name => 'Ignore it')
     end
-    
+
     it 'should show only tasks associated with event' do
       names = @chicken_pox_event.filter_tasks.collect(&:name)
       names.include?('Done it').should be_true

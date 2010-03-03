@@ -27,7 +27,7 @@ Feature: Searching for existing people or events before adding a CMR
 
     When I search for last_name = "Jones"
     Then I should see results for both records
-    
+
   Scenario: Searches should not include encounter events
     Given a simple morbidity event for last name Jones
     And there is an associated encounter event
@@ -44,7 +44,7 @@ Feature: Searching for existing people or events before adding a CMR
     When I search for last_name = "Jones"
     Then I should see both the CMR and the entity
 
-Scenario: Searches do not include delete people
+  Scenario: Searches do not include deleted people
     Given a deleted person with the last name "Jones"
     And I am logged in as a super user
 
@@ -114,12 +114,12 @@ Scenario: Searches do not include delete people
     Then I should see the following results:
       |last_name|first_name|
       |Jones    |David     |
-                  
+
     When I search for last_name starting with "Jo" and first_name starting with "M"
     Then I should see the following results:
       |last_name|first_name|
       |Jones    |Mick      |
- 
+
   Scenario: Disease is hidden from people without the right privileges
     Given a morbidity event for last name Jones with disease Mumps in jurisdiction Davis County
     And I am logged in as a user without view or update privileges in Davis County
@@ -130,7 +130,7 @@ Scenario: Searches do not include delete people
   Scenario: People with multiple events are grouped together
     Given there are 2 morbidity events for a single person with the last name Jones
     And I am logged in as a super user
-    
+
     When I search for last_name = "Jones"
     Then I should see two morbidity events under one name
 
@@ -141,7 +141,7 @@ Scenario: Searches do not include delete people
     When I search for last_name = "Jones"
     And I create a new morbidity event from the morbidity named Jones
     Then I should be in edit mode for a new copy of Jones
-    
+
   Scenario: Creating a new morb event from an existing contact event
     Given a simple morbidity event for last name Jones
     And there is a contact on the event named Smith
@@ -150,4 +150,15 @@ Scenario: Searches do not include delete people
     When I search for last_name = "Smith"
     And I create a new morbidity event from the contact named Smith
     Then I should be in edit mode for a new copy of Smith
+
+  Scenario: Creating a new morb from search criteria
+    Given I am logged in as a super user
+     When I search for:
+       | Last name | First name | Birth date |
+       | Aurelius  | Marcus     | 3/3/1972   |
+      And I follow "Start a CMR with the criteria you searched on"
+     Then I should see the following values:
+       | Last name | First name | Date of birth |
+       | Aurelius  | Marcus     | March 03, 1972 |
+
 

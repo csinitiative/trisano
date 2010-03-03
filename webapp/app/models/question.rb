@@ -22,13 +22,13 @@ class Question < ActiveRecord::Base
   class << self
     def data_type_array
       [
-        ["Single line text", "single_line_text"],
-        ["Multi-line text", "multi_line_text"],
-        ["Drop-down select list", "drop_down"],
-        ["Radio buttons", "radio_button"],
-        ["Checkboxes", "check_box"],
-        ["Date", "date"],
-        ["Phone Number", "phone"]
+        [I18n.t('question_data_types.single_line_text'), "single_line_text"],
+        [I18n.t('question_data_types.multi_line_text'), "multi_line_text"],
+        [I18n.t('question_data_types.drop_down'), "drop_down"],
+        [I18n.t('question_data_types.radio_button'), "radio_button"],
+        [I18n.t('question_data_types.check_box'), "check_box"],
+        [I18n.t('question_data_types.date'), "date"],
+        [I18n.t('question_data_types.phone'), "phone"]
       ]
     end
 
@@ -57,7 +57,7 @@ class Question < ActiveRecord::Base
   def validate
     # Bypassing validates_inclusion_of in order to work around the data_type to_sym method
     unless Question.valid_data_types.include? data_type.to_s
-      errors.add(:data_type, "is not vaild") if core_data.blank?
+      errors.add(:data_type, :invalid) if core_data.blank?
     end
   end
 

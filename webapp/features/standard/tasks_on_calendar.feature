@@ -5,7 +5,7 @@ Features: Viewing and working with tasks via the calendar
 
   Scenario: Viewing tasks on the calendar
     Given I am logged in as a super user
-    And a morbidity event exists
+    And a basic morbidity event exists
     And the following tasks for the event
     | name | category | priority | status | due_date |
     | Visit the sick | Appointment | High | Pending | today |
@@ -25,7 +25,7 @@ Features: Viewing and working with tasks via the calendar
 
   Scenario: Clicking through to tasks on the calendar
     Given I am logged in as a super user
-    And a morbidity event exists
+    And a basic morbidity event exists
     And the following tasks for the event
     | name | category | priority | status | due_date |
     | Visit the sick | Appointment | High | Pending | today |

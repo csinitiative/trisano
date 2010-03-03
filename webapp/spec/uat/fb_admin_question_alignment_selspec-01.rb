@@ -48,7 +48,7 @@ describe 'Form Builder Admin Question Alignment Functionality' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease_name, "Bear River Health Department")
     edit_cmr(@browser)
     
-    @browser.is_text_present(@question_text).should be_true
+    @browser.get_html_source.include?(@question_text).should be_true
     published_question_id = get_question_investigate_div_id(@browser, @question_text)
     @browser.get_eval("window.document.getElementById(\"question_investigate_#{published_question_id}\").attributes[0].nodeValue").should eql("horiz")
   end

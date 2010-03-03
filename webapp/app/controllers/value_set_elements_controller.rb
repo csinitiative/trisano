@@ -21,7 +21,7 @@ class ValueSetElementsController <  AdminController
     @value_set_elements = ValueSetElement.find(:all)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml  { render :xml => @value_set_elements }
     end
   end
@@ -40,7 +40,7 @@ class ValueSetElementsController <  AdminController
       @library_elements = []
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the value set form at this time.'
+      flash[:error] = t("unable_to_display_value_set_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -102,7 +102,7 @@ class ValueSetElementsController <  AdminController
       @form = Form.find(@value_element.form_id)
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to toggle the value at this time.'
+      flash[:error] = t("unable_to_toggle_value")
       render :template => 'rjs-error'
     end
   end

@@ -24,7 +24,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe| %>
         <%= render :partial => 'people/name_form', :locals => {:f => pe, :event => event, :event_form => f } %>
         <%= render :partial => 'people/address_form', :locals => {:f => f, :event => event } %>
-        <%= render :partial => 'people/age_form', :locals => {:f => pe, :event => event} %>
+        <%= render :partial => 'people/age_form', :locals => {:f => pe, :event_form => f} %>
         <%= render :partial => 'people/phones_form', :locals => {:f => pe } %>
         <%= render :partial => 'people/demographics_form', :locals => {:f => pe, :event => event} %>
       <% end %>

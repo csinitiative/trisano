@@ -23,8 +23,8 @@
       = render :partial => 'form', :locals => { :f => f }
 
       %p
-        = f.submit("Create", :id => "create_value_set_submit_#{@value_set_element.parent_element_id}")
+        = f.submit(t("create"), :id => "create_value_set_submit_#{@value_set_element.parent_element_id}")
         &nbsp;&nbsp;
-        = link_to_function "Close", "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"
+        = link_to_function t("close"), "$('value-set-mods-#{@value_set_element.parent_element_id}').down('form').reset(); Effect.BlindUp($('value-set-mods-#{@value_set_element.parent_element_id}'), { duration: 0.1 })"
 
   = render :partial => "forms/library", :locals => {:direction => :from_library, :type => :value_set_element}

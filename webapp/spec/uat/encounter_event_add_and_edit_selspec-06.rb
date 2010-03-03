@@ -48,9 +48,9 @@ describe 'Updating a task' do
   it 'should not be possible to add an encounter on a new CMR' do
     @browser.open "/trisano/cmrs"
     click_nav_new_cmr(@browser)
-    @browser.is_text_present("No encounters").should be_true
-    @browser.is_text_present("Add an encounter").should be_false
-    @browser.is_text_present(@encounter_date_field_label).should be_false
+    @browser.get_html_source.include?("No encounters").should be_true
+    @browser.get_html_source.include?("Add an encounter").should be_false
+    @browser.get_html_source.include?(@encounter_date_field_label).should be_false
   end
   
   it "should create a basic CMR" do
@@ -59,12 +59,12 @@ describe 'Updating a task' do
 
   it 'should add an encounter' do
     edit_cmr(@browser)
-    @browser.is_text_present(@encounter_date_field_label).should be_true
+    @browser.get_html_source.include?(@encounter_date_field_label).should be_true
     @browser.type('css=input[id$=participations_encounter_attributes_encounter_date]', @date)
     @browser.type('css=textarea[id$=participations_encounter_attributes_description]', @description)
     save_cmr(@browser)
-    @browser.is_text_present("2009-03-10").should be_true
-    @browser.is_text_present(@description).should be_true
+    @browser.get_html_source.include?("2009-03-10").should be_true
+    @browser.get_html_source.include?(@description).should be_true
   end
 
   it 'should edit the encounter' do
@@ -73,11 +73,12 @@ describe 'Updating a task' do
     @browser.type('css=textarea[id$=participations_encounter_attributes_description]', @new_description)
     save_cmr(@browser)
 
-    @browser.is_text_present("2009-03-10").should be_false
-    @browser.is_text_present(@description).should be_false
+    html_source = @browser.get_html_source
+    html_source.include?("2009-03-10").should be_false
+    html_source.include?(@description).should be_false
 
-    @browser.is_text_present("2009-03-11").should be_true
-    @browser.is_text_present(@new_description).should be_true
+    html_source.include?("2009-03-11").should be_true
+    html_source.include?(@new_description).should be_true
   end
   
   it 'should delete the encounter' do

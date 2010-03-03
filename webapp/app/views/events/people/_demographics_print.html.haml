@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %span.subsection-header
-  Demographics
+  =t('demographics')
 -f.fields_for(:person,  :builder => ExtendedFormBuilder) do |p|
   -core_element_print :birth_gender_id, p, :horiz do
-    %span.print-label Birth gender:
+    %span.print-label=ct('birth_gender')
     %span.print-value=h(person.birth_gender_description)
   -core_element_print :primary_language_id, p, :horiz do
-    %span.print-label Primary language:
+    %span.print-label=ct('primary_language')
     %span.print-value=h(person.primary_language_description)
   -core_element_print :ethnicity_id,  p, :vert do
-    %span.print-label Ethnicity:
+    %span.print-label=ct('ethnicity')
     %span.print-value=h(person.ethnicity_description)
   %span.vert
-    %span.print-label Race:
+    %span.print-label=ct('race')
     %span.print-value=h(person.race_description)

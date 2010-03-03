@@ -46,20 +46,21 @@ describe 'Sorting tasks on the Dashboard' do
 
   it 'should add a bunch of tasks.' do
     [{ :task_name => 'z' + @task_name, 
-       :task_category => 'Treatment', 
-       :task_priority => 'Low', 
-       :task_due_date => Date.today, 
-       :task_notes => 'z notes', 
-       :task_user_id => 'default_user' },
-     { :task_name => 'a' + @task_name, 
-       :task_category => 'Appointment', 
-       :task_priority => 'High', 
-       :task_due_date => Date.today + 1, 
-       :task_notes => 'a notes', 
-       :task_user_id => 'default_user' }
+        :task_category => 'Treatment',
+        :task_priority => 'Low',
+        :task_due_date => Date.today,
+        :task_notes => 'z notes',
+        :task_user_id => 'default_user' },
+      { :task_name => 'a' + @task_name,
+        :task_category => 'Appointment',
+        :task_priority => 'High',
+        :task_due_date => Date.today + 1,
+        :task_notes => 'a notes',
+        :task_user_id => 'default_user' }
     ].each do |task|
       add_task(@browser, task).should be_true
-      show_cmr(@browser)
+      @browser.click("link=Show CMR")
+      @browser.wait_for_page_to_load($load_time)
     end
   end
 

@@ -18,15 +18,15 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
 <fieldset>
-  <legend>Epidemiological Information
-    <span id='epi_info_hide' onClick="Element.hide('epi_info_form'); Element.hide('epi_info_hide'); Element.show('epi_info_show'); return false;">[Hide]</span>
-    <span id='epi_info_show' onClick="Element.show('epi_info_form'); Element.hide('epi_info_show'); Element.show('epi_info_hide'); return false;" style="display: none;">[Show]</span>
+  <legend><%= t('epi_info') %>
+    <span id='epi_info_hide' onClick="Element.hide('epi_info_form'); Element.hide('epi_info_hide'); Element.show('epi_info_show'); return false;">[<%=  t('hide') %>]</span>
+    <span id='epi_info_show' onClick="Element.show('epi_info_form'); Element.hide('epi_info_show'); Element.show('epi_info_hide'); return false;" style="display: none;">[<%=  t('show') %>]</span>
   </legend>
   <div id='epi_info_form'>
     <% f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ap| -%>
       <% ap.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |rf| -%>
         <fieldset class="form">
-          <legend>Contact Oriented</legend>
+          <legend><%=  t('contact_oriented') %></legend>
           <% core_element :food_handler_id, rf, :horiz do %>
             <%= rf.label(:food_handler_id) %>
             <%= rf.dropdown_code_field(:food_handler_id, 'yesno', {}, {}, @event) %>
@@ -50,7 +50,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         </fieldset>
         <br />
         <fieldset class="form">
-          <legend>Other</legend>
+          <legend><%=  t('other') %></legend>
           <% core_element :imported_from_id, f, :horiz do -%>
             <%= f.label(:imported_from_id) %>
             <%= f.dropdown_code_field(:imported_from_id, 'imported', {}, {}, @event) %>
@@ -64,11 +64,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= rf.text_area(:risk_factors_notes, :cols => 50, :rows => 2) %>
           <% end %>
           <% core_element :other_data_1, f, :vert do -%>
-            <%= f.label(:other_data_1, 'Other data 1') %>
+            <%= f.label(:other_data_1) %>
             <%= f.text_field(:other_data_1, :size => 30, :maxlength => 255) %>
           <% end -%>
           <% core_element :other_data_2, f, :horiz do -%>
-            <%= f.label(:other_data_2, "Other data 2") %>
+            <%= f.label(:other_data_2) %>
             <%= f.text_field(:other_data_2, :size => 30, :maxlength => 255) %>
           <% end -%>
         </fieldset>

@@ -20,7 +20,7 @@ require 'active_support'
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'Copying an address from the Original Patient' do
   
-# $dont_kill_browser = true
+  # $dont_kill_browser = true
   
   before(:all) do
     @last_name = get_unique_name(1) + "-copy-uat"
@@ -71,17 +71,18 @@ describe 'Copying an address from the Original Patient' do
 end
 
 def copy_address
-  @browser.click "//a[@id='edit-contact-event'][1]"
+  @browser.click("//a[contains(@id, 'edit-event')][1]")
   @browser.wait_for_page_to_load($load_time)
   @browser.click "//input[@value='Copy From Original Patient']"
   sleep(5)
   save_cmr(@browser).should be_true
-  @browser.is_text_present('Postin Place').should be_true
-  @browser.is_text_present('123').should be_true
-  @browser.is_text_present('54').should be_true
-  @browser.is_text_present(@city).should be_true
-  @browser.is_text_present('Utah').should be_true
-  @browser.is_text_present('Beaver').should be_true
-  @browser.is_text_present('12345').should be_true
+  html_source = @browser.get_html_source
+  html_source.include?('Postin Place').should be_true
+  html_source.include?('123').should be_true
+  html_source.include?('54').should be_true
+  html_source.include?(@city).should be_true
+  html_source.include?('Utah').should be_true
+  html_source.include?('Beaver').should be_true
+  html_source.include?('12345').should be_true
 end
 

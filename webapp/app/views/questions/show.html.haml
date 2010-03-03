@@ -14,27 +14,27 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  Form:
+  = ct 'form'
   =h "'#{@form.name}'"
-  Version
+  =t 'version'
   =h "#{@form.version}: "
-  Short Names
+  =t 'short_names'
 
 -content_for :tools do
-  =link_to h('< Master Copy'), @master_form
+  =link_to h("< #{t 'Master_Copy'}"), @master_form
   %p
 
 %table.list
   %tr
-    %th Version
-    %th Published
-    %th Diseases
-    %th Form Metadata
+    %th=t 'version'
+    %th=t 'published'
+    %th=t 'diseases'
+    %th=t 'form_metadata'
     %th
   =render :partial => 'forms/admin_version_info', :locals => {:form => @form}
 %table.list
   %tr
-    %th Question
-    %th Data type
-    %th Short name
+    %th=t 'question'
+    %th=t 'data_type'
+    %th=t 'short_name'
   =render @form.questions

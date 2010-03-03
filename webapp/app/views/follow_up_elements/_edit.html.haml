@@ -22,6 +22,6 @@
     = render :partial => 'form', :locals => { :f => f }
 
     %p
-      = f.submit("Update", :id => "edit_follow_up_submit_#{@follow_up_element.id}")
+      = f.submit("update", :id => "edit_follow_up_submit_#{@follow_up_element.id}")
       &nbsp;&nbsp;
-      = link_to_function "Close", "$('follow-up-mods-#{@follow_up_element.id}').down('form').reset(); Effect.BlindUp($('follow-up-mods-#{@follow_up_element.id}'), { duration: 0.1 })"
+      = link_to_function "close", "$('follow-up-mods-#{@follow_up_element.id}').down('form').reset(); Effect.BlindUp($('follow-up-mods-#{@follow_up_element.id}'), { duration: 0.1 })"

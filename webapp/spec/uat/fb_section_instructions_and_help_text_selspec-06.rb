@@ -42,7 +42,7 @@ describe 'Adding help text to form builder questions' do
   describe 'on sections with instructions and help text' do
     it "should create a section w/instructions and help text" do
       disease = get_random_disease
-      create_new_form_and_go_to_builder(@browser, @form_name, disease, 'All Jurisdictions', 'Morbidity event').should be_true
+      create_new_form_and_go_to_builder(@browser, @form_name, disease, 'All Jurisdictions').should be_true
       add_section_to_view(@browser, "Default View", {:section_name => @section_name, :description => @instruction_text, :help_text => @help_text})
       add_question_to_section(@browser, @section_name, {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
       publish_form(@browser).should be_true
@@ -50,14 +50,14 @@ describe 'Adding help text to form builder questions' do
       edit_cmr(@browser).should be_true
       click_core_tab(@browser, 'Investigation')
       assert_tooltip_exists(@browser, @help_text).should be_true
-      @browser.is_text_present(@instruction_text).should be_true
+      @browser.get_html_source.include?(@instruction_text).should be_true
       answer_investigator_question(@browser, @question_text, "Answer").should be_true
       save_cmr(@browser).should be_true
       assert_tooltip_exists(@browser, @help_text).should be_true
-      @browser.is_text_present(@instruction_text).should be_true
+      @browser.get_html_source.include?(@instruction_text).should be_true
       
       print_cmr(@browser).should be_true
-      @browser.is_text_present(@instruction_text).should be_true
+      @browser.get_html_source.include?(@instruction_text).should be_true
       @browser.close()
       @browser.select_window 'null'
     end

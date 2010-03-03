@@ -32,4 +32,4 @@ Feature: Creating and editing users
     When I go to edit the user
     And I fill in "UID" with ""
     And I press "Update"
-    Then I should see "Uid can't be blank"
+    Then I should see "UID can't be blank"

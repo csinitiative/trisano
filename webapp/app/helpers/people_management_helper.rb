@@ -31,13 +31,14 @@ module PeopleManagementHelper
 
   def render_person_actions(person)
     result = ""
-    result << link_to('Edit', edit_person_path(person.person_entity))
+    logger.debug "-----> before the person links"
+    result << link_to(t('edit'), edit_person_path(person.entity_id))
     result << "&nbsp;|&nbsp;"
-    result << link_to('Show', person_path(person.person_entity))
-    
+    result << link_to(t('show'), person_path(person.entity_id))
+
     if User.current_user.is_entitled_to?(:create_event)
       result << "&nbsp;|&nbsp;"
-      result << link_to('Create and edit CMR using this person', cmrs_path(:from_person => person.person_entity, :return => true), :method => :post)
+      result << link_to(t('create_cmr_this_person'), cmrs_path(:from_person => person.entity_id, :return => true), :method => :post)
     end
 
     result
@@ -46,6 +47,21 @@ module PeopleManagementHelper
   def is_person_merge_entity(person_entity)
     # PLUGIN_HOOK -is_merge_entity(person_entity)
     return false
+  end
+
+  def search_result_has_address?(record)
+    [:street_number,
+     :street_name,
+     :unit_number,
+     :city,
+     :state_name,
+     :postal_code].any? {|f| record[f]}
+  end
+
+  def search_result_has_second_address_block?(record)
+    [:city,
+     :state_name,
+     :postal_code].any? {|f| record[f]}
   end
 
 end

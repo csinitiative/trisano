@@ -74,7 +74,7 @@ describe 'Form Builder Markup Support' do
     save_cmr(@browser)
     markup_assertions(:show)
   end
-  
+
   it "shouldn't display any markup other than line breaks for sections and questions in print mode" do
     print_cmr(@browser)
     markup_assertions(:print)

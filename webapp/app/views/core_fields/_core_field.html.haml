@@ -21,7 +21,7 @@
       = h(core_field.help_text)
   %td
     .tools{:style => "position: absolute; right: 15px;"}
-      = link_to('Edit', edit_core_field_path(core_field))
+      = link_to(t('edit'), edit_core_field_path(core_field))
       |
-      = link_to('Show', core_field_path(core_field))
+      = link_to(t('show'), core_field_path(core_field))
     

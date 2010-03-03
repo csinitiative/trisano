@@ -18,45 +18,45 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
 <fieldset>
-  <legend>Administrative Information
-    <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;">[Hide]</span>
-    <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;">[Show]</span>
+  <legend><%= t 'admin_info' %>
+    <span id='cmr_info_hide' onClick="Element.hide('cmr_info_form'); Element.hide('cmr_info_hide'); Element.show('cmr_info_show'); return false;"><%= hide %> </span>
+    <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;"><%= show %></span>
   </legend>
   <div id='cmr_info_form'>
     <% if not @event.record_number.blank? %>
-      <span class="label">Record number:</span> <%= h(@event.record_number) %>
+      <span class="label"><%= ct "record_number" %></span> <%= h(@event.record_number) %>
     <% end %>
 
     <% if not @event.MMWR_year.blank? %>
-      <span class="label">MMWR year:</span> <%= h(@event.MMWR_year) %>
-      <span class="label">MMWR week:</span> <%= h(@event.MMWR_week) %>
+      <span class="label"><%= ct 'mmwr_year' %></span> <%= h(@event.MMWR_year) %>
+      <span class="label"><%= ct 'mmwr_week' %><%= h(@event.MMWR_week) %>
     <% end %>
     <br />
-    <span class="label">Date record created:</span>
-    <%= h(@event.event_onset_date) %>
+    <span class="label"><%= ct 'date_record_created' %></span>
+    <%= ld(@event.event_onset_date) %>
     <p/>
     <fieldset class="form">
-      <legend>Case / Outbreak</legend>
+      <legend><%= t 'case_outbreak' %></legend>
       <% core_element :lhd_case_status_id, f, :horiz do -%>
-        <%= f.label(:lhd_case_status_id, "LHD case status") %>
+        <%= f.label :lhd_case_status_id %>
         <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
       <% end -%>
       <% core_element :state_case_status_id, f, :horiz do -%>
-        <%= f.label(:state_case_status_id, "State case status") %>
+        <%= f.label(:state_case_status_id) %>
         <%= f.dropdown_code_field(:state_case_status_id, 'case', {}) %>
       <% end -%>
       <% core_element :outbreak_associated_id, f, :horiz do -%>
-        <%= f.label(:outbreak_associated_id, "Outbreak associated") %>
+        <%= f.label(:outbreak_associated_id) %>
         <%= f.dropdown_code_field(:outbreak_associated_id, 'yesno', {}, {}, @event) %>
       <% end -%>
       <% core_element :outbreak_name, f, :horiz do -%>
-        <%= f.label(:outbreak_name, "Outbreak") %>
+        <%= f.label(:outbreak_name) %>
         <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event) %>
       <% end -%>
     </fieldset>
     <fieldset class="form">
-      <legend>Auditing / Investigation</legend>
-      <label>Jurisdiction of Residence</label>
+      <legend><%= "#{t 'auditing'} / #{'investigation'}" %></legend>
+      <label><%= t 'jurisdiction_of_residence' %></label>
       <%  if @event.address %>
         <%  address = @event.address %>
         <%  if address && address.county && address.county.jurisdiction %>
@@ -75,7 +75,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% end -%>
       <% unless RAILS_ENV == "production" %>
         <fieldset style='clear:both; border: 1px solid; background: LightGray'>
-          <b>NOTE: THESE FIELDS ARE ONLY VISIBLE IN DEVELOPMENT MODE</b>
+          <b><%= t('dev_mode_note') %></b>
           <% core_element :workflow_state, f, :horiz do -%>
             <%= f.label(:workflow_state) %>
             <% states_options = MorbidityEvent.get_states_and_descriptions.collect{|s| [s.description, s.workflow_state.to_s]} -%>
@@ -83,15 +83,15 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
             <%= select_tag('morbidity_event_workflow_state', options) %>
           <% end -%>
           <% core_element :investigation_started_date, f, :horiz do -%>
-            <%= f.label(:investigation_started_date, "Date investigation started") %>
+            <%= f.label(:investigation_started_date) %>
             <%= f.calendar_date_select(:investigation_started_date, :year_range => 5.years.ago..0.years.from_now) %>
           <% end -%>
           <% core_element :investigation_completed_LHD_date, f, :horiz do -%>
-            <%= f.label(:investigation_completed_LHD_date, "Date investigation completed") %>
+            <%= f.label(:investigation_completed_LHD_date) %>
             <%= f.calendar_date_select(:investigation_completed_LHD_date, :year_range => 5.years.ago..0.years.from_now) %>
           <% end -%>
           <% core_element :review_completed_by_state_date, f, :horiz do -%>
-            <%= f.label(:review_completed_by_state_date, "Date review completed by state") %>
+            <%= f.label(:review_completed_by_state_date) %>
             <%= f.calendar_date_select(:review_completed_by_state_date, :year_range => 5.years.ago..0.years.from_now) %>
           <% end -%>
         </fieldset>

@@ -14,10 +14,10 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Create a Common Test Type
+  = t('create_common_test_type')
 
 - content_for :tools do
-  = link_to h('< Back to Common Test Types'), common_test_types_path
+  = link_to h(t('back_to_common_test_types')), common_test_types_path
   %p
 
 = render :partial => 'form', :locals => {:common_test_type => @common_test_type}

@@ -27,7 +27,7 @@ describe 'copying forms' do
     @contact_last_name = get_unique_name(1) + " copy_form"
     @disease_name = "Lyme disease"
     @jurisdiction = "All Jurisdictions"
-    @event_type = "Morbidity event"
+    @event_type = "Morbidity Event"
   end
 
   after :all do

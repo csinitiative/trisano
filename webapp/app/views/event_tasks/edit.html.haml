@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Event Task
+  =t('edit_thing', :name => t('event_task'))
 
 - content_for :name do
   = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
@@ -22,8 +22,8 @@
 #edit-task-form
 
   %p
-    %span{ :style => "font-size: 150%;"}Edit Task
-    ="(#{link_to("View on calendar", calendar_path(:month => @task.due_date.month, :year => @task.due_date.year))})"
+    %span{ :style => "font-size: 150%;"}=t('edit_thing', :name => t('task'))
+    ="(#{link_to(t('view_on_calendar'), calendar_path(:month => @task.due_date.month, :year => @task.due_date.year))})"
 
   = error_messages_for :task
 
@@ -31,7 +31,7 @@
     = render :partial => "form", :locals => { :f => f }
     %br{ :clear => 'all' }
     %br
-    = f.submit "Update"
+    = f.submit t('update')
 
 %br
 
@@ -39,6 +39,6 @@
 
 #existing-tasks
   %h2
-    Existing Tasks
+    = t('existing_tasks')
   #tasks
     = render(:partial => 'tasks/list', :locals => { :task_owner => @event })

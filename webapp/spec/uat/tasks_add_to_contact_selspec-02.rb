@@ -47,9 +47,8 @@ describe 'Adding a task to a contact' do
     edit_cmr(@browser)
     add_contact(@browser, { :last_name => @contact_last_name } )
     save_cmr(@browser)
-    @browser.click("edit-contact-event")
+    @browser.click("link=Show Contact")
     @browser.wait_for_page_to_load($load_time)
-    show_contact(@browser)
   end
 
   it 'should add a task with no notes from contact show mode' do
@@ -62,7 +61,8 @@ describe 'Adding a task to a contact' do
   end
 
   it 'should add a task with notes from contact show mode' do
-    show_contact(@browser)
+    @browser.click "link=Show Contact"
+    @browser.wait_for_page_to_load($load_time)
     add_task(@browser, {
         :task_name => @task_with_notes_name,
         :task_notes => @task_with_notes_notes,
@@ -73,15 +73,18 @@ describe 'Adding a task to a contact' do
   end
 
   it 'should display the tasks in contact edit mode' do
-    edit_contact(@browser)
-    @browser.is_text_present(@task_name).should be_true
-    @browser.is_text_present(@task_with_notes_name).should be_true
+    @browser.click "link=Edit Contact"
+    @browser.wait_for_page_to_load($load_time)
+    html_source = @browser.get_html_source
+    html_source.include?(@task_name).should be_true
+    html_source.include?(@task_with_notes_name).should be_true
   end
   
   it 'should display the tasks in contact show mode' do
     show_contact(@browser)
-    @browser.is_text_present(@task_name).should be_true
-    @browser.is_text_present(@task_with_notes_name).should be_true
+    html_source = @browser.get_html_source
+    html_source.include?(@task_name).should be_true
+    html_source.include?(@task_with_notes_name).should be_true
   end
 
   it 'should only have added one note to the contact' do

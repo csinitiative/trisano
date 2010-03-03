@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'ruby-hl7'
@@ -211,18 +211,28 @@ module StagedMessages
   class ObrWrapper
     attr_reader :obr_segment
     attr_accessor :full_message
-  
+
     def initialize(obr_segment, options={})
       @obr_segment = obr_segment
       @full_message = options[:full_message]
     end
-    
+
     def test_performed
       obr_segment.universal_service_id.split(obr_segment.item_delim)[1]
     end
 
     def specimen_source
-      obr_segment.specimen_source.split('^').join(', ')
+      returning obr_segment.specimen_source.split('^').join(', ') do |source|
+        source.instance_eval do
+          def id
+            ExternalCode.find(
+              :first,
+              :select => 'id',
+              :conditions => ['code_name = ? AND code_description ILIKE ?', 'specimen', self]
+            ).try(:id)
+          end
+        end
+      end
     end
 
     def collection_date
@@ -279,7 +289,7 @@ module StagedMessages
         "Could not be determined"
       end
     end
-  
+
     def reference_range
       begin
         obx_segment.references_range

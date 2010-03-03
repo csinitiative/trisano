@@ -5,6 +5,8 @@ Administrator:
   - write_staged_message
   - manage_staged_message
   - manage_entities
+  - merge_people
+  - merge_places
 Investigator:
   - create_event
   - view_event

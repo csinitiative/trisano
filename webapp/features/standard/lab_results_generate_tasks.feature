@@ -12,14 +12,14 @@ Feature: Adding Lab Results to an Event Generates a Task
         | Mumps        | Lumpy       |
       And the event is assigned to user "investigator"
     When I go to edit the CMR
-      And I click on the lab tab
-      And I enter a lab name of 'Elephant Lab'
-      And I select a test type of 'Lumpy'
-      And I save the edit event form
+     And I click on the lab tab
+     And I enter a lab name of 'Elephant Lab'
+     And I select a test type of 'Lumpy'
+     And I save the edit event form
     Then I should be on the show CMR page
-      And I should see the following tasks:
-        | Due Date | Name                        | Description | Category | Priority | Assigned to  | Status  |
-        | Today    | New lab result added: Lumpy |             |          |          | investigator | Pending |
+     And I should see the following tasks:
+       | Due date | Name                        | Description | Category | Priority | Assigned to  | Status  |
+       | Today    | New lab result added: Lumpy |             |          |          | investigator | Pending |
 
   Scenario: Lab result entered by investigator who is responsible for the event
     Given I am logged in as a super user
@@ -55,7 +55,7 @@ Feature: Adding Lab Results to an Event Generates a Task
     Then I should see the new lab result with 'Hep-B Ag'
       And  I should see a note for the assigned lab
       And I should see the following tasks:
-        | Due Date | Name                           | Description | Category | Priority | Assigned to  | Status  |
+        | Due date | Name                           | Description | Category | Priority | Assigned to  | Status  |
         | Today    | New lab result added: Hep-B Ag |             |          |          | investigator | Pending |
 
   Scenario: ELR assigned to event by user who is responsible for the event

@@ -35,14 +35,13 @@ class ViewElementsController < AdminController
       @view_element.parent_element_id = params[:form_element_id]
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the tab form at this time.'
+      flash[:error] = t("unable_to_display_view_form")
       render :template => 'rjs-error'
     end
   end
 
   def edit
     head :not_found
-    # @view_element = ViewElement.find(params[:id])
   end
     
   def create
@@ -54,7 +53,7 @@ class ViewElementsController < AdminController
         format.js { @form = Form.find(@view_element.form_id)}
       else
         @view_element = post_transaction_refresh(@view_element, params[:view_element])
-        flash[:error] = 'Unable to create new tab.'
+        flash[:error] = t("unable_to_create_new_tab")
         format.xml  { render :xml => @view_element.errors, :status => :unprocessable_entity }
         format.js { render :action => "new" }
       end
@@ -63,19 +62,6 @@ class ViewElementsController < AdminController
 
   def update
     head :not_found
-
-    # @view_element = ViewElement.find(params[:id])
-
-    # respond_to do |format|
-    #   if @view_element.update_and_validate(params[:view_element])
-    #     flash[:notice] = 'ViewElement was successfully updated.'
-    #     format.html { redirect_to(@view_element) }
-    #     format.xml  { head :ok }
-    #   else
-    #     format.html { render :action => "edit" }
-    #     format.xml  { render :xml => @view_element.errors, :status => :unprocessable_entity }
-    #   end
-    # end
   end
 
   def destroy

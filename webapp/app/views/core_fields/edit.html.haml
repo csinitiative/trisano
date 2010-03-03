@@ -14,17 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Edit Core Field
+  = t('edit_core_field')
 
 - content_for :tools do
-  = link_to h('< Back to Core Fields'), core_fields_path
+  = link_to h(t('back_to_core_fields')), core_fields_path
   %p
   
 #rot
   %table.list
     %tr
       %th.forminformation
-        Core Field
+        = t('core_field')
       %th
       %tr
         %td.forminformation
@@ -32,9 +32,9 @@
             = h(@core_field.name)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            Edit
+            = t('edit')
             |
-            = link_to 'Show', @core_field
+            = link_to t('show'), @core_field
 #rot
   = error_messages_for :core_field
 
@@ -42,4 +42,4 @@
 
     = render :partial => 'form', :locals => { :f => f }
 
-    = f.submit "Update"
+    = f.submit t('submit')

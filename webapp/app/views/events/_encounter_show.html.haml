@@ -1,9 +1,9 @@
 %table.list
   %tr
-    %th Investigator
-    %th Encounter Date
-    %th Description
-    %th Location
+    %th=t 'investigator'
+    %th=t 'encounter_date'
+    %th=t 'description'
+    %th=t 'location'
     %th &nbsp
 
   - for encounter in encounters
@@ -17,9 +17,9 @@
 
     %tr
       %td{style}=h(encounter_event_data.user.best_name)
-      %td{style}=h(encounter_event_data.encounter_date)
+      %td{style}=ld(encounter_event_data.encounter_date)
       %td{style}=h(encounter_event_data.description)
-      %td{style}=h(encounter_event_data.encounter_location_type)
+      %td{style}=h(I18n.t("encounter_location_types.#{encounter_event_data.encounter_location_type}"))
       %td
         .tools
           = show_and_edit_event_links(encounter)

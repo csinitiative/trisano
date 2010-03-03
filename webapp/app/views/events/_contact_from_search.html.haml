@@ -9,10 +9,10 @@
     - contact_event_data = f.object.participations_contact
 
     %span.horiz{:style => "clear: both;"}
-      = label_tag "Name"
+      = label_tag t("name")
       = person.last_comma_first
     %span.horiz
-      = label_tag "Phone"
+      = label_tag t("phone")
       -unless contact_phone.nil?
         %span.horiz= contact_phone.simple_format
 
@@ -28,4 +28,4 @@
         %span.horiz
           &nbsp;
           %br
-          = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
+          = link_to_function(t("remove"), "this.up().up().remove()", :id => "remove_#{uniq_id}")

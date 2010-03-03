@@ -16,15 +16,15 @@
 %table.list
   %tr
     %th.forminformation
-      Export Conversion Value
+      =t 'export_conversion_value'
   %tr
     %td
       %span{ :class => "horiz" }
-        = f.label(:value_from, "When local value is&nbsp;&nbsp;(leave blank for 'text' values)")
+        = f.label(:value_from)
         = f.text_field(:value_from)
 
       %span{ :class => "horiz" }
-        = f.label(:value_to, "Convert it to")
+        = f.label(:value_to, t("convert_it_to"))
         = f.text_field(:value_to, :class => 'required')
 
       %span{ :class => "horiz" }

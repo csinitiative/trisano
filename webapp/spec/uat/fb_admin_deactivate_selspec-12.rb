@@ -47,7 +47,7 @@ describe 'Form Builder Admin Deactivate Functionality' do
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease, @jurisdiction)
     edit_cmr(@browser)
     save_cmr(@browser)
-    @browser.is_text_present(@form_name).should be_true
+    @browser.get_html_source.include?(@form_name).should be_true
   end
   
   it 'should deactivate the form' do
@@ -60,7 +60,7 @@ describe 'Form Builder Admin Deactivate Functionality' do
   it 'existing CMR should still have its form' do
     click_nav_cmrs(@browser)
     click_resource_edit(@browser, "cmrs", @cmr_last_name)
-    @browser.is_text_present(@form_name).should be_true
+    @browser.get_html_source.include?(@form_name).should be_true
   end
   
   it 'should create a second CMR and save it' do

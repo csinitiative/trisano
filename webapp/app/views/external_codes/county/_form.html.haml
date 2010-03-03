@@ -1,4 +1,4 @@
 = render("external_codes/form", :code_form => code_form)
 %span.vert-break
-  %label Jurisdiction
-  = code_form.select :jurisdiction_id, Place.jurisdictions.map{ |j| [h(j.name), j.id] }, {:prompt => 'Choose One'} 
+  %label=t 'jurisdiction'
+  = code_form.select :jurisdiction_id, Place.jurisdictions.map{ |j| [h(j.name), j.id] }, {:prompt => t('choose_one')}

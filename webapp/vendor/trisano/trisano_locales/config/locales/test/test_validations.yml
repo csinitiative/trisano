@@ -1,0 +1,9 @@
+test:
+
+  activerecord:
+    errors:
+      models:
+        default_locale:
+          attributes:
+            short_name:
+              inclusion: "x'{{value}}' is not a supported locale"

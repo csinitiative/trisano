@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 = f.hidden_field :parent_element_id
@@ -18,14 +18,12 @@
 = f.hidden_field :event_type
 
 %p
-  %label Condition
+  =f.label :condition
   - if (@follow_up_element.core_data == "true")
     = condition_autocomplete
   - else
     = f.text_field :condition
 
 - if (@follow_up_element.core_data == "true")
-  %label Core data element
-  - values = {}
-  - eval(@follow_up_element.event_type.camelcase).exposed_attributes.each_pair { |k, v| values[v[:name]] = k if v[:can_follow_up] == true}
-  = f.select(:core_path, values.sort, {:include_blank => true}) 
+  =f.label :core_path
+  = f.select(:core_path, follow_up_select_options(@follow_up_element.event_type), {:include_blank => true})

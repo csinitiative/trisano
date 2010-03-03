@@ -17,6 +17,8 @@
 
 Webrat.configure do |config|
   config.mode = :rails
+  config.open_error_files = false
 end
 
-Cucumber::Rails.use_transactional_fixtures
+Cucumber::Rails::World.use_transactional_fixtures
+

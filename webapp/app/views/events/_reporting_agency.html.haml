@@ -19,7 +19,7 @@
 - if f
   - agency_form = f
 - else
-  - fields_for("morbidity_event[reporting_agency_attributes]", reporting_agency) do |ra|
+  - fields_for("morbidity_event[reporting_agency_attributes]", reporting_agency, :builder => ExtendedFormBuilder) do |ra|
     - agency_form = ra
 
 -# Hack! Rendering the "Add a reporting agency" link
@@ -33,19 +33,24 @@
     - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
       = error_messages_for :object => reporting_agency
       - core_element :name, p, :horiz do
-        = p.label(:name, "Reporting Agency Name")
+        = p.label(:name, t('reporting_agency_name'))
         = p.text_field(:name, :size => 25, :class => 'required_if_others')
 
       - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
-        - core_element :area_code, phone_fields, :horiz do
-          = phone_fields.label(:area_code)
-          = phone_fields.core_text_field(:area_code, {:size => 3, :maxlength => 3}, @event)
+        -if Telephone.use?(:country_code)
+          - core_element :country_code, phone_fields, :horiz do
+            = phone_fields.label(:country_code)
+            = phone_fields.core_text_field(:country_code, {:size => 3}, @event)
+        -if Telephone.use?(:area_code)
+          - core_element :area_code, phone_fields, :horiz do
+            = phone_fields.label(:area_code)
+            = phone_fields.core_text_field(:area_code, {:size => 3}, @event)
         - core_element :phone_number, phone_fields, :horiz do
           = phone_fields.label(:phone_number)
           = phone_fields.core_text_field(:phone_number, {:size => 8}, @event)
         - core_element :extension, phone_fields, :horiz do
           = phone_fields.label(:extension)
-          = phone_fields.core_text_field(:extension, {:size => 6, :maxlength => 6}, @event)
+          = phone_fields.core_text_field(:extension, {:size => 6}, @event)
 
       - core_element :agency_type, p, 'vert-break' do
         = agency_type_selector(p)
@@ -53,7 +58,7 @@
   %div
     - core_element :name, agency_form, :horiz do
       = agency_form.hidden_field(:secondary_entity_id)
-      = agency_form.label(:name, "Reporting Agency")
+      = agency_form.label(:name)
       = h(reporting_agency.name) || "&nbsp;"
     - core_element :agency_type, agency_form, :horiz do
       = agency_form.label(:agency_types)
@@ -63,10 +68,10 @@
       -# This place was added via live search. Provide a mechanism for removing the place before saving.
       &nbsp;
       %br
-      = link_to_function("Remove", "this.up().remove()", :id => "remove_#{uniq_id}")
+      = link_to_function(t("remove"), "this.up().remove()", :id => "remove_#{uniq_id}")
     - else
       %span.horiz
         = agency_form.hidden_field(:id)
-        = agency_form.label :_delete, "Remove"
+        = agency_form.label :_delete
         = agency_form.check_box :_delete
-     
+

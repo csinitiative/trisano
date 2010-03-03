@@ -16,11 +16,11 @@
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - form_tag(home_path, :method => :get) do
-  %span.vert= "Show tasks for the last #{text_field_tag(:look_back, params[:look_back], :size => '3')} day#{params[:look_back] == '1' ? '' : 's'} (leave blank for all overdue tasks)."
-  %span.vert= "Show tasks for the next #{text_field_tag(:look_ahead, params[:look_ahead], :size => '3')} day#{params[:look_ahead] == '1' ? '' : 's'} (leave blank for all pending tasks)."
-  %span.vert Leaving a field blank shows all tasks in that direction.
+  %span.vert= t('show_past_tasks', :days => "#{text_field_tag(:look_back, params[:look_back], :size => '3')} day#{params[:look_back] == '1' ? '' : 's'}")
+  %span.vert= t('show_future_tasks', :days => "#{text_field_tag(:look_ahead, params[:look_ahead], :size => '3')} day#{params[:look_ahead] == '1' ? '' : 's'}")
+  %span.vert= t('leave_blank_def')
   %span.vert
-    %label Disease Filter
+    %label= t('disease_filter')
   %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
     %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
       - Disease.find(:all, :order => "disease_name").each do |disease|
@@ -28,7 +28,7 @@
   - assignees = User.default_task_assignees
   - unless assignees.empty?
     %span.vert
-      %label Users Filter
+      %label=t('users_filter')
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - assignees.each do |assignee|
@@ -37,7 +37,7 @@
   - jurisdictions = User.current_user.jurisdictions_for_privilege(:approve_event_at_state)
   - unless jurisdictions.empty?
     %span.vert
-      %label Jurisdictions Filter
+      %label=t('jurisdictions_filter')
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - jurisdictions.each do |jurisdiction|
@@ -46,11 +46,11 @@
   - statuses = Task.status_array
   - unless statuses.empty?
     %span.vert
-      %label Status Filter
+      %label=t('status_filter')
     %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;clear: both;'}
       %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
         - statuses.each do |status|
           = "<label>" + check_box_tag("task_statuses[]", status[1], (params[:task_statuses] || []).include?(status[1]), :id => status[0].tr(" ", "_")) + h(status[0]) + "</label>"
 
-  %span.horiz= submit_tag 'Update', :id => 'update_tasks_filter'
-  %span.horiz= link_to_function('Close', "Effect.BlindUp('task_view_settings')")
+  %span.horiz= submit_tag t('update'), :id => 'update_tasks_filter'
+  %span.horiz= link_to_function(t('close'), "Effect.toggle('task_view_settings')")

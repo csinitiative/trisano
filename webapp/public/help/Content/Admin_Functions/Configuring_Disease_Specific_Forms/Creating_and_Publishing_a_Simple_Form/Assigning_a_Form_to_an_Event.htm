@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:MadCap="http://www.madcapsoftware.com/Schemas/MadCap.xsd" MadCap:lastBlockDepth="5" MadCap:lastHeight="815" MadCap:lastWidth="711" MadCap:disableMasterStylesheet="true" MadCap:tocPath="Admin Functions|Configuring Disease Specific Forms|Creating and Publishing a Simple Form" MadCap:PathToHelpSystem="../../../../" MadCap:SearchType="Stem">
+    <head><title>Assigning a Form to an Event</title>
+        <link href="../../../Resources/Stylesheets/Styles.css" rel="stylesheet" type="text/css" />
+        <script src="../../../SkinSupport/MadCapUtilities.js">
+        </script>
+        <script src="../../../SkinSupport/MadCapBody.js">
+        </script>
+        <script src="../../../SkinSupport/MadCapHighlighter.js">
+        </script>
+    </head>
+    <body>
+        <h2>Assigning a Form to an Event</h2>
+        <p>Form assignment refers to the&#160;relationship between&#160;an event, (CMR, Contact,  Encounter, or Place) and a published form. Assignment happens&#160;when the form is connected to a particular event. This normally occurs automatically,  but you can override automatic assignment and manage it manually, if you prefer.</p>
+        <h3>Automatically&#160;Assigning  a Form</h3>
+        <p>Forms are automatically assigned to an event in the following ways:</p>
+        <blockquote>
+            <p><b><b class="green">At event-creation time</b> –</b>&#160;when the event is saved for the first time  </p>
+            <ul>
+                <li value="1">If the event has a disease associated with it, any forms associated with  that disease and the event's jurisdictions are assigned to the form. No other  form will be automatically assigned to&#160;this event in the future.  </li>
+                <li value="2">If the event does not have a disease associated with it, no form is  assigned. </li>
+            </ul>
+        </blockquote>
+        <blockquote>
+            <p><b class="green">At event-update time</b> – when the event is saved in the future  </p>
+            <ul>
+                <li value="1">If the event has a disease associated with it and a form has not been  previously&#160;assigned, any forms associated with that disease and the event's  jurisdictions are assigned to the form. No other form will be automatically  assigned to&#160;this event in the future.  </li>
+                <li value="2">If a disease is still not associated with the event, then no form assignment  occurs and the event remains eligible for automatic form assignment. <br class="atl-forced-newline" /></li>
+            </ul>
+        </blockquote>
+        <p><b color="#008000" class="green">Note:</b> If you change the disease assigned to  an even after you have already saved the event,&#160;the application does not  change&#160;the forms assigned to&#160;it. You must change the form assignment manually.  <br class="atl-forced-newline" /></p>
+        <h3>Manually Assigning a Form to an Event</h3>
+        <p>To manually assign a form:</p>
+        <ol>
+            <li value="1">Click <b class="green">Add/Remove forms for this event</b>. <br></br><br></br><img src="../../../Resources/Images/Investigative_Information.jpg"></img><br></br><br></br></li>
+            <li value="2">The page that opens contains form names that are available for this event. The page has&#160;two  sections:</li>
+        </ol>
+        <blockquote>
+            <ul>
+                <li value="1"><b>Forms in use</b> – can be removed from the event  </li>
+                <li value="2"><b>Forms available for use</b> – can be added to the event<br class="atl-forced-newline"></br></li>
+            </ul>
+        </blockquote>
+        <ol MadCap:continue="true">
+            <li value="3">To add a form,&#160;if there are any listed, select the check box on&#160;the&#160;right side of the page and click <b class="green">Add Forms</b>. The form is added to the section called <b class="green">Forms in Use</b>.<b class="green"></b></li>
+        </ol>
+        <p>
+            <br class="atl-forced-newline" />
+        </p>
+        <h2 class="NoTOC">Related information</h2>
+        <p><a href="Manually_Removing_a_Form_from_an_Event.htm">Manually Removing a Form from an Event</a>
+        </p>
+        <p><a href="Using_a_Form.htm">Using a Form</a>
+        </p>
+        <p>&#160;</p>
+        <p>&#160;</p>
+        <script type="text/javascript" src="../../../SkinSupport/MadCapBodyEnd.js">
+        </script>
+    </body>
+</html>

@@ -46,16 +46,16 @@
           = a.label(:unit_number)
           = a.text_field(:unit_number, {:size => 4, :maxlength=> 10})
         %span.horiz
-          = a.label(:city, "City")
+          = a.label(:city)
           = a.text_field(:city, {:size => 20, :maxlength=> 255})
         %span.horiz
-          = a.label(:state_id, "State")
+          = a.label(:state_id)
           = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {})
         %span.horiz
-          = a.label(:county_id, "County")
+          = a.label(:county_id)
           = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {})
         %span.horiz
-          = a.label(:postal_code, "Zip code")
+          = a.label(:postal_code)
           = a.text_field(:postal_code, {:size => 7, :maxlength=> 10})
 
   %hr

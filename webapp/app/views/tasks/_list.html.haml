@@ -15,7 +15,7 @@
 
 %fieldset.form
   %legend
-    Event Tasks
+    =t 'event_tasks'
 
   - urls_hash = sort_urls(task_owner)
   - tasks = task_owner.filter_tasks(params)
@@ -24,18 +24,18 @@
     %table#task-list.list
       %thead
         %tr
-          %th= link_to_remote('Due&nbsp;date',    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])
-          %th= link_to_remote('Name',             :update => 'tasks', :method => :get, :url => urls_hash['name'])
+          %th= link_to_remote(t('due_date'),    :update => 'tasks', :method => :get, :url => urls_hash['due_date'])
+          %th= link_to_remote(t('name'),             :update => 'tasks', :method => :get, :url => urls_hash['name'])
           - unless task_owner.is_a? Event
-            %th= link_to_remote('Disease',        :update => 'tasks', :method => :get, :url => urls_hash['disease_name'])
-          %th= link_to_remote('Description',      :update => 'tasks', :method => :get, :url => urls_hash['notes'])
-          %th= link_to_remote('Category',         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
-          %th= link_to_remote('Priority',         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
-          %th= link_to_remote('Assigned&nbsp;to', :update => 'tasks', :method => :get, :url => urls_hash['user_name'])
-          %th= link_to_remote('Status',           :update => 'tasks', :method => :get, :url => urls_hash['status'])
+            %th= link_to_remote(t('disease'),        :update => 'tasks', :method => :get, :url => urls_hash['disease_name'])
+          %th= link_to_remote(t('description'),      :update => 'tasks', :method => :get, :url => urls_hash['notes'])
+          %th= link_to_remote(t('category'),         :update => 'tasks', :method => :get, :url => urls_hash['category_name'])
+          %th= link_to_remote(t('priority'),         :update => 'tasks', :method => :get, :url => urls_hash['priority'])
+          %th= link_to_remote(t('assigned_to'), :update => 'tasks', :method => :get, :url => urls_hash['user_name'])
+          %th= link_to_remote(t('status'),           :update => 'tasks', :method => :get, :url => urls_hash['status'])
       %tbody
         - meth = params[:tasks_ordered_by]
-        - unless meth.nil? 
+        - unless meth.nil?
           - tasks = tasks.sort_by do |task|
             - (task.send(meth) || (meth.to_s == 'due_date' ? '9' : '')).to_s
         - for task in tasks
@@ -43,7 +43,7 @@
 
           %tr{ :class => task_class }
             %td
-              =task.due_date         ? h(task.due_date) : '&nbsp;'
+              =ld(task.due_date)
             %td
               =task.name             ? h(task.name) : '&nbsp;'
             - unless task_owner.is_a? Event
@@ -54,7 +54,7 @@
             %td
               =task.category_name    ? h(task.category_name) : '&nbsp;'
             %td
-              =!task.priority.blank? ? h(task.priority.humanize) : '&nbsp;'
+              =!task.priority.blank? ? t(task.priority) : '&nbsp;'
             %td
               =task.user_name        ? h(task.user_name) : '&nbsp;'
             %td
@@ -64,4 +64,4 @@
                 = user_task_action_links(task)
 
   - else
-    %span No tasks
+    %span=t 'no_tasks'

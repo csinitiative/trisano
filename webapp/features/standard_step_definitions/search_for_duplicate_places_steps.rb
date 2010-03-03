@@ -17,7 +17,7 @@
 
 When(/^I navigate to the place management tool$/) do
   visit places_path
-  response.should contain("Place Management")
+  response.should contain("Place management")
 end
 
 Given(/^a lab named (.+) exists$/) do |place_name|
@@ -33,6 +33,15 @@ Given(/^a lab named (.+) exists$/) do |place_name|
   )
   @event.save!
   @place_entity = @event.labs[0].place_entity
+end
+
+Given /^the place entity has a canonical address of:$/i do |addresses|
+  address_attr = addresses.hashes.first.with_indifferent_access
+  if state = address_attr.delete(:state)
+    state_code = ExternalCode.find_by_the_code(state)
+    address_attr[:state_id] = state_code.id
+  end
+  @place_entity.addresses.create(address_attr).should be_true
 end
 
 Given(/^a diagnosing facility named (.+) exists$/) do |place_name|

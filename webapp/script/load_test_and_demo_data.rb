@@ -25,7 +25,7 @@ Code.transaction do
       :the_code => code['the_code'],
       :code_description => code['code_description'],
       :sort_order => code['sort_order'])
-    
+
     c.attributes = code unless c.new_record?
     c.save!
   end
@@ -72,14 +72,7 @@ end
 # Users are represented as an array of hashes
 users = YAML::load_file "#{RAILS_ROOT}/db/defaults/users.yml"
 
-# Can't simply delete all and insert as the delete may trigger a FK constraint
-User.transaction do
-  users.each do |user|
-    u = User.find_or_initialize_by_uid(:uid => user['uid'], :user_name => user['user_name'])
-    u.attributes = user unless u.new_record?
-    u.save!
-  end
-end
+User.load_default_users(users)
 
 # Create a default superuser
 RoleMembership.transaction do
@@ -113,7 +106,7 @@ User.transaction do
   state_manager = User.find_by_user_name('state_manager')
 
   bear_river = Place.find_by_name("Bear River Health Department").entity_id
-  unassigned = Place.find_by_name("Unassigned").entity_id
+  unassigned =Place.unassigned_jurisdiction.entity_id
 
   data_entry_tech_role = Role.find_by_role_name("Data Entry Technician").id
   surveillance_mgr_role = Role.find_by_role_name("Surveillance Manager").id
@@ -178,4 +171,20 @@ ExternalCode.transaction do
       raise
     end
   end
+end
+
+# DEBT: for now, creating test translations will happen here, rather then the plugin
+the_magic = proc do |code|
+  code_id = code.class.name.underscore.gsub('translation', 'id')
+  copy = code.class.find(:first, :conditions => {:locale => 'test', code_id => code.try(code_id)})
+  copy = code.clone unless copy
+  copy.locale = 'test'
+  copy.code_description = "x#{copy.code_description}"
+  copy.save!
+end
+CodeTranslation.transaction do
+  CodeTranslation.all.each(&the_magic)
+end
+ExternalCodeTranslation.transaction do
+  ExternalCodeTranslation.all.each(&the_magic)
 end

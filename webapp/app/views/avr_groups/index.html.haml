@@ -16,13 +16,13 @@
   AVR Groups
 
 - content_for :tools_two do
-  = button_to("Create new AVR Group", {:action => "new"}, { :method => :get })
+  = button_to(t('create_new_avr_group'), {:action => "new"}, { :method => :get })
 
 .vert-break#rot
   %table.list
     %tr
       %th.forminformation
-        AVR Groups
+        =t('avr_groups')
       %th
     - for avr_group in @avr_groups
       %tr.roll
@@ -31,7 +31,7 @@
             = link_to h(avr_group.name), avr_group
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_avr_group_path(avr_group)
+            = link_to t('edit'), edit_avr_group_path(avr_group)
             |
-            = link_to 'Show', avr_group
+            = link_to t('show'), avr_group
 

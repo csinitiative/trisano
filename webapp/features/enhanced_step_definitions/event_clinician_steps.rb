@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given(/^a clinician exists$/) do
+Given(/^there is a clinician$/) do
   @clinician = Factory.create(:person_entity, :person => Factory.create(:clinician))
 end
 
 Given(/^a deleted clinician exists with a name similar to another clinician$/) do
-  @common_name = get_unique_name(2)
+  @common_name = get_unique_name(1)
   @clinician = Factory.create(:person_entity, :person => Factory.create(:clinician, :last_name => "#{@common_name}-Active"))
   @deleted_clinician = Factory.create(:person_entity, :person => Factory.create(:clinician, :last_name => "#{@common_name}-Deleted"), :deleted_at => Time.now)
 end

@@ -3,17 +3,17 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 - content_for :title do
-  Roles
+  =t 'roles'
 
 /- content_for :name do
 /  Roles
@@ -22,13 +22,13 @@
 /  = link_to 'New role', new_role_path
 
 - content_for :tools_two do
-  = button_to("Create new role", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_role"), {:action => "new"}, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        Roles
+        =t 'roles'
       %th
     - for role in @roles.sort_by {|r| r.role_name}
       %tr.roll
@@ -36,9 +36,9 @@
           .formname
             = link_to h(role.role_name), role
           .tools
-            = link_to('Delete', role, :confirm => 'Are you sure?', :method => :delete)
+            = link_to(t('delete'), role, :confirm => t('are_you_sure'), :method => :delete)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to 'Edit', edit_role_path(role)
+            = link_to t('edit'), edit_role_path(role)
             |
-            = link_to 'Show', role
+            = link_to t('show'), role

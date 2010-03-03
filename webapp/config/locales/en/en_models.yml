@@ -1,0 +1,298 @@
+en:
+
+  activerecord:
+    attributes:
+      event:
+        parent_guardian: Parent/Guardian
+        age_at_onset: Age at onset
+        lhd_case_status_id: LHD case status
+        state_case_status_id: State case status
+        outbreak_associated_id: Outbreak associated
+        outbreak_name: Outbreak name
+        workflow_state: Event status
+        investigation_completed_LHD_date: Date investigation completed
+        investigation_started_date: Date investigation started
+        event_name: Event name
+        review_completed_by_state_date: Date review completed by state
+        acuity: Acuity
+        imported_from_id: Imported from
+        other_data_1: Other data 1
+        other_data_2: Other data 2
+        results_reported_to_clinician_date: Results reported to clinician date
+        first_reported_PH_date: Date first reported to public health
+        _delete: Remove
+
+      person:
+        last_name: Last name
+        first_name: First name
+        middle_name: Middle name
+        birth_date: Date of birth
+        birth_gender: Birth gender
+        birth_gender_id: Birth gender
+        primary_language: Primary language
+        primary_language_id: Primary language
+        ethnicity: Ethnicity
+        ethnicity_id: Ethnicity
+        date_of_death: Date of death
+        approximate_age_no_birthday: Age
+
+      place:
+        name: Name
+        short_name: Short name
+        place_type_ids: Types
+
+      entity:
+        race: Race
+        race_ids: Race
+
+      address:
+        street_number: Street number
+        street_name: Street name
+        unit_number: Unit number
+        city: City
+        city_id: City
+        state: State
+        state_id: State
+        county: County
+        county_id: County
+        postal_code: Zip code
+        longitude: Longitude
+        latitude: Latitude
+        district: District
+
+      telephone:
+        entity_location_type_id: Phone type
+        entity_location_type: Phone type
+        country_code: Country code
+        area_code: Area code
+        phone_number: Phone number
+        extension: Extension
+        _delete: Remove
+
+      email_address:
+        email_address: Email address
+        _delete: Remove
+
+      disease_event:
+        disease_id: Disease
+        disease_onset_date: Onset date
+        date_diagnosed: Date diagnosed
+        hospitalized_id: Hospitalized
+        died_id: Died
+
+      disease:
+        disease_name: Disease name
+        contact_lead_in: Contact lead-in question
+        place_lead_in: Place lead-in question
+        treatment_lead_in: Treatment lead-in question
+        cdc_code: CDC/NETSS code
+        case_id: CDC/NETSS export disease when case is
+
+      hospitalization_facility:
+        secondary_entity_id: Health facility
+
+      hospitals_participation:
+        admission_date: Admission date
+        discharge_date: Discharge date
+        medical_record_number: Medical record number
+
+      participations_risk_factor:
+        pregnant_id: Pregnant
+        pregnancy_due_date: Pregnancy due date
+        food_handler_id: Food handler
+        healthcare_worker_id: Health care worker
+        group_living_id: Group living
+        day_care_association_id: Day care association
+        occupation: Occupation
+        risk_factors: Risk factors
+        risk_factors_notes: Risk factors notes
+
+      participations_treatment:
+        treatment_given_yn_id: Treatment given
+        treatment_given_yn: Treatment given
+        treatment: Treatment
+        treatment_date: Date of treatment
+        stop_treatment_date: Date treatment stopped
+        _delete: Remove
+
+      participations_contact:
+        disposition: Disposition
+        disposition_id: Disposition
+        contact_type_id: Contact type
+
+      participations_encounter:
+        user_id: Investigator
+        encounter_date: Encounter date
+        encounter_location_type: Location
+        description: Description
+
+      participations_place:
+        date_of_exposure: Date of exposure
+
+      reporting_agency:
+        agency_types: Agency types
+        name: Reporting agency
+
+      participation:
+        _delete: Remove
+
+      clinician:
+        _delete: Remove
+
+      reporter:
+        _delete: Remove
+
+      jurisdiction:
+        secondary_entity_id: Jurisdiction responsible for investigation
+
+      lab:
+        _delete: Remove lab (with results)
+
+      lab_result:
+        test_type: Test type
+        organism: Organism
+        test_result: Test result
+        result_value: Result value
+        units: Units
+        reference_range: Reference range
+        test_status_id: Test status
+        specimen_source_id: Specimen source
+        collection_date: Collection date
+        lab_test_date: Lab test date
+        specimen_sent_to_state_id: Specimen sent to state lab?
+        comment: Comment
+        _delete: Remove
+
+      note:
+        note: New note
+        note_type: Is admin
+
+      avr_group:
+        name: Name
+
+      common_test_type:
+        common_name: Common name
+
+      core_field:
+        help_text: Help text
+
+      attachment:
+        file: File
+        category: Category
+
+      event_queue:
+        queue_name: Queue name
+        jurisdiction: Jurisdiction
+        jurisdiction_id: Jurisdiction
+
+      task:
+        name: Name
+        notes: Description
+        status: Status
+        category: Category
+        priority: Priority
+        due_date: Due date
+        user: User
+        user_id: User
+
+      export_column:
+        name: Descriptive name
+        export_column_name: CDC column name
+        export_disease_group: Disease group (empty if all)
+        export_disease_group_show: Disease group
+        type_data: Data source
+        data_type: Data type (if source if Formbuilder)
+        table_name: Table name (if source is Core Data)
+        column_name: Column name (if source is Core Data)
+        start_position: Start position
+        length_to_output: Length to output
+        is_required: Required
+
+      export_conversion_value:
+        value_from: When local value is&nbsp;&nbsp;(leave blank for 'text' values)
+        value_to: Convert it to
+        sort_order: Sort order
+
+      external_code:
+        code_description: Description
+        sort_order: Sort order
+        the_code: Code
+
+      follow_up_element:
+        core_path: Core data element
+        condition: Condition
+
+      group_element:
+        name: Group name
+
+      section_element:
+        name: Section text
+        description: Instructions
+        help_text: Help text
+
+      value_element:
+        name: Value name
+        code: Code
+
+      value_set_element:
+        name: Value set name
+
+      question:
+        question_text: Question text
+        short_name: Short name
+        style: Style
+        help_text: Help text
+        export_column_id: CDC export column
+        data_type: Data type
+
+      question_element:
+        is_active: Is active?
+
+      form:
+        name: Name
+        short_name: Short name
+        event_type: Show when event type is
+        disease_id: Show when disease is
+        jurisdiction_id: Show when jurisdiction is
+        description: Description
+
+      loinc_code:
+        loinc_code: LOINC code
+        test_name: Test name
+        common_test_type_id: Common test type
+        scale_id: Scale
+        organism_id: Organism
+        diseases: Diseases
+
+      organism:
+        organism_name: Organism name
+        diseases: Diseases
+
+      role:
+        role_name: Role name
+
+      role_membership:
+        jurisdiction_id: Jurisdiction
+        role_id: Role
+
+      privileges_role:
+        privilege_id: Privilege
+
+      staged_message:
+        hl7_message: HL7 Message
+
+      user:
+        uid: UID
+        user_name: User name
+        first_name: First name
+        last_name: Last name
+        given_name: Given name
+        generational_qualifer: Generational qualifier
+        initials: Initials
+        statue: Status
+
+    # No model names in en_models.yml because the default is a humanized class name
+    # Add models here if we need to display the class name to users but we need to
+    # display something slightly different that what class.name.underscore.humanize
+    # would produce.
+    # models:

@@ -2,21 +2,21 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module TaskFilter
-  
+
   def filter_tasks(options={})
     filter_methods = [:days_filter, :disease_filter, :jurisdictions_filter, :task_status_filter]
     conditions = {:sql => [], :values => []}
@@ -32,11 +32,16 @@ module TaskFilter
       conditions[:sql] << sql if sql
       # build the conditional
       conditions[:values] += values if values
-    end    
+    end
 
     find_options = {}
     find_options[:conditions] = [conditions[:sql].join(' AND ')] + conditions[:values]
-    find_options[:include] = { :event => { :disease_event => { :disease => {} }, :all_jurisdictions => { :secondary_entity => { :place => {} } } } }
+    find_options[:include] = {:event => {
+        :disease_event => {
+          :disease => {} },
+        :all_jurisdictions => {
+          :secondary_entity => {
+            :place => {} } } } }
     Task.find(:all, find_options)
   end
 

@@ -20,14 +20,14 @@
     %table.list
       %tr
         %th.forminformation
-          Edit Organism
+          =t 'edit_organism'
       %tr
         %td
           %span.vert
             =f.label      :organism_name
             =f.text_field :organism_name, :size => 60
           %span.vert
-            %label Diseases
+            =f.label      :diseases
             -scroll_pane do
               -disease_check_boxes f.object_name, organism.disease_ids
 

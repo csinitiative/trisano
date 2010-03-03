@@ -27,7 +27,7 @@ class QuestionsController < AdminController
   def update
     respond_to do |format|
       if @questions.update(params[:questions])
-        flash[:notice] = 'Form questions were successfully updated.'
+        flash[:notice] = t("form_questions_successfully_updated")
         format.html { redirect_to form_questions_path(@form) }
       else
         format.html { render :action => :edit, :status => :bad_request }

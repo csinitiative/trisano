@@ -54,10 +54,10 @@ end
 task :default => :spec
 task :stats => "spec:statsetup"
 
-desc "Run all specs in spec directory (excluding plugin specs)"
+desc "Run all TriSano specs"
 Spec::Rake::SpecTask.new(:spec => spec_prereq) do |t|
   t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
-  t.spec_files = FileList['spec/**/*_spec.rb']
+  t.spec_files = FileList["spec/**/*_spec.rb"]
 end
 
 namespace :spec do

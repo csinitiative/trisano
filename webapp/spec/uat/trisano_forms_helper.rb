@@ -65,11 +65,9 @@ module TrisanoFormsHelper
     end
   end
 
-  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity event', short_name=nil)
-    browser.open "/trisano/cmrs"
-    browser.click "link=FORMS"
-    browser.wait_for_page_to_load($load_time)
-    browser.click "//input[@value='Create new form']"
+  def create_new_form_and_go_to_builder(browser, form_name, disease_label, jurisdiction_label, type='Morbidity Event', short_name=nil)
+    click_nav_forms(@browser).should be_true
+    browser.click "//input[@value='Create New Form']"
     browser.wait_for_page_to_load($load_time)
     browser.type "form_name", form_name
     browser.type "form_short_name", short_name || form_name
@@ -461,7 +459,7 @@ module TrisanoFormsHelper
   def publish_form(browser)
     click_publish_button(browser)
     browser.wait_for_page_to_load($publish_time)
-    return(browser.is_text_present("Form was successfully published "))
+    return(browser.is_text_present("Form was successfully published"))
   end
 
   def publish_form_failure(browser=@browser)

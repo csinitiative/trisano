@@ -14,19 +14,19 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Manage Form Library
+  =t 'manage_form_library'
 
-Import form library:
+=t 'import_form_library'
 
 - form_tag({:action => 'import'}, :multipart => true) do
 
   %span{ :class => 'horiz' }
     = file_field_tag 'import'
   %span{ :class => 'horiz' }
-    = button_to("Upload", {}, { :type => "submit" })
+    = button_to(t("upload"), {}, { :type => "submit" })
 
 
 %br
 %br
 
-= link_to 'Export form library', export_library_elements_path, :method => :post
+= link_to t('export_form_library'), export_library_elements_path, :method => :post

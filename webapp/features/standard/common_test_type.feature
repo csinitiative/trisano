@@ -156,7 +156,7 @@ Feature: Common tests types for lab results
     Then I should see "Culture X, Sterile body fluid"
     And the search results should not have "Culture X, Unspecified"
 
-  Scenario: Searching for loincs *will* loincs associated w/ other test types
+  Scenario: Searching for loincs *will* return loincs associated w/ other test types
     Given I am logged in as a super user
     And I have the following LOINC codes in the system:
       | loinc_code | test_name                   |

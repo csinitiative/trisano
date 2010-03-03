@@ -32,7 +32,7 @@ module FormsLibraryHelper
     result = ""
     
     if (direction == :to_library)
-      result << link_to_remote("No Group", 
+      result << link_to_remote(t("no_group"),
         :update => "library-element-list-#{@reference_element.id}", 
         :complete => visual_effect(:highlight, "library-element-list-#{@reference_element.id}"), 
         :url => {
@@ -144,7 +144,7 @@ module FormsLibraryHelper
       )
     end
     
-    result << "&nbsp;&nbsp;<small>" + question_element.question.data_type_before_type_cast.humanize + "</small>"
+    result << "&nbsp;&nbsp;<small>#{I18n.t("question_data_types.#{question_element.question.data_type_before_type_cast}")}</small>"
     
     question_children = element_cache.children(question_element)
     

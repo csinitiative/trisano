@@ -29,7 +29,6 @@ class EventTasksController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-        #Hmmmmm. Why do I have to add the .html.haml onto the partial?
         render :partial => 'tasks/list.html.haml', :locals => { :task_owner => @event }
       end
     end
@@ -55,7 +54,7 @@ class EventTasksController < ApplicationController
     
     respond_to do |format|
       if @task.save
-        flash[:notice] = 'Task was successfully created.'
+        flash[:notice] = t("event_task_created")
         format.html { redirect_to event_tasks_path(@event) }
       else
         format.html { render :action => "new" }
@@ -69,12 +68,12 @@ class EventTasksController < ApplicationController
     
     respond_to do |format|
       if @task.update_attributes(params[:task])
-        flash[:notice] = 'Task was successfully updated.'
+        flash[:notice] = t("event_task_updated")
         format.html { redirect_to edit_event_task_path(@event, @task) }
         format.js { }
       else
         format.html { render :action => "edit" }
-        format.js { flash[:error] = 'Could not update task.' }
+        format.js { flash[:error] = t("could_not_update_task") }
       end
     end
     

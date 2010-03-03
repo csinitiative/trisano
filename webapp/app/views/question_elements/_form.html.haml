@@ -30,15 +30,15 @@
     - else
       = q.text_field :short_name
 
-  = f.label(:is_active, "Is active?")
+  = f.label(:is_active)
   = f.radio_button :is_active, "true"
-  Yes
+  = t 'yes_true'
   = f.radio_button :is_active, "false"
-  No
+  = t 'no_false'
 
   %p
     = q.label(:style)
-    = q.select(:style, [["Horizontal", "horiz"], ["Vertical", "vert"]], {:include_blank => true}) 
+    = q.select(:style, [[I18n.t("question_styles.horizontal"), "horiz"], [I18n.t("question_styles.vertical"), "vert"]], {:include_blank => true})
 
   %p
     = q.label(:help_text)

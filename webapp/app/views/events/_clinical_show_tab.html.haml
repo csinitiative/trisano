@@ -15,21 +15,21 @@
 
 
 %fieldset
-  %legend Clinical Information
+  %legend=t 'clinical_info'
 
   %fieldset.form
     %legend
-      Disease
+      =t 'disease'
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
       - core_element_show :disease_id, d, :horiz do
-        = d.label(:disease_id, "Disease")
+        = d.label :disease_id
         = h(@event.safe_call_chain(:disease_event, :disease, :disease_name))
       - core_element_show :disease_onset_date, d, :horiz do
-        = d.label(:disease_onset_date, "Onset date")
-        = h(@event.safe_call_chain(:disease_event, :disease_onset_date))
+        = d.label :disease_onset_date
+        = ld(@event.safe_call_chain(:disease_event, :disease_onset_date))
       - core_element_show :date_diagnosed, d, :horiz do
         = d.label(:date_diagnosed)
-        = h(@event.safe_call_chain(:disease_event, :date_diagnosed))
+        = ld(@event.safe_call_chain(:disease_event, :date_diagnosed))
       %span.vert-break
       - core_element_show :died_id, d, :horiz do
         = d.label(:died_id)
@@ -40,7 +40,7 @@
         - primary_form.fields_for(:person, @event.interested_party.person_entity.person, :builder => ExtendedFormBuilder) do |person_form|
           - core_element_show :date_of_death, person_form, :horiz do
             = person_form.label(:date_of_death)
-            = h(@event.interested_party.person_entity.person.date_of_death)
+            = ld(@event.interested_party.person_entity.person.date_of_death)
 
     - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
       - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
@@ -49,53 +49,53 @@
           = h(l(@event.safe_call_chain(:interested_party, :risk_factor, :pregnant)))
         - core_element_show :pregnancy_due_date, risk_factor_form, :horiz do
           = risk_factor_form.label(:pregnancy_due_date)
-          = h(@event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date))
+          = ld(@event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date))
 
   %span{:clear => 'all'}
 
   %fieldset.form
     %legend
-      Hospitalized health facilities
+      =t 'hospitalized_health_facilities'
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |disease_form|
       - core_element_show :hospitalized_id, disease_form, 'vert-break' do
-        = disease_form.label(:hospitalized)
+        = disease_form.label(:hospitalized_id)
         = h(@event.disease_event ? l(@event.disease_event.hospitalized) : '&nbsp;')
-    - if @event.hospitalization_facilities.empty?
-      %h3{:style => 'clear: both;'} No hospitalized health facilities have been recorded for this event
+    - if @event.hospitalization_facility_ids.compact.empty?
+      %h3{:style => 'clear: both;'}=t('no_hospitalized_health_facilities')
     - else
       %table.list
         %tr
-          %th Hospitalized health facility
-          %th Admission date
-          %th Discharge date
-          %th Medical Record Number
+          %th=t('activerecord.attributes.hospitalization_facility.secondary_entity_id')
+          %th=t('activerecord.attributes.hospitals_participation.admission_date')
+          %th=t('activerecord.attributes.hospitals_participation.discharge_date')
+          %th=t('activerecord.attributes.hospitals_participation.medical_record_number')
 
-        - for hospital in @event.hospitalization_facilities
-          %tr
-            - if hospital.place_entity
-              %td= h(hospital.place_entity.place.name)
-              - if hospital.hospitals_participation.nil?
-                %td
-                %td
-                %td
-              - else
-                %td= h(hospital.hospitals_participation.admission_date)
-                %td= h(hospital.hospitals_participation.discharge_date)
-                %td= h(hospital.hospitals_participation.medical_record_number)
+          - for hospital in @event.hospitalization_facilities
+            %tr
+              - if hospital.place_entity
+                %td= h(hospital.place_entity.place.name)
+                - if hospital.hospitals_participation.nil?
+                  %td
+                  %td
+                  %td
+                - else
+                  %td= ld(hospital.hospitals_participation.admission_date)
+                  %td= ld(hospital.hospitals_participation.discharge_date)
+                  %td= h(hospital.hospitals_participation.medical_record_number)
 
   = render :partial => 'events/treatments_show', :locals => { :f => event_form, :event => @event }
 
   %fieldset.form
     %legend
-      Clinicians  
+      =t('clinicians')
 
-    - if @event.clinicians.empty?
-      %h3 No clinicians have been recorded for this event
+    - if @event.clinician_ids.compact.blank?
+      %h3=t('no_clinicians_for_event')
     - else
       %table.list
         %tr
-          %th Name
-          %th Phone
+          %th=t('name')
+          %th=t('phone')
 
         -# A clinician (participation) may have one name and zero or one phone numbers
         - for clinician in @event.clinicians
@@ -112,15 +112,15 @@
 
   %fieldset.form
     %legend
-      Diagnostic Facilities  
+      =t('diagnostic_facilities')
 
-    - if @event.diagnostic_facilities.empty?
-      %h3 No diganosing health facilities have been recorded for this event
+    - if @event.diagnostic_facility_ids.compact.empty?
+      %h3=t('no_diagnosing_health_facilities')
     - else
       %table.list
         %tr
-          %th Diagnosing health facility
-          %th Type
+          %th=t('diagnosing_health_facility')
+          %th=t('type')
 
         - for diagnostic in @event.diagnostic_facilities
           %tr

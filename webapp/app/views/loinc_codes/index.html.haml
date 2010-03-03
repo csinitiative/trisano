@@ -14,22 +14,22 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  List LOINC Codes
+  =t 'list_loinc_codes'
 
 - content_for :tools_two do
-  = button_to("Create New LOINC Code", new_loinc_code_path, { :method => :get })
+  = button_to(t("create_new_loinc_code"), new_loinc_code_path, { :method => :get })
 
 #rot
   %table.list
     %tr
       %th.forminformation
-        LOINC Code
+        =t 'loinc_code'
       %th
-        Test Name
+        =t 'test_name'
       %th
-        Scale
+        =t 'scale'
       %th
-        Organism
+        =t 'organism'
       %th
         &nbsp;
       - @loinc_codes.each do |loinc_code|

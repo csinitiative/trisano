@@ -34,11 +34,11 @@ describe 'adding an export column' do
     column_name = get_unique_name(1)
 
     navigate_to_export_admin(@browser).should be_true
-    @browser.click("//input[@value='Create new export column']")
+    @browser.click("//input[@value='Create new Export Column']")
     @browser.wait_for_page_to_load($load_time)
 
     #associate some diseases
-    %w(Hepatitis_A,_acute Hepatitis_B,_acute Hepatitis_B_virus_infection,_chronic).each do |id|
+    %w(Hepatitis_A Hepatitis_B,_acute Hepatitis_B_virus_infection,_chronic).each do |id|
       @browser.check("css=input[id^='#{id}']")
     end
 
@@ -56,7 +56,7 @@ describe 'adding an export column' do
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present("Export Column was successfully created.").should be_true
-    ['Hepatitis A, acute','Hepatitis B, acute','Hepatitis B virus infection, chronic'].each do |text|
+    ['Hepatitis A','Hepatitis B, acute','Hepatitis B virus infection, chronic'].each do |text|
       @browser.is_text_present(text).should be_true
     end
     @browser.is_text_present(@descriptive_name).should be_true
@@ -68,11 +68,11 @@ describe 'adding an export column' do
   it "should allow editing of an export column" do
     @browser.click "link=Edit"
     @browser.wait_for_page_to_load($load_time)
-    @browser.uncheck("css=input[id='Hepatitis_A,_acute']")
+    @browser.uncheck("css=input[id='Hepatitis_A']")
     @browser.type("export_column_name", @descriptive_name)
     @browser.click "export_column_submit"
     @browser.wait_for_page_to_load($load_time)
-    @browser.is_text_present('Hepatitis A, acute').should_not be_true
+    @browser.is_text_present('Hepatitis A').should_not be_true
     @browser.is_text_present("Export Column was successfully updated.").should be_true
     @browser.is_text_present(@descriptive_name).should be_true
   end

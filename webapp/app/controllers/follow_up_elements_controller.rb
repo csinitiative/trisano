@@ -24,11 +24,11 @@ class FollowUpElementsController <  AdminController
   end
   
   def index
-    render :text => 'Method not supported.', :status => 405
+    render :text => t("method_not_supported"), :status => 405
   end
 
   def show
-    render :text => 'Method not supported.', :status => 405
+    render :text => t("method_not_supported"), :status => 405
   end
   
   def new
@@ -39,7 +39,7 @@ class FollowUpElementsController <  AdminController
       @follow_up_element.event_type = params[:event_type]
     rescue Exception => ex
       logger.debug ex
-      flash[:error] = 'Unable to display the follow up form at this time.'
+      flash[:error] = t("unable_to_display_follow_up_element_form")
       render :template => 'rjs-error'
     end
   end
@@ -84,7 +84,7 @@ class FollowUpElementsController <  AdminController
     end
     
     if update
-      flash[:notice] = 'Follow up was successfully updated.'
+      flash[:notice] = t("follow_up_element_updated")
       @form = Form.find(@follow_up_element.form_id)
     else
       render :action => "edit"
@@ -93,7 +93,7 @@ class FollowUpElementsController <  AdminController
   end
 
   def destroy
-    render :text => 'Deletion handled by form elements.', :status => 405
+    render :text => t("deletion_handled_by_form_elements"), :status => 405
   end
   
   def process_core_condition
@@ -102,7 +102,7 @@ class FollowUpElementsController <  AdminController
       @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex
-      flash[:notice] = 'Unable to process conditional logic for follow up questions.'
+      flash[:notice] = t("unable_to_process_follow_up_conditional")
       @error_message_div = "follow-up-error"
       render :template => 'rjs-error'
     end

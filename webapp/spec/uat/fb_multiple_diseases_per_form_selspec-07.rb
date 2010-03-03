@@ -41,12 +41,12 @@ describe 'form builder associating a form with multiple diseases' do
 
     create_basic_investigatable_cmr(@browser, @cmr_last_name_1, @disease_1, "Bear River Health Department")
     edit_cmr(@browser)
-    @browser.is_text_present(@question_1).should be_true
-    @browser.is_text_present(@question_2).should be_true
+    @browser.get_html_source.include?(@question_1).should be_true
+    @browser.get_html_source.include?(@question_2).should be_true
 
     create_basic_investigatable_cmr(@browser, @cmr_last_name_2, @disease_2, "Bear River Health Department")
     edit_cmr(@browser)
-    @browser.is_text_present(@question_1).should be_true
-    @browser.is_text_present(@question_2).should be_true
+    @browser.get_html_source.include?(@question_1).should be_true
+    @browser.get_html_source.include?(@question_2).should be_true
   end
 end

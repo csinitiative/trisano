@@ -17,6 +17,6 @@
   %td
     =sanitize question.question_text, :tags => %w(br)
   %td
-    =h question.data_type.to_s.humanize
+    =h I18n.t("question_data_types.#{question.data_type.to_s}")
   %td
     =short_name_field_tag question

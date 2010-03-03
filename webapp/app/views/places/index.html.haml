@@ -14,28 +14,14 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  Place Management
+  =t('place_management')
 
 - content_for :tools_two do
-  = button_to("Create new place", {:action => "new"}, { :method => :get })
+  = button_to(t('create_new_place'), {:action => "new"}, { :method => :get })
 
-- form_tag(places_path, :method => :get) do
+=render :partial => "search_form"
 
-  %div#name_criteria{:style => "margin-top: 5px"}
-    %div{ :class => "horiz" }
-      %label Place name
-      = text_field_tag :name, params[:name], :size => "30", :class => "search"
-      %label Participation type
-      %select{ :name => "participation_type" }
-        %option
-        = options_for_select([["Diagnostic Facility", "DiagnosticFacility"], ["Hospitalization Facility", "HospitalizationFacility"], ["Lab", "Lab"], ["Place Exposure", "InterestedPlace"], ["Reporting Agency", "ReportingAgency"]], :selected => params[:participation_type])
+-unless @place_entities.blank?
+  =render :partial => 'place_entities', :locals => { :place_entities => @place_entities }
 
-      = render_merge_hidden_fields
-
-      %input{ :type => "submit", :id => 'submit_place_search', :value => "Search" }
-
-%br{ :clear => 'all' }
-%br
-
-= render_place_management_list
 

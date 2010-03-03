@@ -25,7 +25,7 @@ class IbisEventsController < AdminController
       start_date = Date.parse(params[:start_date])
       end_date = Date.parse(params[:end_date])
     rescue
-      flash[:error] = "Invalid date format"
+      flash[:error] = t("invalid_ibis_date_format")
       redirect_to ibis_events_path
       return
     end

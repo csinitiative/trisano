@@ -55,7 +55,8 @@ describe 'Adding a task to a CMR' do
   end
 
   it 'should add a task with notes from show mode' do
-    show_cmr(@browser)
+    @browser.click "link=Show CMR"
+    @browser.wait_for_page_to_load($load_time)
     add_task(@browser, {
         :task_name => @task_with_notes_name,
         :task_notes => @task_with_notes_notes,
@@ -66,7 +67,8 @@ describe 'Adding a task to a CMR' do
   end
 
   it 'should add a task and assign to a user from show mode' do
-    show_cmr(@browser)
+    @browser.click "link=Show CMR"
+    @browser.wait_for_page_to_load($load_time)
     add_task(@browser, {
         :task_name => @task_assigned_name,
         :task_category => 'Appointment',
@@ -77,17 +79,20 @@ describe 'Adding a task to a CMR' do
   end
 
   it 'should display the tasks in edit mode' do
-    edit_cmr(@browser)
-    @browser.is_text_present(@task_name).should be_true
-    @browser.is_text_present(@task_with_notes_name).should be_true
-    @browser.is_text_present(@task_assigned_name).should be_true
+    @browser.click "link=Edit CMR"
+    @browser.wait_for_page_to_load($load_time)
+    html_source = @browser.get_html_source
+    html_source.include?(@task_name).should be_true
+    html_source.include?(@task_with_notes_name).should be_true
+    html_source.include?(@task_assigned_name).should be_true
   end
   
   it 'should display the tasks in show mode' do
     show_cmr(@browser)
-    @browser.is_text_present(@task_name).should be_true
-    @browser.is_text_present(@task_with_notes_name).should be_true
-    @browser.is_text_present(@task_assigned_name).should be_true
+    html_source = @browser.get_html_source
+    html_source.include?(@task_name).should be_true
+    html_source.include?(@task_with_notes_name).should be_true
+    html_source.include?(@task_assigned_name).should be_true
   end
 
   it 'should have only added one note in addition to the standard admin CMR creation note' do
@@ -95,7 +100,7 @@ describe 'Adding a task to a CMR' do
     note_count(@browser, "Administrative").should eql(1)
     note_count(@browser, "Clinical").should eql(1)
   end
-  
+
   it 'should display the task notes as a clinical note' do
     @browser.click("clinical-notes")
     sleep(2)

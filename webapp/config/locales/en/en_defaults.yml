@@ -1,0 +1,276 @@
+en:
+  locale_name: English
+  language: Language
+  number:
+    # Used in number_with_delimiter()
+    # These are also the defaults for 'currency', 'percentage', 'precision', and 'human'
+    format:
+      # Sets the separator between the units, for more precision (e.g. 1.0 / 2.0 == 0.5)
+      separator: "."
+      # Delimets thousands (e.g. 1,000,000 is a million) (always in groups of three)
+      delimiter: ","
+      # Number of decimals, behind the separator (1 with a precision of 2 gives: 1.00)
+      precision: 3
+
+    # Used in number_to_currency()
+    currency:
+      format:
+        # Where is the currency sign? %u is the currency unit, %n the number (default: $5.00)
+        format: "%u%n"
+        unit: "$"
+        # These three are to override number.format and are optional
+        separator: "."
+        delimiter: ","
+        precision: 2
+
+    # Used in number_to_percentage()
+    percentage:
+      format:
+        # These three are to override number.format and are optional
+        # separator:
+        delimiter: ""
+        # precision:
+
+    # Used in number_to_precision()
+    precision:
+      format:
+        # These three are to override number.format and are optional
+        # separator:
+        delimiter: ""
+        # precision:
+
+    # Used in number_to_human_size()
+    human:
+      format:
+        # These three are to override number.format and are optional
+        # separator:
+        delimiter: ""
+        precision: 1
+
+  # Used in distance_of_time_in_words(), distance_of_time_in_words_to_now(), time_ago_in_words()
+  datetime:
+    distance_in_words:
+      half_a_minute: "half a minute"
+      less_than_x_seconds:
+        one:  "less than 1 second"
+        many: "less than {{count}} seconds"
+      x_seconds:
+        one:  "1 second"
+        many: "{{count}} seconds"
+      less_than_x_minutes:
+        one:  "less than a minute"
+        many: "less than {{count}} minutes"
+      x_minutes:
+        one:  "1 minute"
+        many: "{{count}} minutes"
+      about_x_hours:
+        one:  "about 1 hour"
+        many: "about {{count}} hours"
+      x_days:
+        one:  "1 day"
+        many: "{{count}} days"
+      about_x_months:
+        one:  "about 1 month"
+        many: "about {{count}} months"
+      x_months:
+        one:  "1 month"
+        many: "{{count}} months"
+      about_x_years:
+        one:  "about 1 year"
+        many: "about {{count}} years"
+      over_x_years:
+        one:  "over 1 year"
+        many: "over {{count}} years"
+
+  date:
+    formats:
+      # Use the strftime parameters for formats.
+      # When no format has been given, it uses default.
+      # You can provide other formats here if you like!
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+
+    day_names: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+    abbr_day_names: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+
+    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+    month_names: [~, January, February, March, April, May, June, July, August, September, October, November, December]
+    abbr_month_names: [~, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+    # Used in date_select and datime_select.
+    order: [ :year, :month, :day ]
+
+  calendar_date_select:
+    ok: OK
+    now: Now
+    today: Today
+    clear: Clear
+
+  time:
+    formats:
+      default: "%a, %d %b %Y %H:%M:%S %z"
+      date_format: "%a, %d %b %Y"
+      notes: "%a, %b %d, %Y at %I:%M %p"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+    am: "am"
+    pm: "pm"
+
+  support:
+    array:
+      two_words_connector: ' and '
+
+  unassigned_jurisdiction_name: "Unassigned"
+  or: ' or '
+
+  not_available: "N/A"
+  copy_of: "Copy of"
+  default_view: "Default View"
+  library_export_file_name: "library-export"
+
+  workflow:
+    event_created_for_jurisdiction: "Event created for jurisdiction"
+    assigned_to_lhd: "Assigned to Local Health Dept."
+    accepted_by_lhd: "Accepted by Local Health Dept."
+    rejected_by_lhd: "Rejected by Local Health Dept."
+    assigned_to_queue: "Assigned to Queue"
+    assigned_to_investigator: "Assigned to Investigator"
+    approved_by_lhd: "Approved by Local Health Dept."
+    approved_by_state: "Approved by State"
+    not_participating_in_workflow: "Not Participating in Workflow"
+    under_investigation: "Under Investigation"
+    new: New
+    rejected_by_investigator: Rejected by Investigator
+    investigation_complete: Investigation Complete
+    reopened_by_manager: Reopened by Manager
+    reopened_by_state: Reopened by State
+    closed: Closed
+    not_routed: Not Participating in Workflow
+
+  attachment_types:
+    correspondence: Correspondence
+    lab: Laboratory results
+    letter: Letter
+    x-ray: X-ray
+
+  encounter_location_types:
+    clinic: Clinic
+    home: Home
+    phone: Phone
+    school: School
+    work: Work
+    other: Other
+
+  question_data_types:
+    single_line_text: Single line text
+    multi_line_text: Multi-line text
+    drop_down: Drop-down select list
+    radio_button: Radio buttons
+    check_box: Checkboxes
+    date: Date
+    phone: Phone Number
+    
+  question_styles:
+    horizontal: Horizontal
+    vertical: Vertical
+
+  task_statuses:
+    pending: Pending
+    complete: Complete
+    not_applicable: Not applicable
+
+  task_intervals:
+    day: Daily
+    week: Weekly
+    month: Monthly
+    year: Yearly
+
+  user_statuses:
+    active: Active
+    disabled: Disabled
+
+  core_views:
+    demographics: Demographics
+    clinical: Clinical
+    laboratory: Laboratory
+    contacts: Contacts
+    epidemiological: Epidemiological
+    reporting: Reporting
+    administrative: Administrative
+    place: Place
+    encounter: Encounter
+
+  system_notes:
+    event_deleted: Event deleted
+    event_edited: "Edited event"
+    extra_jurisdictional_view_only_access: "Extra-jurisdictional, view-only access"
+    event_derived_from: "Event derived from {{link}}."
+    event_promoted_from_contact: "Promoted from contact."
+
+    event_queue_deleted: "Event queue '{{queue_name}}' has been deleted. Event has been moved out of that queue."
+    event_needs_reassignment: "Event has not yet been accepted for investigation and should be reassigned."
+
+    contact_event_created: "Contact event created."
+    event_changed_from_contact_to_morbidity: "Event changed from contact event to morbidity event"
+
+    lab_and_results_deleted: "Lab and all its results deleted"
+    lab_result_deleted: "Lab result deleted"
+    elr_with_test_type_assigned: "ELR with test type \"{{test_type}}\" assigned to event."
+
+    place_event_created: "Place event created."
+
+    task_created: "Task created.\n\nName: {{name}}\nDescription: {{notes}}"
+    task_repeats: "Repeats every {{repeating_interval}} until {{until_date}}"
+    task_status_change: "Task status change.\n\n'{{name}}' changed from {{existing_status}} to {{new_status}}"
+
+    encounter_event_created: "Encounter event created"
+
+    workflow_accepted_by: "Accepted by {{jurisdiction_name}}.\n{{note}}"
+    workflow_rejected_by: "Rejected by {{jurisdiction_name}}.\n{{note}}"
+    workflow_approved_at: "Approved at {{jurisdiction_name}}.\n{{note}}"
+    workflow_routed_to_queue: "Routed to queue {{name}}.\n{{note}}"
+    workflow_routed_to_investigator: "Routed to investigator {{name}}.\n{{note}}"
+    workflow_accepted_by_investigator: "Accepted by Investigator {{name}}.\n{{note}}"
+    workflow_rejected_for_investigation: "Rejected for investigation.\n{{note}}"
+    workflow_completed_investigation: "Completed investigation.\n{{note}}"
+    workflow_investigator_closed_investigation: "Investigator closed investigation.\n{{note}}"
+    workflow_reopened_by: "Reopened by {{jurisdiction_name}} manager.\n{{note}}"
+    workflow_reopened_by_state: "Reopened by State.\n{{note}}"
+    workflow_approved_by_state: "Approved by State.\n{{note}}"
+
+  common_test_type_associated_with_lab_results: "{{name}} already associated with lab results"
+  investigator_already_assigned: "Investigator already assigned"
+  cannot_promote_unsaved_contact: "Cannot promote an unsaved contact to a morbidity event"
+  loading_disease_group: "Loading disease group {{disease_group}}"
+  could_not_remove_form_from_event: "Could not remove a form from an event: {{message}}"
+  unable_to_process_new_forms: "Unable to process new forms"
+  missing_form_reference: "Missing form reference."
+  cannot_publish_already_published_version: "Cannot publish an already published version"
+  zip_file_missing_library_export: "The zip file did not contain a form library export. Please ensure you aren't trying to import a single form."
+  import_file_empty: "The import file did not contain any content."
+  unable_to_find_export_column_data: "Unable to find export column data ({{disease_group_name}}:{{export_column_name}}) required to import {{element_type}} '{{identifier}}'"
+  unable_to_find_export_conversion_value_date: "Unable to find export conversion value data ({{disease_group_name}}:{{export_column_name}}:{{value_from}}:{{value_to}}) required to import a value."
+  unable_to_find_system_code_fore_core_follow_up: "Unable to find the system code ({{code_name}}:{{the_code}}) required to import a core follow up on {{core_path}}"
+  no_queue_ids_returned: "No queue ids returned"
+  invalid_birthdate: "Invalid birthdate"
+  new_jurisdiction_is_not_jurisdiction: "New jurisdiction is not a jurisdiction"
+  not_a_valid_staged_message: "{{staged_message}} is not a valid staged message"
+  unknown_loinc_code: "LOINC code, {{loinc_code}}, is unknown to TriSano."
+  loinc_code_known_but_not_linked: "LOINC code, {{loinc_code}}, is known but not linked to a common test type."
+  no_loinc_code_maps_to_disease: "No LOINC code maps to a disease."
+  event_disease_set_to: "Event's disease set to {{disease_name}}"
+  loinc_code_maps_to_multiple_diseases: "LOINC code(s) map to multiple diseases:"
+  loinc_code_must_be_blank_error: "must be blank when Scale is set to '{{code_description}}'"
+  errors_saving_short_names: "Errors saving short names"
+  role_membership_already_assigned: "is already assigned this role for this jurisdiction"
+  cannot_associate_labs_with: "Cannot associate labs with {{event_class}}"
+  staged_message_is_already_assigned: "Staged message is already assigned to an event"
+  task_repeat_date_must_be_after_due_date: "date must come after the original due date"
+  form_element_could_not_find_external_code: "The external code for the condition on {{core_path}} could not be found."
+  form_element_export_column_or_disease_group_not_found: "The export column and/or disease group for the {{element_type}} '{{identifier}}' could not be found."
+  form_element_something_not_found_for_value_element: "The conversion value, export column, or disease group could not be found for the value element '{{name}}.'"
+  form_element_library_element_at_fault: "The library element at fault is the {{name}}"
+  insufficient_privileges_for_change: "You do not have sufficient privileges to make this change"
+  insufficient_privileges_to_route_from_jurisdiction: "You do not have sufficient privileges to route events from this jurisdiction"
+
+

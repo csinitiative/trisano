@@ -25,7 +25,7 @@ class RoleMembership < ActiveRecord::Base
 
 
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
-    :message => "is already assigned this role for this jurisdiction"
+    :message => I18n.translate('role_membership_already_assigned')
 
   class << self
     def for_jurisdiction(jurisdiction)

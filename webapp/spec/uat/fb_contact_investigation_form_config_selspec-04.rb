@@ -40,7 +40,7 @@ describe 'form builder investigation form for contacts' do
   end
   
   it 'should create a new form' do
-    create_new_form_and_go_to_builder(@browser, @form_name, "Plague", "All Jurisdictions", "Contact event").should be_true
+    create_new_form_and_go_to_builder(@browser, @form_name, "Plague", "All Jurisdictions", "Contact Event").should be_true
     add_question_to_view(@browser, "Default View", {:question_text => @question_text, :data_type => "Single line text", :short_name => get_random_word})
   end
     
@@ -50,19 +50,19 @@ describe 'form builder investigation form for contacts' do
     edit_cmr(@browser).should be_true
     add_contact(@browser, {:last_name => @contact_last_name, :first_name => "John", :disposition => "Unable to locate"})
     save_cmr(@browser).should be_true
-    click_link_by_order(@browser, "edit-contact-event", 1)
+    click_link_by_order(@browser, "edit-event", 1)
     @browser.wait_for_page_to_load($load_time)
   end
   
   it 'should have the investigation form' do
-    @browser.is_text_present(@form_name).should be_true
-    @browser.is_text_present(@question_text).should be_true
+    @browser.get_html_source.include?(@form_name).should be_true
+    @browser.get_html_source.include?(@question_text).should be_true
   end
     
   it 'should allow answers to be saved' do
     answer_investigator_question(@browser, @question_text, @answer).should be_true
     save_contact_event(@browser).should be_true
-    @browser.is_text_present(@answer).should be_true
+    @browser.get_html_source.include?(@answer).should be_true
   end
   
 end

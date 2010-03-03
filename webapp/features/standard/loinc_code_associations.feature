@@ -11,7 +11,7 @@ Feature: Associate common test types with loinc codes
     When I go to edit LOINC code "10000-1"
       And I select "Arbovirus" from "Common test type"
       And I press "Update"
-    Then I should see "Loinc code was successfully updated"
+    Then I should see "LOINC code was successfully updated"
       And I should see "Arbovirus"
 
   Scenario: Associate a Loinc code with a diseases
@@ -26,7 +26,7 @@ Feature: Associate common test types with loinc codes
       And I check "Dengue"
       And I press "Update"
     Then I should be on the LOINC code "10000-1" page
-      And I should see "Loinc code was successfully updated"
+      And I should see "LOINC code was successfully updated"
       And I should see "African Tick Bite Fever"
       And I should see "Dengue"
 
@@ -46,7 +46,7 @@ Feature: Associate common test types with loinc codes
       And I uncheck "Dengue"
       And I uncheck "African Tick Bite Fever"
       And I press "Update"
-    Then I should see "Loinc code was successfully updated"
+    Then I should see "LOINC code was successfully updated"
       And I should not see "Dengue"
       And I should not see "African Tick Bite Fever"
 

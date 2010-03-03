@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given(/^a morbidity event exists$/) do
+Given(/^a basic morbidity event exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
@@ -55,7 +55,7 @@ Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_
   @event = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
 
-Given(/^a contact event exists$/) do
+Given(/^there is a contact event$/) do
   @contact_event = Factory.build(:contact_event)
   @contact_event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)
   @contact_event.save!
@@ -84,4 +84,3 @@ Given /^all core field configs for a (.+) have help text$/ do |event_type|
     core_field.save!
   end
 end
-

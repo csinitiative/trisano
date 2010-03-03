@@ -16,9 +16,9 @@
 
 %fieldset
   %legend 
-    Encounter Information
-    %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"} [Hide]
-    %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"} [Show]
+    =t('encounter_info')
+    %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"}=t('hide')
+    %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"}=t('show')
 
   %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
 
@@ -26,7 +26,7 @@
       = error_messages_for :object => pe_fields.object
 
       %span.horiz
-        =pe_fields.label(:user_id, "Investigator")
+        =pe_fields.label(:user_id)
         =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name)
 
       %span.horiz
@@ -34,7 +34,7 @@
         =pe_fields.calendar_date_select(:encounter_date, :year_range => 5.years.ago..0.years.from_now)
 
       %span.horiz
-        =pe_fields.label(:encounter_location_type, "Location")
+        =pe_fields.label(:encounter_location_type)
         =pe_fields.select(:encounter_location_type, ParticipationsEncounter.location_type_array)
 
       %span.vert

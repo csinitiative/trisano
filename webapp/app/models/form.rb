@@ -49,11 +49,11 @@ class Form < ActiveRecord::Base
       conditions << record.id
     end
     if value && self.find(:first, :conditions => conditions)
-      record.errors.add attr, "is already being used by another active form."
+      record.errors.add attr, :in_use
     end
 
     if record.short_name_changed?
-      record.errors.add attr, "can't be changed once the form has been published" if not record.short_name_editable?
+      record.errors.add attr, :immutable if not record.short_name_editable?
     end
   end
 
@@ -88,7 +88,7 @@ class Form < ActiveRecord::Base
   # render.
   def has_investigator_view_elements?
     investigator_view_elements_container.all_children.each_with_index do |c, i|
-      return true if i > 0 || c.name != 'Default View'
+      return true if i > 0 || c.read_attribute(:type) != 'ViewElement'
     end
     false
   end
@@ -116,7 +116,7 @@ class Form < ActiveRecord::Base
 
   def publish
 
-    raise("Cannot publish an already published version") unless self.is_template
+    raise(I18n.translate('cannot_publish_already_published_version')) unless self.is_template
 
     published_form = nil;
 
@@ -181,7 +181,7 @@ class Form < ActiveRecord::Base
 
   def deactivate
     unless self.status == "Published"
-      self.errors.add_to_base("A form must have a status of 'Published' in order to be deactivated.")
+      self.errors.add_to_base(:deactivate_unpublished)
       return nil
     end
 
@@ -205,8 +205,8 @@ class Form < ActiveRecord::Base
     begin
       transaction do
         copied_form = self.clone
-        copied_form.name << " (Copy)"
-        copied_form.short_name << "_copy"
+        copied_form.name << " (#{I18n.t('copy')})"
+        copied_form.short_name << "_#{I18n.t('copy')}"
         copied_form.ensure_short_name_unique
         copied_form.created_at = nil
         copied_form.updated_at = nil
@@ -241,7 +241,7 @@ class Form < ActiveRecord::Base
   def rollback
 
     unless self.status == "Published"
-      self.errors.add_to_base("Only forms with published versions can be rolled back")
+      self.errors.add_to_base(:rollback_unpublished)
       return nil
     end
 
@@ -285,7 +285,7 @@ class Form < ActiveRecord::Base
 
   def push
     if self.diseases.empty?
-      self.errors.add_to_base("There are no diseases associated with this form.")
+      self.errors.add_to_base(:no_diseases)
       return nil
     end
 
@@ -293,18 +293,26 @@ class Form < ActiveRecord::Base
       most_recent_form = most_recent_version
       return nil if most_recent_form.nil?
       push_count = 0
-      jurisdiction_ids = self.jurisdiction_id.nil? ? jurisdiction_ids = Place.jurisdictions.collect {|place| place.id }.join(", ") : jurisdiction_ids = self.jurisdiction_id
+      jurisdiction_ids = self.jurisdiction_id.nil? ? jurisdiction_ids = Place.jurisdictions.collect {|place| place.id } : jurisdiction_ids = self.jurisdiction_id
+      conditions_array = []
+      
+      conditions_array[0] = "events.type = ? "
+      conditions_array << self.event_type.camelcase
 
-      conditions = "events.type = '#{self.event_type.camelcase}'"
-      conditions << "AND participations.type = 'Jurisdiction' "
-      conditions << "AND participations.secondary_entity_id IN (#{jurisdiction_ids}) "
-      conditions << "AND disease_events.disease_id IN (#{self.disease_ids.join(", ")})"
+      conditions_array[0] << "AND participations.type = ? "
+      conditions_array << "Jurisdiction"
+
+      conditions_array[0] << " AND participations.secondary_entity_id IN (?) "
+      conditions_array << jurisdiction_ids
+
+      conditions_array[0] << " AND disease_events.disease_id IN (?)"
+      conditions_array << self.disease_ids
 
       joins = "INNER JOIN participations ON participations.event_id = events.id "
       joins << "INNER JOIN disease_events ON disease_events.event_id = events.id"
 
       events = Event.find(:all,
-        :conditions => conditions,
+        :conditions => conditions_array,
         :joins => joins
       )
 
@@ -319,7 +327,7 @@ class Form < ActiveRecord::Base
       push_count
     rescue Exception => ex
       logger.error ex
-      self.errors.add_to_base("An error occurred while pushing the form.")
+      self.errors.add_to_base(:publishing_error)
       return nil
     end
 
@@ -379,7 +387,7 @@ class Form < ActiveRecord::Base
   def self.export_library
     begin
       base_path = "/tmp/"
-      zip_file_path = "#{base_path}library-export.zip"
+      zip_file_path = "#{base_path}#{I18n.translate('library_export_file_name')}.zip"
       form_elements_file_name = "library-elements"
       library_elements = []
 
@@ -415,10 +423,10 @@ class Form < ActiveRecord::Base
         begin
           zip_contents = zip.read("library-elements")
         rescue
-          raise "The zip file did not contain a form library export. Please ensure you aren't trying to import a single form."
+          raise(I18n.translate('zip_file_missing_library_export'))
         end
 
-        raise "The import file did not contain any content." if zip_contents.blank?
+        raise(I18n.translate('import_file_empty')) if zip_contents.blank?
 
         transaction do
           import_elements(zip_contents)
@@ -469,14 +477,14 @@ class Form < ActiveRecord::Base
   def structural_errors
     structural_errors = form_base_element.structural_errors
 
-    structural_errors << "Form base element is invalid" unless form_base_element.class.name == "FormBaseElement"
+    structural_errors << :invalid_base_element unless form_base_element.class.name == "FormBaseElement"
 
     if form_base_element.children_count == 3
-      structural_errors << "Investigator view element container is the wrong type" unless form_base_element.children[0].class.name == "InvestigatorViewElementContainer"
-      structural_errors << "Core view element container is the wrong type" unless form_base_element.children[1].class.name == "CoreViewElementContainer"
-      structural_errors << "Core field element container is the wrong type" unless form_base_element.children[2].class.name == "CoreFieldElementContainer"
+      structural_errors << :investigator_view_type unless form_base_element.children[0].class.name == "InvestigatorViewElementContainer"
+      structural_errors << :core_view_type unless form_base_element.children[1].class.name == "CoreViewElementContainer"
+      structural_errors << :core_field_type unless form_base_element.children[2].class.name == "CoreFieldElementContainer"
     else
-      structural_errors << "Form does not contain the correct top-level containers"
+      structural_errors << :incorrect_top_level
     end
 
     structural_errors
@@ -522,10 +530,13 @@ class Form < ActiveRecord::Base
       form_base_element.add_child(core_view_element_container)
       form_base_element.add_child(core_field_element_container)
 
-      default_view_element = ViewElement.create({:form_id => self.id, :tree_id => tree_id, :name => "Default View"})
+      default_view_element = ViewElement.create({
+          :form_id => self.id, 
+          :tree_id => tree_id,
+          :name => I18n.translate('default_view', :locale => I18n.default_locale)})
       investigator_view_element_container.add_child(default_view_element)
     rescue Exception => ex
-      errors.add_to_base("An error occurred initializing form elements")
+      errors.add_to_base(:initialization_error)
       logger.error ex
       raise
     end
@@ -615,7 +626,7 @@ class Form < ActiveRecord::Base
 
   def self.import_elements(element_import_string, form_id = nil)
     elements = ActiveSupport::JSON.decode(element_import_string)
-    raise "The import file did not contain any content." if elements.empty?
+    raise(I18n.translate('import_file_empty')) if elements.empty?
     parent_id_map = {}
     tree_id = FormElement.next_tree_id unless form_id.nil?
 
@@ -654,7 +665,12 @@ class Form < ActiveRecord::Base
             element_type = "value set"
             identifier = e["name"]
           end
-          raise "Unable to find export column data (#{disease_group_name}:#{export_column_name}) required to import #{element_type} '#{identifier}'"
+
+          raise(I18n.translate('unable_to_find_export_column_data',
+              :disease_group_name => disease_group_name,
+              :export_column_name => export_column_name,
+              :element_type => element_type,
+              :identifier => identifier))
         end
       else
         values[:export_column_id] =  null_safe_sanitize(e["export_column_id"])
@@ -673,7 +689,11 @@ class Form < ActiveRecord::Base
           raise if export_conversion_value.nil?
           values[:export_conversion_value_id] = export_conversion_value.id
         rescue
-          raise "Unable to find export conversion value data (#{disease_group_name}:#{export_column_name}:#{value_from}:#{value_to}) required to import a value."
+          raise(I18n.translate('unable_to_find_export_conversion_value_date',
+              :disease_group_name => disease_group_name,
+              :export_column_name => export_column_name,
+              :value_from => value_from,
+              :value_to => value_to))
         end
       else
         values[:export_conversion_value_id] =  null_safe_sanitize(e["export_conversion_value_id"])
@@ -686,7 +706,10 @@ class Form < ActiveRecord::Base
           raise if external_code.nil?
           values[:condition] = external_code.id
         rescue
-          raise "Unable to find the system code (#{code_name}:#{the_code}) required to import a core follow up on #{e["core_path"]}"
+           raise(I18n.translate('unable_to_find_system_code_fore_core_follow_up',
+              :code_name => code_name,
+              :the_code => the_code,
+              :core_path => e["core_path"]))
         end
       else
         values[:condition] =  null_safe_sanitize(e["condition"])
