@@ -25,7 +25,7 @@ GEM_DIR=../lib/gems/
 
 echo "installing gems"
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-openssl-0.2.3.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/postgres-pr-0.4.0.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/pg-0.8.0.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/builder-2.1.2.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hpricot-0.6.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyforge-1.0.0.gem
@@ -35,23 +35,26 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.3.3
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-0.9.2.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ci_reporter-1.5.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rest-open-uri-1.0.0.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.12.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/warbler-0.9.14.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/flexmock-0.8.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/lockfile-1.4.3.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-0.9.4.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/logging-1.3.0.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/little-plugger-1.1.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/json_pure-1.1.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyzip-0.9.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mislav-will_paginate-2.3.6.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-1.2.8.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rspec-rails-1.2.7.1.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/haml-2.0.7.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-0.9.1.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.2.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.3.2.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.3.2.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.2.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.2.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.2.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rack-1.0.1.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails-2.3.5.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activesupport-2.3.5.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activeresource-2.3.5.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-2.3.5.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack-2.3.5.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.5.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
-sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/thoughtbot-factory_girl-1.2.1.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_girl-1.2.3.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/freshy_filter_chain-0.1.0.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/validates_timeliness-2.2.2.gem
