@@ -1,0 +1,8 @@
+#! /usr/bin/env ruby
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'trisano/deployment'
+
+include Trisano
+Deployment.delete_plugin_links
+deployment = Deployment.new(ARGV.shift || 'development')
+deployment.link_plugins
