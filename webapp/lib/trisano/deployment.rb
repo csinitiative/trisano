@@ -6,7 +6,7 @@ module Trisano
   class Deployment
 
     class << self
-      def delete_plugin_links
+      def delete_all_plugin_links
         Dir[trisano_extensions].each do |ext|
           FileUtils.rm(ext) if File.symlink?(ext)
         end
@@ -42,6 +42,9 @@ module Trisano
         File.join(app_dir, 'deployments')
       end
 
+      def descriptor_path(deployment)
+        File.join(deployments, deployment, 'descriptor.yml')
+      end
     end
 
     def initialize(deployment)
@@ -49,7 +52,7 @@ module Trisano
       @class_delegator = SimpleDelegator.new(self.class)
     end
 
-    def link_plugins
+    def create_plugin_symlinks
       plugins.each do |plugin_name|
         unless File.exists?(trisano_extension(plugin_name))
           FileUtils.ln_sf(plugin(plugin_name), trisano_extension(plugin_name))
@@ -63,8 +66,8 @@ module Trisano
 
     def descriptor
       return @descriptor if @descriptor
-      f = File.join(deployments, @deployment, 'descriptor.yml')
-      @descriptor = YAML.load_file(f)
+      f = descriptor_path(@deployment)
+      @descriptor = YAML.load(IO.read(f))
     end
 
     def method_missing(symbol, *args)

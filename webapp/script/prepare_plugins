@@ -3,6 +3,6 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'trisano/deployment'
 
 include Trisano
-Deployment.delete_plugin_links
+Deployment.delete_all_plugin_links
 deployment = Deployment.new(ARGV.shift || 'development')
-deployment.link_plugins
+deployment.create_plugin_symlinks
