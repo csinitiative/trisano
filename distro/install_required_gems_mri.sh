@@ -58,3 +58,4 @@ sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.ge
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_girl-1.2.3.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/freshy_filter_chain-0.1.0.gem
 sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/validates_timeliness-2.2.2.gem
+sudo gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mocha-0.9.8.gem
