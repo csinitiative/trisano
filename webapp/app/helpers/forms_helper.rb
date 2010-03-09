@@ -81,13 +81,14 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("view_#{element.id}_children", :constraint => :vertical, :only => "sortable", :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("view_#{element.id}_children", element, :only => 'sortable')
       end
 
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('view_element')
     end
   end
@@ -114,13 +115,14 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("view_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("view_#{h(element.id)}_children", element)
       end
 
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('core_view_element')
     end
   end
@@ -167,6 +169,7 @@ module FormsHelper
       return result
     rescue Exception => e
       logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('core_field_element')
     end
   end
@@ -189,14 +192,15 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("before_core_field_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("before_core_field_#{h(element.id)}_children", element)
       end
 
       result << "<div id='question-mods-#{h(element.id.to_s)}'></div>"
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('before_core_field')
     end
   end
@@ -219,14 +223,15 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("after_core_field_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("after_core_field_#{h(element.id)}_children", element)
       end
 
       result << "<div id='question-mods-#{h(element.id.to_s)}'></div>"
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('after_core_field')
     end
   end
@@ -253,13 +258,14 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("section_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("section_#{h(element.id)}_children", element)
       end
 
       result << "</ul>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('section_element')
     end
   end
@@ -279,13 +285,14 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("section_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("section_#{h(element.id)}_children", element)
       end
 
       result << "</ul>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('group_element')
     end
   end
@@ -329,8 +336,9 @@ module FormsHelper
 
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('question_element')
     end
   end
@@ -383,7 +391,7 @@ module FormsHelper
           result << render_element(form_elements_cache, child, include_children)
         end
         result << "</ul>"
-        result << sortable_element("follow_up_#{h(element.id)}_children", :constraint => :vertical, :url => { :controller => 'forms', :action => 'order_section_children', :id => element.id})
+        result << sortable_fb_element("follow_up_#{h(element.id)}_children", element)
       end
 
       result << "<div id='question-mods-#{h(element.id.to_s)}'></div>"
@@ -394,6 +402,15 @@ module FormsHelper
       logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('follow_up_element')
     end
+  end
+
+  def sortable_fb_element(html_id, element, options = {})
+    options = {:handle => '.question', :constraint => :vertical, :url => order_section_children_path(element)}.merge(options)
+    sortable_element(h(html_id), options)
+  end
+
+  def order_section_children_path(element)
+    url_for(:controller => :forms, :action => :order_section_children, :id => element.id)
   end
 
   def render_value_set(form_elements_cache, element, include_children=true)
@@ -431,7 +448,8 @@ module FormsHelper
       result << "</li>"
       return result
     rescue Exception => e
-      logger.debug($!)
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('value_set_element')
     end
   end
@@ -453,8 +471,9 @@ module FormsHelper
       result << "<div id='value-mods-#{h(element.id.to_s)}'></div>" if include_children
       result << "</li>"
       return result
-    rescue
-      logger.debug($!)
+    rescue Exception => e
+      logger.debug(e.message)
+      logger.debug(e.backtrace.join("\n"))
       could_not_render element, t('value_element')
     end
   end
