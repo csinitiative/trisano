@@ -296,10 +296,16 @@ module ApplicationHelper
 
   def dom_loaded
     concat("<script type='text/javascript'>\n")
-    concat("  document.observe('dom:loaded', function() {\n")
+    concat("  document.observe('trisano:dom:loaded', function() {\n")
     yield if block_given?
     concat("  });\n")
     concat("</script>\n")
+  end
+
+  def fire_document_loaded
+    javascript_tag do
+      "document.fire('trisano:dom:loaded')"
+    end
   end
 
   def render_extensions(*args)
