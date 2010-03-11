@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Place do
+  include PlaceSpecHelper
 
   fixtures :places, :entities, :places_types
 
@@ -79,11 +80,6 @@ describe Place do
       Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "Unassigned"
     end
 
-    it "should be able to place 'xUnassigned' at the top of the list in the test locale" do
-      I18n.locale = :test
-      jurisdictions = put_unassigned_at_the_bottom(Place.jurisdictions)
-      Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "xUnassigned"
-    end
   end
 
   describe "class method" do
@@ -206,12 +202,6 @@ describe Place do
       place = Place.create(:name => 'Unassigned', :place_type_ids => [Code.jurisdiction_place_type_id])
       place.errors.on(:name).should == "'Unassigned' is special for jurisdictions. Please choose a different name."
     end
-  end
-
-  def put_unassigned_at_the_bottom(jurisdictions)
-    unassigned = jurisdictions.find { |jurisdiction| jurisdiction.read_attribute(:name) == "Unassigned" }
-    jurisdictions.insert(jurisdictions.size-1, jurisdictions.delete(unassigned))
-    jurisdictions
   end
 
 end

@@ -73,12 +73,6 @@ describe CoreField do
     cf.name.should == 'Places'
   end
 
-  it "should pull test translations for name" do
-    I18n.locale = :test
-    cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
-    cf.name.should == 'xPlaces'
-  end
-
   it "should return scope for I18n retrieval" do
     cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
     cf.i18n_scope.should == ['event_fields', 'morbidity_event']

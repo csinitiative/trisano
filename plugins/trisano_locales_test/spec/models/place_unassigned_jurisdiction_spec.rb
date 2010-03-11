@@ -15,12 +15,20 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_helper')
 
 describe Place, "when working with the unassigned jurisdiction" do
+  include PlaceSpecHelper
 
-  fixtures :places
-  
+  before :all do
+    PlaceEntity.delete_all
+    Place.delete_all
+  end
+
+  after :all do
+    Fixtures.reset_cache
+  end
+
   before(:each) do
     @place = Place.new
   end
@@ -79,6 +87,14 @@ describe Place, "when working with the unassigned jurisdiction" do
     @place.place_types << Code.jurisdiction_place_type
     I18n.locale = :test
     @place.short_name.should == "xUnassigned"
+  end
+
+  it "should be able to place 'xUnassigned' at the top of the list in the test locale" do
+    create_jurisdiction_entity
+    create_jurisdiction_entity(:place_attributes => { :name => "Unassigned", :short_name => "Unassigned" })
+    I18n.locale = :test
+    jurisdictions = put_unassigned_at_the_bottom(Place.jurisdictions)
+    Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "xUnassigned"
   end
 
 end
