@@ -18,14 +18,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe EventQueuesController do
   before(:each) do
     mock_user
-    @user.stub!(:jurisdiction_ids_for_privilege).with(:administer).and_return([75])
+    @user.stubs(:jurisdiction_ids_for_privilege).with(:administer).returns([75])
   end
 
   describe "handling GET /event_queues" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue)
-      EventQueue.stub!(:find).and_return([@event_queue])
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns([@event_queue])
     end
   
     def do_get
@@ -43,7 +43,7 @@ describe EventQueuesController do
     end
   
     it "should find all event_queues" do
-      EventQueue.should_receive(:find).and_return([@event_queue])
+      EventQueue.expects(:find).returns([@event_queue])
       do_get
     end
   
@@ -56,8 +56,8 @@ describe EventQueuesController do
   describe "handling GET /event_queues.xml" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue, :to_xml => "XML")
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
   
     def do_get
@@ -71,12 +71,12 @@ describe EventQueuesController do
     end
 
     it "should find all event_queues" do
-      EventQueue.should_receive(:find).and_return([@event_queue])
+      EventQueue.expects(:find).returns([@event_queue])
       do_get
     end
   
     it "should render the found event_queues as xml" do
-      @event_queue.should_receive(:to_xml).and_return("XML")
+      @event_queue.expects(:to_xml).returns("XML")
       do_get
       response.body.should == "XML"
     end
@@ -85,8 +85,8 @@ describe EventQueuesController do
   describe "handling GET /event_queues/1" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue)
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
   
     def do_get
@@ -104,7 +104,7 @@ describe EventQueuesController do
     end
   
     it "should find the event_queue requested" do
-      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+      EventQueue.expects(:find).with("1").returns(@event_queue)
       do_get
     end
   
@@ -117,8 +117,8 @@ describe EventQueuesController do
   describe "handling GET /event_queues/1.xml" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue, :to_xml => "XML")
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
   
     def do_get
@@ -132,12 +132,12 @@ describe EventQueuesController do
     end
   
     it "should find the event_queue requested" do
-      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+      EventQueue.expects(:find).with("1").returns(@event_queue)
       do_get
     end
   
     it "should render the found event_queue as xml" do
-      @event_queue.should_receive(:to_xml).and_return("XML")
+      @event_queue.expects(:to_xml).returns("XML")
       do_get
       response.body.should == "XML"
     end
@@ -146,8 +146,8 @@ describe EventQueuesController do
   describe "handling GET /event_queues/new" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue)
-      EventQueue.stub!(:new).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:new).returns(@event_queue)
     end
   
     def do_get
@@ -165,12 +165,12 @@ describe EventQueuesController do
     end
   
     it "should create an new event_queue" do
-      EventQueue.should_receive(:new).and_return(@event_queue)
+      EventQueue.expects(:new).returns(@event_queue)
       do_get
     end
   
     it "should not save the new event_queue" do
-      @event_queue.should_not_receive(:save)
+      @event_queue.expects(:save).never
       do_get
     end
   
@@ -187,8 +187,8 @@ describe EventQueuesController do
     end
 
     before(:each) do
-      @event_queue = mock_model(EventQueue)
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
  
     it "should be successful" do
@@ -202,7 +202,7 @@ describe EventQueuesController do
     end
   
     it "should find the event_queue requested" do
-      EventQueue.should_receive(:find).and_return(@event_queue)
+      EventQueue.expects(:find).returns(@event_queue)
       do_get
     end
   
@@ -215,25 +215,25 @@ describe EventQueuesController do
   describe "handling POST /event_queues" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue, :to_param => "1")
-      EventQueue.stub!(:new).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:new).returns(@event_queue)
     end
     
     describe "with successful save" do
   
       def do_post
-        @event_queue.should_receive(:save).and_return(true)
+        @event_queue.expects(:save).returns(true)
         post :create, :event_queue => {}
       end
  
       it "should create a new event_queue" do
-        EventQueue.should_receive(:new).with({}).and_return(@event_queue)
+        EventQueue.expects(:new).with({}).returns(@event_queue)
         do_post
       end
 
       it "should redirect to the new event_queue" do
         do_post
-        response.should redirect_to(event_queue_url("1"))
+        response.should redirect_to(event_queue_url(@event_queue))
       end
       
     end
@@ -241,7 +241,7 @@ describe EventQueuesController do
     describe "with failed save" do
 
       def do_post
-        @event_queue.should_receive(:save).and_return(false)
+        @event_queue.expects(:save).returns(false)
         post :create, :event_queue => {}
       end
   
@@ -256,19 +256,19 @@ describe EventQueuesController do
   describe "handling PUT /event_queues/1" do
     
     before(:each) do
-      @event_queue = mock_model(EventQueue, :to_param => "1")
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
     
     describe "with successful update" do
 
       def do_put
-        @event_queue.should_receive(:update_attributes).and_return(true)
+        @event_queue.expects(:update_attributes).returns(true)
         put :update, :id => "1"
       end
 
       it "should find the event_queue requested" do
-        EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+        EventQueue.expects(:find).with("1").returns(@event_queue)
         do_put
       end
 
@@ -284,7 +284,7 @@ describe EventQueuesController do
 
       it "should redirect to the event_queue" do
         do_put
-        response.should redirect_to(event_queue_url("1"))
+        response.should redirect_to(event_queue_url(@event_queue))
       end
 
     end
@@ -292,7 +292,7 @@ describe EventQueuesController do
     describe "with failed update" do
 
       def do_put
-        @event_queue.should_receive(:update_attributes).and_return(false)
+        @event_queue.expects(:update_attributes).returns(false)
         put :update, :id => "1"
       end
 
@@ -307,8 +307,8 @@ describe EventQueuesController do
   describe "handling DELETE /event_queues/1" do
 
     before(:each) do
-      @event_queue = mock_model(EventQueue, :destroy => true)
-      EventQueue.stub!(:find).and_return(@event_queue)
+      @event_queue = Factory.create(:event_queue)
+      EventQueue.stubs(:find).returns(@event_queue)
     end
   
     def do_delete
@@ -316,12 +316,12 @@ describe EventQueuesController do
     end
 
     it "should find the event_queue requested" do
-      EventQueue.should_receive(:find).with("1").and_return(@event_queue)
+      EventQueue.expects(:find).with("1").returns(@event_queue)
       do_delete
     end
   
     it "should call destroy on the found event_queue" do
-      @event_queue.should_receive(:destroy)
+      @event_queue.expects(:destroy)
       do_delete
     end
   

@@ -20,6 +20,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CommonTestType do
   fixtures :external_codes
 
+  before :all do
+    CoreField.delete_all  # There's been fixutures spotted around these parts.
+  end
+
+  after :all do
+    Fixtures.reset_cache
+  end
+
   describe 'associations' do
     it { should have_many(:common_test_types_diseases) }
     it { should have_many(:diseases) }

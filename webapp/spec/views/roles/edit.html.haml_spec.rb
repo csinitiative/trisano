@@ -23,12 +23,12 @@ describe "/roles/edit.html.haml" do
   before do
     @user = mock_user
     assigns[:user] = @user
-    @role = mock_model(Role)
-    @role.stub!(:find).and_return([@role])
-    @role.stub!(:role_name).and_return("role name")
-    @role.stub!(:description).and_return("role description")
-    @role.stub!(:role_memberships).and_return([])
-    @role.stub!(:privileges_roles).and_return([])
+    @role = Factory.create(:role)
+    @role.stubs(:find).returns([@role])
+    @role.stubs(:role_name).returns("role name")
+    @role.stubs(:description).returns("role description")
+    @role.stubs(:role_memberships).returns([])
+    @role.stubs(:privileges_roles).returns([])
     assigns[:role] = @role
   end
 

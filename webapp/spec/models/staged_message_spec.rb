@@ -23,7 +23,7 @@ describe StagedMessage do
 
   before(:each) do
     @user = users(:default_user)
-    User.stub!(:current_user).and_return(@user)
+    User.stubs(:current_user).returns(@user)
 
     @valid_attributes = {
       :hl7_message => hl7_messages[:arup_1]

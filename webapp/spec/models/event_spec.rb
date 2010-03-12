@@ -187,7 +187,7 @@ describe MorbidityEvent do
         before(:each) do
           @event = MorbidityEvent.new()
           @user = users(:default_user)
-          User.stub!(:current_user).and_return(@user)
+          User.stubs(:current_user).returns(@user)
           @event.save
         end
 
@@ -213,7 +213,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @user = users(:default_user)
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
       @event = MorbidityEvent.new
       @event.save!
     end
@@ -266,7 +266,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @user = users(:default_user)
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
       @event = MorbidityEvent.find(events(:marks_cmr).id)
     end
 
@@ -277,7 +277,7 @@ describe MorbidityEvent do
       end
 
       it "should change the jurisdiction and event state" do
-        @event.jurisdiction.stub!(:allows_current_user_to?).and_return(true)
+        @event.jurisdiction.stubs(:allows_current_user_to?).returns(true)
         @event.jurisdiction.place_entity.place.name.should == places(:Southeastern_District).name
         @event.assign_to_lhd(entities(:Davis_County), [], nil)
         @event.jurisdiction.place_entity.place.name.should == places(:Davis_County).name
@@ -392,7 +392,7 @@ describe MorbidityEvent do
       event.save!
       event = Event.find(event.id)
       event.review_completed_by_state_date.should == nil
-      event.jurisdiction.stub!(:allows_current_user_to?).and_return true
+      event.jurisdiction.stubs(:allows_current_user_to?).returns true
       event.approve 'A note'
       event.save!
       event.review_completed_by_state_date.should == Date.today
@@ -442,9 +442,9 @@ describe MorbidityEvent do
 
     before(:each) do
       @event = MorbidityEvent.create
-      @permissive_jurisdiction = stub_model(Jurisdiction)
-      @permissive_jurisdiction.stub!(:allows_current_user_to?).and_return(true)
-      User.stub!(:current_user).and_return(nil) #just in case some old stubbin' is around
+      @permissive_jurisdiction = Factory.build(:jurisdiction)
+      @permissive_jurisdiction.stubs(:allows_current_user_to?).returns(true)
+      User.stubs(:current_user).returns(nil) #just in case some old stubbin' is around
     end
 
     it "should be able to assign to an investigator, when accepted by lhd" do
@@ -474,8 +474,8 @@ describe MorbidityEvent do
     end
 
     it 'should be able to transition from :new to :assigned_to_lhd' do
-      @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
-      @event.should_receive(:route_to_jurisdiction).and_return true
+      @event.stubs(:jurisdiction).returns @permissive_jurisdiction
+      @event.expects(:route_to_jurisdiction).returns true
       @event.assign_to_lhd(nil, nil, nil)
       @event.workflow_state.should == 'assigned_to_lhd'
       @event.current_state.name.should == :assigned_to_lhd
@@ -483,9 +483,9 @@ describe MorbidityEvent do
     end
 
     it 'should be able to move between states, as allowed by transitions' do
-      @event.stub!(:jurisdiction).and_return @permissive_jurisdiction
-      @event.stub!(:route_to_jurisdiction).and_return true
-      @event.stub!(:primary_jurisdiction).and_return nil
+      @event.stubs(:jurisdiction).returns @permissive_jurisdiction
+      @event.stubs(:route_to_jurisdiction).returns true
+      @event.stubs(:primary_jurisdiction).returns nil
       @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd
       @event.reset_to_new
@@ -518,14 +518,14 @@ describe MorbidityEvent do
   describe "Support for investigation view elements" do
 
     def ref(form)
-      ref = mock(FormReference)
-      ref.should_receive(:form).and_return(form)
+      ref = Factory.build(:form_reference)
+      ref.expects(:form).returns(form)
       ref
     end
 
     def investigation_form(is_a)
-      form = mock(Form)
-      form.stub!(:has_investigator_view_elements?).and_return(is_a)
+      form = Factory.build(:form)
+      form.stubs(:has_investigator_view_elements?).returns(is_a)
       form
     end
 
@@ -534,7 +534,7 @@ describe MorbidityEvent do
       core_view_form = investigation_form(false)
       core_field_form = investigation_form(false)
       event = Event.new
-      event.should_receive(:form_references).and_return([ref(core_field_form), ref(core_view_form), ref(investigation_form)])
+      event.expects(:form_references).returns([ref(core_field_form), ref(core_view_form), ref(investigation_form)])
       event
     end
 
@@ -799,9 +799,9 @@ describe MorbidityEvent do
       jurisdiction_id = role_memberships(:default_user_admin_role_southeastern_district).jurisdiction_id
 
       @user = users(:default_user)
-      @user.stub!(:jurisdiction_ids_for_privilege).and_return([jurisdiction_id])
-      User.stub!(:current_user).and_return(@user)
-      MorbidityEvent.stub!(:get_allowed_queues).and_return([[1], ["Speedy-BearRiver"]])
+      @user.stubs(:jurisdiction_ids_for_privilege).returns([jurisdiction_id])
+      User.stubs(:current_user).returns(@user)
+      MorbidityEvent.stubs(:get_allowed_queues).returns([[1], ["Speedy-BearRiver"]])
 
       @event_hash = {
         "interested_party_attributes" => {
@@ -953,7 +953,7 @@ describe MorbidityEvent do
     end
 
     it "should sort appropriately" do
-      @user.stub!(:jurisdiction_ids_for_privilege).and_return([places(:Southeastern_District).entity_id,
+      @user.stubs(:jurisdiction_ids_for_privilege).returns([places(:Southeastern_District).entity_id,
           places(:Davis_County).entity_id,
           places(:Summit_County).entity_id])
 
@@ -996,7 +996,7 @@ describe MorbidityEvent do
       MorbidityEvent.create(@event_hash)
 
       HumanEvent.find_all_for_filtered_view.size.should == 3
-      @user.should_receive(:update_attribute)
+      @user.expects(:update_attribute)
       HumanEvent.find_all_for_filtered_view({:queues => ["Enterics-BearRiver"], :set_as_default_view => "1"}).size.should == 1
     end
 
@@ -1416,7 +1416,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @user = users(:default_user)
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
       @event_hash = {
         "interested_party_attributes" => {
           "person_entity_attributes" => {
@@ -1551,7 +1551,7 @@ describe Event, 'cloning an event' do
   fixtures :users, :places, :places_types, :diseases, :entities
 
   before :each do
-    User.stub!(:current_user).and_return(users(:default_user))
+    User.stubs(:current_user).returns(users(:default_user))
 
     @event_hash = {
       "interested_party_attributes" => {

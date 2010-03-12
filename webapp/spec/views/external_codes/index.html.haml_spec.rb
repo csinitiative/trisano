@@ -22,15 +22,15 @@ describe "/external_codes/index.html.haml" do
 
   before(:each) do
 
-    cn1 = mock_model(CodeName)
-    cn1.stub!(:code_name).and_return('test1')
-    cn1.stub!(:description).and_return('Test 1')
-    cn1.stub!(:external).and_return(true)
+    cn1 = Factory.build(:code_name)
+    cn1.stubs(:code_name).returns('test1')
+    cn1.stubs(:description).returns('Test 1')
+    cn1.stubs(:external).returns(true)
 
-    cn2 = mock_model(CodeName)
-    cn2.stub!(:code_name).and_return('test2')
-    cn2.stub!(:description).and_return('Test 2')
-    cn2.stub!(:external).and_return(true)
+    cn2 = Factory.build(:code_name)
+    cn2.stubs(:code_name).returns('test2')
+    cn2.stubs(:description).returns('Test 2')
+    cn2.stubs(:external).returns(true)
 
     assigns[:code_names] = [cn1, cn2]
   end

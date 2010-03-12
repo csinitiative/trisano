@@ -21,16 +21,16 @@ describe EventNotesController do
   before(:each) do
     mock_user
     @event = mock_event
-    Event.stub!(:find).and_return(@event)
+    Event.stubs(:find).returns(@event)
   end
 
   describe "handling GET /events/1/notes with view event entitlement" do
 
     before(:each) do
-      @note_1 = mock_model(Note)
-      @note_2 = mock_model(Note)
-      Note.stub!(:find).and_return([@note_1, @note_2])
-      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @note_1 = Factory.build(:note)
+      @note_2 = Factory.build(:note)
+      Note.stubs(:find).returns([@note_1, @note_2])
+      @user.stubs(:is_entitled_to_in?).returns(true)
     end
   
     def do_get
@@ -58,7 +58,7 @@ describe EventNotesController do
   describe "handling GET /events/1/notes without view event entitlement" do
 
     before(:each) do
-      @user.stub!(:is_entitled_to_in?).and_return(false)
+      @user.stubs(:is_entitled_to_in?).returns(false)
     end
 
     def do_get
@@ -79,8 +79,8 @@ describe EventNotesController do
   describe "handling GET /events/1/notes without a valid event" do
 
     before(:each) do
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get

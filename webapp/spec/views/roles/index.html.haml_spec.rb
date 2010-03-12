@@ -21,12 +21,12 @@ describe "/roles/index.html.haml" do
   include RolesHelper
   
   before(:each) do
-    role_98 = mock_model(Role)
-    role_98.stub!(:find).and_return([@role])
-    role_98.stub!(:role_name).and_return("role name")
-    role_98.stub!(:description).and_return("role description")
-    role_98.stub!(:role_memberships).and_return([])
-    role_98.stub!(:privileges_roles).and_return([])
+    role_98 = Factory.create(:role)
+    role_98.stubs(:find).returns([@role])
+    role_98.stubs(:role_name).returns("role name")
+    role_98.stubs(:description).returns("role description")
+    role_98.stubs(:role_memberships).returns([])
+    role_98.stubs(:privileges_roles).returns([])
 
     assigns[:roles] = [role_98, role_98]
   end

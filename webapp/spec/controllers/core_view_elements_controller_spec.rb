@@ -22,8 +22,8 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement)
-      CoreViewElement.stub!(:find).and_return([@core_view_element])
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:find).returns([@core_view_element])
     end
   
     def do_get
@@ -40,8 +40,8 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement)
-      CoreViewElement.stub!(:find).and_return(@core_view_element)
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:find).returns(@core_view_element)
     end
   
     def do_get
@@ -58,9 +58,9 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement)
-      CoreViewElement.stub!(:new).and_return(@core_view_element)
-      @core_view_element.stub!(:available_core_views).and_return([])
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:new).returns(@core_view_element)
+      @core_view_element.stubs(:available_core_views).returns([])
     end
   
     def do_get
@@ -78,12 +78,12 @@ describe CoreViewElementsController do
     end
   
     it "should create an new core_view_element" do
-      CoreViewElement.should_receive(:new).and_return(@core_view_element)
+      CoreViewElement.expects(:new).returns(@core_view_element)
       do_get
     end
   
     it "should not save the new core_view_element" do
-      @core_view_element.should_not_receive(:save)
+      @core_view_element.expects(:save).never
       do_get
     end
   
@@ -97,8 +97,8 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement)
-      CoreViewElement.stub!(:find).and_return(@core_view_element)
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:find).returns(@core_view_element)
     end
   
     def do_get
@@ -115,22 +115,22 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement, :to_param => "1")
-      @core_view_element.stub!(:form_id).and_return(1)
-      CoreViewElement.stub!(:new).and_return(@core_view_element)
+      @core_view_element = Factory.build(:core_view_element)
+      @core_view_element.stubs(:form_id).returns(1)
+      CoreViewElement.stubs(:new).returns(@core_view_element)
     end
     
     describe "with successful save" do
   
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @core_view_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @core_view_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         post :create, :core_view_element => {}
       end
   
       it "should create a new core_view_element" do
-        CoreViewElement.should_receive(:new).with({}).and_return(@core_view_element)
+        CoreViewElement.expects(:new).with({}).returns(@core_view_element)
         do_post
       end
 
@@ -145,9 +145,9 @@ describe CoreViewElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @core_view_element.should_receive(:save_and_add_to_form).and_return(false)
-        @core_view_element.stub!(:available_core_views).and_return([])
-        @core_view_element.errors.should_receive(:each)
+        @core_view_element.expects(:save_and_add_to_form).returns(false)
+        @core_view_element.stubs(:available_core_views).returns([])
+        @core_view_element.errors.expects(:each)
         post :create, :core_view_element => {}
       end
   
@@ -163,8 +163,8 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement, :to_param => "1")
-      CoreViewElement.stub!(:find).and_return(@core_view_element)
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:find).returns(@core_view_element)
     end
     
     def do_put
@@ -181,8 +181,8 @@ describe CoreViewElementsController do
 
     before(:each) do
       mock_user
-      @core_view_element = mock_model(CoreViewElement, :destroy_and_validate => true)
-      CoreViewElement.stub!(:find).and_return(@core_view_element)
+      @core_view_element = Factory.build(:core_view_element)
+      CoreViewElement.stubs(:find).returns(@core_view_element)
     end
   
     def do_delete
@@ -190,12 +190,12 @@ describe CoreViewElementsController do
     end
 
     it "should find the core_view_element requested" do
-      CoreViewElement.should_receive(:find).with("1").and_return(@core_view_element)
+      CoreViewElement.expects(:find).with("1").returns(@core_view_element)
       do_delete
     end
   
     it "should call destroy on the found core_view_element" do
-      @core_view_element.should_receive(:destroy_and_validate)
+      @core_view_element.expects(:destroy_and_validate)
       do_delete
     end
   

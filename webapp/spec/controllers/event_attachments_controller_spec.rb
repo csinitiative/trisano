@@ -21,12 +21,12 @@ describe EventAttachmentsController do
 
   before(:each) do
     mock_user
-    @user.stub!(:is_entitled_to_in?).and_return(true)
+    @user.stubs(:is_entitled_to_in?).returns(true)
     @event = mock_event
-    @event.stub!(:id).and_return(1)
-    @event.stub!(:save).and_return(true)
-    Event.stub!(:find).and_return(@event)
-    User.stub!(:current_user).and_return(@user)
+    @event.stubs(:id).returns(1)
+    @event.stubs(:save).returns(true)
+    Event.stubs(:find).returns(@event)
+    User.stubs(:current_user).returns(@user)
   end
   
   describe "handling GET /events/1/attachments with view event entitlement" do
@@ -49,9 +49,9 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments without view event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      Attachment.stub!(:new).and_return(@attachment)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      Attachment.stubs(:new).returns(@attachment)
     end
 
     def do_get
@@ -73,9 +73,9 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments without a valid event" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -92,13 +92,13 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/new with view event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Attachment.stub!(:new).and_return(@attachment)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Attachment.stubs(:new).returns(@attachment)
     end
 
     def do_get
-      @attachment.should_receive(:event_id=).with(1)
+      @attachment.expects(:event_id=).with(1)
       get :new, :event_id => "1"
     end
 
@@ -122,9 +122,9 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/new without update event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      Attachment.stub!(:new).and_return(@attachment)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      Attachment.stubs(:new).returns(@attachment)
     end
 
     def do_get
@@ -146,9 +146,9 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/new without a valid event" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -165,21 +165,21 @@ describe EventAttachmentsController do
   describe "handling POST /events/1/attachments with update event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Attachment.stub!(:new).and_return(@attachment)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Attachment.stubs(:new).returns(@attachment)
     end
 
     describe "with successful save" do
 
       def do_post
         request.env['HTTP_REFERER'] = "/some_path"
-        @attachment.should_receive(:save).and_return(true)
+        @attachment.expects(:save).returns(true)
         post :create, :attachment => {}
       end
 
       it "should create a new attachment" do
-        Attachment.should_receive(:new).and_return(@attachment)
+        Attachment.expects(:new).returns(@attachment)
         do_post
       end
 
@@ -193,7 +193,7 @@ describe EventAttachmentsController do
     describe "with failed save" do
 
       def do_post
-        @attachment.should_receive(:save).and_return(false)
+        @attachment.expects(:save).returns(false)
         post :create, :attachment => {}
       end
 
@@ -208,9 +208,9 @@ describe EventAttachmentsController do
   describe "handling POST /events/1/attachment without update event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      Attachment.stub!(:new).and_return(@attachment)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      Attachment.stubs(:new).returns(@attachment)
     end
 
     describe "with save attempt" do
@@ -236,9 +236,9 @@ describe EventAttachmentsController do
   describe "handling POST /attachment/1/attachments without a valid event" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -255,17 +255,17 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/1 with view event entitlement" do
 
     before(:each) do
-      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @user.stubs(:is_entitled_to_in?).returns(true)
 
       @attachments = []
-      @event.stub!(:attachments).and_return(@attachments)
+      @event.stubs(:attachments).returns(@attachments)
 
-      @attachment = mock_model(Attachment)
-      @attachment.stub!(:current_data).and_return("some data")
-      @attachment.stub!(:content_type).and_return("text/plain")
-      @attachment.stub!(:filename).and_return("some_file.txt")
+      @attachment = Factory.build(:attachment)
+      @attachment.stubs(:current_data).returns("some data")
+      @attachment.stubs(:content_type).returns("text/plain")
+      @attachment.stubs(:filename).returns("some_file.txt")
 
-      @attachments.stub!(:find).and_return(@attachment)
+      @attachments.stubs(:find).returns(@attachment)
     end
 
     def do_get
@@ -273,8 +273,8 @@ describe EventAttachmentsController do
     end
     
     it "should render a file" do
-      @controller.should_receive(:send_data)
-      @controller.stub!(:render) # http://www.nabble.com/%27Missing-template%27-when-using-send_data-to-render-response-td22538207.html
+      @controller.expects(:send_data)
+      @controller.stubs(:render) # http://www.nabble.com/%27Missing-template%27-when-using-send_data-to-render-response-td22538207.html
       do_get
       response.should be_success
     end
@@ -284,8 +284,8 @@ describe EventAttachmentsController do
   describe "handling GET /events/1/attachments/1 without view event entitlement" do
 
     before(:each) do
-      @attachment = mock_model(Attachment)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
+      @attachment = Factory.build(:attachment)
+      @user.stubs(:is_entitled_to_in?).returns(false)
     end
 
     def do_get
@@ -308,9 +308,9 @@ describe EventAttachmentsController do
 
     before(:each) do
       @attachments = []
-      @event.stub!(:attachments).and_return(@attachments)
-      @attachments.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @event.stubs(:attachments).returns(@attachments)
+      @attachments.stubs(:find).raises(ActiveRecord::RecordNotFound)
+      @user.stubs(:is_entitled_to_in?).returns(true)
     end
 
     def do_get

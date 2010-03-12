@@ -102,6 +102,10 @@ Factory.define :participations_treatment do |pt|
   pt.treatment { Factory.next(:treatment_name) }
 end
 
+Factory.define :participations_contact do |pc|
+  pc.contact_event { Factory.build(:contact_event) }
+end
+
 Factory.define :jurisdiction do |j|
   j.place_entity { create_jurisdiction_entity }
 end
@@ -124,9 +128,14 @@ Factory.define :lab do |l|
   l.lab_results { |lr| [lr.association(:lab_result)] }
 end
 
-# common_test_type factory defined in common_test_type_factories.rb 
+# common_test_type factory defined in common_test_type_factories.rb
 Factory.define :lab_result do |lr|
   lr.test_type { |ctt| ctt.association(:common_test_type) }
+end
+
+Factory.define :answer do |a|
+  a.question { |q| q.association(:question_single_line_text) }
+  a.text_answer { Factory.next(:answer_text) }
 end
 
 Factory.define :answer_single_line_text, :class => :answer do |a|
@@ -168,6 +177,26 @@ end
 
 Factory.define :avr_group do |t|
   t.name { Factory.next(:avr_group_name) }
+end
+
+Factory.define :telephone do |t|
+end
+
+Factory.define :diagnostic_facility do |df|
+end
+
+Factory.define :hospitalization_facility do |hf|
+end
+
+Factory.define :attachment do |a|
+end
+
+Factory.define :event_queue do |eq|
+  eq.queue_name   { Factory.next(:queue_name) }
+  eq.jurisdiction { create_jurisdiction_entity }
+end
+
+Factory.define :code_name do |cn|
 end
 
 #
@@ -232,6 +261,10 @@ end
 
 Factory.sequence :treatment_name do |n|
   "Potion Number #{n}"
+end
+
+Factory.sequence :queue_name do |n|
+  "#{Faker::Lorem.words(1)} #{n}"
 end
 
 def create_diagnostic_facility!(name)

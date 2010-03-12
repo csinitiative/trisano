@@ -54,7 +54,7 @@ describe EventQueue do
       @user = users(:default_user)
       users(:admin_user).event_view_settings = {:diseases => true}
       users(:admin_user).save
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
       event_queues(:enterics_queue).destroy
     end
 

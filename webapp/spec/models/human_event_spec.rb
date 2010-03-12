@@ -490,7 +490,7 @@ describe "When added to an event using an existing person entity" do
 
   before(:each) do
     @user = Factory.create(:user)
-    User.stub!(:current_user).and_return(@user)
+    User.stubs(:current_user).returns(@user)
     @person_entity = Factory.create(:person_entity)
     @person_event_hash = { :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
   end

@@ -293,15 +293,15 @@ describe Form do
     
     def prepare_form
       form = Form.new(:name => "Test Form", :event_type => 'morbidity_event')
-      section = mock(SectionElement)
-      section.stub!(:name).and_return('Something Else')
-      section.stub!(:read_attribute).with(:type).and_return('SectionElement')
-      default_tab = mock(ViewElement)
-      default_tab.stub!(:name).and_return('Default View')
-      default_tab.stub!(:read_attribute).with(:type).and_return('ViewElement')
+      section = Factory.build(:section_element)
+      section.stubs(:name).returns('Something Else')
+      section.stubs(:read_attribute).with(:type).returns('SectionElement')
+      default_tab = Factory.build(:view_element)
+      default_tab.stubs(:name).returns('Default View')
+      default_tab.stubs(:read_attribute).with(:type).returns('ViewElement')
       result = yield(default_tab, section) if block_given?
       container = OpenStruct.new(:all_children => result)
-      form.should_receive(:investigator_view_elements_container).and_return(container)      
+      form.expects(:investigator_view_elements_container).returns(container)
       return form
     end
 
@@ -1124,7 +1124,7 @@ describe Form do
     
     before(:each) do
       @user = users(:default_user)
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
 
       @event_hash = {
         "interested_party_attributes" => {

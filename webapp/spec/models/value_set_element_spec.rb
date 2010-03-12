@@ -102,15 +102,15 @@ describe ValueSetElement do
 
   describe "custom errors" do
     it "should error as too many value sets" do
-      mock_parent = mock(FormElement)
-      mock_parent.stub!(:can_receive_value_set?).and_return(false)
-      FormElement.stub!(:find).and_return(mock_parent)
+      mock_parent = Factory.build(:form_element)
+      mock_parent.stubs(:can_receive_value_set?).returns(false)
+      FormElement.stubs(:find).returns(mock_parent)
       @value_set_element.save_and_add_to_form
       @value_set_element.errors.on_base.should == 'A question can only have one value set'
     end
 
     it "should error if bad parent" do
-      FormElement.stub!(:find).and_raise
+      FormElement.stubs(:find).raises
       @value_set_element.save_and_add_to_form
       @value_set_element.errors.on_base.should == 'An error occurred checking the parent for existing value set children'
     end

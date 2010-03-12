@@ -22,8 +22,8 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement)
-      ViewElement.stub!(:find).and_return([@view_element])
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:find).returns([@view_element])
     end
   
     def do_get
@@ -40,8 +40,8 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement)
-      ViewElement.stub!(:find).and_return(@view_element)
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:find).returns(@view_element)
     end
   
     def do_get
@@ -58,9 +58,9 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement)
-      ViewElement.stub!(:new).and_return(@view_element)
-      @view_element.stub!(:parent_element_id=)
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:new).returns(@view_element)
+      @view_element.stubs(:parent_element_id=)
     end
   
     def do_get
@@ -78,12 +78,12 @@ describe ViewElementsController do
     end
   
     it "should create an new view_element" do
-      ViewElement.should_receive(:new).and_return(@view_element)
+      ViewElement.expects(:new).returns(@view_element)
       do_get
     end
   
     it "should not save the new view_element" do
-      @view_element.should_not_receive(:save)
+      @view_element.expects(:save).never
       do_get
     end
   
@@ -97,8 +97,8 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement)
-      ViewElement.stub!(:find).and_return(@view_element)
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:find).returns(@view_element)
     end
   
     def do_get
@@ -115,22 +115,22 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement, :to_param => "1")
-      @view_element.stub!(:form_id).and_return(1)
-      ViewElement.stub!(:new).and_return(@view_element)
+      @view_element = Factory.build(:view_element)
+      @view_element.stubs(:form_id).returns(1)
+      ViewElement.stubs(:new).returns(@view_element)
     end
     
     describe "with successful save" do
   
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @view_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @view_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         post :create, :view_element => {}
       end
   
       it "should create a new view_element" do
-        ViewElement.should_receive(:new).with({}).and_return(@view_element)
+        ViewElement.expects(:new).with({}).returns(@view_element)
         do_post
       end
 
@@ -145,8 +145,8 @@ describe ViewElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @view_element.should_receive(:save_and_add_to_form).and_return(false)
-        @view_element.errors.should_receive(:each)
+        @view_element.expects(:save_and_add_to_form).returns(false)
+        @view_element.errors.expects(:each)
         post :create, :view_element => {}
       end
   
@@ -162,8 +162,8 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement, :to_param => "1")
-      ViewElement.stub!(:find).and_return(@view_element)
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:find).returns(@view_element)
     end
     
     def do_put
@@ -180,8 +180,8 @@ describe ViewElementsController do
 
     before(:each) do
       mock_user
-      @view_element = mock_model(ViewElement, :destroy_and_validate => true)
-      ViewElement.stub!(:find).and_return(@view_element)
+      @view_element = Factory.build(:view_element)
+      ViewElement.stubs(:find).returns(@view_element)
     end
   
     def do_delete
@@ -189,12 +189,12 @@ describe ViewElementsController do
     end
 
     it "should find the view_element requested" do
-      ViewElement.should_receive(:find).with("1").and_return(@view_element)
+      ViewElement.expects(:find).with("1").returns(@view_element)
       do_delete
     end
   
     it "should call destroy on the found view_element" do
-      @view_element.should_receive(:destroy_and_validate)
+      @view_element.expects(:destroy_and_validate)
       do_delete
     end
   

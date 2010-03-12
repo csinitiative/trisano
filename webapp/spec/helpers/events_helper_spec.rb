@@ -21,6 +21,7 @@ require RAILS_ROOT + '/app/helpers/application_helper'
 describe EventsHelper do
   include ApplicationHelper
   include EventsHelperSpecHelper
+  include EventsSpecHelper
 
   describe "jurisdiction routing controls" do
 
@@ -94,11 +95,11 @@ describe EventsHelper do
   describe "original patient controls" do
 
     it 'should display the patient name and disease for the parent event' do
-      @event = mock_event
-      @encounter_event = mock_model(EncounterEvent)
-      @encounter_event.stub!(:parent_event).and_return(@event)
-      @encounter_event.stub!(:safe_call_chain).with(:parent_event, :disease_event, :disease, :disease_name).and_return("Bubonic,Plague")
-      helper.original_patient_controls(@encounter_event).include?("Groucho Marx").should be_true
+      @event = Factory.create(:morbidity_event)
+      @encounter_event = Factory.create(:encounter_event)
+      @encounter_event.stubs(:parent_event).returns(@event)
+      @encounter_event.stubs(:safe_call_chain).with(:parent_event, :disease_event, :disease, :disease_name).returns("Bubonic,Plague")
+      helper.original_patient_controls(@encounter_event).include?(@event.party.full_name).should be_true
       helper.original_patient_controls(@encounter_event).include?("Bubonic,Plague").should be_true
     end
 
@@ -107,33 +108,19 @@ describe EventsHelper do
   describe "association recorded helper" do
 
     it 'should return false if the provided association is empty' do
-      @event = mock_event
-      @event.stub!(:child_contact_events).and_return([])
-      helper.association_recorded?(@event.child_contact_events).should be_false
+      @event = Factory.create(:morbidity_event)
+      @event.stubs(:contact_child_events).returns([])
+      helper.association_recorded?(@event.contact_child_events).should be_false
     end
 
     it 'should return false if the first record in the association is a new record' do
-      @event = mock_event
-      @child_event_proxy = mock(Object)
-      @new_record = mock(Object)
-      @new_record.stub!(:new_record?).and_return(true)
-      @child_event_proxy.stub!(:respond_to?).and_return(true)
-      @child_event_proxy.stub!(:empty?).and_return(false)
-      @child_event_proxy.stub!(:first).and_return(@new_record)
-      @event.stub!(:child_contact_events).and_return(@child_event_proxy)
-      helper.association_recorded?(@event.child_contact_events).should be_false
+      contact = Factory.build(:contact_event)
+      helper.association_recorded?([contact]).should be_false
     end
 
     it 'should return true if association has a persisted object in it' do
-      @event = mock_event
-      @child_event_proxy = mock(Object)
-      @new_record = mock(Object)
-      @new_record.stub!(:new_record?).and_return(false)
-      @child_event_proxy.stub!(:respond_to?).and_return(true)
-      @child_event_proxy.stub!(:empty?).and_return(false)
-      @child_event_proxy.stub!(:first).and_return(@new_record)
-      @event.stub!(:child_contact_events).and_return(@child_event_proxy)
-      helper.association_recorded?(@event.child_contact_events).should be_true
+      contact = Factory.create(:contact_event)
+      helper.association_recorded?([contact]).should be_true
     end
 
   end
@@ -145,7 +132,7 @@ describe EventsHelper do
                                         :help_text => "Here is some help text"})
       @event = Factory.create(:morbidity_event)
       @fb = mock
-      @fb.stub!(:core_path).and_return(:test_attribute => "morbidity_event[test_attribute]")
+      @fb.stubs(:core_path).returns(:test_attribute => "morbidity_event[test_attribute]")
       helper.render_core_field_help_text(:test_attribute, @fb, @event).should =~ /Here is some help text/i
     end
   end

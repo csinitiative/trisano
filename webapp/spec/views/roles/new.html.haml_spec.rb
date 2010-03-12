@@ -23,13 +23,13 @@ describe "/roles/new.html.haml" do
   before(:each) do
     @user = mock_user
     assigns[:user] = @user
-    @role = mock_model(Role)
-    @role.stub!(:find).and_return([@role])
-    @role.stub!(:role_name).and_return("role name")
-    @role.stub!(:description).and_return("role description")
-    @role.stub!(:role_memberships).and_return([])
-    @role.stub!(:privileges_roles).and_return([])
-    @role.stub!(:new_record?).and_return(true)
+    @role = Factory.build(:role)
+    @role.stubs(:find).returns([@role])
+    @role.stubs(:role_name).returns("role name")
+    @role.stubs(:description).returns("role description")
+    @role.stubs(:role_memberships).returns([])
+    @role.stubs(:privileges_roles).returns([])
+    @role.stubs(:new_record?).returns(true)
     assigns[:role] = @role
   end
 

@@ -681,10 +681,9 @@ module EventsHelper
 
   def link_to_parent(event)
     parent = event.parent_event
-    person = parent.interested_party.person_entity.person
-    name = "#{h(person.first_name)} #{h(person.last_name)}"
+    person = parent.party
     path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
-    link_to name, path
+    link_to(h(person.try(:full_name)), path)
   end
 
   def association_recorded?(association_collection)

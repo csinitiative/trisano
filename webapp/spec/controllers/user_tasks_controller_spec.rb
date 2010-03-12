@@ -19,17 +19,17 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe UserTasksController do
   before do
-    mock_user = mock(User)
-    mock_user.stub!(:is_entitled_to?).and_return(true)
-    User.stub!(:current_user).and_return(mock_user)
+    mock_user = Factory.build(:user)
+    mock_user.stubs(:is_entitled_to?).returns(true)
+    User.stubs(:current_user).returns(mock_user)
   end
 
   describe "handling ajax GET /user/1/tasks" do
 
     def do_xhr
       user = mock('mock user')
-      controller.should_receive(:load_user)
-      controller.should_receive(:find_user)
+      controller.expects(:load_user)
+      controller.expects(:find_user)
       xhr :get, :index
     end
 
@@ -50,11 +50,11 @@ describe UserTasksController do
       @user  = mock('user')
       @tasks = mock('tasks')
       @task  = mock('task')
-      @user.should_receive(:tasks).and_return(@tasks)
-      @tasks.should_receive(:find).and_return(@task)
-      @task.should_receive(:update_attributes).and_return(true)
-      controller.should_receive(:load_user)
-      User.stub!(:find).and_return(@user)
+      @user.expects(:tasks).returns(@tasks)
+      @tasks.expects(:find).returns(@task)
+      @task.expects(:update_attributes).returns(true)
+      controller.expects(:load_user)
+      User.stubs(:find).returns(@user)
       put :update, :task => {}
     end
 

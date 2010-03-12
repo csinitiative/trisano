@@ -25,7 +25,7 @@ describe "/morbidity_events/show.csv.haml" do
   end
 
   it "should render a csv event template" do
-    template.should_receive(:render_events_csv).exactly(1).times
+    template.expects(:render_events_csv)
     render "morbidity_events/show.csv.haml"
   end
 

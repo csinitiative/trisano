@@ -3,8 +3,8 @@
 module DeploymentsSpecHelper
 
   def given_plugin_symlink(name)
-    Dir.should_receive(:[]).with(Deployment.trisano_extensions).and_return([plugin_symlink(name)])
-    File.should_receive(:symlink?).with(plugin_symlink(name)).and_return(true)
+    Dir.expects(:[]).with(Deployment.trisano_extensions).returns([plugin_symlink(name)])
+    File.expects(:symlink?).with(plugin_symlink(name)).returns(true)
   end
 
   def given_no_plugin_symlink(plugin_name)

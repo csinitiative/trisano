@@ -25,7 +25,7 @@ describe "search/cmrs.csv.haml" do
   end
 
   it "should render a csv template of events" do
-    template.should_receive(:render_events_csv).exactly(1)
+    template.expects(:render_events_csv)
     render "search/cmrs.csv.haml"
   end
 

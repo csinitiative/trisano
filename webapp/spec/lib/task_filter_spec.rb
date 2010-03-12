@@ -22,7 +22,7 @@ describe TaskFilter do
 
   before(:each) do
     @user = User.find(1)
-    User.stub!(:current_user).and_return(@user)
+    User.stubs(:current_user).returns(@user)
     @chicken_pox_event = Event.find(1)
     @anthrax_event     = Event.find(5)
   end
@@ -137,7 +137,7 @@ describe TaskFilter do
     before(:each) do
       #need all users for assignment
       users = [User.find(1), User.find(2), User.find(3)]
-      User.should_receive(:default_task_assignees).at_least(1).times.and_return(users)
+      User.expects(:default_task_assignees).at_least(1).returns(users)
       @user_one_task   = create_task(:user => users[0])
       @user_two_task   = create_task(:user => users[1])
       @user_three_task = create_task(:user => users[2])
@@ -168,16 +168,16 @@ describe TaskFilter do
 
     before(:each) do
       @jurisdiction_one = mock('jurisdiction 1')
-      @jurisdiction_one.should_receive(:id).and_return(73)
-      User.current_user.stub!(:jurisdictions_for_privilege).with(:assign_task_to_user).and_return([])
+      @jurisdiction_one.expects(:id).returns(73)
+      User.current_user.stubs(:jurisdictions_for_privilege).with(:assign_task_to_user).returns([])
       @jurisdiction_one_task = create_task(:event => @chicken_pox_event)
       @jurisdiction_two_task = create_task(:event => Event.find(1001))
     end
 
     it 'should show all tasks in filtered jurisdictions' do
       jurisdiction_two = mock('jurisdiction 2')
-      jurisdiction_two.should_receive(:id).and_return(101)
-      User.current_user.should_receive(:jurisdictions_for_privilege).with(:approve_event_at_state).and_return([@jurisdiction_one, jurisdiction_two])
+      jurisdiction_two.expects(:id).returns(101)
+      User.current_user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns([@jurisdiction_one, jurisdiction_two])
       tasks = @user.filter_tasks(:jurisdictions => ['73', '101'])
       tasks.include?(@jurisdiction_one_task).should be_true
       tasks.include?(@jurisdiction_two_task).should be_true
@@ -185,7 +185,7 @@ describe TaskFilter do
     end
 
     it 'should only show tasks in jurisdictions the current user has state approval rights' do
-      User.current_user.should_receive(:jurisdictions_for_privilege).with(:approve_event_at_state).and_return([@jurisdiction_one])
+      User.current_user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns([@jurisdiction_one])
       tasks = @user.filter_tasks(:jurisdictions => ['73', '101'])
       tasks.pop.should == @jurisdiction_one_task
       tasks.should be_empty

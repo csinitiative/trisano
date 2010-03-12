@@ -22,8 +22,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role)
-      Role.stub!(:find).and_return([@role])
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns([@role])
     end
   
     def do_get
@@ -41,7 +41,7 @@ describe RolesController do
     end
   
     it "should find all roles" do
-      Role.should_receive(:find).with(:all).and_return([@role])
+      Role.expects(:find).with(:all).returns([@role])
       do_get
     end
   
@@ -55,8 +55,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role, :to_xml => "XML")
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns(@role)
     end
   
     def do_get
@@ -70,12 +70,12 @@ describe RolesController do
     end
 
     it "should find all roles" do
-      Role.should_receive(:find).with(:all).and_return([@role])
+      Role.expects(:find).with(:all).returns([@role])
       do_get
     end
   
     it "should render the found roles as xml" do
-      @role.should_receive(:to_xml).and_return("XML")
+      @role.expects(:to_xml).returns("XML")
       do_get
       response.body.should == "XML"
     end
@@ -85,8 +85,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role)
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns(@role)
     end
   
     def do_get
@@ -104,7 +104,7 @@ describe RolesController do
     end
   
     it "should find the role requested" do
-      Role.should_receive(:find).with("1").and_return(@role)
+      Role.expects(:find).with("1").returns(@role)
       do_get
     end
   
@@ -118,8 +118,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role, :to_xml => "XML")
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns(@role)
     end
   
     def do_get
@@ -133,12 +133,12 @@ describe RolesController do
     end
   
     it "should find the role requested" do
-      Role.should_receive(:find).with("1").and_return(@role)
+      Role.expects(:find).with("1").returns(@role)
       do_get
     end
   
     it "should render the found role as xml" do
-      @role.should_receive(:to_xml).and_return("XML")
+      @role.expects(:to_xml).returns("XML")
       do_get
       response.body.should == "XML"
     end
@@ -148,8 +148,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role)
-      Role.stub!(:new).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:new).returns(@role)
     end
   
     def do_get
@@ -167,12 +167,12 @@ describe RolesController do
     end
   
     it "should create an new role" do
-      Role.should_receive(:new).and_return(@role)
+      Role.expects(:new).returns(@role)
       do_get
     end
   
     it "should not save the new role" do
-      @role.should_not_receive(:save)
+      @role.expects(:save).never
       do_get
     end
   
@@ -186,8 +186,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role)
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns(@role)
     end
   
     def do_get
@@ -205,7 +205,7 @@ describe RolesController do
     end
   
     it "should find the role requested" do
-      Role.should_receive(:find).and_return(@role)
+      Role.expects(:find).returns(@role)
       do_get
     end
   
@@ -219,25 +219,25 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role, :to_param => "1")
-      Role.stub!(:new).and_return(@role)
+      @role = Factory.create(:role)
+      Role.stubs(:new).returns(@role)
     end
     
     describe "with successful save" do
   
       def do_post
-        @role.should_receive(:save).and_return(true)
+        @role.expects(:save).returns(true)
         post :create, :role => {}
       end
   
       it "should create a new role" do
-        Role.should_receive(:new).with({}).and_return(@role)
+        Role.expects(:new).with({}).returns(@role)
         do_post
       end
 
       it "should redirect to the new role" do
         do_post
-        response.should redirect_to(role_url("1"))
+        response.should redirect_to(role_url(@role))
       end
       
     end
@@ -245,7 +245,7 @@ describe RolesController do
     describe "with failed save" do
 
       def do_post
-        @role.should_receive(:save).and_return(false)
+        @role.expects(:save).returns(false)
         post :create, :role => {}
       end
   
@@ -261,19 +261,19 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role, :to_param => "1")
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.create(:role)
+      Role.stubs(:find).returns(@role)
     end
     
     describe "with successful update" do
 
       def do_put
-        @role.should_receive(:update_attributes).and_return(true)
+        @role.expects(:update_attributes).returns(true)
         put :update, :role => {}, :id => "1"
       end
 
       it "should find the role requested" do
-        Role.should_receive(:find).with("1").and_return(@role)
+        Role.expects(:find).with("1").returns(@role)
         do_put
       end
 
@@ -289,7 +289,7 @@ describe RolesController do
 
       it "should redirect to the role" do
         do_put
-        response.should redirect_to(role_url("1"))
+        response.should redirect_to(role_url(@role))
       end
 
     end
@@ -297,7 +297,7 @@ describe RolesController do
     describe "with failed update" do
 
       def do_put
-        @role.should_receive(:update_attributes).and_return(false)
+        @role.expects(:update_attributes).returns(false)
         put :update, :role => {}, :id => "1"
       end
 
@@ -313,8 +313,8 @@ describe RolesController do
 
     before(:each) do
       mock_user
-      @role = mock_model(Role, :destroy => true)
-      Role.stub!(:find).and_return(@role)
+      @role = Factory.build(:role)
+      Role.stubs(:find).returns(@role)
     end
   
     def do_delete
@@ -322,12 +322,12 @@ describe RolesController do
     end
 
     it "should find the role requested" do
-      Role.should_receive(:find).with("1").and_return(@role)
+      Role.expects(:find).with("1").returns(@role)
       do_delete
     end
   
     it "should call destroy on the found role" do
-      @role.should_receive(:destroy)
+      @role.expects(:destroy)
       do_delete
     end
   

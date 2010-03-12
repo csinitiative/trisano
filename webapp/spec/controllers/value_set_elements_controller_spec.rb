@@ -22,8 +22,8 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement)
-      ValueSetElement.stub!(:find).and_return([@value_set_element])
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:find).returns([@value_set_element])
     end
   
     def do_get
@@ -41,7 +41,7 @@ describe ValueSetElementsController do
     end
   
     it "should find all value_set_elements" do
-      ValueSetElement.should_receive(:find).with(:all).and_return([@value_set_element])
+      ValueSetElement.expects(:find).with(:all).returns([@value_set_element])
       do_get
     end
   
@@ -55,8 +55,8 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement, :to_xml => "XML")
-      ValueSetElement.stub!(:find).and_return(@value_set_element)
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:find).returns(@value_set_element)
     end
   
     def do_get
@@ -70,12 +70,12 @@ describe ValueSetElementsController do
     end
 
     it "should find all value_set_elements" do
-      ValueSetElement.should_receive(:find).with(:all).and_return([@value_set_element])
+      ValueSetElement.expects(:find).with(:all).returns([@value_set_element])
       do_get
     end
   
     it "should render the found value_set_elements as xml" do
-      @value_set_element.should_receive(:to_xml).and_return("XML")
+      @value_set_element.expects(:to_xml).returns("XML")
       do_get
       response.body.should == "XML"
     end
@@ -85,8 +85,8 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement)
-      ValueSetElement.stub!(:find).and_return(@value_set_element)
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:find).returns(@value_set_element)
     end
   
     def do_get
@@ -103,12 +103,12 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @question_element = mock_model(QuestionElement)
-      @value_set_element = mock_model(ValueSetElement)
-      ValueSetElement.stub!(:new).and_return(@value_set_element)
-      @value_set_element.stub!(:parent_element_id=)
-      @value_set_element.stub!(:form_id=)
-      FormElement.stub!(:find).and_return(@question_element)
+      @question_element = Factory.build(:question_element)
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:new).returns(@value_set_element)
+      @value_set_element.stubs(:parent_element_id=)
+      @value_set_element.stubs(:form_id=)
+      FormElement.stubs(:find).returns(@question_element)
     end
   
     def do_get
@@ -126,12 +126,12 @@ describe ValueSetElementsController do
     end
   
     it "should create an new value_set_element" do
-      ValueSetElement.should_receive(:new).and_return(@value_set_element)
+      ValueSetElement.expects(:new).returns(@value_set_element)
       do_get
     end
   
     it "should not save the new value_set_element" do
-      @value_set_element.should_not_receive(:save)
+      @value_set_element.expects(:save).never
       do_get
     end
   
@@ -145,8 +145,8 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement)
-      ValueSetElement.stub!(:find).and_return(@value_set_element)
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:find).returns(@value_set_element)
     end
   
     def do_get
@@ -164,7 +164,7 @@ describe ValueSetElementsController do
     end
   
     it "should find the value_set_element requested" do
-      ValueSetElement.should_receive(:find).and_return(@value_set_element)
+      ValueSetElement.expects(:find).returns(@value_set_element)
       do_get
     end
   
@@ -178,25 +178,25 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement, :to_param => "1")
-      @value_set_element.stub!(:form_id).and_return(1)
-      ValueSetElement.stub!(:new).and_return(@value_set_element)
-      FormElement.stub!(:find).and_return(@section_element)
-      FormElement.stub!(:roots).and_return([])
+      @value_set_element = Factory.build(:value_set_element)
+      @value_set_element.stubs(:form_id).returns(1)
+      ValueSetElement.stubs(:new).returns(@value_set_element)
+      FormElement.stubs(:find).returns(@section_element)
+      FormElement.stubs(:roots).returns([])
     end
     
     describe "with successful save" do
   
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @value_set_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @value_set_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         
         post :create, :value_set_element => {}
       end
   
       it "should create a new value_set_element" do
-        ValueSetElement.should_receive(:new).with({}).and_return(@value_set_element)
+        ValueSetElement.expects(:new).with({}).returns(@value_set_element)
         do_post
       end
 
@@ -211,9 +211,9 @@ describe ValueSetElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @value_set_element.stub!(:parent_element_id).and_return(1)
-        @value_set_element.should_receive(:save_and_add_to_form).and_return(false)
-        @value_set_element.errors.should_receive(:each)
+        @value_set_element.stubs(:parent_element_id).returns(1)
+        @value_set_element.expects(:save_and_add_to_form).returns(false)
+        @value_set_element.errors.expects(:each)
         post :create, :value_set_element => {}
       end
   
@@ -229,19 +229,19 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement, :to_param => "1")
-      ValueSetElement.stub!(:find).and_return(@value_set_element)
+      @value_set_element = Factory.create(:value_set_element)
+      ValueSetElement.stubs(:find).returns(@value_set_element)
     end
     
     describe "with successful update" do
 
       def do_put
-        @value_set_element.should_receive(:update_and_validate).and_return(true)
+        @value_set_element.expects(:update_and_validate).returns(true)
         put :update, :id => "1",  :value_set_element => {}
       end
 
       it "should find the value_set_element requested" do
-        ValueSetElement.should_receive(:find).with("1").and_return(@value_set_element)
+        ValueSetElement.expects(:find).with("1").returns(@value_set_element)
         do_put
       end
 
@@ -257,7 +257,7 @@ describe ValueSetElementsController do
 
       it "should redirect to the value_set_element" do
         do_put
-        response.should redirect_to(value_set_element_url("1"))
+        response.should redirect_to(value_set_element_url(@value_set_element))
       end
 
     end
@@ -265,7 +265,7 @@ describe ValueSetElementsController do
     describe "with failed update" do
 
       def do_put
-        @value_set_element.should_receive(:update_and_validate).and_return(false)
+        @value_set_element.expects(:update_and_validate).returns(false)
         put :update, :id => "1", :value_set_element => {}
       end
 
@@ -281,8 +281,8 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_set_element = mock_model(ValueSetElement, :destroy_and_validate => true)
-      ValueSetElement.stub!(:find).and_return(@value_set_element)
+      @value_set_element = Factory.build(:value_set_element)
+      ValueSetElement.stubs(:find).returns(@value_set_element)
     end
   
     def do_delete
@@ -290,12 +290,12 @@ describe ValueSetElementsController do
     end
 
     it "should find the value_set_element requested" do
-      ValueSetElement.should_receive(:find).with("1").and_return(@value_set_element)
+      ValueSetElement.expects(:find).with("1").returns(@value_set_element)
       do_delete
     end
   
     it "should call destroy on the found value_set_element" do
-      @value_set_element.should_receive(:destroy_and_validate)
+      @value_set_element.expects(:destroy_and_validate)
       do_delete
     end
   
@@ -309,12 +309,12 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement)
-      ValueElement.stub!(:find).and_return(@value_element)
-      @value_element.stub!(:toggle)
-      @value_element.stub!(:save!)
-      @value_element.stub!(:form_id).and_return(1)
-      Form.stub!(:find).with(1).and_return(mock_model(Form))
+      @value_element = Factory.build(:value_element)
+      ValueElement.stubs(:find).returns(@value_element)
+      @value_element.stubs(:toggle)
+      @value_element.stubs(:save!)
+      @value_element.stubs(:form_id).returns(1)
+      Form.stubs(:find).with(1).returns(Factory.build(:form))
     end
   
     def do_post
@@ -323,7 +323,7 @@ describe ValueSetElementsController do
     end
 
     it "should find the value_set_element requested" do
-      ValueElement.should_receive(:find).with("1").and_return(@value_element)
+      ValueElement.expects(:find).with("1").returns(@value_element)
       do_post
     end
     
@@ -338,12 +338,12 @@ describe ValueSetElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement)
-      ValueElement.stub!(:find).and_return(@value_element)
-      @value_element.stub!(:toggle)
-      @value_element.stub!(:save!).and_raise(Exception)
-      @value_element.stub!(:form_id).and_return(1)
-      Form.stub!(:find).with(1).and_return(mock_model(Form))
+      @value_element = Factory.build(:value_element)
+      ValueElement.stubs(:find).returns(@value_element)
+      @value_element.stubs(:toggle)
+      @value_element.stubs(:save!).raises(Exception)
+      @value_element.stubs(:form_id).returns(1)
+      Form.stubs(:find).with(1).returns(Factory.build(:form))
     end
   
     def do_post

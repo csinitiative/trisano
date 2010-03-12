@@ -27,9 +27,9 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find_by_sql).and_return([@event])
-      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([75])
-      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+      Event.stubs(:find_by_sql).returns([@event])
+      @user.stubs(:jurisdiction_ids_for_privilege).with(:view_event).returns([75])
+      @event.stubs(:read_attribute).returns('MorbidityEvent') 
     end
   
     def do_get
@@ -47,7 +47,7 @@ describe MorbidityEventsController do
     end
   
     it "should find all events" do
-      MorbidityEvent.should_receive(:find_all_for_filtered_view).with(kind_of(Hash)).and_return([@event])
+      MorbidityEvent.expects(:find_all_for_filtered_view).with(kind_of(Hash)).returns([@event])
       do_get
     end
   
@@ -62,9 +62,9 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
-      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+      Event.stubs(:find).returns(@event)
+      @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+      @event.stubs(:read_attribute).returns('MorbidityEvent') 
     end
   
     def do_get
@@ -82,7 +82,7 @@ describe MorbidityEventsController do
     end
   
     it "should find the event requested" do
-      Event.should_receive(:find).once().with("75").and_return(@event)
+      Event.expects(:find).once().with("75").returns(@event)
       do_get
     end
   
@@ -97,9 +97,9 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
-      @event.stub!(:read_attribute).and_return('ContactEvent') 
+      Event.stubs(:find).returns(@event)
+      @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+      @event.stubs(:read_attribute).returns('ContactEvent') 
     end
   
     def do_get
@@ -107,7 +107,7 @@ describe MorbidityEventsController do
     end
 
     it "should find the event requested" do
-      Event.should_receive(:find).with("75").and_return(@event)
+      Event.expects(:find).with("75").returns(@event)
       do_get
     end
 
@@ -128,10 +128,10 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      @event.stub!(:add_note)
-      Event.stub!(:find).and_return(@event)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+      @event.stubs(:add_note)
+      Event.stubs(:find).returns(@event)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      @event.stubs(:read_attribute).returns('MorbidityEvent') 
     end
   
     def do_get
@@ -139,12 +139,12 @@ describe MorbidityEventsController do
     end
 
     it "should find the event requested" do
-      Event.should_receive(:find).with("75").and_return(@event)
+      Event.expects(:find).with("75").returns(@event)
       do_get
     end
   
     it "should log access and be successful" do
-      @event.should_receive(:add_note)
+      @event.expects(:add_note)
       do_get
       response.should be_success
     end
@@ -156,9 +156,9 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      MorbidityEvent.stub!(:new).and_return(@event)
-      @user.stub!(:is_entitled_to?).with(:create_event).and_return(true)
-      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+      MorbidityEvent.stubs(:new).returns(@event)
+      @user.stubs(:is_entitled_to?).with(:create_event).returns(true)
+      @event.stubs(:read_attribute).returns('MorbidityEvent') 
     end
     
     def do_get
@@ -176,12 +176,12 @@ describe MorbidityEventsController do
     end
     
     it "should create an new event" do
-      MorbidityEvent.should_receive(:new).and_return(@event)
+      MorbidityEvent.expects(:new).returns(@event)
       do_get
     end
     
     it "should not save the new event" do
-      @event.should_not_receive(:save)
+      @event.expects(:save).never
       do_get
     end
     
@@ -190,21 +190,21 @@ describe MorbidityEventsController do
       assigns[:event].should equal(@event)
     end
   end
-  
+
   describe "handling GET /events/1/edit with update entitlement" do
 
     before(:each) do
       mock_user
       @event = mock_event
-      @form_reference = mock_model(FormReference)
-      @form = mock_model(Form, :null_object => true)
+      @form_reference = Factory.build(:form_reference)
+      @form = Factory.build(:form)
 
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:get_investigation_forms).and_return([@form])
-      @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
-      @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:get_investigation_forms).returns([@form])
+      @user.stubs(:is_entitled_to_in?).with(:update_event, 75).returns(true)
+      @event.stubs(:read_attribute).returns('MorbidityEvent')
     end
-  
+
     def do_get
       get :edit, :id => "75"
     end
@@ -220,7 +220,7 @@ describe MorbidityEventsController do
     end
   
     it "should find the event requested" do
-      Event.should_receive(:find).and_return(@event)
+      Event.expects(:find).returns(@event)
       do_get
     end
   
@@ -233,29 +233,29 @@ describe MorbidityEventsController do
   describe "handling JURISDICTION requests /events/1/jurisdiction" do
     before(:each) do
       mock_user
-      @user.stub!(:is_entitled_to_in?).with(:route_event_to_any_lhd, 1).and_return(true)
-      @user.stub!(:is_entitled_to_in?).with(:create_event, "2").and_return(true)
-      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
+      @user.stubs(:is_entitled_to_in?).with(:route_event_to_any_lhd, 1).returns(true)
+      @user.stubs(:is_entitled_to_in?).with(:create_event, "2").returns(true)
+      @user.stubs(:jurisdiction_ids_for_privilege).with(:view_event).returns([1])
 
-      @jurisdiction = mock_model(Participation)
-      @jurisdiction.stub!(:secondary_entity_id).and_return(1)
+      @jurisdiction = Factory.build(:jurisdiction)
+      @jurisdiction.stubs(:secondary_entity_id).returns(1)
 
-      @primary_jurisdiction = mock_model(Place)
-      @primary_jurisdiction.stub!(:is_unassigned_jurisdiction?).and_return(false)
+      @primary_jurisdiction = Factory.build(:place)
+      @primary_jurisdiction.stubs(:is_unassigned_jurisdiction?).returns(false)
 
-      @event = mock_model(MorbidityEvent, :to_param => "1")
-      @event.stub!(:jurisdiction).and_return(@jurisdiction)
-      @event.stub!(:update_attribute).and_return(true)
-      @event.stub!(:primary_jurisdiction).and_return(@primary_jurisdiction)
-      MorbidityEvent.stub!(:find).and_return(@event)
+      @event = Factory.build(:morbidity_event)
+      @event.stubs(:jurisdiction).returns(@jurisdiction)
+      @event.stubs(:update_attribute).returns(true)
+      @event.stubs(:primary_jurisdiction).returns(@primary_jurisdiction)
+      MorbidityEvent.stubs(:find).returns(@event)
     end
 
     describe "with successful routing" do
       def do_route_event
-        Event.should_receive(:find).and_return(@event)
+        Event.expects(:find).returns(@event)
         request.env['HTTP_REFERER'] = "/some_path"
-        @event.should_receive(:assign_to_lhd)
-        @event.should_receive(:save!)
+        @event.expects(:assign_to_lhd)
+        @event.expects(:save!)
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
       end
       
@@ -277,8 +277,8 @@ describe MorbidityEventsController do
 
         describe "With an existing route" do
           it "should not change status" do
-            @jurisdiction.stub!(:secondary_entity_id).and_return(2)
-            @event.should_not_receive(:update_attribute)
+            @jurisdiction.stubs(:secondary_entity_id).returns(2)
+            @event.expects(:update_attribute).never
             do_route_event
           end
         end
@@ -286,9 +286,9 @@ describe MorbidityEventsController do
 
       describe "with secondary_ids too" do
         it "should pass IDs into event#route_to_jurisdiction" do
-          Event.should_receive(:find).and_return(@event)
-          @event.should_receive(:assign_to_lhd)
-          @event.should_receive(:save!)
+          Event.expects(:find).returns(@event)
+          @event.expects(:assign_to_lhd)
+          @event.expects(:save!)
           request.env['HTTP_REFERER'] = "/some_path"
           post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"], :note => ""
         end
@@ -300,21 +300,21 @@ describe MorbidityEventsController do
   describe "handling STATE actions /events/1/state" do
     def set_up_mocks
       mock_user
-      @user.stub!(:is_entitled_to_in?).with(:a_privilege, 1).and_return(true)
-      @user.stub!(:jurisdiction_ids_for_privilege).with(:view_event).and_return([1])
+      @user.stubs(:is_entitled_to_in?).with(:a_privilege, 1).returns(true)
+      @user.stubs(:jurisdiction_ids_for_privilege).with(:view_event).returns([1])
 
-      @jurisdiction = mock_model(Participation)
-      @jurisdiction.stub!(:secondary_entity_id).and_return(1)
+      @jurisdiction = Factory.build(:jurisdiction)
+      @jurisdiction.stubs(:secondary_entity_id).returns(1)
 
-      @event = mock_model(MorbidityEvent, :to_param => "1")
-      @event.stub!(:jurisdiction).and_return(@jurisdiction)
-      @event.stub!(:update_attributes).and_return(true)
-      @event.stub!(:attributes=).and_return(1)
-      @event.stub!(:investigator_id=).and_return(@user.id)
-      @event.stub!(:investigation_started_date=)
-      @event.stub!(:add_note)
-      MorbidityEvent.stub!(:find).and_return(@event)
-      ExternalCode.stub!(:event_code_str).and_return("A_PRIV")
+      @event = Factory.build(:morbidity_event)
+      @event.stubs(:jurisdiction).returns(@jurisdiction)
+      @event.stubs(:update_attributes).returns(true)
+      @event.stubs(:attributes=).returns(1)
+      @event.stubs(:investigator_id=).returns(@user.id)
+      @event.stubs(:investigation_started_date=)
+      @event.stubs(:add_note)
+      MorbidityEvent.stubs(:find).returns(@event)
+      ExternalCode.stubs(:event_code_str).returns("A_PRIV")
     end
 
     describe "with successful state change" do
@@ -323,10 +323,10 @@ describe MorbidityEventsController do
       end
 
       def do_change_state
-        Event.should_receive(:find).with("1").and_return(@event)
+        Event.expects(:find).with("1").returns(@event)
         request.env['HTTP_REFERER'] = "/some_path"
-        @event.should_receive(:a_status)
-        @event.should_receive(:save).and_return(true)
+        @event.expects(:a_status)
+        @event.expects(:save).returns(true)
         post :state, :id => "1", :morbidity_event => {:workflow_action=> 'a_status'}
       end
 
@@ -344,9 +344,9 @@ describe MorbidityEventsController do
       
       def do_change_state
         mock_user
-        event = mock_model(MorbidityEvent, :to_param => "1")        
-        event.should_receive(:halted?).and_return true
-        Event.should_receive(:find).with("1").and_return(event)
+        event = Factory.build(:morbidity_event)
+        event.expects(:halted?).returns true
+        Event.expects(:find).with("1").returns(event)
 
         request.env['HTTP_REFERER'] = "/some_path"
         post :state, :id => "1", :morbidity_event => {:workflow_action => 'a_status'}
@@ -361,9 +361,9 @@ describe MorbidityEventsController do
     describe "with insufficent privileges" do
       def do_change_state
         mock_user
-        event = mock_model(MorbidityEvent, :to_param => "1")
-        event.should_receive(:halted?).and_return true
-        Event.should_receive(:find).and_return(event)
+        event = Factory.build(:morbidity_event)
+        event.expects(:halted?).returns true
+        Event.expects(:find).returns(event)
 
         post :state, :id => "1", :morbidity_event => {:event_status => 'a_status'}
       end
@@ -381,10 +381,10 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("MorbidityEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("MorbidityEvent")
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -393,13 +393,13 @@ describe MorbidityEventsController do
     end
 
     it "should redirect to where the user came from" do
-      @event.should_receive(:soft_delete).and_return(true)
+      @event.expects(:soft_delete).returns(true)
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
     
     it "should set the flash notice to a success message" do
-      @event.should_receive(:soft_delete).and_return(true)
+      @event.expects(:soft_delete).returns(true)
       do_post
       flash[:notice].should eql("The event was successfully marked as deleted.")
     end
@@ -410,10 +410,10 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("MorbidityEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("MorbidityEvent")
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -422,20 +422,20 @@ describe MorbidityEventsController do
     end
 
     it "should redirect to where the user came from" do
-      @event.should_receive(:soft_delete).and_return(false)
+      @event.expects(:soft_delete).returns(false)
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
     
     it "should set the flash error to an error message" do
-      @event.should_receive(:soft_delete).and_return(false)
+      @event.expects(:soft_delete).returns(false)
       do_post
       flash[:error].should eql("An error occurred marking the event as deleted.")
     end
 
     it "should not add a note" do
-      @event.should_receive(:soft_delete).and_return(false)
-      @event.should_not_receive(:add_note)
+      @event.expects(:soft_delete).returns(false)
+      @event.expects(:add_note).never
       do_post
     end
   end
@@ -445,10 +445,10 @@ describe MorbidityEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("MorbidityEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("MorbidityEvent")
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -462,7 +462,7 @@ describe MorbidityEventsController do
     end
 
     it "should not add a note" do
-      @event.should_not_receive(:add_note)
+      @event.expects(:add_note).never
       do_post
     end
   end

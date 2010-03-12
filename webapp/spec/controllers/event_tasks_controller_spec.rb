@@ -22,17 +22,17 @@ describe EventTasksController do
   before(:each) do
     mock_user
     @event = mock_event
-    @event.stub!(:id).and_return(1)
-    @event.stub!(:save).and_return(true)
-    Event.stub!(:find).and_return(@event)
+    @event.stubs(:id).returns(1)
+    @event.stubs(:save).returns(true)
+    Event.stubs(:find).returns(@event)
   end
 
   describe "handling GET /events/1/tasks with view event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Task.stubs(:new).returns(@task)
     end
   
     def do_get
@@ -54,9 +54,9 @@ describe EventTasksController do
   describe "handling GET /events/1/tasks without view event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      Task.stubs(:new).returns(@task)
     end
 
     def do_get
@@ -78,9 +78,9 @@ describe EventTasksController do
   describe "handling GET /events/1/tasks without a valid event" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -115,13 +115,13 @@ describe EventTasksController do
   describe "handling GET /events/1/tasks/new with update event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Task.stubs(:new).returns(@task)
     end
 
     def do_get
-      @task.should_receive(:event_id=).with(1)
+      @task.expects(:event_id=).with(1)
       get :new, :event_id => "1"
     end
 
@@ -145,9 +145,9 @@ describe EventTasksController do
   describe "handling GET /events/1/tasks/new without update event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      Task.stubs(:new).returns(@task)
     end
 
     def do_get
@@ -169,9 +169,9 @@ describe EventTasksController do
   describe "handling GET /events/1/tasks/new without a valid event" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -189,11 +189,11 @@ describe EventTasksController do
 
     before(:each) do
       mock_user
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
       @proxy = mock('proxy')
-      @proxy.stub!(:find).and_return(@task)
-      @event.stub!(:tasks).and_return(@proxy)
+      @proxy.stubs(:find).returns(@task)
+      @event.stubs(:tasks).returns(@proxy)
     end
 
     def do_get
@@ -219,22 +219,22 @@ describe EventTasksController do
   describe "handling POST /events/1/tasks with update event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @task.stub!(:user_id).and_return(nil)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @task.stubs(:user_id).returns(nil)
+      Task.stubs(:new).returns(@task)
     end
 
     describe "with successful save" do
 
       def do_post
-        @task.should_receive(:user_id=).once()
-        @task.should_receive(:save).and_return(true)
+        @task.expects(:user_id=).once()
+        @task.expects(:save).returns(true)
         post :create, :task => {}
       end
 
       it "should create a new task" do
-        Task.should_receive(:new).and_return(@task)
+        Task.expects(:new).returns(@task)
         do_post
       end
 
@@ -248,8 +248,8 @@ describe EventTasksController do
     describe "with failed save" do
 
       def do_post
-        @task.should_receive(:user_id=).once()
-        @task.should_receive(:save).and_return(false)
+        @task.expects(:user_id=).once()
+        @task.expects(:save).returns(false)
         post :create, :task => {}
       end
 
@@ -264,10 +264,10 @@ describe EventTasksController do
   describe "handling POST /events/1/tasks without update event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      @task.stub!(:user_id).and_return(nil)
-      Task.stub!(:new).and_return(@task)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      @task.stubs(:user_id).returns(nil)
+      Task.stubs(:new).returns(@task)
     end
 
     describe "with save attempt" do
@@ -293,9 +293,9 @@ describe EventTasksController do
   describe "handling POST /events/1/tasks without a valid event" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      Event.stub!(:find).and_raise(ActiveRecord::RecordNotFound)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      Event.stubs(:find).raises(ActiveRecord::RecordNotFound)
     end
 
     def do_get
@@ -312,19 +312,20 @@ describe EventTasksController do
   describe "handling PUT /events/1/task/1 with update event entitlement" do
 
     before(:each) do
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @task.stub!(:user_id).and_return(nil)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @task.stubs(:user_id).returns(nil)
 
       @proxy = mock('proxy')
-      @proxy.stub!(:find).and_return(@task)
-      @event.stub!(:tasks).and_return(@proxy)
+      @proxy.stubs(:find).returns(@task)
+      @event.stubs(:tasks).returns(@proxy)
+      @task.save(false)
     end
 
     describe "with successful update" do
 
       def do_put
-        @task.should_receive(:update_attributes).and_return(true)
+        @task.expects(:update_attributes).returns(true)
         put :update, :task => {}
       end
 
@@ -343,7 +344,7 @@ describe EventTasksController do
     describe "with failed update" do
 
       def do_put
-        @task.should_receive(:update_attributes).and_return(false)
+        @task.expects(:update_attributes).returns(false)
         put :update, :task => {}
       end
 
@@ -359,19 +360,19 @@ describe EventTasksController do
 
     before(:each) do
       request.env["HTTP_ACCEPT"] = "application/javascript"
-      @task = mock_model(Task)
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @task.stub!(:user_id).and_return(nil)
+      @task = Factory.build(:task)
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @task.stubs(:user_id).returns(nil)
 
       @proxy = mock('proxy')
-      @proxy.stub!(:find).and_return(@task)
-      @event.stub!(:tasks).and_return(@proxy)
+      @proxy.stubs(:find).returns(@task)
+      @event.stubs(:tasks).returns(@proxy)
     end
 
     describe "with successful update" do
 
       def do_put
-        @task.should_receive(:update_attributes).and_return(true)
+        @task.expects(:update_attributes).returns(true)
         put :update, :task => {}
       end
 
@@ -390,7 +391,7 @@ describe EventTasksController do
     describe "with failed update" do
 
       def do_put
-        @task.should_receive(:update_attributes).and_return(false)
+        @task.expects(:update_attributes).returns(false)
         put :update, :task => {}
       end
 

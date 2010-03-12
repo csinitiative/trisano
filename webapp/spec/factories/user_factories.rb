@@ -30,6 +30,13 @@ Factory.define :privileged_role_membership, :class => 'role_membership' do |rm|
   rm.jurisdiction { |r| rm.default_jurisdiction }
 end
 
+Factory.define :role_membership do |rm|
+end
+
+Factory.define :role do |r|
+  r.role_name { Factory.next(:role_name) }
+end
+
 #
 # Sequences
 #

@@ -53,9 +53,9 @@ describe ValueElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement)
-      ValueElement.stub!(:new).and_return(@value_element)
-      @value_element.stub!(:parent_element_id=)
+      @value_element = Factory.build(:value_element)
+      ValueElement.stubs(:new).returns(@value_element)
+      @value_element.stubs(:parent_element_id=)
     end
 
     def do_get
@@ -73,12 +73,12 @@ describe ValueElementsController do
     end
 
     it "should create an new value_element" do
-      ValueElement.should_receive(:new).and_return(@value_element)
+      ValueElement.expects(:new).returns(@value_element)
       do_get
     end
 
     it "should not save the new value_element" do
-      @value_element.should_not_receive(:save)
+      @value_element.expects(:save).never
       do_get
     end
 
@@ -92,8 +92,8 @@ describe ValueElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement)
-      ValueElement.stub!(:find).and_return(@value_element)
+      @value_element = Factory.build(:value_element)
+      ValueElement.stubs(:find).returns(@value_element)
     end
 
     def do_get
@@ -111,7 +111,7 @@ describe ValueElementsController do
     end
 
     it "should find the value_element requested" do
-      ValueElement.should_receive(:find).and_return(@value_element)
+      ValueElement.expects(:find).returns(@value_element)
       do_get
     end
 
@@ -125,24 +125,24 @@ describe ValueElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement, :to_param => "1")
-      @value_element.stub!(:form_id).and_return(1)
-      ValueElement.stub!(:new).and_return(@value_element)
-      FormElement.stub!(:find).and_return(@section_element)
+      @value_element = Factory.build(:value_element)
+      @value_element.stubs(:form_id).returns(1)
+      ValueElement.stubs(:new).returns(@value_element)
+      FormElement.stubs(:find).returns(@section_element)
     end
 
     describe "with successful save" do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @value_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @value_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
 
         post :create, :value_element => {}
       end
 
       it "should create a new value_element" do
-        ValueElement.should_receive(:new).with({}).and_return(@value_element)
+        ValueElement.expects(:new).with({}).returns(@value_element)
         do_post
       end
 
@@ -157,9 +157,9 @@ describe ValueElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @value_element.stub!(:parent_element_id).and_return(1)
-        @value_element.should_receive(:save_and_add_to_form).and_return(false)
-        @value_element.errors.should_receive(:each)
+        @value_element.stubs(:parent_element_id).returns(1)
+        @value_element.expects(:save_and_add_to_form).returns(false)
+        @value_element.errors.expects(:each)
         post :create, :value_element => {}
       end
 
@@ -175,21 +175,21 @@ describe ValueElementsController do
 
     before(:each) do
       mock_user
-      @value_element = mock_model(ValueElement, :to_param => "1")
-      @value_element.stub!(:form_id).and_return(1)
-      Form.stub!(:find).and_return(mock_model(Form))
-      ValueElement.stub!(:find).and_return(@value_element)
+      @value_element = Factory.build(:value_element)
+      @value_element.stubs(:form_id).returns(1)
+      Form.stubs(:find).returns(Factory.build(:form))
+      ValueElement.stubs(:find).returns(@value_element)
     end
 
     describe "with successful update" do
 
       def do_put
-        @value_element.should_receive(:update_and_validate).and_return(true)
+        @value_element.expects(:update_and_validate).returns(true)
         put :update, :id => "1",  :value_element => {}
       end
 
       it "should find the value_element requested" do
-        ValueElement.should_receive(:find).with("1").and_return(@value_element)
+        ValueElement.expects(:find).with("1").returns(@value_element)
         do_put
       end
 
@@ -213,7 +213,7 @@ describe ValueElementsController do
     describe "with failed update" do
 
       def do_put
-        @value_element.should_receive(:update_and_validate).and_return(false)
+        @value_element.expects(:update_and_validate).returns(false)
         put :update, :id => "1", :value_element => {}
       end
 

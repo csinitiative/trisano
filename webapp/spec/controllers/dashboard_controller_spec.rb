@@ -32,9 +32,9 @@ describe DashboardController do
     describe 'with filter applied' do
       
       before(:each) do
-        @controller.should_receive(:has_a_filter_applied?).and_return(true)
+        @controller.expects(:has_a_filter_applied?).returns(true)
         # Test used to use #an_instance_of? but that failed in 1.1.12.  See here: http://rubyforge.org/frs/shownotes.php?release_id=30324
-        User.current_user.should_receive(:store_as_task_view_settings).with(a_kind_of(Hash))
+        User.current_user.expects(:store_as_task_view_settings).with(kind_of(Hash))
       end
 
       it "should be successful" do
@@ -55,8 +55,8 @@ describe DashboardController do
 
     describe 'with no filter applied' do
       before(:each) do
-        @controller.should_receive(:has_a_filter_applied?).and_return(false)
-        @user.should_receive(:task_view_settings).and_return({:look_ahead => '0', :look_back => '0'})
+        @controller.expects(:has_a_filter_applied?).returns(false)
+        @user.expects(:task_view_settings).returns({:look_ahead => '0', :look_back => '0'})
       end
 
       it 'should redirect to dashboard with default filters applied' do

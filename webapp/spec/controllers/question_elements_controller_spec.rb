@@ -22,8 +22,8 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @question_element = mock_model(QuestionElement)
-      QuestionElement.stub!(:find).and_return([@question_element])
+      @question_element = Factory.build(:question_element)
+      QuestionElement.stubs(:find).returns([@question_element])
     end
   
     def do_get
@@ -40,8 +40,8 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @question_element = mock_model(QuestionElement)
-      QuestionElement.stub!(:find).and_return(@question_element)
+      @question_element = Factory.build(:question_element)
+      QuestionElement.stubs(:find).returns(@question_element)
     end
   
     def do_get
@@ -58,20 +58,20 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @form = mock_model(Form)
-      @section_element = mock_model(SectionElement)
-      @question_element = mock_model(QuestionElement)
-      @question = mock_model(Question)
-      @question.stub!(:is_core_data).and_return(false)
-      @question.stub!(:core_data=).and_return(false)
-      Question.stub!(:new).and_return(@question)
-      @question_element.stub!(:parent_element_id=)
-      @question_element.stub!(:question=)
-      @question_element.stub!(:question).and_return(@question)
-      QuestionElement.stub!(:new).and_return(@question_element)
-      FormElement.stub!(:find).and_return(@section_element)
-      @section_element.stub!(:form).and_return(@form)
-      @form.stub!(:disease_ids).and_return([])
+      @form = Factory.build(:form)
+      @section_element = Factory.build(:section_element)
+      @question_element = Factory.build(:question_element)
+      @question = Factory.build(:question)
+      @question.stubs(:is_core_data).returns(false)
+      @question.stubs(:core_data=).returns(false)
+      Question.stubs(:new).returns(@question)
+      @question_element.stubs(:parent_element_id=)
+      @question_element.stubs(:question=)
+      @question_element.stubs(:question).returns(@question)
+      QuestionElement.stubs(:new).returns(@question_element)
+      FormElement.stubs(:find).returns(@section_element)
+      @section_element.stubs(:form).returns(@form)
+      @form.stubs(:disease_ids).returns([])
     end
   
     def do_get
@@ -89,12 +89,12 @@ describe QuestionElementsController do
     end
   
     it "should create an new question_element" do
-      QuestionElement.should_receive(:new).and_return(@question_element)
+      QuestionElement.expects(:new).returns(@question_element)
       do_get
     end
   
     it "should not save the new question_element" do
-      @question_element.should_not_receive(:save)
+      @question_element.expects(:save).never
       do_get
     end
   
@@ -108,13 +108,13 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @question_element = mock_model(QuestionElement)
-      @form = mock_model(Form)
+      @question_element = Factory.build(:question_element)
+      @form = Factory.build(:form)
       
-      QuestionElement.stub!(:find).and_return(@question_element)
+      QuestionElement.stubs(:find).returns(@question_element)
       
-      @question_element.stub!(:form).and_return(@form)
-      @form.stub!(:disease_ids).and_return([])
+      @question_element.stubs(:form).returns(@form)
+      @form.stubs(:disease_ids).returns([])
     end
   
     def do_get
@@ -132,7 +132,7 @@ describe QuestionElementsController do
     end
   
     it "should find the question_element requested" do
-      QuestionElement.should_receive(:find).and_return(@question_element)
+      QuestionElement.expects(:find).returns(@question_element)
       do_get
     end
   
@@ -146,29 +146,29 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @form = mock_model(Form)
-      @form.stub!(:disease_ids).and_return([])
-      @section_element = mock_model(SectionElement)
-      @section_element.stub!(:form).and_return(@form)
-      @question_element = mock_model(QuestionElement, :to_param => "1")
-      @question_element.stub!(:form_id).and_return(1)
-      QuestionElement.stub!(:new).and_return(@question_element)
+      @form = Factory.build(:form)
+      @form.stubs(:disease_ids).returns([])
+      @section_element = Factory.build(:section_element)
+      @section_element.stubs(:form).returns(@form)
+      @question_element = Factory.build(:question_element)
+      @question_element.stubs(:form_id).returns(1)
+      QuestionElement.stubs(:new).returns(@question_element)
       
-      @question_element.stub!(:parent_element_id).and_return(1)
-      FormElement.stub!(:find).and_return(@section_element)
-      FormElement.stub!(:roots).and_return([])
+      @question_element.stubs(:parent_element_id).returns(1)
+      FormElement.stubs(:find).returns(@section_element)
+      FormElement.stubs(:roots).returns([])
     end
     
     describe "with successful save" do
   
       def do_post
-        @question_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @question_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         post :create, :question_element => {}
       end
   
       it "should create a new question_element" do
-        QuestionElement.should_receive(:new).with({}).and_return(@question_element)
+        QuestionElement.expects(:new).with({}).returns(@question_element)
         do_post
       end
 
@@ -182,13 +182,13 @@ describe QuestionElementsController do
     describe "with failed save" do
 
       def do_post
-        @question_element.should_receive(:save_and_add_to_form).and_return(false)
-        @question_element.errors.should_receive(:each)
+        @question_element.expects(:save_and_add_to_form).returns(false)
+        @question_element.errors.expects(:each)
         post :create, :question_element => {}
       end
   
       it "should re-render 'new'" do
-        @question_element.stub!(:question=)
+        @question_element.stubs(:question=)
         do_post
         response.should render_template('new')
       end
@@ -200,24 +200,24 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @question_element = mock_model(QuestionElement, :to_param => "1")
-      @form = mock_model(Form)
-      @form.stub!(:disease_ids).and_return([])
-      @question_element.stub!(:form_id).and_return(1)
-      @question_element.stub!(:form).and_return(@form)
-      QuestionElement.stub!(:find).and_return(@question_element)
+      @question_element = Factory.build(:question_element)
+      @form = Factory.build(:form)
+      @form.stubs(:disease_ids).returns([])
+      @question_element.stubs(:form_id).returns(1)
+      @question_element.stubs(:form).returns(@form)
+      QuestionElement.stubs(:find).returns(@question_element)
     end
     
     describe "with successful update" do
 
       def do_put
-        @question_element.should_receive(:update_and_validate).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @question_element.expects(:update_and_validate).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         put :update, :id => "1"
       end
 
       it "should find the question_element requested" do
-        QuestionElement.should_receive(:find).with("1").and_return(@question_element)
+        QuestionElement.expects(:find).with("1").returns(@question_element)
         do_put
       end
 
@@ -241,7 +241,7 @@ describe QuestionElementsController do
     describe "with failed update" do
 
       def do_put
-        @question_element.should_receive(:update_and_validate).and_return(false)
+        @question_element.expects(:update_and_validate).returns(false)
         put :update, :id => "1"
       end
 
@@ -257,11 +257,11 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
-      @event = mock_model(Event)
-      @follow_up = mock_model(FollowUpElement)
-      @question_element = mock_model(QuestionElement, :to_param => "1")
-      QuestionElement.stub!(:find).and_return(@question_element)
-      Event.stub!(:find).and_return(@event)
+      @event = Factory.build(:morbidity_event)
+      @follow_up = Factory.build(:follow_up_element)
+      @question_element = Factory.build(:question_element)
+      QuestionElement.stubs(:find).returns(@question_element)
+      Event.stubs(:find).returns(@event)
     end
   
     describe "with successful condition processing" do
@@ -271,25 +271,25 @@ describe QuestionElementsController do
       end
       
       it "should be successful" do
-        @question_element.stub!(:process_condition).and_return(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         response.should be_success
       end
       
       it "should assign the follow up group for the view" do
-        @question_element.stub!(:process_condition).and_return(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         assigns(:follow_up).should equal(@follow_up)
       end
     
       it "should assign the event for the view to use to build form fields" do
-        @question_element.stub!(:process_condition).and_return(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         assigns(:event).should equal(@event)
       end
       
       it "should render the process_condition rjs template" do
-        @question_element.stub!(:process_condition).and_return(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         response.should render_template('process_condition')
       end
@@ -302,7 +302,7 @@ describe QuestionElementsController do
       end
     
       it "should render rjs failure template" do
-        @question_element.stub!(:process_condition).and_raise(Exception)
+        @question_element.stubs(:process_condition).raises(Exception)
         do_post
         response.should render_template('rjs-error')
       end

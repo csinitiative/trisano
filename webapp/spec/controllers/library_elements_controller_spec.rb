@@ -162,8 +162,8 @@ describe LibraryElementsController do
 
       it 'should send export file' do
         pending "Does not work with current mix of Rails and rspec -- address once version mismatches have been addressed"
-        Form.should_receive(:export_library).and_return("library-export.zip")
-        @controller.should_receive(:send_file).with("library-export.zip")
+        Form.expects(:export_library).returns("library-export.zip")
+        @controller.expects(:send_file).with("library-export.zip")
         do_post
         response.should be_success
       end
@@ -181,8 +181,8 @@ describe LibraryElementsController do
       end
     
       it 'should redirect to library_elements listing' do
-        Form.should_receive(:export_library).and_raise(Exception)
-        @controller.should_not_receive(:send_file).with(("library-export.zip"))
+        Form.expects(:export_library).raises(Exception)
+        @controller.expects(:send_file).with(("library-export.zip")).never
         do_post
         response.should redirect_to(library_elements_path)
       end
@@ -219,7 +219,7 @@ describe LibraryElementsController do
 
       before :each do
         mock_user
-        @upload_file = mock(ActionController::UploadedStringIO)
+        @upload_file = mock('ActionController::UploadedStringIO')
       end
 
       def do_post
@@ -227,13 +227,13 @@ describe LibraryElementsController do
       end
 
       it 'should be successful' do
-        Form.should_receive(:import_library).and_return(true)
+        Form.expects(:import_library).returns(true)
         do_post
         response.should redirect_to(library_elements_path)
       end
       
       it 'should set a flash message' do
-        Form.should_receive(:import_library).and_return(true)
+        Form.expects(:import_library).returns(true)
         do_post
         flash[:notice].should eql('Successfully imported the library elements.')
       end
@@ -244,8 +244,8 @@ describe LibraryElementsController do
 
       before :each do
         mock_user
-        Form.stub!(:import_library).and_raise(Exception)
-        @upload_file = mock(ActionController::UploadedStringIO)
+        Form.stubs(:import_library).raises(Exception)
+        @upload_file = mock('ActionController::UploadedStringIO')
       end
 
       def do_post

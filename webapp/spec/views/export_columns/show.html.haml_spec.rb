@@ -18,25 +18,25 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/export_columns/show.html.haml" do
-  
+
   before(:each) do
-    disease1 = mock_model(Disease)
-    disease1.should_receive(:disease_name).twice.and_return('Hepatitis A, acute')
-    disease2 = mock_model(Disease)
-    disease2.should_receive(:disease_name).twice.and_return('Mumps')
-    @export_column = mock_model(ExportColumn)
-    @export_column.should_receive(:name).twice.and_return('Export Column Name')
-    @export_column.should_receive(:diseases).and_return([disease1, disease2])
-    @export_column.should_receive(:export_column_name).and_return('some_column')
-    @export_column.should_receive(:export_disease_group).and_return(nil)
-    @export_column.should_receive(:type_data).and_return('FORM')
-    @export_column.should_receive(:data_type).and_return('single_line_text')
-    @export_column.should_receive(:table_name).and_return('')
-    @export_column.should_receive(:column_name).and_return('')
-    @export_column.should_receive(:is_required).and_return(false)
-    @export_column.should_receive(:start_position).and_return(69)
-    @export_column.should_receive(:length_to_output).and_return(1)
-    @export_column.should_receive(:export_conversion_values).and_return([])
+    disease1 = Factory.build(:disease)
+    disease1.expects(:disease_name).twice.returns('Hepatitis A, acute')
+    disease2 = Factory.build(:disease)
+    disease2.expects(:disease_name).twice.returns('Mumps')
+    @export_column = Factory.create(:export_column)
+    @export_column.expects(:name).twice.returns('Export Column Name')
+    @export_column.expects(:diseases).returns([disease1, disease2])
+    @export_column.expects(:export_column_name).returns('some_column')
+    @export_column.expects(:export_disease_group).returns(nil)
+    @export_column.expects(:type_data).returns('FORM')
+    @export_column.expects(:data_type).returns('single_line_text')
+    @export_column.expects(:table_name).returns('')
+    @export_column.expects(:column_name).returns('')
+    @export_column.expects(:is_required).returns(false)
+    @export_column.expects(:start_position).returns(69)
+    @export_column.expects(:length_to_output).returns(1)
+    @export_column.expects(:export_conversion_values).returns([])
 
     assigns[:export_column] = @export_column
   end

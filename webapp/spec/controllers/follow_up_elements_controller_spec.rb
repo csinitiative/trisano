@@ -21,7 +21,7 @@ describe FollowUpElementsController do
   describe "handling GET /follow_up_elements" do
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement)
+      @follow_up_element = Factory.build(:follow_up_element)
     end
   
     def do_get
@@ -37,7 +37,7 @@ describe FollowUpElementsController do
   describe "handling GET /follow_up_elements.xml" do
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :to_xml => "XML")
+      @follow_up_element = Factory.build(:follow_up_element)
     end
   
     def do_get
@@ -54,7 +54,7 @@ describe FollowUpElementsController do
   describe "handling GET /follow_up_elements/1" do
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement)
+      @follow_up_element = Factory.build(:follow_up_element)
     end
   
     def do_get
@@ -71,7 +71,7 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :to_xml => "XML")
+      @follow_up_element = Factory.build(:follow_up_element)
     end
   
     def do_get
@@ -89,11 +89,11 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement)
-      FollowUpElement.stub!(:new).and_return(@follow_up_element)
-      @follow_up_element.stub!(:parent_element_id=)
-      @follow_up_element.stub!(:core_data=)
-      @follow_up_element.stub!(:event_type=)
+      @follow_up_element = Factory.build(:follow_up_element)
+      FollowUpElement.stubs(:new).returns(@follow_up_element)
+      @follow_up_element.stubs(:parent_element_id=)
+      @follow_up_element.stubs(:core_data=)
+      @follow_up_element.stubs(:event_type=)
     end
   
     def do_get
@@ -111,12 +111,12 @@ describe FollowUpElementsController do
     end
   
     it "should create an new follow_up_element" do
-      FollowUpElement.should_receive(:new).and_return(@follow_up_element)
+      FollowUpElement.expects(:new).returns(@follow_up_element)
       do_get
     end
   
     it "should not save the new follow_up_element" do
-      @follow_up_element.should_not_receive(:save)
+      @follow_up_element.expects(:save).never
       do_get
     end
   
@@ -130,11 +130,11 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement)
-      FollowUpElement.stub!(:find).and_return(@follow_up_element)
-      @follow_up_element.stub!(:is_condition_code).and_return(false)
-      @follow_up_element.stub!(:core_data=).and_return(nil)
-      @follow_up_element.stub!(:event_type=).and_return(nil)
+      @follow_up_element = Factory.build(:follow_up_element)
+      FollowUpElement.stubs(:find).returns(@follow_up_element)
+      @follow_up_element.stubs(:is_condition_code).returns(false)
+      @follow_up_element.stubs(:core_data=).returns(nil)
+      @follow_up_element.stubs(:event_type=).returns(nil)
     end
   
     def do_get
@@ -152,7 +152,7 @@ describe FollowUpElementsController do
     end
   
     it "should find the question_element requested" do
-      FollowUpElement.should_receive(:find).and_return(@follow_up_element)
+      FollowUpElement.expects(:find).returns(@follow_up_element)
       do_get
     end
   
@@ -167,22 +167,22 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :to_param => "1")
-      @follow_up_element.stub!(:form_id).and_return(1)
-      FollowUpElement.stub!(:new).and_return(@follow_up_element)
+      @follow_up_element = Factory.build(:follow_up_element)
+      @follow_up_element.stubs(:form_id).returns(1)
+      FollowUpElement.stubs(:new).returns(@follow_up_element)
     end
     
     describe "with successful save" do
   
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @follow_up_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @follow_up_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         post :create, :follow_up_element => {}
       end
   
       it "should create a new follow_up_element" do
-        FollowUpElement.should_receive(:new).with({}).and_return(@follow_up_element)
+        FollowUpElement.expects(:new).with({}).returns(@follow_up_element)
         do_post
       end
 
@@ -197,8 +197,8 @@ describe FollowUpElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @follow_up_element.should_receive(:save_and_add_to_form).and_return(false)
-        @follow_up_element.errors.should_receive(:each)
+        @follow_up_element.expects(:save_and_add_to_form).returns(false)
+        @follow_up_element.errors.expects(:each)
         post :create, :follow_up_element => {}
       end
   
@@ -214,21 +214,21 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :to_param => "1")
-      @follow_up_element.stub!(:form_id).and_return(1)
-      FollowUpElement.stub!(:find).and_return(@follow_up_element)
+      @follow_up_element = Factory.build(:follow_up_element)
+      @follow_up_element.stubs(:form_id).returns(1)
+      FollowUpElement.stubs(:find).returns(@follow_up_element)
     end
     
     describe "with successful update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_core_follow_up).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @follow_up_element.expects(:update_core_follow_up).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         put :update, {:id => "1", :follow_up_element => {:core_data => true}}
       end
 
       it "should find the question_element requested" do
-        FollowUpElement.should_receive(:find).with("1").and_return(@follow_up_element)
+        FollowUpElement.expects(:find).with("1").returns(@follow_up_element)
         do_put
       end
 
@@ -247,7 +247,7 @@ describe FollowUpElementsController do
     describe "with failed update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_core_follow_up).and_return(false)
+        @follow_up_element.expects(:update_core_follow_up).returns(false)
         put :update, {:id => "1", :follow_up_element => {:core_data => true}}
       end
 
@@ -263,21 +263,21 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :to_param => "1")
-      @follow_up_element.stub!(:form_id).and_return(1)
-      FollowUpElement.stub!(:find).and_return(@follow_up_element)
+      @follow_up_element = Factory.build(:follow_up_element)
+      @follow_up_element.stubs(:form_id).returns(1)
+      FollowUpElement.stubs(:find).returns(@follow_up_element)
     end
     
     describe "with successful update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_and_validate).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @follow_up_element.expects(:update_and_validate).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
        put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
       end
 
       it "should find the question_element requested" do
-        FollowUpElement.should_receive(:find).with("1").and_return(@follow_up_element)
+        FollowUpElement.expects(:find).with("1").returns(@follow_up_element)
         do_put
       end
 
@@ -296,7 +296,7 @@ describe FollowUpElementsController do
     describe "with failed update" do
 
       def do_put
-        @follow_up_element.should_receive(:update_and_validate).and_return(false)
+        @follow_up_element.expects(:update_and_validate).returns(false)
         put :update, {:id => "1", :follow_up_element => {:core_data => ""}}
       end
 
@@ -312,7 +312,7 @@ describe FollowUpElementsController do
 
     before(:each) do
       mock_user
-      @follow_up_element = mock_model(FollowUpElement, :destroy => true)
+      @follow_up_element = Factory.build(:follow_up_element)
     end
   
     def do_delete
@@ -330,7 +330,7 @@ describe FollowUpElementsController do
     before(:each) do
       mock_user
       @items = []
-      ExternalCode.stub!(:find_codes_for_autocomplete).and_return(@items)
+      ExternalCode.stubs(:find_codes_for_autocomplete).returns(@items)
     end
     
     def do_post

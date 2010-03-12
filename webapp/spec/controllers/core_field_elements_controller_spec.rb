@@ -22,8 +22,8 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement)
-      CoreFieldElement.stub!(:find).and_return([@core_field_element])
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:find).returns([@core_field_element])
     end
   
     def do_get
@@ -40,8 +40,8 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement)
-      CoreFieldElement.stub!(:find).and_return(@core_field_element)
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:find).returns(@core_field_element)
     end
   
     def do_get
@@ -58,9 +58,9 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement)
-      CoreFieldElement.stub!(:new).and_return(@core_field_element)
-      @core_field_element.stub!(:available_core_fields).and_return([])
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:new).returns(@core_field_element)
+      @core_field_element.stubs(:available_core_fields).returns([])
     end
   
     def do_get
@@ -78,12 +78,12 @@ describe CoreFieldElementsController do
     end
   
     it "should create an new core_field_element" do
-      CoreFieldElement.should_receive(:new).and_return(@core_field_element)
+      CoreFieldElement.expects(:new).returns(@core_field_element)
       do_get
     end
   
     it "should not save the new core_field_element" do
-      @core_field_element.should_not_receive(:save)
+      @core_field_element.expects(:save).never
       do_get
     end
   
@@ -97,8 +97,8 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement)
-      CoreFieldElement.stub!(:find).and_return(@core_field_element)
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:find).returns(@core_field_element)
     end
   
     def do_get
@@ -115,22 +115,22 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement, :to_param => "1")
-      @core_field_element.stub!(:form_id).and_return(1)
-      CoreFieldElement.stub!(:new).and_return(@core_field_element)
+      @core_field_element = Factory.build(:core_field_element)
+      @core_field_element.stubs(:form_id).returns(1)
+      CoreFieldElement.stubs(:new).returns(@core_field_element)
     end
     
     describe "with successful save" do
   
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @core_field_element.should_receive(:save_and_add_to_form).and_return(true)
-        Form.stub!(:find).with(1).and_return(mock_model(Form))
+        @core_field_element.expects(:save_and_add_to_form).returns(true)
+        Form.stubs(:find).with(1).returns(Factory.build(:form))
         post :create, :core_field_element => {}
       end
   
       it "should create a new core_field_element" do
-        CoreFieldElement.should_receive(:new).with({}).and_return(@core_field_element)
+        CoreFieldElement.expects(:new).with({}).returns(@core_field_element)
         do_post
       end
 
@@ -145,9 +145,9 @@ describe CoreFieldElementsController do
 
       def do_post
         @request.env["HTTP_ACCEPT"] = "application/javascript"
-        @core_field_element.should_receive(:save_and_add_to_form).and_return(false)
-        @core_field_element.stub!(:available_core_fields).and_return([])
-        @core_field_element.errors.should_receive(:each)
+        @core_field_element.expects(:save_and_add_to_form).returns(false)
+        @core_field_element.stubs(:available_core_fields).returns([])
+        @core_field_element.errors.expects(:each)
         post :create, :core_field_element => {}
       end
   
@@ -163,8 +163,8 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement, :to_param => "1")
-      CoreFieldElement.stub!(:find).and_return(@core_field_element)
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:find).returns(@core_field_element)
     end
     
     def do_put
@@ -181,8 +181,8 @@ describe CoreFieldElementsController do
 
     before(:each) do
       mock_user
-      @core_field_element = mock_model(CoreFieldElement, :destroy_and_validate => true)
-      CoreFieldElement.stub!(:find).and_return(@core_field_element)
+      @core_field_element = Factory.build(:core_field_element)
+      CoreFieldElement.stubs(:find).returns(@core_field_element)
     end
   
     def do_delete
@@ -190,12 +190,12 @@ describe CoreFieldElementsController do
     end
 
     it "should find the core_field_element requested" do
-      CoreFieldElement.should_receive(:find).with("1").and_return(@core_field_element)
+      CoreFieldElement.expects(:find).with("1").returns(@core_field_element)
       do_delete
     end
   
     it "should call destroy on the found core_field_element" do
-      @core_field_element.should_receive(:destroy_and_validate)
+      @core_field_element.expects(:destroy_and_validate)
       do_delete
     end
   

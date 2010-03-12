@@ -27,7 +27,27 @@ Factory.define :core_field_element do |cfe|
   cfe.name      { Factory.next(:core_field_element_name) }
 end
 
+Factory.define(:follow_up_element) do |fue|
+end
+
+Factory.define :form_element do |fe|
+end
+
+Factory.define :value_element do |ve|
+end
+
+Factory.define :value_set_element do |vse|
+  vse.name { Factory.next(:value_set_name) }
+end
+
+Factory.define :core_view_element do |cve|
+end
+
 Factory.sequence :core_field_element_name do |n|
+  "#{Faker::Lorem.words(3)} #{n}"
+end
+
+Factory.sequence :value_set_name do |n|
   "#{Faker::Lorem.words(3)} #{n}"
 end
 

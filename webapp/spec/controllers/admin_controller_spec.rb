@@ -45,8 +45,8 @@ describe AdminController do
     
     before(:each) do
       mock_user
-      @user.stub!(:is_admin?).and_return(false)
-      @user.stub!(:user_name).and_return("not_an_admin")
+      @user.stubs(:is_admin?).returns(false)
+      @user.stubs(:user_name).returns("not_an_admin")
     end
     
     def do_get

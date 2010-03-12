@@ -16,16 +16,16 @@ module CsvSpecHelper
   end
 
   def csv_mock_disease
-    morbidity_question = mock_model(Question)
-    morbidity_question.stub!(:short_name).and_return("morb_q")
+    morbidity_question = Factory.build(:question)
+    morbidity_question.stubs(:short_name).returns("morb_q")
 
-    morbidity_form = mock_model(Form)
-    morbidity_form.stub!(:exportable_questions).and_return([morbidity_question])
+    morbidity_form = Factory.build(:form)
+    morbidity_form.stubs(:exportable_questions).returns([morbidity_question])
 
-    d = mock_model(Disease)
-    d.stub!(:live_forms).with("MorbidityEvent").and_return([morbidity_form])
-    d.stub!(:live_forms).with("ContactEvent").and_return([])
-    d.stub!(:live_forms).with("PlaceEvent").and_return([])
+    d = Factory.build(:disease)
+    d.stubs(:live_forms).with("MorbidityEvent").returns([morbidity_form])
+    d.stubs(:live_forms).with("ContactEvent").returns([])
+    d.stubs(:live_forms).with("PlaceEvent").returns([])
 
     d
   end
@@ -288,7 +288,7 @@ module CsvSpecHelper
 
   def lab_output
     out = ""
-    out << "#{@lab_result.id},"
+    out << '"",' # @lab_result.id
     out << "#{@lab_result.lab_name},"
     out << "#{@lab_result.test_type.common_name},"
     out << "#{@lab_result.organism.organism_name},"
@@ -305,7 +305,7 @@ module CsvSpecHelper
 
   def treatment_output
     out = ""
-    out << "#{@treatment.id},"
+    out << '"",' # treatment.id
     out << "#{@treatment.treatment_given_yn.code_description},"
     out << "#{@treatment.treatment},"
     out << "#{@treatment.treatment_date},"
@@ -314,127 +314,126 @@ module CsvSpecHelper
 
   def csv_mock_event(event_type)
 
-    @person = mock_model(Person)
-    @person.stub!(:last_name).and_return("Lastname")
-    @person.stub!(:first_name).and_return("Firstname")
-    @person.stub!(:middle_name).and_return("Middlename")
-    @person.stub!(:birth_date).and_return("2008-01-01")
-    @person.stub!(:date_of_death).and_return("2008-01-02")
-    @person.stub!(:approximate_age_no_birthday).and_return(55)
-    @person.stub!(:birth_gender).and_return(simple_reference)
-    @person.stub!(:ethnicity).and_return(simple_reference)
-    @person.stub!(:primary_language).and_return(simple_reference)
-    @person.stub!(:disposition).and_return(simple_reference)
+    @person = Factory.build(:person)
+    @person.stubs(:last_name).returns("Lastname")
+    @person.stubs(:first_name).returns("Firstname")
+    @person.stubs(:middle_name).returns("Middlename")
+    @person.stubs(:birth_date).returns("2008-01-01")
+    @person.stubs(:date_of_death).returns("2008-01-02")
+    @person.stubs(:approximate_age_no_birthday).returns(55)
+    @person.stubs(:birth_gender).returns(simple_reference)
+    @person.stubs(:ethnicity).returns(simple_reference)
+    @person.stubs(:primary_language).returns(simple_reference)
+    @person.stubs(:disposition).returns(simple_reference)
 
-    entity = mock_model(PersonEntity)
-    entity.stub!(:telephones).and_return([])
-    entity.stub!(:person).and_return(@person)
-    entity.stub!(:races).and_return([])
+    entity = Factory.build(:person_entity)
+    entity.stubs(:telephones).returns([])
+    entity.stubs(:person).returns(@person)
+    entity.stubs(:races).returns([])
 
-    @treatment = mock_model(ParticipationsTreatment)
-    @treatment.stub!(:treatment_given_yn).and_return(simple_reference)
-    @treatment.stub!(:treatment).and_return("Antibiotics")
-    @treatment.stub!(:treatment_date).and_return("2008-02-01")
-    @treatment.stub!(:stop_treatment_date).and_return("2009-02-01")
+    @treatment = Factory.build(:participations_treatment)
+    @treatment.stubs(:treatment_given_yn).returns(simple_reference)
+    @treatment.stubs(:treatment).returns("Antibiotics")
+    @treatment.stubs(:treatment_date).returns("2008-02-01")
+    @treatment.stubs(:stop_treatment_date).returns("2009-02-01")
 
-    @contact = mock_model(ParticipationsContact)
-    @contact.stub!(:contact_type).and_return(simple_reference)
-    @contact.stub!(:disposition).and_return(simple_reference)
+    @contact = Factory.build(:participations_contact)
+    @contact.stubs(:contact_type).returns(simple_reference)
+    @contact.stubs(:disposition).returns(simple_reference)
 
-    patient = mock_model(InterestedParty,
-                         :person_entity => entity,
-                         :treatments => [@treatment],
-                         :risk_factor => nil)
+    patient = Factory.build(:interested_party)
+    patient.stubs(:person_entity).returns(entity)
+    patient.stubs(:treatments).returns([@treatment])
+    patient.stubs(:risk_factor).returns(nil)
 
-    @disease = mock_model(DiseaseEvent)
-    @disease.stub!(:disease).and_return(simple_reference)
-    @disease.stub!(:disease_onset_date).and_return("2008-01-03")
-    @disease.stub!(:date_diagnosed).and_return("2008-01-04")
-    @disease.stub!(:hospitalized).and_return(simple_reference)
-    @disease.stub!(:died).and_return(simple_reference)
+    @disease = Factory.build(:disease_event)
+    @disease.stubs(:disease).returns(simple_reference)
+    @disease.stubs(:disease_onset_date).returns("2008-01-03")
+    @disease.stubs(:date_diagnosed).returns("2008-01-04")
+    @disease.stubs(:hospitalized).returns(simple_reference)
+    @disease.stubs(:died).returns(simple_reference)
 
     if event_type == :morbidity
-      m = mock_model(MorbidityEvent,
-                     :type => 'MorbidityEvent',
-                     :answers => [mock_model(Answer, { :short_name => "morb_q", :text_answer => "morb_q answer"})])
+      a = Factory.build(:answer, :text_answer => 'morb_q answer')
+      a.stubs(:short_name).returns('morb_q')
+      m = Factory.build(:morbidity_event)
+      m.stubs(:answers).returns([a])
     elsif event_type == :contact
-      m = mock_model(ContactEvent)
-      m.stub!(:type).and_return('ContactEvent')
-      m.stub!(:participations_contact).and_return(@contact)
+      m = Factory.build(:contact_event)
+      m.stubs(:participations_contact).returns(@contact)
     else
-      m = mock_model(PlaceEvent)
-      m.stub!(:type).and_return('PlaceEvent')
+      m = Factory.build(:place_event)
     end
 
-    m.stub!(:id).and_return(1)
-    m.stub!(:address).and_return(nil)
-    m.stub!(:record_number).and_return("20080001")
-    m.stub!(:event_onset_date).and_return("2008-01-05")
-    m.stub!(:read_attribute).with("MMWR_week").and_return(1)
-    m.stub!(:read_attribute).with("MMWR_year").and_return(2008)
-    m.stub!(:age_info).and_return(OpenStruct.new(:in_years => 30))
+    m.stubs(:id).returns(1)
+    m.stubs(:address).returns(nil)
+    m.stubs(:record_number).returns("20080001")
+    m.stubs(:event_onset_date).returns("2008-01-05")
+    m.stubs(:read_attribute).with("MMWR_week").returns(1)
+    m.stubs(:read_attribute).with("MMWR_year").returns(2008)
+    m.stubs(:age_info).returns(OpenStruct.new(:in_years => 30))
 
-    m.stub!(:age_type).and_return(simple_reference)
-    m.stub!(:imported_from).and_return(simple_reference)
-    m.stub!(:lhd_case_status).and_return(simple_reference)
-    m.stub!(:state_case_status).and_return(simple_reference)
-    m.stub!(:outbreak_associated).and_return(simple_reference)
-    m.stub!(:outbreak_name).and_return("an outbreak")
+    m.stubs(:age_type).returns(simple_reference)
+    m.stubs(:imported_from).returns(simple_reference)
+    m.stubs(:lhd_case_status).returns(simple_reference)
+    m.stubs(:state_case_status).returns(simple_reference)
+    m.stubs(:outbreak_associated).returns(simple_reference)
+    m.stubs(:outbreak_name).returns("an outbreak")
 
-    m.stub!(:disease_event).and_return(@disease)
-    m.stub!(:disease_id).and_return(nil)
-    m.stub!(:event_name).and_return("an event")
-    m.stub!(:workflow_state).and_return("new")
-    m.stub!(:investigation_started_date).and_return("2008-01-06")
-    m.stub!(:investigation_completed_lhd_date).and_return("2008-01-07")
-    m.stub!(:review_completed_by_state_date).and_return("2008-01-08")
-    m.stub!(:results_reported_to_clinician_date).and_return("2008-01-09")
-    m.stub!(:first_reported_PH_date).and_return("2008-01-10")
-    m.stub!(:investigation_completed_LHD_date).and_return("2008-01-11")
+    m.stubs(:disease_event).returns(@disease)
+    m.stubs(:disease_id).returns(nil)
+    m.stubs(:event_name).returns("an event")
+    m.stubs(:workflow_state).returns("new")
+    m.stubs(:investigation_started_date).returns("2008-01-06")
+    m.stubs(:investigation_completed_lhd_date).returns("2008-01-07")
+    m.stubs(:review_completed_by_state_date).returns("2008-01-08")
+    m.stubs(:results_reported_to_clinician_date).returns("2008-01-09")
+    m.stubs(:first_reported_PH_date).returns("2008-01-10")
+    m.stubs(:investigation_completed_LHD_date).returns("2008-01-11")
     #Mon Jun 29 13:29:58 -0400 2009 should be exported as 2009-06-29 13:29:58
-    m.stub!(:created_at).and_return("Mon Jun 29 13:29:58 -0400 2009")
-    m.stub!(:updated_at).and_return("Mon Jun 29 13:29:58 -0400 2009")
+    m.stubs(:created_at).returns("Mon Jun 29 13:29:58 -0400 2009")
+    m.stubs(:updated_at).returns("Mon Jun 29 13:29:58 -0400 2009")
 
-    m.stub!(:investigator).and_return(simple_reference)
-    m.stub!(:sent_to_cdc).and_return(true)
+    m.stubs(:investigator).returns(simple_reference)
+    m.stubs(:sent_to_cdc).returns(true)
 
-    m.stub!(:primary_jurisdiction).and_return(simple_reference)
-    m.stub!(:interested_party).and_return(patient)
+    m.stubs(:primary_jurisdiction).returns(simple_reference)
+    m.stubs(:interested_party).returns(patient)
 
-    m.stub!(:place_exposures).and_return([])
-    m.stub!(:safe_call_chain).and_return(nil)
-    m.stub!(:labs).and_return([])
-    m.stub!(:hospitalization_facilities).and_return([])
-    m.stub!(:diagnostic_facilities).and_return([])
-    m.stub!(:clinicians).and_return([])
-    m.stub!(:contacts).and_return([])
-    m.stub!(:acuity).twice.and_return(1)
-    m.stub!(:other_data_1).and_return('First Other Data')
-    m.stub!(:other_data_2).and_return('Second Other Data')
-    m.stub!(:deleted_at).and_return(nil)
+    m.stubs(:place_exposures).returns([])
+    m.stubs(:safe_call_chain).returns(nil)
+    m.stubs(:labs).returns([])
+    m.stubs(:hospitalization_facilities).returns([])
+    m.stubs(:diagnostic_facilities).returns([])
+    m.stubs(:clinicians).returns([])
+    m.stubs(:contacts).returns([])
+    m.stubs(:acuity).twice.returns(1)
+    m.stubs(:other_data_1).returns('First Other Data')
+    m.stubs(:other_data_2).returns('Second Other Data')
+    m.stubs(:deleted_at).returns(nil)
 
-    @common_test_type = mock_model(CommonTestType)
-    @common_test_type.stub!(:common_name).and_return("Biopsy")
+    @common_test_type = Factory.build(:common_test_type)
+    @common_test_type.stubs(:common_name).returns("Biopsy")
 
-    @organism = mock_model(Organism)
-    @organism.stub!(:organism_name).and_return("Cooties")
+    @organism = Factory.build(:organism)
+    @organism.stubs(:organism_name).returns("Cooties")
 
-    @lab_result = mock_model(LabResult)
-    @lab_result.stub!(:lab_name).and_return("LabName")
-    @lab_result.stub!(:test_type).and_return(@common_test_type)
-    @lab_result.stub!(:organism).and_return(@organism)
-    @lab_result.stub!(:test_result).and_return(simple_reference)
-    @lab_result.stub!(:result_value).and_return("100")
-    @lab_result.stub!(:units).and_return("Gallons")
-    @lab_result.stub!(:reference_range).and_return("Detected")
-    @lab_result.stub!(:specimen_source).and_return(simple_reference)
-    @lab_result.stub!(:test_status).and_return(simple_reference)
-    @lab_result.stub!(:collection_date).and_return("2008-02-01")
-    @lab_result.stub!(:lab_test_date).and_return("2008-02-02")
-    @lab_result.stub!(:specimen_sent_to_state).and_return(simple_reference)
-    m.stub!(:lab_results).and_return([@lab_result])
+    @lab_result = Factory.build(:lab_result)
+    @lab_result.stubs(:lab_name).returns("LabName")
+    @lab_result.stubs(:test_type).returns(@common_test_type)
+    @lab_result.stubs(:organism).returns(@organism)
+    @lab_result.stubs(:test_result).returns(simple_reference)
+    @lab_result.stubs(:result_value).returns("100")
+    @lab_result.stubs(:units).returns("Gallons")
+    @lab_result.stubs(:reference_range).returns("Detected")
+    @lab_result.stubs(:specimen_source).returns(simple_reference)
+    @lab_result.stubs(:test_status).returns(simple_reference)
+    @lab_result.stubs(:collection_date).returns("2008-02-01")
+    @lab_result.stubs(:lab_test_date).returns("2008-02-02")
+    @lab_result.stubs(:specimen_sent_to_state).returns(simple_reference)
+    m.stubs(:lab_results).returns([@lab_result])
 
-    m.stub!(:reload).and_return(m)
+    m.stubs(:reload).returns(m)
     m
   end
 end

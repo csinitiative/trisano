@@ -50,7 +50,7 @@ describe PlaceEvent do
       before(:each) do
         mock_user
         @user = users(:default_user)
-        User.stub!(:current_user).and_return(@user)
+        User.stubs(:current_user).returns(@user)
 
         place_hash = { :place_child_events_attributes => [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "Davis Natatorium" } } },
               "participations_place_attributes" => {} } ],
@@ -75,7 +75,7 @@ describe PlaceEvent do
 
     before(:each) do
       @user = Factory.create(:user)
-      User.stub!(:current_user).and_return(@user)
+      User.stubs(:current_user).returns(@user)
       @place_entity = Factory.create(:place_entity)
       @place_event_hash = { :place_child_events_attributes => [{
             "interested_place_attributes"=>{

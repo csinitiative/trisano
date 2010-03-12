@@ -22,8 +22,8 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn)
-      ExportColumn.stub!(:find).and_return([@export_column])
+      @export_column = Factory.build(:export_column)
+      ExportColumn.stubs(:find).returns([@export_column])
     end
   
     def do_get
@@ -41,7 +41,7 @@ describe ExportColumnsController do
     end
   
     it "should find all export columns" do
-      ExportColumn.should_receive(:find).and_return([@export_column])
+      ExportColumn.expects(:find).returns([@export_column])
       do_get
     end
   
@@ -55,8 +55,8 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn)
-      ExportColumn.stub!(:find).and_return(@export_column)
+      @export_column = Factory.build(:export_column)
+      ExportColumn.stubs(:find).returns(@export_column)
     end
   
     def do_get
@@ -74,7 +74,7 @@ describe ExportColumnsController do
     end
   
     it "should find the export_column requested" do
-      ExportColumn.should_receive(:find).with("1").and_return(@export_column)
+      ExportColumn.expects(:find).with("1").returns(@export_column)
       do_get
     end
   
@@ -88,8 +88,8 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn)
-      ExportColumn.stub!(:new).and_return(@export_column)
+      @export_column = Factory.build(:export_column)
+      ExportColumn.stubs(:new).returns(@export_column)
     end
   
     def do_get
@@ -107,12 +107,12 @@ describe ExportColumnsController do
     end
   
     it "should create an new export_column" do
-      ExportColumn.should_receive(:new).and_return(@export_column)
+      ExportColumn.expects(:new).returns(@export_column)
       do_get
     end
   
     it "should not save the new export_column" do
-      @export_column.should_not_receive(:save)
+      @export_column.expects(:save).never
       do_get
     end
   
@@ -126,8 +126,8 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn)
-      ExportColumn.stub!(:find).and_return(@export_column)
+      @export_column = Factory.build(:export_column)
+      ExportColumn.stubs(:find).returns(@export_column)
     end
   
     def do_get
@@ -145,7 +145,7 @@ describe ExportColumnsController do
     end
   
     it "should find the export_column requested" do
-      ExportColumn.should_receive(:find).and_return(@export_column)
+      ExportColumn.expects(:find).returns(@export_column)
       do_get
     end
   
@@ -159,26 +159,26 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn, :to_param => "1")
-      @export_column.stub!(:export_name=).and_return("CDC") 
-      ExportColumn.stub!(:new).and_return(@export_column)
+      @export_column = Factory.create(:export_column)
+      @export_column.stubs(:export_name=).returns("CDC") 
+      ExportColumn.stubs(:new).returns(@export_column)
     end
     
     describe "with successful save" do
   
       def do_post
-        @export_column.should_receive(:save).and_return(true)
+        @export_column.expects(:save).returns(true)
         post :create, :export_column => {}
       end
   
       it "should create a new export_column" do
-        ExportColumn.should_receive(:new).with({}).and_return(@export_column)
+        ExportColumn.expects(:new).with({}).returns(@export_column)
         do_post
       end
 
       it "should redirect to the new export_column" do
         do_post
-        response.should redirect_to(export_column_url("1"))
+        response.should redirect_to(export_column_url(@export_column))
       end
       
     end
@@ -186,7 +186,7 @@ describe ExportColumnsController do
     describe "with failed save" do
 
       def do_post
-        @export_column.should_receive(:save).and_return(false)
+        @export_column.expects(:save).returns(false)
         post :create, :export_column => {}
       end
   
@@ -202,19 +202,19 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn, :to_param => "1")
-      ExportColumn.stub!(:find).and_return(@export_column)
+      @export_column = Factory.create(:export_column)
+      ExportColumn.stubs(:find).returns(@export_column)
     end
     
     describe "with successful update" do
 
       def do_put
-        @export_column.should_receive(:update_attributes).and_return(true)
+        @export_column.expects(:update_attributes).returns(true)
         put :update, :id => "1"
       end
 
       it "should find the export_column requested" do
-        ExportColumn.should_receive(:find).with("1").and_return(@export_column)
+        ExportColumn.expects(:find).with("1").returns(@export_column)
         do_put
       end
 
@@ -230,7 +230,7 @@ describe ExportColumnsController do
 
       it "should redirect to the export_column" do
         do_put
-        response.should redirect_to(export_column_url("1"))
+        response.should redirect_to(export_column_url(@export_column))
       end
 
     end
@@ -238,7 +238,7 @@ describe ExportColumnsController do
     describe "with failed update" do
 
       def do_put
-        @export_column.should_receive(:update_attributes).and_return(false)
+        @export_column.expects(:update_attributes).returns(false)
         put :update, :id => "1"
       end
 
@@ -254,8 +254,8 @@ describe ExportColumnsController do
 
     before(:each) do
       mock_user
-      @export_column = mock_model(ExportColumn, :destroy => true)
-      ExportColumn.stub!(:find).and_return(@export_column)
+      @export_column = Factory.build(:export_column)
+      ExportColumn.stubs(:find).returns(@export_column)
     end
   
     def do_delete
@@ -263,12 +263,12 @@ describe ExportColumnsController do
     end
 
     it "should find the export_column requested" do
-      ExportColumn.should_receive(:find).with("1").and_return(@export_column)
+      ExportColumn.expects(:find).with("1").returns(@export_column)
       do_delete
     end
   
     it "should call destroy on the found export_column" do
-      @export_column.should_receive(:destroy)
+      @export_column.expects(:destroy)
       do_delete
     end
   

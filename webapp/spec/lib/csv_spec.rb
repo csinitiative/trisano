@@ -38,7 +38,7 @@ describe Export::Csv do
       }
     }
     # There are 7 races
-    ExternalCode.stub!(:count).and_return(7)
+    ExternalCode.stubs(:count).returns(7)
   end
 
   it "should expose an export method that takes an event or a list of events and an optional proc" do
@@ -104,7 +104,7 @@ describe Export::Csv do
 
     describe "and when contact promoted to cmr" do
       before do
-        User.current_user = mock_user
+        login_as_super_user
         @contact_event.promote_to_morbidity_event.should be_true
       end
 
@@ -118,7 +118,8 @@ describe Export::Csv do
 
   describe 'picking codes over descriptions' do
     before(:each) do
-      @county = mock_model(ExternalCode, :jurisdiction => nil)
+      @county = Factory.build(:external_code)
+      @county.stubs(:jurisdiction).returns(nil)
       @address = Factory.build(:address)
       @address.attributes = {
         :street_number => nil,
@@ -129,19 +130,21 @@ describe Export::Csv do
         :county => @county,
         :postal_code => nil
       }
-      @event = csv_mock_event(:morbidity)
+      @event = Factory.create(:morbidity_event)
     end
 
     it 'should return county code, not name' do
-      @event.stub!(:address).and_return(@address)
-      @county.should_receive(:the_code).and_return('56')
+      @event.stubs(:address).returns(@address)
+      @county.expects(:the_code).returns('56')
       Export::Csv.export(@event, {'patient_address_county' => 'use_code'})
     end
 
     it 'should pick cdc code, rather then disease name' do
-      d = mock_model(Disease)
-      d.should_receive(:cdc_code).and_return('10110')
-      @disease.should_receive(:disease).and_return(d)
+      d = Factory.build(:disease)
+      d.expects(:cdc_code).returns('10110')
+      de = Factory.build(:disease_event)
+      @event.stubs(:disease_event).returns(de)
+      de.expects(:disease).returns(d)
       Export::Csv.export(@event, {'patient_disease' => 'use_code'})
     end
   end

@@ -40,9 +40,9 @@ describe PlaceEventsController do
 
       before(:each) do
         @event = mock_event
-        Event.stub!(:find).and_return(@event)
-        @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
-        @event.stub!(:read_attribute).and_return('PlaceEvent') 
+        Event.stubs(:find).returns(@event)
+        @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+        @event.stubs(:read_attribute).returns('PlaceEvent') 
       end
       
       def do_get
@@ -60,7 +60,7 @@ describe PlaceEventsController do
       end
   
       it "should find the event requested" do
-        Event.should_receive(:find).once().with("75").and_return(@event)
+        Event.expects(:find).once().with("75").returns(@event)
         do_get
       end
   
@@ -74,9 +74,9 @@ describe PlaceEventsController do
 
       before(:each) do
         @event = mock_event
-        Event.stub!(:find).and_return(@event)
-        @user.stub!(:is_entitled_to_in?).and_return(false)
-        @event.stub!(:read_attribute).and_return('PlaceEvent') 
+        Event.stubs(:find).returns(@event)
+        @user.stubs(:is_entitled_to_in?).returns(false)
+        @event.stubs(:read_attribute).returns('PlaceEvent') 
       end
   
       def do_get
@@ -84,14 +84,14 @@ describe PlaceEventsController do
       end
 
       it "should log access and be successful" do
-        @event.should_receive(:add_note)
+        @event.expects(:add_note)
         do_get
         response.should be_success
       end
 
       it "should find the event requested" do
-        @event.should_receive(:add_note)
-        Event.should_receive(:find).with("75").and_return(@event)
+        @event.expects(:add_note)
+        Event.expects(:find).with("75").returns(@event)
         do_get
       end
     end
@@ -101,9 +101,9 @@ describe PlaceEventsController do
       before(:each) do
         mock_user
         @event = mock_event
-        Event.stub!(:find).and_return(@event)
-        @user.stub!(:is_entitled_to_in?).with(:view_event, 75).and_return(true)
-        @event.stub!(:read_attribute).and_return('MorbidityEvent') 
+        Event.stubs(:find).returns(@event)
+        @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+        @event.stubs(:read_attribute).returns('MorbidityEvent') 
       end
   
       def do_get
@@ -111,7 +111,7 @@ describe PlaceEventsController do
       end
       
       it "should find the event requested" do
-        Event.should_receive(:find).with("75").and_return(@event)
+        Event.expects(:find).with("75").returns(@event)
         do_get
       end
 
@@ -143,13 +143,13 @@ describe PlaceEventsController do
 
       before(:each) do
         @event = mock_event
-        @form_reference = mock_model(FormReference)
-        @form = mock_model(Form, :null_object => true)
+        @form_reference = Factory.build(:form_reference)
+        @form = Factory.build(:form)
 
-        Event.stub!(:find).and_return(@event)
-        @event.stub!(:get_investigation_forms).and_return([@form])
-        @user.stub!(:is_entitled_to_in?).with(:update_event, 75).and_return(true)
-        @event.stub!(:read_attribute).and_return('PlaceEvent') 
+        Event.stubs(:find).returns(@event)
+        @event.stubs(:get_investigation_forms).returns([@form])
+        @user.stubs(:is_entitled_to_in?).with(:update_event, 75).returns(true)
+        @event.stubs(:read_attribute).returns('PlaceEvent') 
       end
   
       def do_get
@@ -167,7 +167,7 @@ describe PlaceEventsController do
       end
   
       it "should find the event requested" do
-        Event.should_receive(:find).and_return(@event)
+        Event.expects(:find).returns(@event)
         do_get
       end
   
@@ -190,10 +190,10 @@ describe PlaceEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("PlaceEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("PlaceEvent")
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -202,13 +202,13 @@ describe PlaceEventsController do
     end
 
     it "should redirect to where the user came from" do
-      @event.should_receive(:soft_delete).and_return(true)
+      @event.expects(:soft_delete).returns(true)
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
     
     it "should set the flash notice to a success message" do
-      @event.should_receive(:soft_delete).and_return(true)
+      @event.expects(:soft_delete).returns(true)
       do_post
       flash[:notice].should eql("The event was successfully marked as deleted.")
     end
@@ -219,10 +219,10 @@ describe PlaceEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("PlaceEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(true)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("PlaceEvent")
+      @user.stubs(:is_entitled_to_in?).returns(true)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -231,20 +231,20 @@ describe PlaceEventsController do
     end
 
     it "should redirect to where the user came from" do
-      @event.should_receive(:soft_delete).and_return(false)
+      @event.expects(:soft_delete).returns(false)
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
     
     it "should set the flash error to an error message" do
-      @event.should_receive(:soft_delete).and_return(false)
+      @event.expects(:soft_delete).returns(false)
       do_post
       flash[:error].should eql("An error occurred marking the event as deleted.")
     end
 
     it "should not add a note" do
-      @event.should_receive(:soft_delete).and_return(false)
-      @event.should_not_receive(:add_note)
+      @event.expects(:soft_delete).returns(false)
+      @event.expects(:add_note).never
       do_post
     end
   end
@@ -254,10 +254,10 @@ describe PlaceEventsController do
     before(:each) do
       mock_user
       @event = mock_event
-      Event.stub!(:find).and_return(@event)
-      @event.stub!(:read_attribute).and_return("PlaceEvent")
-      @user.stub!(:is_entitled_to_in?).and_return(false)
-      @event.stub!(:add_note).and_return(true)
+      Event.stubs(:find).returns(@event)
+      @event.stubs(:read_attribute).returns("PlaceEvent")
+      @user.stubs(:is_entitled_to_in?).returns(false)
+      @event.stubs(:add_note).returns(true)
     end
     
     def do_post
@@ -271,7 +271,7 @@ describe PlaceEventsController do
     end
 
     it "should not add a note" do
-      @event.should_not_receive(:add_note)
+      @event.expects(:add_note).never
       do_post
     end
   end

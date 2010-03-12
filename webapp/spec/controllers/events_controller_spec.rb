@@ -25,8 +25,8 @@ describe EventsController do
 
     before(:each) do
       mock_user
-      @place = mock_model(Place)
-      Place.stub!(:find).and_return([@place])
+      @place = Factory.build(:place)
+      Place.stubs(:find).returns([@place])
     end
   
     def do_post

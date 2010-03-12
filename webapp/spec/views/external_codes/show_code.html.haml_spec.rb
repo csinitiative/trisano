@@ -21,17 +21,17 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe "/external_codes/show_code.html.haml" do
 
   before(:each) do
-    cn = mock_model(CodeName)
-    cn.stub!(:code_name).and_return('test')
-    cn.stub!(:description).and_return('Test')
-    cn.stub!(:external).and_return(true)
+    cn = Factory.build(:code_name)
+    cn.stubs(:code_name).returns('test')
+    cn.stubs(:description).returns('Test')
+    cn.stubs(:external).returns(true)
 
-    code = mock_model(ExternalCode)
-    code.stub!(:the_code).and_return('TEST')
-    code.stub!(:code_name).and_return('test')
-    code.stub!(:code_description).and_return('Test Code')
-    code.stub!(:sort_order).and_return(1)
-    code.should_receive(:deleted?).at_least(:once).and_return(false)
+    code = Factory.build(:external_code)
+    code.stubs(:the_code).returns('TEST')
+    code.stubs(:code_name).returns('test')
+    code.stubs(:code_description).returns('Test Code')
+    code.stubs(:sort_order).returns(1)
+    code.stubs(:deleted?).returns(false)
 
     assigns[:code_name] = cn
     assigns[:external_code] = code

@@ -19,11 +19,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 
 def configure_request
-  request = mock(Object)
-  request.stub!(:xhr?).and_return(@xhr_request)
+  request = mock('Object')
+  request.stubs(:xhr?).returns(@xhr_request)
   @template = Object.new
   @template.extend(ApplicationHelper)
-  @template.stub!(:request).and_return(request)
+  @template.stubs(:request).returns(request)
 end
 
 def configure_radio_buttons

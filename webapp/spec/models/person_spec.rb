@@ -181,26 +181,26 @@ end
 
 describe Person, "with one or more races" do
   it "should look up the race description" do
-    entity = mock(PersonEntity)
-    entity.stub!(:races).and_return([external_codes(:race_white)])
+    entity = Factory.build(:person_entity)
+    entity.stubs(:races).returns([external_codes(:race_white)])
     person = Person.new(:last_name => 'Entwistle')
-    person.stub!(:person_entity).and_return(entity)
+    person.stubs(:person_entity).returns(entity)
     person.race_description.should eql('White')
   end
 
   it "should build a race description if several races" do
-    entity = mock(PersonEntity)
-    entity.stub!(:races).and_return([external_codes(:race_white), external_codes(:race_asian), external_codes(:race_indian)])
+    entity = Factory.build(:person_entity)
+    entity.stubs(:races).returns([external_codes(:race_white), external_codes(:race_asian), external_codes(:race_indian)])
     person = Person.new(:last_name => 'Entwistle')
-    person.stub!(:person_entity).and_return(entity)
+    person.stubs(:person_entity).returns(entity)
     person.race_description.should eql('White, Asian and American Indian')
   end
 
   it "should not be an error to have no race" do
-    entity = mock(PersonEntity)
-    entity.stub!(:races).and_return([])
+    entity = Factory.build(:person_entity)
+    entity.stubs(:races).returns([])
     person = Person.new(:last_name => 'Entwistle')
-    person.stub!(:person_entity).and_return(entity)
+    person.stubs(:person_entity).returns(entity)
     person.race_description.should be_nil
   end
 

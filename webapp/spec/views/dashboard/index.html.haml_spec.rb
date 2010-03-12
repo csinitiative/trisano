@@ -20,27 +20,25 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 include ApplicationHelper
 
 describe "/dashboard/index.html.haml" do
-  
+
   before(:each) do
     @assignees = []
-    User.stub!(:default_task_assignees).and_return(@assignees)
-    @user = mock_model(User)
-    @user.stub!(:is_entitled_to_in?).and_return(true)
+    User.stubs(:default_task_assignees).returns(@assignees)
+    @user = Factory.build(:user)
+    @user.stubs(:id).returns(1)
+    @user.stubs(:is_entitled_to_in?).returns(true)
     @jurisdictions = []
-    @user.stub!(:jurisdictions_for_privilege).with(:approve_event_at_state).and_return(@jurisdictions)
-    User.stub!(:current_user).and_return(@user)
+    @user.stubs(:jurisdictions_for_privilege).with(:approve_event_at_state).returns(@jurisdictions)
+    User.stubs(:current_user).returns(@user)
   end
 
   describe 'without user tasks' do
 
     before(:each) do
-      # All the ordinary mocks had to be made into mock models to provide the right whatnots to
-      # Rails 2.3 and Rspec 1.1.12.  Things like to_param I imagine, for constucting URLs.
-      # @user = mock('current user')
-      @user.stub!(:filter_tasks).and_return([])
-      @user.should_receive(:id).exactly(6).times.and_return(1)
+      @user.stubs(:filter_tasks).returns([])
+      @user.expects(:id).times(6).returns(1)
     end
-    
+
     it 'should not render the table' do
       render 'dashboard/index.html.haml'
       response.should_not have_tag('table')
@@ -50,7 +48,7 @@ describe "/dashboard/index.html.haml" do
       render 'dashboard/index.html.haml'
       response.should have_tag('h2', :text => 'Tasks')
     end
-                             
+
     it 'should have a "no tasks" message' do
       render 'dashboard/index.html.haml'
       response.should have_tag('span', :text => 'No tasks')
@@ -61,35 +59,31 @@ describe "/dashboard/index.html.haml" do
   describe 'with user tasks' do
 
     before(:each) do
-      # @event = mock('event')
-      @event = mock_model(Event)
-      @jurisdiction = mock_model(Jurisdiction, :secondary_entity_id => '1')
-      @event.stub!(:all_jurisdictions).and_return([@jurisdiction])
-      
+      @event = Factory.create(:morbidity_event)
+      @jurisdiction = Factory.build(:jurisdiction, :secondary_entity_id => '1')
+      @event.stubs(:all_jurisdictions).returns([@jurisdiction])
+
       @values = {
         :name          => 'First task',
         :due_date      => Date.today,
         :category_name => 'Treatment',
         :priority      => 'P1',
         :notes         => 'Sample notes',
-        :user_name     => 'Default User', 
+        :user_name     => 'Default User',
         :status        => 'pending',
         :disease_name  => 'ATBF'}
 
-      # @task = mock(@values[:name])
-      @task = mock_model(Task)
-      @task.stub!(:id).and_return(1)
-      @task.stub!(:event).and_return(@event)
-      @task.should_receive(:user_id).and_return(1)
-      
+      @task = Factory.build(:task)
+      @task.stubs(:id).returns(1)
+      @task.stubs(:event).returns(@event)
+      @task.stubs(:user_id).returns(1)
+
       @tasks = [@task]
       @values.each do |method, value|
-        @task.should_receive(method).at_least(2).times.and_return(value)
+        @task.expects(method).at_least(2).returns(value)
       end
-      #@user = mock('user')
-      #@user = mock_model(User)
-      @user.should_receive(:filter_tasks).and_return(@tasks)
-      @user.should_receive(:id).exactly(6).times.and_return(1)
+      @user.expects(:filter_tasks).returns(@tasks)
+      @user.expects(:id).times(6).returns(1)
       params[:look_back] = '0'
       params[:look_ahead] = '0'
       params['task'] = {'status' => 'complete'}
@@ -104,11 +98,11 @@ describe "/dashboard/index.html.haml" do
     it 'should have columns for name, date, priority, category' do
       render 'dashboard/index.html.haml'
       [%w(Name              name),
-        %w(Description     notes),
-        %w(Priority          priority),
-        %w(Due&nbsp;date     due_date),
-        %w(Category          category_name),
-        %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
+       %w(Description       notes),
+       %w(Priority          priority),
+       %w(Due&nbsp;date     due_date),
+       %w(Category          category_name),
+       %w(Assigned&nbsp;to  user_name)].each do |text, order_by|
         response.should have_tag("th a[onclick*=tasks_ordered_by=#{order_by}]", :text => text)
         response.should have_tag("th a[onclick*=look_back=0]", :text => text)
       end
@@ -168,19 +162,18 @@ describe "/dashboard/index.html.haml" do
       end
 
       it 'should have a list of disease check boxes' do
-        # disease = mock('disease')
-        disease = mock_model(Disease)
-        disease.should_receive(:id).twice.and_return('id')
-        disease.should_receive(:disease_name).twice.and_return('Sample Disease')
-        Disease.should_receive(:find).with(:all, :order => 'disease_name').and_return([disease])
+        disease = Factory.build(:disease)
+        disease.expects(:id).twice.returns('id')
+        disease.expects(:disease_name).twice.returns('Sample Disease')
+        Disease.expects(:find).with(:all, :order => 'disease_name').returns([disease])
         render 'dashboard/index.html.haml'
         response.should have_tag("label input[type=checkbox]")
         response.should have_tag("label", :text => /Sample Disease/)
       end
 
       it 'should have a list of user check boxes' do
-        User.stub!(:default_task_assignees).and_return([@user])
-        @user.should_receive(:best_name).twice.and_return('default_user')
+        User.stubs(:default_task_assignees).returns([@user])
+        @user.expects(:best_name).twice.returns('default_user')
         render 'dashboard/index.html.haml'
         response.should have_tag("label", :task => 'default_user') do
           with_tag("input[type=checkbox]")
@@ -189,8 +182,8 @@ describe "/dashboard/index.html.haml" do
           
 
       it 'should have a list of jurisdiction check boxes' do
-        jurisdiction = mock_model(Place)
-        jurisdiction.should_receive(:name).twice.and_return('some jurisdiction')
+        jurisdiction = Factory.build(:place)
+        jurisdiction.expects(:name).twice.returns('some jurisdiction')
         @jurisdictions << jurisdiction
         render 'dashboard/index.html.haml'
         response.should have_tag("label", :task => 'some jurisdiction') do
@@ -215,10 +208,9 @@ describe "/dashboard/index.html.haml" do
 
   describe 'with nil field comparisons in user tasks' do
     before(:each) do
-      # @event = mock('event')
-      @event = mock_model(Event)
-      @jurisdiction = mock_model(Jurisdiction, :secondary_entity_id => '1')
-      @event.stub!(:all_jurisdictions).and_return([@jurisdiction])
+      @event = Factory.create(:morbidity_event)
+      @jurisdiction = Factory.build(:jurisdiction, :secondary_entity_id => '1')
+      @event.stubs(:all_jurisdictions).returns([@jurisdiction])
 
       @values = {
         :name          => 'First task',
@@ -238,30 +230,26 @@ describe "/dashboard/index.html.haml" do
         :user_name     => nil,
         :status        => nil,
         :disease_name  => nil}
-      # @task_values = mock(@values[:name])
-      @task_values = mock_model(Task)
-      # @task_nils   = mock('nil task')
-      @task_nils   = mock_model(Task)
+      @task_values = Factory.build(:task)
+      @task_nils   = Factory.build(:task)
 
-      @task_values.stub!(:id).and_return(1)
-      @task_values.stub!(:status).and_return('pending')
-      @task_values.stub!(:event).and_return(@event)
-      @task_values.should_receive(:user_id).and_return(1)
+      @task_values.stubs(:id).returns(1)
+      @task_values.stubs(:status).returns('pending')
+      @task_values.stubs(:event).returns(@event)
+      @task_values.stubs(:user_id).returns(1)
 
-      @task_nils.stub!(:id).and_return(2)
-      @task_nils.stub!(:status).and_return('pending')
-      @task_nils.stub!(:event).and_return(@event)
-      @task_nils.should_receive(:user_id).and_return(1)
+      @task_nils.stubs(:id).returns(2)
+      @task_nils.stubs(:status).returns('pending')
+      @task_nils.stubs(:event).returns(@event)
+      @task_nils.stubs(:user_id).returns(1)
 
       @tasks = [@task_values, @task_nils]
       @values.each do |method, value|
-        @task_values.stub!(method).and_return(value)
-        @task_nils.stub!(method).and_return(nil)
+        @task_values.stubs(method).returns(value)
+        @task_nils.stubs(method).returns(nil)
       end
-      # @user = mock('user')
-      #@user = mock_model(User)
-      @user.should_receive(:filter_tasks).and_return(@tasks)      
-      @user.should_receive(:id).exactly(6).times.and_return(1)
+      @user.stubs(:filter_tasks).returns(@tasks)
+      @user.expects(:id).times(6).returns(1)
     end
 
     %w(name due_date notes category_name priority user_name).each do |meth|
