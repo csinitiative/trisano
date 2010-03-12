@@ -6,7 +6,5 @@ def default_deployment
   File.join(File.dirname(__FILE__), '..', '..', 'deployments', 'development')
 end
 
-include Trisano
-Deployment.delete_all_plugin_links
-deployment = Deployment.new(ARGV.shift || default_deployment)
-deployment.create_plugin_symlinks
+Trisano::Deployment.use_deployment(ARGV.shift || default_deployment)
+

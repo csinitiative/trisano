@@ -41,7 +41,7 @@ end
 # Sequences
 #
 Factory.sequence :user_name do |n|
-  Faker::Name.first_name
+  "#{Faker::Name.first_name} #{n}"
 end
 
 Factory.sequence :uid do |n|

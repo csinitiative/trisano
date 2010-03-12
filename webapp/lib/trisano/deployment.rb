@@ -6,6 +6,12 @@ module Trisano
   class Deployment
 
     class << self
+      def use_deployment(deployment)
+        delete_all_plugin_links
+        prep_plugin_dir
+        new(deployment).create_plugin_symlinks
+      end
+
       def delete_all_plugin_links
         Dir[trisano_extensions].each do |ext|
           FileUtils.rm(ext) if File.symlink?(ext)
@@ -30,6 +36,11 @@ module Trisano
             File.dirname(__FILE__), '..', '..', '..'))
       end
 
+      def prep_plugin_dir
+        unless File.exists?(trisano_ext_path)
+          FileUtils.mkdir_p(trisano_ext_path)
+        end
+      end
     end
 
     def initialize(deployment)

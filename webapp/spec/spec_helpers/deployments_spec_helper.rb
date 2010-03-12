@@ -30,8 +30,16 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(expanded_other_project_plugin_path(name)).returns(true)
   end
 
+  def given_no_trisano_plugin_dir
+    File.expects(:exists?).with(vendor_trisano_dir).returns(false)
+  end
+
+  def given_vendor_trisano_exists
+    File.expects(:exists?).with(vendor_trisano_dir).returns(true)
+  end
+
   def plugin_symlink(plugin_name)
-    RAILS_ROOT + "/vendor/trisano/" + plugin_name
+    File.join(vendor_trisano_dir, plugin_name)
   end
 
   def plugin_path(name)
@@ -64,5 +72,9 @@ module DeploymentsSpecHelper
 
   def project_descriptor(deployment)
     File.expand_path(project_deployment(deployment) + "/descriptor.yml")
+  end
+
+  def vendor_trisano_dir
+    File.expand_path(File.join(RAILS_ROOT, 'vendor', 'trisano'))
   end
 end
