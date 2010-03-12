@@ -1,5 +1,3 @@
-#require 'mocha'
-
 module DeploymentsSpecHelper
 
   def given_plugin_symlink(name)
