@@ -30,6 +30,10 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(expanded_other_project_plugin_path(name)).returns(true)
   end
 
+  def given_other_project_dir(name)
+    File.expects(:exists?).with(expanded_other_project_path(name)).returns(true)
+  end
+
   def given_no_trisano_plugin_dir
     File.expects(:exists?).with(vendor_trisano_dir).returns(false)
   end
@@ -38,8 +42,21 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(vendor_trisano_dir).returns(true)
   end
 
+  def given_no_installer_link
+    File.expects(:exists?).with(installer_symlink).returns(false)
+  end
+
+  def given_installer_symlink
+    File.expects(:exists?).with(installer_symlink).returns(true)
+    File.expects(:symlink?).with(installer_symlink).returns(true)
+  end
+
   def plugin_symlink(plugin_name)
     File.join(vendor_trisano_dir, plugin_name)
+  end
+
+  def installer_symlink
+    File.expand_path(File.join(RAILS_ROOT, '../install'))
   end
 
   def plugin_path(name)
@@ -51,15 +68,23 @@ module DeploymentsSpecHelper
   end
 
   def other_project_plugin_path(name)
-    RAILS_ROOT + "/../../otherproject/plugins/" + name
+    File.join(other_project_path('plugins'), name)
+  end
+
+  def other_project_path(name)
+    File.expand_path(File.join(RAILS_ROOT, "/../../otherproject/", name))
   end
 
   def expanded_other_project_plugin_path(name)
     File.expand_path(other_project_plugin_path(name))
   end
 
+  def expanded_other_project_path(name)
+    File.expand_path(other_project_path(name))
+  end
+
   def other_project_deployment(name)
-    RAILS_ROOT + "/../../otherproject/deployments/" + name
+    File.expand_path(File.join(other_project_path('deployments'), name))
   end
 
   def other_project_descriptor(deployment)

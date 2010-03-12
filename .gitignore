@@ -21,3 +21,4 @@ webrat-*
 /webapp/vendor/trisano/*
 /webapp/db/development_structure.sql
 /webapp/db/names.sql
+/install
