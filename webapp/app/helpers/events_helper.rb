@@ -1314,7 +1314,7 @@ module EventsHelper
     options[:url]          ||= {:controller => "morbidity_events", :action => "auto_complete_for_#{options[:search_field]}"}
     options[:results]      ||= options[:search_field] + '_results'
     options[:insertion_point] ||= 'Insertion.Bottom'
-    options[:after_update_element_url] ||= {:controller => "moridity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
+    options[:after_update_element_url] ||= {:controller => "morbidity_events", :action => options[:search_field] + '_selection', :event_type => options[:event_type]}
     options[:after_update_element]     ||= live_search_callback(:update => options[:results], :insertion_point => options[:insertion_point],
       :url => options[:after_update_element_url])
     <<-HTML

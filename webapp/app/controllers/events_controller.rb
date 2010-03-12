@@ -16,7 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EventsController < ApplicationController
-
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
   before_filter :can_new?, :only => [:new]
   before_filter :can_view?, :only => [:show, :export_single]
