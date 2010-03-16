@@ -27,7 +27,11 @@ module DeploymentsSpecHelper
   end
 
   def given_other_project_plugin(name)
-    File.expects(:exists?).with(expanded_other_project_plugin_path(name)).returns(true)
+    File.stubs(:exists?).with(expanded_other_project_plugin_path(name)).returns(true)
+  end
+
+  def given_other_project_plugin_js(name)
+    File.expects(:exists?).with(expanded_other_project_plugin_js_path(name)).returns(true)
   end
 
   def given_other_project_dir(name)
@@ -49,6 +53,23 @@ module DeploymentsSpecHelper
   def given_installer_symlink
     File.expects(:exists?).with(installer_symlink).returns(true)
     File.expects(:symlink?).with(installer_symlink).returns(true)
+  end
+
+  def given_ext_javascript_symlink(link_name)
+    Dir.expects(:[]).with(File.join(Deployment.ext_javascripts, '*')).returns(ext_javascript_symlink(link_name))
+    File.expects(:symlink?).with(ext_javascript_symlink(link_name)).returns(true)
+  end
+
+  def given_no_ext_javascript_dir
+    File.expects(:exists?).with(Deployment.ext_javascripts).returns(false)
+  end
+
+  def given_ext_javascript_dir
+    File.expects(:exists?).with(Deployment.ext_javascripts).returns(true)
+  end
+
+  def ext_javascript_symlink(link_name)
+    File.join(RAILS_ROOT, 'public', 'javascripts', 'ext', link_name)
   end
 
   def plugin_symlink(plugin_name)
@@ -81,6 +102,10 @@ module DeploymentsSpecHelper
 
   def expanded_other_project_path(name)
     File.expand_path(other_project_path(name))
+  end
+
+  def expanded_other_project_plugin_js_path(name)
+    File.join(expanded_other_project_plugin_path(name), 'public', 'javascripts')
   end
 
   def other_project_deployment(name)

@@ -42,10 +42,31 @@ describe Deployment do
     Deployment.new(other_project_deployment('a_deployment')).create_installer_symlink
   end
 
-  it "should delete installer symlink, it present" do
+  it "should delete installer symlink, if present" do
     given_installer_symlink
     FileUtils.expects(:rm).with(installer_symlink)
     Deployment.delete_installer_symlink
   end
 
+  it "should delete ext javascript dir, if present" do
+    File.expects(:exists?).with(Deployment.ext_javascripts).returns(true)
+    FileUtils.expects(:rm_rf).with(Deployment.ext_javascripts)
+    Deployment.delete_ext_javascripts
+  end
+
+  it "should create ext javascript directory, if not present" do
+    given_no_ext_javascript_dir
+    FileUtils.expects(:mkdir_p).with(Deployment.ext_javascripts)
+    Deployment.prep_ext_javascripts
+  end
+
+  it "should link plugin javascript dirs into ext javascripts dir" do
+    given_other_deployment('a_deployment', {'plugins' => ['foo'] })
+    given_other_project_plugin('foo')
+    given_other_project_plugin_js('foo')
+    given_ext_javascript_dir
+    File.expects(:exists?).with(Deployment.ext_javascript('foo')).returns(false)
+    FileUtils.expects(:ln_sf).with(expanded_other_project_plugin_js_path('foo'), File.join(Deployment.ext_javascripts, 'foo'))
+    Deployment.new(other_project_deployment('a_deployment')).create_javascript_links
+  end
 end
