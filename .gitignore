@@ -22,3 +22,4 @@ webrat-*
 /webapp/db/development_structure.sql
 /webapp/db/names.sql
 /install
+/webapp/public/javascripts/ext
