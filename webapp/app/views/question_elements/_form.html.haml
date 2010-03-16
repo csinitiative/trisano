@@ -16,7 +16,6 @@
 = f.hidden_field :parent_element_id
 
 - f.fields_for(:question)  do |q|
-  = error_messages_for :object => q.object
   = q.hidden_field :core_data
 
   %p

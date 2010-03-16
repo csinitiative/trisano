@@ -37,7 +37,7 @@ class QuestionElementsController <  AdminController
       @question_element.question = Question.new
       @question_element.parent_element_id = params[:form_element_id]
       @question_element.question.core_data = params[:core_data] == "true" ? true : false
-      
+
       @reference_element = FormElement.find(params[:form_element_id], :include => :form)
       @library_elements = []
       @export_columns = export_columns(@reference_element.form.disease_ids)
@@ -60,12 +60,10 @@ class QuestionElementsController <  AdminController
       form_id = @question_element.form_id
       @form = Form.find(form_id)
     else
-      @question_element = post_transaction_refresh(@question_element, params[:question_element])
-      @question_element.question = Question.new(params[:question_element][:question_attributes])
       @reference_element = FormElement.find(@question_element.parent_element_id)
       @library_elements = []
       @export_columns = export_columns(@reference_element.form.disease_ids)
-      render :action => "new" 
+      render :action => "new", :status => :bad_request
     end
 
   end

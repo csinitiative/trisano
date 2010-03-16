@@ -25,11 +25,11 @@ describe QuestionElementsController do
       @question_element = Factory.build(:question_element)
       QuestionElement.stubs(:find).returns([@question_element])
     end
-  
+
     def do_get
       get :index
     end
-  
+
     it "should return a 404" do
       do_get
       response.response_code.should == 404
@@ -43,7 +43,7 @@ describe QuestionElementsController do
       @question_element = Factory.build(:question_element)
       QuestionElement.stubs(:find).returns(@question_element)
     end
-  
+
     def do_get
       get :show, :id => "1"
     end
@@ -73,7 +73,7 @@ describe QuestionElementsController do
       @section_element.stubs(:form).returns(@form)
       @form.stubs(:disease_ids).returns([])
     end
-  
+
     def do_get
       get :new, :form_element_id => 1
     end
@@ -176,23 +176,22 @@ describe QuestionElementsController do
         do_post
         response.should render_template('create')
       end
-      
+
     end
-    
+
     describe "with failed save" do
 
       def do_post
         @question_element.expects(:save_and_add_to_form).returns(false)
-        @question_element.errors.expects(:each)
         post :create, :question_element => {}
       end
-  
+
       it "should re-render 'new'" do
         @question_element.stubs(:question=)
         do_post
         response.should render_template('new')
       end
-      
+
     end
   end
 
@@ -207,7 +206,7 @@ describe QuestionElementsController do
       @question_element.stubs(:form).returns(@form)
       QuestionElement.stubs(:find).returns(@question_element)
     end
-    
+
     describe "with successful update" do
 
       def do_put
@@ -237,7 +236,7 @@ describe QuestionElementsController do
       end
 
     end
-    
+
     describe "with failed update" do
 
       def do_put
@@ -252,7 +251,7 @@ describe QuestionElementsController do
 
     end
   end
-  
+
   describe "handling POST /question_elements/process_conditional" do
 
     before(:each) do
@@ -263,52 +262,52 @@ describe QuestionElementsController do
       QuestionElement.stubs(:find).returns(@question_element)
       Event.stubs(:find).returns(@event)
     end
-  
+
     describe "with successful condition processing" do
-    
+
       def do_post
         post :process_condition, :question_element_id => "1", :response => "Yes", :event_id => "1"
       end
-      
+
       it "should be successful" do
         @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         response.should be_success
       end
-      
+
       it "should assign the follow up group for the view" do
         @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         assigns(:follow_up).should equal(@follow_up)
       end
-    
+
       it "should assign the event for the view to use to build form fields" do
         @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         assigns(:event).should equal(@event)
       end
-      
+
       it "should render the process_condition rjs template" do
         @question_element.stubs(:process_condition).returns(@follow_up)
         do_post
         response.should render_template('process_condition')
       end
-    
+
     end
-    
+
     describe "with unsuccessful condition processing" do
       def do_post
         post :process_condition, :question_element_id => "1", :response => "Yes", :event_id => "1"
       end
-    
+
       it "should render rjs failure template" do
         @question_element.stubs(:process_condition).raises(Exception)
         do_post
         response.should render_template('rjs-error')
       end
-    
+
     end
 
   end
-  
+
 end

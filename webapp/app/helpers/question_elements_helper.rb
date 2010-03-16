@@ -16,4 +16,11 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module QuestionElementsHelper
+
+  def options_for_question_data_type
+    Question.data_type_array.map do |text, value|
+      [text, value.to_sym]
+    end
+  end
+
 end
