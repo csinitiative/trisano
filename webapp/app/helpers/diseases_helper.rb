@@ -25,12 +25,23 @@ module DiseasesHelper
 
   def disease_check_boxes(object_name, checked_values=[])
     name = object_name + "[disease_ids][]"
-    Disease.all(:order => 'disease_name').each do |disease|
+    tags = Disease.all(:order => 'disease_name').map do |disease|
       id = name.gsub('[', '_').gsub(']', '') + disease.id.to_s
-      haml_tag :label, :for => id do
-        haml_concat check_box_tag(name, disease.id, checked_values.include?(disease.id), :id => id)
-        haml_concat disease.disease_name
+      returning "" do |result|
+        result << tag('label', nil, true)
+        result << check_box_tag(name, disease.id, checked_values.include?(disease.id), :id => id)
+        result << tag('span', disease_label_options(disease), true)
+        result << disease.disease_name
+        result << "</span>"
+        result << "</label>"
       end
+    end
+    tags.join
+  end
+
+  def disease_label_options(disease)
+    returning({}) do |options|
+      options[:class] = :inactive unless disease.active
     end
   end
 end

@@ -31,7 +31,7 @@
             %label
               =t('diseases')
             -scroll_pane do
-              -disease_check_boxes f.object_name, common_test_type.disease_ids
+              =disease_check_boxes f.object_name, common_test_type.disease_ids
 
     %span.vert
       =create_or_update_button common_test_type

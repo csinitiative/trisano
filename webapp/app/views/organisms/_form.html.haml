@@ -29,7 +29,7 @@
           %span.vert
             =f.label      :diseases
             -scroll_pane do
-              -disease_check_boxes f.object_name, organism.disease_ids
+              =disease_check_boxes f.object_name, organism.disease_ids
 
     %span.vert
       =create_or_update_button organism
