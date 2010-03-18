@@ -129,7 +129,6 @@ class User < ActiveRecord::Base
     self.update_attribute(:status, 'disabled')
   end
 
-  # Debt: should be deprecated in favor of methods like #can_update?, #can_view?
   def is_entitled_to_in?(privilege, jurisdiction_ids)
     # jurisdiction_ids may be an array or a single ID.  Convert them all to ints just to be sure.
     j_ids = Set.new([jurisdiction_ids].flatten.map(&:to_i))
@@ -236,6 +235,10 @@ class User < ActiveRecord::Base
 
       role_memberships.build(attributes)
     end
+  end
+
+  def can_create?
+    is_entitled_to?(:create_event)
   end
 
   def can_update?(event)

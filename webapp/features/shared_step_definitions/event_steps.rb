@@ -65,6 +65,10 @@ Given /^there is a contact on the event named (.+)$/ do |last_name|
   @contact_event = add_contact_to_event(@event, last_name)
 end
 
+Given /^the contact event is deleted$/i do
+  @contact_event.update_attributes!(:deleted_at => Time.now)
+end
+
 Given(/^the disease-specific questions for the event have been answered$/) do
   @answer_text = "#{get_unique_name(2)} answer"
   question_elements = FormElement.find_all_by_form_id_and_type(@published_form.id, "QuestionElement", :include => [:question])

@@ -319,4 +319,20 @@ module ApplicationHelper
       end
     end
   end
+
+  def tr_tag(options={})
+    returning "" do |result|
+      result << tag('tr', options, true)
+      yield(result) if block_given?
+      result << "</tr>"
+    end
+  end
+
+  def td_tag(text, options={})
+    returning "" do |result|
+      result << tag('td', options, true)
+      result << (text || "&nbsp;")
+      result << "</td>"
+    end
+  end
 end

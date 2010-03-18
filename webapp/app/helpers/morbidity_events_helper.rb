@@ -122,4 +122,27 @@ module MorbidityEventsHelper
       yield
     end
   end
+
+  def new_cmr_search_results(results)
+    results = NewCmrSearchResults.new(results, self)
+    returning "" do |html|
+      results.each do |result|
+        html << new_cmr_search_result(result)
+      end
+    end
+  end
+
+  def new_cmr_search_result(result)
+    tr_tag(:class => result.css_class, :id => result.css_id) do |tr|
+      tr << td_tag(h(result.name))
+      tr << td_tag(result.bdate)
+      tr << td_tag(h(result.gender))
+      tr << td_tag(result.event_type)
+      tr << td_tag(h(result.jurisdiction))
+      tr << td_tag(result.event_onset_date)
+      tr << td_tag(h(result.disease_name))
+      tr << td_tag(result.links)
+      tr << td_tag(result.link_to_create_cmr)
+    end
+  end
 end

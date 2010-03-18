@@ -191,6 +191,12 @@ Then /^I should see results for just the morbidity event$/ do
   response.should_not contain("Encounter Event")
 end
 
+Then /^the contact event search result should be styled search-inactive/i do
+  response.should have_selector("tr.search-inactive") do |tr|
+    tr.should contain(@contact_event.party.full_name)
+  end
+end
+
 Then /^the disease should show as 'private'$/ do
   response.should contain("Private")
   response.should_not contain("Mumps")
