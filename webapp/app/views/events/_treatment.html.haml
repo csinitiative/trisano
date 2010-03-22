@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %div{:class => 'treatment', :style => "clear: both;"}
@@ -25,11 +25,11 @@
 
     - core_element :treatment_date, f, :horiz do
       = f.label :treatment_date
-      = f.core_calendar_date_select(:treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
+      = f.core_calendar_date_select(:treatment_date, {:size => 20, :year_range => 100.years.ago..1.years.from_now})
 
     - core_element :stop_treatment_date, f, :horiz do
       = f.label :stop_treatment_date
-      = f.core_calendar_date_select(:stop_treatment_date, {:size => 15, :year_range => 100.years.ago..1.years.from_now})
+      = f.core_calendar_date_select(:stop_treatment_date, {:size => 20, :year_range => 100.years.ago..1.years.from_now})
 
     %span.horiz
       - unless f.object.new_record?
