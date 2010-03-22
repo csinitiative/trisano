@@ -56,15 +56,17 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     </fieldset>
     <fieldset class="form">
       <legend><%= "#{t 'auditing'} / #{'investigation'}" %></legend>
-      <label><%= t 'jurisdiction_of_residence' %></label>
-      <%  if @event.address %>
-        <%  address = @event.address %>
-        <%  if address && address.county && address.county.jurisdiction %>
-          <%  jurisdiction_name = address.county.jurisdiction.name %>
+      <span class="horiz">
+        <label><%= t 'jurisdiction_of_residence' %></label>
+        <%  if @event.address %>
+          <%  address = @event.address %>
+          <%  if address && address.county && address.county.jurisdiction %>
+            <%  jurisdiction_name = address.county.jurisdiction.name %>
+          <% end %>
+          <%= jurisdiction_name.blank? ? 'Not Applicable' : h(jurisdiction_name) %>
         <% end %>
-        <%= jurisdiction_name.blank? ? 'Not Applicable' : h(jurisdiction_name) %>
-      <% end %>
-      <% core_element :event_name, f, :horiz do -%>
+      </span>
+      <% core_element :event_name, f, :vert do -%>
         <%= f.label(:event_name) %>
         <%= f.core_text_field(:event_name, {:size => 25, :maxlength => 100}, @event) %>
       <% end -%>
