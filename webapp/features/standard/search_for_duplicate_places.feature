@@ -20,7 +20,7 @@ Feature: Searching for duplicate places
     And I am logged in as a super user
 
     When I navigate to the place management tool
-    And I search for Manzanita with a participation type of Lab
+    And I search for Manzanita with a place type of Laboratory
 
     Then I should receive 1 matching record for a lab
-    
+

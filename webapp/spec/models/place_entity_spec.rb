@@ -19,181 +19,138 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe PlaceEntity do
 
-  fixtures :places, :places_types
-
-  def with_event(event_hash=@event_hash)
-    event = MorbidityEvent.new(event_hash)
-    event.save!
-    event.reload
-    yield event if block_given?
+  before :all do
+    PlaceEntity.delete_all
+    Place.delete_all
+    Code.delete_all
   end
-  
-  before(:each) do
-    User.current_user = nil 
-    @place_entity = PlaceEntity.new
+
+  after(:all) { Fixtures.reset_cache }
+
+  before do
+    User.current_user = nil
   end
 
   describe "finding exising places" do
-    fixtures :codes, :places, :places_types, :entities
 
-    before(:each) do
-      @event_hash = {
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Placer"
-            }
-          }
-        },
-        "hospitalization_facilities_attributes" => {
-          "0"=>{
-            "secondary_entity_id"=> places(:Davis_Nat).entity.id,
-            "hospitals_participation_attributes"=>{
-              "admission_date"=>"", "discharge_date"=>"", "medical_record_number"=>""
-            }
-          }
-        },
-        "diagnostic_facilities_attributes"=>{
-          "2"=>{
-            "place_entity_attributes"=>{
-              "place_attributes"=>{
-                "name"=>"Diagnostic Facility"
-              }
-            }
-          }
-        },
-        "labs_attributes"=>{
-          "3"=>{
-            "place_entity_attributes"=>{
-              "place_attributes"=>{
-                "name"=>"Labby Lab"
-              }
-            },
-            "lab_results_attributes"=>{
-              "0"=>{
-                "test_type_id"=>1, "reference_range"=>"",
-                "specimen_source_id"=>"", "collection_date"=> nil, "lab_test_date"=> nil, "specimen_sent_to_state_id"=>""
-              }
-            }
-          }
-        },
-        "place_child_events_attributes"=>{
-          "5"=>{
-            "interested_place_attributes"=>{
-              "place_entity_attributes"=>{
-                "place_attributes"=>{
-                  "name"=>"FallMart"
-                }
-              }
-            },
-            "participations_place_attributes"=>{
-              "date_of_exposure"=>""
-            }
-          }
-        },
-        "reporting_agency_attributes"=>{
-          "place_entity_attributes"=>{
-            "place_attributes"=>{
-              "name"=>"Reporters Inc."
-            },
-            "telephones_attributes"=>{
-              "0"=>{
-                "area_code"=>"", "phone_number"=>"", "extension"=>""
-              }
-            }
-          }
-        }
-      }
+    describe "by participation" do
+
+      describe "places used as hospitalization facilities" do
+        before do
+          @pool = create_place!('P', 'Davis Nat')
+          @event = Factory.create(:morbidity_event)
+          @event.hospitalization_facilities.build(:secondary_entity_id => @pool.id).save!
+        end
+
+        it "should be found if a matching name is used" do
+          psf = PlacesSearchForm.new(:name => "Davis", :place_type => "H")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 1
+        end
+
+        it "should not be found if name doesn't match" do
+          psf = PlacesSearchForm.new(:name => "xxx", :place_type => "H")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 0
+        end
+      end
+
+      describe "place used as disagnostic facilities" do
+        before do
+          @pool = create_place!('P', 'Diagnostic Facility')
+          @event = Factory.create(:morbidity_event)
+          @event.diagnostic_facilities.build(:secondary_entity_id => @pool.id).save!
+        end
+
+        it "should be found if matching name is used" do
+          psf = PlacesSearchForm.new(:name => "Diagnostic Facility", :place_type => "DiagnosticFacility")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 1
+        end
+
+        it "should not find places that have been utilized as diagnostic facilities if a matching name is not used" do
+          psf = PlacesSearchForm.new(:name => "xxx", :place_type => "DiagnosticFacility")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 0
+        end
+      end
+
+      describe "place used as a lab" do
+        before do
+          @pool = create_place!('P', 'Labby Lab')
+          @event = Factory.create(:morbidity_event)
+          @event.labs.build(:secondary_entity_id => @pool.id).save!
+        end
+
+        it "should be found if matching name is used" do
+          psf = PlacesSearchForm.new(:name => "Labby Lab", :place_type => "L")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 1
+        end
+
+        it "should not be found if a matching name is not used" do
+          psf = PlacesSearchForm.new(:name => "xxx", :place_type => "L")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 0
+        end
+      end
+
+      describe "place used as exposure" do
+        before do
+          @event = Factory.create(:morbidity_event)
+          @event.place_child_events.build(:interested_place_attributes => {
+                                            :place_entity_attributes => {
+                                              :place_attributes => {
+                                                :name => "FallMart"}}}).save!
+        end
+
+        it "should find places that have been utilized as place exposures if a matching name is used" do
+          psf = PlacesSearchForm.new({:name => "FallMart", :place_type => "InterestedPlace"})
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 1
+        end
+
+        it "should not find places that have been utilized as place exposures if a matching name is not used" do
+          psf = PlacesSearchForm.new({:name => "xxx", :place_type => "InterestedPlace"})
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 0
+        end
+      end
+
+      describe "place used as a reporting agency" do
+        before do
+          @pool = create_place!('P', 'Reporters Inc.')
+          @event = Factory.create(:morbidity_event)
+          @event.build_reporting_agency(:secondary_entity_id => @pool.id).save!
+        end
+
+        it "should find places that have been utilized as labs if a matching name is used" do
+          psf = PlacesSearchForm.new({:name => "Reporters", :place_type => "ReportingAgency"})
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 1
+        end
+
+        it "should not find places that have been utilized as labs if a matching name is not used" do
+          psf = PlacesSearchForm.new(:name => "xxx", :place_type => "ReportingAgency")
+          PlaceEntity.by_name_and_participation_type(psf).size.should == 0
+        end
+
+        it "should be able to exclude an entity from a search result" do
+          psf = PlacesSearchForm.new(:name => "Reporters", :place_type => "ReportingAgency")
+          PlaceEntity.by_name_and_participation_type(psf).exclude_entity(@event.reporting_agency.place_entity).size.should == 0
+        end
+      end
+
     end
 
-    it "should find places that have been utilized as hospitalization facilities if a matching name is used" do
-      PlaceEntity.by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 0
+    describe "using place type" do
 
-      with_event(@event_hash) do |event|
-        PlaceEntity.by_name_and_participation_type({:name => "Davis", :participation_type => "HospitalizationFacility"}).size.should == 1
+      before do
+        PlaceEntity.delete_all
+        Place.delete_all
+        Code.delete_all
       end
-    end
 
-    it "should not find places that have been utilized as hospitalization facilities if a matching name is not used" do
-      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
+      after(:all) { Fixtures.reset_cache }
 
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "HospitalizationFacility"}).size.should == 0
+      it "should find places by thier code type" do
+        p = create_place!(:diagnostic, 'Dark Moor')
+        psf = PlacesSearchForm.new(:place_type => 'H')
+        results = PlaceEntity.by_name_and_participation_type(psf)
+        PlaceEntity.by_name_and_participation_type(psf).should == [p]
       end
-    end
 
-    it "should find places that have been utilized as diagnostic facilities if a matching name is used" do
-      PlaceEntity.by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "Diagnostic Facility", :participation_type => "DiagnosticFacility"}).size.should == 1
-      end
-    end
-
-    it "should not find places that have been utilized as diagnostic facilities if a matching name is not used" do
-      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "DiagnosticFacility"}).size.should == 0
-      end
-    end
-
-    it "should find places that have been utilized as labs if a matching name is used" do
-      PlaceEntity.by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "Labby Lab", :participation_type => "Lab"}).size.should == 1
-      end
-    end
-
-    it "should not find places that have been utilized as labs if a matching name is not used" do
-      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "Lab"}).size.should == 0
-      end
-    end
-
-    it "should find places that have been utilized as place exposures if a matching name is used" do
-      PlaceEntity.by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "FallMart", :participation_type => "InterestedPlace"}).size.should == 1
-      end
-    end
-
-    it "should not find places that have been utilized as place exposures if a matching name is not used" do
-      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "InterestedPlace"}).size.should == 0
-      end
-    end
-
-    it "should find places that have been utilized as labs if a matching name is used" do
-      PlaceEntity.by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "Reporters Inc.", :participation_type => "ReportingAgency"}).size.should == 1
-      end
-    end
-
-    it "should not find places that have been utilized as labs if a matching name is not used" do
-      PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
-
-      with_event(@event_hash) do
-        PlaceEntity.by_name_and_participation_type({:name => "xxx", :participation_type => "ReportingAgency"}).size.should == 0
-      end
-    end
-
-    it "should be able to exclude an entity from a search result" do
-      pe_count = PlaceEntity.count
-
-      with_event(@event_hash) do |event|
-        PlaceEntity.count.should == pe_count + 4
-        PlaceEntity.exclude_entity(event.reporting_agency.place_entity).count.should == pe_count + 3
-        PlaceEntity.by_name_and_participation_type({:name => "Reporters", :participation_type => "ReportingAgency"}).exclude_entity(event.reporting_agency.place_entity).size.should == 0
-      end
     end
   end
 
@@ -202,41 +159,36 @@ end
 describe PlaceEntity do
 
   describe "using jurisdiction named scopes" do
+    before do
+      PlaceEntity.delete_all
+      Place.delete_all
+      Code.delete_all
+    end
 
-    before(:each) do
-      @base_count = PlaceEntity.jurisdictions.size
+    after(:all) { Fixtures.reset_cache }
 
-      @jurisdiction_one = Factory.create(:place_entity)
-      @jurisdiction_one.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
-
-      @jurisdiction_two = Factory.create(:place_entity)
-      @jurisdiction_two.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
-
-      @jurisdiction_unassigned = Factory.create(:place_entity, :place => Factory.create(:place, :name => "Unassigned"))
-      @jurisdiction_unassigned.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
-
-      @jurisdiction_deleted = Factory.create(:place_entity, :deleted_at => Time.now)
-      @jurisdiction_deleted.place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+    before do
+      @jurisdiction_one = create_jurisdiction_entity(:place_attributes => {:name => 'JurisOne'})
+      @jurisdiction_two = create_jurisdiction_entity(:place_attributes => {:name => 'JurisTwo'})
+      @jurisdiction_unassigned = create_jurisdiction_entity(:place_attributes => {:name => "Unassigned"})
+      @jurisdiction_deleted = create_jurisdiction_entity(:deleted_at => Time.now, :place_attributes => {:name => 'Baleted'})
     end
 
     it "should find all jurisdictions when using the 'jurisdictions' named scope" do
-      pending("Suffering from fixture interference")
       PlaceEntity.jurisdictions.size.should == 4
     end
 
     it "should find only active jurisdictions when using the 'active_jurisdictions' named scope" do
-      pending("Suffering from fixture interference")
-      PlaceEntity.active_jurisdictions.size.should == 3
-      PlaceEntity.active_jurisdictions.detect {|j| !j.deleted_at.nil?}.should be_nil
+      PlaceEntity.jurisdictions.active.size.should == 3
+      PlaceEntity.jurisdictions.active.detect {|j| !j.deleted_at.nil?}.should be_nil
     end
 
     it "should find leave out the Unassigned jurisdiction when chaining 'excluding_unassigned' onto one of the other jurisdiction named scopes" do
-      pending("Suffering from fixture interference")
       PlaceEntity.jurisdictions.excluding_unassigned.size.should == 3
       PlaceEntity.jurisdictions.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
 
-      PlaceEntity.active_jurisdictions.excluding_unassigned.size.should == 2
-      PlaceEntity.active_jurisdictions.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
+      PlaceEntity.jurisdictions.active.excluding_unassigned.size.should == 2
+      PlaceEntity.jurisdictions.active.excluding_unassigned.detect {|j| j.place.name == "Unassigned" }.should be_nil
     end
 
   end

@@ -22,3 +22,12 @@ Feature: Searching places
       And I should see "Ohio"
       And I should see "Tabitha"
       And I should see "Super Evil Annex"
+
+  Scenario: Narrowing a search by the participation
+    Given I am logged in as a super user
+      And a basic morbidity event exists
+      And the event has a lab
+     When I go to the places search page
+      And I select "Laboratory" from "place_type"
+      And I press "Search"
+     Then I should see the event's lab in the results

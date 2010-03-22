@@ -17,13 +17,15 @@
 
 class PlacesController < ApplicationController
 
+  before_filter :init_search_form, :only => [:index]
+
   def index
     unless User.current_user.is_entitled_to?(:manage_entities)
       render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
     end
 
     unless params[:name].nil?
-      @place_entities = PlaceEntity.by_name_and_participation_type(params)
+      @place_entities = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new(params))
     end
   end
 
@@ -88,4 +90,9 @@ class PlacesController < ApplicationController
     end
   end
 
+  private
+
+  def init_search_form
+    @search_form = PlacesSearchForm.new(params)
+  end
 end

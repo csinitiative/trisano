@@ -125,6 +125,7 @@ Factory.define :disease do |d|
 end
 
 Factory.define :lab do |l|
+  l.secondary_entity { Factory.build(:place_entity) }
   l.lab_results { |lr| [lr.association(:lab_result)] }
 end
 
@@ -288,10 +289,16 @@ end
 def create_place!(type, name)
   place_entity = Factory.build(:place_entity)
   place_entity.place.name = name
-  the_code = Place.send("#{type.to_s}_type_codes").first
-  type = Code.find_or_create_by_code_name_and_the_code('placetype', the_code)
+  begin
+    the_code = Place.send("#{type.to_s}_type_codes").first
+  rescue NoMethodError => e
+    the_code = type
+  end
+  type = Code.find_by_code_name_and_the_code('placetype', the_code)
+  type = Factory.create(:code, :code_name => 'placetype',:the_code => the_code) unless type
   place_entity.place.place_types << type
   place_entity.save!
+  place_entity
 end
 
 def create_contact!(name)

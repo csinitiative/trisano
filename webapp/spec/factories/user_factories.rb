@@ -89,9 +89,9 @@ end
 def create_jurisdiction_entity(options = {})
   place_attributes = options.delete(:place_attributes) || {}
   returning(Factory(:place_entity, options)) do |entity|
-    place_type = Code.jurisdiction_place_type
+    place_type = Code.jurisdiction_place_type(true) || Factory.create(:place_type, :the_code => 'J')
     if place_type
-      entity.place.place_types << place_type
+      entity.place.place_type_ids = [place_type.id]
       entity.place.short_name = entity.place.name
       entity.place.update_attributes!(place_attributes)
     end

@@ -16,14 +16,11 @@
 -form_tag nil, :method => :get do
   %div#name_criteria{:style => "margin-top: 5px"}
     %div{ :class => "horiz" }
-      %label{:for => :name}=t('place_name')
-      =text_field_tag :name, params[:name], :size => "30", :class => "search"
-      %label=t('participation_type')
-      %select{ :name => "participation_type" }
-        %option
-        =options_for_select([["Diagnostic Facility", "DiagnosticFacility"], ["Hospitalization Facility", "HospitalizationFacility"], ["Lab", "Lab"], ["Place Exposure", "InterestedPlace"], ["Reporting Agency", "ReportingAgency"]], :selected => params[:participation_type])
-
-      %input{ :type => "submit", :id => 'submit_place_search', :value => t("search_button") }
+      =label_tag(:name, t('place_name'))
+      =text_field_tag(:name, @search_form.name, :size => "30", :class => "search")
+      =label_tag(:place_type, t(:place_type))
+      =select_tag(:place_type, options_for_select(@search_form.search_type_options, :selected => @search_form.place_type))
+      =submit_tag(t(:search_button), :id => :submit_place_search, :name => nil)
 
 %br{ :clear => 'all' }
 %br

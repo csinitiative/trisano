@@ -53,20 +53,24 @@ When(/^I search for Manzanita$/) do
   click_button "Search"
 end
 
-When(/^I search for Manzanita with a participation type of Lab$/) do
+When(/^I search for Manzanita with a place type of Laboratory$/) do
   fill_in "name", :with => "Manzanita"
-  select("Lab", :from => "participation_type")
+  select("Laboratory", :from => "place_type")
   click_button "Search"
 end
 
 Then( /^I should receive 2 matching records$/) do
-  response.should contain("Manzanita")
-  response.should contain("Hospital / ICP")
-  response.should contain("Laboratory")
+  doc = Nokogiri::HTML::parse(response_body)
+  result = doc.css("table#entity_search_results tr td").text
+  result.should contain("Manzanita")
+  result.should contain("Hospital / ICP")
+  result.should contain("Laboratory")
 end
 
 Then( /^I should receive 1 matching record for a lab$/) do
-  response.should contain("Manzanita")
-  response.should contain("Laboratory")
-  response.should_not contain("Hospital / ICP")
+  doc = Nokogiri::HTML::parse(response_body)
+  results = doc.css("table#entity_search_results tr td").text
+  results.should contain("Manzanita")
+  results.should contain("Laboratory")
+  results.should_not contain("Hospital / ICP")
 end

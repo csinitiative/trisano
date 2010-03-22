@@ -88,3 +88,9 @@ Given /^all core field configs for a (.+) have help text$/ do |event_type|
     core_field.save!
   end
 end
+
+Given /^the event has a lab$/i do
+  lab = Factory.build(:lab)
+  @event.labs << lab
+  @event.save!
+end

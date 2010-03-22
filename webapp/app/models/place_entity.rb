@@ -25,11 +25,8 @@ class PlaceEntity < Entity
     :order => 'p.name',
     :readonly => false
 
-  named_scope :active_jurisdictions,
-    :joins => "INNER JOIN places p on entities.id = p.entity_id INNER JOIN places_types on p.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
-    :conditions => "codes.the_code = 'J' AND codes.code_name = 'placetype' AND entities.deleted_at IS NULL",
-    :order => 'p.name',
-    :readonly => false
+  named_scope :active, :conditions => "entities.deleted_at IS NULL"
+
 
   # Intended to be chained to one of the other jurisdiction named scopes
   named_scope :excluding_unassigned,
@@ -42,15 +39,21 @@ class PlaceEntity < Entity
   }
 
   named_scope :with_place_names_like, lambda { |place_name|
-    { :joins => "INNER JOIN places p on entities.id = p.entity_id",
+    { :joins => ["INNER JOIN places p on entities.id = p.entity_id"],
       :conditions => ["p.name ILIKE ? AND entities.deleted_at IS NULL", '%' + place_name + '%']
     }
   }
 
-  named_scope :with_participation_type, lambda { |participation_type|
-    { :joins => "INNER JOIN participations ON entities.id = participations.#{participation_type == 'InterestedPlace' ? 'primary_entity_id' : 'secondary_entity_id'}",
-      :conditions => ["participations.type = ?", participation_type]
-    }
+  named_scope :join_participations, lambda { |participation_type|
+    { :joins => "LEFT JOIN participations ON entities.id = participations.#{participation_type == 'InterestedPlace' ? 'primary_entity_id' : 'secondary_entity_id'}" }
+  }
+
+  named_scope :limit_by_place_types, lambda { |types|
+    { :conditions => ["codes.the_code IN (?)", types] }
+  }
+
+  named_scope :limit_by_place_or_participation_types, lambda { |place_types, participation_type|
+    { :conditions => ["codes.the_code IN (?) OR participations.type = ?", place_types, participation_type] }
   }
 
   # Used to decrease number of queries executed when diplaying a place
@@ -62,10 +65,17 @@ class PlaceEntity < Entity
   }
 
   # builds a scoped object, like what is returned from named_scopes
-  def self.by_name_and_participation_type(search_params)
+  def self.by_name_and_participation_type(search_data)
     scope = optimize_for_index
-    scope = scope.with_place_names_like(search_params[:name])
-    scope = scope.with_participation_type(search_params[:participation_type]) unless search_params[:participation_type].blank?
+    if search_data.includes_place_type?
+      if search_data.includes_participation_type?
+        scope = scope.join_participations(search_data.participation_type)
+        scope = scope.limit_by_place_or_participation_types(search_data.place_types, search_data.participation_type)
+      else
+        scope = scope.limit_by_place_types(search_data.place_types)
+      end
+    end
+    scope = scope.with_place_names_like(search_data.name)
     scope
   end
 
