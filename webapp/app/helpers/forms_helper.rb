@@ -746,4 +746,14 @@ module FormsHelper
     "<li>#{t('could_not_render', :thing => type, :id => element.id)}</li>"
   end
 
+  def link_to_show_all_groups(reference_element, type)
+    link_to_remote(t(:show_all_groups),
+                   :url => {
+                     :controller => 'form_elements',
+                     :action => 'filter_elements',
+                     :reference_element_id => reference_element.id,
+                     :direction => :from_library,
+                     :type => type },
+                   :update => "library-element-list-#{reference_element.id}")
+  end
 end
