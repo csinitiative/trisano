@@ -3,6 +3,7 @@ class NewCmrSearchResults
   def initialize(results, view)
     @results = results
     @view = view
+    publicize_view
   end
 
   def each
@@ -18,6 +19,10 @@ class NewCmrSearchResults
 
   def view
     @view
+  end
+
+  def publicize_view
+    @view.class_eval { public :h }
   end
 
   class NewCmrSearchResult
@@ -44,12 +49,12 @@ class NewCmrSearchResults
       unless same_as_previous_entity?
         returning "" do |str|
           if @result['first_name'].blank?
-            str << @result['last_name']
+            str << view.h(@result['last_name'])
           else
             unless @result['last_name'].blank?
-              str << @result['last_name'] + ', '
+              str << view.h(@result['last_name']) + ', '
             end
-            str << @result['first_name']
+            str << view.h(@result['first_name'])
           end
         end
       else

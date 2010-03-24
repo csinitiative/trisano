@@ -134,7 +134,7 @@ module MorbidityEventsHelper
 
   def new_cmr_search_result(result)
     tr_tag(:class => result.css_class, :id => result.css_id) do |tr|
-      tr << td_tag(h(result.name))
+      tr << td_tag(result.name)
       tr << td_tag(result.bdate)
       tr << td_tag(h(result.gender))
       tr << td_tag(result.event_type)
