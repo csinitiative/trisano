@@ -208,17 +208,31 @@ label {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px; }
 
-.system-message {
+.message-box {
   color: #000000;
+  border: 1px solid #C1DAD7;
+  background-color: #eee;
+  postion: absolute;
+  left: 200px;
+  top: 50px;
+  z-index: 900;
+  margin: 10px 0px 5px 0px;
+  padding: 0; }
+
+.system-messages {
   overflow: auto;
-  border: 1px solid #006633;
+  padding: 0em 0.25em 0em 0.50em;
   height: 56px;
   width: 250px;
-  margin: 10px 0px 5px 0px;
-  padding: 0em 0.25em 0em 0.50em;
-  white-space: normal;
-  border: 1px solid #C1DAD7;
-  background-color: #eee; }
+  white-space: normal; }
+
+.system-message {
+  border-bottom: 1px solid #76ADA6; }
+
+.message-tools {
+  text-align: right;
+  padding: 0 .25em 0 .25em;
+  background-color: #C1DAD7; }
 
 .test_name {
   font-weight: bold; }
