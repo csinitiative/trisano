@@ -1,49 +1,50 @@
+
 -# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 -#
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- next if f.object.deleted_at
+-unless f.object.deleted_at
 
-%div{:class => 'encounter', :style => "clear: both;"}
+  %div{:class => 'encounter', :style => "clear: both;"}
 
-  - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
-    = error_messages_for :object => pe_fields.object
+    -f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
+      =error_messages_for :object => pe_fields.object
 
-    %span.horiz
-      =pe_fields.label(:user_id)
-      - options = f.object.new_record? ? {:selected => User.current_user.id} : {}
-      =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name, options, { :class => "required_if_others" })
-
-    %span.horiz
-      =pe_fields.label(:encounter_date)
-      =pe_fields.calendar_date_select(:encounter_date, :year_range => 5.years.ago..0.years.from_now, :class => "required_if_others" )
-
-    %span.horiz
-      =pe_fields.label(:encounter_location_type)
-      - options = f.object.new_record? ? {:selected => "clinic"} : {}
-      =pe_fields.select(:encounter_location_type, ParticipationsEncounter.location_type_array, options, { :class => "required_if_others" })
-
-    - unless f.object.new_record?
       %span.horiz
-        = f.label :_delete
-        = f.check_box :_delete
+        =pe_fields.label(:user_id)
+        -options = f.object.new_record? ? {:selected => User.current_user.id} : {}
+        =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name, options, { :class => "required_if_others" })
+
       %span.horiz
-        = f.label "&nbsp;"
-        = show_and_edit_event_links(f.object)
+        =pe_fields.label(:encounter_date)
+        =pe_fields.calendar_date_select(:encounter_date, :year_range => 5.years.ago..0.years.from_now, :class => "required_if_others" )
 
-    %span.vert
-      =pe_fields.label(:description)
-      =pe_fields.text_area(:description, { :rows => 5, :cols => 50 })
+      %span.horiz
+        =pe_fields.label(:encounter_location_type)
+        -options = f.object.new_record? ? {:selected => "clinic"} : {}
+        =pe_fields.select(:encounter_location_type, ParticipationsEncounter.location_type_array, options, { :class => "required_if_others" })
 
-    %hr
+      -unless f.object.new_record?
+        %span.horiz
+          =f.label :_delete
+          =f.check_box :_delete
+        %span.horiz
+          =f.label "&nbsp;"
+          =show_and_edit_event_links(f.object)
+
+      %span.vert
+        =pe_fields.label(:description)
+        =pe_fields.text_area(:description, { :rows => 5, :cols => 50 })
+
+      %hr
