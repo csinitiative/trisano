@@ -17,7 +17,7 @@ Code.transaction do
       error_code = 1
       next
     end
-    code_translation = code.code_translations.build(:locale => locale, :code_description => t['description'])
+    code_translation = code.code_translations.build(:locale => locale, :code_description => t['code_description'])
     unless code_translation.save
       $stderr.puts code_translation.errors.full_messages.join("\n")
       error_code = 1
