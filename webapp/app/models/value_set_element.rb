@@ -16,16 +16,16 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ValueSetElement < FormElement
-  
-  has_many :value_elements, 
+
+  has_many :value_elements,
     :class_name => "FormElement",
     :foreign_key => :parent_id,
     :dependent => :destroy
-  
+
   validates_presence_of :name
-  
+
   attr_accessor :parent_element_id
-  
+
   def save_and_add_to_form
     begin
       parent_element = FormElement.find(parent_element_id)

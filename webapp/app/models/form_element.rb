@@ -156,7 +156,7 @@ class FormElement < ActiveRecord::Base
     e.code = node_to_copy.code
     e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
     if e.is_a?(ValueElement) && self.is_a?(QuestionElement)
-      e.question = self.question
+      e.question = self.question.dup
     end
     e.save!
     parent.add_child e unless parent.nil?
