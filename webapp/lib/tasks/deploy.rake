@@ -68,7 +68,7 @@ namespace :trisano do
         File.delete("./distro/#{trisano_war_file}")
         puts "deleted ./distro/#{trisano_war_file}"
       end
-      sh "rm ./webapp/log/*.*"
+      sh "rm -f ./webapp/log/*.*"
       sh "rm -rf ./webapp/nbproject"
       sh "rm -rf ./distro/dump"
       sh "rm -rf ./webapp/tmp"
