@@ -26,6 +26,10 @@ class EncounterEvent < HumanEvent
     encounter.add_note(I18n.translate("system_notes.encounter_event_created", :locale => I18n.default_locale))
   end
 
+  before_update do |encounter|
+    encounter.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale))
+  end
+
   class << self
     def core_views
       [

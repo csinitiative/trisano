@@ -41,7 +41,6 @@ class EncounterEventsController < EventsController
 
   def update
     go_back = params.delete(:return)
-    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     respond_to do |format|
       @event.validate_against_bday = true
