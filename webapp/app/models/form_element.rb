@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class FormElement < ActiveRecord::Base
@@ -133,6 +133,7 @@ class FormElement < ActiveRecord::Base
         return true
       end
     rescue Exception => ex
+      self.errors.add(:base, ex.message)
       return nil
     end
   end
@@ -154,6 +155,9 @@ class FormElement < ActiveRecord::Base
     e.export_conversion_value_id = node_to_copy.export_conversion_value_id
     e.code = node_to_copy.code
     e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
+    if e.is_a?(ValueElement) && self.is_a?(QuestionElement)
+      e.question = self.question
+    end
     e.save!
     parent.add_child e unless parent.nil?
     node_to_copy.children.each do |child|
@@ -253,7 +257,7 @@ class FormElement < ActiveRecord::Base
     end
     return true
   end
-  
+
   def code_condition_lookup
     if self.is_condition_code
       begin
@@ -265,13 +269,13 @@ class FormElement < ActiveRecord::Base
       end
     end
   end
-  
+
   def cdc_export_column_lookup
     if self.export_column_id
       begin
         export_column = ExportColumn.find(self.export_column_id, :include => :export_disease_group)
         return "#{export_column.export_disease_group.name}#{@@export_lookup_separator}#{export_column.export_column_name}"
-      rescue Exception => ex 
+      rescue Exception => ex
         if self.class.name == "QuestionElement"
           element_type = "question"
           identifier = self.question.question_text
@@ -284,7 +288,7 @@ class FormElement < ActiveRecord::Base
       end
     end
   end
-  
+
   def cdc_export_conversion_value_lookup
     if self.export_conversion_value_id
       begin

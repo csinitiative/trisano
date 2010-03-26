@@ -887,6 +887,9 @@ en:
     archived: 'Archived'
     live: 'Live'
     invalid: 'Invalid'
+  form_errors:
+    radio_button_blank_value: "can't be blank when question is a radio button"
+    check_box_blank_value: "can't be blank when question is a check box"
 
   #participations
   hospitalization: "Hospitalization"

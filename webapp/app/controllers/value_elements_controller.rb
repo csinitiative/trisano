@@ -71,5 +71,5 @@ class ValueElementsController <  AdminController
   def destroy
     head :method_not_allowed
   end
-  
+
 end
