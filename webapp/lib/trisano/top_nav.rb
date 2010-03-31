@@ -23,9 +23,14 @@ module Trisano
     end
 
     def render_links_and_rollovers
-      children.map do |child|
-        child.render_name if child.renderable?
-      end.compact.join("&nbsp;|&nbsp;")
+      renderables = children.select(&:renderable?)
+      if renderables.empty?
+        "&nbsp;"
+      else
+        children.select(&:renderable?).map do |child|
+          child.render_name
+        end.join("&nbsp;|&nbsp;")
+      end
     end
 
     def render_submenus
