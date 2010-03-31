@@ -168,6 +168,7 @@ class HumanEvent < Event
       real_select = <<-SQL
         SELECT events.id AS id,
             events.event_onset_date AS event_onset_date,
+            events.created_at AS created_at,
             events.type AS type,
             events.deleted_at AS deleted_at,
             events.workflow_state as workflow_state,

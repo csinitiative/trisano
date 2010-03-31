@@ -30,9 +30,9 @@
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         ="#{t 'morbidity_event'} |"
-        = ld(morbidity_event.event_onset_date)
+        = ld(morbidity_event.created_at.to_date)
     .tools
-      = basic_morbidity_event_controls(morbidity_event, from_index) 
+      = basic_morbidity_event_controls(morbidity_event, from_index)
       = render :partial => 'morbidity_events/print_options', :locals => { :event => morbidity_event }
       = extra_tools if !from_index
   %td
