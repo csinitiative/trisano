@@ -23,7 +23,7 @@
 
     %span{:class => "horiz"}
       %label=t 'date_record_created'
-      =ld(@event.event_onset_date)
+      =ld(@event.created_at.try(:to_date))
 
     %span{:class => "horiz"}
       %label=t 'mmwr_year'

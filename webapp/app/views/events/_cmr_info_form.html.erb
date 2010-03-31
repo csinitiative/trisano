@@ -33,7 +33,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <% end %>
     <br />
     <span class="label"><%= ct 'date_record_created' %></span>
-    <%= ld(@event.event_onset_date) %>
+    <%= ld(@event.created_at.try(:to_date)) %>
     <p/>
     <fieldset class="form">
       <legend><%= t 'case_outbreak' %></legend>
