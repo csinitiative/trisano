@@ -29,10 +29,7 @@
         =render :partial => 'events/places/name_form', :locals => {:f => pe, :event_form => f}
 
         -# Remember, the object tree is initialized by the form to have blank records wherever there are no records
-        -if @event.address.new_record?
-          =render :partial => 'people/address_form', :locals => {:f => f, :event => @event }
-        -else
-          =render :partial => 'events/places/address_show', :locals => {:f => f}
+        =render :partial => 'people/address_form', :locals => {:f => f, :event => @event }
 
         -if pe.object.primary_phone.new_record?
           =render :partial => 'people/phones_form', :locals => {:f => pe}
