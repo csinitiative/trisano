@@ -10,6 +10,10 @@ en:
   new_thing: 'New {{name}}'
   back_to: '< Back to {{name}}'
   create_new: 'Create new {{name}}'
+  case_management: 'Cases'
+  entity_management: 'Entities'
+  system_management: 'System'
+  tools: Tools
   events: "EVENTS"
   search: "SEARCH"
   search_normal_case: "Search"

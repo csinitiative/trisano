@@ -109,6 +109,7 @@ Rails::Initializer.run do |config|
     require 'menu_array'
     require 'i18n_logger'
     require 'i18n_core_field'
+    require 'trisano/top_nav'
   end
 
 end

@@ -65,7 +65,8 @@
           =render_main_logo
         .right
           .areas
-            =render_main_menu
+            #topnav
+              =top_nav.render
           .user
             -if User.current_user
               =render_user_tools(User.current_user)
