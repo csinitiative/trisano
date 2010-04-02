@@ -30,7 +30,7 @@
                     = link_to_function val, "change_shortcut($('user_shortcut_settings_#{label}'))"
                 .tools
                   .key
-                    = @user.shortcut_settings[label] == '' ? 'Undefined' : (@user.shortcut_settings[label] || 'Undefined')
+                    = @user.shortcut_settings[label] == '' ? t('unspecified') : (@user.shortcut_settings[label] || t('unspecified'))
                   = shortcut.text_field label, :value => @user.shortcut_settings[label], :size => 20, :maxlength => 20, :onblur => "shortcut_set('#{label}')", :style => "display: none", :autocomplete => "off"
   %p
   = f.submit t("update_shortcuts"), :disabled => "true"
