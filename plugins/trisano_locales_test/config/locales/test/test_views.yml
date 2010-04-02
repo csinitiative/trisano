@@ -352,7 +352,7 @@ test:
   add_reporting_agency: "xAdd a new reporting agency"
   reporter: "xReporter"
   reported_dates: "xReported Dates"
-  search_reporting_agency: "xSearch for an existing reporting agancy"
+  search_reporting_agency: "xSearch for an existing reporting agency"
   reporter_last_name: "xReporter last name"
   reporter_first_name: "xReporter first name"
   reporting_agency_name: "xReporting agency name"
