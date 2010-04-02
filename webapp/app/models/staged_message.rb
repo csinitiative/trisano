@@ -172,7 +172,7 @@ class StagedMessage < ActiveRecord::Base
                                                          :middle_name => self.patient.patient_middle_name,
                                                          :birth_date => self.patient.birth_date,
                                                          :birth_gender_id => self.patient.trisano_sex_id)
-
+      
       unless self.patient.address_empty?
         event.build_address(:street_number => self.patient.address_street_no,
                             :unit_number => self.patient.address_unit_no,
@@ -190,6 +190,7 @@ class StagedMessage < ActiveRecord::Base
                                                               :entity_location_type_id => ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id)
       end
     end
+    
     event.build_jurisdiction unless event.jurisdiction
     event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
     event
