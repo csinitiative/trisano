@@ -335,4 +335,8 @@ module ApplicationHelper
       result << "</td>"
     end
   end
+
+  def birthdate_select_tag(name, value)
+    calendar_date_select_tag(name, value, :year_range => 100.years.ago..0.years.from_now)
+  end
 end

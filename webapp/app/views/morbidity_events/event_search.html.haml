@@ -10,7 +10,7 @@
 
   %span.horiz
     = label_tag :birth_date, t('birth_date')
-    = text_field_tag :birth_date, params[:birth_date]
+    = birthdate_select_tag(:birth_date, params[:birth_date])
 
   %span.horiz
     = label_tag "&nbsp;"
