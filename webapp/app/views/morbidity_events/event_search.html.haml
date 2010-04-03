@@ -1,16 +1,19 @@
+=error_messages_for(:search_form, :header_message => t(:invalid_search_criteria))
+
 %h3=t('before_create')
 - form_tag event_search_cmrs_path, :method => :get do
+
   %span.horiz
     = label_tag :last_name, t('last_name')
-    = text_field_tag :last_name, params[:last_name]
+    = text_field_tag(:last_name, @search_form.last_name)
 
   %span.horiz
     = label_tag :first_name, t('first_name')
-    = text_field_tag :first_name, params[:first_name]
+    = text_field_tag(:first_name, @search_form.first_name)
 
   %span.horiz
     = label_tag :birth_date, t('birth_date')
-    = birthdate_select_tag(:birth_date, params[:birth_date])
+    = birthdate_select_tag(:birth_date, @search_form.birth_date)
 
   %span.horiz
     = label_tag "&nbsp;"
@@ -18,7 +21,7 @@
 
   %span.vert
     = label_tag "&nbsp;"
-    = labeled_check_box_tag :use_starts_with_search, t('use_starts_with')
+    = labeled_check_box_tag(:use_starts_with_search, t('use_starts_with'))
 
   %span.vert-break
 
