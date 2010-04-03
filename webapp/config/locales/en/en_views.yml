@@ -62,6 +62,7 @@ en:
   no_results: "No results"
   start_a_cmr: "Start a CMR with the criteria you searched on"
   created_date: "Created date"
+  invalid_search_criteria: "Invalid search criteria"
 
   cmr_actions: "CMR Actions"
   entity_actions: "Entity Actions"

@@ -149,15 +149,14 @@ class MorbidityEventsController < EventsController
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return
     end
 
-    begin
-      return unless [:last_name, :first_name, :birth_date].any? {|p| !params[p].blank?}
-      page = params[:page].blank? ? 1 : params[:page]
-      @results = HumanEvent.find_by_name_and_bdate({:page_size => 50, :page => page}.merge(params))
-    rescue Exception => e
-      logger.error(e)
-      # shouldn't the logger do the backtrace for me?
-      logger.debug(e.backtrace.join("\n"))
-      flash.now[:error] = t("unable_to_process_search")
+    @search_form = NameAndBirthdateSearchForm.new(params)
+
+    if @search_form.valid?
+      if @search_form.has_search_criteria?
+        @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash)
+      end
+    else
+      render :action => :event_search, :status => :unprocessable_entity
     end
   end
 

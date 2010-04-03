@@ -291,6 +291,9 @@ en:
         initials: Initials
         statue: Status
 
+      name_and_birthdate_search_form:
+        birth_date: Birth date
+
     # No model names in en_models.yml because the default is a humanized class name
     # Add models here if we need to display the class name to users but we need to
     # display something slightly different that what class.name.underscore.humanize

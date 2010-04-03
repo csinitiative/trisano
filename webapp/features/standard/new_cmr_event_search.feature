@@ -47,10 +47,10 @@ Feature: Searching for existing people or events before adding a CMR
 
   Scenario: Searching with a name and birthdate works properly
     Given the following morbidity events:
-      |last_name|first_name|birth_date|
-      |Jones    |Mick      |1955-06-26|
-      |Jones    |David     |1947-01-08|
-      |Jones    |Steve     |          |
+      | last_name | first_name | birth_date |
+      | Jones     | Mick       | 1955-06-26 |
+      | Jones     | David      | 1947-01-08 |
+      | Jones     | Steve      |            |
       And I am logged in as a super user
      When I search for last_name = "Jones"
      Then I should see the following results:
@@ -72,7 +72,7 @@ Feature: Searching for existing people or events before adding a CMR
       |Jones    |Mick      |
       |Jones    |Steve     |
 
-     When I search for birth date = "1947-01-08"
+     When I search for birth date = "January 08, 1947"
      Then I should see the following results:
       |last_name|first_name|
       |Jones    |David     |
@@ -80,7 +80,16 @@ Feature: Searching for existing people or events before adding a CMR
   Scenario: Handles malformed dates properly
     Given I am logged in as a super user
     When I search for birth date = "1947-01-"
-    Then I should see "Unable to process search. Is birth date a valid date"
+    Then I should get a 422 response
+     And I should see "Invalid search criteria"
+     And I should see "Birth date is invalid"
+
+  Scenario: Warns if a two digit year is used in birth date field
+    Given I am logged in as a super user
+    When I search for birth date = "Jan 8, 85"
+    Then I should get a 422 response
+     And I should see "Invalid search criteria"
+     And I should see "Birth date can't have a two digit year"
 
   Scenario: Searching for names using starts with
     Given the following morbidity events:
