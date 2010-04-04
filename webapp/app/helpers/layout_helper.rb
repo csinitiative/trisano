@@ -64,6 +64,18 @@ module LayoutHelper
     JS
   end
 
+  def translations_js
+    case I18n.locale
+    when :en
+      javascript_include_tag("translations_en")
+    when :test
+      javascript_include_tag("ext/trisano_locales_test/translations_test")
+    else
+      locale = I18n.locale.to_s
+      javascript_include_tag("ext/trisano_#{locale}/translations_#{locale}")
+    end
+  end
+
   def render_main_logo
     returning "" do |result|
       result << '<div class="horiz">'
