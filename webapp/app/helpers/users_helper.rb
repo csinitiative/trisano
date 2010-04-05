@@ -25,19 +25,19 @@ module UsersHelper
 
   def each_shortcut
       list = {
-        :new => "New CMR",
-        :cmr_search => "Search",
-        :cmrs => "View/Edit CMRs",
-        :navigate_right => "Move One Tab Right",
-        :navigate_left => "Move One Tab Left",
-        :save => "Highlight 'Save & Exit'",
-        :settings => "Edit User Settings",
-        :analysis => "Analysis"
+        :new => t("new_cmr_normal_case"),
+        :cmr_search => t("search_normal_case"),
+        :cmrs => t("view_edit_cmrs"),
+        :navigate_right => t("navigate_right"),
+        :navigate_left => t("navigate_left"),
+        :save => t("navigate_to_save"),
+        :settings => t("edit_settings"),
+        :analysis => t("analysis")
       }
 
       admin = {
-        :forms => "View/Edit Forms",
-        :admin => "Admin Dashboard"
+        :forms => t("view_edit_forms"),
+        :admin => t("admin_dashboard")
       }
 
       list.each do |label|
