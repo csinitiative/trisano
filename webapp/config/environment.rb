@@ -84,8 +84,7 @@ Rails::Initializer.run do |config|
   # For datetime validation plugin to switch to U.S. format (month/day/year)
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README
   config.after_initialize do
-    ValidatesTimeliness::Formats.add_formats(:date, 'mmm d, yyyy')
-    ValidatesTimeliness::Formats.add_formats(:date, 'm-d-yy', :before => 'd-m-yy')
+    require 'validates_timeliness_formats'
     require "active_record/errors.rb"
     require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
     require "active_record/scopes.rb"
