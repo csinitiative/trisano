@@ -58,7 +58,7 @@
             = h(result['birth_gender']) if output_name
           %td
             - if includes_event
-              = h(result['event_type'].underscore.humanize)
+              = h(t(result['event_type'].underscore))
             - else
               %i=t 'none'
           %td
