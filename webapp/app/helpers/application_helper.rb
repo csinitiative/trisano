@@ -202,7 +202,7 @@ module ApplicationHelper
     form_id = get_form_id(event)
 
     content_for :enable_save_buttons do
-      content = "&nbsp;&nbsp;" + link_to_function("Enable Save Buttons", "toggle_save_buttons('on')", :onmouseout => "UnTip()", :onmouseover => "TagToTip('save_button_help', FADEOUT, 500, FADEIN, 500)")
+      content = "&nbsp;&nbsp;" + link_to_function(t("enable_save_buttons"), "toggle_save_buttons('on')", :onmouseout => "UnTip()", :onmouseover => "TagToTip('save_button_help', FADEOUT, 500, FADEIN, 500)")
       content += "<div id='save_button_help' style='display: none;'>Click here to enable the save buttons if they are grayed out when they shouldn't be.</div>"
     end
     # The display: inline style is to get IE to render the two buttons side by side.
