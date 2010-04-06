@@ -20,54 +20,12 @@ puts "Loading defaults"
 # core fields
 core_fields = YAML::load_file("#{RAILS_ROOT}/db/defaults/core_fields.yml")
 CoreField.transaction do
-  core_fields.each do |k, v|
-    CoreField.create(v)
+  core_fields.each do |v|
+    if (code_name = v.delete('code_name'))
+      v['code_name'] = CodeName.find_by_code_name(code_name)
+    end
+    CoreField.create!(v)
   end
-end
-
-# Integrate the following into the block above
-[[CoreField.find_by_key("morbidity_event[address][state_id]"), CodeName.find_by_code_name("state")],
-  [CoreField.find_by_key("morbidity_event[address][county_id]"), CodeName.find_by_code_name("county")],
-  [CoreField.find_by_key("morbidity_event[imported_from_id]"), CodeName.find_by_code_name("imported")],
-  [CoreField.find_by_key("morbidity_event[labs][lab_results][test_type]"), CodeName.find_by_code_name("lab_test_type")],
-  [CoreField.find_by_key("morbidity_event[interested_party][person_entity][person][birth_gender_id]"), CodeName.find_by_code_name("gender")],
-  [CoreField.find_by_key("morbidity_event[interested_party][person_entity][person][ethnicity_id]"), CodeName.find_by_code_name("ethnicity")],
-  [CoreField.find_by_key("morbidity_event[interested_party][person_entity][person][primary_language_id]"), CodeName.find_by_code_name("language")],
-  [CoreField.find_by_key("morbidity_event[interested_party][risk_factor][pregnant_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[labs][lab_results][specimen_sent_to_state]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[interested_party][risk_factor][food_handler_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[interested_party][risk_factor][healthcare_worker_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[interested_party][risk_factor][group_living_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[disease_event][hospitalized_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[disease_event][died_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[interested_party][risk_factor][day_care_association_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[lhd_case_status_id]"), CodeName.find_by_code_name("investigation")],
-  [CoreField.find_by_key("morbidity_event[labs][lab_results][test_status]"), CodeName.find_by_code_name("test_status")],
-  [CoreField.find_by_key("morbidity_event[state_case_status_id]"), CodeName.find_by_code_name("investigation")],
-  [CoreField.find_by_key("morbidity_event[outbreak_associated_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("morbidity_event[labs][lab_results][specimen_source]"), CodeName.find_by_code_name("specimen")],
-  [CoreField.find_by_key("morbidity_event[labs][lab_results][test_result]"), CodeName.find_by_code_name("test_result")],
-  [CoreField.find_by_key("contact_event[address][state_id]"), CodeName.find_by_code_name("state")],
-  [CoreField.find_by_key("contact_event[address][county_id]"), CodeName.find_by_code_name("county")],
-  [CoreField.find_by_key("contact_event[imported_from_id]"), CodeName.find_by_code_name("imported")],
-  [CoreField.find_by_key("contact_event[labs][lab_results][test_type]"), CodeName.find_by_code_name("lab_test_type")],
-  [CoreField.find_by_key("contact_event[interested_party][person_entity][person][birth_gender_id]"), CodeName.find_by_code_name("gender")],
-  [CoreField.find_by_key("contact_event[interested_party][person_entity][person][ethnicity_id]"), CodeName.find_by_code_name("ethnicity")],
-  [CoreField.find_by_key("contact_event[interested_party][person_entity][person][primary_language_id]"), CodeName.find_by_code_name("language")],
-  [CoreField.find_by_key("contact_event[interested_party][risk_factor][pregnant_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[labs][lab_results][specimen_sent_to_state]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[interested_party][risk_factor][food_handler_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[interested_party][risk_factor][healthcare_worker_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[interested_party][risk_factor][group_living_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[disease_event][hospitalized_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[disease_event][died_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[interested_party][risk_factor][day_care_association_id]"), CodeName.find_by_code_name("yesno")],
-  [CoreField.find_by_key("contact_event[labs][lab_results][test_status]"), CodeName.find_by_code_name("test_status")],
-  [CoreField.find_by_key("contact_event[labs][lab_results][specimen_source]"), CodeName.find_by_code_name("specimen")],
-  [CoreField.find_by_key("contact_event[labs][lab_results][test_result]"), CodeName.find_by_code_name("test_result")]].each do |field_and_code|
-
-  field_and_code[0].code_name_id = field_and_code[1].id
-  field_and_code[0].save!
 end
 
 # Privileges are represented as an array of strings
