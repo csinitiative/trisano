@@ -22,12 +22,12 @@ describe NameAndBirthdateSearchForm do
   it "should report errors on invalid dates" do
     form = NameAndBirthdateSearchForm.new(:birth_date => '1947-10-')
     form.should_not be_valid
-    form.errors.on(:birth_date).should == 'is invalid'
+    form.errors.on(:birth_date).should == 'is not a valid date'
   end
 
   it "should report errors on two digit years" do
     form = NameAndBirthdateSearchForm.new(:birth_date => 'January 1, 85')
     form.should_not be_valid
-    form.errors.on(:birth_date).should == "can't have a two digit year"
+    form.errors.on(:birth_date).should == "is not a valid date"
   end
 end

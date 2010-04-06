@@ -222,11 +222,5 @@ en:
             text_answer:
               format: 'Phone number must include area code and seven digit number'
 
-        name_and_birthdate_search_form:
-          attributes:
-            birth_date:
-              invalid_birthdate: 'is invalid'
-              two_digit_year: "can't have a two digit year"
-
       attributes:
         # Overrides model and default messages.

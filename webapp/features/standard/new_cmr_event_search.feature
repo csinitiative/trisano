@@ -82,14 +82,14 @@ Feature: Searching for existing people or events before adding a CMR
     When I search for birth date = "1947-01-"
     Then I should get a 422 response
      And I should see "Invalid search criteria"
-     And I should see "Birth date is invalid"
+     And I should see "Birth date is not a valid date"
 
   Scenario: Warns if a two digit year is used in birth date field
     Given I am logged in as a super user
     When I search for birth date = "Jan 8, 85"
     Then I should get a 422 response
      And I should see "Invalid search criteria"
-     And I should see "Birth date can't have a two digit year"
+     And I should see "Birth date is not a valid date"
 
   Scenario: Searching for names using starts with
     Given the following morbidity events:

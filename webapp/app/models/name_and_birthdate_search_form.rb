@@ -56,16 +56,17 @@ class NameAndBirthdateSearchForm
 
   def validate
     errors.clear
-    parse_birth_date if birth_date_parseable?
+    return unless birth_date_parseable?
+    validate_date
   end
 
-  def parse_birth_date
-    bdate = ParseDate.parsedate(birth_date)
-    unless bdate[0] and bdate[1] and bdate[2]
-      errors.add(:birth_date, :invalid_birthdate)
-    end
-    if bdate[0] && bdate[0] < 100
-      errors.add(:birth_date, :two_digit_year)
+  def bdate_array
+    @bdate_array ||= ValidatesTimeliness::Formats.parse(birth_date, :date)
+  end
+
+  def validate_date
+    unless bdate_array
+      errors.add(:birth_date, :invalid_date)
     end
   end
 
@@ -73,12 +74,17 @@ class NameAndBirthdateSearchForm
     !birth_date.blank? and birth_date.is_a?(String)
   end
 
+  def normalized_birth_date
+    return unless bdate_array
+    DateTime.civil(*bdate_array).to_date
+  end
+
   # DEBT: would like to be able to just pass this obj to searches
   def to_hash
     returning({}) do |h|
       h[:last_name] = last_name
       h[:first_name] = first_name
-      h[:birth_date] = birth_date
+      h[:birth_date] = normalized_birth_date
       h[:use_starts_with_search] = uses_starts_with_search? ? 'true' : nil
       h[:page_size] = page_size
       h[:page] = page
