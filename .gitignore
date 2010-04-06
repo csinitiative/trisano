@@ -17,6 +17,7 @@ distro/config.yml
 webapp/config/database.yml
 webapp/config/site_config.yml
 avr/mdr.*
+*nbproject*
 webrat-*
 /webapp/vendor/trisano/*
 /webapp/db/development_structure.sql
