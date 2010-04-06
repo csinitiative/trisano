@@ -35,6 +35,7 @@ en:
   unspecified: 'Unspecified'
   disable_tabs: 'Disable Tabs'
   enable_tabs: 'Enable Tabs'
+  add_hospitalization_facility: 'Add a Hospitalization Facility'
   
   please_exit: 'Please exit'
   assigned_jurisdiction: 'Assigned Jurisdiction'
