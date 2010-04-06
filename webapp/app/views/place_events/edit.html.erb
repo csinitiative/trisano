@@ -53,9 +53,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
   <%  @event_form = event_form %>
 
   <% tabs = []
-     tabs << %w(place_tab Place)
-     tabs << %w(investigation_tab Investigation)
-     tabs << %w(notes_tab Notes)
+     tabs << ["place_tab", t('place')]
+     tabs << ["investigation_tab", t('investigation')]
+     tabs << ["notes_tab", t('notes')]
   %>
 
   <% tabbed_content(tabs, @tab_index) do %>

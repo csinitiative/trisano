@@ -33,7 +33,9 @@ en:
   demographic_info: 'Demographic Information'
   jurisdictions: 'Jurisdictions'
   unspecified: 'Unspecified'
-
+  disable_tabs: 'Disable Tabs'
+  enable_tabs: 'Enable Tabs'
+  
   please_exit: 'Please exit'
   assigned_jurisdiction: 'Assigned Jurisdiction'
   jurisdictions_with_access: 'Jurisidctions with Access'
@@ -878,7 +880,7 @@ en:
   data_type: "Data Type"
   Master_Copy: "Master Copy"
   add_new_group: "Add a new group"
-  import_form_library: "Import form library:"
+  import_form_library: "Import form library"
   export_form_library: "Export form library"
   manage_form_library: "Manage form library"
   add_new_section: "Add a new section"
