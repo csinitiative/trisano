@@ -37,6 +37,27 @@ function toggle_investigator_forms(id_to_show) {
     $(id_to_show).show();
 }
 
+extractLocaleAsQueryString = function(path) {
+  var qp = $H(path.toQueryParams());
+  var l = qp.get('locale');
+  if (l == undefined) {
+    return "";
+  } else {
+    return "?" + "locale=" + l;
+  }
+};
+
+joinAndPreserveLocale = function(base, ext) {
+  var s = base.split("?");
+  var p = s[0];
+  if (s[1] == undefined) {
+    var l = "";
+  } else {
+    var l = extractLocaleAsQueryString(base);
+  }
+  return p + ext + l;
+};
+
 function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
     if (typeof spinner_id == "undefined")
         spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
