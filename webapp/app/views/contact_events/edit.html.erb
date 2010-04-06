@@ -22,7 +22,7 @@
 <% end %>
 
 <% content_for :tools do %>
-  <%= link_to_function('Show', "send_url_with_tab_index('#{contact_event_path(@event)}')") %>
+  <%= link_to_function(t('show'), "send_url_with_tab_index('#{contact_event_path(@event)}')") %>
 <% end %>
 
 <% @form_index = 0 %>

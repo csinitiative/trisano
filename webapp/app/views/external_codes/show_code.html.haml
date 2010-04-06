@@ -54,6 +54,6 @@
           - else
             = link_to t("edit"), edit_code_path(@external_code.code_name, @external_code.the_code)
             |
-            Show
+            = t('show')
             |
             = link_to t("delete"), soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really delete code?"

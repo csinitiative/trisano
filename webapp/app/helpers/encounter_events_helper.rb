@@ -29,7 +29,7 @@ module EncounterEventsHelper
   def basic_encounter_event_controls(event, with_show=true)
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
-    controls << link_to_function('Show', "send_url_with_tab_index('#{encounter_event_path(event)}')") if with_show
+    controls << link_to_function(t('show'), "send_url_with_tab_index('#{encounter_event_path(event)}')") if with_show
 
     if can_update
       controls <<  " | "  if with_show

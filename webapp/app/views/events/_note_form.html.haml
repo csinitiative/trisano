@@ -17,16 +17,16 @@
   %fieldset
     %legend
       =t 'attachments'
-      %span{:id => 'attachments_hide', :onClick => "Element.hide('attachments'); Element.hide('attachments_hide'); Element.show('attachments_show'); return false;"} [Hide]
-      %span{:id => 'attachments_show', :onClick => "Element.show('attachments'); Element.hide('attachments_show'); Element.show('attachments_hide'); return false;", :style => "display: none;"} [Show]
+      %span{:id => 'attachments_hide', :onClick => "Element.hide('attachments'); Element.hide('attachments_hide'); Element.show('attachments_show'); return false;"}= "[#{t('hide')}]"
+      %span{:id => 'attachments_show', :onClick => "Element.show('attachments'); Element.hide('attachments_show'); Element.show('attachments_hide'); return false;", :style => "display: none;"}= "[#{t('show')}]"
     #attachments
       = render(:partial => 'event_attachments/list', :locals => { :attachments => @event.attachments })
 
 %fieldset
   %legend
     Notes
-    %span{:id => 'notes_hide', :onClick => "Element.hide('notes'); Element.hide('notes_hide'); Element.show('notes_show'); return false;"} [Hide]
-    %span{:id => 'notes_show', :onClick => "Element.show('notes'); Element.hide('notes_show'); Element.show('notes_hide'); return false;", :style => "display: none;"} [Show]
+    %span{:id => 'notes_hide', :onClick => "Element.hide('notes'); Element.hide('notes_hide'); Element.show('notes_show'); return false;"}= "[#{t('hide')}]"
+    %span{:id => 'notes_show', :onClick => "Element.show('notes'); Element.hide('notes_show'); Element.show('notes_hide'); return false;", :style => "display: none;"}= "[#{t('show')}]"
 
   #notes
     #note-list
@@ -56,7 +56,7 @@
   %fieldset
     %legend
       =t "tasks"
-      %span{:id => 'tasks_hide', :onClick => "Element.hide('tasks'); Element.hide('tasks_hide'); Element.show('tasks_show'); return false;"} [Hide]
-      %span{:id => 'tasks_show', :onClick => "Element.show('tasks'); Element.hide('tasks_show'); Element.show('tasks_hide'); return false;", :style => "display: none;"} [Show]
+      %span{:id => 'tasks_hide', :onClick => "Element.hide('tasks'); Element.hide('tasks_hide'); Element.show('tasks_show'); return false;"}= "[#{t('hide')}]"
+      %span{:id => 'tasks_show', :onClick => "Element.show('tasks'); Element.hide('tasks_show'); Element.show('tasks_hide'); return false;", :style => "display: none;"}= "[#{t('show')}]"
     #tasks
       = render(:partial => 'tasks/list', :locals => { :task_owner => @event })
