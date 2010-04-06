@@ -769,7 +769,6 @@ en:
   no_staged_message_search_results: "There are no messages for this search"
   collection_date_range: "Collection date range"
   search_for_staged_messages: 'Search for Staged Messages'
-  search_normal_case: "Search"
   specimen_source_is: "Specimen: {{source}}"
   collected_on_date: "Collected: {{date}}"
   test_date: "Test Date"
