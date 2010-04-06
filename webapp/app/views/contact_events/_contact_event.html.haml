@@ -34,7 +34,7 @@
         = h(contact_event.interested_party.person_entity.person.last_comma_first)
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
-        Contact Event |
+        = t("contact_event") |
         = ld(contact_event.event_onset_date)
         - if !from_index
           = original_patient_controls(@event)  
