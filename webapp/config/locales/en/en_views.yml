@@ -622,6 +622,7 @@ en:
   edit_jurisdiction: "Edit Jurisdiction"
   jurisdiction_management: "Jurisdiction Management"
   create_new_jurisdiction: "Create New Jurisdiction"
+  create_jurisdiction: "Create Jurisdiction"
   #loinc codes
   create_new_loinc_code: "Create New LOINC Code"
   scale: "Scale"
