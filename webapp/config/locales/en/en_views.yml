@@ -923,6 +923,7 @@ en:
   date_or_year_of_birth: "Date or year of birth (mm/dd/yyyy or yyyy)"
   investigated_by: "Investigated by"
   are_you_sure: "Are you sure?"
+  person_merge: "Person Merge"
   merge: "Merge"
   merge_into: "Merge into {{name}}"
   show_hide_details: "&nbsp;Show&nbsp;|&nbsp;Hide&nbsp;Details&nbsp;"
