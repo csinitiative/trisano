@@ -3,21 +3,21 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
   =t 'person_detail'
 
 /- content_for :name do
-/  Person details:  
+/  Person details:
 /  = @person.last_name
 
 - content_for :tools do
@@ -40,7 +40,7 @@
             - form_for(@person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |pe|
               - pe.fields_for(:person, :url => person_path(@person), :builder => ExtendedFormBuilder) do |p|
                 = render :partial => 'people/name_show', :locals => {:person => @person.person, :f => pe, :event_form => nil}
-                = render :partial => 'people/address_show', :locals => {:address => @person.canonical_address, :f => pe}
+                = render_address_show(pe, @person)
                 = render :partial => 'people/age_show', :locals => {:f => pe, :event_form => nil}
                 = render :partial => 'people/phones_show', :locals => {:f => pe}
                 = render :partial => 'people/demographics_show', :locals => {:person => @person.person, :f => pe}

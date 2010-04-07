@@ -183,7 +183,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         result += rb_export_js(cdc_attributes, export_conv_field_id)
       end
     else
-      result += @template.content_tag(:label) do
+      result += @template.content_tag(:label, :for => html_options[:id]) do
         sanitize(question.question_text, :tags => %w(br))
       end
       result += input_element
