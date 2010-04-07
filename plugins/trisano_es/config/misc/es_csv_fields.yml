@@ -1,0 +1,1400 @@
+csv_field_00076: 
+  sort_order: 540
+  export_group: event
+  long_name: paciente_agencia_notificadora
+  use_description: safe_call_chain(:reporting_agency, :secondary_entity, :place, :name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00131: 
+  sort_order: 550
+  export_group: event
+  long_name: paciente_denunciante_apellido
+  use_description: safe_call_chain(:reporter, :secondary_entity, :person, :last_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00048: 
+  sort_order: 110
+  export_group: event
+  long_name: paciente_dirección_código_postal
+  use_description: address.try(:postal_code)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00103: 
+  sort_order: 670
+  export_group: event
+  long_name: paciente_brote_correspondiente
+  use_description: outbreak_associated.try(:code_description)
+  short_name: 
+  use_code: outbreak_associated.try(:the_code)
+  event_type: morbidity_event
+csv_field_00160: 
+  sort_order: 0
+  export_group: event
+  long_name: contacto_evento_id
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00077: 
+  sort_order: 60
+  export_group: event
+  long_name: paciente_dirección_nombre_de_calle
+  use_description: address.try(:street_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00132: 
+  sort_order: 620
+  export_group: event
+  long_name: paciente_evento_fecha_de_inicio
+  use_description: event_onset_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00049: 
+  sort_order: 180
+  export_group: event
+  long_name: paciente_sexo_de_nacimiento
+  use_description: interested_party.person_entity.person.try(:birth_gender).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:birth_gender).try(:the_code)
+  event_type: morbidity_event
+csv_field_00104: 
+  sort_order: 680
+  export_group: event
+  long_name: paciente_brote_nombre
+  use_description: outbreak_name
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00161: 
+  sort_order: 10
+  export_group: event
+  long_name: contacto_número_de_registro
+  use_description: record_number
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00078: 
+  sort_order: 490
+  export_group: event
+  long_name: contacto_obrador/a_de_atención_médica
+  use_description: interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:healthcare_worker).try(:the_code)
+  event_type: contact_event
+csv_field_00133: 
+  sort_order: 610
+  export_group: event
+  long_name: paciente_primer_reporte_a_DSP_fecha
+  use_description: first_reported_PH_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00105: 
+  sort_order: 120
+  export_group: event
+  long_name: contacto_fecha_de_nacimiento
+  use_description: interested_party.person_entity.person.birth_date
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00162: 
+  sort_order: 210
+  export_group: event
+  long_name: contacto_raza_2
+  use_description: interested_party.person_entity.try(:races).try(:[], 1).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 1).try(:the_code)
+  event_type: contact_event
+csv_field_00020: 
+  sort_order: 340
+  export_group: event
+  long_name: paciente_hospital_fecha_de_ingreso
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00079: 
+  sort_order: 600
+  export_group: event
+  long_name: paciente_reporte_de_resultados_al_clínico_fecha
+  use_description: results_reported_to_clinician_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00106: 
+  sort_order: 110
+  export_group: event
+  long_name: contacto_dirección_código_postal
+  use_description: address.try(:postal_code)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00163: 
+  sort_order: 70
+  export_group: event
+  long_name: lugar_dirección_ciudad
+  use_description: address.try(:city)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00021: 
+  sort_order: 440
+  export_group: event
+  long_name: paciente_clínico_teléfono_número_de_teléfono
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00107: 
+  sort_order: 550
+  export_group: event
+  long_name: contacto_importado_de
+  use_description: imported_from.try(:code_description)
+  short_name: 
+  use_code: imported_from.try(:the_code)
+  event_type: contact_event
+csv_field_00164: 
+  sort_order: 290
+  export_group: event
+  long_name: contacto_tipo
+  use_description: participations_contact.try(:contact_type).try(:code_description)
+  short_name: 
+  use_code: participations_contact.try(:contact_type).try(:the_code)
+  event_type: contact_event
+csv_field_00022: 
+  sort_order: 350
+  export_group: event
+  long_name: paciente_hospital_fecha_de_alta
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_oranism_name: 
+  sort_order: 25
+  export_group: lab
+  long_name: laboratorio_organismo
+  use_description: organism.try(:organism_name)
+  short_name:
+  use_code:
+  event_type:
+csv_field_00136: 
+  sort_order: 30
+  export_group: lab
+  long_name: laboratorio_resultado
+  use_description: test_result.try(:code_description)
+  short_name:
+  use_code: test_result.try(:the_code)
+  event_type:
+csv_field_lab_result_test_status: 
+  sort_order: 60
+  export_group: lab
+  long_name: laboratorio_prueba_estado
+  use_description: test_status.try(:code_description)
+  short_name:
+  use_code: test_status.try(:the_code)
+  event_type:
+csv_field_lab_result_value: 
+  sort_order: 40
+  export_group: lab
+  long_name: laboratorio_resultado_valor
+  use_description: result_value
+  short_name:
+  use_code:
+  event_type:
+csv_field_lab_units: 
+  sort_order: 45
+  export_group: lab
+  long_name: laboratorio_unidades
+  use_description: units
+  short_name:
+  use_code:
+  event_type:
+csv_field_00108: 
+  sort_order: 630
+  export_group: event
+  long_name: paciente_MMWR_semana
+  use_description: read_attribute('MMWR_week')
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00050: 
+  sort_order: 170
+  export_group: event
+  long_name: paciente_teléfono_extensión
+  use_description: interested_party.person_entity.telephones.last.try(:extension)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00165: 
+  sort_order: 800
+  export_group: event
+  long_name: otros_datos_2
+  use_description: other_data_2
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00023: 
+  sort_order: 360
+  export_group: event
+  long_name: paciente_hospital_registro_médico_no
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00137: 
+  sort_order: 50
+  export_group: lab
+  long_name: laboratorio_referencia_rango
+  use_description: reference_range
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00109: 
+  sort_order: 570
+  export_group: event
+  long_name: paciente_denunciante_teléfono_prefijo
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :area_code)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00051: 
+  sort_order: 160
+  export_group: event
+  long_name: paciente_teléfono_número_de_teléfono
+  use_description: interested_party.person_entity.telephones.last.try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00024: 
+  sort_order: 10
+  export_group: event
+  long_name: paciente_número_de_registro
+  use_description: record_number
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00138: 
+  sort_order: 240
+  export_group: event
+  long_name: paciente_raza_5
+  use_description: interested_party.person_entity.try(:races).try(:[], 4).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 4).try(:the_code)
+  event_type: morbidity_event
+csv_field_00080: 
+  sort_order: 530
+  export_group: event
+  long_name: paciente_importado_de
+  use_description: imported_from.try(:code_description)
+  short_name: 
+  use_code: imported_from.try(:the_code)
+  event_type: morbidity_event
+csv_field_00052: 
+  sort_order: 430
+  export_group: event
+  long_name: contacto_clínico_nombre
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:first_name)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00166: 
+  sort_order: 300
+  export_group: event
+  long_name: contacto_enfermedad
+  use_description: disease_event.try(:disease).try(:disease_name)
+  short_name: 
+  use_code: disease_event.try(:disease).try(:cdc_code)
+  event_type: contact_event
+csv_field_00139: 
+  sort_order: 280
+  export_group: event
+  long_name: paciente_enfermedad
+  use_description: disease_event.try(:disease).try(:disease_name)
+  short_name: 
+  use_code: disease_event.try(:disease).try(:cdc_code)
+  event_type: morbidity_event
+csv_field_00081: 
+  sort_order: 150
+  export_group: event
+  long_name: paciente_teléfono_prefijo
+  use_description: interested_party.person_entity.telephones.last.try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00053: 
+  sort_order: 220
+  export_group: event
+  long_name: contacto_raza_3
+  use_description: interested_party.person_entity.try(:races).try(:[], 2).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 2).try(:the_code)
+  event_type: contact_event
+csv_field_00167: 
+  sort_order: 50
+  export_group: event
+  long_name: lugar_dirección_nombre_de_calle
+  use_description: address.try(:street_name)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00025: 
+  sort_order: 470
+  export_group: event
+  long_name: contacto_clínico_teléfono_extensión
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00082: 
+  sort_order: 40
+  export_group: event
+  long_name: paciente_segundo_nombre
+  use_description: interested_party.person_entity.person.middle_name
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00054: 
+  sort_order: 420
+  export_group: event
+  long_name: contacto_ clínico_apellido
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:last_name)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00168: 
+  sort_order: 190
+  export_group: event
+  long_name: contacto_etnia
+  use_description: interested_party.person_entity.person.try(:ethnicity).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:ethnicity).try(:the_code)
+  event_type: contact_event
+csv_field_00026: 
+  sort_order: 450
+  export_group: event
+  long_name: paciente_clínico_teléfono_extensión
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00083: 
+  sort_order: 50
+  export_group: event
+  long_name: paciente_dirección_número_de_calle
+  use_description: address.try(:street_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00055: 
+  sort_order: 230
+  export_group: event
+  long_name: contacto_raza_4
+  use_description: interested_party.person_entity.try(:races).try(:[], 3).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 3).try(:the_code)
+  event_type: contact_event
+csv_field_00110: 
+  sort_order: 640
+  export_group: event
+  long_name: paciente_MMWR_año
+  use_description: read_attribute('MMWR_year')
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00169: 
+  sort_order: 60
+  export_group: event
+  long_name: lugar_address_número_de_unidad
+  use_description: address.try(:unit_number)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00027: 
+  sort_order: 420
+  export_group: event
+  long_name: paciente_clínico_segundo_nombre
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:middle_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00084: 
+  sort_order: 30
+  export_group: treatment
+  long_name: fecha_de_tratamiento
+  use_description: treatment_date
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00300:
+  sort_order: 40
+  export_group: treatment
+  long_name: fecha_del_término_de_tratamiento
+  use_description: stop_treatment_date
+  short_name:
+  use_code:
+  event_type:
+csv_field_00056: 
+  sort_order: 410
+  export_group: event
+  long_name: contacto_embarazada
+  use_description: interested_party.try(:risk_factor).try(:pregnant).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:pregnant).try(:the_code)
+  event_type: contact_event
+csv_field_00111: 
+  sort_order: 650
+  export_group: event
+  long_name: paciente_caso_lhd_estado
+  use_description: lhd_case_status.try(:code_description)
+  short_name: 
+  use_code: lhd_case_status.try(:the_code)
+  event_type: morbidity_event
+csv_field_00028: 
+  sort_order: 430
+  export_group: event
+  long_name: paciente_clínico_teléfono_prefijo
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00085: 
+  sort_order: 20
+  export_group: treatment
+  long_name: tratamiento
+  use_description: treatment.treatment
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00140: 
+  sort_order: 260
+  export_group: event
+  long_name: paciente_raza_7
+  use_description: interested_party.person_entity.try(:races).try(:[], 6).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 6).try(:the_code)
+  event_type: morbidity_event
+csv_field_00057: 
+  sort_order: 400
+  export_group: event
+  long_name: contacto_fecha_de_muerte
+  use_description: interested_party.person_entity.person.date_of_death
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00112: 
+  sort_order: 660
+  export_group: event
+  long_name: paciente_provincia_caso_estado
+  use_description: state_case_status.try(:code_description)
+  short_name: 
+  use_code: state_case_status.try(:the_code)
+  event_type: morbidity_event
+csv_field_00029: 
+  sort_order: 480
+  export_group: event
+  long_name: paciente_vivienda_colectiva
+  use_description: interested_party.try(:risk_factor).try(:group_living).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:group_living).try(:the_code)
+  event_type: morbidity_event
+csv_field_00086: 
+  sort_order: 70
+  export_group: event
+  long_name: paciente_dirección_número_de_unidad
+  use_description: address.try(:unit_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00141: 
+  sort_order: 340
+  export_group: event
+  long_name: contacto_hospitalizado/a
+  use_description: disease_event.try(:hospitalized).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:hospitalized).try(:the_code)
+  event_type: contact_event
+csv_field_00058: 
+  sort_order: 250
+  export_group: event
+  long_name: contacto_raza_6
+  use_description: interested_party.person_entity.try(:races).try(:[], 5).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 5).try(:the_code)
+  event_type: contact_event
+csv_field_00113: 
+  sort_order: 560
+  export_group: event
+  long_name: paciente_denunciante_nombre
+  use_description: safe_call_chain(:reporter, :secondary_entity, :person, :first_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00087: 
+  sort_order: 80
+  export_group: event
+  long_name: paciente_dirección_ciudad
+  use_description: address.try(:city)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00142: 
+  sort_order: 250
+  export_group: event
+  long_name: paciente_raza_6
+  use_description: interested_party.person_entity.try(:races).try(:[], 5).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 5).try(:the_code)
+  event_type: morbidity_event
+csv_field_00059: 
+  sort_order: 390
+  export_group: event
+  long_name: paciente_embarazada
+  use_description: interested_party.try(:risk_factor).try(:pregnant).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:pregnant).try(:the_code)
+  event_type: morbidity_event
+csv_field_00114: 
+  sort_order: 780
+  export_group: event
+  long_name: agudeza
+  use_description: acuity
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00170: 
+  sort_order: 0
+  export_group: event
+  long_name: paciente_evento_id
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00143: 
+  sort_order: 330
+  export_group: event
+  long_name: contacto_diagnóstico_institución
+  use_description: diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00001: 
+  sort_order: 240
+  export_group: event
+  long_name: contacto_raza_5
+  use_description: interested_party.person_entity.try(:races).try(:[], 4).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 4).try(:the_code)
+  event_type: contact_event
+csv_field_00115: 
+  sort_order: 730
+  export_group: event
+  long_name: paciente_investigación_fecha_inicial
+  use_description: investigation_started_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00171: 
+  sort_order: 200
+  export_group: event
+  long_name: contacto_raza_1
+  use_description: interested_party.person_entity.try(:races).try(:[], 0).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 0).try(:the_code)
+  event_type: contact_event
+csv_field_00088: 
+  sort_order: 510
+  export_group: event
+  long_name: contacto_asociación_de_atención_diurna
+  use_description: interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:day_care_association).try(:the_code)
+  event_type: contact_event
+csv_field_00144: 
+  sort_order: 750
+  export_group: event
+  long_name: paciente_revisión_concluída_por_provincia_fecha
+  use_description: review_completed_by_state_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00002: 
+  sort_order: 570
+  export_group: event
+  long_name: contacto_evento_fecha_de_última_actualización
+  use_description: updated_at
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00116: 
+  sort_order: 140
+  export_group: event
+  long_name: contacto_edad_de_inicio_en_años
+  use_description: age_info.in_years
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00172: 
+  sort_order: 280
+  export_group: event
+  long_name: contacto_dispocisión
+  use_description: participations_contact.try(:disposition).try(:code_description)
+  short_name: 
+  use_code: participations_contact.try(:disposition).try(:the_code)
+  event_type: contact_event
+csv_field_00030: 
+  sort_order: 460
+  export_group: event
+  long_name: paciente_manejador/a_de_alimentos
+  use_description: interested_party.try(:risk_factor).try(:food_handler).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:food_handler).try(:the_code)
+  event_type: morbidity_event
+csv_field_00089: 
+  sort_order: 510
+  export_group: event
+  long_name: paciente_factores_de_riesgo
+  use_description: interested_party.risk_factor.try(:risk_factors)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00003: 
+  sort_order: 10
+  export_group: event
+  long_name: lugar_nombre
+  use_description: interested_place.place_entity.place.name
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00117: 
+  sort_order: 270
+  export_group: event
+  long_name: contacto_idioma
+  use_description: interested_party.person_entity.person.try(:primary_language).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:primary_language).try(:the_code)
+  event_type: contact_event
+csv_field_00031: 
+  sort_order: 470
+  export_group: event
+  long_name: paciente_obrador/a_de_atención_médica
+  use_description: interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:healthcare_worker).try(:the_code)
+  event_type: morbidity_event
+csv_field_00145: 
+  sort_order: 200
+  export_group: event
+  long_name: paciente_raza_1
+  use_description: interested_party.person_entity.try(:races).try(:[], 0).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 0).try(:the_code)
+  event_type: morbidity_event
+csv_field_00118: 
+  sort_order: 130
+  export_group: event
+  long_name: contacto_edad_aproximada_sin_fecha_de_nacimiento
+  use_description: interested_party.person_entity.person.approximate_age_no_birthday
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00060: 
+  sort_order: 90
+  export_group: lab
+  long_name: laboratorio_fecha_de_prueba
+  use_description: lab_test_date
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00032: 
+  sort_order: 380
+  export_group: event
+  long_name: contacto_hospital_registro_médico_no
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00146: 
+  sort_order: 320
+  export_group: event
+  long_name: contacto_fecha_de_diagnósis
+  use_description: disease_event.try(:date_diagnosed)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00004: 
+  sort_order: 160
+  export_group: event
+  long_name: contacto_teléfono_número_telefénico
+  use_description: interested_party.person_entity.telephones.last.try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00119: 
+  sort_order: 260
+  export_group: event
+  long_name: contacto_raza_7
+  use_description: interested_party.person_entity.try(:races).try(:[], 6).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 6).try(:the_code)
+  event_type: contact_event
+csv_field_00061: 
+  sort_order: 410
+  export_group: event
+  long_name: paciente_clínico_nombre
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:first_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00033: 
+  sort_order: 10
+  export_group: lab
+  long_name: laboratorio_nombre
+  use_description: lab_name
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00147: 
+  sort_order: 270
+  export_group: event
+  long_name: paciente_idioma
+  use_description: interested_party.person_entity.person.try(:primary_language).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:primary_language).try(:the_code)
+  event_type: morbidity_event
+csv_field_00005: 
+  sort_order: 440
+  export_group: event
+  long_name: contacto_clínico_segundo_nombre
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:middle_name)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00062: 
+  sort_order: 190
+  export_group: event
+  long_name: paciente_etnia
+  use_description: interested_party.person_entity.person.try(:ethnicity).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:ethnicity).try(:the_code)
+  event_type: morbidity_event
+csv_field_00034: 
+  sort_order: 390
+  export_group: event
+  long_name: contacto_se_murió
+  use_description: disease_event.try(:died).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:died).try(:the_code)
+  event_type: contact_event
+csv_field_00148: 
+  sort_order: 310
+  export_group: event
+  long_name: contacto_enfermedad_fecha_de_inicio
+  use_description: disease_event.try(:disease_onset_date)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00006: 
+  sort_order: 560
+  export_group: event
+  long_name: contacto_evento_fecha_de_creación
+  use_description: created_at
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00090: 
+  sort_order: 20
+  export_group: event
+  long_name: paciente_apellido
+  use_description: interested_party.person_entity.person.last_name
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00063: 
+  sort_order: 400
+  export_group: event
+  long_name: paciente_clínico_apellido
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:last_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00035: 
+  sort_order: 360
+  export_group: event
+  long_name: contacto_hospital_fecha_de_ingreso
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00149: 
+  sort_order: 760
+  export_group: event
+  long_name: paciente_investigador/a
+  use_description: investigator.try(:best_name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00007: 
+  sort_order: 450
+  export_group: event
+  long_name: contacto_clínico_teléfono_prefijo
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00091: 
+  sort_order: 60
+  export_group: event
+  long_name: contacto_dirección_nombre_de_calle
+  use_description: address.try(:street_name)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00064: 
+  sort_order: 70
+  export_group: lab
+  long_name: laboratorio_muestra_fuente
+  use_description: specimen_source.try(:code_description)
+  short_name: 
+  use_code: specimen_source.try(:the_code)
+  event_type: 
+csv_field_00036: 
+  sort_order: 130
+  export_group: event
+  long_name: lugar_teléfono_extensión
+  use_description: interested_place.place_entity.telephones.last.try(:extension)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00008: 
+  sort_order: 0
+  export_group: event
+  long_name: lugar_evento_id
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00092: 
+  sort_order: 30
+  export_group: event
+  long_name: paciente_nombre
+  use_description: interested_party.person_entity.person.first_name
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00065: 
+  sort_order: 80
+  export_group: event
+  long_name: lugar_dirección_provincia
+  use_description: address.try(:state).try(:code_description)
+  short_name: 
+  use_code: address.try(:state).try(:the_code)
+  event_type: place_event
+csv_field_00120: 
+  sort_order: 150
+  export_group: event
+  long_name: contacto_teléfono_prefijo
+  use_description: interested_party.person_entity.telephones.last.try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00037: 
+  sort_order: 370
+  export_group: event
+  long_name: contacto_hospital_fecha_de_alta
+  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00009: 
+  sort_order: 30
+  export_group: event
+  long_name: lugar_fecha_de_exposición
+  use_description: participations_place.try(:date_of_exposure)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00093: 
+  sort_order: 530
+  export_group: event
+  long_name: contacto_factores_de_riesgo
+  use_description: interested_party.risk_factor.try(:risk_factors)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00038: 
+  sort_order: 150
+  export_group: event
+  long_name: lugar_evento_fecha_de_última_actualización
+  use_description: updated_at
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00066: 
+  sort_order: 80
+  export_group: lab
+  long_name: laboratorio_recolección_fecha
+  use_description: collection_date
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00121: 
+  sort_order: 120
+  export_group: event
+  long_name: luger_teléfono_número_telefónico
+  use_description: interested_place.place_entity.telephones.last.try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00094: 
+  sort_order: 500
+  export_group: event
+  long_name: paciente_oficio
+  use_description: interested_party.try(:risk_factor).try(:occupation)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00150: 
+  sort_order: 740
+  export_group: event
+  long_name: paciente_investigación_fecha_de_cumplimiento_lhd
+  use_description: investigation_completed_LHD_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00067: 
+  sort_order: 20
+  export_group: lab
+  long_name: laboratorio_tipo_de_prueba
+  use_description: test_type.try(:common_name)
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00122: 
+  sort_order: 460
+  export_group: event
+  long_name: contacto_clínico_teléfono_número_de_teléfono
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00039: 
+  sort_order: 140
+  export_group: event
+  long_name: lugar_evento_fecha_de_creación
+  use_description: created_at
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00095: 
+  sort_order: 100
+  export_group: event
+  long_name: contacto_dirección_municipio
+  use_description: address.try(:county).try(:code_description)
+  short_name: 
+  use_code: address.try(:county).try(:the_code)
+  event_type: contact_event
+csv_field_00123: 
+  sort_order: 700
+  export_group: event
+  long_name: paciente_jurisdicción_de_investigación
+  use_description: primary_jurisdiction.try(:name)
+  short_name: 
+  use_code: primary_jurisdiction.try(:entity_id)
+  event_type: morbidity_event
+csv_field_00068: 
+  sort_order: 210
+  export_group: event
+  long_name: paciente_raza_2
+  use_description: interested_party.person_entity.try(:races).try(:[], 1).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 1).try(:the_code)
+  event_type: morbidity_event
+csv_field_00096: 
+  sort_order: 540
+  export_group: event
+  long_name: contacto_factores_de_riesgo_apuntes
+  use_description: interested_party.risk_factor.try(:risk_factors_notes)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00151: 
+  sort_order: 690
+  export_group: event
+  long_name: paciente_evento_nombre
+  use_description: event_name
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00069: 
+  sort_order: 100
+  export_group: lab
+  long_name: laboratorio_muestra_enviada_a_provincia
+  use_description: specimen_sent_to_state.try(:code_description)
+  short_name: 
+  use_code: specimen_sent_to_state.try(:the_code)
+  event_type: 
+csv_field_00010: 
+  sort_order: 180
+  export_group: event
+  long_name: contacto_sexo_de_nacimiento
+  use_description: interested_party.person_entity.person.try(:birth_gender).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:birth_gender).try(:the_code)
+  event_type: contact_event
+csv_field_00097: 
+  sort_order: 70
+  export_group: event
+  long_name: contacto_dirección_número_de_unidad
+  use_description: address.try(:unit_number)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00152: 
+  sort_order: 350
+  export_group: event
+  long_name: contacto_institución_de_hospitalización
+  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  short_name: 
+  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  event_type: contact_event
+csv_field_00124: 
+  sort_order: 110
+  export_group: event
+  long_name: lugar_teléfono_prefijo
+  use_description: interested_place.place_entity.telephones.last.try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00011: 
+  sort_order: 20
+  export_group: event
+  long_name: lugar_tipo
+  use_description: interested_place.place_entity.place.place_types.first.try(:code_description)
+  short_name: 
+  use_code: interested_place.place_entity.place.place_types.first.try(:the_code)
+  event_type: place_event
+csv_field_00153: 
+  sort_order: 20
+  export_group: event
+  long_name: contacto_apellido
+  use_description: interested_party.person_entity.person.last_name
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00098: 
+  sort_order: 520
+  export_group: event
+  long_name: paciente_factores_de_riesgo_apuntes
+  use_description: interested_party.risk_factor.try(:risk_factors_notes)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00125: 
+  sort_order: 480
+  export_group: event
+  long_name: contacto_manejador/a_de_comida
+  use_description: interested_party.try(:risk_factor).try(:food_handler).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:food_handler).try(:the_code)
+  event_type: contact_event
+csv_field_00154: 
+  sort_order: 30
+  export_group: event
+  long_name: contacto_nombre
+  use_description: interested_party.person_entity.person.first_name
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00099: 
+  sort_order: 520
+  export_group: event
+  long_name: contacto_oficio
+  use_description: interested_party.try(:risk_factor).try(:occupation)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00040: 
+  sort_order: 90
+  export_group: event
+  long_name: lugar_dirección_municipio
+  use_description: address.try(:county).try(:code_description)
+  short_name: 
+  use_code: address.try(:county).try(:the_code)
+  event_type: place_event
+csv_field_00012: 
+  sort_order: 170
+  export_group: event
+  long_name: contacto_teléfono_extensión
+  use_description: interested_party.person_entity.telephones.last.try(:extension)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00126: 
+  sort_order: 770
+  export_group: event
+  long_name: paciente_enviado_a_cdc
+  use_description: sent_to_cdc
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00013: 
+  sort_order: 10
+  export_group: treatment
+  long_name: tratamiento_administrado
+  use_description: treatment_given_yn.try(:code_description)
+  short_name: 
+  use_code: treatment_given_yn.try(:the_code)
+  event_type: 
+csv_field_00155: 
+  sort_order: 100
+  export_group: event
+  long_name: paciente_dirección_municipio
+  use_description: address.try(:county).try(:code_description)
+  short_name: 
+  use_code: address.try(:county).try(:the_code)
+  event_type: morbidity_event
+csv_field_00041: 
+  sort_order: 0
+  export_group: lab
+  long_name: laboratorio_registro_id
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00127: 
+  sort_order: 100
+  export_group: event
+  long_name: lugar_dirección_código_postal
+  use_description: address.try(:postal_code)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00128: 
+  sort_order: 720
+  export_group: event
+  long_name: paciente_flujo_de_trabajo_provincia
+  use_description: workflow_state
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00070: 
+  sort_order: 0
+  export_group: treatment
+  long_name: tratamiento_registro_id
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: 
+csv_field_00156: 
+  sort_order: 40
+  export_group: event
+  long_name: lugar_dirección_número_de_calle
+  use_description: address.try(:street_number)
+  short_name: 
+  use_code: 
+  event_type: place_event
+csv_field_00014: 
+  sort_order: 380
+  export_group: event
+  long_name: paciente_fecha_de_muerte
+  use_description: interested_party.person_entity.person.date_of_death
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00042: 
+  sort_order: 790
+  export_group: event
+  long_name: otros_datos_1
+  use_description: other_data_1
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00071: 
+  sort_order: 220
+  export_group: event
+  long_name: paciente_raza_3
+  use_description: interested_party.person_entity.try(:races).try(:[], 2).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 2).try(:the_code)
+  event_type: morbidity_event
+csv_field_00043: 
+  sort_order: 40
+  export_group: event
+  long_name: contacto_segundo_nombre
+  use_description: interested_party.person_entity.person.middle_name
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00157: 
+  sort_order: 90
+  export_group: event
+  long_name: paciente_dirección_provincia
+  use_description: address.try(:state).try(:code_description)
+  short_name: 
+  use_code: address.try(:state).try(:the_code)
+  event_type: morbidity_event
+csv_field_00015: 
+  sort_order: 290
+  export_group: event
+  long_name: paciente_enfermedad_fecha_de_inicio
+  use_description: disease_event.try(:disease_onset_date)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00129: 
+  sort_order: 710
+  export_group: event
+  long_name: paciente_jurisdicción_de_vivienda
+  use_description: address.try(:county).try(:jurisdiction).try(:name)
+  short_name: 
+  use_code: address.try(:county).try(:jurisdiction).try(:entity_id)
+  event_type: morbidity_event
+csv_field_00016: 
+  sort_order: 300
+  export_group: event
+  long_name: paciente_fecha_de_diagnósis
+  use_description: disease_event.try(:date_diagnosed)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00044: 
+  sort_order: 50
+  export_group: event
+  long_name: contacto_dirección_número_de_calle
+  use_description: address.try(:street_number)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00072: 
+  sort_order: 230
+  export_group: event
+  long_name: paciente_raza_4
+  use_description: interested_party.person_entity.try(:races).try(:[], 3).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 3).try(:the_code)
+  event_type: morbidity_event
+csv_field_00158: 
+  sort_order: 810
+  export_group: event
+  long_name: paciente_evento_fecha_de_creación
+  use_description: created_at
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00159: 
+  sort_order: 820
+  export_group: event
+  long_name: paciente_evento_fecha_de_última_actualización
+  use_description: updated_at
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00073: 
+  sort_order: 500
+  export_group: event
+  long_name: contacto_vivienda_colectiva
+  use_description: interested_party.try(:risk_factor).try(:group_living).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:group_living).try(:the_code)
+  event_type: contact_event
+csv_field_00017: 
+  sort_order: 310
+  export_group: event
+  long_name: paciente_insititución_diagnóstica
+  use_description: diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00045: 
+  sort_order: 140
+  export_group: event
+  long_name: paciente_edad_de_inicio_en_años
+  use_description: age_info.in_years
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00100: 
+  sort_order: 80
+  export_group: event
+  long_name: contacto_dirección_ciudad
+  use_description: address.try(:city)
+  short_name: 
+  use_code: 
+  event_type: contact_event
+csv_field_00101: 
+  sort_order: 490
+  export_group: event
+  long_name: paciente_asociación_de atención_diurna
+  use_description: interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:day_care_association).try(:the_code)
+  event_type: morbidity_event
+csv_field_00046: 
+  sort_order: 130
+  export_group: event
+  long_name: paciente_edad_aproximada_sin_fecha_de_nacimiento
+  use_description: interested_party.person_entity.person.approximate_age_no_birthday
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00018: 
+  sort_order: 320
+  export_group: event
+  long_name: paciente_hospitalizado/a
+  use_description: disease_event.try(:hospitalized).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:hospitalized).try(:the_code)
+  event_type: morbidity_event
+csv_field_00074: 
+  sort_order: 590
+  export_group: event
+  long_name: paciente_denunciante_teléfono_extensión
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :extension)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00130: 
+  sort_order: 580
+  export_group: event
+  long_name: paciente_denunciante_teléfono_número_telefónico
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :phone_number)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00047: 
+  sort_order: 120
+  export_group: event
+  long_name: paciente_fecha_de_nacimiento
+  use_description: interested_party.person_entity.person.birth_date
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+csv_field_00102: 
+  sort_order: 90
+  export_group: event
+  long_name: contacto_dirección_provincia
+  use_description: address.try(:state).try(:code_description)
+  short_name: 
+  use_code: address.try(:state).try(:the_code)
+  event_type: contact_event
+csv_field_00019: 
+  sort_order: 330
+  export_group: event
+  long_name: paciente_institución_de_hospitalización
+  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  short_name: 
+  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  event_type: morbidity_event
+csv_field_00075: 
+  sort_order: 370
+  export_group: event
+  long_name: paciente_se_murió
+  use_description: disease_event.try(:died).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:died).try(:the_code)
+  event_type: morbidity_event

@@ -1,0 +1,12 @@
+es:
+
+  activerecord:
+    errors:
+
+      models:
+
+        entity:
+          attributes:
+            base:
+              failed_merge: "Falló la fusión. {{msg}}"
+              no_entities_for_merging: "No se pudo fusionar entidades: No se hallaron entidades para fusionar."

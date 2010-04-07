@@ -1,0 +1,25 @@
+es:
+  trisano_ee:
+    merge: "Fusionar"
+    merge_places: "Fusionar Lugares"
+    merge_place: "Fusionar Lugar"
+    merge_into: "Fusionar a {{name}}"
+
+    lack_privileges:
+      merge_people: "No sin privilegios para fusionar Personas"
+
+    system_messages: "Mensajes de Sistema"
+    system_message_detail: "Detalle del Mensaje de Sistema"
+    system_message: "Mensaje de Sistema"
+    expire_now: "Caducarse Ahora"
+    show_all_messages: "Mostrar Todos Mensajes"
+    create_new_system_message: "Crear Mensaje de Sistema nuevo"
+    permanent_message_desc: 'Fijar todos campos a vacío para un mensaje permanente'
+    show_active_only: 'Sólo mostrar mensajes activos'
+    expires_in: "Se caduca dentro de {{when}} horas."
+    na: "N/A"
+    expired_on: "Se caducó el {{when}}."
+    create_system_message: "Crear Mensaje de Sistema"
+    never_expires: "Nunca se caduca"
+    update_contact_coords: 'Algunos resultados precisan actualizarse con coordinados de mapa.'
+    all_system_messages: "Todos mensajes de sistema"

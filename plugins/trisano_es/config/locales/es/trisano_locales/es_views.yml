@@ -1,0 +1,11 @@
+es:
+
+  trisano_locales:
+    manage_locale_link: "Gestionar Local"
+    default_locale: "Local Predeterminado"
+    system_modified: "Sistema modificado"
+    current_locale: "Local actual"
+    changed_by: "Modificado por"
+    updated_at: "Última modificación"
+    update_default_locale: "Cambiar Local Predeterminado"
+    successful_update: "Se actualizó el local predeterminado con éxito"

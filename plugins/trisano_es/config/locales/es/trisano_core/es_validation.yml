@@ -1,0 +1,226 @@
+es:
+
+  activerecord:
+    errors:
+      template:
+        header:
+          one:  "1 error impidió que se aguardara el {{model}}"
+          other:  "{{count}} errores impidieron que se guardara el {{model}}"
+        # The variable :count is also available
+        body: "Se produjeron problemas con los campos siguientes:"
+
+      # The values :model, :attribute and :value are always available for interpolation
+      # The value :count is available when applicable. Can be used for pluralization.
+      messages:
+        inclusion: "no se ha incluido en la lista"
+        exclusion: "está reservado/a"
+        invalid: "está inválido/a"
+        confirmation: "no corresponde a la confirmación"
+        accepted: "debe aceptarse"
+        empty: "no puede estar vacío/a"
+        blank: "no puede quedarse en blanco"
+        too_long: "está demasiado largo/a (se permite hasta un máximo de {{count}} caracteres)"
+        too_short: "está demasiado corto/a (se permite un mínimo de {{count}} caracteres)"
+        wrong_length: "está incorrecto de largo (debería constar de {{count}} caracteres)"
+        taken: "ya se ha llevado"
+        not_a_number: "no es número"
+        greater_than: "debe ser más de {{count}}"
+        greater_than_or_equal_to: "debe equivalerse a o ser más de {{count}}"
+        equal_to: "debe equivalerse a {{count}}"
+        less_than: "debe ser menos de {{count}}"
+        less_than_or_equal_to: "debe equivalerse a o ser menos de {{count}}"
+        odd: "debe ser impar"
+        even: "debe ser par"
+        # Append your own errors here or at the model/attributes scope.
+        is_not_valid: "no es válido/a"
+        precede_birth_date: "{{thing}} la(s) fecha(s) precede(n) la fecha de nacimiento"
+        cannot_precede_birth_date: "no puede ser antes de la fecha de nacimiento"
+        merge_race_errors: "se ha fusionado a otra entidad y ya no está disponible para usarse en eventos. Se puede tomar las siguientes acciones: Intentar eliminar la entidad o cambiar al modo mostrador para ver la entidad sustitutiva."
+
+      models:
+        # Overrides default messages
+        interested_place:
+          attributes:
+            base:
+              no_place_name: "No se ha dado nombre para este lugar."
+
+        value_set_element:
+          attributes:
+            base:
+              too_many_value_sets: "Sólo puede haber un conjunto de valores por pregunta"
+              bad_parent: "Se produjo un error al verificar el conjunto primario para existentes subconjuntos de valores" 
+
+        lab_result:
+          attributes:
+            lab_test_date:
+              precedes_collection_date: "no se puede preceder la fecha de recolección"
+
+        telephone:
+          attributes:
+            base:
+              all_blank: "Por lo menos un campo telefónico debe de tener valor"
+            phone_number:
+              format: "no debe quedarse en blanco sino que debe contener 7 dígitos con un guión opcional (e.g.5551212 o 555-1212)"
+            area_code:
+              format: "debe ser de 3 dígitos"
+            extension:
+              format: "debe tener entre 1 y 6 dígitos"
+
+        staged_message:
+          attributes:
+            hl7_message:
+              parse_error: "no se pudo analizar sintácticamente"
+              missing_header: "falta la cabecera"
+              missing_segment: "le falta uno o más de los segmentos siguientes: PID, OBR o OBX"
+              missing_last_name: "No se ha dado apellido para el paciente."
+              missing_loinc: "El segmento OBX {{segment}} no contiente un código LOINC."
+
+        loinc_code:
+          attributes:
+            loinc_code:
+              invalid: "está inválido (debe ser nnnnn-n)"
+
+        form:
+          attributes:
+            base:
+              invalid_base_element: "Está inválido el elemento base de formulario"
+              investigator_view_type: "Es del tipo equivocado el contenedor de elementos visualizadores de investigadores. "
+              core_view_type: "Es del tipo equivocado el contenedor de elementos visualizadores esenciales."
+              core_field_type: "Es del tipo equivocado el contenedor de elementos de campos esenciales."
+              incorrect_top_level: "No contiene el formulario los contenedores correctos de nivel superior"
+              deactivate_unpublished: "Para desactivarse, un formulario debe tener el estado de 'Publicado'."
+              rollback_unpublished: "Sólo se puede reanudar los formularios con versiones publicadas"
+              no_diseases: "No hay enfermedades relacionadas a este formulario."
+              publishing_error: "Se produjo un error mientras que se pasaba el formulario."
+              initialization_error: "Se produjo un error al inicializar los elementos de formulario"
+            short_name:
+              in_use: "ya está en uso por otro formulario activo."
+              immutable: "no puede cambiarse una vez que se ha publicado"
+
+        task:
+          attributes:
+            base:
+              repeating_task_failure: "No se pudo crear tareas repitientes."
+              repeating_task_invalid: "Requiere una tarea repitiente un intervalo y una fecha final."
+              insufficient_privileges: "Privilegios insuficientes para la asignación de tarea."
+            due_date:
+              due_date_rage: "debe figurarse dentro de los próximos dos años"
+            repeating_interval:
+              invalid: "Está inválido el intervalo de tareas"
+            until_date:
+              out_of_range: "la fecha debe figurarse dentro de los próximos dos años"
+
+        hospitalization_facility:
+          attributes:
+            base:
+              blank_hospitalization_facility: "No puede quedarse en blanco la institución de hospitalización si se dan las fechas de hospitalización o el número del registro médico."
+
+        hospitals_participation:
+          attributes:
+            discharge_date:
+              precedes_admission_date: "no se puede preceder la fecha de ingreso"
+
+        encounter_event:
+          attributes:
+            base:
+              before_bday: "La(s) fecha(s) del encuentro precede(n) la fecha de nacimiento"
+
+        participations_encounter:
+          attributes:
+            encounter_date:
+              before_bday: "no puede ser antes de la fecha de nacimiento"
+
+        core_field_element:
+          attributes:
+            base:
+              blank_core_path: "Se requiere la ruta común."
+
+        disease_event:
+          attributes:
+            date_diagnosed:
+              precedes_onset: "no se puede preceder la fecha del inicio de actividad"
+
+        questions:
+          attributes:
+            base:
+              unexpected_error: "Se produjo un error al actualizar los nombres abreviados. Favor de comunicarse con el administrador."
+            short_name:
+              taken: "'{{short_name}}' ya está en uso"
+
+        human_event:
+          attributes:
+            base:
+              invalid_case_status: "Debe quedarse '{{status}}' o en blanco el estado de caso estatal o local para un evento con un(a) {{attr}} de '{{value}}'"
+            age_at_onset:
+              lesst_than: "es negativa. Esto suele provenir de una fecha equivocada de inicio de actividad o una fecha de nacimiento equivocada."
+
+        address:
+          attributes:
+            base:
+              all_blank: "Por lo menos un campo de dirección debe de tener valor"
+
+        place_event:
+          attributes:
+            base:
+              precede_birth_date: "La(s) fecha(s) de {{thing}} precede(n) la fecha de nacimiento del paciente"
+            date_of_exposure:
+              cannot_precede_birth_date: "no puede ser antes de la fecha de nacimiento del paciente"
+
+        form_element:
+          attributes:
+            base:
+              incorrect_top_level: "No contiene el formulario los contenedores correctos de nivel superior"
+              invalid_base_element: "Está inválido el elemento base de formulario"
+              failed_copy: "No se puede completar la copia. Una pregunta sólo puede tener un conjunto de valores"
+              multiple_roots: "Se descubrieron varios elementos raíz"
+              overlap: "Se descubrió un traslapo en la estructura del elemento formulario"
+              structure_gaps: "Se descubrieron espacios en la estructura del elemento formulario"
+              orphans: "Se descubrieron elementos huérfanos"
+              corrupt_nesting: "Está corrupta la estructura de anidamiento"
+              parent_exception: "Se produjo un error al verificar el primario conjunto para subconjuntos existentes de valores"
+              investigator_view_type: "Es del tipo equivocado el contenedor de elementos visualizadores de investigadores. "
+              core_view_type: "Es del tipo equivocado el contenedor de elementos visualizadores esenciales."
+              core_field_type: "Es del tipo equivocado el contenedor de elementos de campos esenciales."
+
+        question_element:
+          attributes:
+            base:
+              short_name_taken: "Ya está en uso el nombre abreviado ingresado en este formulario. Favor de ingresar otro."
+              invalid_state: "No está en un estado válido para guardarse el elemento de preguntas."
+
+        interested_party:
+          attributes:
+            base:
+              nil_person: "No se ha dado información para el partido interesado."
+
+        export_column:
+          attributes:
+            base:
+              data_type_required: "Si la fuente de datos es {{source}}, se requiere el tipo de datos"
+              table_name_blank: "Si la fuente de datos es {{source}}, el nombre de table debe quedarse en blanco"
+              column_name_blank: "Si la fuente de datos es {{source}}, el nombre de columna debe quedarse en blanco"
+              table_name_required: "Si la fuente de datos es {{source}}, se requiere el nombre de tabla"
+              column_name_required: "Si la fuente de datos es {{source}}, se requiere el nombre de columna"
+              data_type_blank: "Si la fuente de datos es {{source}}, el tipo de datos debe quedarse en blanco"
+        user:
+          attributes:
+            status:
+              valid_status: "sólo puede ser {{status}}"
+
+        place:
+          attributes:
+            name:
+              unassigned_is_special: "'No asignada' es especial para las jurisdicciones. Favor de elegir otro nombre."
+
+        entity:
+          attributes:
+            base:
+              incomplete: "no está completa la información de entidad.  Es probable que esté agregando información telefónica o de direccioón sin incluir un nombre"
+
+        answer:
+          attributes:
+            text_answer:
+              format: 'Número telefónico debe incluir el prefijo y número de siete dígitos'
+
+      attributes:
+        # Overrrides model and default messages.

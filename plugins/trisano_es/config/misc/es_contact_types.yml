@@ -1,0 +1,44 @@
+- code_name: "contact_type"
+  the_code:  "SEXUAL"
+  code_description: "Sexual"
+  sort_order: 10
+
+- code_name: "contact_type"
+  the_code:  "HOUSEHOLD"
+  code_description: "Casa"
+  sort_order: 20
+
+- code_name: "contact_type"
+  the_code:  "SOCIAL"
+  code_description: "Social (eg, de los amigos, la iglesia, las extracurriculares)"
+  sort_order: 30
+
+- code_name: "contact_type"
+  the_code:  "SCHOOL"
+  code_description: "Escuelas/Guarderías"
+  sort_order: 40
+
+- code_name: "contact_type"
+  the_code:  "WORK"
+  code_description: "Trabajo"
+  sort_order: 50
+
+- code_name: "contact_type"
+  the_code:  "LABWORKER"
+  code_description: "Obrador/a de Laboratorio"
+  sort_order: 60
+
+- code_name: "contact_type"
+  the_code:  "HEALTHCARE"
+  code_description: "Atención Médica/Obrador/a de Atención Médica"
+  sort_order: 70
+
+- code_name: "contact_type"
+  the_code:  "RESPONDER"
+  code_description: "Miembro del Equipo de Primera Respuesta"
+  sort_order: 80
+
+- code_name: "contact_type"
+  the_code:  "OTHER"
+  code_description: "Otro/a"
+  sort_order: 90

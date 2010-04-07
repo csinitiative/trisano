@@ -1,0 +1,39 @@
+es:
+  outbreak_management:
+
+    #Top nav link
+    outbreaks_nav_link: "BROTES"
+
+    #Index listing
+    list_outbreak_events: "Listar Eventos de Brote"
+    create_new_outbreak: "Crear nuevo brote"
+    date_heading: "Fecha"
+    disease_heading: "Enfermedad"
+    jurisdiction_heading: "Jurisdicción"
+
+    outbreak_event: "Evento de Brote"
+    edit_outbreak_event: "Editar Evento de Brote"
+    view_outbreak_event: "Ver Evento de Brote"
+    new_outbreak_event: "Evento de Brote Nuevo"
+    outbreak: "Brote"
+    outbreaks: "Brotes"
+    outbreak_information: "Información de Brote"
+
+    #Outbreak tab fields
+    event_name: "Nombre"
+    disease: "Enfermedad"
+    outbreak_date: "Fecha de brote"
+    investigating_juristdiction: "Jurisdicción encargada de la investigación"
+    description: "Descripción"
+
+    # Outbreak tabs
+    notes: "Apuntes"
+    investigation: 'Investigación'
+
+    # Outbreak associated events
+    associated_events: "Eventos Correspondientes"
+    no_associated_events: "Sin eventos correspondientes"
+
+    # Errors
+    blank_jurisdiction: "Se prohíbe que esté vacío el campo jurisdicción"
+    blank_disease: "Se prohíbe que esté vacío el campo enfermedad"

@@ -1,0 +1,40 @@
+- code_name: "test_result"
+  the_code:  "POSITIVE"
+  code_description: "Positivo / Reactivo"
+  sort_order: 10
+
+- code_name: "test_result"
+  the_code:  "NEGATIVE"
+  code_description: "Negativo / No reactivo"
+  sort_order: 20
+
+- code_name: "test_result"
+  the_code:  "PRESUMPTIVE"
+  code_description: "Presunto reactivo"
+  sort_order: 30
+
+- code_name: "test_result"
+  the_code:  "TITER"
+  code_description: "Título / Anticuerpo presente"
+  sort_order: 40
+
+- code_name: "test_result"
+  the_code: "EQUIVOCAL" 
+  code_description: "Dudoso / Limítrofe"
+  sort_order: 50
+
+- code_name: "test_result"
+  the_code: "INDETERMINATE"
+  code_description: "Indeterminado"
+  sort_order: 60
+
+- code_name: "test_result"
+  the_code: "REPEAT_REACT"
+  code_description: "Reacciona reiteradamente"
+  sort_order: 70
+
+- code_name: "test_result"
+  the_code: "OTHER"
+  code_description: "Otro / Desconocido"
+  sort_order: 80
+

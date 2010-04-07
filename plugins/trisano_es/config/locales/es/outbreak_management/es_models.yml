@@ -1,0 +1,11 @@
+es:
+
+  activerecord:
+    attributes:
+      morbidity_event:
+        outbreak_event_id: Nombre de brote
+
+      outbreak_event:
+        event_name: Nombre
+        outbreak_description: Descripción
+        outbreak_date: Fecha de brote
