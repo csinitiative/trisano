@@ -22,7 +22,7 @@
   =link_to_toggle_sort_tools t("change_sorting")
 
 - content_for :tools_two do
-  = button_to("Create new user", {:action => "new"}, { :method => :get })
+  = button_to(t("create_new_user"), {:action => "new"}, { :method => :get })
 
 .vert-break{:id => 'sort-tools', :style => 'display: none;'}
   -form_tag users_path, :method => :get do
