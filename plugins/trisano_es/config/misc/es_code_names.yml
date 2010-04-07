@@ -1,0 +1,103 @@
+- code_name: "investigation"
+  description: "Estado de investigación"
+  external: false
+
+- code_name: "eventtype"
+  description: "Tipo de evento"
+  external: false
+
+- code_name: "imported"
+  description: "Formulario importado"
+  external: true
+
+- code_name: "placetype"
+  decription: "Tipo de lugar"
+  external: false
+
+- code_name: "case"
+  description: "Caso"
+  external: true
+
+- code_name: "gender"
+  description: "Sexo"
+  external: true
+
+- code_name: "ethnicity"
+  desctiption: "Etnia"
+  external: true
+
+- code_name: "race"
+  description: "Raza"
+  external: true
+
+- code_name: "language"
+  description: "Idioma"
+  external: true
+
+- code_name: "state"
+  description: "Provincia"
+  external: true
+
+- code_name: "county"
+  description: "Municipio"
+  external: true
+
+- code_name: "district"
+  description: "Distrito"
+  external: true
+
+- code_name: "yesno"
+  description: "Sí/No"
+  external: true
+
+- code_name: "specimen"
+  description: "Muestra"
+  external: true
+
+- code_name: "telephonelocationtype"
+  description: "Tipo de ubicación telefónica"
+  external: true
+
+- code_name: "contactdispositiontype"
+  description: "Tipo de arreglo con contacto"
+  external: true
+
+- code_name: "contact_type"
+  description: "Tipo de contacto"
+  external: true
+
+- code_name: "age_type"
+  description: "Tipo de edad"
+  external: true
+
+- code_name: "lab_test_type"
+  description: "Tipo de prueba de laboratorio"
+  external: true
+
+- code_name: "task_category"
+  description: "Categoría de tarea"
+  external: true
+
+- code_name: "lab_interpretation"
+  description: "Interpretación de laboratorio"
+  external: true
+
+- code_name: "participant"
+  dscription: "Participante"
+  external: false
+
+- code_name: "locationtype"
+  description: "Tipo de ubicación"
+  external: false
+
+- code_name: "test_result"
+  description: "Resultado de prueba"
+  external: true
+
+- code_name: "test_status"
+  description: "Estado de prueba"
+  external: true
+
+- code_name: "loinc_scale"
+  description: "Escala"
+  external: true

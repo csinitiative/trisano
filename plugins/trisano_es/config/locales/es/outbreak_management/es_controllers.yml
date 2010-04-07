@@ -1,0 +1,10 @@
+es:
+
+  outbreak_event_created: "Se creó evento de brote con éxito."
+  outbreak_event_updated: "Se actualizó evento de brote con éxito."
+  outbreak_event_saved: "Se guardó brote."
+  outbreak_event_not_saved: "Evento de brote no se guardó:{{message}}"
+
+    
+
+    

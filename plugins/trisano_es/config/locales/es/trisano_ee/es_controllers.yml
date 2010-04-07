@@ -1,0 +1,9 @@
+es:
+
+  # People
+  no_merge_privs: "Sin privilegios para fusionar Personas"
+
+  # System messages
+  system_message_created: "Se creó el mensaje con éxito."
+  system_message_updated: "Se actualizó el mensaje con éxito."
+  unable_to_create_message: "No se pudo crear Mensaje."

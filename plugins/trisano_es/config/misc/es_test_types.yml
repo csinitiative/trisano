@@ -1,0 +1,74 @@
+- code_name: "lab_test_type"
+  the_code:  "CULTURE"
+  code_description: "Cultura"
+  sort_order: 10
+
+- code_name: "lab_test_type"
+  the_code:  "EIA"
+  code_description: "EIA/ELISA"
+  sort_order: 20
+
+- code_name: "lab_test_type"
+  the_code:  "DNA"
+  code_description: "Sonda de DNA (u otra técnica no amplificadora)"
+  sort_order: 30
+
+- code_name: "lab_test_type"
+  the_code:  "PCR"
+  code_description: "RCP (u otra técnica de amplificación nucleica)"
+  sort_order: 40
+
+- code_name: "lab_test_type"
+  the_code:  "IgM"
+  code_description: "Serología – IgM"
+  sort_order: 50
+
+- code_name: "lab_test_type"
+  the_code:  "IgG"
+  code_description: "Serología – IgG"
+  sort_order: 60
+
+- code_name: "lab_test_type"
+  the_code:  "TOTAL"
+  code_description: "Serología – Total"
+  sort_order: 70
+
+- code_name: "lab_test_type"
+  the_code:  "BLOT"
+  code_description: "Western Blot (u otro método de prueba confirmatorio)"
+  sort_order: 80
+
+- code_name: "lab_test_type"
+  the_code:  "TYPING"
+  code_description: "Tipificación"
+  sort_order: 90
+
+- code_name: "lab_test_type"
+  the_code:  "RAPID"
+  code_description: "Prueba Rápida"
+  sort_order: 100
+
+- code_name: "lab_test_type"
+  the_code:  "SKIN"
+  code_description: "Prueba Cutánea de TBC"
+  sort_order: 110
+
+- code_name: "lab_test_type"
+  the_code:  "QUANT"
+  code_description: "QuantiFERON"
+  sort_order: 120
+
+- code_name: "lab_test_type"
+  the_code:  "TREP"
+  code_description: "Prueba Treponémica"
+  sort_order: 130
+
+- code_name: "lab_test_type"
+  the_code:  "NON-TREP"
+  code_description: "Prueba No Treponémica"
+  sort_order: 140
+
+- code_name: "lab_test_type"
+  the_code:  "OTHER"
+  code_description: "Otro/a"
+  sort_order: 150

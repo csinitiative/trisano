@@ -1,0 +1,169 @@
+es:
+  event_fields:
+    outbreak_event:
+      event_name: Nombre
+      disease_event:
+        disease_id: Enfermedad
+      juristiction:
+        secondary_entity_id: Jurisdicción
+      outbreak_date: Fecha de brote
+      outbreak_description: Descripción
+    place_event:
+      address:
+        city: Ciudad
+        postal_code: Código postal
+        unit_number: Número de unidad
+        street_number: Número de calle
+        county_id: Departamento/Municipio
+        street_name: Nombre de calle
+        state_id: Estado
+      interested_place:
+        place_entity:
+          place:
+            name: Nombre
+            place_type_id: Tipo
+    contact_event:
+      address:
+        city: Ciudad de contacto
+        postal_code: Código postal de contacto
+        unit_number: Número de unidad de contacto
+        county_id: Departamento/Municipio de contacto
+        street_number: Número de calle de contacto
+        state_id: Estado de contacto
+        street_name: Nombre de calle de contacto
+      disease_event:
+        date_diagnosed: Fecha de diagnóstico de enfermedad
+        disease_onset_date: Fecha de inicio de enfermedad
+        died_id: Muerto/a(s)
+        disease_id: Enfermedad
+        hospitalized_id: Se hospitalizó
+      treatments: Tratamientos
+      interested_party:
+        risk_factor:
+          occupation: Oficio
+          risk_factors: Factores de riesgo
+          pregnancy_due_date: Fecha programada de parto
+          risk_factors_notes: Apuntes sobre los factores de riesgo
+          day_care_association_id: Asociación de atención diurna
+          food_handler_id: Manejador/a de alimentos
+          group_living_id: Vivienda colectiva
+          pregnant_id: Embarazada
+          healthcare_worker_id: Obrador/a de atención médica
+        person_entity:
+          person:
+            date_of_death: Fecha de muerte de contacto
+            age_at_onset: Edad cuando se inició actividad
+            birth_gender_id: Sexo de nacimiento de contacto
+            birth_date: Fecha de nacimiento de contacto
+            ethnicity_id: Etnia de contacto
+            primary_language_id: Lengua materna de contacto
+            last_name: Apellido de contacto
+            approximate_age_no_birthday: Edad de contacto
+            first_name: Nombre de contacto
+            middle_name: Segundo nombre de contacto
+      labs:
+        lab_results:
+          comment: Resultados de laboratorio | Comentario
+          organism: Resultados de laboratorio | Organismo
+          test_type: Resultados de laboratorio | Tipo de prueba
+          test_status: Resultados de laboratorio | Estado de prueba
+          test_result: Resultados de laboratorio | Resultado de prueba
+          units: Resultados de laboratorio | Unidades
+          collection_date: Resultados de laboratorio | Fecha de recolección
+          result_value: Resultados de laboratorio | Valor de resultado
+          reference_range: Resultados de laboratorio | Rango de referencia
+          specimen_sent_to_state: "Resultados de laboratorio | Muestra enviada al laboratorio provincial"
+          lab_test_date: Resultados de laboratorio | Fecha de prueba de laboratorio
+          specimen_source: "Resultados de laboratorio | Fuente de muestra"
+        place_entity:
+          place:
+            name: Resultados de laboratorio | Nombre de laboratorio
+      imported_from_id: Se importó de
+    morbidity_event:
+      results_reported_to_clinician_date: Fecha en que se reportaron los resultados al clínico
+      address:
+        city: Ciudad del paciente
+        postal_code: Código postal del paciente
+        unit_number: Número de unidad del paciente
+        street_number: Número de calle del paciente
+        county_id: Departamento/Municipio del paciente
+        street_name: Nombre de calle del paciente
+        state_id: Estado del paciente
+      investigation_completed_LHD_date: Fecha en que se concluyó la investigación
+      review_completed_by_state_date: Fecha en que el estado concluyó la revisión
+      reporter:
+        person_entity:
+          person:
+            last_name: Apellido del denunciante
+            first_name: Nombre del denunciante
+          telephones:
+            area_code: Prefijo del denunciante
+            extension: Extensión del denunciante
+            phone_number: Número telefónico del denunciante
+      places: Lugares
+      other_data_1: Datos adicionales (primer campo)
+      disease_event:
+        date_diagnosed: Fecha de diagnóstico de enfermedad
+        disease_onset_date: Fecha de inicio de enfermedad
+        died_id: Muerto/a(s)
+        disease_id: Enfermedad
+        hospitalized_id: Se hospitalizó
+      other_data_1: Datos adicionales (segundo campo)
+      outbreak_name: Brote
+      juristiction:
+        secondary_entity_id: Jurisdicción encargada de la investigación
+      first_reported_PH_date: Fecha en que primero se reportó al departamento de la salud pública
+      reporting_agency:
+        place_entity:
+          place:
+            name: Agencia notificadora
+      acuity: Agudeza
+      event_name: Nombre de evento
+      lhd_case_status_id: Estado de caso LHD
+      outbreak_associated_id: Brote correspondiente
+      treatments: Tratamientos
+      contacts: "Contactos"
+      workflow_state: Estado de evento
+      interested_party:
+        risk_factor:
+          occupation: Oficio
+          risk_factors: Factores de riesgo
+          pregnancy_due_date: Fecha programada de parto
+          risk_factors_notes: Apuntes sobre los factores de riesgo
+          day_care_association_id: Asociación de atención diurna
+          food_handler_id: Manejador/a de alimentos
+          group_living_id: Vivienda colectiva
+          pregnant_id: Embarazada
+          healthcare_worker_id: Obrador/a de atención médica
+        person_entity:
+          person:
+            date_of_death: Fecha de muerte del paciente
+            age_at_onset: Edad cuando se inició actividad
+            birth_gender_id: Sexo de nacimiento del paciente
+            ethnicity_id: Etnia del paciente
+            primary_language_id: Lengua materna del paciente
+            birth_date: Fecha de nacimiento del paciente
+            last_name: Apellido del paciente
+            approximate_age_no_birthday: Edad del paciente
+            first_name: Nombre del paciente
+            middle_name: Segundo nombre del paciente
+      investigation_started_date: Fecha de inicio de la investigación
+      state_case_status_id: Estado de caso provincial
+      labs:
+        lab_results:
+          organism: Resultados de laboratorio | Organismo
+          comment: Resultados de laboratorio | Comentario
+          test_type: Resultados de laboratorio | Tipo de prueba
+          test_status: Resultados de laboratorio | Estado de prueba
+          test_result: Resultados de laboratorio | Resultado de prueba
+          units: Resultados de laboratorio | Unidades
+          collection_date: Resultados de laboratorio | Fecha de recolección
+          result_value: Resultados de laboratorio | Valor de resultado
+          reference_range: Resultados de laboratorio | Rango de referencia
+          specimen_sent_to_state: "Resultados de laboratorio | Muestra enviada al laboratorio provincial"
+          lab_test_date: Resultados de laboratorio | Fecha de prueba de laboratorio
+          specimen_source: "Resultados de laboratorio | Fuente de muestra"
+        place_entity:
+          place:
+            name: Resultados de laboratorio | Nombre de laboratorio
+      imported_from_id: Se importó de

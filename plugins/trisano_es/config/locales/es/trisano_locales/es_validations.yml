@@ -1,0 +1,9 @@
+es:
+
+  activerecord:
+    errors:
+      models:
+        default_locale:
+          attributes:
+            short_name:
+              inclusion: "'{{value}}' no es un local compatible"

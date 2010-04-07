@@ -1,0 +1,48 @@
+geo_csv_field_00049:
+  sort_order: 111
+  export_group: event
+  long_name: paciente_dirección_latitud
+  use_description: address.try(:latitude)
+  short_name:
+  use_code: address.try(:latitude)
+  event_type: morbidity_event
+geo_csv_field_00050:
+  sort_order: 112
+  export_group: event
+  long_name: paciente_dirección_longitud
+  use_description: address.try(:longitude)
+  short_name:
+  use_code: address.try(:longitude)
+  event_type: morbidity_event
+geo_csv_field_00107:
+  sort_order: 111
+  export_group: event
+  long_name: contacto_dirección_latitud
+  use_description: address.try(:latitude)
+  short_name:
+  use_code: address.try(:latitude)
+  event_type: contact_event
+geo_csv_field_00108:
+  sort_order: 112
+  export_group: event
+  long_name: contacto_dirección_longitud
+  use_description: address.try(:longitude)
+  short_name:
+  use_code: address.try(:longitude)
+  event_type: contact_event
+geo_csv_field_00128:
+  sort_order: 101
+  export_group: event
+  long_name: lugar_dirección_latitud
+  use_description: address.try(:latitude)
+  short_name:
+  use_code: address.try(:latitude)
+  event_type: place_event
+geo_csv_field_00129:
+  sort_order: 102
+  export_group: event
+  long_name: lugar_dirección_longitud
+  use_description: address.try(:longitude)
+  short_name:
+  use_code: address.try(:longitude)
+  event_type: place_event

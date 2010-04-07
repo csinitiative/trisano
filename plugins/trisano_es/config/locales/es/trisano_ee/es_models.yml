@@ -1,0 +1,8 @@
+es:
+
+  activerecord:
+    attributes:
+      system_message:
+        message: "Mensaje"
+        expires_on: "Caduca el"
+        

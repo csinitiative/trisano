@@ -1,0 +1,298 @@
+es:
+
+  activerecord:
+    attributes:
+      event:
+        parent_guardian: Padre/Tutor
+        age_at_onset: Edad cuando se inició actividad
+        lhd_case_status_id: Estado de caso LHD
+        state_case_status_id: Estado de caso estatal
+        outbreak_associated_id: Brote correspondiente
+        outbreak_name: Nombre de brote
+        workflow_state: Estado de evento
+        investigation_completed_LHD_date: Fecha en que se concluyó la investigación
+        investigation_started_date: Fecha de inicio de la investigación
+        event_name: Nombre de evento
+        review_completed_by_state_date: Fecha en que el estado concluyó la revisión
+        acuity: Agudeza
+        imported_from_id: Se importó de
+        other_data_1: Datos adicionales 1
+        other_data_2: Datos adicionales 2
+        results_reported_to_clinician_date: Fecha en que se reportaron los resultados al clínico
+        first_reported_PH_date: Fecha en que primero se reportó al departamento de la salud pública
+        _delete: Eliminar
+
+      person:
+        last_name: Apellido
+        first_name: Nombre
+        middle_name: Segundo nombre
+        birth_date: Fecha de nacimiento
+        birth_gender: Sexo de nacimiento
+        birth_gender_id: Sexo de nacimiento
+        primary_language: Lengua materna
+        primary_language_id: Lengua materna
+        ethnicity: Etnia
+        ethnicity_id: Etnia
+        date_of_death: Fecha de muerte
+        approximate_age_no_birthday: Edad
+
+      place:
+        name: Nombre
+        short_name: Nombre abreviado
+        place_type_ids: Tipos
+
+      entity:
+        race: Raza
+        race_ids: Raza
+
+      address:
+        street_number: Número de calle
+        street_name: Nombre de calle
+        unit_number: Número de unidad
+        city: Ciudad
+        city_id: Ciudad
+        state: Estado
+        state_id: Estado
+        county: Departamento/Municipio
+        county_id: Departamento/Municipio
+        postal_code: Código postal
+        longitude: Longitud
+        latitude: Latitud
+        district: Distrito
+
+      telephone:
+        entity_location_type_id: Tipo de teléfono
+        entity_location_type: Tipo de teléfono
+        country_code: Código de país
+        area_code: Prefijo
+        phone_number: Número telefónico
+        extension: Extensión
+        _delete: Eliminar
+
+      email_address:
+        email_address: Correo electrónico
+        _delete: Eliminar
+
+      disease_event:
+        disease_id: Enfermedad
+        disease_onset_date: Fecha de inicio de actividad
+        date_diagnosed: Fecha de diagnóstico
+        hospitalized_id: Se hospitalizó
+        died_id: Muerto/a(s)
+
+      disease:
+        diseade_name: Nombre de enfermedad
+        contact_lead_in: Pregunta introductoria de contacto
+        place_lead_in: Pregunta introductoria de lugar
+        treatment_lead_in: Pregunta introductoria de tratmiento
+        cdc_code: Código de CDC/NETSS
+        case_id: Exporta el CDC/NETSS la enfermedad cuando el caso es
+
+      hospitalization_facility:
+        secondary_entity_id: Institución de salud
+
+      hospitals_participation:
+        admission_date: Fecha de ingreso
+        discharge_date: Fecha de alta
+        medical_record_number: Número de registro médico
+
+      participation_risk_factor:
+        pregnant_id: Embarazada
+        pregnancy_due_date: Fecha programada de parto
+        food_handler_id: Manejador/a de alimentos
+        healthcare_worker_id: Obrador/a de atención médica
+        group_living_id: Vivienda colectiva
+        day_care_association_id: Asociación de atención diurna
+        occupation: Oficio
+        risk_factors: Factores de riesgo
+        risk_factors_notes: Apuntes sobre los factores de riesgo
+
+      participations_treatment:
+        treatment_given_yn_id: Se administró el tratamiento
+        treatment_given_yn: Se administró el tratamiento
+        treatment: Tratamiento
+        treatment_date: Fecha de tratamiento
+        stop_treatment_date: Fecha de conclusión del tratamiento
+        _delete: Eliminar
+
+      participations_contact:
+        disposition: dispocisión
+        disposition_id: dispocisión
+        contact_type_id: Tipo de contacto
+
+      participations_encounter:
+        user_id: Investigador/a
+        encounter_date: Fecha de encuentro
+        encounter_location_type: Ubicación
+        description: Descripción
+
+      participations_place:
+        date_of_exposure: Fecha de exposición
+
+      reporting_agency:
+        agency_types: Tipos de agencia
+        name: Agencia notificadora
+
+      participation:
+        _delete: Eliminar
+
+      clinician:
+        _delete: Eliminar
+
+      reporter:
+        _delete: Eliminar
+
+      juristiction:
+        secondary_entity_id: Jurisdicción encargada de la investigación
+
+      lab:
+        _delete: Eliminar laboratorio (y resultados)
+
+      lab_result:
+        test_type: Tipo de prueba
+        organism: Organismo
+        test_result: Resultado de prueba
+        result_value: Valor de resultado
+        units: Unidades
+        reference_range: Rango de referencia
+        test_status_id: Estado de prueba
+        specimen_source_id: Fuente de muestra
+        collection_date: Fecha de recolección
+        lab_test_date: Fecha de prueba de laboratorio
+        specimen_sent_to_state_id: ¿Se envió la muestra al laboratorio provincial?
+        comment: Comentario
+        _delete: Eliminar
+
+      note:
+        note: Apunte nuevo
+        note_type: Es administrador/a
+
+      avr_group:
+        name: Nombre
+
+      common_test_type:
+        common_name: Nombre común
+
+      core_field:
+        help_text: Texto de ayuda
+
+      attachment:
+        file: Archivo
+        category: Categoría
+
+      event_queue:
+        queue_name: Nombre de cola
+        jurisdiction: Jurisdicción
+        jurisdiction_id: Jurisdicción
+
+      task:
+        name: Nombre
+        notes: Descripción
+        status: Estado
+        category: Categoría
+        priority: Prioridad
+        due_date: Fecha de vencimiento
+        user: Usuario
+        user_id: Usuario
+
+      export_column:
+        name: Nombre descriptivo
+        export_column_name: Nombre de columna del CDC
+        export_disease_group: Grupo de enfermedades (vacío si todos)
+        export_disease_group_show: Grupo de enfermedades
+        type_data: Fuente de datos
+        data_type: Tipo de datos (si la fuente es generador de formularios)
+        table_name: Nombre de tabla (si la fuente es Datos Comúnes)
+        column_name: Nombre de columna (si la fuente es Datos Comúnes)
+        start_position: Posición inicial
+        length_to_output: Longitud para salir
+        is_required: Se require
+
+      export_conversion_value:
+        value_from: Cuando el valor local es&nbsp;&nbsp;(quédese vacío para valores 'textuales')
+        value_to: Convertírselo a
+        sort_order: Orden de clasificación
+
+      external_code:
+        code_description: Descripción
+        sort_order: Orden de clasificación
+        the_code: Código
+
+      follow_up_element:
+        core_path: Elemento de datos principales
+        condition: Condición
+
+      group_element:
+        name: Nombre de grupo
+
+      section_element:
+        name: Texto de sección
+        description: Instrucciones
+        help_text: Texto de ayuda
+
+      value_element:
+        name: Nombre de valor
+        code: Código
+
+      value_set_element:
+        name: Nombre del conjunto de valores
+
+      question:
+        question_text: Texto de pregunta
+        short_name: Nombre abreviado
+        style: Estilo
+        help_text: Texto de ayuda
+        export_column_id: Columna de exportación CDC
+        data_type: Tipo de datos
+
+      question_element:
+        is_active: ¿Está activo/a?
+
+      form:
+        name: Nombre
+        short_name: Nombre abreviado
+        event_type: Mostrar cuando el tipo de evento es/está
+        disease_id: Mostrar cuando la enfermedad es/está
+        jurisdiction_id: Mostrar cuando la jurisdicción es/está
+        description: Descripción
+
+      loinc_code:
+        loinc_code: Código LOINC
+        test_name: Nombre de prueba
+        common_test_type_id: Tipo de prueba común
+        scale_id: Escala
+        organism_id: Organismo
+        diseases: Enfermedades
+
+      organism:
+        organism_name: Nombre de organismo
+        diseases: Enfermedades
+
+      role:
+        role_name: Nombre de función
+
+      role_memebership:
+        jurisdiction_id: Jurisdicción
+        role_id: Función
+
+      privileges_role:
+        privilege_id: Privilegio
+
+      staged_message:
+        hl7_message: Mensaje HL7
+
+      user:
+        uid: UID
+        user_name: Usuario
+        first_name: Nombre
+        last_name: Apellido
+        given_name: Nombre de pila
+        generational_qualifier: Calificador generacional
+        initials: Iniciales
+        statue: Estado
+
+    # No model names in en_models.yml because the default is a humanized class name
+    # Add models here if we need to display the class name to users but we need to
+    # display something slightly different that what class.name.underscore.humanize
+    # would produce.
+    # models:

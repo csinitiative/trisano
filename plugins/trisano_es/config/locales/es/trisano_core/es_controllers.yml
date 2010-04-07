@@ -1,0 +1,301 @@
+es:
+
+  no_admin_rights: "Sin derechos administrativos"
+  no_view_privs_for_jurisdiction: "Sin privilegios para ver esta jurisdicción"
+  no_create_privs_for_jurisdiction: "Sin privilegios para crear en esta jurisdicción"
+  no_update_privs_for_jurisdicion: "Sin privilegios para hacer actualizaciones en esta jurisdicción"
+  no_uid_present: "Aplicación interna error: No hay UID. Favor de comunicarse con el administrador."
+  user_not_found: "Aplicación interna error: No se encuentra el usuario. Favor de comunicarse con el administrador."
+  account_not_available: "No está disponible esta cuenta. Favor de comunicarse con el administrador."
+  application_error: "Error de aplicación"
+  an_error_occurred: "Se produjo un error durante el proceso de la solicitud."
+  provide_feedback: "Hacer comentarios"
+
+  # Generic controller
+  could_not_complete_request: "TriSano no pudo cumplir la solicitud más reciente. Comuníquese con el administrador del sistema."
+  method_not_supported: "Método no compatible."
+
+  # Generic form element
+  deletion_handled_by_form_elements: "Borrado está a cargo de los elementos de formulario."
+
+  # AVR groups
+  avr_group_successfully_created: "Se creó el grupo AVR con éxito."
+  avr_group_successfully_updated: "Se actualizó el grupo AVR con éxito."
+
+  # CDC export
+  cdc_export_error: "Falló la exportación CDC. Esto ocurre con frecuencia o por incluirse inadvertidamente un evento fuera de plaza en el artículo de exportación CDC o porque el valor que se exporta no tiene un valor de exportación. Favor de examinar el evento especificado e intentar de nuevo. {{message}}"
+  invalid_date_format: "Formato de fecha inválido"
+
+  # Common test type
+  common_test_type_successfully_created: "Se creó el tipo de prueba común con éxito."
+  common_test_type_successfully_updated: "Se actualizó el tipo de prueba común con éxito."
+  common_test_type_successfully_deleted: "Se borró el tipo de prueba común con éxito."
+  common_test_type_could_not_be_deleted: "No se pudo borrar el tipo de prueba común. Es posible que ya corresponda a un resultado de laboratorio."
+
+  # Contact events
+  contact_event_successfully_created: "Se creó el evento de contacto con éxito."
+  contact_event_successfully_updated: "Se actualizó el evento de contacto con éxito."
+  contact_event_no_index: "Sólo se puede listar contactos desde la página de presentación de eventos de morbilidad que visualiza individuos con contactos."
+  contact_event_no_new: "Sólo se puede crear contactos desde un evento de morbilidad."
+  contact_event_no_create: "Sólo se puede crear contactos desde un evento de morbilidad."
+  contact_saved: "Se guardó contacto."
+  contact_not_saved: "Contacto no se guardó: {{message}}"
+  could_not_promote_to_morbidity: "No fue posible traspasar a evento de morbilidad."
+  promoted_to_moridity: "Se traspasó el contacto con éxito"
+
+  #Core field configurations
+  core_field_configuration_successfully_created: "Se creó la configuración de campo principal con éxito."
+  core_field_configuration_successfully_updated: "Se actualizó la configuración de campo principal con éxito."
+
+  # Core fields
+  core_field_successfully_created: "Se creó el campo principal con éxito."
+  core_field_successfully_updated: "Se actualizó el campo principal con éxito."
+  unable_to_display_core_field_form: "No se pudo visualizar el formulario del campo principal en este momento."
+
+  # Core tab configurations
+  core_tab_configuration_successfully_created: "Se creó la configuración de pestaña principal con éxito."
+  core_tab_configuration_successfully_ updated: "Se actualizó la configuración de pestaña principal con éxito."
+
+  # Core view elememts
+  unable_to_display_core_tab_form: "No se pudo visualizar el formulario de la pestaña principal en este momento."
+
+  # Diseases
+  disease_successfully_created: "Se creó la enfermedad con éxito."
+  disease_successfully_updated: "Se actualizó la enfermedad con éxito."
+  
+  # Encounter events
+  encounter_event_created: "Se creó el evento de encuentro con éxito."
+  encounter_event_updated: "Se actualizó el evento de encuentro con éxito."
+  encounter_event_no_index: "Sólo se puede alistar encuentros desde la página de presentación de eventos de morbilidad de casos que tienen encuentros."
+  encounter_event_no_new: "Sólo se puede crear encuentros desde un evento de morbilidad."
+  encounter_event_no_create: "Sólo se puede crear encuentros desde un evento de morbilidad."
+  encounter_saved: "Se guardó encuentro."
+  encounter_not_saved: "No se guardó el encuentro: {{message}}"
+
+  # Event attachments
+  event_attachement_created: "Se creó adjunto con éxito."
+  event_attachement_updated: "Se actualizó el adjunto con éxito."
+  event_attachement_deleted: "Se borró adjunto con éxito."
+  failed_to_delete_event_attachment: "No se pudo eliminar adjunto."
+
+  # Event forms
+  no_add_remove_forms_privs: "Sin privilegios para agregar/eliminar los formularios."
+  no_remove_forms_privs: "Sin privilegios para eliminar los formularios."
+  no_forms_were_selected_for_addition: "No se seleccionaron formularios para adjuntar a este evento."
+  no_forms_were_selected_for_removal: "No se seleccionaron formularios para eliminar de este evento."
+  form_in_use_successfully_updated: "Se actualizó la lista de formularios con éxito."
+  unable_to_remove_forms: "No se pudo eliminar los formularios de este evento."
+
+  # Event queue
+  event_queue_created: "Se creó la cola de eventos con éxito."
+  event_queue_updated: "Se actualizó la cola de eventos con éxito."
+  
+  # Event tasks
+  event_task_created: "Se creó la tarea con éxito."
+  event_task_updated: "Se actualizó la tarea con éxito."
+  could_not_update_task: "No se pudo actualizar la tarea."
+
+  # Events
+  action_not_available: "La acción no está disponible."
+  successfully_marked_as_deleted: "Se marcó el evento como eliminado con éxito."
+  error_marking_event_as_deleted: "Se produjo un error mientras se marcaba el evento como eliminado."
+  unable_to_route_cmr: "No se pudo enviar CMR. {{message}}"
+  unable_to_route_cmr_no_edit_priv: "No se pudo entrutar CMR. Tendrá que corregir el evento un usuario con privilegios para actualizar. {{message}}"
+  event_successfully_routed: "Se enrutó el evento con éxito."
+  event_successfully_routed_no_privs: "Se enrutó el evento con éxito, pero sin privilegios suficientes para verlo en la nueva jurisdicción."
+  illegal_state_transition: "Transición ilegal de estado"
+  unable_to_change_cmr_state: "No se pudo cambiar el estado de CMR."
+  unable_to_change_state_no_edit_privs: "No se pudo cambiar el estado de CMR. Tendrá que corregir el evento un usuario con privilegios para actualizar."
+  no_update_privs_for_jurisdiction: "Sin privilegios para actualizar esta jurisdicción."
+  no_event_create_privs: "Sin privilegios para crear un evento."
+  no_event_view_privs: "Sin privilegios para ver los eventos."
+
+  # Export columns
+  export_column_ created: "Se creó la columna de exportación con éxito."
+  export_column_updated: "Se actualizó la columna de exportación con éxito."
+
+  # Export conversion values
+  export_conversion_value_created: "Se creó el valor de conversión de exportación con éxito."
+  export_conversion_value_updated: "Se actualizó el valor de conversión de exportación con éxito."
+
+  # External codes
+  external_code_created: "Se creó el código con éxito."
+  external_code_updated: "Se actualizó el código con éxito."
+  external_code_deleted: "Se borró el código con éxito."
+  could_not_find_code_names: "No se pudo encontrar los nombres de código."
+  could_not_find_code_name_for_name: "No se pudo encontrar el nombre de código para '{{name}}.'"
+  could_not_find_code_name_for_name_and_code: "No se pudo encontrar el nombre de código para '{{name}}, {{code}}.'"
+  code_modification_failed: "Falló la modificación del código."
+  code_creation_failed: "Falló la creación del código."
+  code_deletion_failed: "Falló la eliminación del código."
+  code_restoration_successful: "Se restauró el código con éxito."
+  code_restoration_failed: "No se pudo restaurar el código."
+
+  # Follow up elements
+  follow_up_element_created: "Se creó el seguimiento con éxito."
+  follow_up_element_updated: "Se actualizó el seguimiento con éxito."
+  unable_to_display_follow_up_element_form: "No se pudo visualizar el formulario de seguimiento en este momento."
+
+  # Form elements
+  error_during_delete: "Se produjo un error durante el proceso de eliminación."
+  error_during_filtering: "Se produjo un error durante el proceso de filtrar."
+
+  # Forms
+  form_created: "Se creó el formulario con éxito."
+  form_updated: "Se actualizó el formulario con éxito."
+  not_a_template_form: "Este formulario no es de plantilla."
+  form_copy_successful: "Se copió el formulario con éxito."
+  form_copy_failed: "No se pudo copiar el formulario."
+  form_publish_successful: "Se publicó el formulario con éxito."
+  form_publish_failed: "No se pudo publicar el formulario."
+  form_push_successful: "Se pasó el formulario a eventos con éxito."
+  form_push_failed: "No se pudo traspasar el formulario."
+  form_deactivation_successful: "Se desactivó el formulario con éxito."
+  form_deactivation_failed: "No se pudo desactivar el formulario."
+  form_rollback_failed: "No se pudo reanudar el formulario. Favor de comunicarse con el administrador."
+  form_export_failed: "No se pudo exportar el formulario."
+  navigate_to_form_to_import: "Favor de navegar a un archivo para importar."
+  form_import_failed: "No se pudo importar el formulario. {{message}}."
+  reordering_failed: "Se produjo un error durante el proceso de reordenar."
+  library_copy_failed: "No se pudo copiar {{type}} a la biblioteca."
+  element_copy_failed: "No se pudo copiar al formulario el elemento."
+  open_library_failed: "No se pudo abrir la biblioteca."
+
+  # Group elements
+  group_created: "Se creó el grupo con éxito."
+  group_updated: "Se actualizó el grupo con éxito."
+  unable_to_create_group: "No se pudo crear el grupo en este momento."
+  unable_to_display_group_element_form: "No se pudo visualizar el formulario del grupo en este momento."
+
+  # lbis
+  invalid_ibis_date_format: "Formato de fecha inválido."
+
+  # Jurisdiction
+  jurisdiction_created: "Se creó la jurisdicción con éxito."
+  jurisdiction_updated: "Se actualizó la jurisdicción con éxito."
+
+  # Library elements
+  navigate_to_library_import_file: "Favor de navegar al archivo de exportación de biblioteca para importar."
+  library_import_successful: "Se importaron los elementos de biblioteca con éxito."
+  library_import_failed: "No se pudo importar los elementos de biblioteca. {{message}}"
+  library_export_failed: "No se pudo exportar el formulario de biblioteca. {{message}}"
+
+  # LOINC Codes
+  loinc_code_creadted: "Se creó el código LOINC con éxito."
+  loinc_code_updated: "Se actualizó el código LOINC con éxito."
+  loinc_code_deleted: "Se borró el código LOINC con éxito."
+  
+
+  # Morbidity events
+  cmr_created: "Se creó el CMR con éxito."
+  cmr_updated: "Se actualizó el CMR con éxito."
+  cmr_saved: "Se guardó el CMR."
+  morbidity_event_not_saved: "No se guardó el evento de morbilidad: {{message}}"
+  unable_to_process_search: "No se pudo procesar la búsqueda. ¿Es válida la fecha de nacimiento?"
+  too_many_cmrs: "TriSano no puede procesar más de 100 cmrs por página."
+
+  # Organisms
+  organism_created: "Se creó el organismo con éxito."
+  organism_updated: "Se actualizó el organismo con éxito."
+  
+  # People
+  person_created: "Se creó la persona con éxito."
+  person_updated: "Se actualizó la persona con éxito."
+  no_people_management_privs: "Sin privilegios para administrar personas."
+  too_many_people: "TriSano no puede procesar más de 100 personas por página."
+
+  # Place exposures
+  place_event_created: "Se creó el evento de lugar con éxito."
+  place_event_updated: "Se actualizó el evento de lugar con éxito."
+  no_direct_place_event_access: "No se puede entrar a las exposiciones de lugar directamente."
+  no_direct_place_event_creation: "No se puede crear las exposiciones de lugar directamente."
+  place_event_saved: "Se guardó la exposición."
+  place_event_not_saved: "No se guardó el evento de exposición: {{message}}"
+
+  # Places
+  place_created: "Se creó el lugar con éxito."
+  place_updated: "Se actualizó el lugar con éxito."
+  no_place_management_privs: "Sin privilegios para administrar Lugares."
+
+  # Question elements
+  question_element_created: "Se creó la pregunta con éxito."
+  question_element_updated: "Se actualizó la pregunta con éxito."
+  form_questions_successfully_updated: "Se actualizaron las preguntas de formulario con éxito."
+  unable_to_process_conditional_logic: "No se pudo procesar la lógica condicional para las preguntas de seguimiento."
+  unable_to_display_question_element_form: "No se pudo visualizar el formulario del elemento de preguntas en este momento."
+
+  # Roles
+  role_created: "Se creó la función con éxito."
+  role_updated: "Se actualizó la función con éxito."
+
+  # Search
+  no_view_event_privs_in_any_jurisdiction: "Sin permisos de vista para ninguna jurisdicción."
+  invalid_birth_date_format: "Formato inválido de fecha de nacimiento"
+  invalid_entered_on_start_date_format: "Formato inválido para la fecha de inicio que indica su ingreso"
+  invalid_entered_on_end_date_format: "Formato inválido para la fecha final que indica su ingreso"
+  problem_with_search_criteria: "Se produjo un problema con los criterios de búsqueda "
+  event_search_type_morb: Evento de Morbilidad (CMR)
+  event_search_type_contact: Evento de Contacto
+
+  # Sections
+  section_created: "Se creó la sección con éxito."
+  section_updated: "Se actualizó la sección con éxito."
+  unable_to_display_section_element_form: "No se pudo visualizar el formulario de sección en este momento."
+
+  # Staged messages
+  staged_message_successfully_created: "Se creó el mensaje de fases con éxito."
+  staged_message_successfully_updated: "Se actualizó el mensaje de fases con éxito."
+  could_not_discard_message_event: "No se pudo descartar el evento de mensaje. {{message}}"
+  staged_message_discarded: "Se descartó el mensaje de fases."
+  existing: "existente(s)"
+  new: "nuevo(s)"
+  message_assignment_successful: "Se asignó el mensaje de fases al evento {{msg_string}} con éxito. <br/>{{note}}"
+  message_assignment_failed: "No se pudo asignar el mensaje al evento {{msg_string}}. {{message}}"
+  staged_message_search failed: "Falló la búsqueda. Asegúrese de que sea válido el rango de fechas."
+  no_manage_staged_message_privs: "Sin privilegios para administrar los mensajes de fases."
+  no_create_or_modify_staged_message_privs: "Sin privilegios para crear/modificar un mensaje de fases."
+
+  # Tasks
+  task_successfully_created: "Se creó la tarea con éxito."
+  task_successfully_updated: "Se actualizó la tarea con éxito."
+  task_update_failed: "No se pudo actualizar la tarea."
+
+  # Users
+  user_successfully_created: "Se creó el usuario con éxito."
+  user_successfully_updated: "Se actualizó el usuario con éxito."
+  shortcuts_successfully_updated: "Se actualizaron los accesos directos con éxito."
+  shrotcuts_update_failed: "Falló la actualización de los accesos directos."
+
+  # Value elements
+  unable_to_display_value_element_form: "No se pudo visualizar el formulario del elemento de valores en este momento."
+  value_successfully_updated: "Se actualizó el valor con éxito."
+
+  # Value sets
+  unable_to_display_value_set_element_form: "No se pudo visualizar el formulario para fijar valores en este momento."
+  unable_to_toggle_value: "No se pudo alternar el valor en este momento."
+
+  # View elements
+  unable_to_display_view_form: "No se pudo visualizar el formulario de pestaña en este momento."
+  unable_to_create_new_tab: "No se pudo crear una nueva pestaña."
+
+  logger:
+    unauthorized_admin_access_by: "Acceso desautorizado a la consola administrativa por {{uid}}"
+    using_user_in_session: "Se fijó el usuario activo en la sesión."
+    using_user_in_env_variable: "Se encontró el usuario activo de TriSano en el variable ambiental de {{auth_src_env}}"
+    using_user_in_headr: "Se encontró el usuario activo de TriSano en la cabecera http de {{auth_src_header}}"
+    no_uid_present: "No hay UID"
+    attempting_to_load_user: "Intentando cargar el usuario que tiene el UID de {{uid}}"
+    user_not_found: "No se encontró el usuario por el UID:{{uid}}"
+    no_uid_present: "No hay UID"
+    login_attempt_with_disabled_uid: "Intento de iniciar sesión usando el UID desactivado {{uid}}"
+    user_loaded: "Se cargó el usuario: {{uid}}"
+
+    cdc_export_error: "Falló la exportación del CDC"
+    
+    
+
+    
+    
+    
+
+    
