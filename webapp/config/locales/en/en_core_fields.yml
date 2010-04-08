@@ -72,6 +72,7 @@ en:
             name: Lab results | Lab name
       imported_from_id: Imported from
     morbidity_event:
+      parent_guardian: Parent / Guardian
       results_reported_to_clinician_date: Results reported to clinician date
       address:
         city: Patient city
@@ -81,6 +82,7 @@ en:
         county_id: Patient county
         street_name: Patient street name
         state_id: Patient state
+        district: District
       investigation_completed_LHD_date: Date investigation completed
       review_completed_by_state_date: Date review completed by state
       reporter:
@@ -107,6 +109,11 @@ en:
       first_reported_PH_date: Date first reported to public health
       reporting_agency:
         place_entity:
+          telephones:
+            area_code: Reporting agency area code
+            country_code: Reporting agency country code
+            phone_number: Reporting agency phone number
+            extension: Reporting agency extension
           place:
             name: Reporting agency
       acuity: Acuity

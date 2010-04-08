@@ -16,4 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module PeopleHelper
+
+  def render_address_show(form, person_entity)
+    address = person_entity.canonical_address || person_entity.build_canonical_address
+    render(:partial => 'people/address_show', :locals => {:f => form, :address => address})
+  end
+
 end

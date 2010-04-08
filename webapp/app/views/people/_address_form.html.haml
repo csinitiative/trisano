@@ -55,7 +55,8 @@
           =a.label(:postal_code)
           %span.data_postal_code
             =a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
-        =a.label :district
+        -core_element :district, a, :horiz do
+          =a.label :district
         -address = event.nil? ? @person.canonical_address : event.address
         -if address.county && address.county.jurisdiction
           %span.data_jurisdiction_name

@@ -147,9 +147,9 @@ Given /^that form has core follow ups configured for all core fields$/ do
         elsif core_field.field_type == "numeric"
           follow_up_element.condition = "1"
         end
-        
+
       end
-    
+
       follow_up_element.parent_element_id = @default_view.id
       follow_up_element.save_and_add_to_form
 
@@ -178,7 +178,7 @@ Given /^that form has core field configs configured for all core fields$/ do
       core_field_config.core_path = core_field.key
       core_field_config.parent_element_id = @core_field_container.id
       core_field_config.save_and_add_to_form
-      
+
       # Add question to before config
       before_question_element = QuestionElement.new({
           :parent_element_id => core_field_config.children[0].id,
@@ -222,7 +222,7 @@ Given /^that form has core view configs configured for all core views$/ do
           :short_name => Digest::MD5::hexdigest(core_view[0])
         }
       })
-    question_element.save_and_add_to_form    
+    question_element.save_and_add_to_form
   end
 
 end

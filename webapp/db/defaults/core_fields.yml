@@ -1,869 +1,952 @@
---- 
-core_field_contact_lab_result_specimen_sent_to_state: 
-  help_text: 
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_sent_to_state]
-core_field_00015: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][birth_gender_id]
-core_field_00071: 
-  help_text: 
+  code_name: gender
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[address][state_id]
-core_field_contact_lab_result_collection_date: 
-  help_text: 
+  code_name: state
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][collection_date]
-core_field_00016: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][ethnicity_id]
-core_field_00072: 
-  help_text: 
+  code_name: ethnicity
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[address][county_id]
-core_field_00044: 
-  help_text: 
-  fb_accessible: false
+  code_name: county
+
+- help_text:
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][area_code]
-core_field_00017: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][primary_language_id]
-core_field_00073: 
-  help_text: 
+  code_name: language
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][postal_code]
-core_field_00045: 
-  help_text: 
-  fb_accessible: false
+
+- help_text:
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][phone_number]
-core_field_00018: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][pregnant_id]
-core_field_00074: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][person_entity][person][birth_date]
-core_field_00046: 
-  help_text: 
-  fb_accessible: false
+
+- help_text:
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][extension]
-core_field_00019: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][risk_factor][pregnancy_due_date]
-core_field_00075: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: numeric
   key: contact_event[interested_party][person_entity][person][approximate_age_no_birthday]
-core_field_00047: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][disease_id]
-core_field_00076: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: numeric
   key: contact_event[interested_party][person_entity][person][age_at_onset]
-core_field_contact_lab_result_reference_range: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][reference_range]
-core_field_00048: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[disease_event][disease_onset_date]
-core_field_morb_lab_result_reference_range: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][reference_range]
-core_field_00077: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][person_entity][person][date_of_death]
-core_field_00049: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[disease_event][date_diagnosed]
-core_field_00078: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][person_entity][person][birth_gender_id]
-core_field_00020: 
-  help_text: 
+  code_name: gender
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][food_handler_id]
-core_field_00079: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][ethnicity_id]
-core_field_00021: 
-  help_text: 
+  code_name: ethnicity
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][healthcare_worker_id]
-core_field_contact_lab_result_lab_name: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][place_entity][place][name]
-core_field_morb_lab_result_collection_date: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][collection_date]
-core_field_00022: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][group_living_id]
-core_field_00050: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][hospitalized_id]
-core_field_00051: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][died_id]
-core_field_00023: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][day_care_association_id]
-core_field_00080: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][primary_language_id]
-core_field_00052: 
-  help_text: 
+  code_name: language
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[contacts]
-core_field_00024: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][risk_factor][occupation]
-core_field_00081: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[imported_from_id]
-core_field_00053: 
-  help_text: 
+  code_name: imported
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[places]
-core_field_00025: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][risk_factor][risk_factors]
-core_field_00082: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][pregnant_id]
-core_field_00054: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[treatments]
-core_field_00026: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: multi_line_text
   key: morbidity_event[interested_party][risk_factor][risk_factors_notes]
-core_field_00083: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][risk_factor][pregnancy_due_date]
-core_field_00055: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[interested_place][place_entity][place][name]
-core_field_00027: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[results_reported_to_clinician_date]
-core_field_00084: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][food_handler_id]
-core_field_00056: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: place_event
   field_type: drop_down
   key: place_event[interested_place][place_entity][place][place_type_id]
-core_field_00028: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[first_reported_PH_date]
-core_field_contact_lab_result_test_result:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_result]
-core_field_contact_lab_result_organism:
-  help_text: 
+  code_name: test_result
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][organism]
-core_field_contact_lab_result_test_status:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_status]
-core_field_contact_lab_result_result_value:
-  help_text: 
+  code_name: test_status
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][result_value]
-core_field_contact_lab_result_units:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][units]
-core_field_contact_lab_result_comment:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][comment]
-core_field_00085: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][healthcare_worker_id]
-core_field_00057: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][street_number]
-core_field_acuity: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[acuity]
-core_field_00029: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[lhd_case_status_id]
-core_field_00058: 
-  help_text: 
+  code_name: investigation
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][street_name]
-core_field_00086: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][group_living_id]
-core_field_00059: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][unit_number]
-core_field_other_data_1: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[other_data_1]
-core_field_00087: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][day_care_association_id]
-core_field_00001: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][last_name]
-core_field_other_data_2: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[other_data_2]
-core_field_00088: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][risk_factor][occupation]
-core_field_00030: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[state_case_status_id]
-core_field_00089: 
-  help_text: 
+  code_name: investigation
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][risk_factor][risk_factors]
-core_field_00002: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][first_name]
-core_field_00031: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[outbreak_associated_id]
-core_field_00003: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][middle_name]
-core_field_contact_lab_result_lab_test_date: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][lab_test_date]
-core_field_00060: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][city]
-core_field_00032: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[outbreak_name]
-core_field_00004: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][street_number]
-core_field_00061: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: drop_down
   key: place_event[address][state_id]
-core_field_00033: 
-  help_text: 
+  code_name: state
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: multi_select
   key: morbidity_event[jurisdiction][secondary_entity_id]
-core_field_00005: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][street_name]
-core_field_00062: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: drop_down
   key: place_event[address][county_id]
-core_field_00034: 
-  help_text: 
+  code_name: county
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[workflow_state]
-core_field_00006: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][unit_number]
-core_field_00090: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: multi_line_text
   key: contact_event[interested_party][risk_factor][risk_factors_notes]
-core_field_00063: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][postal_code]
-core_field_00035: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[investigation_started_date]
-core_field_00007: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][city]
-core_field_00091: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: drop_down
   key: contact_event[disease_event][disease_id]
-core_field_00064: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][last_name]
-core_field_00036: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[investigation_completed_LHD_date]
-core_field_00008: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[address][state_id]
-core_field_00092: 
-  help_text: 
+  code_name: state
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][disease_onset_date]
-core_field_morb_lab_result_specimen_sent_to_state: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_sent_to_state]
-core_field_00037: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[event_name]
-core_field_00009: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[address][county_id]
-core_field_00093: 
-  help_text: 
+  code_name: county
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][date_diagnosed]
-core_field_morb_lab_result_lab_name: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][place_entity][place][name]
-core_field_00065: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][first_name]
-core_field_00038: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[review_completed_by_state_date]
-core_field_00094: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[disease_event][hospitalized_id]
-core_field_00066: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][middle_name]
-core_field_00039: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[imported_from_id]
-core_field_00095: 
-  help_text: 
+  code_name: imported
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: drop_down
   key: contact_event[disease_event][died_id]
-core_field_00067: 
-  help_text: 
+  code_name: yesno
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][street_number]
-core_field_morb_lab_result_test_type: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_type]
-core_field_00096: 
-  help_text: 
+  code_name: lab_test_type
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: drop_down
   key: contact_event[treatments]
-core_field_morb_lab_result_lab_test_date: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][lab_test_date]
-core_field_00068: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][street_name]
-core_field_contact_lab_result_test_type: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_type]
-core_field_00010: 
-  help_text: 
+  code_name: lab_test_type
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][postal_code]
-core_field_00069: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][unit_number]
-core_field_00011: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][person_entity][person][birth_date]
-core_field_morb_lab_result_specimen_source: 
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_source]
-core_field_contact_lab_result_specimen_source: 
-  help_text: 
+  code_name: specimen
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_source]
-core_field_00040: 
-  help_text: 
+  code_name: specimen
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporting_agency][place_entity][place][name]
-core_field_00012: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][approximate_age_no_birthday]
-core_field_00041: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][first_name]
-core_field_00013: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][age_at_onset]
-core_field_00042: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][last_name]
-core_field_morb_lab_result_test_result:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_result]
-core_field_morb_lab_result_organism:
-  help_text: 
+  code_name: test_result
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][organism]
-core_field_morb_lab_result_test_status:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_status]
-core_field_morb_lab_result_result_value:
-  help_text: 
+  code_name: test_status
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][result_value]
-core_field_morb_lab_result_units:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][units]
-core_field_morb_lab_result_comment:
-  help_text: 
+
+- help_text:
   fb_accessible: false
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][comment]
-core_field_00014: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][person_entity][person][date_of_death]
-core_field_00070: 
-  help_text: 
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][city]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[parent_guardian]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[address][district]
+  code_name: district
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][area_code]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][phone_number]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][extension]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_select
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][place][place_type]
+  code_name: placetype
