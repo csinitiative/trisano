@@ -618,7 +618,7 @@ es:
 
   #jurisdictions
   jursidiction_detail: "Detalle de Jurisdicción"
-  edit_jursidiction: "Editar Jurisdicción"
+  edit_jurisdiction: "Editar Jurisdicción"
   jurisdiction_management: "Administración de Jurisdicciones"
   create_new_jurisdiction: "Crear Jurisdicción Nueva"
   #loinc codes
