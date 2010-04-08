@@ -46,7 +46,7 @@
   code_name: county
 
 - help_text:
-  fb_accessible: false
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -68,7 +68,7 @@
   key: contact_event[address][postal_code]
 
 - help_text:
-  fb_accessible: false
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -90,7 +90,7 @@
   key: contact_event[interested_party][person_entity][person][birth_date]
 
 - help_text:
-  fb_accessible: false
+  fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -906,3 +906,47 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][city]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[parent_guardian]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[address][district]
+  code_name: district
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][area_code]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][phone_number]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][telephones][extension]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_select
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency][place_entity][place][place_type]
+  code_name: placetype

@@ -52,7 +52,7 @@
           = phone_fields.label(:extension)
           = phone_fields.core_text_field(:extension, {:size => 6}, @event)
 
-      - core_element :agency_type, p, 'vert-break' do
+      - core_element :place_type, p, 'vert-break' do
         = agency_type_selector(p)
 - else
   %div
@@ -60,8 +60,8 @@
       = agency_form.hidden_field(:secondary_entity_id)
       = agency_form.label(:name)
       = h(reporting_agency.name) || "&nbsp;"
-    - core_element :agency_type, agency_form, :horiz do
-      = agency_form.label(:agency_types)
+    - core_element(:place_type, agency_form, :horiz) do
+      = agency_form.label(:place_type)
       = h(reporting_agency.formatted_place_descriptions)
 
     - if agency_form.object.new_record?

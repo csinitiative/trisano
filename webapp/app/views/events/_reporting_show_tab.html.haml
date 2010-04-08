@@ -9,11 +9,11 @@
           - core_element_show :name, place_form, :horiz do
             = place_form.label(:name, t('reporting_agency_name'))
             = h(place_form.object.name)
-          %span.horiz
+          - core_element_show :place_type, place_form, :horiz do
             = label_tag t('activerecord.attributes.reporting_agency.agency_types')
             = h(place_form.object.formatted_place_descriptions)
-          = label_tag(t('agency_phone'))
-          = h(entity_form.object.primary_phone.simple_format)
+        - entity_form.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_form|
+          - show_telephones(phone_form)
 
   %fieldset.form
     %legend=t 'reporter'
@@ -31,20 +31,7 @@
 
         - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
         - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
-          -if Telephone.use?(:country_code)
-            - core_element_show :country_code, phone_fields, :horiz do
-              = phone_fields.label(:country_code)
-              = h(phone_fields.object.country_code)
-          -if Telephone.use?(:area_code)
-            - core_element_show :area_code, phone_fields, :horiz do
-              = phone_fields.label(:area_code)
-              = h(phone_fields.object.area_code)
-          - core_element_show :phone_number, phone_fields, :horiz do
-            = phone_fields.label(:phone_number)
-            = h(phone_number(phone_fields.object.phone_number)) if phone_fields.object.phone_number
-          - core_element_show :extension, phone_fields, :horiz do
-            = phone_fields.label(:extension)
-            = h(phone_fields.object.extension)
+          - show_telephones(phone_fields)
 
   %fieldset.form
     %legend=t 'reported_dates'

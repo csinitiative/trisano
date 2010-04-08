@@ -145,4 +145,34 @@ module MorbidityEventsHelper
       tr << td_tag(result.link_to_create_cmr)
     end
   end
+
+  def show_telephones(fields_or_form)
+    show_country_code(fields_or_form) if Telephone.use?(:country_code)
+    show_area_code(fields_or_form)    if Telephone.use?(:area_code)
+    show_phone_number(fields_or_form)
+    show_extension(fields_or_form)
+  end
+
+  def show_phone_field(field, fields_or_form)
+    core_element_show field, fields_or_form, :horiz do
+      concat(fields_or_form.label(field))
+      concat(h(fields_or_form.object.try(field)))
+    end
+  end
+
+  def show_country_code(fields_or_form)
+    show_phone_field(:country_code, fields_or_form)
+  end
+
+  def show_area_code(fields_or_form)
+    show_phone_field(:area_code, fields_or_form)
+  end
+
+  def show_phone_number(fields_or_form)
+    show_phone_field(:phone_number, fields_or_form)
+  end
+
+  def show_extension(fields_or_form)
+    show_phone_field(:extension, fields_or_form)
+  end
 end

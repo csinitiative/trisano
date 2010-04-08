@@ -1337,5 +1337,6 @@ module EventsHelper
       "var formWatcher = new FormWatch('#{get_form_id(form)}');"
     end
   end
+
 end
 
