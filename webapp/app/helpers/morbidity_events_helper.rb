@@ -175,4 +175,35 @@ module MorbidityEventsHelper
   def show_extension(fields_or_form)
     show_phone_field(:extension, fields_or_form)
   end
+
+  def edit_telephones(fields_or_form)
+    edit_country_code(fields_or_form) if Telephone.use?(:country_code)
+    edit_area_code(fields_or_form)    if Telephone.use?(:area_code)
+    edit_phone_number(fields_or_form)
+    edit_extension(fields_or_form)
+  end
+
+  def edit_phone_field(field, fields_or_form, options={})
+    core_element(field, fields_or_form, :horiz) do
+      concat(fields_or_form.label(field))
+      concat(fields_or_form.core_text_field(fields, options))
+    end
+  end
+
+  def edit_country_code(fields_or_form)
+    edit_phone_field(:country_code, fields_or_form, :size => 3)
+  end
+
+  def edit_area_code(fields_or_form)
+    edit_phone_field(:area_code, fields_or_form, :size => 3)
+  end
+
+  def edit_phone_number(fields_or_form)
+    edit_phone_field(:phone_number, fields_or_form, :size => 8)
+  end
+
+  def edit_extension(fields_or_form)
+    edit_phone_field(:extension, fields_or_form, :size => 6)
+  end
+
 end
