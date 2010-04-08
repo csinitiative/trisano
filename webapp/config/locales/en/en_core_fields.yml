@@ -116,6 +116,7 @@ en:
             extension: Reporting agency extension
           place:
             name: Reporting agency
+            place_type: Reporting agency place type
       acuity: Acuity
       event_name: Event name
       lhd_case_status_id: LHD case status
