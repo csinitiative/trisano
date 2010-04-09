@@ -88,27 +88,27 @@
   %fieldset.form
     %legend
       =t('clinicians')
-
-    - if @event.clinician_ids.compact.blank?
-      %h3=t('no_clinicians_for_event')
-    - else
-      %table.list
-        %tr
-          %th=t('name')
-          %th=t('phone')
-
-        -# A clinician (participation) may have one name and zero or one phone numbers
-        - for clinician in @event.clinicians
-          -# Note: Blank clinicians and phones will exist (coutesy of the view) even if there are none in the DB
-          - next if clinician.new_record?
-          - clinician_entity = clinician.person_entity
-          - clinician_person = clinician_entity.person
-          - clinician_phone  = clinician_entity.primary_phone
-
+    -core_element_show(:clinicians, event_form, :horiz) do
+      -if @event.clinician_ids.compact.blank?
+        %h3=t('no_clinicians_for_event')
+      -else
+        %table.list
           %tr
-            %td= h(clinician_person.last_comma_first)
-            %td 
-              = h(clinician_phone.simple_format)
+            %th=t('name')
+            %th=t('phone')
+
+          -# A clinician (participation) may have one name and zero or one phone numbers
+          - for clinician in @event.clinicians
+            -# Note: Blank clinicians and phones will exist (coutesy of the view) even if there are none in the DB
+            - next if clinician.new_record?
+            - clinician_entity = clinician.person_entity
+            - clinician_person = clinician_entity.person
+            - clinician_phone  = clinician_entity.primary_phone
+
+            %tr
+              %td= h(clinician_person.last_comma_first)
+              %td
+                = h(clinician_phone.simple_format)
 
   %fieldset.form
     %legend

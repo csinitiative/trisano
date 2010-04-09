@@ -73,6 +73,7 @@ en:
       imported_from_id: Imported from
     morbidity_event:
       parent_guardian: Parent / Guardian
+      clinicians: Clinicians
       results_reported_to_clinician_date: Results reported to clinician date
       address:
         city: Patient city

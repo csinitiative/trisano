@@ -964,3 +964,10 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][email_addresses]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[clinicians]
