@@ -906,7 +906,12 @@ es:
     archived: 'Archivado'
     live: 'Vivo'
     invalid: 'Inválido'
-
+  form_errors:
+    radio_button_blank_value: "can't be blank when question is a radio button (EN)"
+    check_box_blank_value: "can't be blank when question is a check box (EN)"
+  invalid_core_field_config: "Core field configuration is invalid (EN)"
+  exporting_to_cdc: "exporting to CDC (EN)"
+  
   #participations
   hospitalization: "Hospitalización"
   treatment: "Tratamiento"

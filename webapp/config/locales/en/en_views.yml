@@ -909,6 +909,8 @@ en:
   form_errors:
     radio_button_blank_value: "can't be blank when question is a radio button"
     check_box_blank_value: "can't be blank when question is a check box"
+  invalid_core_field_config: "Core field configuration is invalid"
+  exporting_to_cdc: "exporting to CDC"
 
   #participations
   hospitalization: "Hospitalization"

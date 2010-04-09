@@ -137,13 +137,13 @@ module FormsHelper
       result = "<li id='core_field_#{h(element.id)}' class='fb-core-field' style='clear: both;'>"
 
       if event_field(element).nil?
-        result << "<b style='color: #CC0000;'>Core field configuration is invalid: #{h(element.name)}</b><br/><small>Invalid core field path is: #{h(element.core_path)}</small>"
+        result << "<b style='color: #CC0000;'>#{t("invalid_core_field_config")} #{h(element.name)}</b><br/><small>Invalid core field path is: #{h(element.core_path)}</small>"
       else
         result << "<table><tr>"
         result << "<td class='tab'>#{h(element.name)}"
         result << "<span class=\"cdc_export_info\" id=\"cdc-export-info-#{h(element.id)}\" "
         result << "style=\"display: none;\"" if element.export_column_id.nil?
-        result << ">&nbsp;&nbsp;<em>(exporting to CDC)</em></span>"
+        result << ">&nbsp;&nbsp;<em>(#{t('exporting_to_cdc')})</em></span>"
         result << "</td>"
       end
 
