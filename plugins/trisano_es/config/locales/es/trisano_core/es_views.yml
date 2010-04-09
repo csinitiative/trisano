@@ -599,7 +599,7 @@ es:
   #export_conversion_values
   create_export_conversion_value: "Crear Valor de Conversión de Exportación"
   export_conversion_value: "Valor de Conversión de Exportación"
-  conter_it_to: "Convertirse a"
+  convert_it_to: "Convertirse a"
   convert_to: "Convertirse de {{from_value}} a {{to_value}}"
 
   #external_codes
