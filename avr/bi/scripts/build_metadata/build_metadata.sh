@@ -52,5 +52,5 @@ export PENTAHO_SECURITY_FILE=
 # for some things.
 cd $BI_SERVER_PATH/pentaho-solutions/TriSano
 
-java -cp $BI_SERVER_PATH/tomcat/webapps/trisano/WEB-INF/lib/jruby-complete-1.2.0.jar org.jruby.Main \
+java -cp jruby-complete-1.2.0.jar org.jruby.Main \
     $BI_SERVER_PATH/pentaho-solutions/TriSano/build_metadata.rb

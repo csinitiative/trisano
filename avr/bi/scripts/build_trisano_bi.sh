@@ -92,6 +92,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-ac
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/publisher_config.xml $BI_SERVER_HOME/pentaho-solutions/system/
 
 # Step 2: Copy custom jar files
 echo " * Copying Trisano custom java extensions to BI Server"
@@ -139,6 +140,7 @@ cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-s
 cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/lib
 cp $TRISANO_SOURCE_HOME/avr/pentaho-metadata-2.2.0-SNAPSHOT.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/pentaho-metadata-2.2.0.jar
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/trisano.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/
+cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/pentaho-solutions/TriSano
 
 # Removing sample repositories
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels
@@ -152,6 +154,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/scripts/etl.sh $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/warehouse_init.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.sql $WAREHOUSE_DIR
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/dw.png $WAREHOUSE_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata_schema.sql $WAREHOUSE_DIR
 
 # Bundle sample reports
 echo " * Bundling sample reports"
