@@ -73,6 +73,9 @@ en:
       imported_from_id: Imported from
     morbidity_event:
       parent_guardian: Parent / Guardian
+      clinicians: Clinicians
+      diagnostic_facilities: Diagnostic facilities
+      encounters: Encounters
       results_reported_to_clinician_date: Results reported to clinician date
       address:
         city: Patient city
@@ -116,6 +119,7 @@ en:
             extension: Reporting agency extension
           place:
             name: Reporting agency
+            place_type: Reporting agency place type
       acuity: Acuity
       event_name: Event name
       lhd_case_status_id: LHD case status
@@ -135,6 +139,8 @@ en:
           pregnant_id: Pregnant
           healthcare_worker_id: Healthcare worker
         person_entity:
+          telephones: Patient telephones
+          email_addresses: Patient email addresses
           person:
             date_of_death: Patient date of death
             age_at_onset: Age at onset
@@ -149,6 +155,7 @@ en:
       investigation_started_date: Date investigation started
       state_case_status_id: State case status
       labs:
+        name: Labs
         lab_results:
           organism: Lab results | Organism
           comment: Lab results | Comment
