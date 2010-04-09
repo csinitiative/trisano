@@ -20,10 +20,11 @@
   %fieldset.form
     %legend
       =t 'encounters'
-    - if @event.encounter_child_events.first.new_record?
-      %h3= t 'no_encounters', :thing => 'event'
-    - else
-      = render :partial => 'events/encounter_show', :locals => { :encounters => @event.encounter_child_events }
+    -core_element_show(:encounters, f, :horiz) do
+      - if @event.encounter_child_events.first.new_record?
+        %h3= t 'no_encounters', :thing => 'event'
+      - else
+        = render :partial => 'events/encounter_show', :locals => { :encounters => @event.encounter_child_events }
 
   %fieldset.form
     %legend
