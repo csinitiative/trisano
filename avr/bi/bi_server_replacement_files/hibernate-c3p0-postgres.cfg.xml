@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-configuration
+  PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+  "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+
+    <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
+    <property name="hibernate.generate_statistics">true</property>
+    <property name="hibernate.cache.use_query_cache">true</property>
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/hibernate</property>
+    <property name="hibernate.connection.username">hibuser</property>
+    <property name="hibernate.connection.password">hibpasswd</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="show_sql">false</property>
+    <property name="hibernate.jdbc.use_streams_for_binary">true</property>
+    <property name="hibernate.c3p0.min_size">5</property>
+    <property name="hibernate.c3p0.max_size">20</property>
+    <property name="hibernate.c3p0.timeout">1800</property>
+    <property name="hibernate.c3p0.max_statements">0</property>
+    <!-- replaces DefinitionVersionManager -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <!-- load resource from classpath -->
+    <mapping resource="hibernate/postgresql.hbm.xml" />
+    <!--  This is only used by Pentaho Administration Console. Acegi will not use
+          these mapping files -->
+    <mapping resource="PentahoUser.hbm.xml" />
+    <mapping resource="PentahoRole.hbm.xml" />
+
+  </session-factory>
+</hibernate-configuration>
+
