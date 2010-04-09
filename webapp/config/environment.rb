@@ -81,6 +81,7 @@ Rails::Initializer.run do |config|
   config.gem 'rack', :version => '= 1.0.1'
   config.gem 'freshy_filter_chain', :version => '= 0.1.0'
   config.gem 'validates_timeliness', :version =>'>= 2.2.2'
+  config.gem 'haml', :version => '= 2.0.7'
   # For datetime validation plugin to switch to U.S. format (month/day/year)
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README
   config.after_initialize do
