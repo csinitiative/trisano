@@ -154,6 +154,7 @@ en:
       investigation_started_date: Date investigation started
       state_case_status_id: State case status
       labs:
+        name: Labs
         lab_results:
           organism: Lab results | Organism
           comment: Lab results | Comment

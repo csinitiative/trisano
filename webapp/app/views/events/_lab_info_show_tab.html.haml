@@ -16,7 +16,8 @@
 %fieldset
   %legend= t 'laboratory_information'
 
-  = render(:partial => 'events/labs', :locals => { :labs => @event.labs })
+  -core_element_show(:labs, f, :horiz) do
+    = render(:partial => 'events/labs', :locals => { :labs => @event.labs })
 
 - if @event.is_a?(MorbidityEvent)
   = render :partial => "events/encounter_specific_labs", :locals => { :event => @event}

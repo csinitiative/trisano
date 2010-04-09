@@ -1,7 +1,11 @@
 module I18nCoreField
 
   def name
-    I18n.t(name_key, :scope => i18n_scope)
+    name = I18n.t(name_key, :scope => i18n_scope)
+    if name.is_a?(Hash)
+      name = I18n.t(:name, :scope => i18n_scope << name_key)
+    end
+    name
   end
 
   def name_key
