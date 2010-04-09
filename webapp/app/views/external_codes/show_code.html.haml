@@ -50,10 +50,10 @@
       %td
         .tools{:style => "position: absolute; right: 15px;"}
           - if @external_code.deleted?
-            = link_to t("undelete"), soft_undelete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really restore code?"
+            = link_to t("undelete"), soft_undelete_code_path(@external_code.code_name, @external_code.the_code), :confirm => t("confirm_code_restore")
           - else
             = link_to t("edit"), edit_code_path(@external_code.code_name, @external_code.the_code)
             |
             = t('show')
             |
-            = link_to t("delete"), soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => "Really delete code?"
+            = link_to t("delete"), soft_delete_code_path(@external_code.code_name, @external_code.the_code), :confirm => t("confirm_code_delete")

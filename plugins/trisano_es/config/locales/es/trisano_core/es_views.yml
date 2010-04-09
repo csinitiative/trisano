@@ -586,7 +586,16 @@ es:
   formbuilder: "Generador de formularios"
   core: "Núcleo"
   system_generated: "Generado/a(s) del Sistema"
-
+  single_line_text: "Single line text (EN)"
+  multi_line_text: "Multi-line text (EN)"
+  drop_down: "Drop-down select list (EN)"
+  radio_button: "Radio buttons (EN)"
+  check_box: "Checkboxes (EN)"
+  date_value: "Date (EN)"
+  phone: "Phone Number (EN)"
+  confirm_code_delete: "Really delete code? (EN)"
+  confirm_code_restore: "Really restore code? (EN)"
+  
   #export_conversion_values
   create_export_conversion_value: "Crear Valor de Conversión de Exportación"
   export_conversion_value: "Valor de Conversión de Exportación"

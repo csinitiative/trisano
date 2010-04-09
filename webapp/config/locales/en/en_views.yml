@@ -587,6 +587,14 @@ en:
   formbuilder: "Formbuilder"
   core: "Core"
   system_generated: "System Generated"
+  single_line_text: "Single line text"
+  multi_line_text: "Multi-line text"
+  drop_down: "Drop-down select list"
+  radio_button: "Radio buttons"
+  check_box: "Checkboxes"
+  date_value: "Date"
+  confirm_code_delete: "Really delete code?"
+  confirm_code_restore: "Really restore code?"
 
   #export_conversion_values
   create_export_conversion_value: "Create Export Conversion Value"

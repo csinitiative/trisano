@@ -46,7 +46,7 @@
           = f.collection_select(:export_disease_group_id, ExportDiseaseGroup.find(:all), :id, :name, :include_blank => true)
         - else
           = f.label(:export_disease_group_show)
-          = @export_column.export_disease_group.nil? ? "All Diseases" : h(@export_column.export_disease_group.name)
+          = @export_column.export_disease_group.nil? ? t("all_diseases") : h(@export_column.export_disease_group.name)
 
       %br.vert-break
       %br
@@ -57,7 +57,7 @@
         = f.collection_select(:type_data, cp_colm_names, :last, :first, :class => 'required')
 
       -# Copied over from views/question_elements/_new.html.haml
-      - fb_colm_names = [["Single line text", "single_line_text"], ["Multi-line text", "multi_line_text"], ["Drop-down select list", "drop_down"], ["Radio buttons", "radio_button"], ["Checkboxes", "check_box"], ["Date", "date"], ["Phone Number", "phone"]]
+      - fb_colm_names = [[t("single_line_text"), "single_line_text"], [t("multi_line_text"), "multi_line_text"], [t("drop_down"), "drop_down"], [t("radio_button"), "radio_button"], [t("check_box"), "check_box"], [t("date_value"), "date"], [t("phone_number"), "phone"]]
       %span{ :class =>  "horiz" }
         = f.label(:data_type)
         = f.collection_select(:data_type, fb_colm_names, :last, :first, :include_blank => true)
@@ -70,7 +70,7 @@
         = f.label(:column_name)
         = f.text_field(:column_name)
 
-      - req_colm_names = [["Yes", "Y"], ["No", "N"]]
+      - req_colm_names = [[t("yes_true"), "Y"], [t("no_false"), "N"]]
       %span{ :class =>  "horiz" }
         = f.label(:is_required)
         = f.collection_select(:is_required, req_colm_names, :last, :first)
