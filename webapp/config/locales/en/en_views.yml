@@ -714,7 +714,8 @@ en:
   edit_organism: "Edit Organism"
   organism_name: "Organism Name"
   create_new_organism: "Create New Organism"
-
+  list_organisms: "List Organisms"
+  
   #People
   create_new_person: "Create new person"
   clear_search_criteria: "Clear Search Criteria"

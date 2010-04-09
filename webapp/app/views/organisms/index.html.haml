@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -content_for :title do
-  List Organisms
+  = t("list_organisms")
 
 -content_for :tools_two do
   =button_to(t("create_new_organism"), new_organism_path, { :method => :get })
