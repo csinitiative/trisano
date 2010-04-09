@@ -205,6 +205,7 @@ en:
     administrative: Administrative
     place: Place
     encounter: Encounter
+    default view: Default View
 
   system_notes:
     event_deleted: Event deleted

@@ -199,6 +199,7 @@ es:
     administrative: Administrativo/a(s)
     place: Lugar
     encounter: Encuentro
+    default view: Vista predeterminada
 
   system_notes:
     event_deleted: Se eliminó evento
