@@ -74,6 +74,7 @@ en:
     morbidity_event:
       parent_guardian: Parent / Guardian
       clinicians: Clinicians
+      diagnostic_facilities: Diagnostic facilities
       results_reported_to_clinician_date: Results reported to clinician date
       address:
         city: Patient city

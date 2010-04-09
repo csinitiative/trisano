@@ -114,15 +114,16 @@
     %legend
       =t('diagnostic_facilities')
 
-    - if @event.diagnostic_facility_ids.compact.empty?
-      %h3=t('no_diagnosing_health_facilities')
-    - else
-      %table.list
-        %tr
-          %th=t('diagnosing_health_facility')
-          %th=t('type')
-
-        - for diagnostic in @event.diagnostic_facilities
+    -core_element_show(:diagnostic_facilities, event_form, :horiz) do
+      - if @event.diagnostic_facility_ids.compact.empty?
+        %h3=t('no_diagnosing_health_facilities')
+      - else
+        %table.list
           %tr
-            %td= h(diagnostic.place_entity.place.name)
-            %td= h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
+            %th=t('diagnosing_health_facility')
+            %th=t('type')
+
+          - for diagnostic in @event.diagnostic_facilities
+            %tr
+              %td= h(diagnostic.place_entity.place.name)
+              %td= h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))

@@ -97,12 +97,16 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
     <fieldset class="form">
       <legend><%= t 'clinicians' %></legend>
-      <%= render :partial => "events/clinicians_form", :locals => {:event_form => f} %>
+      <%- core_element(:clinicians, f, :horiz) do %>
+        <%= render :partial => "events/clinicians_form", :locals => {:event_form => f} %>
+      <%- end %>
     </fieldset>
 
     <fieldset class="form">
       <legend><%= t 'diagnostic_facilities' %></legend>
-      <%= render :partial => "events/diagnostics_form", :locals => {:event_form => f} %>
+      <%- core_element(:diagnostic_facilities, f, :horiz) do %>
+        <%= render :partial => "events/diagnostics_form", :locals => {:event_form => f} %>
+      <%- end %>
     </fieldset>
 
   </div>
