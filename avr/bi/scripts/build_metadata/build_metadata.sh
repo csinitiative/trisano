@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -18,15 +18,17 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Path on the file system where the BI server was installed
-#export BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
-export BI_SERVER_PATH=/home/josh/pentaho/biserver-ce
+export BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
+
+# Path for plugins
+export TRISANO_PLUGIN_DIRECTORY=
 
 # JDBC database driver class
 export TRISANO_DB_DRIVER="org.postgresql.Driver"
 
 # Credentials for warehouse database
-export TRISANO_DB_USER="josh"
-export TRISANO_DB_PASSWORD="josh"
+export TRISANO_DB_USER="trisano_ro"
+export TRISANO_DB_PASSWORD="password"
 
 # JDBC connection information
 export TRISANO_DB_HOST='localhost'
@@ -37,11 +39,14 @@ export TRISANO_JDBC_URL="jdbc:postgresql://${TRISANO_DB_HOST}:${TRISANO_DB_PORT}
 # URL that the BI server can is running on (needed to publish updates)
 export BI_SERVER_URL="http://localhost:8080"
 export BI_PUBLISH_URL="${BI_SERVER_URL}/pentaho/RepositoryFilePublisher"
+export BI_PUBLISH_PASSWORD="password"
 
 # User credentials for an admin on the BI server. (also needed for
 # publishing)
 export BI_USER_NAME=joe
 export BI_USER_PASSWORD=password
+
+export PENTAHO_SECURITY_FILE=
 
 # move to the script's dir because we can't change where pentaho looks
 # for some things.

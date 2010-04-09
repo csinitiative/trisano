@@ -10,7 +10,8 @@ CREATE TABLE trisano.core_tables (
     table_description TEXT,
     target_table TEXT NOT NULL, -- The actual table name this should point at
     order_num INTEGER NOT NULL,
-    make_category BOOLEAN DEFAULT true
+    make_category BOOLEAN DEFAULT true,
+    formbuilder_prefix TEXT
 );
 
 DROP TABLE IF EXISTS trisano.core_columns;
@@ -24,372 +25,409 @@ CREATE TABLE trisano.core_columns (
     make_category_column BOOLEAN DEFAULT true
 );
 
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_events_view', 'Morbidity Events', 'trisano.dw_morbidity_events_view',1);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_clinicians_view', 'Morbidity Clinicians', 'trisano.dw_morbidity_clinicians_view',2);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_diagnostic_facilities_view', 'Morbidity Diagnostic Facilities', 'trisano.dw_morbidity_diagnostic_facilities_view',3);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_diseases_view', 'Morbidity Diseases', 'trisano.dw_morbidity_diseases_view',4);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_hospitals_view', 'Morbidity Hospitals', 'trisano.dw_morbidity_hospitals_view',5);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_lab_results_view', 'Morbidity Lab Results', 'trisano.dw_morbidity_lab_results_view',6);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_patients_view', 'Morbidity Patients', 'trisano.dw_morbidity_patients_view',7);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_patients_races_view', 'Morbidity Patients Races', 'trisano.dw_morbidity_patients_races_view',8);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_reporting_agencies_view', 'Morbidity Reporting Agencies', 'trisano.dw_morbidity_reporting_agencies_view',9);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_reporters_view', 'Morbidity Reporters', 'trisano.dw_morbidity_reporters_view',10);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_secondary_jurisdictions_view', 'Morbidity Secondary Jurisdictions', 'trisano.dw_morbidity_secondary_jurisdictions_view',11);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_morbidity_treatments_events_view', 'Morbidity Treatments Events', 'trisano.dw_morbidity_treatments_events_view',12);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_events_view', 'Contact Events', 'trisano.dw_contact_events_view',13);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_clinicians_view', 'Contact Clinicians', 'trisano.dw_contact_clinicians_view',14);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_diagnostic_facilities_view', 'Contact Diagnostic Facilities', 'trisano.dw_contact_diagnostic_facilities_view',15);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_diseases_view', 'Contact Diseases', 'trisano.dw_contact_diseases_view',16);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_hospitals_view', 'Contact Hospitals', 'trisano.dw_contact_hospitals_view',17);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_lab_results_view', 'Contact Lab Results', 'trisano.dw_contact_lab_results_view',18);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_patients_view', 'Contact Patients', 'trisano.dw_contact_patients_view',19);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_patients_races_view', 'Contact Patients Races', 'trisano.dw_contact_patients_races_view',20);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_secondary_jurisdictions_view', 'Contact Secondary Jurisdictions', 'trisano.dw_contact_secondary_jurisdictions_view',21);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_contact_treatments_events_view', 'Contact Treatments Events', 'trisano.dw_contact_treatments_events_view',22);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_encounters_view', 'Encounters', 'trisano.dw_encounters_view',23);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_encounters_lab_results_view', 'Encounters Lab Results', 'trisano.dw_encounters_lab_results_view',24);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_encounters_treatments_events_view', 'Encounters Treatments Events', 'trisano.dw_encounters_treatments_events_view',25);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'dw_place_events_view', 'Place Events', 'trisano.dw_place_events_view',26);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (true,  'avr_groups_view', 'Disease Groups', 'trisano.avr_groups_view',27);
-INSERT INTO trisano.core_tables (make_category, table_name,table_description,target_table,order_num) VALUES (false, 'avr_groups_diseases_view', 'avr_groups_diseases_view', 'trisano.avr_groups_diseases_view',28);
+INSERT INTO trisano.core_tables (make_category, table_name, table_description, target_table, order_num, formbuilder_prefix) VALUES
+(true,  'dw_morbidity_events_view',                  'Morbidity Events',                  'trisano.dw_morbidity_events_view',                  1,  'Morbidity'),
+(true,  'dw_morbidity_clinicians_view',              'Morbidity Clinicians',              'trisano.dw_morbidity_clinicians_view',              2,  NULL),
+(true,  'dw_morbidity_diagnostic_facilities_view',   'Morbidity Diagnostic Facilities',   'trisano.dw_morbidity_diagnostic_facilities_view',   2,  NULL),
+(true,  'dw_morbidity_email_addresses_view',         'Morbidity Email Addresses',         'trisano.dw_morbidity_email_addresses_view',         2,  NULL),
+(true,  'dw_morbidity_hospitals_view',               'Morbidity Hospitals',               'trisano.dw_morbidity_hospitals_view',               2,  NULL),
+(true,  'dw_morbidity_lab_results_view',             'Morbidity Lab Results',             'trisano.dw_morbidity_lab_results_view',             2,  NULL),
+(true,  'dw_morbidity_patients_races_view',          'Morbidity Patients Races',          'trisano.dw_morbidity_patients_races_view',          2,  NULL),
+(true,  'dw_morbidity_secondary_jurisdictions_view', 'Morbidity Secondary Jurisdictions', 'trisano.dw_morbidity_secondary_jurisdictions_view', 2,  NULL),
+(true,  'dw_morbidity_telephones_view',              'Morbidity Telephone Numbers',       'trisano.dw_morbidity_telephones_view',              2,  NULL),
+(true,  'dw_morbidity_treatments_events_view',       'Morbidity Treatments Events',       'trisano.dw_morbidity_treatments_events_view',       2,  NULL),
+(true,  'dw_contact_events_view',                    'Contact Events',                    'trisano.dw_contact_events_view',                    3,  'Contact'),
+(true,  'dw_contact_clinicians_view',                'Contact Clinicians',                'trisano.dw_contact_clinicians_view',                4,  NULL),
+(true,  'dw_contact_diagnostic_facilities_view',     'Contact Diagnostic Facilities',     'trisano.dw_contact_diagnostic_facilities_view',     4,  NULL),
+(true,  'dw_contact_email_addresses_view',           'Contact Email Addresses',           'trisano.dw_contact_email_addresses_view',           4,  NULL),
+(true,  'dw_contact_hospitals_view',                 'Contact Hospitals',                 'trisano.dw_contact_hospitals_view',                 4,  NULL),
+(true,  'dw_contact_lab_results_view',               'Contact Lab Results',               'trisano.dw_contact_lab_results_view',               4,  NULL),
+(true,  'dw_contact_patients_races_view',            'Contact Patients Races',            'trisano.dw_contact_patients_races_view',            4,  NULL),
+(true,  'dw_contact_secondary_jurisdictions_view',   'Contact Secondary Jurisdictions',   'trisano.dw_contact_secondary_jurisdictions_view',   4,  NULL),
+(true,  'dw_contact_telephones_view',                'Contact Telephone Numbers',         'trisano.dw_contact_telephones_view',                4,  NULL),
+(true,  'dw_contact_treatments_events_view',         'Contact Treatments Events',         'trisano.dw_contact_treatments_events_view',         4,  NULL),
+(true,  'dw_encounter_events_view',                  'Encounters',                        'trisano.dw_encounter_events_view',                  5,  'Encounter'),
+(true,  'dw_encounter_email_addresses_view',         'Encounter Email Addresses',         'trisano.dw_encounter_email_addresses_view',         6,  NULL),
+(true,  'dw_encounters_lab_results_view',            'Encounters Lab Results',            'trisano.dw_encounters_lab_results_view',            6,  NULL),
+(true,  'dw_encounter_patients_races_view',          'Encounter Patients Races',          'trisano.dw_encounter_patients_races_view',          6,  NULL),
+(true,  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',       'trisano.dw_encounter_telephones_view',              6,  NULL),
+(true,  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',      'trisano.dw_encounters_treatments_events_view',      6,  NULL),
+(true,  'dw_place_events_view',                      'Place Events',                      'trisano.dw_place_events_view',                      7,  'Place'),
+(true,  'avr_groups_view',                           'Disease Groups',                    'trisano.avr_groups_view',                           9,  NULL),
+(false, 'avr_groups_diseases_view',                  'avr_groups_diseases_view',          'trisano.avr_groups_diseases_view',                  9,  NULL);
 
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('race', 'trisano.dw_morbidity_patients_races_view', 'race', 'Morbidity Patients Race', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name', 'trisano.dw_morbidity_clinicians_view', 'first_name', 'Morbidity Clinicians First Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_lead_in', 'trisano.dw_contact_diseases_view', 'treatment_lead_in', 'Contact Diseases Treatment Lead-in', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_investigation_started', 'trisano.dw_morbidity_events_view', 'date_investigation_started', 'Morbidity Events Date Investigation Started', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_investigation_completed', 'trisano.dw_morbidity_events_view', 'date_investigation_completed', 'Morbidity Events Date Investigation Completed', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_of_residence', 'trisano.dw_morbidity_events_view', 'jurisdiction_of_residence', 'Morbidity Events Jurisdiction of Residence', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('estimated_age_at_onset', 'trisano.dw_morbidity_events_view', 'estimated_age_at_onset', 'Morbidity Events Estimated Age at Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('additional_risk_factors', 'trisano.dw_morbidity_events_view', 'additional_risk_factors', 'Morbidity Events Additional Risk Factors', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_number', 'trisano.dw_morbidity_events_view', 'street_number', 'Morbidity Events Street Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_disease_diagnosed', 'trisano.dw_morbidity_events_view', 'date_disease_diagnosed', 'Morbidity Events Date Disease Diagnosed', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_lab_results_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_morbidity_lab_results_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('person_id', 'trisano.dw_contact_patients_races_view', 'person_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigating_jurisdiction_id', 'trisano.dw_morbidity_events_view', 'investigating_jurisdiction_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_encounters_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_clinicians_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('middle_name', 'trisano.dw_morbidity_patients_view', 'middle_name', 'Morbidity Patients Middle Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('middle_name', 'trisano.dw_contact_patients_view', 'middle_name', 'Contact Patients Middle Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigating_jurisdiction', 'trisano.dw_contact_events_view', 'investigating_jurisdiction', 'Contact Events Investigating Jurisdiction', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('group_living', 'trisano.dw_contact_events_view', 'group_living', 'Contact Events Group Living', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('other_data_2', 'trisano.dw_contact_events_view', 'other_data_2', 'Contact Events Other Data 2', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_disease_onset', 'trisano.dw_contact_events_view', 'date_disease_onset', 'Contact Events Date Disease Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('review_completed_by_state_date', 'trisano.dw_contact_events_view', 'review_completed_by_state_date', 'Contact Events Review Completed by State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('middle_name', 'trisano.dw_morbidity_reporters_view', 'middle_name', 'Morbidity Reporters Middle Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_treatment', 'trisano.dw_contact_treatments_events_view', 'date_of_treatment', 'Contact Treatments Events Date of Treatment', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('result_value', 'trisano.dw_morbidity_lab_results_view', 'result_value', 'Morbidity Lab Results Result Value', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('collection_date', 'trisano.dw_contact_lab_results_view', 'collection_date', 'Contact Lab Results Collection Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_status', 'trisano.dw_contact_lab_results_view', 'test_status', 'Contact Lab Results Test Status', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_place_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_place_events_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_encounters_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('encounter_event_id', 'trisano.dw_encounters_view', 'encounter_event_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('created_at', 'trisano.avr_groups_view', 'created_at', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('updated_at', 'trisano.avr_groups_view', 'updated_at', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.avr_groups_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_diseases_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_diseases_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('avr_group_id', 'trisano.avr_groups_diseases_view', 'avr_group_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('updated_at', 'trisano.avr_groups_diseases_view', 'updated_at', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('created_at', 'trisano.avr_groups_diseases_view', 'created_at', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_id', 'trisano.dw_morbidity_events_view', 'disease_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_id', 'trisano.avr_groups_diseases_view', 'disease_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_patients_id', 'trisano.dw_morbidity_events_view', 'dw_patients_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('parent_id', 'trisano.dw_morbidity_events_view', 'parent_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_of_residence_id', 'trisano.dw_morbidity_events_view', 'jurisdiction_of_residence_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_deleted', 'trisano.dw_morbidity_events_view', 'date_deleted', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('imported_from_code', 'trisano.dw_morbidity_events_view', 'imported_from_code', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('always_one', 'trisano.dw_morbidity_events_view', 'always_one', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('event_queue_id', 'trisano.dw_morbidity_events_view', 'event_queue_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name_soundex', 'trisano.dw_morbidity_patients_view', 'first_name_soundex', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_patients_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('entity_id', 'trisano.dw_morbidity_patients_view', 'entity_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name_soundex', 'trisano.dw_morbidity_patients_view', 'last_name_soundex', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_patients_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('entity_id', 'trisano.dw_contact_patients_view', 'entity_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name_soundex', 'trisano.dw_contact_patients_view', 'last_name_soundex', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_patients_id', 'trisano.dw_contact_events_view', 'dw_patients_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('parent_id', 'trisano.dw_contact_events_view', 'parent_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_id', 'trisano.dw_contact_events_view', 'disease_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigating_jurisdiction_id', 'trisano.dw_contact_events_view', 'investigating_jurisdiction_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_of_residence_id', 'trisano.dw_contact_events_view', 'jurisdiction_of_residence_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_updated', 'trisano.dw_contact_events_view', 'date_updated', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_created', 'trisano.dw_contact_events_view', 'date_created', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('event_queue_id', 'trisano.dw_contact_events_view', 'event_queue_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_deleted', 'trisano.dw_contact_events_view', 'date_deleted', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('imported_from_code', 'trisano.dw_contact_events_view', 'imported_from_code', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('always_one', 'trisano.dw_contact_events_view', 'always_one', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_reporting_agencies_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_patients_races_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_patients_races_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_id', 'trisano.dw_morbidity_reporting_agencies_view', 'place_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_reporting_agencies_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_reporting_agencies_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_diagnostic_facilities_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_id', 'trisano.dw_morbidity_diagnostic_facilities_view', 'place_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_diagnostic_facilities_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_diagnostic_facilities_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_diagnostic_facilities_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_id', 'trisano.dw_contact_diagnostic_facilities_view', 'place_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_diagnostic_facilities_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_morbidity_treatments_events_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_reporters_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_contact_diagnostic_facilities_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_reporters_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_reporters_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_treatments_events_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_treatments_events_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_id', 'trisano.dw_morbidity_treatments_events_view', 'treatment_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_treatments_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_contact_treatments_events_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_contact_treatments_events_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_treatments_events_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_id', 'trisano.dw_contact_treatments_events_view', 'treatment_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_encounters_treatments_events_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_treatments_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_encounters_treatments_events_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_encounters_treatments_events_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_id', 'trisano.dw_encounters_treatments_events_view', 'treatment_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_lab_results_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_encounters_treatments_events_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_contact_lab_results_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_contact_lab_results_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_lab_results_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_lab_results_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_encounters_lab_results_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_encounters_lab_results_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_encounter_events_id', 'trisano.dw_encounters_lab_results_view', 'dw_encounter_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_hospitals_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_hospitals_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_id', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'jurisdiction_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_contact_secondary_jurisdictions_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_id', 'trisano.dw_contact_secondary_jurisdictions_view', 'jurisdiction_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_secondary_jurisdictions_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name', 'trisano.dw_morbidity_clinicians_view', 'last_name', 'Morbidity Clinicians Last Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('middle_name', 'trisano.dw_morbidity_clinicians_view', 'middle_name', 'Morbidity Clinicians Middle Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('middle_name', 'trisano.dw_contact_clinicians_view', 'middle_name', 'Contact Clinicians Middle Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name', 'trisano.dw_contact_clinicians_view', 'first_name', 'Contact Clinicians First Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name', 'trisano.dw_contact_clinicians_view', 'last_name', 'Contact Clinicians Last Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('postal_code', 'trisano.dw_place_events_view', 'postal_code', 'Place Events Postal Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_place_events_view', 'name', 'Place Events Place Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_type', 'trisano.dw_place_events_view', 'place_type', 'Place Events Place Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_exposure', 'trisano.dw_place_events_view', 'date_of_exposure', 'Place Events Date of Exposure', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_number', 'trisano.dw_place_events_view', 'street_number', 'Place Events Street Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_name', 'trisano.dw_place_events_view', 'street_name', 'Place Events Street Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('unit_number', 'trisano.dw_place_events_view', 'unit_number', 'Place Events Unit Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('city', 'trisano.dw_place_events_view', 'city', 'Place Events City', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('state', 'trisano.dw_place_events_view', 'state', 'Place Events State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('county', 'trisano.dw_place_events_view', 'county', 'Place Events County', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('latitude', 'trisano.dw_place_events_view', 'latitude', 'Place Events Latitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('longitude', 'trisano.dw_place_events_view', 'longitude', 'Place Events Longitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('description', 'trisano.dw_encounters_view', 'description', 'Encounter Description', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigator_id', 'trisano.dw_encounters_view', 'investigator_id', 'Encounter Investigator', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('encounter_date', 'trisano.dw_encounters_view', 'encounter_date', 'Encounter Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('location', 'trisano.dw_encounters_view', 'location', 'Encounter Location', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.avr_groups_view', 'name', 'Disease Group Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_lead_in', 'trisano.dw_morbidity_diseases_view', 'treatment_lead_in', 'Morbidity Diseases Treatment Lead-In', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_contact_clinicians_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_lead_in', 'trisano.dw_morbidity_diseases_view', 'place_lead_in', 'Morbidity Diseases Place Lead-in', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('contact_lead_in', 'trisano.dw_morbidity_diseases_view', 'contact_lead_in', 'Morbidity Diseases Contact Lead-in', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('cdc_code', 'trisano.dw_morbidity_diseases_view', 'cdc_code', 'Morbidity Diseases CDC Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('active', 'trisano.dw_morbidity_diseases_view', 'active', 'Morbidity Diseases Active', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_name', 'trisano.dw_morbidity_diseases_view', 'disease_name', 'Morbidity Diseases Disease Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('contact_lead_in', 'trisano.dw_contact_diseases_view', 'contact_lead_in', 'Contact Diseases Contact Lead-in', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('cdc_code', 'trisano.dw_contact_diseases_view', 'cdc_code', 'Contact Diseases CDC Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('active', 'trisano.dw_contact_diseases_view', 'active', 'Contact Diseases Active', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_name', 'trisano.dw_contact_diseases_view', 'disease_name', 'Contact Diseases Disease Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_lead_in', 'trisano.dw_contact_diseases_view', 'place_lead_in', 'Contact Diseases Place Lead-in', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigating_jurisdiction', 'trisano.dw_morbidity_events_view', 'investigating_jurisdiction', 'Morbidity Events Investigating Jurisdiction', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('state_case_status_code', 'trisano.dw_morbidity_events_view', 'state_case_status_code', 'Morbidity Events State Case Status Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lhd_case_status_code', 'trisano.dw_morbidity_events_view', 'lhd_case_status_code', 'Morbidity Events LHD Case Status Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_clinicians_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('review_completed_by_state_date', 'trisano.dw_morbidity_events_view', 'review_completed_by_state_date', 'Morbidity Events Date Review Completed by State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('sent_to_cdc', 'trisano.dw_morbidity_events_view', 'sent_to_cdc', 'Morbidity Events Sent to CDC', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('contact_type_if_once_a_contact', 'trisano.dw_morbidity_events_view', 'contact_type_if_once_a_contact', 'Morbidity Events Contact Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disposition_if_once_a_contact', 'trisano.dw_morbidity_events_view', 'disposition_if_once_a_contact', 'Morbidity Events Disposition', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('sent_to_ibis', 'trisano.dw_morbidity_events_view', 'sent_to_ibis', 'Morbidity Events Sent to IBIS', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('ibis_updated_at', 'trisano.dw_morbidity_events_view', 'ibis_updated_at', 'Morbidity Events Date IBIS Updated', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_created', 'trisano.dw_morbidity_events_view', 'date_created', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_event_died', 'trisano.dw_morbidity_events_view', 'disease_event_died', 'Morbidity Events Died', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_updated', 'trisano.dw_morbidity_events_view', 'date_updated', 'Morbidity Events Date Updated', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('pregnancy_due_date', 'trisano.dw_morbidity_events_view', 'pregnancy_due_date', 'Morbidity Events Pregnancy Due Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('risk_factor_details', 'trisano.dw_morbidity_events_view', 'risk_factor_details', 'Morbidity Events Risk Factor Details', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name', 'trisano.dw_contact_patients_view', 'last_name', 'Contact Patients Last Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('birth_date', 'trisano.dw_contact_patients_view', 'birth_date', 'Contact Patients Birth Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_death', 'trisano.dw_contact_patients_view', 'date_of_death', 'Contact Patients Date of Death', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_name', 'trisano.dw_contact_events_view', 'street_name', 'Contact Events Street Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('actual_age_at_onset', 'trisano.dw_contact_events_view', 'actual_age_at_onset', 'Contact Events Actual Age at Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name_soundex', 'trisano.dw_contact_patients_view', 'first_name_soundex', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('jurisdiction_of_residence', 'trisano.dw_contact_events_view', 'jurisdiction_of_residence', 'Contact Events Jurisdiction of Residence', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('actual_age_type', 'trisano.dw_contact_events_view', 'actual_age_type', 'Contact Events Actual Age Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('age_in_years', 'trisano.dw_contact_events_view', 'age_in_years', 'Contact Events Age in Years', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('estimated_age_at_onset', 'trisano.dw_contact_events_view', 'estimated_age_at_onset', 'Contact Events Estimated Age at Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('estimated_age_type', 'trisano.dw_contact_events_view', 'estimated_age_type', 'Contact Events Estimated Age Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('food_handler', 'trisano.dw_contact_events_view', 'food_handler', 'Contact Events Food Handler', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('healthcare_worker', 'trisano.dw_contact_events_view', 'healthcare_worker', 'Contact Events Healthcare Worker', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('day_care_association', 'trisano.dw_contact_events_view', 'day_care_association', 'Contact Events Day Care Association', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('race', 'trisano.dw_contact_patients_races_view', 'race', 'Contact Patients Race', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('person_id', 'trisano.dw_morbidity_patients_races_view', 'person_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_morbidity_reporting_agencies_view', 'name', 'Morbidity Reporting Agencies Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_type', 'trisano.dw_morbidity_reporting_agencies_view', 'place_type', 'Morbidity Reporting Agencies Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_morbidity_diagnostic_facilities_view', 'name', 'Morbidity Diagnostic Facilities Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_type', 'trisano.dw_morbidity_diagnostic_facilities_view', 'place_type', 'Morbidity Diagnostic Facilities Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_contact_diagnostic_facilities_view', 'name', 'Contact Diagnostic Facilities Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('place_type', 'trisano.dw_contact_diagnostic_facilities_view', 'place_type', 'Contact Diagnostic Facilities Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name', 'trisano.dw_morbidity_reporters_view', 'last_name', 'Morbidity Reporters Last Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name', 'trisano.dw_morbidity_reporters_view', 'first_name', 'Morbidity Reporters First Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_given', 'trisano.dw_morbidity_treatments_events_view', 'treatment_given', 'Morbidity Treatments Events Treatment Given', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_treatment', 'trisano.dw_morbidity_treatments_events_view', 'date_of_treatment', 'Morbidity Treatments Events Date of Treatment', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_notes', 'trisano.dw_morbidity_treatments_events_view', 'treatment_notes', 'Morbidity Treatments Events Treatment Notes', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_given', 'trisano.dw_contact_treatments_events_view', 'treatment_given', 'Contact Treatments Events Treatment Given', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_notes', 'trisano.dw_contact_treatments_events_view', 'treatment_notes', 'Contact Treatments Events Treatment Notes', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_given', 'trisano.dw_encounters_treatments_events_view', 'treatment_given', 'Encounters Treatments Events Treatment Given', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_treatment', 'trisano.dw_encounters_treatments_events_view', 'date_of_treatment', 'Encounters Treatments Events Date of Treatment', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('treatment_notes', 'trisano.dw_encounters_treatments_events_view', 'treatment_notes', 'Encounters Treatments Events Treatment Notes', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_encounters_lab_results_view', 'id', 'Encounters Lab Results ', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_source', 'trisano.dw_morbidity_lab_results_view', 'specimen_source', 'Morbidity Lab Results Specimen Source', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('collection_date', 'trisano.dw_morbidity_lab_results_view', 'collection_date', 'Morbidity Lab Results Collection Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_test_date', 'trisano.dw_morbidity_lab_results_view', 'lab_test_date', 'Morbidity Lab Results Lab Test Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_sent_to_state', 'trisano.dw_morbidity_lab_results_view', 'specimen_sent_to_state', 'Morbidity Lab Results Specimen Sent to State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('reference_range', 'trisano.dw_morbidity_lab_results_view', 'reference_range', 'Morbidity Lab Results Reference Range', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('loinc_code', 'trisano.dw_morbidity_lab_results_view', 'loinc_code', 'Morbidity Lab Results LOINC code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_type', 'trisano.dw_morbidity_lab_results_view', 'test_type', 'Morbidity Lab Results Test Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_lab_results_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_contact_secondary_jurisdictions_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_clinicians_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_morbidity_hospitals_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_contact_events_id', 'trisano.dw_morbidity_hospitals_view', 'dw_contact_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('id', 'trisano.dw_morbidity_hospitals_view', 'id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('dw_morbidity_events_id', 'trisano.dw_contact_hospitals_view', 'dw_morbidity_events_id', '', false);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_encounters_lab_results_view', 'name', 'Encounters Lab Results Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_type', 'trisano.dw_encounters_lab_results_view', 'lab_type', 'Encounters Lab Results Lab Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hl7_message', 'trisano.dw_encounters_lab_results_view', 'hl7_message', 'Encounters Lab Results HL7 Message', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_state', 'trisano.dw_encounters_lab_results_view', 'staged_message_state', 'Encounters Lab Results Staged Message State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_note', 'trisano.dw_encounters_lab_results_view', 'staged_message_note', 'Encounters Lab Results Staged Message Note', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hospital_name', 'trisano.dw_morbidity_hospitals_view', 'hospital_name', 'Morbidity Hospitals Hospital Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('admission_date', 'trisano.dw_morbidity_hospitals_view', 'admission_date', 'Morbidity Hospitals Admission Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('discharge_date', 'trisano.dw_morbidity_hospitals_view', 'discharge_date', 'Morbidity Hospitals Discharge Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('medical_record_number', 'trisano.dw_morbidity_hospitals_view', 'medical_record_number', 'Morbidity Hospitals Medical Record Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hospital_record_number', 'trisano.dw_morbidity_hospitals_view', 'hospital_record_number', 'Morbidity Hospitals Hospital Record Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hospital_name', 'trisano.dw_contact_hospitals_view', 'hospital_name', 'Contact Hospitals Hospital Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('admission_date', 'trisano.dw_contact_hospitals_view', 'admission_date', 'Contact Hospitals Admission Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('discharge_date', 'trisano.dw_contact_hospitals_view', 'discharge_date', 'Contact Hospitals Discharge DAte', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('medical_record_number', 'trisano.dw_contact_hospitals_view', 'medical_record_number', 'Contact Hospitals Medical Record Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hospital_record_number', 'trisano.dw_contact_hospitals_view', 'hospital_record_number', 'Contact Hospitals Hospital Record Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'name', 'Morbidity Secondary Jurisdictions Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_contact_secondary_jurisdictions_view', 'name', 'Contact Secondary Jurisdictions Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('collection_date', 'trisano.dw_encounters_lab_results_view', 'collection_date', 'Encounters Lab Results Collection Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('mmwr_week', 'trisano.dw_morbidity_events_view', 'mmwr_week', 'Morbidity Events MMWR Week', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('mmwr_year', 'trisano.dw_morbidity_events_view', 'mmwr_year', 'Morbidity Events MMWR Year', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('event_name', 'trisano.dw_morbidity_events_view', 'event_name', 'Morbidity Events Event Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('record_number', 'trisano.dw_morbidity_events_view', 'record_number', 'Morbidity Events Record Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('actual_age_at_onset', 'trisano.dw_morbidity_events_view', 'actual_age_at_onset', 'Morbidity Events Actual Age at Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('actual_age_type', 'trisano.dw_morbidity_events_view', 'actual_age_type', 'Morbidity Events Actual Age Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('age_in_years', 'trisano.dw_morbidity_events_view', 'age_in_years', 'Morbidity Events Age in Years', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('estimated_age_type', 'trisano.dw_morbidity_events_view', 'estimated_age_type', 'Morbidity Events Estimated Age Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('parent_guardian', 'trisano.dw_morbidity_events_view', 'parent_guardian', 'Morbidity Events Parent/Guardian', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('food_handler', 'trisano.dw_morbidity_events_view', 'food_handler', 'Morbidity Events Food Handler', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('healthcare_worker', 'trisano.dw_morbidity_events_view', 'healthcare_worker', 'Morbidity Events Healthcare Worker', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('group_living', 'trisano.dw_morbidity_events_view', 'group_living', 'Morbidity Events Group Living', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('day_care_association', 'trisano.dw_morbidity_events_view', 'day_care_association', 'Morbidity Events Day Care Association', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('pregnant', 'trisano.dw_morbidity_events_view', 'pregnant', 'Morbidity Events Pregnant', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('occupation', 'trisano.dw_morbidity_events_view', 'occupation', 'Morbidity Events Occupation', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('other_data_1', 'trisano.dw_morbidity_events_view', 'other_data_1', 'Morbidity Events Other Data 1', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_event_hospitalized', 'trisano.dw_morbidity_events_view', 'disease_event_hospitalized', 'Morbidity Events Hospitalized', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('other_data_2', 'trisano.dw_morbidity_events_view', 'other_data_2', 'Morbidity Events Other Data 2', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('outbreak_associated_code', 'trisano.dw_morbidity_events_view', 'outbreak_associated_code', 'Morbidity Events Outbreak Associated Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('outbreak_name', 'trisano.dw_morbidity_events_view', 'outbreak_name', 'Morbidity Events Outbreak Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigator', 'trisano.dw_morbidity_events_view', 'investigator', 'Morbidity Events Investigator', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('acuity', 'trisano.dw_morbidity_events_view', 'acuity', 'Morbidity Events Acuity', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_name', 'trisano.dw_morbidity_events_view', 'street_name', 'Morbidity Events Street Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('unit_number', 'trisano.dw_morbidity_events_view', 'unit_number', 'Morbidity Events Unit Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('city', 'trisano.dw_morbidity_events_view', 'city', 'Morbidity Events City', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('county', 'trisano.dw_morbidity_events_view', 'county', 'Morbidity Events County', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('state', 'trisano.dw_morbidity_events_view', 'state', 'Morbidity Events State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('postal_code', 'trisano.dw_morbidity_events_view', 'postal_code', 'Morbidity Events Postal Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('latitude', 'trisano.dw_morbidity_events_view', 'latitude', 'Morbidity Events Latitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('longitude', 'trisano.dw_morbidity_events_view', 'longitude', 'Morbidity Events Longitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_disease_onset', 'trisano.dw_morbidity_events_view', 'date_disease_onset', 'Morbidity Events Date Disease Onset', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('results_reported_to_clinician_date', 'trisano.dw_morbidity_events_view', 'results_reported_to_clinician_date', 'Morbidity Events Results Reported to Clinician', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_reported_to_public_health', 'trisano.dw_morbidity_events_view', 'date_reported_to_public_health', 'Morbidity Events Date Reported to Public Health', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_entered_into_system', 'trisano.dw_morbidity_events_view', 'date_entered_into_system', 'Morbidity Events Date Entered Into System', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('birth_gender', 'trisano.dw_morbidity_patients_view', 'birth_gender', 'Morbidity Patients Birth Gender', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('ethnicity', 'trisano.dw_morbidity_patients_view', 'ethnicity', 'Morbidity Patients Ethnicity', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('primary_language', 'trisano.dw_morbidity_patients_view', 'primary_language', 'Morbidity Patients Primary Language', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name', 'trisano.dw_morbidity_patients_view', 'first_name', 'Morbidity Patients First Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('last_name', 'trisano.dw_morbidity_patients_view', 'last_name', 'Morbidity Patients Last Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('birth_date', 'trisano.dw_morbidity_patients_view', 'birth_date', 'Morbidity Patients Birth Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_of_death', 'trisano.dw_morbidity_patients_view', 'date_of_death', 'Morbidity Patients Date of Death', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('birth_gender', 'trisano.dw_contact_patients_view', 'birth_gender', 'Contact Patients Birth Gender', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('ethnicity', 'trisano.dw_contact_patients_view', 'ethnicity', 'Contact Patients Ethnicity', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('primary_language', 'trisano.dw_contact_patients_view', 'primary_language', 'Contact Patients Primary Language', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('first_name', 'trisano.dw_contact_patients_view', 'first_name', 'Contact Patients First Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('pregnant', 'trisano.dw_contact_events_view', 'pregnant', 'Contact Events Pregnant', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('pregnancy_due_date', 'trisano.dw_contact_events_view', 'pregnancy_due_date', 'Contact Events Pregnancy Due Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('additional_risk_factors', 'trisano.dw_contact_events_view', 'additional_risk_factors', 'Contact Events Additional Risk Factors', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('risk_factor_details', 'trisano.dw_contact_events_view', 'risk_factor_details', 'Contact Events Risk Factor Details', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('occupation', 'trisano.dw_contact_events_view', 'occupation', 'Contact Events Occupation', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('other_data_1', 'trisano.dw_contact_events_view', 'other_data_1', 'Contact Events Other Data 1', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_event_hospitalized', 'trisano.dw_contact_events_view', 'disease_event_hospitalized', 'Contact Events Hospitalized', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('investigator', 'trisano.dw_contact_events_view', 'investigator', 'Contact Events Investigator', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('street_number', 'trisano.dw_contact_events_view', 'street_number', 'Contact Events Street Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('unit_number', 'trisano.dw_contact_events_view', 'unit_number', 'Contact Events Unit Number', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('city', 'trisano.dw_contact_events_view', 'city', 'Contact Events City', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('county', 'trisano.dw_contact_events_view', 'county', 'Contact Events County', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('state', 'trisano.dw_contact_events_view', 'state', 'Contact Events State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('postal_code', 'trisano.dw_contact_events_view', 'postal_code', 'Contact Events Postal Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('latitude', 'trisano.dw_contact_events_view', 'latitude', 'Contact Events Latitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('longitude', 'trisano.dw_contact_events_view', 'longitude', 'Contact Events Longitude', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_disease_diagnosed', 'trisano.dw_contact_events_view', 'date_disease_diagnosed', 'Contact Events Date Disease Diagnosed', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_entered_into_system', 'trisano.dw_contact_events_view', 'date_entered_into_system', 'Contact Events Date Entered Into System', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_investigation_started', 'trisano.dw_contact_events_view', 'date_investigation_started', 'Contact Events Date Investigation Started', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('date_investigation_completed', 'trisano.dw_contact_events_view', 'date_investigation_completed', 'Contact Events Date Investigation Completed', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disposition', 'trisano.dw_contact_events_view', 'disposition', 'Contact Events Disposition', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('contact_type', 'trisano.dw_contact_events_view', 'contact_type', 'Contact Events Contact Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('sent_to_ibis', 'trisano.dw_contact_events_view', 'sent_to_ibis', 'Contact Events Sent to IBIS', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('ibis_updated_at', 'trisano.dw_contact_events_view', 'ibis_updated_at', 'Contact Events IBIS Updated', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('disease_event_died', 'trisano.dw_contact_events_view', 'disease_event_died', 'Contact Events Died', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_result', 'trisano.dw_morbidity_lab_results_view', 'test_result', 'Morbidity Lab Results Test Result', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('units', 'trisano.dw_morbidity_lab_results_view', 'units', 'Morbidity Lab Results Units', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_status', 'trisano.dw_morbidity_lab_results_view', 'test_status', 'Morbidity Lab Results Test Status', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('comment', 'trisano.dw_morbidity_lab_results_view', 'comment', 'Morbidity Lab Results Comment', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_morbidity_lab_results_view', 'name', 'Morbidity Lab Results Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_type', 'trisano.dw_morbidity_lab_results_view', 'lab_type', 'Morbidity Lab Results Lab Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hl7_message', 'trisano.dw_morbidity_lab_results_view', 'hl7_message', 'Morbidity Lab Results HL7 Message', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_state', 'trisano.dw_morbidity_lab_results_view', 'staged_message_state', 'Morbidity Lab Results Staged Message State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_note', 'trisano.dw_morbidity_lab_results_view', 'staged_message_note', 'Morbidity Lab Results Staged Message Note', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_source', 'trisano.dw_contact_lab_results_view', 'specimen_source', 'Contact Lab Results Specimen Source', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_test_date', 'trisano.dw_contact_lab_results_view', 'lab_test_date', 'Contact Lab Results Lab Test Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_sent_to_state', 'trisano.dw_contact_lab_results_view', 'specimen_sent_to_state', 'Contact Lab Results Specimen Sent to State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('reference_range', 'trisano.dw_contact_lab_results_view', 'reference_range', 'Contact Lab Results Reference Range', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('loinc_code', 'trisano.dw_contact_lab_results_view', 'loinc_code', 'Contact Lab Results LOINC Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_type', 'trisano.dw_contact_lab_results_view', 'test_type', 'Contact Lab Results Test Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_result', 'trisano.dw_contact_lab_results_view', 'test_result', 'Contact Lab Results Test Result', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('result_value', 'trisano.dw_contact_lab_results_view', 'result_value', 'Contact Lab Results Result Value', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('units', 'trisano.dw_contact_lab_results_view', 'units', 'Contact Lab Results Units', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('comment', 'trisano.dw_contact_lab_results_view', 'comment', 'Contact Lab Results Comment', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('name', 'trisano.dw_contact_lab_results_view', 'name', 'Contact Lab Results Name', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_type', 'trisano.dw_contact_lab_results_view', 'lab_type', 'Contact Lab Results Lab Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('hl7_message', 'trisano.dw_contact_lab_results_view', 'hl7_message', 'Contact Lab Results HL7 Message', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_state', 'trisano.dw_contact_lab_results_view', 'staged_message_state', 'Contact Lab Results Staged Message State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('staged_message_note', 'trisano.dw_contact_lab_results_view', 'staged_message_note', 'Contact Lab Results Staged Message Note', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('lab_test_date', 'trisano.dw_encounters_lab_results_view', 'lab_test_date', 'Encounters Lab Results Lab Test Date', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_source', 'trisano.dw_encounters_lab_results_view', 'specimen_source', 'Encounters Lab Results Specimen Source', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('specimen_sent_to_state', 'trisano.dw_encounters_lab_results_view', 'specimen_sent_to_state', 'Encounters Lab Results Specimen Sent to State', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('reference_range', 'trisano.dw_encounters_lab_results_view', 'reference_range', 'Encounters Lab Results Reference Range', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('loinc_code', 'trisano.dw_encounters_lab_results_view', 'loinc_code', 'Encounters Lab Results LOINC Code', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_type', 'trisano.dw_encounters_lab_results_view', 'test_type', 'Encounters Lab Results Test Type', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_result', 'trisano.dw_encounters_lab_results_view', 'test_result', 'Encounters Lab Results Test Result', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('result_value', 'trisano.dw_encounters_lab_results_view', 'result_value', 'Encounters Lab Results Result Value', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('units', 'trisano.dw_encounters_lab_results_view', 'units', 'Encounters Lab Results Units', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('test_status', 'trisano.dw_encounters_lab_results_view', 'test_status', 'Encounters Lab Results Test Status', true);
-INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES ('comment', 'trisano.dw_encounters_lab_results_view', 'comment', 'Encounters Lab Results Comment', true);
+INSERT INTO trisano.core_columns (target_table, target_column, column_name, column_description, make_category_column) VALUES
+('trisano.avr_groups_diseases_view',                  'avr_group_id',                       'avr_group_id',                       '',                          false),
+('trisano.avr_groups_diseases_view',                  'created_at',                         'created_at',                         '',                          false),
+('trisano.avr_groups_diseases_view',                  'disease_id',                         'disease_id',                         '',                          false),
+('trisano.avr_groups_diseases_view',                  'updated_at',                         'updated_at',                         '',                          false),
+('trisano.avr_groups_view',                           'created_at',                         'created_at',                         '',                          false),
+('trisano.avr_groups_view',                           'id',                                 'id',                                 '',                          false),
+('trisano.avr_groups_view',                           'name',                               'name',                               'Dis Grp Nm',                true),
+('trisano.avr_groups_view',                           'updated_at',                         'updated_at',                         '',                          false),
+('trisano.dw_contact_clinicians_view',                'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_clinicians_view',                'first_name',                         'first_name',                         'CC Frst Nm',                true),
+('trisano.dw_contact_clinicians_view',                'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_clinicians_view',                'last_name',                          'last_name',                          'CC Lst Nm',                 true),
+('trisano.dw_contact_clinicians_view',                'middle_name',                        'middle_name',                        'CC Mid Nm',                 true),
+('trisano.dw_contact_diagnostic_facilities_view',     'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_diagnostic_facilities_view',     'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_contact_diagnostic_facilities_view',     'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_diagnostic_facilities_view',     'name',                               'name',                               'CDF Nm',                    true),
+('trisano.dw_contact_diagnostic_facilities_view',     'place_id',                           'place_id',                           '',                          false),
+('trisano.dw_contact_diagnostic_facilities_view',     'place_type',                         'place_type',                         'CDF Typ',                   true),
+('trisano.dw_contact_email_addresses_view',           'email_address',                      'email_address',                      'CP Email Addr',             true),
+('trisano.dw_contact_email_addresses_view',           'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_contact_events_view',                    'active',                             'active',                             'CD Act',                    true),
+('trisano.dw_contact_events_view',                    'actual_age_at_onset',                'actual_age_at_onset',                'CE Actl Age at Onst',       true),
+('trisano.dw_contact_events_view',                    'actual_age_type',                    'actual_age_type',                    'CE Actl Age Typ',           true),
+('trisano.dw_contact_events_view',                    'additional_risk_factors',            'additional_risk_factors',            'CE Addtl Risk Fctrs',       true),
+('trisano.dw_contact_events_view',                    'age_in_years',                       'age_in_years',                       'CE Age in Yrs',             true),
+('trisano.dw_contact_events_view',                    'always_one',                         'always_one',                         '',                          false),
+('trisano.dw_contact_events_view',                    'birth_date',                         'birth_date',                         'CP Brth Dt',                true),
+('trisano.dw_contact_events_view',                    'birth_gender',                       'birth_gender',                       'CP Brth Gndr',              true),
+('trisano.dw_contact_events_view',                    'cdc_code',                           'cdc_code',                           'CD CDC Cd',                 true),
+('trisano.dw_contact_events_view',                    'city',                               'city',                               'CE City',                   true),
+('trisano.dw_contact_events_view',                    'contact_lead_in',                    'contact_lead_in',                    'CD Cntct Lead-in',          true),
+('trisano.dw_contact_events_view',                    'contact_type',                       'contact_type',                       'CE Cntct Typ',              true),
+('trisano.dw_contact_events_view',                    'county',                             'county',                             'CE Cnty',                   true),
+('trisano.dw_contact_events_view',                    'date_created',                       'date_created',                       '',                          false),
+('trisano.dw_contact_events_view',                    'date_deleted',                       'date_deleted',                       '',                          false),
+('trisano.dw_contact_events_view',                    'date_disease_diagnosed',             'date_disease_diagnosed',             'CE Dt Dis Diag',            true),
+('trisano.dw_contact_events_view',                    'date_disease_onset',                 'date_disease_onset',                 'CE Dt Dis Onst',            true),
+('trisano.dw_contact_events_view',                    'date_entered_into_system',           'date_entered_into_system',           'CE Dt Entrd Into Sys',      true),
+('trisano.dw_contact_events_view',                    'date_investigation_completed',       'date_investigation_completed',       'CE Dt Inv Cmpl',            true),
+('trisano.dw_contact_events_view',                    'date_investigation_started',         'date_investigation_started',         'CE Dt Inv Strtd',           true),
+('trisano.dw_contact_events_view',                    'date_of_death',                      'date_of_death',                      'CP Dt of Death',            true),
+('trisano.dw_contact_events_view',                    'date_updated',                       'date_updated',                       '',                          false),
+('trisano.dw_contact_events_view',                    'day_care_association',               'day_care_association',               'CE Day Care Assoc',         true),
+('trisano.dw_contact_events_view',                    'disease_event_died',                 'disease_event_died',                 'CE Died',                   true),
+('trisano.dw_contact_events_view',                    'disease_event_hospitalized',         'disease_event_hospitalized',         'CE Hospitalized',           true),
+('trisano.dw_contact_events_view',                    'disease_id',                         'disease_id',                         '',                          false),
+('trisano.dw_contact_events_view',                    'disease_name',                       'disease_name',                       'CD Dis Nm',                 true),
+('trisano.dw_contact_events_view',                    'disposition',                        'disposition',                        'CE Dsp',                    true),
+('trisano.dw_contact_events_view',                    'dw_patients_id',                     'dw_patients_id',                     '',                          false),
+('trisano.dw_contact_events_view',                    'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_contact_events_view',                    'estimated_age_at_onset',             'estimated_age_at_onset',             'CE Est Age at Onst',        true),
+('trisano.dw_contact_events_view',                    'estimated_age_type',                 'estimated_age_type',                 'CE Est Age Typ',            true),
+('trisano.dw_contact_events_view',                    'ethnicity',                          'ethnicity',                          'CP Ethncty',                true),
+('trisano.dw_contact_events_view',                    'event_queue_id',                     'event_queue_id',                     '',                          false),
+('trisano.dw_contact_events_view',                    'first_name',                         'first_name',                         'CP Frst Nm',                true),
+('trisano.dw_contact_events_view',                    'first_name_soundex',                 'first_name_soundex',                 '',                          false),
+('trisano.dw_contact_events_view',                    'food_handler',                       'food_handler',                       'CE Food Hdlr',              true),
+('trisano.dw_contact_events_view',                    'group_living',                       'group_living',                       'CE Grp Lvng',               true),
+('trisano.dw_contact_events_view',                    'healthcare_worker',                  'healthcare_worker',                  'CE Hlthcare Wrkr',          true),
+('trisano.dw_contact_events_view',                    'ibis_updated_at',                    'ibis_updated_at',                    'CE IBIS Updtd',             true),
+('trisano.dw_contact_events_view',                    'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_events_view',                    'imported_from_code',                 'imported_from_code',                 '',                          false),
+('trisano.dw_contact_events_view',                    'investigating_jurisdiction',         'investigating_jurisdiction',         'CE Inv Jur',                true),
+('trisano.dw_contact_events_view',                    'investigating_jurisdiction_id',      'investigating_jurisdiction_id',      '',                          false),
+('trisano.dw_contact_events_view',                    'investigator',                       'investigator',                       'CE Invstgtr',               true),
+('trisano.dw_contact_events_view',                    'jurisdiction_of_residence',          'jurisdiction_of_residence',          'CE Jur of Res',             true),
+('trisano.dw_contact_events_view',                    'jurisdiction_of_residence_id',       'jurisdiction_of_residence_id',       '',                          false),
+('trisano.dw_contact_events_view',                    'last_name',                          'last_name',                          'CP Lst Nm',                 true),
+('trisano.dw_contact_events_view',                    'last_name_soundex',                  'last_name_soundex',                  '',                          false),
+('trisano.dw_contact_events_view',                    'latitude',                           'latitude',                           'CE Lat',                    true),
+('trisano.dw_contact_events_view',                    'longitude',                          'longitude',                          'CE Lon',                    true),
+('trisano.dw_contact_events_view',                    'middle_name',                        'middle_name',                        'CP Mid Nm',                 true),
+('trisano.dw_contact_events_view',                    'occupation',                         'occupation',                         'CE Occ',                    true),
+('trisano.dw_contact_events_view',                    'other_data_1',                       'other_data_1',                       'CE Othr Data 1',            true),
+('trisano.dw_contact_events_view',                    'other_data_2',                       'other_data_2',                       'CE Othr Data 2',            true),
+('trisano.dw_contact_events_view',                    'parent_id',                          'parent_id',                          '',                          false),
+('trisano.dw_contact_events_view',                    'patient_entity_id',                  'patient_entity_id',                  '',                          false),
+('trisano.dw_contact_events_view',                    'place_lead_in',                      'place_lead_in',                      'CD Plc Lead-in',            true),
+('trisano.dw_contact_events_view',                    'postal_code',                        'postal_code',                        'CE Pstl Cd',                true),
+('trisano.dw_contact_events_view',                    'pregnancy_due_date',                 'pregnancy_due_date',                 'CE Pregnancy Due Dt',       true),
+('trisano.dw_contact_events_view',                    'pregnant',                           'pregnant',                           'CE Preg',                   true),
+('trisano.dw_contact_events_view',                    'primary_language',                   'primary_language',                   'CP Prim Lng',               true),
+('trisano.dw_contact_events_view',                    'public_health_status',               'public_health_status',               'CE PH Stat',                true),
+('trisano.dw_contact_events_view',                    'review_completed_by_state_date',     'review_completed_by_state_date',     'CE Rvw Cmpl by St',         true),
+('trisano.dw_contact_events_view',                    'risk_factor_details',                'risk_factor_details',                'CE Risk Fctr Dtls',         true),
+('trisano.dw_contact_events_view',                    'sent_to_ibis',                       'sent_to_ibis',                       'CE Snt to IBIS',            true),
+('trisano.dw_contact_events_view',                    'state',                              'state',                              'CE St',                     true),
+('trisano.dw_contact_events_view',                    'street_name',                        'street_name',                        'CE Street Nm',              true),
+('trisano.dw_contact_events_view',                    'street_number',                      'street_number',                      'CE Street Nbr',             true),
+('trisano.dw_contact_events_view',                    'treatment_lead_in',                  'treatment_lead_in',                  'CD Trtmnt Lead-in',         true),
+('trisano.dw_contact_events_view',                    'unit_number',                        'unit_number',                        'CE Unit Nbr',               true),
+('trisano.dw_contact_hospitals_view',                 'admission_date',                     'admission_date',                     'CH Admsn Dt',               true),
+('trisano.dw_contact_hospitals_view',                 'discharge_date',                     'discharge_date',                     'CH Dschg Dt',               true),
+('trisano.dw_contact_hospitals_view',                 'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_hospitals_view',                 'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_contact_hospitals_view',                 'hospital_name',                      'hospital_name',                      'CH Hosp Nm',                true),
+('trisano.dw_contact_hospitals_view',                 'hospital_record_number',             'hospital_record_number',             'CH Hosp Rec Nbr',           true),
+('trisano.dw_contact_hospitals_view',                 'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_hospitals_view',                 'medical_record_number',              'medical_record_number',              'CH Med Rec Nbr',            true),
+('trisano.dw_contact_lab_results_view',               'collection_date',                    'collection_date',                    'CLR Clct Dt',               true),
+('trisano.dw_contact_lab_results_view',               'comment',                            'comment',                            'CLR Cmt',                   true),
+('trisano.dw_contact_lab_results_view',               'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_lab_results_view',               'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_contact_lab_results_view',               'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_contact_lab_results_view',               'hl7_message',                        'hl7_message',                        'CLR HL7 Msg',               true),
+('trisano.dw_contact_lab_results_view',               'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_lab_results_view',               'lab_test_date',                      'lab_test_date',                      'CLR Lab Tst Dt',            true),
+('trisano.dw_contact_lab_results_view',               'lab_type',                           'lab_type',                           'CLR Lab Typ',               true),
+('trisano.dw_contact_lab_results_view',               'loinc_code',                         'loinc_code',                         'CLR LOINC Cd',              true),
+('trisano.dw_contact_lab_results_view',               'name',                               'name',                               'CLR Nm',                    true),
+('trisano.dw_contact_lab_results_view',               'reference_range',                    'reference_range',                    'CLR Ref Rng',               true),
+('trisano.dw_contact_lab_results_view',               'result_value',                       'result_value',                       'CLR Rslt Val',              true),
+('trisano.dw_contact_lab_results_view',               'specimen_sent_to_state',             'specimen_sent_to_state',             'CLR Spec Snt to St',        true),
+('trisano.dw_contact_lab_results_view',               'specimen_source',                    'specimen_source',                    'CLR Spec Src',              true),
+('trisano.dw_contact_lab_results_view',               'staged_message_note',                'staged_message_note',                'CLR Stgd Msg Note',         true),
+('trisano.dw_contact_lab_results_view',               'staged_message_state',               'staged_message_state',               'CLR Stgd Msg St',           true),
+('trisano.dw_contact_lab_results_view',               'test_result',                        'test_result',                        'CLR Tst Rslt',              true),
+('trisano.dw_contact_lab_results_view',               'test_status',                        'test_status',                        'CLR Tst Stat',              true),
+('trisano.dw_contact_lab_results_view',               'test_type',                          'test_type',                          'CLR Tst Typ',               true),
+('trisano.dw_contact_lab_results_view',               'units',                              'units',                              'CLR Units',                 true),
+('trisano.dw_contact_patients_races_view',            'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_patients_races_view',            'person_id',                          'person_id',                          '',                          false),
+('trisano.dw_contact_patients_races_view',            'race',                               'race',                               'CP Race',                   true),
+('trisano.dw_contact_secondary_jurisdictions_view',   'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_secondary_jurisdictions_view',   'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_contact_secondary_jurisdictions_view',   'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_secondary_jurisdictions_view',   'jurisdiction_id',                    'jurisdiction_id',                    '',                          false),
+('trisano.dw_contact_secondary_jurisdictions_view',   'name',                               'name',                               'CSJ Nm',                    true),
+('trisano.dw_contact_telephones_view',                'area_code',                          'area_code',                          'CP Area Cd',                true),
+('trisano.dw_contact_telephones_view',                'country_code',                       'country_code',                       'CP Cntry Cd',               true),
+('trisano.dw_contact_telephones_view',                'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_contact_telephones_view',                'extension',                          'extension',                          'CP Ext',                    true),
+('trisano.dw_contact_telephones_view',                'phone_number',                       'phone_number',                       'CP Phn Nbr',                true),
+('trisano.dw_contact_telephones_view',                'phone_type',                         'phone_type',                         'CP Phn Type',               true),
+('trisano.dw_contact_treatments_events_view',         'date_of_treatment',                  'date_of_treatment',                  'CT Dt of Trtmnt',           true),
+('trisano.dw_contact_treatments_events_view',         'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_contact_treatments_events_view',         'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_contact_treatments_events_view',         'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_contact_treatments_events_view',         'id',                                 'id',                                 '',                          false),
+('trisano.dw_contact_treatments_events_view',         'stop_treatment_date',                'stop_treatment_date',                'CT Dt Trtmnt Stppd',        true),
+('trisano.dw_contact_treatments_events_view',         'treatment_given',                    'treatment_given',                    'CT Trtmnt Gvn',             true),
+('trisano.dw_contact_treatments_events_view',         'treatment_id',                       'treatment_id',                       '',                          false),
+('trisano.dw_contact_treatments_events_view',         'treatment_notes',                    'treatment_notes',                    'CT Trtmnt Notes',           true),
+('trisano.dw_encounter_email_addresses_view',         'email_address',                      'email_address',                      'EP Email Addr',             true),
+('trisano.dw_encounter_email_addresses_view',         'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_encounter_events_view',                  'birth_date',                         'birth_date',                         'EP Brth Dt',                true),
+('trisano.dw_encounter_events_view',                  'birth_gender',                       'birth_gender',                       'EP Brth Gndr',              true),
+('trisano.dw_encounter_events_view',                  'date_of_death',                      'date_of_death',                      'EP Dt of Death',            true),
+('trisano.dw_encounter_events_view',                  'description',                        'description',                        'EE Desc',                   true),
+('trisano.dw_encounter_events_view',                  'dw_patients_id',                     'dw_patients_id',                     '',                          false),
+('trisano.dw_encounter_events_view',                  'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_encounter_events_view',                  'encounter_date',                     'encounter_date',                     'EE Dt',                     true),
+('trisano.dw_encounter_events_view',                  'encounter_event_id',                 'encounter_event_id',                 '',                          false),
+('trisano.dw_encounter_events_view',                  'ethnicity',                          'ethnicity',                          'EP Ethncty',                true),
+('trisano.dw_encounter_events_view',                  'first_name',                         'first_name',                         'EP Frst Nm',                true),
+('trisano.dw_encounter_events_view',                  'id',                                 'id',                                 '',                          false),
+('trisano.dw_encounter_events_view',                  'investigator_id',                    'investigator_id',                    'EE Invstgtr',               true),
+('trisano.dw_encounter_events_view',                  'last_name',                          'last_name',                          'EP Lst Nm',                 true),
+('trisano.dw_encounter_events_view',                  'location',                           'location',                           'EE Loc',                    true),
+('trisano.dw_encounter_events_view',                  'middle_name',                        'middle_name',                        'EP Mid Nm',                 true),
+('trisano.dw_encounter_events_view',                  'patient_entity_id',                  'patient_entity_id',                  '',                          false),
+('trisano.dw_encounter_events_view',                  'primary_language',                   'primary_language',                   'EP Prim Lng',               true),
+('trisano.dw_encounter_patients_races_view',          'id',                                 'id',                                 '',                          false),
+('trisano.dw_encounter_patients_races_view',          'person_id',                          'person_id',                          '',                          false),
+('trisano.dw_encounter_patients_races_view',          'race',                               'race',                               'EP Race',                   true),
+('trisano.dw_encounters_lab_results_view',            'collection_date',                    'collection_date',                    'ELR Clct Dt',               true),
+('trisano.dw_encounters_lab_results_view',            'comment',                            'comment',                            'ELR Cmt',                   true),
+('trisano.dw_encounters_lab_results_view',            'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_encounters_lab_results_view',            'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_encounters_lab_results_view',            'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_encounters_lab_results_view',            'hl7_message',                        'hl7_message',                        'ELR HL7 Msg',               true),
+('trisano.dw_encounters_lab_results_view',            'id',                                 'id',                                 'EE Lab Rslts ',             true),
+('trisano.dw_encounters_lab_results_view',            'lab_test_date',                      'lab_test_date',                      'ELR Lab Tst Dt',            true),
+('trisano.dw_encounters_lab_results_view',            'lab_type',                           'lab_type',                           'ELR Lab Typ',               true),
+('trisano.dw_encounters_lab_results_view',            'loinc_code',                         'loinc_code',                         'ELR LOINC Cd',              true),
+('trisano.dw_encounters_lab_results_view',            'name',                               'name',                               'ELR Lab Nm',                true),
+('trisano.dw_encounters_lab_results_view',            'reference_range',                    'reference_range',                    'ELR Ref Rng',               true),
+('trisano.dw_encounters_lab_results_view',            'result_value',                       'result_value',                       'ELR Rslt Val',              true),
+('trisano.dw_encounters_lab_results_view',            'specimen_sent_to_state',             'specimen_sent_to_state',             'ELR Spec Snt to St',        true),
+('trisano.dw_encounters_lab_results_view',            'specimen_source',                    'specimen_source',                    'ELR Spec Src',              true),
+('trisano.dw_encounters_lab_results_view',            'staged_message_note',                'staged_message_note',                'ELR Stgd Msg Note',         true),
+('trisano.dw_encounters_lab_results_view',            'staged_message_state',               'staged_message_state',               'ELR Stgd Msg St',           true),
+('trisano.dw_encounters_lab_results_view',            'test_result',                        'test_result',                        'ELR Tst Rslt',              true),
+('trisano.dw_encounters_lab_results_view',            'test_status',                        'test_status',                        'ELR Tst Stat',              true),
+('trisano.dw_encounters_lab_results_view',            'test_type',                          'test_type',                          'ELR Tst Typ',               true),
+('trisano.dw_encounters_lab_results_view',            'units',                              'units',                              'ELR Units',                 true),
+('trisano.dw_encounters_treatments_events_view',      'date_of_treatment',                  'date_of_treatment',                  'ET Dt of Trtmnt',           true),
+('trisano.dw_encounters_treatments_events_view',      'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_encounters_treatments_events_view',      'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_encounters_treatments_events_view',      'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_encounters_treatments_events_view',      'id',                                 'id',                                 '',                          false),
+('trisano.dw_encounters_treatments_events_view',      'stop_treatment_date',                'stop_treatment_date',                'ET Dt Trtmnt Stppd',        true),
+('trisano.dw_encounters_treatments_events_view',      'treatment_given',                    'treatment_given',                    'ET Trtmnt Gvn',             true),
+('trisano.dw_encounters_treatments_events_view',      'treatment_id',                       'treatment_id',                       '',                          false),
+('trisano.dw_encounters_treatments_events_view',      'treatment_notes',                    'treatment_notes',                    'ET Trtmnt Notes',           true),
+('trisano.dw_encounter_telephones_view',              'area_code',                          'area_code',                          'EP Area Cd',                true),
+('trisano.dw_encounter_telephones_view',              'country_code',                       'country_code',                       'EP Cntry Cd',               true),
+('trisano.dw_encounter_telephones_view',              'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_encounter_telephones_view',              'extension',                          'extension',                          'EP Ext',                    true),
+('trisano.dw_encounter_telephones_view',              'phone_number',                       'phone_number',                       'EP Phn Nbr',                true),
+('trisano.dw_encounter_telephones_view',              'phone_type',                         'phone_type',                         'EP Phn Type',               true),
+('trisano.dw_morbidity_clinicians_view',              'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_clinicians_view',              'first_name',                         'first_name',                         'MC Frst Nm',                true),
+('trisano.dw_morbidity_clinicians_view',              'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_clinicians_view',              'last_name',                          'last_name',                          'MC Lst Nm',                 true),
+('trisano.dw_morbidity_clinicians_view',              'middle_name',                        'middle_name',                        'MC Mid Nm',                 true),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'name',                               'name',                               'MDF Nm',                    true),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'place_id',                           'place_id',                           '',                          false),
+('trisano.dw_morbidity_diagnostic_facilities_view',   'place_type',                         'place_type',                         'MDF Typ',                   true),
+('trisano.dw_morbidity_email_addresses_view',         'email_address',                      'email_address',                      'MP Email Addr',             true),
+('trisano.dw_morbidity_email_addresses_view',         'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_morbidity_events_view',                  'active',                             'active',                             'MD Act',                    true),
+('trisano.dw_morbidity_events_view',                  'actual_age_at_onset',                'actual_age_at_onset',                'ME Actl Age at Onst',       true),
+('trisano.dw_morbidity_events_view',                  'actual_age_type',                    'actual_age_type',                    'ME Actl Age Typ',           true),
+('trisano.dw_morbidity_events_view',                  'acuity',                             'acuity',                             'ME Acuity',                 true),
+('trisano.dw_morbidity_events_view',                  'additional_risk_factors',            'additional_risk_factors',            'ME Addtl Risk Fctrs',       true),
+('trisano.dw_morbidity_events_view',                  'age_in_years',                       'age_in_years',                       'ME Age in Yrs',             true),
+('trisano.dw_morbidity_events_view',                  'always_one',                         'always_one',                         '',                          false),
+('trisano.dw_morbidity_events_view',                  'birth_date',                         'birth_date',                         'MP Brth Dt',                true),
+('trisano.dw_morbidity_events_view',                  'birth_gender',                       'birth_gender',                       'MP Brth Gndr',              true),
+('trisano.dw_morbidity_events_view',                  'cdc_code',                           'cdc_code',                           'MD CDC Cd',                 true),
+('trisano.dw_morbidity_events_view',                  'city',                               'city',                               'ME City',                   true),
+('trisano.dw_morbidity_events_view',                  'contact_lead_in',                    'contact_lead_in',                    'MD Cntct Lead-in',          true),
+('trisano.dw_morbidity_events_view',                  'contact_type_if_once_a_contact',     'contact_type_if_once_a_contact',     'ME Cntct Typ',              true),
+('trisano.dw_morbidity_events_view',                  'county',                             'county',                             'ME Cnty',                   true),
+('trisano.dw_morbidity_events_view',                  'date_created',                       'date_created',                       '',                          false),
+('trisano.dw_morbidity_events_view',                  'date_deleted',                       'date_deleted',                       '',                          false),
+('trisano.dw_morbidity_events_view',                  'date_disease_diagnosed',             'date_disease_diagnosed',             'ME Dt Dis Diag',            true),
+('trisano.dw_morbidity_events_view',                  'date_disease_onset',                 'date_disease_onset',                 'ME Dt Dis Onst',            true),
+('trisano.dw_morbidity_events_view',                  'date_entered_into_system',           'date_entered_into_system',           'ME Dt Entrd Into Sys',      true),
+('trisano.dw_morbidity_events_view',                  'date_investigation_completed',       'date_investigation_completed',       'ME Dt Inv Cmpl',            true),
+('trisano.dw_morbidity_events_view',                  'date_investigation_started',         'date_investigation_started',         'ME Dt Inv Strtd',           true),
+('trisano.dw_morbidity_events_view',                  'date_of_death',                      'date_of_death',                      'MP Dt of Death',            true),
+('trisano.dw_morbidity_events_view',                  'date_reported_to_public_health',     'date_reported_to_public_health',     'ME Dt Rptd to PH',          true),
+('trisano.dw_morbidity_events_view',                  'date_updated',                       'date_updated',                       'ME Dt Updtd',               true),
+('trisano.dw_morbidity_events_view',                  'day_care_association',               'day_care_association',               'ME Day Care Assoc',         true),
+('trisano.dw_morbidity_events_view',                  'disease_event_died',                 'disease_event_died',                 'ME Died',                   true),
+('trisano.dw_morbidity_events_view',                  'disease_event_hospitalized',         'disease_event_hospitalized',         'ME Hospitalized',           true),
+('trisano.dw_morbidity_events_view',                  'disease_id',                         'disease_id',                         '',                          false),
+('trisano.dw_morbidity_events_view',                  'disease_name',                       'disease_name',                       'MD Dis Nm',                 true),
+('trisano.dw_morbidity_events_view',                  'disposition_if_once_a_contact',      'disposition_if_once_a_contact',      'ME Dsp',                    true),
+('trisano.dw_morbidity_events_view',                  'dw_patients_id',                     'dw_patients_id',                     '',                          false),
+('trisano.dw_morbidity_events_view',                  'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_morbidity_events_view',                  'estimated_age_at_onset',             'estimated_age_at_onset',             'ME Est Age at Onst',        true),
+('trisano.dw_morbidity_events_view',                  'estimated_age_type',                 'estimated_age_type',                 'ME Est Age Typ',            true),
+('trisano.dw_morbidity_events_view',                  'ethnicity',                          'ethnicity',                          'MP Ethncty',                true),
+('trisano.dw_morbidity_events_view',                  'event_name',                         'event_name',                         'ME Evnt Nm',                true),
+('trisano.dw_morbidity_events_view',                  'event_queue_id',                     'event_queue_id',                     '',                          false),
+('trisano.dw_morbidity_events_view',                  'first_name',                         'first_name',                         'MP Frst Nm',                true),
+('trisano.dw_morbidity_events_view',                  'first_name_soundex',                 'first_name_soundex',                 '',                          false),
+('trisano.dw_morbidity_events_view',                  'food_handler',                       'food_handler',                       'ME Food Hdlr',              true),
+('trisano.dw_morbidity_events_view',                  'group_living',                       'group_living',                       'ME Grp Lvng',               true),
+('trisano.dw_morbidity_events_view',                  'healthcare_worker',                  'healthcare_worker',                  'ME Hlthcare Wrkr',          true),
+('trisano.dw_morbidity_events_view',                  'ibis_updated_at',                    'ibis_updated_at',                    'ME Dt IBIS Updtd',          true),
+('trisano.dw_morbidity_events_view',                  'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_events_view',                  'imported_from_code',                 'imported_from_code',                 '',                          false),
+('trisano.dw_morbidity_events_view',                  'investigating_jurisdiction_id',      'investigating_jurisdiction_id',      '',                          false),
+('trisano.dw_morbidity_events_view',                  'investigating_jurisdiction',         'investigating_jurisdiction',         'ME Inv Jur',                true),
+('trisano.dw_morbidity_events_view',                  'investigator',                       'investigator',                       'ME Invstgtr',               true),
+('trisano.dw_morbidity_events_view',                  'jurisdiction_of_residence_id',       'jurisdiction_of_residence_id',       '',                          false),
+('trisano.dw_morbidity_events_view',                  'jurisdiction_of_residence',          'jurisdiction_of_residence',          'ME Jur of Res',             true),
+('trisano.dw_morbidity_events_view',                  'last_name',                          'last_name',                          'MP Lst Nm',                 true),
+('trisano.dw_morbidity_events_view',                  'last_name_soundex',                  'last_name_soundex',                  '',                          false),
+('trisano.dw_morbidity_events_view',                  'latitude',                           'latitude',                           'ME Lat',                    true),
+('trisano.dw_morbidity_events_view',                  'lhd_case_status_code',               'lhd_case_status_code',               'ME LHD Case Stat Cd',       true),
+('trisano.dw_morbidity_events_view',                  'longitude',                          'longitude',                          'ME Lon',                    true),
+('trisano.dw_morbidity_events_view',                  'middle_name',                        'middle_name',                        'MP Mid Nm',                 true),
+('trisano.dw_morbidity_events_view',                  'mmwr_week',                          'mmwr_week',                          'ME MMWR Wk',                true),
+('trisano.dw_morbidity_events_view',                  'mmwr_year',                          'mmwr_year',                          'ME MMWR Yr',                true),
+('trisano.dw_morbidity_events_view',                  'occupation',                         'occupation',                         'ME Occ',                    true),
+('trisano.dw_morbidity_events_view',                  'other_data_1',                       'other_data_1',                       'ME Othr Data 1',            true),
+('trisano.dw_morbidity_events_view',                  'other_data_2',                       'other_data_2',                       'ME Othr Data 2',            true),
+('trisano.dw_morbidity_events_view',                  'outbreak_associated_code',           'outbreak_associated_code',           'ME Outbrk Assoc Cd',        true),
+('trisano.dw_morbidity_events_view',                  'outbreak_event_id',                  'outbreak_event_id',                  '',                          false),
+('trisano.dw_morbidity_events_view',                  'outbreak_name',                      'outbreak_name',                      'ME Outbrk Nm',              true),
+('trisano.dw_morbidity_events_view',                  'parent_guardian',                    'parent_guardian',                    'ME Prnt/Guard',             true),
+('trisano.dw_morbidity_events_view',                  'parent_id',                          'parent_id',                          '',                          false),
+('trisano.dw_morbidity_events_view',                  'patient_entity_id',                  'patient_entity_id',                  '',                          false),
+('trisano.dw_morbidity_events_view',                  'place_lead_in',                      'place_lead_in',                      'MD Plc Lead-in',            true),
+('trisano.dw_morbidity_events_view',                  'postal_code',                        'postal_code',                        'ME Pstl Cd',                true),
+('trisano.dw_morbidity_events_view',                  'pregnancy_due_date',                 'pregnancy_due_date',                 'ME Pregnancy Due Dt',       true),
+('trisano.dw_morbidity_events_view',                  'pregnant',                           'pregnant',                           'ME Preg',                   true),
+('trisano.dw_morbidity_events_view',                  'primary_language',                   'primary_language',                   'MP Prim Lng',               true),
+('trisano.dw_morbidity_events_view',                  'public_health_status',               'public_health_status',               'ME PH Stat',                true),
+('trisano.dw_morbidity_events_view',                  'record_number',                      'record_number',                      'ME Rec Nbr',                true),
+('trisano.dw_morbidity_events_view',                  'rep_ag_name',                        'rep_ag_name',                        'MRA Nm',                    true),
+('trisano.dw_morbidity_events_view',                  'rep_ag_place_type',                  'rep_ag_place_type',                  'MRA Typ',                   true),
+('trisano.dw_morbidity_events_view',                  'rep_first_name',                     'rep_first_name',                     'MR Frst Nm',                true),
+('trisano.dw_morbidity_events_view',                  'rep_last_name',                      'rep_last_name',                      'MR Lst Nm',                 true),
+('trisano.dw_morbidity_events_view',                  'rep_middle_name',                    'rep_middle_name',                    'MR Mid Nm',                 true),
+('trisano.dw_morbidity_events_view',                  'results_reported_to_clinician_date', 'results_reported_to_clinician_date', 'ME Rslts Rptd to Clin',     true),
+('trisano.dw_morbidity_events_view',                  'review_completed_by_state_date',     'review_completed_by_state_date',     'ME Dt Rvw Cmpl by St',      true),
+('trisano.dw_morbidity_events_view',                  'risk_factor_details',                'risk_factor_details',                'ME Risk Fctr Dtls',         true),
+('trisano.dw_morbidity_events_view',                  'sent_to_cdc',                        'sent_to_cdc',                        'ME Snt to CDC',             true),
+('trisano.dw_morbidity_events_view',                  'sent_to_ibis',                       'sent_to_ibis',                       'ME Snt to IBIS',            true),
+('trisano.dw_morbidity_events_view',                  'state_case_status_code',             'state_case_status_code',             'ME St Case Stat Cd',        true),
+('trisano.dw_morbidity_events_view',                  'state',                              'state',                              'ME St',                     true),
+('trisano.dw_morbidity_events_view',                  'street_name',                        'street_name',                        'ME Street Nm',              true),
+('trisano.dw_morbidity_events_view',                  'street_number',                      'street_number',                      'ME Street Nbr',             true),
+('trisano.dw_morbidity_events_view',                  'treatment_lead_in',                  'treatment_lead_in',                  'MD Trtmnt Lead-In',         true),
+('trisano.dw_morbidity_events_view',                  'unit_number',                        'unit_number',                        'ME Unit Nbr',               true),
+('trisano.dw_morbidity_hospitals_view',               'admission_date',                     'admission_date',                     'MH Admsn Dt',               true),
+('trisano.dw_morbidity_hospitals_view',               'discharge_date',                     'discharge_date',                     'MH Dschg Dt',               true),
+('trisano.dw_morbidity_hospitals_view',               'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_morbidity_hospitals_view',               'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_hospitals_view',               'hospital_name',                      'hospital_name',                      'MH Hosp Nm',                true),
+('trisano.dw_morbidity_hospitals_view',               'hospital_record_number',             'hospital_record_number',             'MH Hosp Rec Nbr',           true),
+('trisano.dw_morbidity_hospitals_view',               'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_hospitals_view',               'medical_record_number',              'medical_record_number',              'MH Med Rec Nbr',            true),
+('trisano.dw_morbidity_lab_results_view',             'collection_date',                    'collection_date',                    'MLR Clct Dt',               true),
+('trisano.dw_morbidity_lab_results_view',             'comment',                            'comment',                            'MLR Cmt',                   true),
+('trisano.dw_morbidity_lab_results_view',             'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_morbidity_lab_results_view',             'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_morbidity_lab_results_view',             'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_lab_results_view',             'hl7_message',                        'hl7_message',                        'MLR HL7 Msg',               true),
+('trisano.dw_morbidity_lab_results_view',             'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_lab_results_view',             'lab_test_date',                      'lab_test_date',                      'MLR Lab Tst Dt',            true),
+('trisano.dw_morbidity_lab_results_view',             'lab_type',                           'lab_type',                           'MLR Lab Typ',               true),
+('trisano.dw_morbidity_lab_results_view',             'loinc_code',                         'loinc_code',                         'MLR LOINC code',            true),
+('trisano.dw_morbidity_lab_results_view',             'name',                               'name',                               'MLR Nm',                    true),
+('trisano.dw_morbidity_lab_results_view',             'reference_range',                    'reference_range',                    'MLR Ref Rng',               true),
+('trisano.dw_morbidity_lab_results_view',             'result_value',                       'result_value',                       'MLR Rslt Val',              true),
+('trisano.dw_morbidity_lab_results_view',             'specimen_sent_to_state',             'specimen_sent_to_state',             'MLR Spec Snt to St',        true),
+('trisano.dw_morbidity_lab_results_view',             'specimen_source',                    'specimen_source',                    'MLR Spec Src',              true),
+('trisano.dw_morbidity_lab_results_view',             'staged_message_note',                'staged_message_note',                'MLR Stgd Msg Note',         true),
+('trisano.dw_morbidity_lab_results_view',             'staged_message_state',               'staged_message_state',               'MLR Stgd Msg St',           true),
+('trisano.dw_morbidity_lab_results_view',             'test_result',                        'test_result',                        'MLR Tst Rslt',              true),
+('trisano.dw_morbidity_lab_results_view',             'test_status',                        'test_status',                        'MLR Tst Stat',              true),
+('trisano.dw_morbidity_lab_results_view',             'test_type',                          'test_type',                          'MLR Tst Typ',               true),
+('trisano.dw_morbidity_lab_results_view',             'units',                              'units',                              'MLR Units',                 true),
+('trisano.dw_morbidity_patients_races_view',          'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_patients_races_view',          'person_id',                          'person_id',                          '',                          false),
+('trisano.dw_morbidity_patients_races_view',          'race',                               'race',                               'MP Race',                   true),
+('trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_secondary_jurisdictions_view', 'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_secondary_jurisdictions_view', 'jurisdiction_id',                    'jurisdiction_id',                    '',                          false),
+('trisano.dw_morbidity_secondary_jurisdictions_view', 'name',                               'name',                               'MSJ Nm',                    true),
+('trisano.dw_morbidity_telephones_view',              'area_code',                          'area_code',                          'MP Area Cd',                true),
+('trisano.dw_morbidity_telephones_view',              'country_code',                       'country_code',                       'MP Cntry Cd',               true),
+('trisano.dw_morbidity_telephones_view',              'entity_id',                          'entity_id',                          '',                          false),
+('trisano.dw_morbidity_telephones_view',              'extension',                          'extension',                          'MP Ext',                    true),
+('trisano.dw_morbidity_telephones_view',              'phone_number',                       'phone_number',                       'MP Phn Nbr',                true),
+('trisano.dw_morbidity_telephones_view',              'phone_type',                         'phone_type',                         'MP Phn Type',               true),
+('trisano.dw_morbidity_treatments_events_view',       'date_of_treatment',                  'date_of_treatment',                  'MT Dt of Trtmnt',           true),
+('trisano.dw_morbidity_treatments_events_view',       'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
+('trisano.dw_morbidity_treatments_events_view',       'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false),
+('trisano.dw_morbidity_treatments_events_view',       'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_morbidity_treatments_events_view',       'id',                                 'id',                                 '',                          false),
+('trisano.dw_morbidity_treatments_events_view',       'stop_treatment_date',                'stop_treatment_date',                'MT Dt Trtmnt Stppd',        true),
+('trisano.dw_morbidity_treatments_events_view',       'treatment_given',                    'treatment_given',                    'MT Trtmnt Gvn',             true),
+('trisano.dw_morbidity_treatments_events_view',       'treatment_id',                       'treatment_id',                       '',                          false),
+('trisano.dw_morbidity_treatments_events_view',       'treatment_notes',                    'treatment_notes',                    'MT Trtmnt Notes',           true),
+('trisano.dw_place_events_view',                      'city',                               'city',                               'PX City',                   true),
+('trisano.dw_place_events_view',                      'county',                             'county',                             'PX Cnty',                   true),
+('trisano.dw_place_events_view',                      'date_of_exposure',                   'date_of_exposure',                   'PX Dt of Expsr',            true),
+('trisano.dw_place_events_view',                      'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false),
+('trisano.dw_place_events_view',                      'id',                                 'id',                                 '',                          false),
+('trisano.dw_place_events_view',                      'latitude',                           'latitude',                           'PX Lat',                    true),
+('trisano.dw_place_events_view',                      'longitude',                          'longitude',                          'PX Lon',                    true),
+('trisano.dw_place_events_view',                      'name',                               'name',                               'PX Plc Nm',                 true),
+('trisano.dw_place_events_view',                      'place_type',                         'place_type',                         'PX Plc Typ',                true),
+('trisano.dw_place_events_view',                      'postal_code',                        'postal_code',                        'PX Pstl Cd',                true),
+('trisano.dw_place_events_view',                      'state',                              'state',                              'PX St',                     true),
+('trisano.dw_place_events_view',                      'street_name',                        'street_name',                        'PX Street Nm',              true),
+('trisano.dw_place_events_view',                      'street_number',                      'street_number',                      'PX Street Nbr',             true),
+('trisano.dw_place_events_view',                      'unit_number',                        'unit_number',                        'PX Unit Nbr',               true);
 
 DROP TABLE IF EXISTS trisano.core_relationships;
 
@@ -398,34 +436,38 @@ CREATE TABLE trisano.core_relationships (
     from_table TEXT NOT NULL,
     to_column NAME NOT NULL,
     to_table TEXT NOT NULL,
-    relation_type TEXT DEFAULT '1:N'
+    relation_type TEXT DEFAULT '0:N',
+    join_order TEXT NOT NULL DEFAULT 'zzzzzzzzz'
 );
 
-INSERT INTO trisano.core_relationships (from_table, from_column, to_table, to_column, relation_type) VALUES 
-('dw_encounters_view'               , 'id'                , 'dw_encounters_lab_results_view'            , 'dw_encounter_events_id' , '1:N'),
-('dw_encounters_view'               , 'id'                , 'dw_encounters_treatments_events_view'      , 'dw_encounter_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'dw_patients_id'    , 'dw_morbidity_patients_view'                , 'id'                     , '1:1'),
-('dw_morbidity_patients_races_view' , 'person_id'         , 'dw_morbidity_patients_view'                , 'id'                     , 'N:1'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_clinicians_view'              , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_diagnostic_facilities_view'   , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_hospitals_view'               , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_lab_results_view'             , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_reporters_view'               , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_reporting_agencies_view'      , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_contact_events_view'                    , 'parent_id'              , '1:N'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_diagnostic_facilities_view'     , 'dw_contact_events_id'   , '1:N'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_clinicians_view'                , 'dw_contact_events_id'   , '1:N'),
-('dw_contact_events_view'           , 'dw_patients_id'    , 'dw_contact_patients_view'                  , 'id'                     , '1:1'),
-('dw_contact_patients_races_view'   , 'person_id'         , 'dw_contact_patients_view'                  , 'id'                     , 'N:1'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_hospitals_view'                 , 'dw_contact_events_id'   , '1:N'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_lab_results_view'               , 'dw_contact_events_id'   , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_treatments_events_view'       , 'dw_morbidity_events_id' , '1:N'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_treatments_events_view'         , 'dw_contact_events_id'   , '1:N'),
-('dw_morbidity_events_view'         , 'disease_id'        , 'dw_morbidity_diseases_view'                , 'id'                     , '1:1'),
-('dw_contact_events_view'           , 'disease_id'        , 'dw_contact_diseases_view'                  , 'id'                     , '1:1'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_encounters_view'                        , 'dw_morbidity_events_id' , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_place_events_view'                      , 'dw_morbidity_events_id' , '1:N'),
-('dw_contact_events_view'           , 'id'                , 'dw_contact_secondary_jurisdictions_view'   , 'dw_contact_events_id'   , '1:N'),
-('dw_morbidity_events_view'         , 'id'                , 'dw_morbidity_secondary_jurisdictions_view' , 'dw_morbidity_events_id' , '1:N');
+INSERT INTO trisano.core_relationships (from_table, from_column, to_table, to_column, relation_type, join_order) VALUES
+('dw_morbidity_events_view'         , 'disease_id'            , 'avr_groups_diseases_view'                  , 'disease_id'             , 'N:0', 'Aa'),
+('dw_morbidity_events_view'         , 'dw_patients_id'        , 'dw_morbidity_patients_races_view'          , 'person_id'              , '0:N', 'Ab'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_clinicians_view'              , 'dw_morbidity_events_id' , '0:N', 'Ac'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_diagnostic_facilities_view'   , 'dw_morbidity_events_id' , '0:N', 'Ad'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_hospitals_view'               , 'dw_morbidity_events_id' , '0:N', 'Ae'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_lab_results_view'             , 'dw_morbidity_events_id' , '0:N', 'Af'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_secondary_jurisdictions_view' , 'dw_morbidity_events_id' , '0:N', 'Ag'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_morbidity_treatments_events_view'       , 'dw_morbidity_events_id' , '0:N', 'Ah'),
+('dw_morbidity_events_view'         , 'patient_entity_id'     , 'dw_morbidity_email_addresses_view'         , 'entity_id'              , '0:N', 'Ai'),
+('dw_morbidity_events_view'         , 'patient_entity_id'     , 'dw_morbidity_telephones_view'              , 'entity_id'              , '0:N', 'Aj'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_contact_events_view'                    , 'parent_id'              , '0:N', 'Ak'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_encounter_events_view'                  , 'dw_morbidity_events_id' , '0:N', 'Al'),
+('dw_morbidity_events_view'         , 'id'                    , 'dw_place_events_view'                      , 'dw_morbidity_events_id' , '0:N', 'Am'),
+('dw_contact_events_view'           , 'dw_patients_id'        , 'dw_contact_patients_races_view'            , 'person_id'              , '0:N', 'Ba'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_clinicians_view'                , 'dw_contact_events_id'   , '0:N', 'Bb'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_diagnostic_facilities_view'     , 'dw_contact_events_id'   , '0:N', 'Bc'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_hospitals_view'                 , 'dw_contact_events_id'   , '0:N', 'Bd'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_lab_results_view'               , 'dw_contact_events_id'   , '0:N', 'Be'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_secondary_jurisdictions_view'   , 'dw_contact_events_id'   , '0:N', 'Bf'),
+('dw_contact_events_view'           , 'id'                    , 'dw_contact_treatments_events_view'         , 'dw_contact_events_id'   , '0:N', 'Bg'),
+('dw_contact_events_view'           , 'patient_entity_id'     , 'dw_contact_email_addresses_view'           , 'entity_id'              , '0:N', 'Bh'),
+('dw_contact_events_view'           , 'patient_entity_id'     , 'dw_contact_telephones_view'                , 'entity_id'              , '0:N', 'Bi'),
+('dw_encounter_events_view'         , 'dw_patients_id'        , 'dw_encounter_patients_races_view'          , 'person_id'              , '0:N', 'Ca'),
+('dw_encounter_events_view'         , 'id'                    , 'dw_encounters_lab_results_view'            , 'dw_encounter_events_id' , '0:N', 'Cb'),
+('dw_encounter_events_view'         , 'id'                    , 'dw_encounters_treatments_events_view'      , 'dw_encounter_events_id' , '0:N', 'Cc'),
+('dw_encounter_events_view'         , 'patient_entity_id'     , 'dw_encounter_email_addresses_view'         , 'entity_id'              , '0:N', 'Cd'),
+('dw_encounter_events_view'         , 'patient_entity_id'     , 'dw_encounter_telephones_view'              , 'entity_id'              , '0:N', 'Ce'),
+('avr_groups_view'                  , 'id'                    , 'avr_groups_diseases_view'                  , 'avr_group_id'           , '0:N', default);
 
 COMMIT;

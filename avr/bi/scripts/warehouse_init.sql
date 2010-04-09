@@ -1,4 +1,4 @@
--- Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-- Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 --
 -- This file is part of TriSano.
 --
@@ -27,6 +27,282 @@ COMMIT;
 
 BEGIN;
 CREATE LANGUAGE plpgsql;
+COMMIT;
+
+BEGIN;
+-- Running this bit on an already initialized database will result in errors.
+-- Those errors can safely be ignored.
+SET search_path = trisano;
+
+CREATE TYPE hstore;
+
+CREATE OR REPLACE FUNCTION hstore_in(cstring)
+RETURNS hstore
+AS '$libdir/hstore'
+LANGUAGE C STRICT;
+
+CREATE OR REPLACE FUNCTION hstore_out(hstore)
+RETURNS cstring
+AS '$libdir/hstore'
+LANGUAGE C STRICT;
+
+CREATE TYPE hstore (
+        INTERNALLENGTH = -1,
+        INPUT = hstore_in,
+        OUTPUT = hstore_out,
+        STORAGE = extended
+);
+
+CREATE OR REPLACE FUNCTION fetchval(hstore,text)
+RETURNS text
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OPERATOR -> (
+	LEFTARG = hstore,
+	RIGHTARG = text,
+	PROCEDURE = fetchval
+);
+
+CREATE OR REPLACE FUNCTION isexists(hstore,text)
+RETURNS bool
+AS '$libdir/hstore','exists'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION exist(hstore,text)
+RETURNS bool
+AS '$libdir/hstore','exists'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OPERATOR ? (
+	LEFTARG = hstore,
+	RIGHTARG = text,
+	PROCEDURE = exist,
+	RESTRICT = contsel,
+	JOIN = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION isdefined(hstore,text)
+RETURNS bool
+AS '$libdir/hstore','defined'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION defined(hstore,text)
+RETURNS bool
+AS '$libdir/hstore','defined'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION delete(hstore,text)
+RETURNS hstore
+AS '$libdir/hstore','delete'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION hs_concat(hstore,hstore)
+RETURNS hstore
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OPERATOR || (
+	LEFTARG = hstore,
+	RIGHTARG = hstore,
+	PROCEDURE = hs_concat
+);
+
+CREATE OR REPLACE FUNCTION hs_contains(hstore,hstore)
+RETURNS bool
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION hs_contained(hstore,hstore)
+RETURNS bool
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OPERATOR @> (
+	LEFTARG = hstore,
+	RIGHTARG = hstore,
+	PROCEDURE = hs_contains,
+	COMMUTATOR = '<@',
+	RESTRICT = contsel,
+	JOIN = contjoinsel
+);
+
+CREATE OPERATOR <@ (
+	LEFTARG = hstore,
+	RIGHTARG = hstore,
+	PROCEDURE = hs_contained,
+	COMMUTATOR = '@>',
+	RESTRICT = contsel,
+	JOIN = contjoinsel
+);
+
+-- obsolete:
+CREATE OPERATOR @ (
+	LEFTARG = hstore,
+	RIGHTARG = hstore,
+	PROCEDURE = hs_contains,
+	COMMUTATOR = '~',
+	RESTRICT = contsel,
+	JOIN = contjoinsel
+);
+
+CREATE OPERATOR ~ (
+	LEFTARG = hstore,
+	RIGHTARG = hstore,
+	PROCEDURE = hs_contained,
+	COMMUTATOR = '@',
+	RESTRICT = contsel,
+	JOIN = contjoinsel
+);
+
+CREATE OR REPLACE FUNCTION tconvert(text,text)
+RETURNS hstore
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OPERATOR => (
+	LEFTARG = text,
+	RIGHTARG = text,
+	PROCEDURE = tconvert
+);
+
+CREATE OR REPLACE FUNCTION akeys(hstore)
+RETURNS _text
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION avals(hstore)
+RETURNS _text
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION skeys(hstore)
+RETURNS setof text
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION svals(hstore)
+RETURNS setof text
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION each(IN hs hstore,
+    OUT key text,
+    OUT value text)
+RETURNS SETOF record
+AS '$libdir/hstore'
+LANGUAGE C STRICT IMMUTABLE;
+
+
+
+-- define the GiST support methods
+
+CREATE TYPE ghstore;
+
+CREATE OR REPLACE FUNCTION ghstore_in(cstring)
+RETURNS ghstore
+AS '$libdir/hstore'
+LANGUAGE C STRICT;
+
+CREATE OR REPLACE FUNCTION ghstore_out(ghstore)
+RETURNS cstring
+AS '$libdir/hstore'
+LANGUAGE C STRICT;
+
+CREATE TYPE ghstore (
+        INTERNALLENGTH = -1,
+        INPUT = ghstore_in,
+        OUTPUT = ghstore_out
+);
+
+CREATE OR REPLACE FUNCTION ghstore_compress(internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION ghstore_decompress(internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION ghstore_penalty(internal,internal,internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE STRICT;
+
+CREATE OR REPLACE FUNCTION ghstore_picksplit(internal, internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION ghstore_union(internal, internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION ghstore_same(internal, internal, internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION ghstore_consistent(internal,internal,int4)
+RETURNS bool
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+-- register the opclass for indexing (not as default)
+CREATE OPERATOR CLASS gist_hstore_ops
+DEFAULT FOR TYPE hstore USING gist
+AS
+       	OPERATOR        7       @>       RECHECK,
+       	OPERATOR        9       ?(hstore,text)       RECHECK,
+        --OPERATOR        8       <@       RECHECK,
+        OPERATOR        13      @       RECHECK,
+        --OPERATOR        14      ~       RECHECK,
+        FUNCTION        1       ghstore_consistent (internal, internal, int4),
+        FUNCTION        2       ghstore_union (internal, internal),
+        FUNCTION        3       ghstore_compress (internal),
+        FUNCTION        4       ghstore_decompress (internal),
+        FUNCTION        5       ghstore_penalty (internal, internal, internal),
+        FUNCTION        6       ghstore_picksplit (internal, internal),
+        FUNCTION        7       ghstore_same (internal, internal, internal),
+        STORAGE         ghstore;
+
+-- define the GIN support methods
+
+CREATE OR REPLACE FUNCTION gin_extract_hstore(internal, internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION gin_extract_hstore_query(internal, internal, int2)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION gin_consistent_hstore(internal, int2, internal)
+RETURNS internal
+AS '$libdir/hstore'
+LANGUAGE C IMMUTABLE;
+
+CREATE OPERATOR CLASS gin_hstore_ops
+DEFAULT FOR TYPE hstore USING gin
+AS
+	OPERATOR        7       @> RECHECK,
+	OPERATOR        9       ?(hstore,text),
+	FUNCTION        1       bttextcmp(text,text),
+	FUNCTION        2       gin_extract_hstore(internal, internal),
+	FUNCTION        3       gin_extract_hstore_query(internal, internal, int2),
+	FUNCTION        4       gin_consistent_hstore(internal, int2, internal),
+STORAGE         text;
+COMMIT;
+
+BEGIN;
+CREATE OR REPLACE FUNCTION trisano.hstoreagg(trisano.hstore, text, text) RETURNS trisano.hstore AS $$
+    SELECT trisano.hs_concat($1, trisano.tconvert($2, $3));
+$$ LANGUAGE SQL;
+
+CREATE AGGREGATE trisano.hstoreagg(TEXT, TEXT) (SFUNC = trisano.hstoreagg, STYPE = trisano.hstore, INITCOND = '');
 COMMIT;
 
 BEGIN;
@@ -59,6 +335,22 @@ CREATE OR REPLACE FUNCTION trisano.get_age_group(NUMERIC) RETURNS TEXT LANGUAGE 
     SELECT trisano.get_age_group($1::INTEGER);
 $$;
 
+CREATE OR REPLACE FUNCTION trisano.get_age_group_ordinal(INTEGER) RETURNS INTEGER
+    LANGUAGE SQL IMMUTABLE AS
+$$
+SELECT
+    CASE
+        WHEN $1 >= 85 THEN 85
+        ELSE (floor($1 / 5) * 5)::integer
+    END
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_age_group_ordinal(NUMERIC) RETURNS INTEGER
+    LANGUAGE SQL IMMUTABLE AS
+$$
+    SELECT trisano.get_age_group_ordinal($1::INTEGER);
+$$;
+
 DROP TABLE IF EXISTS trisano.etl_success;
 
 CREATE TABLE trisano.etl_success (
@@ -67,33 +359,42 @@ CREATE TABLE trisano.etl_success (
 );
 INSERT INTO trisano.etl_success (success) VALUES (FALSE);
 
-DROP TABLE IF EXISTS trisano.formbuilder_columns;
-DROP TABLE IF EXISTS trisano.formbuilder_tables;
-
-CREATE TABLE trisano.formbuilder_tables (
-    id SERIAL PRIMARY KEY,
-    short_name TEXT,
-    table_name TEXT,
-    modified BOOLEAN DEFAULT TRUE,
-    disease_groups TEXT[]
-);
-CREATE INDEX formbuilder_form_name
-    ON trisano.formbuilder_tables (short_name);
-CREATE UNIQUE INDEX formbuilder_table_name
-    ON trisano.formbuilder_tables (table_name);
-CREATE INDEX formbuilder_tables_modified
-    ON trisano.formbuilder_tables (modified);
-
-CREATE TABLE trisano.formbuilder_columns (
-    formbuilder_table_name TEXT REFERENCES trisano.formbuilder_tables(table_name)
-        ON DELETE RESTRICT ON UPDATE RESTRICT,
-    column_name TEXT,
-    orig_column_name TEXT
-);
-CREATE UNIQUE INDEX formbuilder_columns_ix
-    ON trisano.formbuilder_columns (formbuilder_table_name, column_name);
-CREATE INDEX formbuilder_column_orig_name
-    ON trisano.formbuilder_columns (orig_column_name);
+-- DROP TABLE IF EXISTS trisano.formbuilder_columns;
+-- DROP TABLE IF EXISTS trisano.formbuilder_tables;
+--
+-- CREATE TABLE trisano.formbuilder_tables (
+--     id SERIAL PRIMARY KEY,
+--     short_name TEXT,
+--     table_name TEXT,
+--     modified BOOLEAN DEFAULT TRUE,
+--     morbidity_disease_groups TEXT[],
+--     morbidity_table TEXT,
+--     contact_disease_groups TEXT[],
+--     contact_table TEXT,
+--     place_disease_groups TEXT[],
+--     place_table TEXT,
+--     encounter_disease_groups TEXT[],
+--     encounter_table TEXT,
+--     outbreak_disease_groups TEXT[],
+--     outbreak_table TEXT
+-- );
+-- CREATE INDEX formbuilder_form_name
+--     ON trisano.formbuilder_tables (short_name);
+-- CREATE UNIQUE INDEX formbuilder_table_name
+--     ON trisano.formbuilder_tables (table_name);
+-- CREATE INDEX formbuilder_tables_modified
+--     ON trisano.formbuilder_tables (modified);
+--
+-- CREATE TABLE trisano.formbuilder_columns (
+--     formbuilder_table_name TEXT REFERENCES trisano.formbuilder_tables(table_name)
+--         ON DELETE RESTRICT ON UPDATE RESTRICT,
+--     column_name TEXT,
+--     orig_column_name TEXT
+-- );
+-- CREATE UNIQUE INDEX formbuilder_columns_ix
+--     ON trisano.formbuilder_columns (formbuilder_table_name, column_name);
+-- CREATE INDEX formbuilder_column_orig_name
+--     ON trisano.formbuilder_columns (orig_column_name);
 
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
     SELECT
@@ -472,221 +773,874 @@ AS $function$
             END AS age) f
 $function$ ;
 
-CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    questions_per_table     INTEGER := 200;
-    form_name               TEXT;
-    question_name           TEXT;
-    question_count          INTEGER;
-    cur_table_count         INTEGER;
-    cur_table_name          TEXT;
-    last_event_id           INTEGER;
-    last_event_type         TEXT;
-    insert_vals_clause      TEXT;
-    insert_cols_clause      TEXT;
-    tmprec                  RECORD;
-    tmptext                 TEXT;
-    tmpbool                 BOOLEAN;
-    done                    BOOLEAN;
-BEGIN
-    -- This function creates tables for formbuilder data, in a series of steps:
-    --
-    -- 1) Develop schema for formbuilder tables
-    --
-    -- Forms are represented as one or more tables containing a column for
-    -- each question. These tables contain up to questions_per_table columns.
-    -- This step loops through each form name that has answers, and on each
-    -- one, gets the lowercase short names of all answered questions
-    -- associated with that form that aren't already assigned to a table
-    -- (these assignments are recorded in the formbuilder_tables and
-    -- formbuilder_columns tables in the trisano schema). These columns are
-    -- added to the highest-numbered formbuilder table for this form (the only
-    -- one that can possibly have room left for more columns) until it reaches
-    -- questions_per_table columns, after which new tables are added. Any
-    -- tables added or modified in this process are flagged so the metadata
-    -- builder stuff can know to recreate that table.
-    --
-    -- 2) Build schema based on results from step 1
-    --
-    -- Having developed a schema in the last step, this step builds each of
-    -- the tables defined in the formbuilder tables.
-    --
-    -- 3) Fill tables with data
-    --
-    -- Answers are sorted into the tables they belong to, and the data are
-    -- inserted into the tables
+DROP AGGREGATE IF EXISTS trisano.array_accum(anyelement) CASCADE;
 
-    -- Loop through each form
-    FOR form_name IN
-                SELECT DISTINCT short_name
-                FROM forms
-                WHERE short_name IS NOT NULL AND short_name != ''
-                ORDER BY short_name LOOP
+CREATE AGGREGATE trisano.array_accum (anyelement)
+(
+    sfunc = array_append,
+    stype = anyarray,
+    initcond = '{}'
+);
 
-        RAISE NOTICE 'Processing form name %', form_name;
+--CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
+--    LANGUAGE plpgsql
+--    AS $$
+--DECLARE
+--    questions_per_table     INTEGER := 200;
+--    form_name               TEXT;
+--    question_name           TEXT;
+--    question_count          INTEGER;
+--    cur_table_count         INTEGER;
+--    cur_table_name          TEXT;
+--    last_event_id           INTEGER;
+--    last_event_type         TEXT;
+--    insert_vals_clause      TEXT;
+--    insert_cols_clause      TEXT;
+--    tmprec                  RECORD;
+--    tmptext                 TEXT;
+--    tmpbool                 BOOLEAN;
+--    done                    BOOLEAN;
+--BEGIN
+--    -- This function creates tables for formbuilder data, in a series of steps:
+--    --
+--    -- 1) Develop schema for formbuilder tables
+--    --
+--    -- Forms are represented as one or more tables containing a column for
+--    -- each question. These tables contain up to questions_per_table columns.
+--    -- This step loops through each form name that has answers, and on each
+--    -- one, gets the lowercase short names of all answered questions
+--    -- associated with that form that aren't already assigned to a table
+--    -- (these assignments are recorded in the formbuilder_tables and
+--    -- formbuilder_columns tables in the trisano schema). These columns are
+--    -- added to the highest-numbered formbuilder table for this form (the only
+--    -- one that can possibly have room left for more columns) until it reaches
+--    -- questions_per_table columns, after which new tables are added. Any
+--    -- tables added or modified in this process are flagged so the metadata
+--    -- builder stuff can know to recreate that table.
+--    --
+--    -- 2) Build schema based on results from step 1
+--    --
+--    -- Having developed a schema in the last step, this step builds each of
+--    -- the tables defined in the formbuilder tables.
+--    --
+--    -- 3) Fill tables with data
+--    --
+--    -- Answers are sorted into the tables they belong to, and the data are
+--    -- inserted into the tables
+--    --
+--    -- 4) Update the disease_groups columns in formbuilder_tables to reflect
+--    -- the disease groups that need to know about each table
+--
+--    -- Loop through each form
+--    FOR form_name IN
+--                SELECT DISTINCT short_name
+--                FROM forms
+--                WHERE short_name IS NOT NULL AND short_name != ''
+--                ORDER BY short_name LOOP
+--
+--        RAISE NOTICE 'Processing form name %', form_name;
+--
+--        -- Get highest-numbered table for this form, and count of its rows
+--        SELECT INTO cur_table_count count(*) FROM trisano.formbuilder_tables
+--            WHERE short_name = form_name;
+--        SELECT INTO tmprec id, table_name, count(*) AS count
+--            FROM trisano.formbuilder_tables t
+--            JOIN trisano.formbuilder_columns c
+--                ON (c.formbuilder_table_name = t.table_name)
+--            WHERE t.short_name = form_name
+--            GROUP BY id, table_name
+--            ORDER BY id DESC
+--            LIMIT 1;
+--        question_count := tmprec.count;
+--        cur_table_name := tmprec.table_name;
+--
+--        -- If we haven't found a table, make sure we're set up to create a new
+--        -- one properly
+--        IF question_count IS NULL THEN
+--            question_count := questions_per_table;
+--            cur_table_count := 0;
+--        END IF;
+--        tmpbool := FALSE;
+--
+--        RAISE NOTICE 'Found table name %, question count % for form name %', COALESCE(cur_table_name, '<null>'), question_count, form_name;
+--
+--        -- Get columns represented in the forms that aren't already in the
+--        -- defined schema
+--        <<question_loop>>
+--        FOR tmprec IN SELECT DISTINCT
+--                    q.short_name,
+--                    regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
+--                FROM questions q JOIN answers a
+--                    ON (a.question_id = q.id AND a.text_answer IS NOT NULL AND a.text_answer != '')
+--                JOIN form_elements fe ON (fe.id = q.form_element_id)
+--                JOIN forms f
+--                    ON (f.id = fe.form_id AND f.short_name = form_name)
+--                WHERE NOT EXISTS (
+--                    SELECT 1 FROM trisano.formbuilder_columns tfc
+--                    JOIN trisano.formbuilder_tables tft
+--                        ON (tfc.formbuilder_table_name = tft.table_name
+--                            AND tft.short_name = form_name)
+--                    WHERE tfc.orig_column_name = q.short_name
+--                )
+--                AND q.short_name IS NOT NULL AND q.short_name != ''
+--                ORDER BY 1 LOOP
+--
+--            question_name := tmprec.safe_name;
+--
+--            -- Create a new table if the current one is full
+--            IF question_count >= questions_per_table THEN
+--                cur_table_count := cur_table_count + 1;
+--                cur_table_name := 'fb_' ||
+--                    regexp_replace(lower(form_name), '[^[:alnum:]_]', '_', 'g') ||
+--                    '_' || cur_table_count;
+--                    --regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
+--                RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
+--                INSERT INTO trisano.formbuilder_tables (short_name,
+--                    table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
+--                question_count := 0;
+--                tmpbool := FALSE;
+--            END IF;
+--
+--            -- The loop takes care of columns with different short_names that reduce to
+--            -- the same safe name
+--            <<add_column>>
+--            LOOP
+--                done := TRUE;
+--                BEGIN
+--                    INSERT INTO trisano.formbuilder_columns (formbuilder_table_name,
+--                        column_name, orig_column_name)
+--                        VALUES (cur_table_name, trisano.shorten_identifier(question_name), tmprec.short_name);
+--
+--                    -- Make sure table is marked as modified, as necessary
+--                    IF NOT tmpbool THEN
+--                        UPDATE trisano.formbuilder_tables SET modified = TRUE WHERE
+--                            table_name = cur_table_name;
+--                        tmpbool := TRUE;
+--                    END IF;
+--                EXCEPTION
+--                    WHEN unique_violation THEN
+--                        question_name := question_name || '1';
+--                    done := FALSE;
+--                END;
+--                IF done THEN
+--                    EXIT add_column;
+--                END IF;
+--            END LOOP add_column;
+--
+--            question_count := question_count + 1;
+--        END LOOP question_loop;
+--    END LOOP;
+--
+--    -- Create tables to match the schema we've just built
+--    FOR tmprec IN SELECT table_name, trisano.text_join_agg(column_name, ' TEXT, col_') AS cols
+--        FROM trisano.formbuilder_tables t JOIN trisano.formbuilder_columns c
+--            ON t.table_name = c.formbuilder_table_name
+--        GROUP BY table_name ORDER BY table_name
+--    LOOP
+--        tmptext := 'CREATE TABLE ' || tmprec.table_name || ' (event_id INTEGER, type TEXT, col_'
+--                    || tmprec.cols || ' TEXT);';
+--        RAISE NOTICE 'Creating table %', tmprec.table_name;
+--        EXECUTE tmptext;
+--    END LOOP;
+--
+--    -- Fill tables with data from answers
+--    FOR cur_table_name IN SELECT table_name FROM trisano.formbuilder_tables ORDER BY table_name LOOP
+--        RAISE NOTICE 'Filling table %', cur_table_name;
+--        tmptext := '';
+--
+--        insert_cols_clause := ' (event_id, type';
+--        insert_vals_clause := '';
+--        last_event_id := NULL;
+--        last_event_type := NULL;
+--
+--        -- Find all non-blank answers and associated event information
+--        FOR tmprec IN SELECT DISTINCT ON (a.event_id, e.type, tfc.column_name) a.event_id, e.type, tfc.column_name AS short_name, a.text_answer
+--                    FROM answers a JOIN events e ON (e.id = a.event_id)
+--                    JOIN questions q ON (a.question_id = q.id)
+--                    JOIN form_elements fe ON (fe.id = q.form_element_id)
+--                    JOIN forms f ON (f.id = fe.form_id)
+--                    JOIN trisano.formbuilder_columns tfc ON (tfc.orig_column_name = q.short_name)
+--                    WHERE tfc.formbuilder_table_name = cur_table_name
+--                    AND a.text_answer IS NOT NULL
+--                    AND a.text_answer != ''
+--                    ORDER BY a.event_id, e.type, short_name LOOP
+--
+--            IF last_event_id IS NOT NULL AND last_event_id != tmprec.event_id THEN
+--                tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
+--                EXECUTE tmptext;
+--                insert_cols_clause := ' (event_id, type';
+--                insert_vals_clause := '';
+--            END IF;
+--            last_event_id   := tmprec.event_id;
+--            last_event_type := tmprec.type;
+--
+--            insert_cols_clause := insert_cols_clause || ', ' || quote_ident('col_' || tmprec.short_name);
+--            insert_vals_clause := insert_vals_clause || ', ' || quote_literal(tmprec.text_answer);
+--        END LOOP;
+--
+--        IF last_event_id IS NOT NULL THEN
+--            tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
+--            EXECUTE tmptext;
+--        END IF;
+--
+--        -- Create indexes while we're here
+--        RAISE NOTICE 'Creating indexes for table %', cur_table_name;
+--        EXECUTE 'CREATE UNIQUE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_id_ix') || ' ON ' || cur_table_name || ' (event_id)';
+--        EXECUTE 'CREATE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_type_ix') || ' ON ' || cur_table_name || ' (type)';
+--
+--        -- Fill out disease_groups columns
+--        tmptext := '
+--        UPDATE trisano.formbuilder_tables fbt SET
+--            morbidity_disease_groups = morbs,
+--            contact_disease_groups   = conts,
+--            place_disease_groups     = places,
+--            encounter_disease_groups = encs,
+--            outbreak_disease_groups  = outs
+--        FROM (
+--            SELECT
+--                trisano.array_accum(DISTINCT CASE WHEN c.type = ''MorbidityEvent'' THEN ag.name ELSE NULL END) AS morbs,
+--                trisano.array_accum(DISTINCT CASE WHEN c.type = ''ContactEvent''   THEN ag.name ELSE NULL END) AS conts,
+--                trisano.array_accum(DISTINCT CASE WHEN c.type = ''PlaceEvent''     THEN ag.name ELSE NULL END) AS places,
+--                trisano.array_accum(DISTINCT CASE WHEN c.type = ''EncounterEvent'' THEN ag.name ELSE NULL END) AS encs,
+--                trisano.array_accum(DISTINCT CASE WHEN c.type = ''OutbreakEvent''  THEN ag.name ELSE NULL END) AS outs
+--            FROM
+--                ' || cur_table_name || ' c, avr_groups ag,
+--                avr_groups_diseases agd, disease_events de
+--            WHERE
+--                c.event_id = de.event_id AND
+--                de.disease_id = agd.disease_id AND
+--                agd.avr_group_id = ag.id
+--            ) ft
+--        WHERE fbt.table_name = ''' || cur_table_name || '''';
+--        EXECUTE tmptext;
+--    END LOOP;
+--
+--END;
+--$$;
+---- END OF trisano.build_form_tables()
 
-        -- Get highest-numbered table for this form, and count of its rows
-        SELECT INTO cur_table_count count(*) FROM trisano.formbuilder_tables
-            WHERE short_name = form_name;
-        SELECT INTO tmprec id, table_name, count(*) AS count
-            FROM trisano.formbuilder_tables t
-            JOIN trisano.formbuilder_columns c
-                ON (c.formbuilder_table_name = t.table_name)
-            WHERE t.short_name = form_name
-            GROUP BY id, table_name
-            ORDER BY id DESC
-            LIMIT 1;
-        question_count := tmprec.count;
-        cur_table_name := tmprec.table_name;
+-- Commenting structure
+DROP TABLE IF EXISTS trisano.schema_comments;
 
-        -- If we haven't found a table, make sure we're set up to create a new
-        -- one properly
-        IF question_count IS NULL THEN
-            question_count := questions_per_table;
-            cur_table_count := 0;
-        END IF;
-        tmpbool := FALSE;
+CREATE TABLE trisano.schema_comments (
+    object_type TEXT,
+    object_name TEXT,
+    object_comment TEXT
+);
 
-        RAISE NOTICE 'Found table name %, question count % for form name %', COALESCE(cur_table_name, '<null>'), question_count, form_name;
-
-        -- Get columns represented in the forms that aren't already in the
-        -- defined schema
-        <<question_loop>>
-        FOR tmprec IN SELECT DISTINCT
-                    q.short_name,
-                    regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
-                FROM questions q JOIN answers a
-                    ON (a.question_id = q.id AND a.text_answer IS NOT NULL AND a.text_answer != '')
-                JOIN form_elements fe ON (fe.id = q.form_element_id)
-                JOIN forms f
-                    ON (f.id = fe.form_id AND f.short_name = form_name)
-                WHERE NOT EXISTS (
-                    SELECT 1 FROM trisano.formbuilder_columns tfc
-                    JOIN trisano.formbuilder_tables tft
-                        ON (tfc.formbuilder_table_name = tft.table_name
-                            AND tft.short_name = form_name)
-                    WHERE tfc.orig_column_name = q.short_name
-                )
-                AND q.short_name IS NOT NULL AND q.short_name != ''
-                ORDER BY 1 LOOP
-
-            question_name := tmprec.safe_name;
-
-            -- Create a new table if the current one is full
-            IF question_count >= questions_per_table THEN
-                cur_table_count := cur_table_count + 1;
-                cur_table_name := 'formbuilder_' ||
-                    regexp_replace(lower(form_name), '[^[:alnum:]_]', '_', 'g') ||
-                    '_' || cur_table_count;
-                    --regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
-                RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
-                INSERT INTO trisano.formbuilder_tables (short_name,
-                    table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
-                question_count := 0;
-                tmpbool := FALSE;
-            END IF;
-
-            -- The loop takes care of columns with different short_names that reduce to
-            -- the same safe name
-            <<add_column>>
-            LOOP
-                done := TRUE;
-                BEGIN
-                    INSERT INTO trisano.formbuilder_columns (formbuilder_table_name,
-                        column_name, orig_column_name)
-                        VALUES (cur_table_name, trisano.shorten_identifier(question_name), tmprec.short_name);
-
-                    -- Make sure table is marked as modified, as necessary
-                    IF NOT tmpbool THEN
-                        UPDATE trisano.formbuilder_tables SET modified = TRUE WHERE
-                            table_name = cur_table_name;
-                        tmpbool := TRUE;
-                    END IF;
-                EXCEPTION
-                    WHEN unique_violation THEN
-                        question_name := question_name || '1';
-                    done := FALSE;
-                END;
-                IF done THEN
-                    EXIT add_column;
-                END IF;
-            END LOOP add_column;
-
-            question_count := question_count + 1;
-        END LOOP question_loop;
-    END LOOP;
-
-    -- Create tables to match the schema we've just built
-    FOR tmprec IN SELECT table_name, trisano.text_join_agg(column_name, ' TEXT, col_') AS cols
-        FROM trisano.formbuilder_tables t JOIN trisano.formbuilder_columns c
-            ON t.table_name = c.formbuilder_table_name
-        GROUP BY table_name ORDER BY table_name
-    LOOP
-        tmptext := 'CREATE TABLE ' || tmprec.table_name || ' (event_id INTEGER, type TEXT, col_'
-                    || tmprec.cols || ' TEXT);';
-        RAISE NOTICE 'Creating table %', tmprec.table_name;
-        EXECUTE tmptext;
-    END LOOP;
-
-    -- Fill tables with data from answers
-    FOR cur_table_name IN SELECT table_name FROM trisano.formbuilder_tables ORDER BY table_name LOOP
-        RAISE NOTICE 'Filling table %', cur_table_name;
-        tmptext := '';
-
-        insert_cols_clause := ' (event_id, type';
-        insert_vals_clause := '';
-        last_event_id := NULL;
-        last_event_type := NULL;
-
-        -- Find all non-blank answers and associated event information
-        FOR tmprec IN SELECT DISTINCT ON (a.event_id, e.type, tfc.column_name) a.event_id, e.type, tfc.column_name AS short_name, a.text_answer
-                    FROM answers a JOIN events e ON (e.id = a.event_id)
-                    JOIN questions q ON (a.question_id = q.id)
-                    JOIN form_elements fe ON (fe.id = q.form_element_id)
-                    JOIN forms f ON (f.id = fe.form_id)
-                    JOIN trisano.formbuilder_columns tfc ON (tfc.orig_column_name = q.short_name)
-                    WHERE tfc.formbuilder_table_name = cur_table_name
-                    AND a.text_answer IS NOT NULL
-                    AND a.text_answer != ''
-                    ORDER BY a.event_id, e.type, short_name LOOP
-
-            IF last_event_id IS NOT NULL AND last_event_id != tmprec.event_id THEN
-                tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
-                EXECUTE tmptext;
-                insert_cols_clause := ' (event_id, type';
-                insert_vals_clause := '';
-            END IF;
-            last_event_id   := tmprec.event_id;
-            last_event_type := tmprec.type;
-
-            insert_cols_clause := insert_cols_clause || ', ' || quote_ident('col_' || tmprec.short_name);
-            insert_vals_clause := insert_vals_clause || ', ' || quote_literal(tmprec.text_answer);
-        END LOOP;
-
-        IF last_event_id IS NOT NULL THEN
-            tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
-            EXECUTE tmptext;
-        END IF;
-
-        -- Create indexes while we're here
-        RAISE NOTICE 'Creating indexes for table %', cur_table_name;
-        EXECUTE 'CREATE UNIQUE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_id_ix') || ' ON ' || cur_table_name || ' (event_id)';
-        EXECUTE 'CREATE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_type_ix') || ' ON ' || cur_table_name || ' (type)';
-    END LOOP;
-END;
-$$;
--- END OF trisano.build_form_tables()
+INSERT INTO trisano.schema_comments (object_type, object_name, object_comment) VALUES
+    ('SCHEMA', 'population', 'Schema for OLAP population and rate calculation data'),
+    ('TABLE', 'population.population_dimensions', 'Describes each of the OLAP dimensions usable for population calculation'),
+    ('COLUMN', 'population.population_dimensions.dim_name', 'Names of each OLAP dimension for which population divisions are known'),
+    ('COLUMN', 'population.population_dimensions.dim_cols', 'Column names to be searched for population counts. Each array element corresponds to a different level of the dimension hierarchy'),
+    ('COLUMN', 'population.population_dimensions.mapping_func', 'Functions to map OLAP values to something the underlying population tables will understand. Each element correspond to a level of the dimension hierarchy'),
+    ('TABLE', 'population.population_tables', 'Records the tables in the population schema that record population information'),
+    ('COLUMN', 'population.population_tables.table_name', 'Name of the population table'),
+    ('COLUMN', 'population.population_tables.table_rank', 'When multiple tables will provide the required information, this rank is used to find the desired table. Lowest ranks are selected first (e.g. the table with rank 1 is the best one to use, all else being equal'),
+    ('SCHEMA', 'public', 'Staging area for data warehouse ETL process'),
+    ('SCHEMA', 'trisano', 'Contains views used for reporting and OLAP '),
+    ('VIEW', 'trisano.addresses_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.answers_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.attachments_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.cdc_exports_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.codes_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.core_fields_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.csv_fields_view', 'data dictionary ignore'),
+    ('TABLE', 'trisano.current_schema_name', 'Internal -- used so ETL process knows which schema can be dumped and reloaded'),
+    ('COLUMN', 'trisano.current_schema_name.schemaname', 'Contains the name of the schema currently in use by the warehouse, and referenced by all the views'),
+    ('VIEW', 'trisano.db_files_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.disease_events_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.diseases_export_columns_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.diseases_external_codes_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.diseases_forms_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.diseases_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.dw_contact_answers_view', 'Formbuilder answers applicable to contact events. See transactional database, answers table for more information'),
+    ('COLUMN', 'trisano.dw_contact_answers_view.code', ''),
+    ('VIEW', 'trisano.dw_contact_clinicians_view', 'Clinician information applicable to contact events'),
+    ('COLUMN', 'trisano.dw_contact_clinicians_view.dw_contact_events_id', 'The contact event ID this answer refers to'),
+    ('COLUMN', 'trisano.dw_contact_clinicians_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_contact_clinicians_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_clinicians_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_contact_clinicians_view.middle_name', ''),
+    ('VIEW', 'trisano.dw_contact_diagnostic_facilities_view', 'Diagnostic facility information applicable to contact events'),
+    ('COLUMN', 'trisano.dw_contact_diagnostic_facilities_view.dw_contact_events_id', 'The contact event ID this answer refers to'),
+    ('COLUMN', 'trisano.dw_contact_diagnostic_facilities_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_diagnostic_facilities_view.name', 'Name of the diagnostic facility'),
+    ('COLUMN', 'trisano.dw_contact_diagnostic_facilities_view.place_id', 'Places table record related to this record'),
+    ('COLUMN', 'trisano.dw_contact_diagnostic_facilities_view.place_type', 'Type of facility'),
+    ('VIEW', 'trisano.dw_contact_diseases_view', 'Diseases related to contact events. See diseases table for more information'),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.active', ''),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.cdc_code', ''),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.contact_lead_in', ''),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.disease_name', ''),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.place_lead_in', ''),
+    ('COLUMN', 'trisano.dw_contact_diseases_view.treatment_lead_in', ''),
+    ('VIEW', 'trisano.dw_contact_events_view', 'Table of contact events. Most fields match the events table'),
+    ('COLUMN', 'trisano.dw_contact_events_view.actual_age_at_onset', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.actual_age_type', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.additional_risk_factors', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.age_in_years', 'Calculated age in years, based on actual_age_at_onset and actual_age_type'),
+    ('COLUMN', 'trisano.dw_contact_events_view.city', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.contact_type', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.county', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_created', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_deleted', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_disease_diagnosed', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_disease_onset', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_entered_into_system', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_investigation_completed', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_investigation_started', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.date_updated', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.day_care_association', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.disease_event_died', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.disease_event_hospitalized', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.disease_id', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.disposition', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.dw_patients_id', 'ID of patient record related to this event'),
+    ('COLUMN', 'trisano.dw_contact_events_view.estimated_age_at_onset', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.estimated_age_type', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.event_queue_id', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.food_handler', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.group_living', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.healthcare_worker', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.ibis_updated_at', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_events_view.imported_from_code', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.investigating_jurisdiction', 'Name of the investigating jurisdiction'),
+    ('COLUMN', 'trisano.dw_contact_events_view.investigating_jurisdiction_id', 'Places table record for this investigating jurisdiction'),
+    ('COLUMN', 'trisano.dw_contact_events_view.investigator', 'Name of investigator'),
+    ('COLUMN', 'trisano.dw_contact_events_view.jurisdiction_of_residence', 'Name of jurisdiction of residence'),
+    ('COLUMN', 'trisano.dw_contact_events_view.jurisdiction_of_residence_id', 'Places table record for this jurisdiction of residence'),
+    ('COLUMN', 'trisano.dw_contact_events_view.latitude', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.longitude', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.occupation', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.other_data_1', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.other_data_2', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.parent_id', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.postal_code', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.pregnancy_due_date', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.pregnant', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.review_completed_by_state_date', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.risk_factor_details', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.sent_to_ibis', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.state', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.street_name', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.street_number', ''),
+    ('COLUMN', 'trisano.dw_contact_events_view.unit_number', ''),
+    ('VIEW', 'trisano.dw_contact_hospitals_view', 'Information about hospital admissions related to contact events'),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.admission_date', ''),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.discharge_date', ''),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.hospital_name', ''),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.hospital_record_number', ''),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_hospitals_view.medical_record_number', ''),
+    ('VIEW', 'trisano.dw_contact_jurisdictions_view', 'Jurisdictions related to contact events'),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.entity_id', ''),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.name', ''),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_contact_jurisdictions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_contact_lab_results_view', 'Lab results for contact events. See lab results view for more information'),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.collection_date', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.comment', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.dw_encounter_events_id', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.lab_test_date', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.lab_type', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.loinc_code', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.name', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.reference_range', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.result_value', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.specimen_sent_to_state', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.specimen_source', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.test_result', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.test_status', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.test_type', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.units', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.hl7_message', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.staged_message_state', ''),
+    ('COLUMN', 'trisano.dw_contact_lab_results_view.staged_message_note', ''),
+    ('VIEW', 'trisano.dw_contact_patients_races_view', 'Races of patients involved in contact events. See patients_races table for more information'),
+    ('COLUMN', 'trisano.dw_contact_patients_races_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_patients_races_view.person_id', ''),
+    ('COLUMN', 'trisano.dw_contact_patients_races_view.race', ''),
+--    ('VIEW', 'trisano.dw_contact_patients_view', 'Patients involved in contact events. See people table for more information'),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.birth_date', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.birth_gender', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.date_of_death', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.entity_id', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.ethnicity', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.first_name', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.first_name_soundex', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.id', 'Primary key'),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.last_name', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.last_name_soundex', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.middle_name', ''),
+--    ('COLUMN', 'trisano.dw_contact_patients_view.primary_language', ''),
+    ('VIEW', 'trisano.dw_contact_questions_view', 'Questions on forms related to contact events. See questions table for more information'),
+    ('COLUMN', 'trisano.dw_contact_questions_view.core_data', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.core_data_attr', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.data_type', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.form_element_id', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.help_text', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_questions_view.is_required', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.question_text', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.size', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.style', ''),
+    ('COLUMN', 'trisano.dw_contact_questions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_contact_secondary_jurisdictions_view', 'Secondary jurisdictions of contact events'),
+    ('COLUMN', 'trisano.dw_contact_secondary_jurisdictions_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_contact_secondary_jurisdictions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_secondary_jurisdictions_view.jurisdiction_id', 'Places record related to this jurisdiction'),
+    ('COLUMN', 'trisano.dw_contact_secondary_jurisdictions_view.name', 'Name of the jurisdiction'),
+    ('VIEW', 'trisano.dw_contact_treatments_events_view', 'Treatment events related to contact events. See treatment_events table for more information'),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.date_of_treatment', ''),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.treatment_given', ''),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.treatment_id', ''),
+    ('COLUMN', 'trisano.dw_contact_treatments_events_view.treatment_notes', ''),
+    ('VIEW', 'trisano.dw_contact_treatments_view', 'Treatments related to contact events. See treatments table for more information'),
+    ('COLUMN', 'trisano.dw_contact_treatments_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_contact_treatments_view.treatment_name', ''),
+    ('COLUMN', 'trisano.dw_contact_treatments_view.treatment_type_id', ''),
+    ('VIEW', 'trisano.dw_date_dimension_view', 'Dates used in various records. This provides functionality for the date-related dimensions in the OLAP system'),
+    ('COLUMN', 'trisano.dw_date_dimension_view.day_of_month', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.day_of_week', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.day_of_year', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.fulldate', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.month', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.quarter', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.week_of_year', ''),
+    ('COLUMN', 'trisano.dw_date_dimension_view.year', ''),
+    ('VIEW', 'trisano.dw_encounter_answers_view', 'Formbuilder answers provided in relation to encounter events. See answers table for more information'),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.code', ''),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.event_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.export_conversion_value_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.question_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_answers_view.text_answer', ''),
+    ('VIEW', 'trisano.dw_encounter_patients_view', 'Patients involved in encounter events. See people table for more information'),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.birth_date', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.birth_gender', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.date_of_death', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.entity_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.ethnicity', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.first_name_soundex', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.last_name_soundex', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.middle_name', ''),
+    ('COLUMN', 'trisano.dw_encounter_patients_view.primary_language', ''),
+    ('VIEW', 'trisano.dw_encounter_questions_view', 'Questions asked on forms for encounter events. See questions table for more information'),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.core_data', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.core_data_attr', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.data_type', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.form_element_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.help_text', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.is_required', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.question_text', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.size', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.style', ''),
+    ('COLUMN', 'trisano.dw_encounter_questions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_encounters_lab_results_view', 'Lab results for encounter events. See lab_results table for more information'),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.collection_date', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.comment', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.dw_encounter_events_id', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.lab_test_date', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.lab_type', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.loinc_code', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.name', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.reference_range', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.result_value', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.specimen_sent_to_state', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.specimen_source', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.test_result', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.test_status', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.test_type', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.units', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.hl7_message', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.staged_message_state', ''),
+    ('COLUMN', 'trisano.dw_encounters_lab_results_view.staged_message_note', ''),
+    ('VIEW', 'trisano.dw_encounters_treatments_events_view', 'Treatment events for encounter events. See treatment_events table for more information'),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.date_of_treatment', ''),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.dw_encounter_events_id', ''),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.treatment_given', ''),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.treatment_id', ''),
+    ('COLUMN', 'trisano.dw_encounters_treatments_events_view.treatment_notes', ''),
+--    ('VIEW', 'trisano.dw_encounters_treatments_view', 'Treatments for encounter events. See treatments table for more information'),
+--    ('COLUMN', 'trisano.dw_encounters_treatments_view.dw_encounters_id', ''),
+--    ('COLUMN', 'trisano.dw_encounters_treatments_view.dw_events_treatments_id', ''),
+--    ('COLUMN', 'trisano.dw_encounters_treatments_view.id', 'Primary key'),
+    ('VIEW', 'trisano.dw_encounter_events_view', 'Encounter events. See events table for more information, but note that many fields have been removed because they do not relate to encounter events'),
+    ('COLUMN', 'trisano.dw_encounter_events_view.description', ''),
+    ('COLUMN', 'trisano.dw_encounter_events_view.dw_morbidity_events_id', 'The morbidity event parent of this event'),
+    ('COLUMN', 'trisano.dw_encounter_events_view.encounter_date', ''),
+    ('COLUMN', 'trisano.dw_encounter_events_view.encounter_event_id', ''),
+    ('COLUMN', 'trisano.dw_encounter_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_encounter_events_view.investigator_id', 'Users table record containing the investigator for this event'),
+    ('COLUMN', 'trisano.dw_encounter_events_view.location', ''),
+    ('VIEW', 'trisano.dw_events_diagnostic_facilities_view', 'Diagnostic facilities for various event types'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.name', 'Name of the diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.place_id', 'Place record for this facility'),
+    ('COLUMN', 'trisano.dw_events_diagnostic_facilities_view.place_type', 'Type of facility'),
+    ('VIEW', 'trisano.dw_events_hospitals_view', 'Hospitalizations related to various events'),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.admission_date', ''),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.discharge_date', ''),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.hospital_name', ''),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.hospital_record_number', ''),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_events_hospitals_view.medical_record_number', ''),
+    ('VIEW', 'trisano.dw_events_reporters_view', 'Reporters for various event types'),
+    ('COLUMN', 'trisano.dw_events_reporters_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_reporters_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_reporters_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_events_reporters_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_events_reporters_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_events_reporters_view.middle_name', ''),
+    ('VIEW', 'trisano.dw_events_reporting_agencies_view', 'Reporting agencies for various event types'),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.name', ''),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.place_id', ''),
+    ('COLUMN', 'trisano.dw_events_reporting_agencies_view.place_type', ''),
+    ('VIEW', 'trisano.dw_events_treatments_view', 'Treatments events related to morbidity, encounter, or contact events'),
+    ('COLUMN', 'trisano.dw_events_treatments_view.date_of_treatment', ''),
+    ('COLUMN', 'trisano.dw_events_treatments_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_treatments_view.dw_encounter_events_id', 'Encounter event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_treatments_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_events_treatments_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_events_treatments_view.treatment_given', ''),
+    ('COLUMN', 'trisano.dw_events_treatments_view.treatment_id', ''),
+    ('COLUMN', 'trisano.dw_events_treatments_view.treatment_notes', ''),
+    ('VIEW', 'trisano.dw_lab_results_view', 'Lab result records for various event types. See lab results table for more information'),
+    ('COLUMN', 'trisano.dw_lab_results_view.collection_date', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.comment', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.dw_encounter_events_id', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_lab_results_view.lab_test_date', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.lab_type', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.loinc_code', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.name', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.reference_range', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.result_value', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.specimen_sent_to_state', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.specimen_source', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.test_result', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.test_status', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.test_type', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.units', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.hl7_message', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.staged_message_state', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.staged_message_note', ''),
+    ('COLUMN', 'trisano.dw_lab_results_view.dw_contact_events_id', 'Contact event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_lab_results_view.dw_encounter_events_id', 'Encounter event ID, if any, related to this diagnostic facility'),
+    ('COLUMN', 'trisano.dw_lab_results_view.dw_morbidity_events_id', 'Morbidity event ID, if any, related to this diagnostic facility'),
+    ('VIEW', 'trisano.dw_morbidity_answers_view', 'Formbuild answers related to morbidity events. See answers table for more information'),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.event_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.export_conversion_value_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.question_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_answers_view.text_answer', ''),
+    ('VIEW', 'trisano.dw_morbidity_clinicians_view', 'Clinicians related to morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_clinicians_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_clinicians_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_clinicians_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_clinicians_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_clinicians_view.middle_name', ''),
+    ('VIEW', 'trisano.dw_morbidity_diagnostic_facilities_view', 'Diagnostic facilities asscoiated with morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_diagnostic_facilities_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diagnostic_facilities_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_diagnostic_facilities_view.name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diagnostic_facilities_view.place_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diagnostic_facilities_view.place_type', ''),
+    ('VIEW', 'trisano.dw_morbidity_diseases_view', 'Diseases related to morbidity events. See diseases table for more information'),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.active', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.cdc_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.contact_lead_in', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.disease_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.place_lead_in', ''),
+    ('COLUMN', 'trisano.dw_morbidity_diseases_view.treatment_lead_in', ''),
+    ('VIEW', 'trisano.dw_morbidity_events_view', 'Morbidity event records. See events table for more information'),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.actual_age_at_onset', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.actual_age_type', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.acuity', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.additional_risk_factors', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.age_in_years', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.city', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.contact_type_if_once_a_contact', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.county', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_created', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_deleted', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_disease_diagnosed', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_disease_onset', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_entered_into_system', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_investigation_completed', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_investigation_started', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_reported_to_public_health', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.date_updated', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.day_care_association', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.disease_event_died', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.disease_event_hospitalized', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.disease_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.disposition_if_once_a_contact', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.dw_patients_id', 'Patient record for this event'),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.estimated_age_at_onset', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.estimated_age_type', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.event_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.event_queue_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.food_handler', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.group_living', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.healthcare_worker', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.ibis_updated_at', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.imported_from_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.investigating_jurisdiction', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.investigating_jurisdiction_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.investigator', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.jurisdiction_of_residence', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.jurisdiction_of_residence_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.latitude', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.lhd_case_status_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.longitude', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.mmwr_week', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.mmwr_year', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.occupation', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.other_data_1', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.other_data_2', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.outbreak_associated_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.outbreak_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.parent_guardian', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.parent_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.postal_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.pregnancy_due_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.pregnant', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.record_number', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.results_reported_to_clinician_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.review_completed_by_state_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.risk_factor_details', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.sent_to_cdc', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.sent_to_ibis', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.state', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.state_case_status_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.street_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.street_number', ''),
+    ('COLUMN', 'trisano.dw_morbidity_events_view.unit_number', ''),
+    ('VIEW', 'trisano.dw_morbidity_hospitals_view', 'Hospitalizations related to morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.admission_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.discharge_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.hospital_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.hospital_record_number', ''),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_hospitals_view.medical_record_number', ''),
+    ('VIEW', 'trisano.dw_morbidity_jurisdictions_view', 'Jurisdictions of morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.entity_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_jurisdictions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_morbidity_lab_results_view', 'Lab results for morbidity events. See lab_results table for more infomrmation'),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.collection_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.comment', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.dw_encounter_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.lab_test_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.lab_type', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.loinc_code', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.reference_range', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.result_value', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.specimen_sent_to_state', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.specimen_source', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.test_result', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.test_status', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.test_type', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.units', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.hl7_message', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.staged_message_state', ''),
+    ('COLUMN', 'trisano.dw_morbidity_lab_results_view.staged_message_note', ''),
+    ('VIEW', 'trisano.dw_morbidity_patients_races_view', 'Races of patients in morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_patients_races_view.id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_races_view.person_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_races_view.race', ''),
+    ('VIEW', 'trisano.dw_morbidity_patients_view', 'Patients associated with morbidity events. See people table for more information'),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.birth_date', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.birth_gender', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.date_of_death', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.entity_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.ethnicity', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.first_name_soundex', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.last_name_soundex', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.middle_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_patients_view.primary_language', ''),
+    ('VIEW', 'trisano.dw_morbidity_questions_view', 'Formbuilder questions related to morbidity events. See questions table for more information'),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.core_data', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.core_data_attr', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.data_type', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.form_element_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.help_text', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.is_required', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.question_text', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.size', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.style', ''),
+    ('COLUMN', 'trisano.dw_morbidity_questions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_morbidity_reporters_view', 'Reporter records for morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_reporters_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporters_view.first_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporters_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_reporters_view.last_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporters_view.middle_name', ''),
+    ('VIEW', 'trisano.dw_morbidity_reporting_agencies_view', 'Reporting agencies for morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_reporting_agencies_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporting_agencies_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_reporting_agencies_view.name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporting_agencies_view.place_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_reporting_agencies_view.place_type', ''),
+    ('VIEW', 'trisano.dw_morbidity_secondary_jurisdictions_view', 'Secondary jurisdictions for morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_secondary_jurisdictions_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_secondary_jurisdictions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_secondary_jurisdictions_view.jurisdiction_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_secondary_jurisdictions_view.name', ''),
+    ('VIEW', 'trisano.dw_morbidity_treatments_events_view', 'Treatment events for morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.date_of_treatment', ''),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.treatment_given', ''),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.treatment_id', ''),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_events_view.treatment_notes', ''),
+    ('VIEW', 'trisano.dw_morbidity_treatments_view', 'Treatments related to morbidity events'),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_view.treatment_name', ''),
+    ('COLUMN', 'trisano.dw_morbidity_treatments_view.treatment_type_id', ''),
+    ('VIEW', 'trisano.dw_patients_races_view', 'Races of patients'),
+    ('COLUMN', 'trisano.dw_patients_races_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_patients_races_view.person_id', ''),
+    ('COLUMN', 'trisano.dw_patients_races_view.race', ''),
+    ('VIEW', 'trisano.dw_place_answers_view', 'Answers to formbuilder questions related to place events. See answers table for more information'),
+    ('COLUMN', 'trisano.dw_place_answers_view.code', ''),
+    ('COLUMN', 'trisano.dw_place_answers_view.event_id', ''),
+    ('COLUMN', 'trisano.dw_place_answers_view.export_conversion_value_id', ''),
+    ('COLUMN', 'trisano.dw_place_answers_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_place_answers_view.question_id', ''),
+    ('COLUMN', 'trisano.dw_place_answers_view.text_answer', ''),
+    ('VIEW', 'trisano.dw_place_events_view', 'Place events. See events table for more information, keeping in mind that many fields have been removed'),
+    ('COLUMN', 'trisano.dw_place_events_view.city', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.county', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.dw_morbidity_events_id', 'Morbidity event record that is the parent for this record'),
+    ('COLUMN', 'trisano.dw_place_events_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_place_events_view.latitude', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.longitude', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.name', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.place_type', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.postal_code', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.state', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.street_name', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.street_number', ''),
+    ('COLUMN', 'trisano.dw_place_events_view.unit_number', ''),
+    ('VIEW', 'trisano.dw_place_questions_view', 'Formbuilder questions related to place events. See questions table for more information'),
+    ('COLUMN', 'trisano.dw_place_questions_view.core_data', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.core_data_attr', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.created_at', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.data_type', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.form_element_id', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.help_text', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_place_questions_view.is_required', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.question_text', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.short_name', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.size', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.style', ''),
+    ('COLUMN', 'trisano.dw_place_questions_view.updated_at', ''),
+    ('VIEW', 'trisano.dw_secondary_jurisdictions_view', 'Secondary jurisdictions for various event typesj'),
+    ('COLUMN', 'trisano.dw_secondary_jurisdictions_view.dw_contact_events_id', ''),
+    ('COLUMN', 'trisano.dw_secondary_jurisdictions_view.dw_morbidity_events_id', ''),
+    ('COLUMN', 'trisano.dw_secondary_jurisdictions_view.id', 'Primary key'),
+    ('COLUMN', 'trisano.dw_secondary_jurisdictions_view.jurisdiction_id', ''),
+    ('COLUMN', 'trisano.dw_secondary_jurisdictions_view.name', ''),
+    ('VIEW', 'trisano.dw_outbreak_events_view', 'Outbreak events'),
+    ('VIEW', 'trisano.email_addresses_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.encounters_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.entities_view', 'data dictionary ignore'),
+    ('TABLE', 'trisano.etl_success', 'Internal - records results of ETL processes'),
+    ('VIEW', 'trisano.event_queues_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.events_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.export_columns_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.export_conversion_values_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.export_disease_groups_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.export_names_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.external_codes_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.form_elements_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.form_references_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.forms_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.hospitals_participations_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.lab_results_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.notes_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_contacts_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_encounters_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_places_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_risk_factors_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_treatments_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.participations_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.people_races_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.people_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.places_types_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.places_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.privileges_roles_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.privileges_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.questions_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.role_memberships_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.roles_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.schema_migrations_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.staged_messages_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.tasks_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.telephones_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.treatments_view', 'data dictionary ignore'),
+    ('VIEW', 'trisano.users_view', 'data dictionary ignore');
+-- END OF commenting structure
 
 CREATE OR REPLACE FUNCTION trisano.swap_schemas() RETURNS BOOLEAN AS $$
 DECLARE
     cur_schema TEXT;
     new_schema TEXT;
     tmp TEXT;
+    tmp2 TEXT;
     viewname TEXT;
     validetl BOOLEAN;
-    orig_search_path TEXT;
+    tmprec RECORD;
+    tblnum INTEGER;
 BEGIN
     SELECT success INTO validetl FROM trisano.etl_success ORDER BY entrydate LIMIT 1;
     IF NOT validetl THEN
@@ -706,12 +1660,6 @@ BEGIN
     EXECUTE 'COMMENT ON SCHEMA staging IS ''Holds the actual warehouse data. data dictionary ignore''';
     tmp := 'ALTER SCHEMA staging RENAME TO ' || new_schema;
     EXECUTE tmp;
-
-    -- Create form builder tables
-    SELECT INTO orig_search_path setting FROM pg_settings WHERE name = 'search_path';
-    EXECUTE 'SET search_path = ' || new_schema;
-    PERFORM trisano.build_form_tables();
-    EXECUTE 'SET search_path = ' || orig_search_path;
 
     -- Drop views in trisano schema
     FOR viewname IN
@@ -733,25 +1681,9 @@ BEGIN
     FOR viewname IN
       SELECT pg_class.relname
       FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
-      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'formtable_%'
+      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'fb_%'
       LOOP
         tmp := 'CREATE VIEW trisano.' || viewname || '_view AS SELECT * FROM ' || new_schema || '.' || viewname;
-        EXECUTE tmp;
-    END LOOP;
-
-    -- Create event-type-specific views for each formtable* table
-    FOR viewname IN
-      SELECT pg_class.relname
-      FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
-      WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname LIKE 'formtable_%'
-      LOOP
-        tmp := 'CREATE VIEW trisano.' || viewname || '_morbidity_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''MorbidityEvent''';
-        EXECUTE tmp;
-        tmp := 'CREATE VIEW trisano.' || viewname || '_place_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''PlaceEvent''';
-        EXECUTE tmp;
-        tmp := 'CREATE VIEW trisano.' || viewname || '_contact_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''ContactEvent''';
-        EXECUTE tmp;
-        tmp := 'CREATE VIEW trisano.' || viewname || '_encounter_view AS SELECT * FROM ' || new_schema || '.' || viewname || ' WHERE type = ''EncounterEvent''';
         EXECUTE tmp;
     END LOOP;
 
@@ -760,19 +1692,20 @@ BEGIN
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN ' || new_schema || '.dw_morbidity_patients p
-                ON (p.id = pr.person_id)';
+            JOIN ' || new_schema || '.dw_morbidity_events p
+                ON (p.dw_patients_id = pr.person_id)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN ' || new_schema || '.dw_contact_patients p
-                ON (p.id = pr.person_id)';
+            JOIN ' || new_schema || '.dw_contact_events p
+                ON (p.dw_patients_id = pr.person_id)';
 
     EXECUTE
-        'CREATE VIEW trisano.dw_morbidity_reporting_agencies_view AS
-            SELECT * FROM ' || new_schema || '.dw_events_reporting_agencies
-            WHERE dw_morbidity_events_id IS NOT NULL';
+        'CREATE VIEW trisano.dw_encounter_patients_races_view AS
+            SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
+            JOIN ' || new_schema || '.dw_encounter_events p
+                ON (p.dw_patients_id = pr.person_id)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_diagnostic_facilities_view AS
@@ -783,11 +1716,6 @@ BEGIN
         'CREATE VIEW trisano.dw_contact_diagnostic_facilities_view AS
             SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
             WHERE dw_contact_events_id IS NOT NULL';
-
-    EXECUTE
-        'CREATE VIEW trisano.dw_morbidity_reporters_view AS
-            SELECT * FROM ' || new_schema || '.dw_events_reporters
-            WHERE dw_morbidity_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_treatments_events_view AS
@@ -885,6 +1813,66 @@ BEGIN
             ) f
                 ON (p.id = f.id)';
 
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_email_addresses_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_email_addresses t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_morbidity_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_email_addresses_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_email_addresses t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_contact_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_encounter_email_addresses_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_email_addresses t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_encounter_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_telephones_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_telephones t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_morbidity_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_telephones_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_telephones t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_contact_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_encounter_telephones_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_telephones t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_encounter_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
     FOR viewname IN
       SELECT relname
       FROM pg_class JOIN pg_namespace
@@ -895,605 +1883,32 @@ BEGIN
         EXECUTE tmp;
     END LOOP;
 
-    COMMENT ON SCHEMA population IS 'Schema for OLAP population and rate calculation data';
-    COMMENT ON TABLE population.population_dimensions IS 'Describes each of the OLAP dimensions usable for population calculation';
-    COMMENT ON COLUMN population.population_dimensions.dim_name IS 'Names of each OLAP dimension for which population divisions are known';
-    COMMENT ON COLUMN population.population_dimensions.dim_cols IS 'Column names to be searched for population counts. Each array element corresponds to a different level of the dimension hierarchy';
-    COMMENT ON COLUMN population.population_dimensions.mapping_func IS 'Functions to map OLAP values to something the underlying population tables will understand. Each element correspond to a level of the dimension hierarchy';
-    COMMENT ON TABLE population.population_tables IS 'Records the tables in the population schema that record population information';
-    COMMENT ON COLUMN population.population_tables.table_name IS 'Name of the population table';
-    COMMENT ON COLUMN population.population_tables.table_rank IS 'When multiple tables will provide the required information, this rank is used to find the desired table. Lowest ranks are selected first (e.g. the table with rank 1 is the best one to use, all else being equal';
-    COMMENT ON SCHEMA public IS 'Staging area for data warehouse ETL process';
-    COMMENT ON SCHEMA trisano IS 'Contains views used for reporting and OLAP ';
-    COMMENT ON VIEW trisano.addresses_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.answers_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.attachments_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.cdc_exports_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.codes_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.core_fields_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.csv_fields_view IS 'data dictionary ignore';
-    COMMENT ON TABLE trisano.current_schema_name IS 'Internal -- used so ETL process knows which schema can be dumped and reloaded';
-    COMMENT ON COLUMN trisano.current_schema_name.schemaname IS 'Contains the name of the schema currently in use by the warehouse, and referenced by all the views';
-    COMMENT ON VIEW trisano.db_files_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.disease_events_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.diseases_export_columns_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.diseases_external_codes_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.diseases_forms_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.diseases_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.dw_contact_answers_view IS 'Formbuilder answers applicable to contact events. See transactional database, answers table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_answers_view.code IS '';
-    COMMENT ON VIEW trisano.dw_contact_clinicians_view IS 'Clinician information applicable to contact events';
-    COMMENT ON COLUMN trisano.dw_contact_clinicians_view.dw_contact_events_id IS 'The contact event ID this answer refers to';
-    COMMENT ON COLUMN trisano.dw_contact_clinicians_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_clinicians_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_clinicians_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_clinicians_view.middle_name IS '';
-    COMMENT ON VIEW trisano.dw_contact_diagnostic_facilities_view IS 'Diagnostic facility information applicable to contact events';
-    COMMENT ON COLUMN trisano.dw_contact_diagnostic_facilities_view.dw_contact_events_id IS 'The contact event ID this answer refers to';
-    COMMENT ON COLUMN trisano.dw_contact_diagnostic_facilities_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_diagnostic_facilities_view.name IS 'Name of the diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_contact_diagnostic_facilities_view.place_id IS 'Places table record related to this record';
-    COMMENT ON COLUMN trisano.dw_contact_diagnostic_facilities_view.place_type IS 'Type of facility';
-    COMMENT ON VIEW trisano.dw_contact_diseases_view IS 'Diseases related to contact events. See diseases table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.active IS '';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.cdc_code IS '';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.contact_lead_in IS '';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.disease_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.place_lead_in IS '';
-    COMMENT ON COLUMN trisano.dw_contact_diseases_view.treatment_lead_in IS '';
-    COMMENT ON VIEW trisano.dw_contact_events_view IS 'Table of contact events. Most fields match the events table';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.actual_age_at_onset IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.actual_age_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.additional_risk_factors IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.age_in_years IS 'Calculated age in years, based on actual_age_at_onset and actual_age_type';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.city IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.contact_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.county IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_created IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_deleted IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_disease_diagnosed IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_disease_onset IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_entered_into_system IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_investigation_completed IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_investigation_started IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.date_updated IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.day_care_association IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.disease_event_died IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.disease_event_hospitalized IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.disease_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.disposition IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.dw_patients_id IS 'ID of patient record related to this event';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.estimated_age_at_onset IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.estimated_age_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.event_queue_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.food_handler IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.group_living IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.healthcare_worker IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.ibis_updated_at IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.imported_from_code IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.investigating_jurisdiction IS 'Name of the investigating jurisdiction';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.investigating_jurisdiction_id IS 'Places table record for this investigating jurisdiction';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.investigator IS 'Name of investigator';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.jurisdiction_of_residence IS 'Name of jurisdiction of residence';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.jurisdiction_of_residence_id IS 'Places table record for this jurisdiction of residence';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.latitude IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.longitude IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.occupation IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.other_data_1 IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.other_data_2 IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.parent_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.postal_code IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.pregnancy_due_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.pregnant IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.review_completed_by_state_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.risk_factor_details IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.sent_to_ibis IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.state IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.street_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.street_number IS '';
-    COMMENT ON COLUMN trisano.dw_contact_events_view.unit_number IS '';
-    COMMENT ON VIEW trisano.dw_contact_hospitals_view IS 'Information about hospital admissions related to contact events';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.admission_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.discharge_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.hospital_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.hospital_record_number IS '';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_hospitals_view.medical_record_number IS '';
-    COMMENT ON VIEW trisano.dw_contact_jurisdictions_view IS 'Jurisdictions related to contact events';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.entity_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_jurisdictions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_contact_lab_results_view IS 'Lab results for contact events. See lab results view for more information';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.collection_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.comment IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.dw_encounter_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.lab_test_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.lab_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.loinc_code IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.reference_range IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.result_value IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.specimen_sent_to_state IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.specimen_source IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.test_result IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.test_status IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.test_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.units IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.hl7_message IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.staged_message_state IS '';
-    COMMENT ON COLUMN trisano.dw_contact_lab_results_view.staged_message_note IS '';
-    COMMENT ON VIEW trisano.dw_contact_patients_races_view IS 'Races of patients involved in contact events. See patients_races table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_patients_races_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_patients_races_view.person_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_races_view.race IS '';
-    COMMENT ON VIEW trisano.dw_contact_patients_view IS 'Patients involved in contact events. See people table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.birth_date IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.birth_gender IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.date_of_death IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.entity_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.ethnicity IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.first_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.last_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.middle_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_patients_view.primary_language IS '';
-    COMMENT ON VIEW trisano.dw_contact_questions_view IS 'Questions on forms related to contact events. See questions table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.core_data IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.core_data_attr IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.data_type IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.form_element_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.help_text IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.is_required IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.question_text IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.size IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.style IS '';
-    COMMENT ON COLUMN trisano.dw_contact_questions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_contact_secondary_jurisdictions_view IS 'Secondary jurisdictions of contact events';
-    COMMENT ON COLUMN trisano.dw_contact_secondary_jurisdictions_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_secondary_jurisdictions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_secondary_jurisdictions_view.jurisdiction_id IS 'Places record related to this jurisdiction';
-    COMMENT ON COLUMN trisano.dw_contact_secondary_jurisdictions_view.name IS 'Name of the jurisdiction';
-    COMMENT ON VIEW trisano.dw_contact_treatments_events_view IS 'Treatment events related to contact events. See treatment_events table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.date_of_treatment IS '';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.treatment_given IS '';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.treatment_id IS '';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_events_view.treatment_notes IS '';
-    COMMENT ON VIEW trisano.dw_contact_treatments_view IS 'Treatments related to contact events. See treatments table for more information';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_view.treatment_name IS '';
-    COMMENT ON COLUMN trisano.dw_contact_treatments_view.treatment_type_id IS '';
-    COMMENT ON VIEW trisano.dw_date_dimension_view IS 'Dates used in various records. This provides functionality for the date-related dimensions in the OLAP system';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.day_of_month IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.day_of_week IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.day_of_year IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.fulldate IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.month IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.quarter IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.week_of_year IS '';
-    COMMENT ON COLUMN trisano.dw_date_dimension_view.year IS '';
-    COMMENT ON VIEW trisano.dw_encounter_answers_view IS 'Formbuilder answers provided in relation to encounter events. See answers table for more information';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.code IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.event_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.export_conversion_value_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.question_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_answers_view.text_answer IS '';
-    COMMENT ON VIEW trisano.dw_encounter_patients_view IS 'Patients involved in encounter events. See people table for more information';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.birth_date IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.birth_gender IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.date_of_death IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.entity_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.ethnicity IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.first_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.last_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.middle_name IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_patients_view.primary_language IS '';
-    COMMENT ON VIEW trisano.dw_encounter_questions_view IS 'Questions asked on forms for encounter events. See questions table for more information';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.core_data IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.core_data_attr IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.data_type IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.form_element_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.help_text IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.is_required IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.question_text IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.size IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.style IS '';
-    COMMENT ON COLUMN trisano.dw_encounter_questions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_encounters_lab_results_view IS 'Lab results for encounter events. See lab_results table for more information';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.collection_date IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.comment IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.dw_encounter_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.lab_test_date IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.lab_type IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.loinc_code IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.reference_range IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.result_value IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.specimen_sent_to_state IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.specimen_source IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.test_result IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.test_status IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.test_type IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.units IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.hl7_message IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.staged_message_state IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_lab_results_view.staged_message_note IS '';
-    COMMENT ON VIEW trisano.dw_encounters_treatments_events_view IS 'Treatment events for encounter events. See treatment_events table for more information';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.date_of_treatment IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.dw_encounter_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.treatment_given IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.treatment_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_events_view.treatment_notes IS '';
-    COMMENT ON VIEW trisano.dw_encounters_treatments_view IS 'Treatments for encounter events. See treatments table for more information';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_view.dw_encounters_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_view.dw_events_treatments_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_treatments_view.id IS 'Primary key';
-    COMMENT ON VIEW trisano.dw_encounters_view IS 'Encounter events. See events table for more information, but note that many fields have been removed because they do not relate to encounter events';
-    COMMENT ON COLUMN trisano.dw_encounters_view.description IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_view.dw_morbidity_events_id IS 'The morbidity event parent of this event';
-    COMMENT ON COLUMN trisano.dw_encounters_view.encounter_date IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_view.encounter_event_id IS '';
-    COMMENT ON COLUMN trisano.dw_encounters_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_encounters_view.investigator_id IS 'Users table record containing the investigator for this event';
-    COMMENT ON COLUMN trisano.dw_encounters_view.location IS '';
-    COMMENT ON VIEW trisano.dw_events_diagnostic_facilities_view IS 'Diagnostic facilities for various event types';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.name IS 'Name of the diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.place_id IS 'Place record for this facility';
-    COMMENT ON COLUMN trisano.dw_events_diagnostic_facilities_view.place_type IS 'Type of facility';
-    COMMENT ON VIEW trisano.dw_events_hospitals_view IS 'Hospitalizations related to various events';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.admission_date IS '';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.discharge_date IS '';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.hospital_name IS '';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.hospital_record_number IS '';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_events_hospitals_view.medical_record_number IS '';
-    COMMENT ON VIEW trisano.dw_events_reporters_view IS 'Reporters for various event types';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_events_reporters_view.middle_name IS '';
-    COMMENT ON VIEW trisano.dw_events_reporting_agencies_view IS 'Reporting agencies for various event types';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.place_id IS '';
-    COMMENT ON COLUMN trisano.dw_events_reporting_agencies_view.place_type IS '';
-    COMMENT ON VIEW trisano.dw_events_treatments_view IS 'Treatments events related to morbidity, encounter, or contact events';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.date_of_treatment IS '';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.dw_encounter_events_id IS 'Encounter event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.treatment_given IS '';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.treatment_id IS '';
-    COMMENT ON COLUMN trisano.dw_events_treatments_view.treatment_notes IS '';
-    COMMENT ON VIEW trisano.dw_lab_results_view IS 'Lab result records for various event types. See lab results table for more information';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.collection_date IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.comment IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.dw_encounter_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.lab_test_date IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.lab_type IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.loinc_code IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.reference_range IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.result_value IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.specimen_sent_to_state IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.specimen_source IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.test_result IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.test_status IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.test_type IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.units IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.hl7_message IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.staged_message_state IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.staged_message_note IS '';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.dw_contact_events_id IS 'Contact event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.dw_encounter_events_id IS 'Encounter event ID, if any, related to this diagnostic facility';
-    COMMENT ON COLUMN trisano.dw_lab_results_view.dw_morbidity_events_id IS 'Morbidity event ID, if any, related to this diagnostic facility';
-    COMMENT ON VIEW trisano.dw_morbidity_answers_view IS 'Formbuild answers related to morbidity events. See answers table for more information';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.event_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.export_conversion_value_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.question_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_answers_view.text_answer IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_clinicians_view IS 'Clinicians related to morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_clinicians_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_clinicians_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_clinicians_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_clinicians_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_clinicians_view.middle_name IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_diagnostic_facilities_view IS 'Diagnostic facilities asscoiated with morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_diagnostic_facilities_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diagnostic_facilities_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_diagnostic_facilities_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diagnostic_facilities_view.place_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diagnostic_facilities_view.place_type IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_diseases_view IS 'Diseases related to morbidity events. See diseases table for more information';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.active IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.cdc_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.contact_lead_in IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.disease_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.place_lead_in IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_diseases_view.treatment_lead_in IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_events_view IS 'Morbidity event records. See events table for more information';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.actual_age_at_onset IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.actual_age_type IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.acuity IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.additional_risk_factors IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.age_in_years IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.city IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.contact_type_if_once_a_contact IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.county IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_created IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_deleted IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_disease_diagnosed IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_disease_onset IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_entered_into_system IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_investigation_completed IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_investigation_started IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_reported_to_public_health IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.date_updated IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.day_care_association IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.disease_event_died IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.disease_event_hospitalized IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.disease_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.disposition_if_once_a_contact IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.dw_patients_id IS 'Patient record for this event';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.estimated_age_at_onset IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.estimated_age_type IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.event_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.event_queue_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.food_handler IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.group_living IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.healthcare_worker IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.ibis_updated_at IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.imported_from_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.investigating_jurisdiction IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.investigating_jurisdiction_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.investigator IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.jurisdiction_of_residence IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.jurisdiction_of_residence_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.latitude IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.lhd_case_status_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.longitude IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.mmwr_week IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.mmwr_year IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.occupation IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.other_data_1 IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.other_data_2 IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.outbreak_associated_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.outbreak_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.parent_guardian IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.parent_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.postal_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.pregnancy_due_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.pregnant IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.record_number IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.results_reported_to_clinician_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.review_completed_by_state_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.risk_factor_details IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.sent_to_cdc IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.sent_to_ibis IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.state IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.state_case_status_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.street_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.street_number IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_events_view.unit_number IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_hospitals_view IS 'Hospitalizations related to morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.admission_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.discharge_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.hospital_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.hospital_record_number IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_hospitals_view.medical_record_number IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_jurisdictions_view IS 'Jurisdictions of morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.entity_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_jurisdictions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_lab_results_view IS 'Lab results for morbidity events. See lab_results table for more infomrmation';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.collection_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.comment IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.dw_encounter_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.lab_test_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.lab_type IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.loinc_code IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.reference_range IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.result_value IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.specimen_sent_to_state IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.specimen_source IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.test_result IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.test_status IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.test_type IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.units IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.hl7_message IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.staged_message_state IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_lab_results_view.staged_message_note IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_patients_races_view IS 'Races of patients in morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_races_view.id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_races_view.person_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_races_view.race IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_patients_view IS 'Patients associated with morbidity events. See people table for more information';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.birth_date IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.birth_gender IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.date_of_death IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.entity_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.ethnicity IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.first_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.last_name_soundex IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.middle_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_patients_view.primary_language IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_questions_view IS 'Formbuilder questions related to morbidity events. See questions table for more information';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.core_data IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.core_data_attr IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.data_type IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.form_element_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.help_text IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.is_required IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.question_text IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.size IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.style IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_questions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_reporters_view IS 'Reporter records for morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporters_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporters_view.first_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporters_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporters_view.last_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporters_view.middle_name IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_reporting_agencies_view IS 'Reporting agencies for morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporting_agencies_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporting_agencies_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporting_agencies_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporting_agencies_view.place_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_reporting_agencies_view.place_type IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_secondary_jurisdictions_view IS 'Secondary jurisdictions for morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_secondary_jurisdictions_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_secondary_jurisdictions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_secondary_jurisdictions_view.jurisdiction_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_secondary_jurisdictions_view.name IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_treatments_events_view IS 'Treatment events for morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.date_of_treatment IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.treatment_given IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.treatment_id IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_events_view.treatment_notes IS '';
-    COMMENT ON VIEW trisano.dw_morbidity_treatments_view IS 'Treatments related to morbidity events';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_view.treatment_name IS '';
-    COMMENT ON COLUMN trisano.dw_morbidity_treatments_view.treatment_type_id IS '';
-    COMMENT ON VIEW trisano.dw_patients_races_view IS 'Races of patients';
-    COMMENT ON COLUMN trisano.dw_patients_races_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_patients_races_view.person_id IS '';
-    COMMENT ON COLUMN trisano.dw_patients_races_view.race IS '';
-    COMMENT ON VIEW trisano.dw_place_answers_view IS 'Answers to formbuilder questions related to place events. See answers table for more information';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.code IS '';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.event_id IS '';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.export_conversion_value_id IS '';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.question_id IS '';
-    COMMENT ON COLUMN trisano.dw_place_answers_view.text_answer IS '';
-    COMMENT ON VIEW trisano.dw_place_events_view IS 'Place events. See events table for more information, keeping in mind that many fields have been removed';
-    COMMENT ON COLUMN trisano.dw_place_events_view.city IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.county IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.dw_morbidity_events_id IS 'Morbidity event record that is the parent for this record';
-    COMMENT ON COLUMN trisano.dw_place_events_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_place_events_view.latitude IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.longitude IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.name IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.place_type IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.postal_code IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.state IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.street_name IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.street_number IS '';
-    COMMENT ON COLUMN trisano.dw_place_events_view.unit_number IS '';
-    COMMENT ON VIEW trisano.dw_place_questions_view IS 'Formbuilder questions related to place events. See questions table for more information';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.core_data IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.core_data_attr IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.created_at IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.data_type IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.form_element_id IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.help_text IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.is_required IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.question_text IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.short_name IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.size IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.style IS '';
-    COMMENT ON COLUMN trisano.dw_place_questions_view.updated_at IS '';
-    COMMENT ON VIEW trisano.dw_secondary_jurisdictions_view IS 'Secondary jurisdictions for various event typesj';
-    COMMENT ON COLUMN trisano.dw_secondary_jurisdictions_view.dw_contact_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_secondary_jurisdictions_view.dw_morbidity_events_id IS '';
-    COMMENT ON COLUMN trisano.dw_secondary_jurisdictions_view.id IS 'Primary key';
-    COMMENT ON COLUMN trisano.dw_secondary_jurisdictions_view.jurisdiction_id IS '';
-    COMMENT ON COLUMN trisano.dw_secondary_jurisdictions_view.name IS '';
-    COMMENT ON VIEW trisano.email_addresses_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.encounters_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.entities_view IS 'data dictionary ignore';
-    COMMENT ON TABLE trisano.etl_success IS 'Internal - records results of ETL processes';
-    COMMENT ON VIEW trisano.event_queues_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.events_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.export_columns_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.export_conversion_values_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.export_disease_groups_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.export_names_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.external_codes_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.form_elements_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.form_references_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.forms_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.hospitals_participations_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.lab_results_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.notes_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_contacts_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_encounters_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_places_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_risk_factors_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_treatments_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.participations_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.people_races_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.people_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.places_types_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.places_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.privileges_roles_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.privileges_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.questions_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.role_memberships_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.roles_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.schema_migrations_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.staged_messages_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.tasks_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.telephones_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.treatments_view IS 'data dictionary ignore';
-    COMMENT ON VIEW trisano.users_view IS 'data dictionary ignore';
+    -- Do object comments
+    -- This loop isn't terribly robust against weird comment values,
+    -- because trapping errors in PL/pgSQL is painful. Since we're populating
+    -- the comments table manually, this *shouldn't* be a problem.
+    FOR tmprec IN
+        SELECT
+            object_type, object_name, object_comment
+        FROM trisano.schema_comments
+        -- Trap unknown namespaces here because there's apparently no exception
+        -- type to trap invalid schema errors below
+        LEFT JOIN information_schema.schemata s
+            ON (s.schema_name = object_name)
+        WHERE
+            lower(object_type) != 'schema'
+            OR s.schema_name IS NOT NULL
+    LOOP
+        tmp := 'COMMENT ON ' || tmprec.object_type || ' ' || tmprec.object_name || ' IS ''' || tmprec.object_comment || '''';
+        BEGIN
+            EXECUTE tmp;
+        EXCEPTION
+            WHEN undefined_column THEN
+                RAISE NOTICE 'Exception: unknown column %', tmprec.object_name;
+            WHEN undefined_table THEN
+                RAISE NOTICE 'Exception: unknown table %', tmprec.object_name;
+            END;
+    END LOOP;
 
     UPDATE trisano.current_schema_name SET schemaname = new_schema;
 
@@ -1568,7 +1983,7 @@ BEGIN
     END IF;
 
     -- Now, find tables containing that column
-    FOR table_name IN 
+    FOR table_name IN
         SELECT
             ppt.table_name
         FROM
@@ -1590,7 +2005,7 @@ BEGIN
     IF query = '' THEN
         RAISE EXCEPTION 'Found no tables containing the dimension %', my_dim_name;
     END IF;
-    
+  
     tmp := query;
     query := 'SELECT DISTINCT res FROM ( ' || tmp || ' ) f ORDER BY res';
 
@@ -1600,13 +2015,14 @@ BEGIN
     END LOOP; -- Results loop
 END;
 $$ LANGUAGE plpgsql;
+-- End of distinct_dimension_values
 
 GRANT EXECUTE ON FUNCTION population.distinct_dimension_values(my_dim_name TEXT, my_level INTEGER)
     TO trisano_ro;
 
 CREATE OR REPLACE VIEW population.population_years AS
     SELECT 1 AS id, d.year AS year
-    FROM population.distinct_dimension_values('Population Year'::text, 1) d(year); 
+    FROM population.distinct_dimension_values('Population Year'::text, 1) d(year);
 
 GRANT SELECT ON population.population_years TO trisano_ro;
 

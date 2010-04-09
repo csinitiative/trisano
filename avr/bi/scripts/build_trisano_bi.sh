@@ -51,7 +51,7 @@ fi
 
 # VERIFY THESE NAMES BEFORE RUNNING SCRIPT
 BI_SERVER_ZIP=biserver-ce-3.0.0-STABLE.tar.gz
-REPORT_DESIGNER_ZIP=prd-ce-3.0.0.37222.RC2.zip
+REPORT_DESIGNER_ZIP=prd-ce-3.0.0.37992.stable.zip
 
 BI_SERVER_NAME=biserver-ce
 ADMIN_CONSOLE_NAME=administration-console
@@ -112,7 +112,10 @@ cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/start-pentaho.sh $BI_
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/stop-pentaho.sh $BI_SERVER_HOME
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/quartz.properties $BI_SERVER_HOME/pentaho-solutions/system/quartz/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/hibernate-settings.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/hibernate-c3p0-postgres.cfg.xml $BI_SERVER_HOME/pentaho-solutions/system/hibernate
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/context.xml $BI_SERVER_HOME/tomcat/webapps/pentaho/META-INF
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/c3p0-0.9.1.2.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/c3p0-0.9.1.2.jar $ADMIN_CONSOLE_HOME/lib
 cp $BI_SERVER_HOME/tomcat/common/lib/postgresql-8.2-504.jdbc3.jar $REPORT_DESIGNER_HOME/lib/jdbc
 
 # Customize admin console
@@ -130,10 +133,12 @@ cp $TRISANO_SOURCE_HOME/avr/bi/schema/TriSano.OLAP.xml $BI_SERVER_HOME/pentaho-s
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/metadata.xmi $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.properties $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solutions/TriSano
-cp $TRISANO_SOURCE_HOME/avr/bi/scripts/update_metadata.rb $BI_SERVER_HOME/pentaho-solutions/TriSano
-cp --preserve=mode $TRISANO_SOURCE_HOME/avr/bi/scripts/update_metadata.sh $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.rb $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp --preserve=mode $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.sh $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
 cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/lib
+cp $TRISANO_SOURCE_HOME/avr/pentaho-metadata-2.2.0-SNAPSHOT.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/pentaho-metadata-2.2.0.jar
+cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/trisano.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/
 
 # Removing sample repositories
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels

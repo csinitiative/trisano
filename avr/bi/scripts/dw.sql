@@ -1,4 +1,4 @@
--- Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-- Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
 --
 -- This file is part of TriSano.
 --
@@ -20,7 +20,7 @@
 -- database, using a schema called "staging".
 
 BEGIN;
-    DROP SCHEMA IF EXISTS staging;
+    DROP SCHEMA IF EXISTS staging CASCADE;
     ALTER SCHEMA public RENAME TO staging;
     CREATE SCHEMA public;
 COMMIT;
@@ -42,6 +42,7 @@ CREATE TABLE dw_date_dimension (
 
 -- Takes a date and returns its ID in the dw_date_dimension table, inserting it
 -- if it doesn't exist
+DROP FUNCTION IF EXISTS upsert_date(d DATE);
 CREATE OR REPLACE FUNCTION upsert_date(d DATE) RETURNS DATE AS $$
 BEGIN
     BEGIN
@@ -95,6 +96,7 @@ WHERE
     tablename IN (
         'dw_morbidity_events',
         'dw_contact_events',
+        'dw_outbreak_events',
         'dw_secondary_jurisdictions',
         'dw_patients',
         'dw_events_hospitals',
@@ -112,20 +114,21 @@ WHERE
         'dw_people_races',
         'dw_place_events',
         'dw_encounters',
+        'dw_encounter_events',
         'dw_encounters_labs',
         'dw_encounters_treatments',
-        'dw_morbidity_patients',
-        'dw_contact_patients',
         'dw_place_patients',
-        'dw_encounter_patients',
         'dw_morbidity_answers',
         'dw_contact_answers',
         'dw_place_answers',
+        'dw_outbreak_answers',
         'dw_encounter_answers',
         'dw_morbidity_questions',
         'dw_contact_questions',
         'dw_place_questions',
-        'dw_encounter_questions'
+        'dw_encounter_questions',
+        'dw_telephones',
+        'dw_email_addresses'
     );
 COMMIT;
 
@@ -140,175 +143,191 @@ WHERE
     relkind = 'S' AND
     relname IN (
         'dw_patients_races_seq',
-        'dw_events_reporting_agencies_id_seq',
+--        'dw_events_reporting_agencies_id_seq',
         'dw_events_diagnostic_facilities_id_seq'
     ) AND
     n.nspname = 'public' ;
 COMMIT;
 
 BEGIN;
-CREATE TABLE dw_morbidity_patients AS
-SELECT
-    people.id,
-    people.entity_id,            -- Keeping this just in case
-    birth_gender_ec.code_description AS birth_gender,            -- code_description?
-    ethnicity_ec.code_description AS ethnicity,                -- code_description?
-    primary_language_ec.code_description AS primary_language,        -- code_description?
-    people.first_name,
-    people.middle_name,
-    people.last_name,
-    upsert_date(people.birth_date) AS birth_date,
-    upsert_date(people.date_of_death) AS date_of_death,
-    people.first_name_soundex,
-    people.last_name_soundex
-FROM
-    people
-    LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
-    LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
-    LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec IS NULL)
-    INNER JOIN (
-        SELECT
-            part.primary_entity_id
-        FROM
-            participations part
-            INNER JOIN events
-                ON (events.id = part.event_id AND events.deleted_at IS NULL)
-        WHERE
-            part.type = 'InterestedParty' AND
-            events.type = 'MorbidityEvent'
-        GROUP BY part.primary_entity_id
-    ) f
-        ON (f.primary_entity_id = people.entity_id)
-;
+--CREATE TABLE dw_morbidity_patients AS
+--SELECT
+--    people.id,
+--    people.entity_id,            -- Keeping this just in case
+--    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+--    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+--    primary_language_ec.code_description AS primary_language,        -- code_description?
+--    people.first_name,
+--    people.middle_name,
+--    people.last_name,
+--    upsert_date(people.birth_date) AS birth_date,
+--    upsert_date(people.date_of_death) AS date_of_death
+--FROM
+--    people
+--    LEFT JOIN external_codes birth_gender_ec
+--        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
+--    LEFT JOIN external_codes ethnicity_ec
+--        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
+--    LEFT JOIN external_codes primary_language_ec
+--        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
+--    INNER JOIN (
+--        SELECT
+--            part.primary_entity_id
+--        FROM
+--            participations part
+--            INNER JOIN events
+--                ON (events.id = part.event_id AND events.deleted_at IS NULL)
+--        WHERE
+--            part.type = 'InterestedParty' AND
+--            events.type = 'MorbidityEvent'
+--        GROUP BY part.primary_entity_id
+--    ) f
+--        ON (f.primary_entity_id = people.entity_id)
+--;
+--
+--ALTER TABLE dw_morbidity_patients
+--    ADD CONSTRAINT dw_morbidity_patients_pkey PRIMARY KEY (id);
+--CREATE INDEX dw_morbidity_patients_entity_ix ON dw_morbidity_patients (entity_id);
+--CREATE INDEX dw_morbidity_patients_birth_gender_ix
+--    ON dw_morbidity_patients (birth_gender);
+--CREATE INDEX dw_morbidity_patients_ethnicity_ix ON dw_morbidity_patients (ethnicity);
+--CREATE INDEX dw_morbidity_patients_birth_date_ix
+--    ON dw_morbidity_patients (birth_date);
+--CREATE INDEX dw_morbidity_patients_date_of_death_ix
+--    ON dw_morbidity_patients (date_of_death);
 
-ALTER TABLE dw_morbidity_patients
-    ADD CONSTRAINT dw_morbidity_patients_pkey PRIMARY KEY (id);
-CREATE INDEX dw_morbidity_patients_entity_ix ON dw_morbidity_patients (entity_id);
-CREATE INDEX dw_morbidity_patients_birth_gender_ix
-    ON dw_morbidity_patients (birth_gender);
-CREATE INDEX dw_morbidity_patients_ethnicity_ix ON dw_morbidity_patients (ethnicity);
-CREATE INDEX dw_morbidity_patients_birth_date_ix
-    ON dw_morbidity_patients (birth_date);
-CREATE INDEX dw_morbidity_patients_date_of_death_ix
-    ON dw_morbidity_patients (date_of_death);
-
-CREATE TABLE dw_contact_patients AS
-SELECT
-    people.id,
-    people.entity_id,            -- Keeping this just in case
-    birth_gender_ec.code_description AS birth_gender,            -- code_description?
-    ethnicity_ec.code_description AS ethnicity,                -- code_description?
-    primary_language_ec.code_description AS primary_language,        -- code_description?
-    people.first_name,
-    people.middle_name,
-    people.last_name,
-    upsert_date(people.birth_date) AS birth_date,
-    upsert_date(people.date_of_death) AS date_of_death,
-    people.first_name_soundex,
-    people.last_name_soundex
-FROM
-    people
-    LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
-    LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec IS NULL)
-    LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec IS NULL)
-    INNER JOIN (
-        SELECT
-            part.primary_entity_id
-        FROM
-            participations part
-            INNER JOIN events
-                ON (events.id = part.event_id AND events.deleted_at IS NULL)
-        WHERE
-            part.type = 'InterestedParty' AND
-            events.type = 'ContactEvent'
-        GROUP BY part.primary_entity_id
-    ) f
-        ON (f.primary_entity_id = people.entity_id)
-;
-
-ALTER TABLE dw_contact_patients
-    ADD CONSTRAINT dw_contact_patients_pkey PRIMARY KEY (id);
-CREATE INDEX dw_contact_patients_entity_ix ON dw_contact_patients (entity_id);
-CREATE INDEX dw_contact_patients_birth_gender_ix
-    ON dw_contact_patients (birth_gender);
-CREATE INDEX dw_contact_patients_ethnicity_ix ON dw_contact_patients (ethnicity);
-CREATE INDEX dw_contact_patients_birth_date_ix
-    ON dw_contact_patients (birth_date);
-CREATE INDEX dw_contact_patients_date_of_death_ix
-    ON dw_contact_patients (date_of_death);
-
-CREATE TABLE dw_encounter_patients AS
-SELECT
-    people.id,
-    people.entity_id,            -- Keeping this just in case
-    birth_gender_ec.code_description AS birth_gender,            -- code_description?
-    ethnicity_ec.code_description AS ethnicity,                -- code_description?
-    primary_language_ec.code_description AS primary_language,        -- code_description?
-    people.first_name,
-    people.middle_name,
-    people.last_name,
-    upsert_date(people.birth_date) AS birth_date,
-    upsert_date(people.date_of_death) AS date_of_death,
-    people.first_name_soundex,
-    people.last_name_soundex
-FROM
-    people
-    LEFT JOIN external_codes birth_gender_ec
-        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
-    LEFT JOIN external_codes ethnicity_ec
-        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
-    LEFT JOIN external_codes primary_language_ec
-        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
-    INNER JOIN (
-        SELECT
-            part.primary_entity_id
-        FROM
-            participations part
-            INNER JOIN events
-                ON (events.id = part.event_id AND events.deleted_at IS NULL)
-        WHERE
-            part.type = 'InterestedParty' AND
-            events.type = 'EncounterEvent'
-        GROUP BY part.primary_entity_id
-    ) f
-        ON (f.primary_entity_id = people.entity_id)
-;
-
-ALTER TABLE dw_encounter_patients
-    ADD CONSTRAINT dw_encounter_patients_pkey PRIMARY KEY (id);
-CREATE INDEX dw_encounter_patients_entity_ix ON dw_encounter_patients (entity_id);
-CREATE INDEX dw_encounter_patients_birth_gender_ix
-    ON dw_encounter_patients (birth_gender);
-CREATE INDEX dw_encounter_patients_ethnicity_ix ON dw_encounter_patients (ethnicity);
-CREATE INDEX dw_encounter_patients_birth_date_ix
-    ON dw_encounter_patients (birth_date);
-CREATE INDEX dw_encounter_patients_date_of_death_ix
-    ON dw_encounter_patients (date_of_death);
+--CREATE TABLE dw_contact_patients AS
+--SELECT
+--    people.id,
+--    people.entity_id,            -- Keeping this just in case
+--    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+--    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+--    primary_language_ec.code_description AS primary_language,        -- code_description?
+--    people.first_name,
+--    people.middle_name,
+--    people.last_name,
+--    upsert_date(people.birth_date) AS birth_date,
+--    upsert_date(people.date_of_death) AS date_of_death
+--FROM
+--    people
+--    LEFT JOIN external_codes birth_gender_ec
+--        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
+--    LEFT JOIN external_codes ethnicity_ec
+--        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec IS NULL)
+--    LEFT JOIN external_codes primary_language_ec
+--        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
+--    INNER JOIN (
+--        SELECT
+--            part.primary_entity_id
+--        FROM
+--            participations part
+--            INNER JOIN events
+--                ON (events.id = part.event_id AND events.deleted_at IS NULL)
+--        WHERE
+--            part.type = 'InterestedParty' AND
+--            events.type = 'ContactEvent'
+--        GROUP BY part.primary_entity_id
+--    ) f
+--        ON (f.primary_entity_id = people.entity_id)
+--;
+--
+--ALTER TABLE dw_contact_patients
+--    ADD CONSTRAINT dw_contact_patients_pkey PRIMARY KEY (id);
+--CREATE INDEX dw_contact_patients_entity_ix ON dw_contact_patients (entity_id);
+--CREATE INDEX dw_contact_patients_birth_gender_ix
+--    ON dw_contact_patients (birth_gender);
+--CREATE INDEX dw_contact_patients_ethnicity_ix ON dw_contact_patients (ethnicity);
+--CREATE INDEX dw_contact_patients_birth_date_ix
+--    ON dw_contact_patients (birth_date);
+--CREATE INDEX dw_contact_patients_date_of_death_ix
+--    ON dw_contact_patients (date_of_death);
+--
+-- CREATE TABLE dw_encounter_patients AS
+-- SELECT
+--     people.id,
+--     people.entity_id,            -- Keeping this just in case
+--     birth_gender_ec.code_description AS birth_gender,            -- code_description?
+--     ethnicity_ec.code_description AS ethnicity,                -- code_description?
+--     primary_language_ec.code_description AS primary_language,        -- code_description?
+--     people.first_name,
+--     people.middle_name,
+--     people.last_name,
+--     upsert_date(people.birth_date) AS birth_date,
+--     upsert_date(people.date_of_death) AS date_of_death
+-- FROM
+--     people
+--     LEFT JOIN external_codes birth_gender_ec
+--         ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
+--     LEFT JOIN external_codes ethnicity_ec
+--         ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
+--     LEFT JOIN external_codes primary_language_ec
+--         ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
+--     INNER JOIN (
+--         SELECT
+--             part.primary_entity_id
+--         FROM
+--             participations part
+--             INNER JOIN events
+--                 ON (events.id = part.event_id AND events.deleted_at IS NULL)
+--         WHERE
+--             part.type = 'InterestedParty' AND
+--             events.type = 'EncounterEvent'
+--         GROUP BY part.primary_entity_id
+--     ) f
+--         ON (f.primary_entity_id = people.entity_id)
+-- ;
+--
+-- ALTER TABLE dw_encounter_patients
+--     ADD CONSTRAINT dw_encounter_patients_pkey PRIMARY KEY (id);
+-- CREATE INDEX dw_encounter_patients_entity_ix ON dw_encounter_patients (entity_id);
+-- CREATE INDEX dw_encounter_patients_birth_gender_ix
+--     ON dw_encounter_patients (birth_gender);
+-- CREATE INDEX dw_encounter_patients_ethnicity_ix ON dw_encounter_patients (ethnicity);
+-- CREATE INDEX dw_encounter_patients_birth_date_ix
+--     ON dw_encounter_patients (birth_date);
+-- CREATE INDEX dw_encounter_patients_date_of_death_ix
+--     ON dw_encounter_patients (date_of_death);
 
 CREATE TABLE dw_morbidity_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
     ppl.id AS dw_patients_id,
+    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+    primary_language_ec.code_description AS primary_language,        -- code_description?
+    pplpart.primary_entity_id AS patient_entity_id,
+    ppl.first_name,
+    ppl.middle_name,
+    ppl.last_name,
+    upsert_date(ppl.birth_date) AS birth_date,
+    upsert_date(ppl.date_of_death) AS date_of_death,
 
     ds.id AS disease_id,
+    ds.disease_name,
+    ds.contact_lead_in,
+    ds.place_lead_in,
+    ds.treatment_lead_in,
+    ds.active,
+    ds.cdc_code,
     ijpl.name AS investigating_jurisdiction,
     ijpl.id AS investigating_jurisdiction_id,
     jorpl.name AS jurisdiction_of_residence,
     jorpl.id AS jurisdiction_of_residence_id,
-    scsi.code_description AS state_case_status_code,     -- code_description?
-    lcsi.code_description AS lhd_case_status_code,        -- code_description?
+    COALESCE(scsi.code_description, 'Unknown') AS state_case_status_code,
+    COALESCE(lcsi.code_description, 'Unknown') AS lhd_case_status_code,
     events."MMWR_week" AS mmwr_week,
     events."MMWR_year" AS mmwr_year,
 
     events.event_name,
     events.record_number,
+
+    reppl.first_name AS rep_first_name,
+    reppl.middle_name AS rep_middle_name,
+    reppl.last_name AS rep_last_name,
+
+    repagpl.name AS rep_ag_name,
+    repagc.code_description AS rep_ag_place_type,
 
     events.age_at_onset AS actual_age_at_onset,
     agetypeec.code_description AS actual_age_type,
@@ -332,6 +351,7 @@ SELECT
 
     oaci.code_description AS outbreak_associated_code,    -- code_description?
     events.outbreak_name,
+    events.outbreak_event_id,
 
     -- events.event_status,                    -- Change this from a code to a text value?
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
@@ -370,7 +390,7 @@ SELECT
         ELSE extract(year from disev.date_diagnosed)::TEXT
     END AS date_disease_diagnosed_year,
     CASE
-        WHEN disev.date_diagnosed IS NULL THEN NULL 
+        WHEN disev.date_diagnosed IS NULL THEN NULL
         WHEN extract(month from disev.date_diagnosed) <= 2 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 2 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 5 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
@@ -421,27 +441,34 @@ SELECT
         WHEN events.workflow_state = 'under_investigation'      THEN 'Under Investigation'
         ELSE ''
     END AS public_health_status,
+    newhstore AS morbidity_formbuilder,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
                                  -- Mondrian happy
 FROM events
     LEFT JOIN participations pplpart
-        ON (events.id = pplpart.event_id)
+        ON (events.id = pplpart.event_id AND pplpart.secondary_entity_id IS NULL AND pplpart.type = 'InterestedParty')
     LEFT JOIN participations_risk_factors prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
-        ON (pplpart.primary_entity_id = pplent.id AND pplent.deleted_at IS NULL)
+        ON (pplpart.primary_entity_id = pplent.id)
     LEFT JOIN people ppl
         ON (ppl.entity_id = pplent.id)
+    LEFT JOIN external_codes birth_gender_ec
+        ON (birth_gender_ec.id = ppl.birth_gender_id)
+    LEFT JOIN external_codes ethnicity_ec
+        ON (ethnicity_ec.id = ppl.ethnicity_id)
+    LEFT JOIN external_codes primary_language_ec
+        ON (primary_language_ec.id = ppl.primary_language_id)
     LEFT JOIN external_codes ifi
         ON (events.imported_from_id = ifi.id)
     LEFT JOIN external_codes scsi
-        ON (events.state_case_status_id = scsi.id AND scsi.deleted_at IS NULL)
+        ON (events.state_case_status_id = scsi.id)
     LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id AND oaci.deleted_at IS NULL)
+        ON (events.outbreak_associated_id = oaci.id)
     LEFT JOIN external_codes lcsi
-        ON (events.lhd_case_status_id = lcsi.id AND lcsi.deleted_at IS NULL)
+        ON (events.lhd_case_status_id = lcsi.id)
     LEFT JOIN users inv
         ON (events.investigator_id = inv.id)
     LEFT JOIN disease_events disev
@@ -449,47 +476,73 @@ FROM events
     LEFT JOIN diseases ds
         ON (disev.disease_id = ds.id)
     LEFT JOIN external_codes disevhosp
-        ON (disevhosp.id = disev.hospitalized_id AND disevhosp.deleted_at IS NULL)
+        ON (disevhosp.id = disev.hospitalized_id)
     LEFT JOIN external_codes disevdied
-        ON (disevdied.id = disev.died_id AND disevdied.deleted_at IS NULL)
+        ON (disevdied.id = disev.died_id)
     LEFT JOIN participations pa
-        ON (pa.event_id = events.id)
+        ON (pa.event_id = events.id AND pa.type = 'Jurisdiction')
     LEFT JOIN places ijpl
         ON (ijpl.entity_id = pa.secondary_entity_id)
     LEFT JOIN external_codes fhec
-        ON (prf.food_handler_id = fhec.id AND fhec.deleted_at IS NULL)
+        ON (prf.food_handler_id = fhec.id)
     LEFT JOIN external_codes hcwec
-        ON (hcwec.id = prf.healthcare_worker_id AND hcwec.deleted_at IS NULL)
+        ON (hcwec.id = prf.healthcare_worker_id)
     LEFT JOIN external_codes glec
-        ON (glec.id = prf.group_living_id AND glec.deleted_at IS NULL)
+        ON (glec.id = prf.group_living_id)
     LEFT JOIN external_codes dcaec
-        ON (dcaec.id = prf.day_care_association_id AND dcaec.deleted_at IS NULL)
+        ON (dcaec.id = prf.day_care_association_id)
     LEFT JOIN external_codes pregec
-        ON (pregec.id = prf.pregnant_id AND pregec.deleted_at IS NULL)
+        ON (pregec.id = prf.pregnant_id)
     LEFT JOIN addresses pataddr
         ON (pataddr.event_id = events.id)
     LEFT JOIN external_codes jorec
-        ON (jorec.id = pataddr.county_id AND jorec.deleted_at IS NULL)
+        ON (jorec.id = pataddr.county_id)
     LEFT JOIN places jorpl
         ON (jorpl.entity_id = jorec.jurisdiction_id)
     LEFT JOIN external_codes stateec
-        ON (stateec.id = pataddr.state_id AND stateec.deleted_at IS NULL)
+        ON (stateec.id = pataddr.state_id)
     LEFT JOIN external_codes agetypeec
-        ON (agetypeec.id = events.age_type_id AND agetypeec.deleted_at IS NULL)
+        ON (agetypeec.id = events.age_type_id)
     LEFT JOIN external_codes est_ec
-        ON (est_ec.id = ppl.age_type_id AND est_ec.deleted_at IS NULL)
+        ON (est_ec.id = ppl.age_type_id)
     LEFT JOIN participations_contacts partcon
         ON (partcon.id = events.participations_contact_id)
     LEFT JOIN external_codes partcon_disp_ec
-        ON (partcon.disposition_id = partcon_disp_ec.id AND partcon_disp_ec.deleted_at IS NULL)
+        ON (partcon.disposition_id = partcon_disp_ec.id)
     LEFT JOIN external_codes partcon_cont_ec
-        ON (partcon.contact_type_id = partcon_cont_ec.id AND partcon_cont_ec.deleted_at IS NULL)
+        ON (partcon.contact_type_id = partcon_cont_ec.id)
+    LEFT JOIN participations reppart
+        ON (reppart.event_id = events.id AND reppart.type = 'Reporter')
+    LEFT JOIN people reppl
+        ON (reppl.entity_id = reppart.secondary_entity_id)
+    LEFT JOIN participations repagpart
+        ON (repagpart.event_id = events.id AND repagpart.type = 'ReportingAgency')
+    LEFT JOIN places repagpl
+        ON (repagpl.entity_id = repagpart.secondary_entity_id)
+    LEFT JOIN (
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) repagpt
+        ON (repagpt.place_id = repagpl.id)
+    LEFT JOIN codes repagc
+        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != ''
+        GROUP BY a.event_id
+    ) formbuilder_hstores
+        ON (events.id = formbuilder_hstores.event_id)
 WHERE
     events.type = 'MorbidityEvent' AND
-    events.deleted_at IS NULL AND
-    pa.type = 'Jurisdiction' AND
-    pplpart.secondary_entity_id IS NULL AND
-    pplpart.type = 'InterestedParty'
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_morbidity_events
@@ -538,8 +591,24 @@ SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
     ppl.id AS dw_patients_id,
+    ppl.entity_id,            -- Keeping this just in case
+    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+    primary_language_ec.code_description AS primary_language,        -- code_description?
+    pplpart.primary_entity_id AS patient_entity_id,
+    ppl.first_name,
+    ppl.middle_name,
+    ppl.last_name,
+    upsert_date(ppl.birth_date) AS birth_date,
+    upsert_date(ppl.date_of_death) AS date_of_death,
 
     ds.id AS disease_id,
+    ds.disease_name,
+    ds.contact_lead_in,
+    ds.place_lead_in,
+    ds.treatment_lead_in,
+    ds.active,
+    ds.cdc_code,
     ijpl.name AS investigating_jurisdiction,
     ijpl.id AS investigating_jurisdiction_id,
     jorpl.name AS jurisdiction_of_residence,
@@ -600,7 +669,7 @@ SELECT
         ELSE extract(year from disev.date_diagnosed)::TEXT
     END AS date_disease_diagnosed_year,
     CASE
-        WHEN disev.date_diagnosed IS NULL THEN NULL 
+        WHEN disev.date_diagnosed IS NULL THEN NULL
         WHEN extract(month from disev.date_diagnosed) <= 2 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 2 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 5 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
@@ -646,25 +715,32 @@ SELECT
         WHEN events.workflow_state = 'under_investigation'      THEN 'Under Investigation'
         ELSE ''
     END AS public_health_status,
+    newhstore AS contact_formbuilder,
 
     1::integer AS always_one
 FROM events
     LEFT JOIN participations pplpart
-        ON (events.id = pplpart.event_id)
+        ON (events.id = pplpart.event_id AND pplpart.secondary_entity_id IS NULL AND pplpart.type = 'InterestedParty')
     LEFT JOIN participations_risk_factors prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
-        ON (pplpart.primary_entity_id = pplent.id AND pplent.deleted_at IS NULL)
+        ON (pplpart.primary_entity_id = pplent.id)
     LEFT JOIN people ppl
         ON (ppl.entity_id = pplent.id)
+    LEFT JOIN external_codes birth_gender_ec
+        ON (birth_gender_ec.id = ppl.birth_gender_id)
+    LEFT JOIN external_codes ethnicity_ec
+        ON (ethnicity_ec.id = ppl.ethnicity_id AND ethnicity_ec IS NULL)
+    LEFT JOIN external_codes primary_language_ec
+        ON (primary_language_ec.id = ppl.primary_language_id)
     LEFT JOIN external_codes ifi
-        ON (events.imported_from_id = ifi.id AND ifi.deleted_at IS NULL)
+        ON (events.imported_from_id = ifi.id)
     LEFT JOIN external_codes scsi
-        ON (events.state_case_status_id = scsi.id AND scsi.deleted_at IS NULL)
+        ON (events.state_case_status_id = scsi.id)
     LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id AND oaci.deleted_at IS NULL)
+        ON (events.outbreak_associated_id = oaci.id)
     LEFT JOIN external_codes lcsi
-        ON (events.lhd_case_status_id = lcsi.id AND lcsi.deleted_at IS NULL)
+        ON (events.lhd_case_status_id = lcsi.id)
     LEFT JOIN users inv
         ON (events.investigator_id = inv.id)
     LEFT JOIN disease_events disev
@@ -672,47 +748,59 @@ FROM events
     LEFT JOIN diseases ds
         ON (disev.disease_id = ds.id)
     LEFT JOIN external_codes disevhosp
-        ON (disevhosp.id = disev.hospitalized_id AND disevhosp.deleted_at IS NULL)
+        ON (disevhosp.id = disev.hospitalized_id)
     LEFT JOIN external_codes disevdied
-        ON (disevdied.id = disev.died_id AND disevdied.deleted_at IS NULL)
+        ON (disevdied.id = disev.died_id)
     LEFT JOIN participations pa
-        ON (pa.event_id = events.id)
+        ON (pa.event_id = events.id AND pa.type = 'Jurisdiction')
     LEFT JOIN places ijpl
         ON (ijpl.entity_id = pa.secondary_entity_id)
     LEFT JOIN external_codes fhec
-        ON (prf.food_handler_id = fhec.id AND fhec.deleted_at IS NULL)
+        ON (prf.food_handler_id = fhec.id)
     LEFT JOIN external_codes hcwec
-        ON (hcwec.id = prf.healthcare_worker_id AND hcwec.deleted_at IS NULL)
+        ON (hcwec.id = prf.healthcare_worker_id)
     LEFT JOIN external_codes glec
-        ON (glec.id = prf.group_living_id AND glec.deleted_at IS NULL)
+        ON (glec.id = prf.group_living_id)
     LEFT JOIN external_codes dcaec
-        ON (dcaec.id = prf.day_care_association_id AND dcaec.deleted_at IS NULL)
+        ON (dcaec.id = prf.day_care_association_id)
     LEFT JOIN external_codes pregec
-        ON (pregec.id = prf.pregnant_id AND pregec.deleted_at IS NULL)
+        ON (pregec.id = prf.pregnant_id)
     LEFT JOIN addresses pataddr
         ON (pataddr.event_id = events.id)
     LEFT JOIN external_codes jorec
-        ON (jorec.id = pataddr.county_id AND jorec.deleted_at IS NULL)
+        ON (jorec.id = pataddr.county_id)
     LEFT JOIN places jorpl
         ON (jorpl.entity_id = jorec.jurisdiction_id)
     LEFT JOIN external_codes stateec
-        ON (stateec.id = pataddr.state_id AND stateec.deleted_at IS NULL)
+        ON (stateec.id = pataddr.state_id)
     LEFT JOIN external_codes agetypeec
-        ON (agetypeec.id = events.age_type_id AND agetypeec.deleted_at IS NULL)
+        ON (agetypeec.id = events.age_type_id)
     LEFT JOIN external_codes est_ec
-        ON (est_ec.id = ppl.age_type_id AND est_ec.deleted_at IS NULL)
+        ON (est_ec.id = ppl.age_type_id)
     LEFT JOIN participations_contacts partcon
         ON (partcon.id = events.participations_contact_id)
     LEFT JOIN external_codes partcon_disp_ec
-        ON (partcon.disposition_id = partcon_disp_ec.id AND partcon_disp_ec.deleted_at IS NULL)
+        ON (partcon.disposition_id = partcon_disp_ec.id)
     LEFT JOIN external_codes partcon_cont_ec
-        ON (partcon.contact_type_id = partcon_cont_ec.id AND partcon_cont_ec.deleted_at IS NULL)
+        ON (partcon.contact_type_id = partcon_cont_ec.id)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != ''
+        GROUP BY a.event_id
+    ) formbuilder_hstores
+        ON (events.id = formbuilder_hstores.event_id)
 WHERE
     events.type = 'ContactEvent' AND
-    events.deleted_at IS NULL AND
-    pa.type = 'Jurisdiction' AND
-    pplpart.secondary_entity_id IS NULL AND
-    pplpart.type = 'InterestedParty'
+    events.deleted_at IS NULL
 ;
 
 ALTER TABLE dw_contact_events
@@ -777,7 +865,7 @@ FROM
     JOIN participations patpr
         ON (patpr.event_id = events.id AND patpr.type = 'InterestedParty')
 WHERE
-    events.deleted_at IS NULL AND 
+    events.deleted_at IS NULL AND
     (
         events.type = 'ContactEvent' OR
         events.type = 'MorbidityEvent'
@@ -795,7 +883,7 @@ CREATE INDEX dw_secondary_jurisdictions_jurisdiction_id_ix
 
 CREATE TABLE dw_events_hospitals AS
 SELECT
-    hpart.id AS id,
+    hpart.id,
     CASE
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
@@ -817,6 +905,8 @@ FROM
         ON (pl.entity_id = p.secondary_entity_id)
     JOIN hospitals_participations hpart
         ON (hpart.participation_id = p.id)
+--    RIGHT JOIN events
+--        ON (p.event_id = events.id)
 WHERE
     p.type = 'HospitalizationFacility' AND
     events.deleted_at IS NULL
@@ -870,18 +960,18 @@ FROM
     LEFT JOIN staged_messages sm
         ON (sm.id = lr.staged_message_id)
     LEFT JOIN external_codes tsec
-        ON (tsec.id = lr.test_status_id AND tsec.deleted_at IS NULL)
+        ON (tsec.id = lr.test_status_id)
     LEFT JOIN external_codes trec
-        ON (trec.id = lr.test_result_id AND trec.deleted_at IS NULL)
+        ON (trec.id = lr.test_result_id)
     LEFT JOIN common_test_types ctt
         ON (ctt.id = lr.test_type_id)
     LEFT JOIN external_codes ssec
-        ON (ssec.id = lr.specimen_source_id AND ssec.deleted_at IS NULL)
+        ON (ssec.id = lr.specimen_source_id)
     LEFT JOIN external_codes uphlec
-        ON (uphlec.id = lr.specimen_sent_to_state_id AND uphlec.deleted_at IS NULL)
+        ON (uphlec.id = lr.specimen_sent_to_state_id)
     LEFT JOIN participations p
         ON (p.id = lr.participation_id)
-    LEFT JOIN events
+    JOIN events
         ON (p.event_id = events.id AND events.deleted_at IS NULL)
     LEFT JOIN places
         ON (places.entity_id = p.secondary_entity_id)
@@ -911,7 +1001,7 @@ SELECT
 FROM
     people_races pr
     LEFT JOIN external_codes ex
-        ON (pr.race_id = ex.id AND ex.deleted_at IS NULL)
+        ON (pr.race_id = ex.id)
     LEFT JOIN people p
         ON (p.entity_id = pr.entity_id)
 ;
@@ -939,7 +1029,8 @@ SELECT
     pt.treatment_id,
     tgec.code_description AS treatment_given,
     upsert_date(pt.treatment_date) AS date_of_treatment,
-    pt.treatment AS treatment_notes
+    pt.treatment AS treatment_notes,
+    pt.stop_treatment_date
 FROM
     participations_treatments pt
     LEFT JOIN participations p
@@ -963,8 +1054,9 @@ CREATE INDEX dw_events_treatments_date_of_treatment_ix
 
 CREATE TABLE dw_morbidity_clinicians AS
 SELECT
-    p.id AS id,
+    p.id,
     events.id AS dw_morbidity_events_id,
+    pl.entity_id,
     pl.first_name,
     pl.last_name,
     pl.middle_name
@@ -974,6 +1066,8 @@ FROM
         ON (p.event_id = events.id AND events.type = 'MorbidityEvent')
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
+--    RIGHT JOIN events e
+--        ON (p.event_id = e.id AND e.type = 'MorbidityEvent')
 WHERE
     p.type = 'Clinician' AND
     events.deleted_at IS NULL
@@ -986,7 +1080,7 @@ CREATE INDEX dw_morbidity_clinicians_event_id_ix
 
 CREATE TABLE dw_contact_clinicians AS
 SELECT
-    p.id AS id,
+    p.id,
     events.id AS dw_contact_events_id,
     pl.first_name,
     pl.last_name,
@@ -994,9 +1088,11 @@ SELECT
 FROM
     events
     JOIN participations p
-        ON (p.event_id = events.id AND events.type = 'ContactEvent')
+        ON (events.id = p.event_id AND events.type = 'ContactEvent')
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
+--    RIGHT JOIN events
+--        ON (p.event_id = events.id AND events.type = 'ContactEvent')
 WHERE
     p.type = 'Clinician' AND
     events.deleted_at IS NULL
@@ -1007,11 +1103,8 @@ ALTER TABLE dw_contact_clinicians
 CREATE INDEX dw_contact_clinicians_event_id_ix
     ON dw_contact_clinicians (dw_contact_events_id);
 
-CREATE SEQUENCE dw_events_diagnostic_facilities_id_seq;
-
-CREATE TABLE dw_events_diagnostic_facilities AS
+EXPLAIN
 SELECT
-    nextval('dw_events_diagnostic_facilities_id_seq') AS id,
     CASE
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
@@ -1036,94 +1129,55 @@ FROM
         ON (pt.place_id = pl.id)
     JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+--    RIGHT JOIN events
+--        ON (p.event_id = events.id)
 WHERE
     p.type = 'DiagnosticFacility' AND
+    events.type in ('MorbidityEvent', 'ContactEvent') AND
     events.deleted_at IS NULL
 ;
 
-ALTER TABLE dw_events_diagnostic_facilities
-    ADD CONSTRAINT pk_dw_events_diagnostic_facilities PRIMARY KEY (id);
+CREATE TABLE dw_events_diagnostic_facilities AS
+SELECT
+    CASE
+        WHEN events.type = 'MorbidityEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_morbidity_events_id,
+    CASE
+        WHEN events.type = 'ContactEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_contact_events_id,
+    pl.name AS name,
+    c.code_description AS place_type,
+    pl.id AS place_id
+FROM
+    events
+    JOIN participations p
+        ON (p.event_id = events.id)
+    JOIN places pl
+        ON (pl.entity_id = p.secondary_entity_id)
+    JOIN (
+        -- Just in case there are places with multiple types, we only want it
+        -- to create one record but we don't really care of what place type
+        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    ) pt
+        ON (pt.place_id = pl.id)
+    JOIN codes c
+        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+--    RIGHT JOIN events
+--        ON (p.event_id = events.id)
+WHERE
+    p.type = 'DiagnosticFacility' AND
+--    events.type in ('MorbidityEvent', 'ContactEvent') AND
+    events.deleted_at IS NULL
+;
+
 CREATE INDEX dw_events_diag_fac_morbidity_event_ix
     ON dw_events_diagnostic_facilities (dw_morbidity_events_id);
 CREATE INDEX dw_events_diag_fac_contact_event_ix
     ON dw_events_diagnostic_facilities (dw_contact_events_id);
 CREATE INDEX dw_events_diag_fac_place_id_ix
     ON dw_events_diagnostic_facilities (place_id);
-
-CREATE SEQUENCE dw_events_reporting_agencies_id_seq;
-
-CREATE TABLE dw_events_reporting_agencies AS
-SELECT
-    nextval('dw_events_reporting_agencies_id_seq') AS id,
-    CASE
-        WHEN events.type = 'MorbidityEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_morbidity_events_id,
-    CASE
-        WHEN events.type = 'ContactEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_contact_events_id,
-    pl.name AS name,
-    c.code_description AS place_type,
-    pl.id AS place_id
-FROM
-    events
-    JOIN participations p
-        ON (p.event_id = events.id)
-    JOIN places pl
-        ON (pl.entity_id = p.secondary_entity_id)
-    JOIN (
-        -- Just in case there are places with multiple types. We only want it to create one record
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
-    ) pt
-        ON (pt.place_id = pl.id)
-    JOIN codes c
-        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
-WHERE
-    p.type = 'ReportingAgency' AND
-    events.deleted_at IS NULL
-;
-
-ALTER TABLE dw_events_reporting_agencies
-    ADD CONSTRAINT pk_dw_events_reporting_agencies PRIMARY KEY (id);
-CREATE INDEX dw_events_rep_agen_morbidity_event_ix
-    ON dw_events_reporting_agencies (dw_morbidity_events_id);
-CREATE INDEX dw_events_rep_agen_contact_event_ix
-    ON dw_events_reporting_agencies (dw_contact_events_id);
-CREATE INDEX dw_events_reporting_agencies_place_ix
-    ON dw_events_reporting_agencies (place_id);
-
-CREATE TABLE dw_events_reporters AS
-SELECT
-    p.id AS id,
-    CASE
-        WHEN events.type = 'MorbidityEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_morbidity_events_id,
-    CASE
-        WHEN events.type = 'ContactEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_contact_events_id,
-    pl.first_name,
-    pl.last_name,
-    pl.middle_name
-FROM
-    events
-    JOIN participations p
-        ON (p.event_id = events.id)
-    JOIN people pl
-        ON (pl.entity_id = p.secondary_entity_id)
-WHERE
-    p.type = 'Reporter' AND
-    events.deleted_at IS NULL
-;
-
-ALTER TABLE dw_events_reporters
-    ADD CONSTRAINT pk_dw_events_reporters PRIMARY KEY (id);
-CREATE INDEX dw_events_reporters_morbidity_event_ix
-    ON dw_events_reporters (dw_morbidity_events_id);
-CREATE INDEX dw_events_reporters_contact_event_ix
-    ON dw_events_reporters (dw_contact_events_id);
 
 CREATE TABLE dw_place_events AS
 SELECT
@@ -1140,15 +1194,17 @@ SELECT
     county_ec.code_description AS county,
     ad.postal_code,
     ad.latitude,
-    ad.longitude
+    ad.longitude,
+    disev.disease_id,
+    newhstore AS place_formbuilder
 FROM
     events
     LEFT JOIN addresses ad
         ON (ad.event_id = events.id)
     LEFT JOIN external_codes state_ec
-        ON (state_ec.id = ad.state_id AND state_ec.deleted_at IS NULL)
+        ON (state_ec.id = ad.state_id)
     LEFT JOIN external_codes county_ec
-        ON (county_ec.id = ad.county_id AND county_ec.deleted_at IS NULL)
+        ON (county_ec.id = ad.county_id)
     JOIN participations part
         ON (part.event_id = events.id AND part.type = 'InterestedPlace')
     JOIN places p
@@ -1162,286 +1218,153 @@ FROM
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
     LEFT JOIN participations_places prtpl
         ON (prtpl.id = events.participations_place_id)
+    LEFT JOIN disease_events disev
+        ON (disev.event_id = events.id)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != ''
+        GROUP BY a.event_id
+    ) formbuilder_hstores
+        ON (events.id = formbuilder_hstores.event_id)
 WHERE
     events.type = 'PlaceEvent' AND
     events.deleted_at IS NULL
+;
+
+INSERT INTO dw_place_events (id, dw_morbidity_events_id)
+    SELECT e.id, e.id
+    FROM
+        events e
+        LEFT JOIN events c
+            ON (c.type = 'PlaceEvent' AND e.id = c.parent_id)
+    WHERE
+        e.type = 'MorbidityEvent' AND c.id IS NULL
 ;
 
 ALTER TABLE dw_place_events
     ADD CONSTRAINT pk_dw_place_events PRIMARY KEY (id);
 CREATE INDEX dw_place_events_parent ON dw_place_events (dw_morbidity_events_id);
 
-CREATE TABLE dw_encounters AS
+CREATE TABLE dw_encounter_events AS
 SELECT
     events.id,
     events.parent_id AS dw_morbidity_events_id,
     events.id AS encounter_event_id,
+    people.id AS dw_patients_id,
+    people.entity_id AS patient_entity_id,                   -- Keeping this just in case
+    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+    primary_language_ec.code_description AS primary_language,        -- code_description?
+    people.first_name,
+    people.middle_name,
+    people.last_name,
+    upsert_date(people.birth_date) AS birth_date,
+    upsert_date(people.date_of_death) AS date_of_death,
     u.first_name || ' ' || u.last_name AS investigator_id,
     upsert_date(pe.encounter_date) AS encounter_date,
     pe.encounter_location_type AS location,
-    pe.description
+    pe.description,
+    disev.disease_id,
+    ds.disease_name,
+    ds.contact_lead_in,
+    ds.place_lead_in,
+    ds.treatment_lead_in,
+    ds.active,
+    ds.cdc_code,
+    NULL::trisano.hstore AS encounter_formbuilder
 FROM
     participations_encounters pe
     JOIN events
         ON (events.participations_encounter_id = pe.id AND events.deleted_at IS NULL)
     JOIN users u
         ON (pe.user_id = u.id)
-;
-
-ALTER TABLE dw_encounters
-    ADD CONSTRAINT pk_dw_encounters PRIMARY KEY (id);
-CREATE INDEX dw_encounters_parent ON dw_encounters (dw_morbidity_events_id);
-CREATE INDEX dw_encounters_event_id_ix ON dw_encounters (encounter_event_id);
-CREATE INDEX dw_encounters_investigator_id_ix ON dw_encounters (investigator_id);
-CREATE INDEX dw_encounters_encounter_date_ix ON dw_encounters (encounter_date);
-CREATE INDEX dw_encounters_location_ix ON dw_encounters (location);
-
--- CREATE TABLE dw_encounters_labs AS
--- SELECT
---     p.id,
---     events.id AS dw_encounters_id,
---     lr.id AS dw_lab_results_id
--- FROM
---     lab_results lr
---     JOIN participations p
---         ON (p.id = lr.participation_id)
---     JOIN events
---         ON (events.id = p.event_id)
--- WHERE
---     events.type = 'EncounterEvent'
--- ;
--- 
--- ALTER TABLE dw_encounters_labs
---     ADD CONSTRAINT pk_dw_encounters_labs PRIMARY KEY (id);
--- CREATE INDEX dw_encounters_labs_encounter_id_ix
---     ON dw_encounters_labs (dw_encounters_id);
--- CREATE INDEX dw_encounters_labs_results_ix
---     ON dw_encounters_labs (dw_lab_results_id);
-
--- TODO: is this table useful?
-CREATE TABLE dw_encounters_treatments AS
-SELECT
-    pt.id,
-    events.id AS dw_encounters_id,
-    pt.id AS dw_events_treatments_id
-FROM
-    participations_treatments pt
-    LEFT JOIN participations p
-        ON (p.id = pt.participation_id)
-    LEFT JOIN events
-        ON (events.id = p.event_id AND events.deleted_at IS NULL)
+    LEFT JOIN disease_events disev
+        ON (events.id = disev.event_id)
+    LEFT JOIN diseases ds
+        ON (disev.disease_id = ds.id)
+    JOIN participations pplpart
+        ON (pplpart.event_id = events.id)
+    LEFT JOIN entities pplent
+        ON (pplpart.primary_entity_id = pplent.id)
+    LEFT JOIN people
+        ON (people.entity_id = pplpart.primary_entity_id)
+    LEFT JOIN external_codes birth_gender_ec
+        ON (birth_gender_ec.id = people.birth_gender_id)
+    LEFT JOIN external_codes ethnicity_ec
+        ON (ethnicity_ec.id = people.ethnicity_id)
+    LEFT JOIN external_codes primary_language_ec
+        ON (primary_language_ec.id = people.primary_language_id)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != ''
+        GROUP BY a.event_id
+    ) formbuilder_hstores
+        ON (events.id = formbuilder_hstores.event_id)
 WHERE
-    events.type = 'EncounterEvent'
+    pplpart.type = 'InterestedParty'
 ;
 
-ALTER TABLE dw_encounters_treatments
-    ADD CONSTRAINT pk_dw_encounters_treatments PRIMARY KEY (id);
-CREATE INDEX dw_encounters_treatments_encounter_ix
-    ON dw_encounters_treatments (dw_encounters_id);
-CREATE INDEX dw_enc_treat_events_treatments_id_ix
-    ON dw_encounters_treatments (dw_events_treatments_id);
+--INSERT INTO dw_encounter_events (id, dw_morbidity_events_id)
+--    SELECT e.id, e.id
+--    FROM
+--        events e
+--        LEFT JOIN events c
+--            ON (c.type = 'EncounterEvent' AND e.id = c.parent_id)
+--    WHERE
+--        e.type = 'MorbidityEvent' AND c.id IS NULL
+--;
 
-CREATE TABLE dw_morbidity_questions AS
+ALTER TABLE dw_encounter_events
+    ADD CONSTRAINT pk_dw_encounter_events PRIMARY KEY (id);
+CREATE INDEX dw_encounter_events_parent ON dw_encounter_events (dw_morbidity_events_id);
+CREATE INDEX dw_encounter_events_event_id_ix ON dw_encounter_events (encounter_event_id);
+CREATE INDEX dw_encounter_events_investigator_id_ix ON dw_encounter_events (investigator_id);
+CREATE INDEX dw_encounter_events_encounter_date_ix ON dw_encounter_events (encounter_date);
+CREATE INDEX dw_encounter_events_location_ix ON dw_encounter_events (location);
+
+INSERT INTO avr_groups (name) VALUES ('TriSano');
+INSERT INTO avr_groups_diseases (disease_id, avr_group_id)
+    SELECT d.id, a.id
+    FROM diseases d, avr_groups a
+    WHERE a.name = 'TriSano';
+
+CREATE TABLE dw_telephones AS
 SELECT
-    q.*
+    entity_id,
+    country_code,
+    area_code,
+    phone_number,
+    extension,
+    code_description AS phone_type
 FROM
-    questions q
-    INNER JOIN (
-        SELECT
-            DISTINCT questions.id
-        FROM
-            questions
-            INNER JOIN answers a
-                ON (a.question_id = questions.id)
-            INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'MorbidityEvent' AND e.deleted_at IS NULL)
-    ) f
-        ON (f.id = q.id)
-;
+    telephones t
+    LEFT JOIN external_codes e
+        ON (e.id = t.entity_location_type_id);
 
-ALTER TABLE dw_morbidity_questions
-    ADD CONSTRAINT dw_morbidity_questions_pkey PRIMARY KEY (id);
-CREATE INDEX dw_morbidity_questions_form_element_ix
-    ON dw_morbidity_questions (form_element_id);
-
-CREATE TABLE dw_contact_questions AS
+CREATE TABLE dw_email_addresses AS
 SELECT
-    q.*
+    entity_id,
+    email_address
 FROM
-    questions q
-    INNER JOIN (
-        SELECT
-            DISTINCT questions.id
-        FROM
-            questions
-            INNER JOIN answers a
-                ON (a.question_id = questions.id)
-            INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'ContactEvent' AND e.deleted_at IS NULL)
-    ) f
-        ON (f.id = q.id)
-;
-
-ALTER TABLE dw_contact_questions
-    ADD CONSTRAINT dw_contact_questions_pkey PRIMARY KEY (id);
-CREATE INDEX dw_contact_questions_form_element_ix
-    ON dw_contact_questions (form_element_id);
-
-CREATE TABLE dw_encounter_questions AS
-SELECT
-    q.*
-FROM
-    questions q
-    INNER JOIN (
-        SELECT
-            DISTINCT questions.id
-        FROM
-            questions
-            INNER JOIN answers a
-                ON (a.question_id = questions.id)
-            INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'EncounterEvent' AND e.deleted_at IS NULL)
-    ) f
-        ON (f.id = q.id)
-;
-
-ALTER TABLE dw_encounter_questions
-    ADD CONSTRAINT dw_encounter_questions_pkey PRIMARY KEY (id);
-CREATE INDEX dw_encounter_questions_form_element_ix
-    ON dw_encounter_questions (form_element_id);
-
-CREATE TABLE dw_place_questions AS
-SELECT
-    q.*
-FROM
-    questions q
-    INNER JOIN (
-        SELECT
-            DISTINCT questions.id
-        FROM
-            questions
-            INNER JOIN answers a
-                ON (a.question_id = questions.id)
-            INNER JOIN events e
-                ON (a.event_id = e.id AND e.type = 'PlaceEvent' AND e.deleted_at IS NULL)
-    ) f
-        ON (f.id = q.id)
-;
-
-ALTER TABLE dw_place_questions
-    ADD CONSTRAINT dw_place_questions_pkey PRIMARY KEY (id);
-CREATE INDEX dw_place_questions_form_element_ix
-    ON dw_place_questions (form_element_id);
-
-CREATE TABLE dw_morbidity_answers AS
-SELECT
-    a.*
-FROM
-    answers a
-    INNER JOIN events e
-        ON (e.id = a.event_id AND e.deleted_at IS NULL)
-WHERE
-    e.type = 'MorbidityEvent'
-;
-
-ALTER TABLE dw_morbidity_answers
-    ADD CONSTRAINT dw_morbidity_answers_pkey PRIMARY KEY (id);
-CREATE INDEX dw_morbidity_answers_event_id
-    ON dw_morbidity_answers (event_id);
-CREATE INDEX dw_morbidity_answers_question_id
-    ON dw_morbidity_answers (question_id);
-
-CREATE TABLE dw_contact_answers AS
-SELECT
-    a.*
-FROM
-    answers a
-    INNER JOIN events e
-        ON (e.id = a.event_id AND e.deleted_at IS NULL)
-WHERE
-    e.type = 'ContactEvent'
-;
-
-ALTER TABLE dw_contact_answers
-    ADD CONSTRAINT dw_contact_answers_pkey PRIMARY KEY (id);
-CREATE INDEX dw_contact_answers_event_id
-    ON dw_contact_answers (event_id);
-CREATE INDEX dw_contact_answers_question_id
-    ON dw_contact_answers (question_id);
-
-CREATE TABLE dw_encounter_answers AS
-SELECT
-    a.*
-FROM
-    answers a
-    INNER JOIN events e
-        ON (e.id = a.event_id AND e.deleted_at IS NULL)
-WHERE
-    e.type = 'EncounterEvent'
-;
-
-ALTER TABLE dw_encounter_answers
-    ADD CONSTRAINT dw_encounter_answers_pkey PRIMARY KEY (id);
-CREATE INDEX dw_encounter_answers_event_id
-    ON dw_encounter_answers (event_id);
-CREATE INDEX dw_encounter_answers_question_id
-    ON dw_encounter_answers (question_id);
-
-CREATE TABLE dw_place_answers AS
-SELECT
-    a.*
-FROM
-    answers a
-    INNER JOIN events e
-        ON (e.id = a.event_id AND e.deleted_at IS NULL)
-WHERE
-    e.type = 'PlaceEvent'
-;
-
-ALTER TABLE dw_place_answers
-    ADD CONSTRAINT dw_place_answers_pkey PRIMARY KEY (id);
-CREATE INDEX dw_place_answers_event_id
-    ON dw_place_answers (event_id);
-CREATE INDEX dw_place_answers_question_id
-    ON dw_place_answers (question_id);
-
-CREATE TABLE dw_morbidity_diseases AS
-SELECT
-    d.*
-FROM
-    diseases d
-    INNER JOIN (
-        SELECT
-            DISTINCT diseases.id
-        FROM
-            diseases
-            INNER JOIN dw_morbidity_events dme
-                ON (dme.disease_id = diseases.id)
-    ) f
-        ON (f.id = d.id)
-;
-
-ALTER TABLE dw_morbidity_diseases
-    ADD CONSTRAINT dw_morbidity_diseases_pkey PRIMARY KEY (id);
-
-CREATE TABLE dw_contact_diseases AS
-SELECT
-    d.*
-FROM
-    diseases d
-    INNER JOIN (
-        SELECT
-            DISTINCT diseases.id
-        FROM
-            diseases
-            INNER JOIN dw_contact_events dme
-                ON (dme.disease_id = diseases.id)
-    ) f
-        ON (f.id = d.id)
-;
-
-ALTER TABLE dw_contact_diseases
-    ADD CONSTRAINT dw_contact_diseases_pkey PRIMARY KEY (id);
+    email_addresses e;
 
 ANALYZE;
 

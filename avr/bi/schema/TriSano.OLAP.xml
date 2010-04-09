@@ -2,9 +2,9 @@
 	<Cube name="Morbidity Events" caption="Morbidity Events" cache="true" enabled="true">
 		<Table name="dw_morbidity_events_view" schema="trisano">
 		</Table>
-        <Dimension type="StandardDimension" foreignKey="dw_patients_id" name="Gender">
-            <Hierarchy name="Gender" primaryKey="id" allMemberName="All Genders" hasAll="true">
-                <Table name="dw_morbidity_patients_view" schema="trisano"></Table>
+        <Dimension type="StandardDimension" name="Gender">
+            <Hierarchy name="Gender" allMemberName="All Genders" hasAll="true">
+                <!--<Table name="dw_morbidity_patients_view" schema="trisano"></Table> -->
                 <Level name="Gender" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
                     <KeyExpression>
                         <SQL dialiect="postgres">CASE WHEN birth_gender IS NULL THEN 'Unknown' ELSE birth_gender END</SQL>
@@ -12,9 +12,9 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-        <Dimension type="StandardDimension" foreignKey="dw_patients_id" name="Ethnicity">
-            <Hierarchy name="Ethnicity" primaryKey="id" allMemberName="All Ethnicities" hasAll="true">
-                <Table name="dw_morbidity_patients_view" schema="trisano"></Table>
+        <Dimension type="StandardDimension" name="Ethnicity">
+            <Hierarchy name="Ethnicity" allMemberName="All Ethnicities" hasAll="true">
+                <!--<Table name="dw_morbidity_patients_view" schema="trisano"></Table> -->
                 <Level name="Ethnicity" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
                     <KeyExpression>
                         <SQL dialiect="postgres">CASE WHEN ethnicity IS NULL THEN 'Unknown' ELSE ethnicity END</SQL>
@@ -66,6 +66,9 @@
                     <KeyExpression><SQL dialect="postgres">
                         COALESCE(trisano.get_age_group(age_in_years), 'Unknown')
                     </SQL></KeyExpression>
+                    <OrdinalExpression><SQL dialect="postgres">
+                        COALESCE(trisano.get_age_group_ordinal(age_in_years), 9999)
+                    </SQL></OrdinalExpression>
                 </Level>
                 <Level type="String" name="Age" ordinalColumn="age_in_years">
                     <KeyExpression><SQL dialect="postgres">
@@ -75,11 +78,8 @@
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id">
-            <Hierarchy hasAll="true" primaryKey="id" primaryKeyTable="dw_morbidity_patients_view">
-                <Join leftKey="id" rightAlias="dw_morbidity_patients_races_view" rightKey="person_id">
-                    <Table name="dw_morbidity_patients_view" schema="trisano" />
-                    <Table name="dw_morbidity_patients_races_view" schema="trisano" />
-                </Join>
+            <Hierarchy hasAll="true" primaryKey="person_id">
+                <Table name="dw_morbidity_patients_races_view" schema="trisano" />
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_morbidity_patients_races_view" />
             </Hierarchy>
         </Dimension>
@@ -318,9 +318,9 @@
 	<Cube name="Contact Events" caption="Contact Events" cache="true" enabled="true">
     <Table name="dw_contact_events_view" schema="trisano">
     </Table>
-        <Dimension type="StandardDimension" foreignKey="dw_patients_id" name="Gender">
-            <Hierarchy name="Gender" primaryKey="id" allMemberName="All Genders" hasAll="true">
-                <Table name="dw_contact_patients_view" schema="trisano"></Table>
+        <Dimension type="StandardDimension" name="Gender">
+            <Hierarchy name="Gender" allMemberName="All Genders" hasAll="true">
+                <!--<Table name="dw_contact_patients_view" schema="trisano"></Table> -->
                 <Level name="Gender" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
                     <KeyExpression>
                         <SQL dialiect="postgres">CASE WHEN birth_gender IS NULL THEN 'Unknown' ELSE birth_gender END</SQL>
@@ -328,9 +328,9 @@
                 </Level>
             </Hierarchy>
         </Dimension>
-        <Dimension type="StandardDimension" foreignKey="dw_patients_id" name="Ethnicity">
-            <Hierarchy name="Ethnicity" primaryKey="id" allMemberName="All Ethnicities" hasAll="true">
-                <Table name="dw_contact_patients_view" schema="trisano"></Table>
+        <Dimension type="StandardDimension" name="Ethnicity">
+            <Hierarchy name="Ethnicity" allMemberName="All Ethnicities" hasAll="true">
+                <!--<Table name="dw_contact_patients_view" schema="trisano"></Table> -->
                 <Level name="Ethnicity" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
                     <KeyExpression>
                         <SQL dialiect="postgres">CASE WHEN ethnicity IS NULL THEN 'Unknown' ELSE ethnicity END</SQL>
@@ -377,11 +377,8 @@
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id">
-            <Hierarchy hasAll="true" primaryKey="id" primaryKeyTable="dw_contact_patients_view">
-                <Join leftKey="id" rightAlias="dw_contact_patients_races_view" rightKey="person_id">
-                    <Table name="dw_contact_patients_view" schema="trisano" />
-                    <Table name="dw_contact_patients_races_view" schema="trisano" />
-                </Join>
+            <Hierarchy hasAll="true" primaryKey="person_id">
+                <Table name="dw_contact_patients_races_view" schema="trisano" />
                 <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_contact_patients_races_view" />
             </Hierarchy>
         </Dimension>
