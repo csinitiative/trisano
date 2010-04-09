@@ -713,7 +713,8 @@ es:
   edit_organism: "Editar Organismo"
   organism_name: "Nombre de Organismo"
   create_new_organism: "Crear Organismo Nuevo"
-
+  list_organisms: "Listar Organismos"
+  
   #People
   create_new_person: "Crear persona nueva"
   clear_search_criteria: "Borrar Criteria de Búsqueda"
@@ -866,7 +867,7 @@ es:
   edit_form: "Editar Formulario"
   all_jurisdictions: "Todas las Jurisdicciones"
   contact_event: "Evento de Contacto"
-  place_even: "Evento de Lugar"
+  place_event: "Evento de Lugar"
   create_form: "Crear Formulario"
   invalid_form_structure: "Está inválida la estructura de formulario"
   wait_message: 'Esto puede durar unos minutos.'
