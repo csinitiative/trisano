@@ -19,11 +19,12 @@
   %legend
     ="#{t 'telephone'}/#{t 'Email'}"
   %div{:id => 'telephones'}
-    %div.data_telephones
+    - core_element(:telephones, f, :horiz) do
       - f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
-        = render :partial => 'people/telephone', :locals => { :f => telephone_form }
-    %p
-      =add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone'
+        %div.data_telephones
+          = render :partial => 'people/telephone', :locals => { :f => telephone_form }
+        %p
+          =add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone'
 
   %div{:id => 'email_addresses'}
     %div.data_email_addresses

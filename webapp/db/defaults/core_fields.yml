@@ -950,3 +950,11 @@
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][place][place_type]
   code_name: placetype
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][telephones]
+  
