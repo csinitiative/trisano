@@ -577,7 +577,7 @@ es:
   associated_diseases: "Enfermedades Correspondientes"
   export_column: "Columna de Exportación"
   create_export_column: "Crear Columna de Exportación"
-  descritpive_name: "Nombre Descriptivo"
+  descriptive_name: "Nombre Descriptivo"
   cdc_name: "Nombre de CDC"
   disease_group: "Grupo de Enfermedades"
   not_specificed: "no especificado/a(s)"
