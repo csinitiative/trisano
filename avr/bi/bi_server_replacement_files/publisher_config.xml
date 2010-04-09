@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+	This file must be configured before client tools
+	will be able to publish onto the server. Publishing
+	involves accepting a file (action sequence, xml document,
+	anything) and placing it into the solution. This
+	action should only be allowed if the tool is configured
+	with a server/deployment specific password. The 
+	RepositoryFilePublisher is now coded to expect an MD5
+	hash of the password entered here before it will allow
+	publish into the server.
+	
+	This is a critical security measure designed to prevent
+	malicious actions from being published into your server.
+	Please take care to make the password sufficiently
+	difficult to guess. Also take care that the contents of
+	this file are not generally available
+-->
+<publisher-config>
+	<publisher-password>password</publisher-password>
+</publisher-config>
