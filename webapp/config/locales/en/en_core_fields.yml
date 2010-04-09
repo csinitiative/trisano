@@ -137,6 +137,7 @@ en:
           healthcare_worker_id: Healthcare worker
         person_entity:
           telephones: Patient telephones
+          email_addresses: Patient email addresses
           person:
             date_of_death: Patient date of death
             age_at_onset: Age at onset
