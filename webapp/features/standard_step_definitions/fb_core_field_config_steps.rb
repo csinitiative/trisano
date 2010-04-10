@@ -30,7 +30,11 @@ When /^I answer all core field config questions$/ do
 end
 
 When /^I save the event$/i do
-  submit_form "edit_morbidity_event_#{@event.id}"
+  if @contact_event
+    submit_form "edit_contact_event_#{@contact_event.id}"
+  else
+    submit_form "edit_morbidity_event_#{@event.id}"
+  end
 end
 
 Then /^I should see all core field config answers$/ do

@@ -60,6 +60,9 @@ def path_to(page_name)
   when /the contact edit page/i
     edit_contact_event_path(@contact_event)
 
+  when /the contact event edit page/i
+    edit_contact_event_path(@contact_event)
+
   when /the contact show page/i
     contact_event_path(@contact_event)
 

@@ -15,6 +15,7 @@ en:
             name: Name
             place_type_id: Type
     contact_event:
+      parent_guardian: Parent / Guardian
       address:
         city: Contact city
         postal_code: Contact zip code

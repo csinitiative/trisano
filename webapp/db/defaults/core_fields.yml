@@ -992,3 +992,10 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[encounters]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[parent_guardian]
