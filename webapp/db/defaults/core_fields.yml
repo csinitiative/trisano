@@ -1020,3 +1020,10 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][telephones]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][email_addresses]
