@@ -44,6 +44,7 @@ en:
           pregnant_id: Pregnant
           healthcare_worker_id: Healthcare worker
         person_entity:
+          telephones: Contact telephones
           person:
             date_of_death: Contact date of death
             age_at_onset: Age at onset
