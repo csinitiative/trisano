@@ -24,6 +24,7 @@ en:
         street_number: Contact street number
         state_id: Contact state
         street_name: Contact street name
+        district: District
       disease_event:
         date_diagnosed: Disease date diagnosed
         disease_onset_date: Disease onset date
