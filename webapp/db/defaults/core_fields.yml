@@ -1034,3 +1034,38 @@
   field_type: multi_select
   event_type: contact_event
   key: contact_event[interested_party][person_entity][race_ids]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[clinicians]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[diagnostic_facilities]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[other_data_1]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[other_data_2]
