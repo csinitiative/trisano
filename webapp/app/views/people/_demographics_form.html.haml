@@ -26,7 +26,7 @@
       -core_element :ethnicity_id, p, :horiz do
         =p.label(:ethnicity_id)
         %span.data_ethnicity=p.dropdown_code_field(:ethnicity_id, 'ethnicity', {}, {}, event)
-      %span.horiz
+      -core_element(:race_ids, f, :horiz) do
         =f.label(:race_ids)
         %span.data_race=f.multi_select_code_field(:race_ids, 'race', {}, {})
       -core_element :primary_language_id, p, :horiz do 

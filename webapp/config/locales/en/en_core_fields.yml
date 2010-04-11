@@ -46,6 +46,7 @@ en:
         person_entity:
           telephones: Contact telephones
           email_addresses: Contact email addresses
+          race_ids: Contact races
           person:
             date_of_death: Contact date of death
             age_at_onset: Age at onset

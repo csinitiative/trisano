@@ -1027,3 +1027,10 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][email_addresses]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_select
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][race_ids]

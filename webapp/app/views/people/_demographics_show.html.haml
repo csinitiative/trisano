@@ -26,5 +26,6 @@
       -core_element_show :ethnicity_id, person_form, :horiz do
         =person_form.label(:ethnicity_id)
         %span.data_ethnicity=h(person.ethnicity_description)
-      =f.label :race_ids
-      %span.data_race=h(person.race_description)
+      -core_element_show(:race_ids, f, :horiz) do
+        =f.label :race_ids
+        %span.data_race=h(person.race_description)
