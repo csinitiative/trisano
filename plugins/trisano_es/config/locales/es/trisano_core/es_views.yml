@@ -174,7 +174,7 @@ es:
   elevated_to_morbidity_events: 'Se subió a eventos de morbilidad'
   cmr_contacts: 'Contactos de CMR'
   parent_cmr: 'CMR superior'
-  parent_patient: Parent Patient (EN)
+  parent_patient: Paciente Principal
   parent_guardian: Padre/Tutor
   not_elevated: "Aún no se ha traspasado a eventos de morbilidad"
 
