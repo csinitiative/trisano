@@ -27,7 +27,7 @@ export TRISANO_PLUGIN_DIRECTORY=
 export TRISANO_DB_DRIVER="org.postgresql.Driver"
 
 # Credentials for warehouse database
-export TRISANO_DB_USER="trisano_ro"
+export TRISANO_DB_USER="trisano_su"
 export TRISANO_DB_PASSWORD="password"
 
 # JDBC connection information
