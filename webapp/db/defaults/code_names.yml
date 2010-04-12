@@ -1,103 +1,77 @@
 - code_name: "investigation"
-  description: "Investigation Status"
   external: false
 
 - code_name: "eventtype"
-  description: "Event Type"
   external: false
 
 - code_name: "imported"
-  description: "Imported From"
   external: true
 
 - code_name: "placetype"
-  description: "Place Type"
   external: false
 
 - code_name: "case"
-  description: "Case"
   external: true
 
 - code_name: "gender"
-  description: "Gender"
   external: true
 
 - code_name: "ethnicity"
-  description: "Ethnicity"
   external: true
 
 - code_name: "race"
-  description: "Race"
   external: true
 
 - code_name: "language"
-  description: "Language"
   external: true
 
 - code_name: "state"
-  description: "State"
   external: true
 
 - code_name: "county"
-  description: "County"
   external: true
 
 - code_name: "district"
-  description: "District"
   external: true
 
 - code_name: "yesno"
-  description: "Yes/No"
   external: true
 
 - code_name: "specimen"
-  description: "Specimen"
   external: true
 
 - code_name: "telephonelocationtype"
-  description: "Telephone Location Type"
   external: true
 
 - code_name: "contactdispositiontype"
-  description: "Contact Disposition Type"
   external: true
 
 - code_name: "contact_type"
-  description: "Contact Type"
   external: true
 
 - code_name: "age_type"
-  description: "Age Type"
   external: true
 
 - code_name: "lab_test_type"
-  description: "Lab Test Type"
   external: true
 
 - code_name: "task_category"
-  description: "Task Category"
   external: true
 
 - code_name: "lab_interpretation"
-  description: "Lab Interpretation"
   external: true
 
 - code_name: "participant"
-  description: "Participant"
   external: false
 
 - code_name: "locationtype"
-  description: "Location Type"
   external: false
 
 - code_name: "test_result"
-  description: "Test Result"
   external: true
 
 - code_name: "test_status"
-  description: "Test Status"
   external: true
 
 - code_name: "loinc_scale"
-  description: "Scale"
   external: true

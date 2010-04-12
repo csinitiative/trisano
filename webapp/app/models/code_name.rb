@@ -21,7 +21,6 @@ class CodeName < ActiveRecord::Base
   has_many :external_codes, :foreign_key => :code_name, :primary_key => :code_name
 
   validates_presence_of :code_name
-  validates_presence_of :description
   validates_length_of :code_name, :maximum => 50
   validates_uniqueness_of :code_name
 
@@ -29,4 +28,7 @@ class CodeName < ActiveRecord::Base
     self.find_by_code_name('loinc_scale')
   end
 
+  def description
+    I18n.t(code_name, :scope => [:code_names])
+  end
 end

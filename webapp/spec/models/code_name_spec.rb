@@ -28,22 +28,24 @@ describe CodeName do
 
   it "uniqe code_name should be valid" do
     @code_name.code_name = 'test'
-    @code_name.description = 'Test Code Name'
     @code_name.should be_valid
     @code_name.save.should be_true
   end
 
   it "duplicate code_name should result in error" do
     @code_name.code_name = 'test'
-    @code_name.description = 'Test Code Name'
     @code_name.should be_valid
     @code_name.save.should be_true
 
     @code_name2 = CodeName.new()
     @code_name2.code_name = 'test'
-    @code_name2.description = 'Test Code Name 2'
     @code_name2.should_not be_valid
     @code_name2.save.should_not be_true
+  end
+
+  it "should have a translated description" do
+    @code_name.code_name = "eventtype"
+    @code_name.description.should == "Event Type"
   end
 end
 

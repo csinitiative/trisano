@@ -1,0 +1,28 @@
+en:
+  code_names:
+    investigation: Investigation Status
+    eventtype: Event Type
+    imported: Imported From
+    placetype: Place Type
+    case: Case
+    gender: Gender
+    ethnicity: Ethnicity
+    race: Race
+    language: Language
+    state: State
+    county: County
+    district: District
+    yesno: Yes/No
+    specimen: Specimen
+    telephonelocationtype: Telephone Location Type
+    contactdispositiontype: Contact Disposition Type
+    contact_type: Contact Type
+    age_type: Age Type
+    lab_test_type: Lab Test Type
+    task_category: Task Category
+    lab_interpretation: Lab Interpretation
+    participant: Participant
+    locationtype: Location Type
+    test_result: Test Result
+    test_status: Test Status
+    loinc_scale: Scale
