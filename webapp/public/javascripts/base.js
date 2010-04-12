@@ -7968,8 +7968,12 @@ function detect() {
    if (((BrowserDetect.browser == 'Firefox') && (BrowserDetect.version
  >= 2)) || ((BrowserDetect.browser == 'Explorer') &&
 (BrowserDetect.version >= 7))) not_supported = false
-   if (not_supported) document.write('You are using an unsupported browser: ' +
-BrowserDetect.browser + ' ' + BrowserDetect.version + '<br>Please switch to <a href="http://getfirefox.com">FireFox 2 or higher</a> or <a href="http://www.microsoft.com/windows/downloads/ie/getitnow.mspx"s>Internet Explorer 7 or higher</a>')
+   if (not_supported) document.write(i18n.t('unsupported_browser') + ' ' +
+BrowserDetect.browser + ' ' + BrowserDetect.version + '<br>' +
+i18n.t('please_switch_to') + ' ' + '<a href="http://getfirefox.com">FireFox 2 '
++ i18n.t('or_higher') + '</a> '+ i18n.t('or')
++ ' <a href="http://www.microsoft.com/windows/downloads/ie/getitnow.mspx"s>Internet Explorer 7 '
++ i18n.t('or_higher') + '</a>')
 }
 
 /*

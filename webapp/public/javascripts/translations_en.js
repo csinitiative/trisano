@@ -10,5 +10,9 @@ var i18n = new I18n('en', {
   more_choices: 'More choices...',
   unresolved_conflicts: 'Please resolve all conflicts before saving.',
   undefined: 'Undefined',
-  form_changed: 'Then contents of the form have changed but have not been saved.'
+  form_changed: 'Then contents of the form have changed but have not been saved.',
+  unsupported_browser: 'You are using an unsupported browser:',
+  please_switch_to: 'Please switch to',
+  or_higher: 'or higher',
+  or: 'or'
 });
