@@ -793,6 +793,7 @@ en:
   raw: "Raw"
   create_cmr_from_message: "Create a CMR from this message"
   dob: "DOB"
+  event_search_using_staged_message: "Event Search using staged message"
   staging_area_states:
     pending: Pending
     assigned: Assigned

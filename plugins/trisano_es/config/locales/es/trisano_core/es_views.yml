@@ -793,6 +793,7 @@ es:
   raw: "Primo/a(s)"
   create_cmr_from_message: "Crear CMR de este mensaje"
   dob: "FN"
+  event_search_using_staged_message: "Event Search using staged message (EN)"
   staging_area_states:
     pending: Pendiente
     assigned: Asignado
