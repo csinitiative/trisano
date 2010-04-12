@@ -531,6 +531,9 @@ en:
   view_element: 'view element'
   core_view_element: 'core view element'
   core_field_element: 'core field element'
+  after_config: 'after config'
+  before_config: 'before config'
+  after_configuration: 'After configuration'
   before_configuration: 'Before configuration'
   before_core_field: 'before core field element'
   after_core_field: 'after core field element'
@@ -873,6 +876,7 @@ en:
   invalid_form_structure: 'Form structure is invalid.'
   wait_message: 'This may take a few minutes.'
   form_builder: 'Form Builder'
+  tab: 'tab'
   add_tab: 'Add Tab'
   add_core_tab_config: 'Add Core Tab Config'
   add_core_field_config: 'Add Core Field Config'
@@ -897,6 +901,8 @@ en:
   import_form_library: "Import form library"
   export_form_library: "Export form library"
   manage_form_library: "Manage form library"
+  follow_up_container: "follow up container"
+  section: "section"
   add_new_section: "Add a new section"
   edit_existing_section: "Edit existing section"
   phone_answer_format_msg: 10 digits with optional delimiters. E.g. 9999999999 or 999-999-9999

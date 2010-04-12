@@ -65,9 +65,9 @@ module FormsHelper
 
       result << "<table><tr>"
       result << "<td class='tab'>#{h(I18n.t("core_views.#{element.name.downcase}"))}</td>"
-      result << "<td class='actions'>" << add_section_link(element, "tab")
-      result << "&nbsp;&nbsp;" << add_question_link(element, "tab")
-      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "tab", true)
+      result << "<td class='actions'>" << add_section_link(element, t("tab"))
+      result << "&nbsp;&nbsp;" << add_question_link(element, t("tab"))
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, t("tab"), true)
       result << "&nbsp;&nbsp;" << delete_view_link(element)
       result << "</td></tr></table>"
 
@@ -180,8 +180,8 @@ module FormsHelper
 
       result << "<table><tr>"
       result << "<td class='field'>#{t('before_configuration')}</td>"
-      result << "<td class='actions'>" << add_question_link(element, "before config")
-      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "before config", true)
+      result << "<td class='actions'>" << add_question_link(element, t("before_config"))
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, t("before_config"), true)
       result << "</td></tr></table>"
 
       result << "<div id='follow-up-mods-#{h(element.id.to_s)}'></div>"
@@ -210,9 +210,9 @@ module FormsHelper
       result = "<li id='after_core_field_#{h(element.id)}' class='fb-after-core-field'>"
 
 			result << "<table><tr>"
-      result << "<td class='field'>After configuration</td>"
-      result << "<td class='actions'>" << add_question_link(element, "after config")
-      result << "&nbsp;&nbsp;" << add_follow_up_link(element, "after config", true)
+      result << "<td class='field'>#{t('after_configuration')}</td>"
+      result << "<td class='actions'>" << add_question_link(element, t("after_config"))
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element, t("after_config"), true)
       result << "</td></tr></table>"
 
       result << "<div id='follow-up-mods-#{h(element.id.to_s)}'></div>"
@@ -243,7 +243,7 @@ module FormsHelper
       result << "<td class='section'>#{h(strip_tags(element.name))}</td>"
       result << "<td class='actions'>"
       result << edit_section_link(element)
-      result << "&nbsp;&nbsp;" << add_question_link(element, "section") if (include_children)
+      result << "&nbsp;&nbsp;" << add_question_link(element, t("section")) if (include_children)
       result << "&nbsp;&nbsp;" << delete_section_link(element)
       result << "</td></tr>"
       result << "<tr><td colspan='2' class='instructions'>#{sanitize(h(element.description).gsub("\n", '<br/>'), :tags => %w(br))}</td></tr>" unless element.description.blank?
@@ -377,7 +377,7 @@ module FormsHelper
       result << "</td>"
       result << "<td class='actions'>"
       if (include_children)
-        result << " " << add_question_link(element, "follow up container")
+        result << " " << add_question_link(element, t("follow_up_container"))
         result << "&nbsp;&nbsp;" << edit_follow_up_link(element, !element.core_path.blank?)
         result << "&nbsp;&nbsp;" << delete_follow_up_link(element)
         result << "</td></tr></table>"

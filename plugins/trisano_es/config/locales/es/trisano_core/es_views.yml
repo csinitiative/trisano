@@ -530,6 +530,9 @@ es:
   view_element: 'elemento visualizador'
   core_view_element: 'elemento visualizador principal'
   core_field_element: 'elemento de campo principal'
+  after_config: 'after config (EN)'
+  before_config: 'before config (EN)'
+  after_configuration: 'After configuration (EN)'
   before_configuration: 'Antes de configuración'
   before_core_field: 'antes del elemento de campo principal'
   after_core_field: 'despues del elemento de campo principal'
@@ -873,6 +876,7 @@ es:
   invalid_form_structure: "Está inválida la estructura de formulario"
   wait_message: 'Esto puede durar unos minutos.'
   form_builder: "Generador de Formularios"
+  tab: 'pestaña'
   add_tab: "Agregar Pestaña"
   add_core_tab_config: 'Agregar Configuración de Pestaña Principal'
   add_core_field_config: 'Agregar Configuración de Campo Principal'
@@ -897,6 +901,8 @@ es:
   import_from_library: "Importar de biblioteca:"
   export_form_library: "Exportar de biblioteca"
   manage_form_library: "Gestionar biblioteca de formularios"
+  section: "sección"
+  follow_up_container: "follow up container (EN)"
   add_new_section: "Agregar sección nueva"
   edit_existing_section: "Editar sección existente"
   phone_answer_format_msg: 10 dígitos con delimitadores opcionales. E.g. 9999999999 o 999-999-9999
