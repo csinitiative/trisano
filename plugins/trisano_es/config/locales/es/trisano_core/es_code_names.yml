@@ -1,0 +1,28 @@
+es:
+  code_names:
+    investigation: Estado de investigación
+    eventtype: Tipo de evento
+    imported: Formulario importado
+    placetype: Tipo de lugar
+    case: Caso
+    gender: Sexo
+    ethnicity: Etnia
+    race: Raza
+    language: Idioma
+    state: Provincia
+    county: Municipio
+    district: Distrito
+    yesno: Sí/No
+    specimen: Muestra
+    telephonelocationtype: Tipo de ubicación telefónica
+    contactdispositiontype: Tipo de arreglo con contacto
+    contact_type: Tipo de contacto
+    age_type: Tipo de edad
+    lab_test_type: Tipo de prueba de laboratorio
+    task_category: Categoría de tarea
+    lab_interpretation: Interpretación de laboratorio
+    participant: Participante
+    locationtype: Tipo de ubicación
+    test_result: Resultado de prueba
+    test_status: Estado de prueba
+    loinc_scale: Escala
