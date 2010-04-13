@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module Export
@@ -24,7 +24,7 @@ module Export
           return
         end
         options = {
-          :length => 1, 
+          :length => 1,
           :starting => 0,
           :result => ''}.merge(options)
 
@@ -33,7 +33,7 @@ module Export
         unless (current = options[:result][options[:starting], options[:length]]).strip.blank?
           DEFAULT_LOGGER.warn("CDC Export: Overwriting #{current} with #{value} using these options: #{options.inspect} on #{self.inspect}")
         end
-        options[:result][options[:starting], options[:length]] = value.ljust(options[:length])[0, options[:length]] 
+        options[:result][options[:starting], options[:length]] = value.ljust(options[:length])[0, options[:length]]
         options[:result]
       end
 
@@ -45,7 +45,7 @@ module Export
             begin
               date = Date.parse(value.to_s)
               converted_value = date.strftime(converted_value)
-            rescue Exception => ex              
+            rescue Exception => ex
               DEFAULT_LOGGER.debug "CDC Export: Failed to convert date value '#{value}' because: #{ex.message}"
               return '9' * conversion.length_to_output
             end
@@ -53,8 +53,8 @@ module Export
             length_to_output = conversion.length_to_output
             if value.strip =~ /^[\d+]{4}$/ && length_to_output == 2 # really just trying to catch years
               DEFAULT_LOGGER.debug("CDC Export: Treating a text field as a two digit year - #{conversion.inspect}")
-              converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]              
-            else                                   
+              converted_value = value.rjust(length_to_output, ' ')[-length_to_output, length_to_output]
+            else
               converted_value = value.ljust(length_to_output)[0, length_to_output].strip
             end
           end
@@ -74,7 +74,7 @@ module Export
           'race_ids' => [:interested_party, :person_entity, :race_ids],
           'birth_gender_id' => [:interested_party, :person_entity, :person, :birth_gender_id],
           'birth_date' => [:interested_party, :person_entity, :person, :birth_date],
-          'ethnicity_id' => [:interested_party, :person_entity, :person, :ethnicity_id]}        
+          'ethnicity_id' => [:interested_party, :person_entity, :person, :ethnicity_id]}
       end
 
       def ibis_nested_attribute_paths
@@ -92,7 +92,7 @@ module Export
       def export_core_field_configs
         forms = pg_array(self.disease_form_ids).collect{|fi| Form.find(fi)}
         DEFAULT_LOGGER.info("CDC Export: No forms associated with this event: #{self.record_number}") if forms.empty?
-        forms.collect do |form|          
+        forms.collect do |form|
           form.form_elements.find(:all, :conditions => ['type = ? and export_column_id is not null', 'CoreFieldElement'])
         end.flatten
       end
@@ -125,34 +125,34 @@ module Export
         # IBIS export is interested in all of the same fields as CDC export
         if export_attributes_changed?
           self.cdc_updated_at = Date.today
-          self.ibis_updated_at = Date.today if self.sent_to_ibis          
+          self.ibis_updated_at = Date.today if self.sent_to_ibis
         end
         # IBIS export is also interested in a few more
         if ibis_attributes_changed? && sent_to_ibis
           self.ibis_updated_at = Date.today
         end
       end
-      
+
       private
-      
+
       def export_attributes_changed?
         return false if new_record?
 
         nested_attribute_paths.each do |k, call_path|
           return true if nested_attribute_changed?(k, call_path)
         end
-                
-        %w(event_onset_date 
-           first_reported_PH_date 
-           state_case_status_id 
-           imported_from_id 
+
+        %w(event_onset_date
+           first_reported_PH_date
+           state_case_status_id
+           imported_from_id
            deleted_at).each do |field|
           return true if send("#{field}_changed?")
         end
       end
 
       def ibis_attributes_changed?
-        ibis_nested_attribute_paths.each do |k, call_path|          
+        ibis_nested_attribute_paths.each do |k, call_path|
           return true if nested_attribute_changed?(k, call_path)
         end
         false
@@ -167,7 +167,7 @@ module Export
       def nested_attribute_paths
         {}
       end
-      
+
       def ibis_nested_attribute_paths
         {}
       end
@@ -192,7 +192,7 @@ module Export
         end
       end
     end
-   
+
     module Record
       include PostgresFu
 
@@ -210,7 +210,7 @@ module Export
            exp_birthdate
            age_at_onset
            exp_agetype
-           exp_sex 
+           exp_sex
            exp_race
            exp_ethnicity
            exp_eventdate
@@ -222,13 +222,13 @@ module Export
            disease_specific_records
         )
       end
-      
+
       def to_cdc
         DEFAULT_LOGGER.debug("to_cdc on #{self.inspect}")
         cdc_export_fields.map {|field|
           begin
             send field
-          rescue 
+          rescue
             raise "Failed to export event #{self.id} on field named #{field}."
           end
         }.join
@@ -241,7 +241,7 @@ module Export
       def age_at_onset
         self['age_at_onset'].to_s.rjust(3, '0')
       end
-      
+
       # This is a cheat. Sometime we should go back and fix the view.
       def state_case_status_id
         self.state_case_status_value || '9'
@@ -250,7 +250,7 @@ module Export
       def exp_rectype
         'M'
       end
-      
+
       def exp_update
         ' '
       end
@@ -266,7 +266,7 @@ module Export
       def exp_caseid
         self.record_number[4..9]
       end
-      
+
       def exp_site
         'S01'
       end
@@ -274,7 +274,7 @@ module Export
       def exp_week
         self.MMWR_week.to_s.rjust(2, '0')
       end
-           
+
       def exp_event
         self.cdc_code || '99999'
       end
@@ -303,7 +303,7 @@ module Export
         self.age_at_onset_type || '9'
       end
 
-      def exp_sex 
+      def exp_sex
         sex.blank? ? '9' : sex
       end
 
@@ -331,9 +331,9 @@ module Export
 
       def exp_datetype
         date_type = '1' if disease_onset_date
-        date_type = '2' if date_diagnosed unless date_type 
-        date_type = '3' if pg_array(lab_test_dates).sort.last unless date_type 
-        date_type = '5' if first_reported_PH_date unless date_type 
+        date_type = '2' if date_diagnosed unless date_type
+        date_type = '3' if pg_array(lab_test_dates).sort.last unless date_type
+        date_type = '5' if first_reported_PH_date unless date_type
         date_type || '9'
       end
 
@@ -351,8 +351,8 @@ module Export
         # instead of Event objects. Leaving it in for now for simplicity's sake
         write_answers_to(result)
         core_field_conversions(self, result)
-        (result[60...result.length] || '').rstrip  
-      end      
+        (result[60...result.length] || '').rstrip
+      end
 
       private
 
@@ -363,7 +363,7 @@ module Export
         start_pos    = pg_array(self.start_positions)
         lengths      = pg_array(self.lengths)
         data_types   = pg_array(self.data_types)
-        
+
         answers.each_with_index do |answer, i|
           converted_answer = convert_answer(answer, data_types[i], converions[i], lengths[i].to_i)
           write(converted_answer, {
@@ -425,7 +425,7 @@ module Export
            exp_site
            exp_week)
       end
-        
+
 
       def exp_rectype
         'D'
