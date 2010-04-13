@@ -36,13 +36,13 @@ class CdcExport < ActiveRecord::Base
         )
       END_WHERE_CLAUSE
 
-      events = Event.find_by_sql(modified_record_sql + where_clause)
+      events = HumanEvent.find_by_sql(modified_record_sql + where_clause)
       events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
     end
 
     def annual_cdc_export(mmwr_year)
-      events = Event.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
+      events = HumanEvent.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
       events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
     end

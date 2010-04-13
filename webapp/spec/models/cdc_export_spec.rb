@@ -518,7 +518,7 @@ describe CdcExport do
   describe "displaying summary records for AIDS" do
     fixtures :events, :disease_events, :diseases
 
-    it "should display the summary record for AIDS" do 
+    it "should display the summary record for AIDS" do
       with_sent_events do
         CdcExport.verification_records(Mmwr.new.mmwr_year).length.should == 1
       end

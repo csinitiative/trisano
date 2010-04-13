@@ -101,7 +101,6 @@ class CdcEventsController < AdminController
         begin
           render :template => "cdc_events/format", :layout => false
         rescue
-          I18nLogger.error("logger.cdc_export_error")
           DEFAULT_LOGGER.error($!)
           if RAILS_ENV == "production"
             error_msg = t("cdc_export_error", :message => $!.message)
@@ -119,7 +118,7 @@ class CdcEventsController < AdminController
   def show
     head :method_not_allowed
   end
-  
+
   def new
     head :method_not_allowed
   end
