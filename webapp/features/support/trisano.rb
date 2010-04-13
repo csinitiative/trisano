@@ -37,7 +37,7 @@ end
 def create_event_with_attributes(event_type, last_name, attrs, disease=nil, jurisdiction=nil)
   e = create_basic_event(event_type, last_name, disease, jurisdiction)
   e.attributes = attrs
-  e.save
+  e.save!
   e
 end
 

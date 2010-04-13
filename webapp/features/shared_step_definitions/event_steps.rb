@@ -55,6 +55,24 @@ Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_
   @event = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
 
+Given /^a simple (.+) event in jurisdiction (.+) for the full name of (.+)$/ do |event_type, jurisdiction, name|
+  # Currently assumes a first, middle and last name is supplied
+  name_array = name.split
+  first_name = name_array[0]
+  middle_name = name_array[1]
+  last_name = name_array[2]
+  
+  attrs = {
+    "interested_party_attributes"=>
+      { "person_entity_attributes"=>
+        { "person_attributes"=>
+          { "first_name" => "#{first_name}", "middle_name" => "#{middle_name}", "last_name" => "#{last_name}"}
+        }
+      }
+  }
+  @event = create_event_with_attributes(event_type, last_name, attrs, nil, jurisdiction)
+end
+
 Given(/^there is a contact event$/) do
   @contact_event = Factory.build(:contact_event)
   @contact_event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)

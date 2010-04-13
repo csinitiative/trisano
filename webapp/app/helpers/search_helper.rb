@@ -49,7 +49,7 @@ module SearchHelper
     returning "" do |full_name|
       full_name << record['last_name']
       full_name << ", #{record['first_name']}" unless record['first_name'].blank?
-      full_name << record['middle_name'] if record['middle_name']
+      full_name << " #{record['middle_name']}" if record['middle_name']
     end.strip
   end
 

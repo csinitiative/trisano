@@ -132,3 +132,13 @@ Feature: Searching for Events using core fields for criteria.
        | MorbidityEvent |
      Then I should see max_search_results records returned
       And I should see "Your data export request exceeds the allowed size limit for a real-time request."
+
+  Scenario: Searching for an event w/ fulltext where the patient has a middle name
+    Given a simple morbidity event in jurisdiction Unassigned for the full name of Robert Jack Jones
+      And a simple morbidity event in jurisdiction Unassigned for last name Joans
+      And another morbidity event
+      And I am logged in as a super user
+     When I search for events with the following criteria:
+       | name  |
+       | Jones |
+     Then I should see "Jones, Robert Jack"
