@@ -2,6 +2,13 @@
 en:
   include_repeating_aspects: "Include these repeating aspects in the export"
   trisano_title: "TriSano"
+  view_edit_cmrs: "View/Edit CRMs"
+  view_edit_forms: "View/Edit Forms"
+  navigate_right: "Move One Tab Right"
+  navigate_left: "Move One Tab Left"
+  navigate_to_save: "Highlight 'Save & Exit'"
+  edit_settings: "Edit User Settings"
+  analysis: "Analysis"
   edit: "Edit"
   show: "Show"
   delete: 'Delete'

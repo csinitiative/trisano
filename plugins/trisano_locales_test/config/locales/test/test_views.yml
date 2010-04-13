@@ -2,6 +2,13 @@
 test:
   include_repeating_aspects: "xInclude these repeating aspects in the export"
   trisano_title: "xTriSano"
+  view_edit_cmrs: "xView/Edit CRMs"
+  view_edit_forms: "xView/Edit Forms"
+  navigate_right: "xMove One Tab Right"
+  navigate_left: "xMove One Tab Left"
+  navigate_to_save: "xHighlight 'Save & Exit'"
+  edit_settings: "xEdit User Settings"
+  analysis: "xAnalysis"
   edit: "xEdit"
   show: "xShow"
   delete: 'xDelete'
