@@ -32,7 +32,7 @@
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
-      %label=t 'events'
+      %label=t 'event_investigation_status'
 
       -# Contacts and events have slightly different workflows.  Get the union of the two.
       - events = MorbidityEvent.get_states_and_descriptions

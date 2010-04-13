@@ -134,7 +134,6 @@ test:
   view_contact_event: 'xView Contact event: {{name}}'
   edit_contact_event: 'xEdit Contact event: {{name}}'
   jurisdiction: 'xJurisdiction'
-  status: 'xStatus'
   demographic: 'xDemographic'
   clinical: 'xClinical'
   laboratory: 'xLaboratory'
@@ -633,6 +632,8 @@ test:
   export_all_to_csv: "xExport all to CSV"
   route_to_local: 'xRoute to Local Health Depts.'
   change_view: "xChange View"
+  status: 'xStatus'
+  event_investigation_status: "xEvent Investigation Status"
   create_new_morbidity_report: "xCreate New Morbidity Report"
   queues: "xQueues"
   queue: "xQueue"
