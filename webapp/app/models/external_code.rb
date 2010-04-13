@@ -19,6 +19,9 @@ class ExternalCode < ActiveRecord::Base
 
   belongs_to :jurisdiction, :class_name => 'Place', :foreign_key => :jurisdiction_id
 
+  # DEBT: this really should be a normal relationship using a code_name_id
+  belongs_to :code_group, :class_name => 'CodeName', :foreign_key => :code_name, :primary_key => :code_name
+
   has_and_belongs_to_many :diseases
 
   named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order, the_code'
@@ -98,6 +101,7 @@ class ExternalCode < ActiveRecord::Base
   def self.find_codes_for_autocomplete(condition, limit=10)
     return [] if condition.nil?
     find(:all,
+         :include => :code_group,
          :conditions => ['deleted_at IS NULL AND code_description ILIKE ?', condition + '%'],
          :order => 'code_description',
          :limit => limit)

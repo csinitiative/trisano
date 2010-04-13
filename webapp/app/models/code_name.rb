@@ -17,6 +17,7 @@
 
 class CodeName < ActiveRecord::Base
 
+  # DEBT: I think these need to be done by id and remove code_name field for codes
   has_many :codes, :foreign_key => :code_name, :primary_key => :code_name
   has_many :external_codes, :foreign_key => :code_name, :primary_key => :code_name
 

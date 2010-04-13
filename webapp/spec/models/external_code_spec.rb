@@ -60,9 +60,10 @@ describe ExternalCode do
   describe "find codes for autocomplete" do
 
     before(:each) do
-      @external_code_1 = ExternalCode.create!(:code_name => "test", :code_description => "ZZAA", :the_code => "ZZAA")
-      @external_code_2 = ExternalCode.create!(:code_name => "test", :code_description => "ZZAB", :the_code => "ZZAB")
-      @external_code_3 = ExternalCode.create!(:code_name => "test", :code_description => "XXCC", :the_code => "XXCC")
+      @code_name = CodeName.find_or_create_by_code_name(:code_name => "eventtype")
+      @external_code_1 = ExternalCode.create!(:code_name => "eventtype", :code_description => "ZZAA", :the_code => "ZZAA")
+      @external_code_2 = ExternalCode.create!(:code_name => "eventtype", :code_description => "ZZAB", :the_code => "ZZAB")
+      @external_code_3 = ExternalCode.create!(:code_name => "eventtype", :code_description => "XXCC", :the_code => "XXCC")
     end
 
     it "should return all matching codes based on a first letter" do
@@ -91,6 +92,11 @@ describe ExternalCode do
       codes[0].is_a?(ExternalCode).should be_true
     end
 
+    it "code group for returned code should have user friendly description" do
+      codes = ExternalCode.find_codes_for_autocomplete("XX")
+      codes.should == [@external_code_3]
+      codes.first.code_group.description.should == 'Event Type'
+    end
   end
 
   describe "contact disposition codes" do
