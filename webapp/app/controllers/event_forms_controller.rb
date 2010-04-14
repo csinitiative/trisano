@@ -35,9 +35,15 @@ class EventFormsController < ApplicationController
     form_template_ids_in_use = @forms_in_use.map { |form| form.template_id }
 
     if form_template_ids_in_use.empty?
-      @forms_available = Form.find(:all, :conditions => ["status = ? AND event_type = ?", 'Live', event_type])
+      @forms_available = Form.find(:all,
+        :conditions => ["status = ? AND event_type = ?", 'Live', event_type],
+        :order => "name ASC"
+      )
     else
-      @forms_available = Form.find(:all, :conditions => ["status = ? AND event_type = ? AND template_id NOT IN (?)", 'Live', event_type, form_template_ids_in_use])
+      @forms_available = Form.find(:all,
+        :conditions => ["status = ? AND event_type = ? AND template_id NOT IN (?)", 'Live', event_type, form_template_ids_in_use],
+        :order => "name ASC"
+      )
     end
   end
 

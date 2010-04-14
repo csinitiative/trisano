@@ -19,6 +19,12 @@ When(/^I check the add form checkbox$/) do
   check("forms_to_add_#{@published_form.id}")
 end
 
+When /^I check the add form checkbox for the form with the name "([^\"]*)"$/ do |name|
+  form = Form.find_by_name(name)
+  raise "Form not found by name name" if form.nil?
+  check("forms_to_add_#{form.id}")
+end
+
 When /^the form has been republished$/ do
   @form.publish.should be_true
 end

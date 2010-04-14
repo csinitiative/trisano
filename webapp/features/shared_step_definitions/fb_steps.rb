@@ -32,7 +32,7 @@ Given(/^a (.+) event form exists for the disease (.+)$/) do |event_type, disease
   @form = create_form(event_type, unique_form_name, unique_form_name, disease)
 end
 
-Given(/^a (.+) event form exists for the disease (.+) with the name (.+) \((.+)\)$/) do |event_type, disease, form_name, form_short_name|
+Given(/^a (.+) event form named (.+) \((.+)\) exists for the disease (.+)$/) do |event_type, form_name, form_short_name, disease|
   @form = create_form(event_type, form_name, form_short_name, disease)
 end
 
