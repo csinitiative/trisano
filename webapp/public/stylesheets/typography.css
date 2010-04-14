@@ -135,6 +135,12 @@ label {
   color: #333;
   letter-spacing: 0px;
   padding: 6px 0px 3px 0px; }
+  .patientname a {
+    color: #333;
+    text-decoration: none; }
+    .patientname a:hover {
+      color: #000;
+      text-decoration: underline; }
 
 .patientname-inactive {
   font-family: helvetica, sans-serif;
@@ -144,6 +150,12 @@ label {
   color: #ccc;
   letter-spacing: 0px;
   padding: 6px 0px 3px 0px; }
+  .patientname-inactive a {
+    color: #ccc;
+    text-decoration: none; }
+    .patientname-inactive a:hover {
+      color: #000;
+      text-decoration: underline; }
 
 .contactname-inactive {
   font-family: helvetica, sans-serif;
