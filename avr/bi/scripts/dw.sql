@@ -361,8 +361,6 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
-    pataddr.latitude,
-    pataddr.longitude,
 
     disev.disease_onset_date AS date_disease_onset,
     CASE
@@ -638,8 +636,6 @@ SELECT
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
-    pataddr.latitude,
-    pataddr.longitude,
 
     upsert_date(disev.disease_onset_date) AS date_disease_onset,
     CASE
@@ -1185,8 +1181,6 @@ SELECT
     state_ec.code_description AS state,
     county_ec.code_description AS county,
     ad.postal_code,
-    ad.latitude,
-    ad.longitude,
     disev.disease_id,
     newhstore AS place_formbuilder
 FROM
