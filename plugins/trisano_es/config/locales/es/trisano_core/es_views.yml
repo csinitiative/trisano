@@ -1,13 +1,13 @@
 es:
   include_repeating_aspects: "Incluir estos aspectos repitientes en el artículo para exportar."
   trisano_title: "TriSano"
-  view_edit_cmrs: "View/Edit CRMs"
-  view_edit_forms: "View/Edit Forms"
-  navigate_right: "Move One Tab Right"
-  navigate_left: "Move One Tab Left"
-  navigate_to_save: "Highlight 'Save & Exit'"
-  edit_settings: "Edit User Settings"
-  analysis: "Analysis"
+  view_edit_cmrs: "View/Edit CMRs (EN)"
+  view_edit_forms: "View/Edit Forms (EN)"
+  navigate_right: "Move One Tab Right (EN)"
+  navigate_left: "Move One Tab Left (EN)"
+  navigate_to_save: "Highlight 'Save & Exit'(EN)"
+  edit_settings: "Edit User Settings (EN)"
+  analysis: "Analysis (EN)"
   edit: "Editar"
   show: "Mostrar"
   delete: 'Eliminar'
@@ -173,7 +173,6 @@ es:
   elevated_to_morbidity_events: 'Se subió a eventos de morbilidad'
   cmr_contacts: 'Contactos de CMR'
   parent_cmr: 'CMR superior'
-  parent_patient: Paciente Principal
   parent_guardian: Padre/Tutor
   not_elevated: "Aún no se ha traspasado a eventos de morbilidad"
 
@@ -530,9 +529,9 @@ es:
   view_element: 'elemento visualizador'
   core_view_element: 'elemento visualizador principal'
   core_field_element: 'elemento de campo principal'
-  after_config: 'after config (EN)'
-  before_config: 'before config (EN)'
-  after_configuration: 'After configuration (EN)'
+  after_config: 'después de config'
+  before_config: 'antes de config'
+  after_configuration: 'Después de configuración'
   before_configuration: 'Antes de configuración'
   before_core_field: 'antes del elemento de campo principal'
   after_core_field: 'despues del elemento de campo principal'
@@ -589,15 +588,15 @@ es:
   formbuilder: "Generador de formularios"
   core: "Núcleo"
   system_generated: "Generado/a(s) del Sistema"
-  single_line_text: "Single line text (EN)"
-  multi_line_text: "Multi-line text (EN)"
-  drop_down: "Drop-down select list (EN)"
-  radio_button: "Radio buttons (EN)"
-  check_box: "Checkboxes (EN)"
-  date_value: "Date (EN)"
-  phone: "Phone Number (EN)"
-  confirm_code_delete: "Really delete code? (EN)"
-  confirm_code_restore: "Really restore code? (EN)"
+  single_line_text: "Texto de una sola línea"
+  multi_line_text: "Texto de multilínea"
+  drop_down: "Lista de selección desplegable"
+  radio_button: "Botón de radio"
+  check_box: "Casilla de selección"
+  date_value: "Fecha"
+  phone: "Número telefónico"
+  confirm_code_delete: "¿Borrar el código por completo?"
+  confirm_code_restore: "¿Restaurar el código por completo?"
   
   #export_conversion_values
   create_export_conversion_value: "Crear Valor de Conversión de Exportación"
@@ -798,7 +797,7 @@ es:
   raw: "Primo/a(s)"
   create_cmr_from_message: "Crear CMR de este mensaje"
   dob: "FN"
-  event_search_using_staged_message: "Event Search using staged message (EN)"
+  event_search_using_staged_message: "Búsqueda de eventos emplea mensaje de fases"
   staging_area_states:
     pending: Pendiente
     assigned: Asignado
@@ -904,7 +903,7 @@ es:
   export_form_library: "Exportar de biblioteca"
   manage_form_library: "Gestionar biblioteca de formularios"
   section: "sección"
-  follow_up_container: "follow up container (EN)"
+  follow_up_container: "contenedor de seguimiento"
   add_new_section: "Agregar sección nueva"
   edit_existing_section: "Editar sección existente"
   phone_answer_format_msg: 10 dígitos con delimitadores opcionales. E.g. 9999999999 o 999-999-9999
@@ -916,10 +915,10 @@ es:
     live: 'Vivo'
     invalid: 'Inválido'
   form_errors:
-    radio_button_blank_value: "can't be blank when question is a radio button (EN)"
-    check_box_blank_value: "can't be blank when question is a check box (EN)"
-  invalid_core_field_config: "Core field configuration is invalid (EN)"
-  exporting_to_cdc: "exporting to CDC (EN)"
+    radio_button_blank_value: "no puede quedarse vacío/a cuando pregunta sea botón de radio"
+    check_box_blank_value: "no puede quedarse vacío/a cuando pregunta sea casilla de selección"
+  invalid_core_field_config: "Configuración del campo principal es inválida"
+  exporting_to_cdc: "exportar al CDC"
   
   #participations
   hospitalization: "Hospitalización"
