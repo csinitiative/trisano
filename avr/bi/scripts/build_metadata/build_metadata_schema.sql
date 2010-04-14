@@ -330,7 +330,6 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 ('trisano.dw_morbidity_events_view',                  'other_data_1',                       'other_data_1',                       'ME Othr Data 1',            true),
 ('trisano.dw_morbidity_events_view',                  'other_data_2',                       'other_data_2',                       'ME Othr Data 2',            true),
 ('trisano.dw_morbidity_events_view',                  'outbreak_associated_code',           'outbreak_associated_code',           'ME Outbrk Assoc Cd',        true),
-('trisano.dw_morbidity_events_view',                  'outbreak_event_id',                  'outbreak_event_id',                  '',                          false),
 ('trisano.dw_morbidity_events_view',                  'outbreak_name',                      'outbreak_name',                      'ME Outbrk Nm',              true),
 ('trisano.dw_morbidity_events_view',                  'parent_guardian',                    'parent_guardian',                    'ME Prnt/Guard',             true),
 ('trisano.dw_morbidity_events_view',                  'parent_id',                          'parent_id',                          '',                          false),
