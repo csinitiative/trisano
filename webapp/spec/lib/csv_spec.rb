@@ -136,16 +136,15 @@ describe Export::Csv do
     it 'should return county code, not name' do
       @event.stubs(:address).returns(@address)
       @county.expects(:the_code).returns('56')
-      Export::Csv.export(@event, {'patient_address_county' => 'use_code'})
+      Export::Csv.export(@event, {'patient_address_county' => 'use_code'}).should =~ /56/i
     end
 
     it 'should pick cdc code, rather then disease name' do
       d = Factory.build(:disease)
-      d.expects(:cdc_code).returns('10110')
-      de = Factory.build(:disease_event)
+      d.cdc_code = '11010'
+      de = Factory.build(:disease_event, :disease => d)
       @event.stubs(:disease_event).returns(de)
-      de.expects(:disease).returns(d)
-      Export::Csv.export(@event, {'patient_disease' => 'use_code'})
+      Export::Csv.export(@event, {'patient_disease' => 'use_code'}).should =~ /#{d.cdc_code}/i
     end
   end
 

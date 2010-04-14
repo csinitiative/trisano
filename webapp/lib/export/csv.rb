@@ -19,6 +19,7 @@ require 'csv'
 
 module Export
   module Csv
+    reloadable!
 
     # To follow along:  We may be asked to export a single event or multiple events.  Top level events can
     # be either morbidity events, contact events or a mix of both (ideally sorted first by event type).
@@ -61,11 +62,7 @@ module Export
     end
 
     def Csv.disease_for_single_event(event)
-      begin
-        Disease.find(event.disease_id) unless event.disease_id.blank?
-      rescue
-        nil
-      end
+      event.disease_event.try(:disease)
     end
 
     class LineExporter
