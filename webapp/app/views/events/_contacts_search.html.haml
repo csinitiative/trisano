@@ -81,5 +81,5 @@
               - contact_event.build_interested_party(:primary_entity_id => result['entity_id'])
               - contact_event.build_participations_contact
               - contact_event.interested_party.person_entity.telephones.build
-              = add_record_link f, :contact_child_events, t("add_contact"), :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}"
+              = add_record_link f, :contact_child_events, t("add_contact"), :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}", :insert => 'new_contacts'
 %hr
