@@ -2,6 +2,13 @@
 test:
   include_repeating_aspects: "xInclude these repeating aspects in the export"
   trisano_title: "xTriSano"
+  view_edit_cmrs: "xView/Edit CRMs"
+  view_edit_forms: "xView/Edit Forms"
+  navigate_right: "xMove One Tab Right"
+  navigate_left: "xMove One Tab Left"
+  navigate_to_save: "xHighlight 'Save & Exit'"
+  edit_settings: "xEdit User Settings"
+  analysis: "xAnalysis"
   edit: "xEdit"
   show: "xShow"
   delete: 'xDelete'
@@ -134,7 +141,6 @@ test:
   view_contact_event: 'xView Contact event: {{name}}'
   edit_contact_event: 'xEdit Contact event: {{name}}'
   jurisdiction: 'xJurisdiction'
-  status: 'xStatus'
   demographic: 'xDemographic'
   clinical: 'xClinical'
   laboratory: 'xLaboratory'
@@ -633,6 +639,8 @@ test:
   export_all_to_csv: "xExport all to CSV"
   route_to_local: 'xRoute to Local Health Depts.'
   change_view: "xChange View"
+  status: 'xStatus'
+  event_investigation_status: "xEvent Investigation Status"
   create_new_morbidity_report: "xCreate New Morbidity Report"
   queues: "xQueues"
   queue: "xQueue"
