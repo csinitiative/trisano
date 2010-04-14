@@ -26,7 +26,8 @@ class CsvField < ActiveRecord::Base
   def self.load_csv_fields(csv_fields)
     transaction do
       csv_fields.each do |k, v|
-        CsvField.create!(v)
+        csv_field = CsvField.find_or_initialize_by_long_name(v)
+        csv_field.save!
       end
     end
   end
