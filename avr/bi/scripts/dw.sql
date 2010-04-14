@@ -349,10 +349,6 @@ SELECT
     events.other_data_2,
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
-    oaci.code_description AS outbreak_associated_code,    -- code_description?
-    events.outbreak_name,
-    events.outbreak_event_id,
-
     -- events.event_status,                    -- Change this from a code to a text value?
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,
@@ -465,8 +461,6 @@ FROM events
         ON (events.imported_from_id = ifi.id)
     LEFT JOIN external_codes scsi
         ON (events.state_case_status_id = scsi.id)
-    LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id)
     LEFT JOIN external_codes lcsi
         ON (events.lhd_case_status_id = lcsi.id)
     LEFT JOIN users inv
@@ -737,8 +731,6 @@ FROM events
         ON (events.imported_from_id = ifi.id)
     LEFT JOIN external_codes scsi
         ON (events.state_case_status_id = scsi.id)
-    LEFT JOIN external_codes oaci
-        ON (events.outbreak_associated_id = oaci.id)
     LEFT JOIN external_codes lcsi
         ON (events.lhd_case_status_id = lcsi.id)
     LEFT JOIN users inv
