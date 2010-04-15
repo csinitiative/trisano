@@ -508,6 +508,7 @@ describe FormsController do
       @form = Factory.build(:form)
       @form_element = Factory.build(:form_element)
       @form_element.stubs(:form_id).returns("1")
+      @form_element.stubs(:can_copy_to?).returns(true)
       FormElement.stubs(:find).returns(@form_element)
       Form.stubs(:find).returns(@form)
     end
@@ -519,7 +520,7 @@ describe FormsController do
     it "should render forms/from_library partial on success with the investigator view branch of the form tree" do
       @ancestors = [nil, InvestigatorViewElementContainer.new]
       @form_element.stubs(:ancestors).returns(@ancestors)
-      @form_element.stubs(:copy_from_library).with("2").returns(true)
+      @form_element.stubs(:copy_from_library).with(@form_element).returns(true)
       do_post
       response.should render_template('forms/from_library')
     end
@@ -527,15 +528,21 @@ describe FormsController do
     it "should render forms/from_library on success with the core view branch of the form tree" do
       @ancestors = [nil, CoreViewElementContainer.new]
       @form_element.stubs(:ancestors).returns(@ancestors)
-      @form_element.stubs(:copy_from_library).with("2").returns(true)
+      @form_element.stubs(:copy_from_library).with(@form_element).returns(true)
       do_post
       response.should render_template('forms/from_library')
     end
 
     it "should render rjs error template on failure" do
-      @form_element.stubs(:copy_from_library).with("2").returns(false)
+      @form_element.stubs(:copy_from_library).with(@form_element).returns(false)
       do_post
       response.should render_template('rjs-error')
+    end
+
+    it "should render fix library copy template on short name collision" do
+      @form_element.stubs(:can_copy_to?).returns(false)
+      do_post
+      response.should render_template('forms/fix_library_copy')
     end
   end
 
@@ -604,7 +611,6 @@ describe FormsController do
       end
 
       it 'should send export file' do
-        pending "Does not work with current mix of Rails and rspec -- address once version mismatches have been addressed"
         @form.expects(:export).returns("test_form.zip")
         @controller.expects(:send_file).with("test_form.zip")
         do_post
