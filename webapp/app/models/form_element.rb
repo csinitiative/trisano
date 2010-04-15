@@ -120,10 +120,10 @@ class FormElement < ActiveRecord::Base
     end
   end
 
-  def copy_from_library(lib_element_id)
+  def copy_from_library(lib_element_or_id)
     begin
       transaction do
-        library_element = FormElement.find(lib_element_id)
+        library_element = fetch_or_return_form_element(lib_element_or_id)
         if (library_element.class.name == "ValueSetElement" && !can_receive_value_set?)
           errors.add(:base, :failed_copy)
           raise
@@ -135,6 +135,14 @@ class FormElement < ActiveRecord::Base
     rescue Exception => ex
       self.errors.add(:base, ex.message)
       return nil
+    end
+  end
+
+  def fetch_or_return_form_element(element_or_id)
+    if element_or_id.is_a?(FormElement)
+      element_or_id
+    else
+      FormElement.find(element_or_id)
     end
   end
 

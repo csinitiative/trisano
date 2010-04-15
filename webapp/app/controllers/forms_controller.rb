@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class FormsController < AdminController
@@ -108,7 +108,7 @@ class FormsController < AdminController
       format.xml  { head :ok }
     end
   end
-  
+
   def builder
     @form = Form.find(params[:id])
     @form.structure_valid?
@@ -116,7 +116,7 @@ class FormsController < AdminController
       render :partial => "events/permission_denied", :locals => { :reason => t("not_a_template_form"), :event => nil }, :layout => true, :status => 403 and return
     end
   end
-  
+
   def publish
     @form = Form.find(params[:id])
 
@@ -137,7 +137,7 @@ class FormsController < AdminController
       end
     end
   end
-  
+
   def push
     @form = Form.find(params[:id])
 
@@ -158,7 +158,7 @@ class FormsController < AdminController
       end
     end
   end
-  
+
   def deactivate
     @form = Form.find(params[:id])
 
@@ -183,7 +183,7 @@ class FormsController < AdminController
   def rollback
     @form = Form.find(params[:id])
     @rolled_back_form = @form.rollback
-    
+
     if @rolled_back_form
       @form = @rolled_back_form
       redirect_to(builder_path(@form))
@@ -207,14 +207,14 @@ class FormsController < AdminController
       redirect_to forms_path
     end
   end
-  
+
   def import
     if params[:form].nil? || params[:form][:import].respond_to?(:empty?)
       flash[:error] = t("navigate_to_form_to_import")
       redirect_to forms_path
       return
     end
-    
+
     begin
       @form = Form.import(params[:form][:import])
       redirect_to(@form)
@@ -223,12 +223,12 @@ class FormsController < AdminController
       redirect_to forms_path
     end
   end
-  
+
   def order_section_children
     @section = FormElement.find(params[:id])
     section_name, section_items = params.find { |k, v| k =~ /children$/ }
     reorder_ids = section_items.collect {|id| id.to_i}
-      
+
     if @section.reorder_element_children(reorder_ids)
       @form = Form.find(@section.form_id)
     else
@@ -237,17 +237,17 @@ class FormsController < AdminController
       render :template => 'rjs-error'
     end
   end
-  
+
   def to_library
     if params[:group_element_id] == "root"
       @group_element = nil
     else
       @group_element = FormElement.find(params[:group_element_id])
     end
-    
+
     @question_element = FormElement.find(params[:reference_element_id])
     @reference_element = @question_element
-    
+
     if @question_element.add_to_library(@group_element)
       @library_elements = FormElement.library_roots
       render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.class.name }
@@ -258,10 +258,15 @@ class FormsController < AdminController
   end
 
   def from_library
-    form_element_id = params[:reference_element_id]
-    lib_element_id = params[:lib_element_id]
-    @form_element = FormElement.find(form_element_id)
-    if @form_element.copy_from_library(lib_element_id)
+    @form_element = FormElement.find(params[:reference_element_id])
+    @lib_element = FormElement.find(params[:lib_element_id])
+    if params[:short_name]
+      @lib_element.question.short_name = params[:short_name]
+    end
+
+    if !@lib_element.can_copy_to?(@form_element.id)
+      render(:template => 'forms/fix_library_copy')
+    elsif @form_element.copy_from_library(@lib_element)
       @form = Form.find(@form_element.form_id)
     else
       @rjs_errors = @form_element.errors

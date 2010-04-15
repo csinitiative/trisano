@@ -756,4 +756,12 @@ module FormsHelper
                      :type => type },
                    :update => "library-element-list-#{reference_element.id}")
   end
+
+  def remote_form_for_fixing_short_names(reference_element, &block)
+    options = {
+      :url => url_for(:controller => :forms, :action => :from_library),
+      :loading => "$('submit_short_name_fix_#{reference_element.id}').disable()"
+    }
+    form_remote_tag(options, &block)
+  end
 end

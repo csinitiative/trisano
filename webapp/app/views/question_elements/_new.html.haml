@@ -33,7 +33,7 @@
       %p
         = f.submit(t("create"), :id => "create_question_submit_#{@reference_element.id}")
         &nbsp;&nbsp;
-        = link_to_function t("close"), "$('question-mods-#{@reference_element.id}').down('form').reset(); Effect.BlindUp($('question-mods-#{@reference_element.id}'), { duration: 0.1 })"
+        =link_to_close_question_form(t(:close), @reference_element)
 
   = render :partial => "forms/library", :locals => {:direction => :from_library, :type => :question_element}
 
