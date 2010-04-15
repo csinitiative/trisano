@@ -22,10 +22,10 @@ error_string = ""
 unless @rjs_errors.blank?
   error_string += "<ul>"
   @rjs_errors.each do |k, v|
-    error_string+= "<li style='color:red'>#{k.to_s.humanize} #{v}</li>"
+    error_string+= "<li>#{k.to_s.humanize} #{v}</li>"
   end
   error_string += "</ul>"
 end
 
-page.replace_html @error_message_div, "<p style='color:red'>#{flash[:error]} #{error_string}</p>"
+page.replace_html @error_message_div, "<div id='errorExplanation'><h2>#{flash[:error]}</h2><p>#{error_string}</p></div>"
 flash[:notice] = ''

@@ -1,4 +1,3 @@
-
 en:
   include_repeating_aspects: "Include these repeating aspects in the export"
   trisano_title: "TriSano"
@@ -870,6 +869,7 @@ en:
       one: '1 event'
       other: '{{count}} events'
   fix_short_names: "Fix short names"
+  fix_short_name: Choose a new short name
   applies_to_x_events: "Applies to {{x}}"
   x_elements_with_core_fields: "{{x}} with ties to core fields"
   push: "Push"
@@ -926,6 +926,7 @@ en:
     check_box_blank_value: "can't be blank when question is a check box"
   invalid_core_field_config: "Core field configuration is invalid"
   exporting_to_cdc: "exporting to CDC"
+  continue: Continue
 
   #participations
   hospitalization: "Hospitalization"

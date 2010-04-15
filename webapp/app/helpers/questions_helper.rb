@@ -25,4 +25,10 @@ module QuestionsHelper
     result
   end
 
+  def link_to_close_question_form(text, reference_element)
+    link_to_function(text, <<-JS)
+       $('question-mods-#{reference_element.id}').down('form').reset();
+       Effect.BlindUp($('question-mods-#{reference_element.id}'), { duration: 0.1 });
+    JS
+  end
 end

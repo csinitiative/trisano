@@ -605,5 +605,13 @@ describe QuestionElement do
 
   end
 
-
+  describe "copying from element library" do
+    it "should check for short name uniqueness" do
+      with_question_element do |question_element|
+        question_element.save_and_add_to_form.should_not be_nil
+        library_entry = question_element.add_to_library
+        library_entry.can_copy_to?(question_element.parent_element_id).should be_false
+      end
+    end
+  end
 end

@@ -122,12 +122,23 @@ class QuestionElement < FormElement
     end
   end
 
+  def copying_question_from_library?
+    question_element_state == :copying_question_from_library
+  end
+
   def short_name_editable?
     return true if form.nil?
     most_recent_version = form.most_recent_version
     return true if most_recent_version.nil?
     return false if (most_recent_version.created_at > self.created_at)
     return true
+  end
+
+  def can_copy_to?(reference_element_id)
+    speculative_copy = self.clone
+    speculative_copy.question = self.question.clone
+    speculative_copy.parent_element_id = reference_element_id
+    speculative_copy.valid?
   end
 
   private
