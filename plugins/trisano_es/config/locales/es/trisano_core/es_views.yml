@@ -39,6 +39,10 @@ es:
   demographic_info: 'Información demográfica'
   jurisdictions: 'Jurisdicciones'
   unspecified: 'No especificado/a'
+  disable_tabs: 'Disable Tabs (EN)'
+  enable_tabs: 'Enable Tabs (EN)'
+  add_hospitalization_facility: 'Add a Hospitalization Facility (EN)'
+  enable_save_buttons: "Enable Save Buttons (EN)"
 
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
@@ -145,6 +149,7 @@ es:
   view_contact_event: 'Ver el Cvento de Contacto: {{name}}'
   edit_contact_event: 'Editar el Evento de Contacto: {{name}}'
   jurisdiction: 'Jurisdicción'
+  status: 'Estado'
   demographic: 'Demográfico/a(s)'
   clinical: 'Clínico/a(s)'
   laboratory: 'Laboratorio'
@@ -163,6 +168,7 @@ es:
   hide: 'Ocultar'
   search_button: 'Buscar'
   save_and_exit: 'Guardar y Salir'
+  save_and_continue: 'Guardar y Continuar'
   other_data_1: 'Datos adicionales 1'
   other_data_2: 'Datos adicionales 2'
   disease_not_specified: 'No se especificó enfermedad'
@@ -174,6 +180,7 @@ es:
   cmr_contacts: 'Contactos de CMR'
   parent_cmr: 'CMR superior'
   parent_guardian: Padre/Tutor
+  parent_patient: 'Paciente Principal'
   not_elevated: "Aún no se ha traspasado a eventos de morbilidad"
 
 #core_field_elements
@@ -285,8 +292,8 @@ es:
   no_notes: 'No se han escrito apuntes para este evento'
   event_notes: 'Apuntes'
   new_record_no_notes: 'Registro nuevo: No hay apuntes.'
-  earlier_notes: 'Apuntes anteriores
-#event_queues'
+  earlier_notes: 'Apuntes anteriores'
+#event_queues
   event_queue: 'Cola de Eventos'
   event_queues: 'Colas de Eventos'
   event_queue_admin: 'Administrador/a de Cola de Eventos'
@@ -330,8 +337,8 @@ es:
   county: 'Municipio'
   district: 'Distrito'
   place_info: 'Información de lugar'
-  show_map_of_results: 'Mostrar Mapa de Resultados
-#places'
+  show_map_of_results: 'Mostrar Mapa de Resultados'
+#places
   create_new_place: "Crear lugar nuevo"
   place_management: 'Administración de lugares'
   place_name: "Nombre de Lugar"
@@ -440,7 +447,7 @@ es:
   test_type: "Tipo de prueba"
   test_result: "Resultado de prueba"
   no_lab_results: "No se han registrado el resultados de laboratorio para este evento"
-  labes: "Laboratorios"
+  labs: "Laboratorios"
   specimen: "Muestra"
   specimen_sent_to_state_lab: "Se envió la muestra al laboratorio provincial"
   specimen_source: "Fuente de muestra"
@@ -662,13 +669,13 @@ es:
   queue: "Cola"
   investigators: "Investigadores/as"
   do_not_show_deleted_records: "No mostrar informes eliminados"
-  set_as_default_views: "Fijar como vista predeterminada"
+  set_as_default_view: "Fijar como vista predeterminada"
   items_per_page: "Artículos por página"
   shallow_copy_of: "Crear event nuevo para {{name}} que de otra manera no corresponda al evento actual."
   copies_demographics_only: "Sólo copia información demográfica."
   deep_copy_of: "Crear evento nuevo para {{name}} que corresponda de cerca al evento actual."
   create_and_edit_deep_copy: "Crear y Editar Copia Profunda"
-  create_ and_edit_shallow_copy: "Crear y Editar Copia Poco Superficial"
+  create_and_edit_shallow_copy: "Crear y Editar Copia Poco Superficial"
   shallow_copy: "Copia Superficial"
   deep_copy: "Copia Profunda"
   also_copy: 'Copiar junto con información demográfica'
@@ -700,7 +707,7 @@ es:
   assign_to_queue: Asignar a la cola
   assign_to_investigator: Asignar a investigador/a
   insufficient_privs_transition: Privilegios insuficientes para alterar este evento
-  investigation_juridiction: Jurisdicción investigadora
+  investigating_jurisdiction: Jurisdicción investigadora
   accept: Aceptar
   reject: Rechazar
   approve: Aprobar
@@ -899,7 +906,7 @@ es:
   data_type: "Tipo de Datos"
   Master_Copy: "Copia Original"
   add_new_group: "Agregar grupo nuevo"
-  import_from_library: "Importar de biblioteca:"
+  import_form_library: "Importar de biblioteca"
   export_form_library: "Exportar de biblioteca"
   manage_form_library: "Gestionar biblioteca de formularios"
   section: "sección"
@@ -939,10 +946,11 @@ es:
   show_encounter: "Mostrar Encuentro"
   edit_encounter: "Editar Encuentro"
   strike_through: "Tachar"
-  star_over: "Empezar de Nuevo"
+  start_over: "Empezar de Nuevo"
   date_or_year_of_birth: "Fecha o año de nacimiento (mm/dd/aaaa o aaaa)"
   investigated_by: "Investigado/a(s) por"
   are_you_sure: "¿Seguro/a?"
+  person_merge: "Person Merge (EN)"
   merge: "Fusionar"
   merge_into: "Fusionar a {{name}}"
   show_hide_details: "&nbsp;Mostrar&nbsp;|&nbsp;Ocultar&nbsp;Detalles&nbsp;"
