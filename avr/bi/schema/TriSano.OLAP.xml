@@ -311,7 +311,7 @@
             </MeasureExpression>
         </Measure>
         <CalculatedMember name="Population" formula="GetPopulation([Count])" dimension="Measures" visible="true" />
-        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count]) * 100" formatString="##.####%" dimension="Measures" />
+        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count])" formatString="##.####%" dimension="Measures" />
         <CalculatedMember name="Rate" formula="IIf(NOT ([Measures].[Population] = 0), Format([Measures].[RatePerc], '##.#### %'), '0 %')" visible="true" dimension="Measures" />
 	</Cube>
 
@@ -569,7 +569,7 @@
         </Measure>
         <!-- etc. -->
         <CalculatedMember name="Population" formula="GetPopulation([Count])" dimension="Measures" visible="true" />
-        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count]) * 100" formatString="##.####%" dimension="Measures" />
+        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count])" formatString="##.####%" dimension="Measures" />
         <CalculatedMember name="Rate" formula="IIf(NOT ([Measures].[Population] = 0), Format([Measures].[RatePerc], '##.#### %'), '0 %')" visible="true" dimension="Measures" />
 	</Cube>
 
