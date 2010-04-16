@@ -1,4 +1,4 @@
--- Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+-- Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 --
 -- This file is part of TriSano.
 --
@@ -359,42 +359,32 @@ CREATE TABLE trisano.etl_success (
 );
 INSERT INTO trisano.etl_success (success) VALUES (FALSE);
 
--- DROP TABLE IF EXISTS trisano.formbuilder_columns;
--- DROP TABLE IF EXISTS trisano.formbuilder_tables;
---
--- CREATE TABLE trisano.formbuilder_tables (
---     id SERIAL PRIMARY KEY,
---     short_name TEXT,
---     table_name TEXT,
---     modified BOOLEAN DEFAULT TRUE,
---     morbidity_disease_groups TEXT[],
---     morbidity_table TEXT,
---     contact_disease_groups TEXT[],
---     contact_table TEXT,
---     place_disease_groups TEXT[],
---     place_table TEXT,
---     encounter_disease_groups TEXT[],
---     encounter_table TEXT,
---     outbreak_disease_groups TEXT[],
---     outbreak_table TEXT
--- );
--- CREATE INDEX formbuilder_form_name
---     ON trisano.formbuilder_tables (short_name);
--- CREATE UNIQUE INDEX formbuilder_table_name
---     ON trisano.formbuilder_tables (table_name);
--- CREATE INDEX formbuilder_tables_modified
---     ON trisano.formbuilder_tables (modified);
---
--- CREATE TABLE trisano.formbuilder_columns (
---     formbuilder_table_name TEXT REFERENCES trisano.formbuilder_tables(table_name)
---         ON DELETE RESTRICT ON UPDATE RESTRICT,
---     column_name TEXT,
---     orig_column_name TEXT
--- );
--- CREATE UNIQUE INDEX formbuilder_columns_ix
---     ON trisano.formbuilder_columns (formbuilder_table_name, column_name);
--- CREATE INDEX formbuilder_column_orig_name
---     ON trisano.formbuilder_columns (orig_column_name);
+DROP TABLE IF EXISTS trisano.formbuilder_columns;
+DROP TABLE IF EXISTS trisano.formbuilder_tables;
+
+CREATE TABLE trisano.formbuilder_tables (
+    id SERIAL PRIMARY KEY,
+    short_name TEXT,
+    table_name TEXT,
+    modified BOOLEAN DEFAULT TRUE
+);
+CREATE INDEX formbuilder_form_name
+    ON trisano.formbuilder_tables (short_name);
+CREATE UNIQUE INDEX formbuilder_table_name
+    ON trisano.formbuilder_tables (table_name);
+CREATE INDEX formbuilder_tables_modified
+    ON trisano.formbuilder_tables (modified);
+
+CREATE TABLE trisano.formbuilder_columns (
+    formbuilder_table_name TEXT REFERENCES trisano.formbuilder_tables(table_name)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
+    column_name TEXT,
+    orig_column_name TEXT
+);
+CREATE UNIQUE INDEX formbuilder_columns_ix
+    ON trisano.formbuilder_columns (formbuilder_table_name, column_name);
+CREATE INDEX formbuilder_column_orig_name
+    ON trisano.formbuilder_columns (orig_column_name);
 
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
     SELECT
@@ -782,242 +772,212 @@ CREATE AGGREGATE trisano.array_accum (anyelement)
     initcond = '{}'
 );
 
---CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
---    LANGUAGE plpgsql
---    AS $$
---DECLARE
---    questions_per_table     INTEGER := 200;
---    form_name               TEXT;
---    question_name           TEXT;
---    question_count          INTEGER;
---    cur_table_count         INTEGER;
---    cur_table_name          TEXT;
---    last_event_id           INTEGER;
---    last_event_type         TEXT;
---    insert_vals_clause      TEXT;
---    insert_cols_clause      TEXT;
---    tmprec                  RECORD;
---    tmptext                 TEXT;
---    tmpbool                 BOOLEAN;
---    done                    BOOLEAN;
---BEGIN
---    -- This function creates tables for formbuilder data, in a series of steps:
---    --
---    -- 1) Develop schema for formbuilder tables
---    --
---    -- Forms are represented as one or more tables containing a column for
---    -- each question. These tables contain up to questions_per_table columns.
---    -- This step loops through each form name that has answers, and on each
---    -- one, gets the lowercase short names of all answered questions
---    -- associated with that form that aren't already assigned to a table
---    -- (these assignments are recorded in the formbuilder_tables and
---    -- formbuilder_columns tables in the trisano schema). These columns are
---    -- added to the highest-numbered formbuilder table for this form (the only
---    -- one that can possibly have room left for more columns) until it reaches
---    -- questions_per_table columns, after which new tables are added. Any
---    -- tables added or modified in this process are flagged so the metadata
---    -- builder stuff can know to recreate that table.
---    --
---    -- 2) Build schema based on results from step 1
---    --
---    -- Having developed a schema in the last step, this step builds each of
---    -- the tables defined in the formbuilder tables.
---    --
---    -- 3) Fill tables with data
---    --
---    -- Answers are sorted into the tables they belong to, and the data are
---    -- inserted into the tables
---    --
---    -- 4) Update the disease_groups columns in formbuilder_tables to reflect
---    -- the disease groups that need to know about each table
---
---    -- Loop through each form
---    FOR form_name IN
---                SELECT DISTINCT short_name
---                FROM forms
---                WHERE short_name IS NOT NULL AND short_name != ''
---                ORDER BY short_name LOOP
---
---        RAISE NOTICE 'Processing form name %', form_name;
---
---        -- Get highest-numbered table for this form, and count of its rows
---        SELECT INTO cur_table_count count(*) FROM trisano.formbuilder_tables
---            WHERE short_name = form_name;
---        SELECT INTO tmprec id, table_name, count(*) AS count
---            FROM trisano.formbuilder_tables t
---            JOIN trisano.formbuilder_columns c
---                ON (c.formbuilder_table_name = t.table_name)
---            WHERE t.short_name = form_name
---            GROUP BY id, table_name
---            ORDER BY id DESC
---            LIMIT 1;
---        question_count := tmprec.count;
---        cur_table_name := tmprec.table_name;
---
---        -- If we haven't found a table, make sure we're set up to create a new
---        -- one properly
---        IF question_count IS NULL THEN
---            question_count := questions_per_table;
---            cur_table_count := 0;
---        END IF;
---        tmpbool := FALSE;
---
---        RAISE NOTICE 'Found table name %, question count % for form name %', COALESCE(cur_table_name, '<null>'), question_count, form_name;
---
---        -- Get columns represented in the forms that aren't already in the
---        -- defined schema
---        <<question_loop>>
---        FOR tmprec IN SELECT DISTINCT
---                    q.short_name,
---                    regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
---                FROM questions q JOIN answers a
---                    ON (a.question_id = q.id AND a.text_answer IS NOT NULL AND a.text_answer != '')
---                JOIN form_elements fe ON (fe.id = q.form_element_id)
---                JOIN forms f
---                    ON (f.id = fe.form_id AND f.short_name = form_name)
---                WHERE NOT EXISTS (
---                    SELECT 1 FROM trisano.formbuilder_columns tfc
---                    JOIN trisano.formbuilder_tables tft
---                        ON (tfc.formbuilder_table_name = tft.table_name
---                            AND tft.short_name = form_name)
---                    WHERE tfc.orig_column_name = q.short_name
---                )
---                AND q.short_name IS NOT NULL AND q.short_name != ''
---                ORDER BY 1 LOOP
---
---            question_name := tmprec.safe_name;
---
---            -- Create a new table if the current one is full
---            IF question_count >= questions_per_table THEN
---                cur_table_count := cur_table_count + 1;
---                cur_table_name := 'fb_' ||
---                    regexp_replace(lower(form_name), '[^[:alnum:]_]', '_', 'g') ||
---                    '_' || cur_table_count;
---                    --regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
---                RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
---                INSERT INTO trisano.formbuilder_tables (short_name,
---                    table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
---                question_count := 0;
---                tmpbool := FALSE;
---            END IF;
---
---            -- The loop takes care of columns with different short_names that reduce to
---            -- the same safe name
---            <<add_column>>
---            LOOP
---                done := TRUE;
---                BEGIN
---                    INSERT INTO trisano.formbuilder_columns (formbuilder_table_name,
---                        column_name, orig_column_name)
---                        VALUES (cur_table_name, trisano.shorten_identifier(question_name), tmprec.short_name);
---
---                    -- Make sure table is marked as modified, as necessary
---                    IF NOT tmpbool THEN
---                        UPDATE trisano.formbuilder_tables SET modified = TRUE WHERE
---                            table_name = cur_table_name;
---                        tmpbool := TRUE;
---                    END IF;
---                EXCEPTION
---                    WHEN unique_violation THEN
---                        question_name := question_name || '1';
---                    done := FALSE;
---                END;
---                IF done THEN
---                    EXIT add_column;
---                END IF;
---            END LOOP add_column;
---
---            question_count := question_count + 1;
---        END LOOP question_loop;
---    END LOOP;
---
---    -- Create tables to match the schema we've just built
---    FOR tmprec IN SELECT table_name, trisano.text_join_agg(column_name, ' TEXT, col_') AS cols
---        FROM trisano.formbuilder_tables t JOIN trisano.formbuilder_columns c
---            ON t.table_name = c.formbuilder_table_name
---        GROUP BY table_name ORDER BY table_name
---    LOOP
---        tmptext := 'CREATE TABLE ' || tmprec.table_name || ' (event_id INTEGER, type TEXT, col_'
---                    || tmprec.cols || ' TEXT);';
---        RAISE NOTICE 'Creating table %', tmprec.table_name;
---        EXECUTE tmptext;
---    END LOOP;
---
---    -- Fill tables with data from answers
---    FOR cur_table_name IN SELECT table_name FROM trisano.formbuilder_tables ORDER BY table_name LOOP
---        RAISE NOTICE 'Filling table %', cur_table_name;
---        tmptext := '';
---
---        insert_cols_clause := ' (event_id, type';
---        insert_vals_clause := '';
---        last_event_id := NULL;
---        last_event_type := NULL;
---
---        -- Find all non-blank answers and associated event information
---        FOR tmprec IN SELECT DISTINCT ON (a.event_id, e.type, tfc.column_name) a.event_id, e.type, tfc.column_name AS short_name, a.text_answer
---                    FROM answers a JOIN events e ON (e.id = a.event_id)
---                    JOIN questions q ON (a.question_id = q.id)
---                    JOIN form_elements fe ON (fe.id = q.form_element_id)
---                    JOIN forms f ON (f.id = fe.form_id)
---                    JOIN trisano.formbuilder_columns tfc ON (tfc.orig_column_name = q.short_name)
---                    WHERE tfc.formbuilder_table_name = cur_table_name
---                    AND a.text_answer IS NOT NULL
---                    AND a.text_answer != ''
---                    ORDER BY a.event_id, e.type, short_name LOOP
---
---            IF last_event_id IS NOT NULL AND last_event_id != tmprec.event_id THEN
---                tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
---                EXECUTE tmptext;
---                insert_cols_clause := ' (event_id, type';
---                insert_vals_clause := '';
---            END IF;
---            last_event_id   := tmprec.event_id;
---            last_event_type := tmprec.type;
---
---            insert_cols_clause := insert_cols_clause || ', ' || quote_ident('col_' || tmprec.short_name);
---            insert_vals_clause := insert_vals_clause || ', ' || quote_literal(tmprec.text_answer);
---        END LOOP;
---
---        IF last_event_id IS NOT NULL THEN
---            tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
---            EXECUTE tmptext;
---        END IF;
---
---        -- Create indexes while we're here
---        RAISE NOTICE 'Creating indexes for table %', cur_table_name;
---        EXECUTE 'CREATE UNIQUE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_id_ix') || ' ON ' || cur_table_name || ' (event_id)';
---        EXECUTE 'CREATE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_type_ix') || ' ON ' || cur_table_name || ' (type)';
---
---        -- Fill out disease_groups columns
---        tmptext := '
---        UPDATE trisano.formbuilder_tables fbt SET
---            morbidity_disease_groups = morbs,
---            contact_disease_groups   = conts,
---            place_disease_groups     = places,
---            encounter_disease_groups = encs,
---            outbreak_disease_groups  = outs
---        FROM (
---            SELECT
---                trisano.array_accum(DISTINCT CASE WHEN c.type = ''MorbidityEvent'' THEN ag.name ELSE NULL END) AS morbs,
---                trisano.array_accum(DISTINCT CASE WHEN c.type = ''ContactEvent''   THEN ag.name ELSE NULL END) AS conts,
---                trisano.array_accum(DISTINCT CASE WHEN c.type = ''PlaceEvent''     THEN ag.name ELSE NULL END) AS places,
---                trisano.array_accum(DISTINCT CASE WHEN c.type = ''EncounterEvent'' THEN ag.name ELSE NULL END) AS encs,
---                trisano.array_accum(DISTINCT CASE WHEN c.type = ''OutbreakEvent''  THEN ag.name ELSE NULL END) AS outs
---            FROM
---                ' || cur_table_name || ' c, avr_groups ag,
---                avr_groups_diseases agd, disease_events de
---            WHERE
---                c.event_id = de.event_id AND
---                de.disease_id = agd.disease_id AND
---                agd.avr_group_id = ag.id
---            ) ft
---        WHERE fbt.table_name = ''' || cur_table_name || '''';
---        EXECUTE tmptext;
---    END LOOP;
---
---END;
---$$;
----- END OF trisano.build_form_tables()
+CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    questions_per_table     INTEGER := 200;
+    form_name               TEXT;
+    question_name           TEXT;
+    question_count          INTEGER;
+    cur_table_count         INTEGER;
+    cur_table_name          TEXT;
+    last_event_id           INTEGER;
+    last_event_type         TEXT;
+    insert_vals_clause      TEXT;
+    insert_cols_clause      TEXT;
+    tmprec                  RECORD;
+    tmptext                 TEXT;
+    tmpbool                 BOOLEAN;
+    done                    BOOLEAN;
+BEGIN
+    -- This function creates tables for formbuilder data, in a series of steps:
+    --
+    -- 1) Develop schema for formbuilder tables
+    --
+    -- Forms are represented as one or more tables containing a column for
+    -- each question. These tables contain up to questions_per_table columns.
+    -- This step loops through each form name that has answers, and on each
+    -- one, gets the lowercase short names of all answered questions
+    -- associated with that form that aren't already assigned to a table
+    -- (these assignments are recorded in the formbuilder_tables and
+    -- formbuilder_columns tables in the trisano schema). These columns are
+    -- added to the highest-numbered formbuilder table for this form (the only
+    -- one that can possibly have room left for more columns) until it reaches
+    -- questions_per_table columns, after which new tables are added. Any
+    -- tables added or modified in this process are flagged so the metadata
+    -- builder stuff can know to recreate that table.
+    --
+    -- 2) Build schema based on results from step 1
+    --
+    -- Having developed a schema in the last step, this step builds each of
+    -- the tables defined in the formbuilder tables.
+    --
+    -- 3) Fill tables with data
+    --
+    -- Answers are sorted into the tables they belong to, and the data are
+    -- inserted into the tables
+
+    -- Loop through each form
+    FOR form_name IN
+                SELECT DISTINCT short_name
+                FROM forms
+                WHERE short_name IS NOT NULL AND short_name != ''
+                ORDER BY short_name LOOP
+
+        RAISE NOTICE 'Processing form name %', form_name;
+
+        -- Get highest-numbered table for this form, and count of its rows
+        SELECT INTO cur_table_count count(*) FROM trisano.formbuilder_tables
+            WHERE short_name = form_name;
+        SELECT INTO tmprec id, table_name, count(*) AS count
+            FROM trisano.formbuilder_tables t
+            JOIN trisano.formbuilder_columns c
+                ON (c.formbuilder_table_name = t.table_name)
+            WHERE t.short_name = form_name
+            GROUP BY id, table_name
+            ORDER BY id DESC
+            LIMIT 1;
+        question_count := tmprec.count;
+        cur_table_name := tmprec.table_name;
+
+        -- If we haven't found a table, make sure we're set up to create a new
+        -- one properly
+        IF question_count IS NULL THEN
+            question_count := questions_per_table;
+            cur_table_count := 0;
+        END IF;
+        tmpbool := FALSE;
+
+        RAISE NOTICE 'Found table name %, question count % for form name %', COALESCE(cur_table_name, '<null>'), question_count, form_name;
+
+        -- Get columns represented in the forms that aren't already in the
+        -- defined schema
+        <<question_loop>>
+        FOR tmprec IN SELECT DISTINCT
+                    q.short_name,
+                    regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
+                FROM questions q JOIN answers a
+                    ON (a.question_id = q.id AND a.text_answer IS NOT NULL AND a.text_answer != '')
+                JOIN form_elements fe ON (fe.id = q.form_element_id)
+                JOIN forms f
+                    ON (f.id = fe.form_id AND f.short_name = form_name)
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM trisano.formbuilder_columns tfc
+                    JOIN trisano.formbuilder_tables tft
+                        ON (tfc.formbuilder_table_name = tft.table_name
+                            AND tft.short_name = form_name)
+                    WHERE tfc.orig_column_name = q.short_name
+                )
+                AND q.short_name IS NOT NULL AND q.short_name != ''
+                ORDER BY 1 LOOP
+
+            question_name := tmprec.safe_name;
+
+            -- Create a new table if the current one is full
+            IF question_count >= questions_per_table THEN
+                cur_table_count := cur_table_count + 1;
+                cur_table_name := 'formbuilder_' ||
+                    regexp_replace(lower(form_name), '[^[:alnum:]_]', '_', 'g') ||
+                    '_' || cur_table_count;
+                    --regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
+                RAISE NOTICE 'Creating schema for table %, form %', cur_table_name, form_name;
+                INSERT INTO trisano.formbuilder_tables (short_name,
+                    table_name) VALUES (form_name, trisano.shorten_identifier(cur_table_name));
+                question_count := 0;
+                tmpbool := FALSE;
+            END IF;
+
+            -- The loop takes care of columns with different short_names that reduce to
+            -- the same safe name
+            <<add_column>>
+            LOOP
+                done := TRUE;
+                BEGIN
+                    INSERT INTO trisano.formbuilder_columns (formbuilder_table_name,
+                        column_name, orig_column_name)
+                        VALUES (cur_table_name, trisano.shorten_identifier(question_name), tmprec.short_name);
+
+                    -- Make sure table is marked as modified, as necessary
+                    IF NOT tmpbool THEN
+                        UPDATE trisano.formbuilder_tables SET modified = TRUE WHERE
+                            table_name = cur_table_name;
+                        tmpbool := TRUE;
+                    END IF;
+                EXCEPTION
+                    WHEN unique_violation THEN
+                        question_name := question_name || '1';
+                    done := FALSE;
+                END;
+                IF done THEN
+                    EXIT add_column;
+                END IF;
+            END LOOP add_column;
+
+            question_count := question_count + 1;
+        END LOOP question_loop;
+    END LOOP;
+
+    -- Create tables to match the schema we've just built
+    FOR tmprec IN SELECT table_name, trisano.text_join_agg(column_name, ' TEXT, col_') AS cols
+        FROM trisano.formbuilder_tables t JOIN trisano.formbuilder_columns c
+            ON t.table_name = c.formbuilder_table_name
+        GROUP BY table_name ORDER BY table_name
+    LOOP
+        tmptext := 'CREATE TABLE ' || tmprec.table_name || ' (event_id INTEGER, type TEXT, col_'
+                    || tmprec.cols || ' TEXT);';
+        RAISE NOTICE 'Creating table %', tmprec.table_name;
+        EXECUTE tmptext;
+    END LOOP;
+
+    -- Fill tables with data from answers
+    FOR cur_table_name IN SELECT table_name FROM trisano.formbuilder_tables ORDER BY table_name LOOP
+        RAISE NOTICE 'Filling table %', cur_table_name;
+        tmptext := '';
+
+        insert_cols_clause := ' (event_id, type';
+        insert_vals_clause := '';
+        last_event_id := NULL;
+        last_event_type := NULL;
+
+        -- Find all non-blank answers and associated event information
+        FOR tmprec IN SELECT DISTINCT ON (a.event_id, e.type, tfc.column_name) a.event_id, e.type, tfc.column_name AS short_name, a.text_answer
+                    FROM answers a JOIN events e ON (e.id = a.event_id)
+                    JOIN questions q ON (a.question_id = q.id)
+                    JOIN form_elements fe ON (fe.id = q.form_element_id)
+                    JOIN forms f ON (f.id = fe.form_id)
+                    JOIN trisano.formbuilder_columns tfc ON (tfc.orig_column_name = q.short_name)
+                    WHERE tfc.formbuilder_table_name = cur_table_name
+                    AND a.text_answer IS NOT NULL
+                    AND a.text_answer != ''
+                    ORDER BY a.event_id, e.type, short_name LOOP
+
+            IF last_event_id IS NOT NULL AND last_event_id != tmprec.event_id THEN
+                tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
+                EXECUTE tmptext;
+                insert_cols_clause := ' (event_id, type';
+                insert_vals_clause := '';
+            END IF;
+            last_event_id   := tmprec.event_id;
+            last_event_type := tmprec.type;
+
+            insert_cols_clause := insert_cols_clause || ', ' || quote_ident('col_' || tmprec.short_name);
+            insert_vals_clause := insert_vals_clause || ', ' || quote_literal(tmprec.text_answer);
+        END LOOP;
+
+        IF last_event_id IS NOT NULL THEN
+            tmptext := 'INSERT INTO ' || cur_table_name || insert_cols_clause || ') VALUES (' || last_event_id || ', ''' || last_event_type || '''' || insert_vals_clause || ')';
+            EXECUTE tmptext;
+        END IF;
+
+        -- Create indexes while we're here
+        RAISE NOTICE 'Creating indexes for table %', cur_table_name;
+        EXECUTE 'CREATE UNIQUE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_id_ix') || ' ON ' || cur_table_name || ' (event_id)';
+        EXECUTE 'CREATE INDEX ' || trisano.shorten_identifier(cur_table_name || '_event_type_ix') || ' ON ' || cur_table_name || ' (type)';
+    END LOOP;
+END;
+$$;
+-- END OF trisano.build_form_tables()
 
 -- Commenting structure
 DROP TABLE IF EXISTS trisano.schema_comments;
@@ -1639,6 +1599,7 @@ DECLARE
     tmp2 TEXT;
     viewname TEXT;
     validetl BOOLEAN;
+    orig_search_path TEXT;
     tmprec RECORD;
     tblnum INTEGER;
 BEGIN
@@ -1660,6 +1621,12 @@ BEGIN
     EXECUTE 'COMMENT ON SCHEMA staging IS ''Holds the actual warehouse data. data dictionary ignore''';
     tmp := 'ALTER SCHEMA staging RENAME TO ' || new_schema;
     EXECUTE tmp;
+
+    -- Create form builder tables
+    SELECT INTO orig_search_path setting FROM pg_settings WHERE name = 'search_path';
+    EXECUTE 'SET search_path = ' || new_schema;
+    PERFORM trisano.build_form_tables();
+    EXECUTE 'SET search_path = ' || orig_search_path;
 
     -- Drop views in trisano schema
     FOR viewname IN
