@@ -24,38 +24,6 @@ class FixUpPlaceTypes < ActiveRecord::Migration
       
       execute("ALTER TABLE places_types ADD PRIMARY KEY (place_id, type_id)")
 
-      if RAILS_ENV == 'production'
-        say "Copying reporting agency types to places_types"
-        ReportingAgencyType.all.each do |rat|
-          execute("INSERT INTO places_types (place_id, type_id) VALUES (#{rat.place_id}, #{rat.code_id})")
-        end
-
-        Place.all.each do |place|
-        say "Copying old place types to places_types"
-          if place.place_type_id
-            exists = execute("select * from places_types where place_id = #{place.id} and type_id = #{place.place_type_id}")
-            if exists.empty?
-              execute("INSERT INTO places_types (place_id, type_id) VALUES (#{place.id}, #{place.place_type_id})") if place.place_type_id
-            else
-              say "Duplicate type for #{place.name}, skipping."
-            end
-          end
-        end
-      
-        say "Updating field name references in other tables"
-        execute("
-          UPDATE core_fields
-          SET key = 'place_event[active_place][active_primary_entity][place][place_type_ids]'
-          WHERE key = 'place_event[interested_place][place_entity][place][place_type_id]'
-        ")
-
-        execute("
-          UPDATE form_elements
-          SET core_path = 'place_event[active_place][active_primary_entity][place][place_type_ids]'
-          WHERE core_path = 'place_event[interested_place][place_entity][place][place_type_id]'
-        ")
-      end
-
       say "Removing old columns and tables"
       remove_column :places, :place_type_id
       drop_table :reporting_agency_types
