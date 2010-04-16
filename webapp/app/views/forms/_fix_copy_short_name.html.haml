@@ -14,15 +14,17 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %p
+  =error_messages_for('question', :object => @lib_element.speculative_copy(@form_element.id))
+
   -remote_form_for_fixing_short_names(@form_element) do
     %span
-      =label_tag(:short_name, t(:fix_short_name))
+      =label_tag(:short_name)
       =text_field_tag(:short_name, @lib_element.question.short_name)
       =hidden_field_tag(:reference_element_id, @form_element.id)
       =hidden_field_tag(:lib_element_id, @lib_element.id)
     %span
       %label
         &nbsp;
-      =submit_tag(t(:continue), :id => "submit_short_name_fix_#{@form_element.id}")
+      =submit_tag(t(:update), :id => "submit_short_name_fix_#{@form_element.id}")
       &nbsp;&nbsp;
       =link_to_close_question_form(t(:close), @form_element)

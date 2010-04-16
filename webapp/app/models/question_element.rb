@@ -134,14 +134,30 @@ class QuestionElement < FormElement
     return true
   end
 
+  # uses speculative_copy to determine if a question can be copied
+  # into a form.
   def can_copy_to?(reference_element_id)
-    speculative_copy = self.clone
-    speculative_copy.question = self.question.clone
-    speculative_copy.parent_element_id = reference_element_id
-    speculative_copy.valid?
+    speculative_copy(reference_element_id).valid?
+  end
+
+  # returns a copy of the question, as though it were a new child of
+  # reference_element.
+  def speculative_copy(reference_element_id)
+    if speculative_cache.has_key?(reference_element_id)
+      speculative_cache[reference_element_id]
+    else
+      speculative_copy = self.clone
+      speculative_copy.question = self.question.clone
+      speculative_copy.parent_element_id = reference_element_id
+      speculative_cache[reference_element_id] = speculative_copy
+    end
   end
 
   private
+
+  def speculative_cache
+    @speculative_cache ||= {}
+  end
 
   def validate_question_short_name_uniqueness
     conditions = []
