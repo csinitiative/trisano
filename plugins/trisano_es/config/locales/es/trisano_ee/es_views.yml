@@ -23,3 +23,4 @@ es:
     never_expires: "Nunca se caduca"
     update_contact_coords: 'Algunos resultados precisan actualizarse con coordinados de mapa.'
     all_system_messages: "Todos mensajes de sistema"
+    update_place_coords: 'Algunos lugares precisan actualizarse con coordinados de mapa.'

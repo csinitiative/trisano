@@ -43,7 +43,7 @@ es:
   enable_tabs: 'Enable Tabs (EN)'
   add_hospitalization_facility: 'Add a Hospitalization Facility (EN)'
   enable_save_buttons: "Enable Save Buttons (EN)"
-
+  
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
   jurisdictions_with_access: 'Jurisdicciones con acceso'
