@@ -23,7 +23,7 @@ es:
     event_name: "Nombre"
     disease: "Enfermedad"
     outbreak_date: "Fecha de brote"
-    investigating_juristdiction: "Jurisdicción encargada de la investigación"
+    investigating_jurisdiction: "Jurisdicción encargada de la investigación"
     description: "Descripción"
 
     # Outbreak tabs
