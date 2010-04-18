@@ -147,6 +147,7 @@ en:
 
       lab:
         _delete: Remove lab (with results)
+        _destroy: Remove lab (with results)
 
       lab_result:
         test_type: Test type
@@ -162,6 +163,7 @@ en:
         specimen_sent_to_state_id: Specimen sent to state lab?
         comment: Comment
         _delete: Remove
+        _destroy: Remove
 
       note:
         note: New note

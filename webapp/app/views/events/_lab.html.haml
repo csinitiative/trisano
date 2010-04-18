@@ -34,8 +34,8 @@
 
       - if defined?(f) && !f.object.new_record?
         %span.horiz
-          = f.label :_delete
-          = f.check_box :_delete
+          = f.label :_destroy
+          = f.check_box :_destroy
 
   - lab_form.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result_fields|
     = render :partial => "events/lab_result", :locals => { :f => lab_result_fields }

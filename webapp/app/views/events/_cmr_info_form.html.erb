@@ -29,7 +29,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
     <% if not @event.MMWR_year.blank? %>
       <span class="label"><%= ct 'mmwr_year' %></span> <%= h(@event.MMWR_year) %>
-      <span class="label"><%= ct 'mmwr_week' %><%= h(@event.MMWR_week) %>
+      <span class="label"><%= ct 'mmwr_week' %></span><%= h(@event.MMWR_week) %>
     <% end %>
     <br />
     <span class="label"><%= ct 'date_record_created' %></span>
