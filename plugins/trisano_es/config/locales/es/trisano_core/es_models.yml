@@ -81,7 +81,7 @@ es:
         died_id: Muerto/a(s)
 
       disease:
-        diseade_name: Nombre de enfermedad
+        disease_name: Nombre de enfermedad
         contact_lead_in: Pregunta introductoria de contacto
         place_lead_in: Pregunta introductoria de lugar
         treatment_lead_in: Pregunta introductoria de tratmiento
