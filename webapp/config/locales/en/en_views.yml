@@ -926,7 +926,10 @@ en:
     check_box_blank_value: "can't be blank when question is a check box"
   invalid_core_field_config: "Core field configuration is invalid"
   exporting_to_cdc: "exporting to CDC"
-
+  core_data: "Core Data"
+  formbuilder_data: "Formbuilder Data"
+  system_generated: "System Generated"
+  
   #participations
   hospitalization: "Hospitalization"
   treatment: "Treatment"

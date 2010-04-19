@@ -24,7 +24,7 @@ class ExportColumn < ActiveRecord::Base
 
   class << self
     def type_data_array
-      [["Core Data", "CORE"], ["Formbuilder Data", "FORM"], ["System Generated", "FIXED"]]
+      [[I18n.t('core_data'), "CORE"], [I18n.t('formbuilder_data'), "FORM"], [I18n.t('system_generated'), "FIXED"]]
     end
 
     def valid_types
