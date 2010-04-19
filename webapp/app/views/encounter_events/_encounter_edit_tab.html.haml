@@ -3,19 +3,19 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
 %fieldset
-  %legend 
+  %legend
     =t('encounter_info')
     %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"}=t('hide')
     %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"}=t('show')
@@ -25,18 +25,18 @@
     - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
       = error_messages_for :object => pe_fields.object
 
-      %span.horiz
+      -core_element(:user_id, pe_fields, :horiz) do
         =pe_fields.label(:user_id)
         =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name)
 
-      %span.horiz
+      -core_element(:encounter_date, pe_fields, :horiz) do
         =pe_fields.label(:encounter_date)
         =pe_fields.calendar_date_select(:encounter_date, :year_range => 5.years.ago..0.years.from_now)
 
-      %span.horiz
+      -core_element(:encounter_location_type, pe_fields, :horiz) do
         =pe_fields.label(:encounter_location_type)
         =pe_fields.select(:encounter_location_type, ParticipationsEncounter.location_type_array)
 
-      %span.vert
+      -core_element(:description, pe_fields, :vert) do
         =pe_fields.label(:description)
         =pe_fields.text_area(:description, { :rows => 5, :cols => 50 })

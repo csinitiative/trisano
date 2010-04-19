@@ -3,36 +3,36 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
-  %legend 
+  %legend
     =t('encounter_info')
-    
+
   %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
 
-    - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
+    -f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
 
-      %span.horiz
+      -core_element_show(:user_id, pe_fields, :horiz) do
         =pe_fields.label(:user_id)
         =h @event.participations_encounter.user.best_name
 
-      %span.horiz
+      -core_element_show(:encounter_date, pe_fields, :horiz) do
         =pe_fields.label(:encounter_date)
         =ld(@event.participations_encounter.encounter_date)
 
-      %span.horiz
+      -core_element_show(:encounter_location_type, pe_fields, :horiz) do
         =pe_fields.label(:encounter_location_type)
         =h @event.participations_encounter.encounter_location_type.humanize
 
-      %span.vert
+      -core_element_show(:description, pe_fields, :vert) do
         =pe_fields.label(:description)
         =h @event.participations_encounter.description

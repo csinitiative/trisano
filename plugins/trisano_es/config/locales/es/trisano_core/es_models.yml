@@ -147,6 +147,7 @@ es:
 
       lab:
         _delete: Eliminar laboratorio (y resultados)
+        _destroy: Eliminar laboratorio (y resultados)
 
       lab_result:
         test_type: Tipo de prueba
@@ -162,6 +163,7 @@ es:
         specimen_sent_to_state_id: ¿Se envió la muestra al laboratorio provincial?
         comment: Comentario
         _delete: Eliminar
+        _destroy: Eliminar
 
       note:
         note: Apunte nuevo

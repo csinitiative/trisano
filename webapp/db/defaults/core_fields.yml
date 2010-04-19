@@ -1069,3 +1069,46 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[other_data_2]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_select
+  event_type: encounter_event
+  key: encounter_event[participations_encounter][user_id]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[participations_encounter][encounter_date]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_select
+  event_type: encounter_event
+  key: encounter_event[participations_encounter][encounter_location_type]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: multi_line_text
+  event_type: encounter_event
+  key: encounter_event[participations_encounter][description]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  event_type: encounter_event
+  field_type: drop_down
+  key: encounter_event[treatments]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs]
+
