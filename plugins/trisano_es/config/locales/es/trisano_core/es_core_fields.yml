@@ -31,6 +31,7 @@ es:
         street_number: Número de calle de contacto
         state_id: Estado de contacto
         street_name: Nombre de calle de contacto
+        district: District (EN)
       disease_event:
         date_diagnosed: Fecha de diagnóstico de enfermedad
         disease_onset_date: Fecha de inicio de enfermedad
@@ -80,6 +81,10 @@ es:
             name: Resultados de laboratorio | Nombre de laboratorio
       imported_from_id: Se importó de
     morbidity_event:
+      parent_guardian: Parent / Guardian (EN)
+      clinicians: Clinicians (EN)
+      diagnostic_facilities: Diagnostic facilities (EN)
+      encounters: Encounters
       results_reported_to_clinician_date: Fecha en que se reportaron los resultados al clínico
       address:
         city: Ciudad del paciente
@@ -89,6 +94,7 @@ es:
         county_id: Departamento/Municipio del paciente
         street_name: Nombre de calle del paciente
         state_id: Estado del paciente
+        district: District (EN)
       investigation_completed_LHD_date: Fecha en que se concluyó la investigación
       review_completed_by_state_date: Fecha en que el estado concluyó la revisión
       reporter:
@@ -108,15 +114,22 @@ es:
         died_id: Muerto/a(s)
         disease_id: Enfermedad
         hospitalized_id: Se hospitalizó
-      other_data_1: Datos adicionales (segundo campo)
+      other_data_1: Datos adicionales (primero campo)
+      other_data_2: Datos adicionales (segundo campo)
       outbreak_name: Brote
-      juristiction:
+      jurisdiction:
         secondary_entity_id: Jurisdicción encargada de la investigación
       first_reported_PH_date: Fecha en que primero se reportó al departamento de la salud pública
       reporting_agency:
         place_entity:
+          telephones:
+            area_code: Prefijo del agencia notificadora
+            country_code: Reporting agency country code (EN)
+            phone_number: Número telefónico del agencia notificadora
+            extension: Extensión del agencia notificadora
           place:
             name: Agencia notificadora
+            place_type: Reporting agency place type (EN)
       acuity: Agudeza
       event_name: Nombre de evento
       lhd_case_status_id: Estado de caso LHD
@@ -136,6 +149,8 @@ es:
           pregnant_id: Embarazada
           healthcare_worker_id: Obrador/a de atención médica
         person_entity:
+          telephones: Patient telephones (EN)
+          email_addresses: Patient email addresses (EN)
           person:
             date_of_death: Fecha de muerte del paciente
             age_at_onset: Edad cuando se inició actividad
