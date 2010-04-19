@@ -183,3 +183,11 @@ en:
           place:
             name: Lab results | Lab name
       imported_from_id: Imported from
+    encounter_event:
+      labs: Encounter labs
+      treatments: Encounter treatments
+      participations_encounter:
+        user_id: Investigator
+        encounter_date: Encounter date
+        encounter_location_type: Encounter location type
+        description: Encounter description

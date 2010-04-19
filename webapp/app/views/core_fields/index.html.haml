@@ -19,3 +19,4 @@
 = render :partial => 'list_fields', :locals => {:event_type => t('morbidity_event_fields'), :core_fields => @core_fields.select {|cf| cf.event_type == 'morbidity_event'}}
 = render :partial => 'list_fields', :locals => {:event_type => t('contact_event_fields'), :core_fields => @core_fields.select {|cf| cf.event_type == 'contact_event'}}
 = render :partial => 'list_fields', :locals => {:event_type => t('place_event_fields'), :core_fields => @core_fields.select {|cf| cf.event_type == 'place_event'}}
+= render :partial => 'list_fields', :locals => {:event_type => t('encounter_event_fields'), :core_fields => @core_fields.select { |cf| cf.event_type == 'encounter_event' } }
