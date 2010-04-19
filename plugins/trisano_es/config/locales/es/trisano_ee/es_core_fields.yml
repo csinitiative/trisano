@@ -1,0 +1,10 @@
+en:
+  event_fields:
+    morbidity_event:
+      address:
+        latitude: Latitud
+        longitude: Longitud
+    contact_event:
+      address:
+        latitude: Latitud
+        longitude: Longitud
