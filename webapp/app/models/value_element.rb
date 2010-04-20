@@ -21,8 +21,6 @@ class ValueElement < FormElement
   validates_presence_of :name, :if => :radio_button_question?, :message => I18n.t(:radio_button_blank_value, :scope => [:form_errors])
   validates_presence_of :name, :if => :check_box_question?,    :message => I18n.t(:check_box_blank_value, :scope => [:form_errors])
 
-  attr_accessor :parent_element_id
-
   def radio_button_question?
     return false unless question
     question.data_type == :radio_button

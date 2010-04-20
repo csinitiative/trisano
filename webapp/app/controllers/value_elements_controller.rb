@@ -38,6 +38,7 @@ class ValueElementsController <  AdminController
 
   def edit
     @value_element = ValueElement.find(params[:id])
+    @value_element.parent_element_id = @value_element.parent_id
   end
 
   def create
@@ -64,6 +65,7 @@ class ValueElementsController <  AdminController
       flash[:notice] = t("value_successfully_updated")
       @form = Form.find(@value_element.form_id)
     else
+      @value_element.parent_element_id = @value_element.parent_id
       render :action => "edit"
     end
   end

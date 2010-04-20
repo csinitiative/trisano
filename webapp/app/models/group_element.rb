@@ -17,8 +17,6 @@
 
 class GroupElement < FormElement
 
-  attr_accessor :parent_element_id
-
   validates_presence_of :name
 
   def save_and_add_to_form

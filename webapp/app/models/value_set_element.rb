@@ -24,8 +24,6 @@ class ValueSetElement < FormElement
 
   validates_presence_of :name
 
-  attr_accessor :parent_element_id
-
   def save_and_add_to_form
     begin
       parent_element = FormElement.find(parent_element_id)

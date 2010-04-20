@@ -18,7 +18,6 @@
 class CoreFieldElement < FormElement
   include I18nCoreField
 
-  attr_accessor :parent_element_id
   validates_presence_of :core_path
 
   def save_and_add_to_form

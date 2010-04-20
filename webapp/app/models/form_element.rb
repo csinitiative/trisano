@@ -30,6 +30,8 @@ class FormElement < ActiveRecord::Base
     :form_id => nil
   }
 
+  attr_accessor :parent_element_id
+
   @@export_lookup_separator = "|||"
 
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other

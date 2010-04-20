@@ -17,8 +17,6 @@
 
 class SectionElement < FormElement
 
-  attr_accessor :parent_element_id
-
   validates_presence_of :name
   validates_length_of :description, :maximum => 2000, :allow_blank => true
   validates_length_of :help_text, :maximum => 2000, :allow_blank => true
