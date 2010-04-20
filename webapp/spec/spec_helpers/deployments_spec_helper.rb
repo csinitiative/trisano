@@ -34,6 +34,10 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(expanded_other_project_plugin_js_path(name)).returns(true)
   end
 
+  def given_other_project_plugin_images(name)
+    File.expects(:exists?).with(expanded_other_project_plugin_image_path(name)).returns(true)
+  end
+
   def given_other_project_dir(name)
     File.expects(:exists?).with(expanded_other_project_path(name)).returns(true)
   end
@@ -64,8 +68,16 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(Deployment.ext_javascripts).returns(false)
   end
 
+  def given_no_ext_images_dir
+    File.expects(:exists?).with(Deployment.ext_images).returns(false)
+  end
+
   def given_ext_javascript_dir
     File.expects(:exists?).with(Deployment.ext_javascripts).returns(true)
+  end
+
+  def given_ext_images_dir
+    File.expects(:exists?).with(Deployment.ext_images).returns(true)
   end
 
   def ext_javascript_symlink(link_name)
@@ -106,6 +118,10 @@ module DeploymentsSpecHelper
 
   def expanded_other_project_plugin_js_path(name)
     File.join(expanded_other_project_plugin_path(name), 'public', 'javascripts')
+  end
+
+  def expanded_other_project_plugin_image_path(name)
+    File.join(expanded_other_project_plugin_path(name), 'public', 'images')
   end
 
   def other_project_deployment(name)

@@ -10,11 +10,13 @@ module Trisano
         delete_all_plugin_links
         delete_installer_symlink
         delete_ext_javascripts
+        delete_ext_images
         prep_plugin_dir
         d = new(deployment)
         d.create_plugin_symlinks
         d.create_installer_symlink
         d.create_javascript_links
+        d.create_image_links
       end
 
       def delete_all_plugin_links
@@ -30,7 +32,15 @@ module Trisano
       end
 
       def delete_ext_javascripts
-        FileUtils.rm_rf(ext_javascripts) if File.exists?(ext_javascripts)
+        recursive_delete(ext_javascripts)
+      end
+
+      def delete_ext_images
+        recursive_delete(ext_images)
+      end
+
+      def recursive_delete(path)
+        FileUtils.rm_rf(path) if File.exists?(path)
       end
 
       def trisano_extensions
@@ -46,11 +56,23 @@ module Trisano
       end
 
       def ext_javascripts
-        File.join(app_path, 'webapp', 'public', 'javascripts', 'ext')
+        File.join(public_app_path, 'javascripts', 'ext')
+      end
+
+      def ext_images
+        File.join(public_app_path, 'images', 'ext')
+      end
+
+      def public_app_path
+        File.join(app_path, 'webapp', 'public')
       end
 
       def ext_javascript(name)
         File.join(ext_javascripts, name)
+      end
+
+      def ext_image(name)
+        File.join(ext_images, name)
       end
 
       def trisano_installer
@@ -70,8 +92,16 @@ module Trisano
       end
 
       def prep_ext_javascripts
-        unless File.exists?(ext_javascripts)
-          FileUtils.mkdir_p(ext_javascripts)
+        prep_ext(ext_javascripts)
+      end
+
+      def prep_ext_images
+        prep_ext(ext_images)
+      end
+
+      def prep_ext(path)
+        unless File.exists?(path)
+          FileUtils.mkdir_p(path)
         end
       end
     end
@@ -102,6 +132,15 @@ module Trisano
         unless File.exists?(ext_javascript(plugin.name))
           prep_ext_javascripts
           FileUtils.ln_sf(plugin.javascripts, ext_javascript(plugin.name)) if plugin.javascripts?
+        end
+      end
+    end
+
+    def create_image_links
+      plugins.each do |plugin|
+        unless File.exists?(ext_image(plugin.name))
+          prep_ext_images
+          FileUtils.ln_sf(plugin.images, ext_image(plugin.name)) if plugin.images?
         end
       end
     end
@@ -158,8 +197,20 @@ module Trisano
         File.exists?(javascripts)
       end
 
+      def images?
+        File.exists?(images)
+      end
+
       def javascripts
-        File.join(plugin_path, 'public', 'javascripts')
+        File.join(plugin_public_path, 'javascripts')
+      end
+
+      def images
+        File.join(plugin_public_path, 'images')
+      end
+
+      def plugin_public_path
+        File.join(plugin_path, 'public')
       end
 
       def plugin_paths

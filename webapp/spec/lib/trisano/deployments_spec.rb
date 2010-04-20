@@ -54,10 +54,22 @@ describe Deployment do
     Deployment.delete_ext_javascripts
   end
 
+  it "should delete ext images dir, if present" do
+    File.expects(:exists?).with(Deployment.ext_images).returns(true)
+    FileUtils.expects(:rm_rf).with(Deployment.ext_images)
+    Deployment.delete_ext_images
+  end
+
   it "should create ext javascript directory, if not present" do
     given_no_ext_javascript_dir
     FileUtils.expects(:mkdir_p).with(Deployment.ext_javascripts)
     Deployment.prep_ext_javascripts
+  end
+
+  it "should create ext images directory, if not present" do
+    given_no_ext_images_dir
+    FileUtils.expects(:mkdir_p).with(Deployment.ext_images)
+    Deployment.prep_ext_images
   end
 
   it "should link plugin javascript dirs into ext javascripts dir" do
@@ -68,5 +80,15 @@ describe Deployment do
     File.expects(:exists?).with(Deployment.ext_javascript('foo')).returns(false)
     FileUtils.expects(:ln_sf).with(expanded_other_project_plugin_js_path('foo'), File.join(Deployment.ext_javascripts, 'foo'))
     Deployment.new(other_project_deployment('a_deployment')).create_javascript_links
+  end
+
+  it "should link plugin image dirs into ext images dir" do
+    given_other_deployment('a_deployment', {'plugins' => ['foo'] })
+    given_other_project_plugin('foo')
+    given_other_project_plugin_images('foo')
+    given_ext_images_dir
+    File.expects(:exists?).with(Deployment.ext_image('foo')).returns(false)
+    FileUtils.expects(:ln_sf).with(expanded_other_project_plugin_image_path('foo'), File.join(Deployment.ext_images, 'foo'))
+    Deployment.new(other_project_deployment('a_deployment')).create_image_links
   end
 end
