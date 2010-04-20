@@ -90,40 +90,46 @@ module LayoutHelper
     "logo.png"
   end
 
-  def top_nav
-    top_nav = Trisano::TopNav.new
-    if User.current_user
-      case_management_menu_items(top_nav.add_child(:case_management))
-      entity_management_menu_items(top_nav.add_child(:entity_management))
-      system_management_menu_items(top_nav.add_child(:system_management))
-      tools_menu_items(top_nav.add_child(:tools))
+  def render_main_menu
+    links = main_menu_items.collect do |item|
+      item[:options] ||= {}
+      text = item[:t] ? t(*item[:t]) : item[:text]
+      link_to(text, item[:link], item[:options])
     end
-    top_nav
+    links.join("&nbsp;|&nbsp;")
   end
 
-  def case_management_menu_items(menu)
-    user = User.current_user
-    menu.add_child(:new_cmr, event_search_cmrs_path) if user.is_entitled_to?(:create_event)
-    menu.add_child(:events, cmrs_path) if user.is_entitled_to?(:view_event)
-    menu.add_child(:staging_area, staged_messages_path) if user.is_entitled_to?(:manage_staged_message, :write_staged_message)
-  end
-
-  def entity_management_menu_items(menu)
-    if User.current_user.is_entitled_to? :manage_entities
-      menu.add_child(:people, people_path)
-      menu.add_child(:places, places_path)
+  def main_menu_items
+    return MenuArray.new unless user = User.current_user
+    returning MenuArray.new do |items|
+      if user.is_entitled_to? :create_event
+        items << {:link => event_search_cmrs_path, :t => :new_cmr}
+      end
+      if user.is_entitled_to? :manage_staged_message, :write_staged_message
+        items << {
+          :link => staged_messages_path,
+          :t => :staging_area,
+          :options => {:rel => "http://trisano.org/relation/staged_messages"}}
+      end
+      if user.is_entitled_to? :view_event
+        items << {:link => cmrs_path_with_defaults, :t => :events}
+        items << {:link => search_cmrs_path, :t => :search}
+      end
+      if user.is_entitled_to? :manage_entities
+        items << {:link => people_path, :t => :people}
+        items << {:link => places_path, :t => :places}
+      end
+      if user.is_entitled_to? :access_avr
+        items << {
+          :link => config_option(:bi_server),
+          :t => :avr,
+          :options => {:popup => true}}
+      end
+      if user.is_admin?
+        items << {:link => admin_path, :t => :admin}
+      end
+      items << {:link => settings_path, :t => :settings}
     end
-  end
-
-  def system_management_menu_items(menu)
-    menu.add_child(:admin, admin_path) if User.current_user.is_admin?
-  end
-
-  def tools_menu_items(menu)
-    user = User.current_user
-    menu.add_child(:avr, config_option(:bi_server_url), :popup => true) if user.is_entitled_to? :access_avr
-    menu.add_child(:search, search_cmrs_path) if user.is_entitled_to? :view_event
-    menu.add_child(:settings, settings_path)
   end
 
   def render_user_tools(user)

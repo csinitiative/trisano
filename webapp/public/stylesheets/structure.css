@@ -35,11 +35,6 @@ body {
   top: 120px;
   width: 100%; }
 
-#topnav {
-  text-transform: uppercase; }
-  #topnav .submenu-content {
-    display: none; }
-
 .left {
   position: absolute;
   align: left;

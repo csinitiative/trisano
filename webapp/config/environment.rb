@@ -108,7 +108,6 @@ Rails::Initializer.run do |config|
     require 'globalize/globalize2_patch.rb'
     require 'i18n_logger'
     require 'i18n_core_field'
-    require 'trisano/top_nav'
   end
 
 end
