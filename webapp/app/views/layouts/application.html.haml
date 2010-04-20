@@ -61,14 +61,16 @@
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
-        .left
-          =render_main_logo
-        .right
-          .areas
-            =render_main_menu
-          .user
-            -if User.current_user
-              =render_user_tools(User.current_user)
+        %table
+          %tr
+            %td
+              =render_main_logo
+            %td.right
+              .areas
+                =render_main_menu
+              .user
+                -if User.current_user
+                  =render_user_tools(User.current_user)
 
     #bar
       .container
