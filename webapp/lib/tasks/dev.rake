@@ -132,6 +132,7 @@ namespace :trisano do
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
     task :feature_prep => ["trisano:dev:db_reset"] do
+      RAILS_ENV = "test"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
       ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/set_default_admin_uid.rb"
