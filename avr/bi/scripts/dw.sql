@@ -1273,7 +1273,7 @@ SELECT
     ds.treatment_lead_in,
     ds.active,
     ds.cdc_code,
-    NULL::trisano.hstore AS encounter_formbuilder
+    newhstore AS encounter_formbuilder
 FROM
     participations_encounters pe
     JOIN events
