@@ -80,10 +80,14 @@ module LayoutHelper
     returning "" do |result|
       result << '<div class="horiz">'
       result << link_to(
-        image_tag('logo.png', :border => 0),
+        image_tag(main_logo_path, :border => 0),
         home_path, :id => 'logo')
       result << '</div>'
     end
+  end
+
+  def main_logo_path
+    "logo.png"
   end
 
   def top_nav
