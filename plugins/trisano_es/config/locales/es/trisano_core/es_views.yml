@@ -663,7 +663,7 @@ es:
   export_all_to_csv: "Exportar todo a CSV"
   change_view: "Cambiar Vista"
   status: 'Estado'
-  event_investigation_status: "Event Investigation Status (EN)"
+  event_investigation_status: "Estado de investigación del evento"
   create_new_morbidity_report: "Crear Informe de Morbilidad Nuevo"
   queues: "Colas"
   queue: "Cola"
