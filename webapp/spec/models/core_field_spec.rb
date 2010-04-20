@@ -32,7 +32,7 @@ describe CoreField do
 
   after { I18n.locale = :en }
 
-  it "should update help test" do
+  it "should update help text" do
     @core_field.help_text = 'Here is some help text'
     @core_field.save.should be_true
     CoreField.find_by_key(@core_field.key).help_text.should == 'Here is some help text'

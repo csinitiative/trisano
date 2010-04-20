@@ -20,7 +20,6 @@ class CoreField < ActiveRecord::Base
 
   belongs_to :code_name
 
-  validates_length_of :help_text, :maximum => 1000, :allow_blank => true
   before_validation :normalize_attributes
   after_save :flush_caches
 
