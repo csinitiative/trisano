@@ -39,9 +39,9 @@ es:
   demographic_info: 'Información demográfica'
   jurisdictions: 'Jurisdicciones'
   unspecified: 'No especificado/a'
-  disable_tabs: 'Disable Tabs (EN)'
-  enable_tabs: 'Enable Tabs (EN)'
-  add_hospitalization_facility: 'Add a Hospitalization Facility (EN)'
+  disable_tabs: 'Desactivar pestañas'
+  enable_tabs: 'Activar pestañas'
+  add_hospitalization_facility: 'Activar botones de guardar'
   enable_save_buttons: "Enable Save Buttons (EN)"
   
   please_exit: 'Favor de salir'
@@ -953,7 +953,7 @@ es:
   date_or_year_of_birth: "Fecha o año de nacimiento (mm/dd/aaaa o aaaa)"
   investigated_by: "Investigado/a(s) por"
   are_you_sure: "¿Seguro/a?"
-  person_merge: "Person Merge (EN)"
+  person_merge: "Fusionar registros de gente"
   merge: "Fusionar"
   merge_into: "Fusionar a {{name}}"
   show_hide_details: "&nbsp;Mostrar&nbsp;|&nbsp;Ocultar&nbsp;Detalles&nbsp;"
