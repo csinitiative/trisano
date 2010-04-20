@@ -24,3 +24,4 @@ webrat-*
 /webapp/db/names.sql
 /install
 /webapp/public/javascripts/ext
+/webapp/public/images/ext
