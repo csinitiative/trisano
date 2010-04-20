@@ -1,6 +1,19 @@
-# Copyright (C) 2009, Collaborative Software Initiative
+# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
-# This file is part of CSI TriSano Enterprise Edition..
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
@@ -54,10 +67,22 @@ describe User, "loaded from fixtures" do
     @user.errors.on(:status).should == nil
   end
 
-  it "should allow a status of 'Disabled'" do
+  it "should allow a status of 'disabled'" do
     @user.status = 'disabled'
     @user.save
     @user.errors.on(:status).should == nil
+  end
+
+  it "should not allow a status with the incorrect case 'Disabled'" do
+    @user.status = 'Disabled'
+    @user.save
+    @user.errors.on(:status).should_not == nil
+  end
+
+  it "even if a user has an invalid status of 'Disable' (capitalized), the user should be considered disabled" do
+    ActiveRecord::Base.connection.update("UPDATE users SET status = 'Disabled' WHERE id = '#{@user.id}';")
+    @user.reload
+    @user.disabled?.should be_true
   end
 
   it "other statuses should cause errors" do

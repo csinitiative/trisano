@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
   end
 
   def disabled?
-    self.status == 'disabled'
+    self.status.downcase == 'disabled'
   end
 
   def disable
