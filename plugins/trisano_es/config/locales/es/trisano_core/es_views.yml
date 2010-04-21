@@ -42,7 +42,7 @@ es:
   disable_tabs: 'Desactivar pestañas'
   enable_tabs: 'Activar pestañas'
   add_hospitalization_facility: 'Activar botones de guardar'
-  enable_save_buttons: "Enable Save Buttons (EN)"
+  enable_save_buttons: "Activar botones de guardar"
   
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
@@ -926,9 +926,9 @@ es:
     check_box_blank_value: "no puede quedarse vacío/a cuando pregunta sea casilla de selección"
   invalid_core_field_config: "Configuración del campo principal es inválida"
   exporting_to_cdc: "exportar al CDC"
-  core_data: "Core Data (EN)"
-  formbuilder_data: "Formbuilder Data (EN)"
-  system_generated: "System Generated (EN)"
+  core_data: "Data Principal"
+  formbuilder_data: "Data del Generador de Formularios"
+  system_generated: "Sistema Generado"
 
   #participations
   hospitalization: "Hospitalización"

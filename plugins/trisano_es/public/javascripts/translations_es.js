@@ -11,8 +11,8 @@ var i18n = new I18n('es', {
   unresolved_conflicts: 'Favor de resolver todo conflicto antes de guardar.',
   undefined: 'Indefinido/a(s)',
   form_changed: 'Se han cambiado los contenidos anteriores del formulario sin guardar los cambios.',
-  unsupported_browser: 'You are using an unsupported browser(EN):',
-  please_switch_to: 'Please switch to(EN)',
-  or_higher: 'or higher(EN)',
-  or: 'or(EN)'
+  unsupported_browser: 'Está usando un navegador no soportado: ',
+  please_switch_to: 'Favor de cambiar a ',
+  or_higher: 'o uno más actualizado',
+  or: 'o'
 });
