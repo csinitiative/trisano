@@ -41,7 +41,7 @@ es:
   unspecified: 'No especificado/a'
   disable_tabs: 'Desactivar pestañas'
   enable_tabs: 'Activar pestañas'
-  add_hospitalization_facility: 'Activar botones de guardar'
+  add_hospitalization_facility: 'Agregar una Institución de Hospitalización'
   enable_save_buttons: "Activar botones de guardar"
   
   please_exit: 'Favor de salir'
