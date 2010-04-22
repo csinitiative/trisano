@@ -55,11 +55,13 @@ describe CoreField do
 
   it "should memoize fields for rendering" do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[test_field]'][:help_text].should be_blank
-    CoreField.update_all("help_text='some help text'", ['key=?', 'morbidity_event[test_field]'])
-    CoreField.event_fields('morbidity_event')['morbidity_event[test_field]'][:help_text].should be_blank
-    CoreField.flush_memoization_cache
-    CoreField.event_fields('morbidity_event')['morbidity_event[test_field]'][:help_text].should == 'some help text'
+    old_field = hash['morbidity_event[test_field]']
+    CoreField.all(:conditions => ["key=?", 'morbidity_event[test_field]']).each do |cf|
+      cf.help_text = 'some help text'
+      cf.save
+    end
+    hash = CoreField.event_fields('morbidity_event')
+    old_field.object_id.should_not == hash['morbidity_event[test_field]'].object_id
   end
 
   it "event_fields should return hash of core fields" do
