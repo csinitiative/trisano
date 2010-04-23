@@ -52,7 +52,7 @@
               %td
                 = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
               %td
-                = h form.event_type.humanize
+                = h t(form.event_type)
               - if can_remove
                 %td
                   = check_box_tag("forms_to_remove[]", form.id, false, :id => "forms_to_remove_#{form.id}")
@@ -96,7 +96,7 @@
                 %td
                   = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
                 %td
-                  = h(t(form.event_type))
+                  = h(t(form.event_type.underscore))
                 - if can_add
                   %td
                     = check_box_tag("forms_to_add[]", form.id, false, :id => "forms_to_add_#{form.id}")
