@@ -635,10 +635,11 @@ es:
   ibis_description: "Generar archivo de exportación IBIS para eventos creados, actualizados o eliminados durante las fechas ingresadas, incluso (yyy-mm-dd):"
 
   #jurisdictions
-  jursidiction_detail: "Detalle de Jurisdicción"
+  jurisdiction_detail: "Detalle de Jurisdicción"
   edit_jurisdiction: "Editar Jurisdicción"
   jurisdiction_management: "Administración de Jurisdicciones"
   create_new_jurisdiction: "Crear Jurisdicción Nueva"
+  create_jurisdiction: "Crear Jurisdicción"
   #loinc codes
   create_new_loinc_code: "Crear Nuevo Código LOINC"
   scale: "Escala"
