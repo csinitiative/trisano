@@ -581,6 +581,7 @@ es:
   export_columns: "Columnas de Exportación"
   create_new_export_column: "Crear nueva Columna de Exportación"
   edit_export_column: "Editar Columna de Exportación"
+  edit_export_conversion_value: "Editar valores de Conversión de Columnas de Exportación"
   column_conversion_values: 'Valores de Conversión de Columnas'
   add_conversion_value: "Agregar valor de conversión"
   associated_diseases: "Enfermedades Correspondientes"
