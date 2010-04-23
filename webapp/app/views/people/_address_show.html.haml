@@ -45,4 +45,4 @@
           -jurisdiction_name = address.county.jurisdiction.name
         %span.data_jurisdiction_name=h(jurisdiction_name.blank? ? '' : jurisdiction_name)
 
-    =render_extensions :address_extension_renderers, :address_form => address_form, :read_only_address => address_form.object
+    =render_extensions :address_extension_renderers, :address_form => address_form, :read_only_address => (address_form.object || address)
