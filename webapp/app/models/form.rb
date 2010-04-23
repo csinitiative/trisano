@@ -531,9 +531,9 @@ class Form < ActiveRecord::Base
       form_base_element.add_child(core_field_element_container)
 
       default_view_element = ViewElement.create({
-          :form_id => self.id, 
+          :form_id => self.id,
           :tree_id => tree_id,
-          :name => I18n.translate('default_view', :locale => I18n.default_locale)})
+          :name => I18n.translate('default_view')})
       investigator_view_element_container.add_child(default_view_element)
     rescue Exception => ex
       errors.add_to_base(:initialization_error)

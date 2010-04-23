@@ -64,7 +64,7 @@ module FormsHelper
       result = "<li id='view_#{element.id}' class='sortable fb-tab'>"
 
       result << "<table><tr>"
-      result << "<td class='tab'>#{h(I18n.t("core_views.#{element.name.downcase}"))}</td>"
+      result << "<td class='tab'>#{h(element.name)}</td>"
       result << "<td class='actions'>" << add_section_link(element, t("tab"))
       result << "&nbsp;&nbsp;" << add_question_link(element, t("tab"))
       result << "&nbsp;&nbsp;" << add_follow_up_link(element, t("tab"), true)
