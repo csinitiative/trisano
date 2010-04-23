@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module EncounterEventsHelper
@@ -33,10 +33,10 @@ module EncounterEventsHelper
 
     if can_update
       controls <<  " | "  if with_show
-      controls << link_to_function('Edit', "send_url_with_tab_index('#{edit_encounter_event_path(event)}')")
+      controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_encounter_event_path(event)}')")
       if event.deleted_at.nil?
         controls <<  " | "
-        controls << link_to('Delete', soft_delete_encounter_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+        controls << link_to(t('delete'), soft_delete_encounter_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
       end
     end
 

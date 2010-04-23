@@ -35,7 +35,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <% place_name(@event) do %>
           <%=h(place_name) %>
         <% end %>
-        <small>Date: <%= ld(@event.event_onset_date) %></small>
+        <small><%= ct(:date_word) %> <%= ld(@event.event_onset_date) %></small>
         <div class='tools'>
           <%= basic_place_event_controls(@event) %>
         </div>

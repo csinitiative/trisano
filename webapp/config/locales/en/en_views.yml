@@ -62,6 +62,7 @@ en:
   license: "License"
   collaborate: "Collaborate"
   copyright: "Copyright © 2009 Collaborative Software Foundation"
+  save_button_help: "Click here to enable the save buttons if they are grayed out when they shouldn't be."
 
   before_create: "Before creating a new morbidity event, please search for the person in question."
   use_starts_with: "Use starts with search"
