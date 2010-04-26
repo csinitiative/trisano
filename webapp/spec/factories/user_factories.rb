@@ -5,7 +5,6 @@ Factory.define :user do |u|
   u.after_build { |user| User.current_user = user }
 end
 
-
 Factory.define :privileged_user, :parent => :user do |u|
   u.after_build   { |user| Factory(:privileged_role_membership, :user => user) }
   u.after_create  { |user| user.reload }
@@ -37,6 +36,11 @@ Factory.define :role do |r|
   r.role_name { Factory.next(:role_name) }
 end
 
+Factory.define :privilege do |p|
+  p.priv_name { Factory.next(:priv_name) }
+end
+
+
 #
 # Sequences
 #
@@ -49,6 +53,10 @@ Factory.sequence :uid do |n|
 end
 
 Factory.sequence :role_name do |n|
+  "#{n}_#{Faker::Lorem.words(1)}"
+end
+
+Factory.sequence :priv_name do |n|
   "#{n}_#{Faker::Lorem.words(1)}"
 end
 
@@ -111,11 +119,13 @@ end
 
 def create_super_role
   @super_role = Factory(:privileged_role)
-  Privilege.all.each do |p|
-    Place.jurisdictions.each do |j|
-      attr = {:jurisdiction_id => j.entity_id, :privilege => p}
-      @super_role.privileges_roles.build(attr).save!
-    end
+  Privilege.all.each { |p| add_privilege_to_role_in_all_jurisditcions(p, @super_role) }
+end
+
+def add_privilege_to_role_in_all_jurisditcions(privilege, role)
+  Place.jurisdictions.each do |j|
+    attr = {:jurisdiction_id => j.entity_id, :privilege => privilege}
+    role.privileges_roles.build(attr).save!
   end
 end
 

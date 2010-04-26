@@ -1,0 +1,27 @@
+- role_name: "Administrator"
+  translated_role_name: "xAdministrator"
+  description: ""
+
+- role_name: "Data Entry Technician"
+  translated_role_name: "xData Entry Technician"
+  description: ""
+
+- role_name: "Investigator"
+  translated_role_name: "xInvestigator"
+  description: ""
+
+- role_name: "LHD Manager"
+  translated_role_name: "xLHD Manager"
+  description: ""
+
+- role_name: "Read-only"
+  translated_role_name: "xRead-only"
+  description: ""
+
+- role_name: "State Manager"
+  translated_role_name: "xState Manager"
+  description: ""
+
+- role_name: "Surveillance Manager"
+  translated_role_name: "xSurveillance Manager"
+  description: ""

@@ -1,0 +1,27 @@
+- role_name: "Administrator"
+  translated_role_name: "Administrator (EN)"
+  description: ""
+
+- role_name: "Data Entry Technician"
+  translated_role_name: "Data Entry Technician (EN)"
+  description: ""
+
+- role_name: "Investigator"
+  translated_role_name: "Investigator (EN)"
+  description: ""
+
+- role_name: "LHD Manager"
+  translated_role_name: "LHD Manager (EN)"
+  description: ""
+
+- role_name: "Read-only"
+  translated_role_name: "Read-only (EN)"
+  description: ""
+
+- role_name: "State Manager"
+  translated_role_name: "State Manager (EN)"
+  description: ""
+
+- role_name: "Surveillance Manager"
+  translated_role_name: "Surveillance Manager (EN)"
+  description: ""

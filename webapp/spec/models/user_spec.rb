@@ -135,9 +135,13 @@ describe User, "Setting role memberships and entitlements via User attributes" d
     describe "assigning one admin role in the Southeastern District" do
 
       before(:each) do
+        @admin_role =Factory.create(:role, :role_name => "Administrator")
+        @administer_privilege = Factory.create(:privilege, :priv_name => "administer")
+        add_privilege_to_role_in_all_jurisditcions(@administer_privilege, @admin_role)
+
         @user.attributes = {
           :role_membership_attributes => [
-            { :role_id => roles(:administrator).id, :jurisdiction_id => entities(:Southeastern_District).id }
+            { :role_id => @admin_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
           ]
         }
       end
@@ -145,7 +149,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       it "should have one role_membership of administrator in the southeastern district" do
         lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
         @user.roles.length.should == 1
-        @user.roles.first.role_name.should == roles(:administrator).role_name
+        @user.roles.first.role_name.should == @admin_role.role_name
         @user.role_memberships.length.should == 1
         @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
       end
@@ -333,9 +337,15 @@ describe User, "Setting role memberships and entitlements via User attributes" d
     describe "assigning one state manager role in the Southeastern District" do
 
       before(:each) do
+        @state_manager_role =Factory.create(:role, :role_name => "State Manager")
+
+        ["view_event", "create_event", "update_event", "approve_event_at_state", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
+          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @state_manager_role)
+        end
+        
         @user.attributes = {
           :role_membership_attributes => [
-            { :role_id => roles(:state_manager).id, :jurisdiction_id => entities(:Southeastern_District).id }
+            { :role_id => @state_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
           ]
         }
       end
@@ -343,7 +353,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       it "should have one role_membership of state manager in the southeastern district" do
         lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
         @user.roles.length.should == 1
-        @user.roles.first.role_name.should == roles(:state_manager).role_name
+        @user.roles.first.role_name.should == @state_manager_role.role_name
         @user.role_memberships.length.should == 1
         @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
       end
@@ -424,9 +434,15 @@ describe User, "Setting role memberships and entitlements via User attributes" d
     describe "assigning one LHD manager role in the Southeastern District" do
 
       before(:each) do
+        @lhd_manager_role =Factory.create(:role, :role_name => "LHD Manager")
+
+        ["view_event", "create_event", "update_event", "approve_event_at_state", "approve_event_at_lhd", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
+          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @lhd_manager_role)
+        end
+        
         @user.attributes = {
           :role_membership_attributes => [
-            { :role_id => roles(:lhd_manager).id, :jurisdiction_id => entities(:Southeastern_District).id }
+            { :role_id => @lhd_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
           ]
         }
       end
@@ -434,7 +450,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       it "should have one role_membership of LHD manager in the southeastern district" do
         lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
         @user.roles.length.should == 1
-        @user.roles.first.role_name.should == roles(:lhd_manager).role_name
+        @user.roles.first.role_name.should == @lhd_manager_role.role_name
         @user.role_memberships.length.should == 1
         @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
       end
@@ -510,9 +526,15 @@ describe User, "Setting role memberships and entitlements via User attributes" d
     describe "assigning one surveillance manager role in the Southeastern District" do
 
       before(:each) do
+        @surveillance_manager_role =Factory.create(:role, :role_name => "Surveillance Manager")
+
+        ["view_event", "create_event", "update_event", "accept_event_for_lhd", "route_event_to_investigator", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
+          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @surveillance_manager_role)
+        end
+
         @user.attributes = {
           :role_membership_attributes => [
-            { :role_id => roles(:surveillance_manager).id, :jurisdiction_id => entities(:Southeastern_District).id }
+            { :role_id => @surveillance_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
           ]
         }
       end
@@ -520,7 +542,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       it "should have one role_membership of LHD manager in the southeastern district" do
         lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
         @user.roles.length.should == 1
-        @user.roles.first.role_name.should == roles(:surveillance_manager).role_name
+        @user.roles.first.role_name.should == @surveillance_manager_role.role_name
         @user.role_memberships.length.should == 1
         @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
       end
