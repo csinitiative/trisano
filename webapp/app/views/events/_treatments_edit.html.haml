@@ -34,5 +34,5 @@
       %p{ :style => "clear: both;" }
         =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment')
 
-  -if @event.is_a?(MorbidityEvent)
-    =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event }
+-if @event.is_a?(MorbidityEvent)
+  =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event }
