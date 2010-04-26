@@ -66,6 +66,7 @@ es:
   license: "Licencia"
   collaborate: "Colaborar"
   copyright: "Copyright ¬© 2009 Collaborative Software Foundation"
+  save_button_help: "Si los botones de guardar se hallan oscurecidos sin motivo, haga clic aquí para activarlos."
 
   before_create: "Favor de buscar la persona en cuestión antes de crear un evento de morbilidad nuevo."
   use_starts_with: "Usar búsqueda de primeras letras"
