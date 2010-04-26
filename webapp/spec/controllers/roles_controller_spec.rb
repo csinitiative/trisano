@@ -41,7 +41,7 @@ describe RolesController do
     end
   
     it "should find all roles" do
-      Role.expects(:find).with(:all).returns([@role])
+      Role.expects(:find).returns([@role])
       do_get
     end
   
@@ -70,7 +70,7 @@ describe RolesController do
     end
 
     it "should find all roles" do
-      Role.expects(:find).with(:all).returns([@role])
+      Role.expects(:find).returns([@role])
       do_get
     end
   

@@ -19,7 +19,7 @@ class RolesController < AdminController
   skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
   
   def index
-    @roles = Role.find(:all)
+    @roles = Role.find(:all, :order => "role_name ASC")
 
     respond_to do |format|
       format.html

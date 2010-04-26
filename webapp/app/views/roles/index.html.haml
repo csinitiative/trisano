@@ -30,7 +30,7 @@
       %th.forminformation
         =t 'roles'
       %th
-    - for role in @roles.sort_by {|r| r.role_name}
+    - for role in @roles
       %tr.roll
         %td.forminformation
           .formname
