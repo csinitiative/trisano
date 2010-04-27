@@ -891,6 +891,20 @@ describe Form do
       end
     end
 
+    it "should substitute a dash for a backslash" do
+      @form = Form.find(forms(:hep_a_form).id)
+      @form.name = 'i \ form'
+      @form.save!
+      @form.export.should == "/tmp/i_-_form.zip"
+    end
+
+    it "should substitute a dash for a forward slash" do
+      @form = Form.find(forms(:hep_a_form).id)
+      @form.name = 'i / form'
+      @form.save!
+      @form.export.should == "/tmp/i_-_form.zip"
+    end
+
     it 'should substitute underscores for spaces' do
       @form = Form.find(forms(:hep_a_form).id)
       @form.name = "i am a form"
