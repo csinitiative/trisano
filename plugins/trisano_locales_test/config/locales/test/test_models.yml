@@ -201,7 +201,7 @@ test:
         export_disease_group: xDisease group (empty if all)
         export_disease_group_show: xDisease group
         type_data: xData source
-        data_type: xData type (if source if Formbuilder)
+        data_type: xData type (if source is Formbuilder)
         table_name: xTable name (if source is Core Data)
         column_name: xColumn name (if source is Core Data)
         start_position: xStart position
