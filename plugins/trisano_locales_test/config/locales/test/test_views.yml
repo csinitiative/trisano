@@ -732,6 +732,7 @@ test:
   no_roles: "xNo roles."
   privileges: "xPrivileges"
   add_privilege: "xAdd Privilege"
+  no_privileges: "xThere are no privileges assigned to this role."
 
   #Search
   event_search: "xEvent Search"

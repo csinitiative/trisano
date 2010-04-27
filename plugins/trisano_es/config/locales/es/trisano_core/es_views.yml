@@ -762,6 +762,7 @@ es:
   privileges: "Privilegios"
   add_privilege: "Agregar Privilegio"
   edit_privileges: "Editar Privilegios"
+  no_privileges: "There are no privileges assigned to this role. (EN)"
 
   #Search
   event_search: "Búsqueda de Eventos"
