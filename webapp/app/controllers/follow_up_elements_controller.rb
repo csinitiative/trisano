@@ -20,12 +20,12 @@ class FollowUpElementsController <  AdminController
   def auto_complete_for_core_follow_up_conditions
     condition = params[:follow_up_element][:condition]
     @items = ExternalCode.find_codes_for_autocomplete(condition, 5)
+    # Keep the li markup below all on the same line, otherwise, a bunch of spaces will be added to the
+    # form field when the user selects a code.
     render(:inline => <<-HTML)
        <ul>
          <% for item in @items %>
-           <li id="external_code_id_<%= item.id %>" class="fb-core-code-item">
-             Code: <%= h item.code_description %> (<%= h item.code_group.try(:description) %>)
-           </li>
+           <li id="external_code_id_<%= item.id %>" class="fb-core-code-item">Code: <%= h item.code_description %> (<%= h item.code_group.try(:description) %>)</li>
          <% end %>
        </ul>
      HTML
