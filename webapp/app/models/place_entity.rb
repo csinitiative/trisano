@@ -38,6 +38,9 @@ class PlaceEntity < Entity
     }
   }
 
+  named_scope :with_short_name, lambda { |short_name|
+    { :conditions => ["p.short_name = ?", short_name] } }
+
   named_scope :with_place_names_like, lambda { |place_name|
     { :joins => ["INNER JOIN places p on entities.id = p.entity_id"],
       :conditions => ["p.name ILIKE ? AND entities.deleted_at IS NULL", '%' + place_name + '%']
