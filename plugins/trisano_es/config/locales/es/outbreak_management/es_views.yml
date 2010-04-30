@@ -34,6 +34,7 @@ es:
     # Outbreak associated events
     associated_events: "Eventos Correspondientes"
     no_associated_events: "Sin eventos correspondientes"
+    no_outbreaks: "No se notificaron brotes asociados con esta enfermedad"
 
     # Errors
     blank_jurisdiction: "Se prohíbe que esté vacío el campo jurisdicción"
