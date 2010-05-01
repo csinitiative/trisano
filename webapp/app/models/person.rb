@@ -157,11 +157,19 @@ class Person < ActiveRecord::Base
         conditions << name_conditions(options)
         conditions << birth_date_conditions(options)
         conditions << deleted_conditions(options)
+        conditions << excluding_conditions(options)
       end.flatten.compact.join("\nAND\n")
     end
 
     def people_search_order(options)
       fulltext_order(options) || "last_name, first_name ASC"
+    end
+
+    def excluding_conditions(options)
+      if excluding = options[:excluding]
+        c = [ 'people.entity_id NOT IN (?)', [excluding].flatten ]
+        sanitize_sql_for_conditions(c)
+      end
     end
 
     def name_conditions(options)

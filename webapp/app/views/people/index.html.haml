@@ -22,35 +22,7 @@
   = link_to "&lt; #{t('clear_search_criteria')}", people_path
   %p
 
-- form_tag people_path, :method => :get do
-  %span.horiz
-    = label_tag :last_name, t("last_name")
-    = text_field_tag :last_name, params[:last_name]
-
-  %span.horiz
-    = label_tag :first_name, t("first_name")
-    = text_field_tag :first_name, params[:first_name]
-
-  %span.horiz
-    = label_tag :birth_date, t("birth_date")
-    = text_field_tag :birth_date, params[:birth_date]
-
-  %span.horiz
-    %label=t "items_per_page"
-    - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
-    =select_tag('per_page', page_options)
-
-  %span.horiz
-    = label_tag "&nbsp;"
-    = submit_tag t("search")
-
-  %span.vert
-    = label_tag "&nbsp;"
-    = labeled_check_box_tag :use_starts_with_search, t("use_starts_with")
-
-  = render_merge_person_hidden_fields
-
-  %span.vert-break
+=render(:partial => 'people/search_form')
 %br
 %br
 

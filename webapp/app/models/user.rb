@@ -189,7 +189,6 @@ class User < ActiveRecord::Base
   # Convenience methods to find/set the current user on the thread from anywhere in the app
   def self.current_user=(user)
     Thread.current[:user] = user
-
   end
 
   def self.current_user
