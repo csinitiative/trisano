@@ -1,27 +1,27 @@
 - role_name: "Administrator"
-  translated_role_name: "Administrator (EN)"
+  translated_role_name: "Administrador"
   description: ""
 
 - role_name: "Data Entry Technician"
-  translated_role_name: "Data Entry Technician (EN)"
+  translated_role_name: "Técnico de ingreso de datos"
   description: ""
 
 - role_name: "Investigator"
-  translated_role_name: "Investigator (EN)"
+  translated_role_name: "Investigador"
   description: ""
 
 - role_name: "LHD Manager"
-  translated_role_name: "LHD Manager (EN)"
+  translated_role_name: "Gerente de DSL (Departamento de salud local)"
   description: ""
 
 - role_name: "Read-only"
-  translated_role_name: "Read-only (EN)"
+  translated_role_name: "Solo lectura"
   description: ""
 
 - role_name: "State Manager"
-  translated_role_name: "State Manager (EN)"
+  translated_role_name: "Gerente estatal"
   description: ""
 
 - role_name: "Surveillance Manager"
-  translated_role_name: "Surveillance Manager (EN)"
+  translated_role_name: "Gerente de vigilancia"
   description: ""
