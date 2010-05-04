@@ -311,6 +311,7 @@ en:
   repeat: 'repeat'
   until: 'until'
   task: 'Task'
+  event_task: 'Event Task'
 #events.people
   person_info: 'Person Information'
   telephone: 'Telephone'

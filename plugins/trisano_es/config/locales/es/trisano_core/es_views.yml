@@ -314,6 +314,7 @@ es:
   repeat: 'repetir'
   until: 'hasta'
   task: 'Tarea'
+  event_task: 'Tarea de Evento'
 #events.people
   person_info: 'Información de Persona'
   telephone: 'Teléfono'
