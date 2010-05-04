@@ -96,7 +96,7 @@ es:
         discharge_date: Fecha de alta
         medical_record_number: Número de registro médico
 
-      participation_risk_factor:
+      participations_risk_factor:
         pregnant_id: Embarazada
         pregnancy_due_date: Fecha programada de parto
         food_handler_id: Manejador/a de alimentos
