@@ -96,6 +96,14 @@ class Place < ActiveRecord::Base
       pull_unassigned_and_put_it_on_top(jurisdictions)
     end
 
+    def hospitalization_type_codes
+      %w(H)
+    end
+
+    def lab_type_codes
+      %w(L)
+    end
+
     def agency_type_codes
       %w(H L C O S DC CF LCF PUB OOS)
     end

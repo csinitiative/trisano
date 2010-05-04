@@ -40,7 +40,7 @@ describe Export::Csv do
     # There are 7 races
     ExternalCode.stubs(:count).returns(7)
   end
-
+  
   it "should expose an export method that takes an event or a list of events and an optional proc" do
     lambda { Export::Csv.export(   MorbidityEvent.create(@event_hash)   )    }.should_not raise_error()
     lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] )    }.should_not raise_error()
@@ -48,7 +48,7 @@ describe Export::Csv do
 
     lambda { Export::Csv.export( Object.new) }.should raise_error(ArgumentError)
   end
-
+  
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
       to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
@@ -60,7 +60,7 @@ describe Export::Csv do
       a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
     end
   end
-
+  
   describe "when passed multiple simple events" do
     it "should iterate over each event" do
       second_person = "White"
@@ -78,7 +78,7 @@ describe Export::Csv do
       a[2].include?(second_person).should be_true
     end
   end
-
+  
   # Debt: Does not yet test places
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
@@ -88,7 +88,7 @@ describe Export::Csv do
       a[1].should == "#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}"
     end
   end
-
+  
   describe "when passed an event w/ a contact" do
     before do
       @morbidity_event = Factory.create(:morbidity_event)
@@ -99,7 +99,7 @@ describe Export::Csv do
 
     it "should output the contact" do
       result = to_arry(Export::Csv.export(@morbidity_event, :export_options => %w(contacts)))
-      assert_values_in_result(result, :contact_disease => /The dreaded lurgy (\d+)/i)
+      assert_values_in_result(result, 1, :contact_disease => /The dreaded lurgy (\d+)/i)
     end
 
     describe "and when contact promoted to cmr" do
@@ -110,12 +110,12 @@ describe Export::Csv do
 
       it "should still output contact" do
         result = to_arry(Export::Csv.export(@morbidity_event, :export_options => %w(contacts)))
-        assert_values_in_result(result, :contact_disease => /The dreaded lurgy (\d+)/i)
+        assert_values_in_result(result, 1, :contact_disease => /The dreaded lurgy (\d+)/i)
       end
     end
   end
-
-
+  
+  
   describe 'picking codes over descriptions' do
     before(:each) do
       @county = Factory.build(:external_code)
@@ -148,5 +148,183 @@ describe Export::Csv do
     end
   end
 
+  describe "varying numbers of varying 'multiples'" do
+
+    describe "where there are multiple hospitalization facilities" do
+
+      before(:each) do
+        @event = human_event_with_demographic_info!(:morbidity_event,
+          :last_name => "Johnson"
+        )
+        
+        @hospital_one = add_hospitalization_facility_to_event(@event,
+          "Allen Hospital",
+          :admission_date => Date.today - 5,
+          :discharge_date => Date.today - 1,
+          :medical_record_number => "12345-1"
+        )
+
+        @hospital_two = add_hospitalization_facility_to_event(@event,
+          "Peabody Hospital",
+          :admission_date => Date.today - 10,
+          :discharge_date => Date.today - 6,
+          :medical_record_number => "12345-2"
+        )
+        
+      end
+
+      it "should render multiple hospitalization facilities" do
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+        output.size.should == 3 # Header row, one row for each hospital
+        assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
+        assert_values_in_result(output, 1, :patient_hospital_admission_date => /#{@hospital_one.hospitals_participation.admission_date}/)
+        assert_values_in_result(output, 1, :patient_hospital_discharge_date => /#{@hospital_one.hospitals_participation.discharge_date}/)
+        assert_values_in_result(output, 1, :patient_hospital_medical_record_no => /#{@hospital_one.hospitals_participation.medical_record_number}/)
+
+        assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
+        assert_values_in_result(output, 2, :patient_hospital_admission_date => /#{@hospital_two.hospitals_participation.admission_date}/)
+        assert_values_in_result(output, 2, :patient_hospital_discharge_date => /#{@hospital_two.hospitals_participation.discharge_date}/)
+        assert_values_in_result(output, 2, :patient_hospital_medical_record_no => /#{@hospital_two.hospitals_participation.medical_record_number}/)
+      end
+
+      it "should not render blanks for non-hospital columns in the first row" do
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+        assert_values_in_result(output, 1, :patient_event_id => /#{@event.id}/)
+        assert_values_in_result(output, 1, :patient_record_number => /#{@event.record_number}/)
+        assert_values_in_result(output, 1, :patient_last_name => /Johnson/)
+        assert_values_in_result(output, 1, :patient_jurisdiction_of_investigation => /Unassigned/)
+      end
+      
+      
+      it "should render blanks for non-hospital columns in the second row, except for id" do
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+        assert_values_in_result(output, 2, :patient_event_id => /#{@event.id}/)
+        assert_values_in_result(output, 2, :patient_record_number => //)
+        assert_values_in_result(output, 2, :patient_last_name => //)
+        assert_values_in_result(output, 2, :patient_jurisdiction_of_investigation => //)
+      end
+      
+      
+      it "should render properly when there are more hospitals than labs" do
+        @hospital_three = add_hospitalization_facility_to_event(@event,
+          "Casteen Hospital",
+          :admission_date => Date.today - 15,
+          :discharge_date => Date.today - 11,
+          :medical_record_number => "12345-3"
+        )
+
+        @lab_one = add_lab_to_event(@event,
+          "ARUP",
+          :result_value => "green",
+          :units => "clicks"
+        )
+
+        @lab_two = add_lab_to_event(@event,
+          "ACME",
+          :result_value => "yellow",
+          :units => "drops"
+        )
+
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs)))
+        output.size.should == 4 # Header row, one row for each hospital
+
+        # The first row of results should have the first hospital and the first lab
+        assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
+        assert_values_in_result(output, 1, :lab_name => /ARUP/)
+        assert_values_in_result(output, 1, :lab_result_value => /green/)
+        assert_values_in_result(output, 1, :lab_units => /clicks/)
+
+        # The second row of results should have the second hospital and the second lab
+        assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
+        assert_values_in_result(output, 2, :lab_name => /ACME/)
+        assert_values_in_result(output, 2, :lab_result_value => /yellow/)
+        assert_values_in_result(output, 2, :lab_units => /drops/)
+
+        # The third row of results should have the third hospital and no labs
+        assert_values_in_result(output, 3, :patient_hospitalization_facility => /Casteen Hospital/)
+        assert_values_in_result(output, 3, :lab_name => //)
+        assert_values_in_result(output, 3, :lab_result_value => //)
+        assert_values_in_result(output, 3, :lab_units => //)
+      end
+      
+      it "should render properly when there are more labs than hospitals" do
+        @lab_one = add_lab_to_event(@event,
+          "ARUP",
+          :result_value => "green",
+          :units => "clicks"
+        )
+
+        @lab_two = add_lab_to_event(@event,
+          "ACME",
+          :result_value => "yellow",
+          :units => "drops"
+        )
+
+        @lab_three = add_lab_to_event(@event,
+          "LALA",
+          :result_value => "peas",
+          :units => "pods"
+        )
+
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs)))
+        output.size.should == 4 # Header row, one row for each hospital
+
+        # The first row of results should have the first hospital and the first lab
+        assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
+        assert_values_in_result(output, 1, :lab_name => /ARUP/)
+        assert_values_in_result(output, 1, :lab_result_value => /green/)
+        assert_values_in_result(output, 1, :lab_units => /clicks/)
+
+        # The second row of results should have the second hospital and the second lab
+        assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
+        assert_values_in_result(output, 2, :lab_name => /ACME/)
+        assert_values_in_result(output, 2, :lab_result_value => /yellow/)
+        assert_values_in_result(output, 2, :lab_units => /drops/)
+
+        # The third row of results should have the third lab and no hospital
+        assert_values_in_result(output, 3, :patient_hospitalization_facility => //)
+        assert_values_in_result(output, 3, :lab_name => /LALA/)
+        assert_values_in_result(output, 3, :lab_result_value => /peas/)
+        assert_values_in_result(output, 3, :lab_units => /pods/)
+      end
+      
+      it "should render properly when there are more hospitals than treatments" do
+        pending
+      end
+      
+      it "should render properly when there are more treatments than hospitals" do
+        pending
+      end
+      
+      it "should render properly when there are more hospitals than contacts" do
+        pending
+      end
+      
+      it "should render properly when there are more contacts than hospitals" do
+        pending
+      end
+      
+      
+      it "should render properly when there are more hospitals than place exposures" do
+        pending
+      end
+      
+      it "should render properly when there are more place exposures than hospitals" do
+        pending
+      end
+      
+      describe "and there are contacts on the main event and contacts themselves listed in the export" do
+
+        it "should not blank out contact names for any contacts on an event" do
+          pending
+        end
+
+        it "should blank out demographic data on the second row of a contact event" do
+          pending
+        end
+
+      end
+    end
+  end
 end
 

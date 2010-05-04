@@ -159,18 +159,17 @@ module Export
         num_places      = event.is_a?(MorbidityEvent) && exporting_places? ? event.place_child_events.active(true).size : 0
         num_lab_results = exporting_labs? ? event.lab_results.size : 0
         num_treatments  = exporting_treatments? ? event.interested_party.treatments.size : 0
-        loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, 1].max
+        num_hospitals = event.hospitalization_facilities.nil? ? 0 : event.hospitalization_facilities.size
+        loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, num_hospitals, 1].max
 
         # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
         # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
         loop_event = event
         loop_ctr.times do |ctr|
-          csv_row = event_values(loop_event).map { |value| value.to_s.gsub(/,/,' ') }
+          csv_row = event_values(loop_event, ctr).map { |value| value.to_s.gsub(/,/,' ') }
 
-          # Blank out the main event for successive rows, but not the ID
-          loop_event = event.class.new
-          loop_event.id = event.id
-
+          blank_out_remaining_rows_for(loop_event)
+          
           if exporting_labs?
             if ctr < num_lab_results
               lab_result = event.lab_results[ctr]
@@ -196,7 +195,7 @@ module Export
               else
                 place_event = PlaceEvent.new
               end
-              csv_row += event_values(place_event).map { |value| value.to_s.gsub(/,/,' ') }
+              csv_row += event_values(place_event, ctr).map { |value| value.to_s.gsub(/,/,' ') }
             end
 
             if exporting_contacts?
@@ -205,7 +204,7 @@ module Export
               else
                 contact_event = ContactEvent.new
               end
-              csv_row += event_values(contact_event, :contact_event_fields).map { |value| value.to_s.gsub(/,/,' ') }
+              csv_row += event_values(contact_event, ctr, :contact_event_fields).map { |value| value.to_s.gsub(/,/,' ') }
             end
           end
 
@@ -213,9 +212,15 @@ module Export
         end
       end
 
-      def event_values(event, csv_fields_meth = nil)
+      def blank_out_remaining_rows_for(loop_event)
+        def loop_event.blank_out
+          true
+        end
+      end
+
+      def event_values(event, count, csv_fields_meth = nil)
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-          event_data(event, csv_fields_meth).collect do |event_datum|
+          event_data(event, count, csv_fields_meth).collect do |event_datum|
             begin
               value = event.instance_eval(event_datum.last).to_s
               if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
@@ -255,11 +260,13 @@ module Export
         end
       end
 
-      def event_data(event_or_class, csv_fields_meth = nil)
+      def event_data(event_or_class, count=nil, csv_fields_meth = nil)
+        blank_out = (!event_or_class.is_a?(Class) && event_or_class.respond_to?(:blank_out)) ? true : false
+
         clazz = event_or_class.is_a?(Class) ? event_or_class : event_or_class.class
         meth = csv_fields_meth || "#{clazz.to_s.underscore}_fields"
         event_data = CsvField.send(meth).map do |csv_field|
-          [csv_field.send(short_or_long_name), script_for(csv_field)]
+          [csv_field.send(short_or_long_name), script_for(csv_field, count, blank_out)]
         end
         if showing_answers? and event_or_class.respond_to?(:answers)
           event_data += event_answers(event_or_class)
@@ -295,11 +302,13 @@ module Export
         exporting_using_short_names? ? :short_name : :long_name
       end
 
-      def script_for(csv_field)
-        if options[csv_field.long_name] == 'use_code'
-          csv_field.use_code || csv_field.use_description
+      def script_for(csv_field, count=nil, blank_out=false)
+        script = script_from_field(csv_field, options[csv_field.long_name])
+        
+        if csv_field.collection.blank?
+          blank_out_value?(csv_field, count, blank_out) ? "" : script
         else
-          csv_field.use_description
+          "#{csv_field.collection}[#{count}].#{script}"
         end
       end
 
@@ -307,6 +316,23 @@ module Export
         CSV::Writer.generate(output) do |writer|
           writer << data
         end
+      end
+
+      def script_from_field(csv_field, long_name_option)
+        if long_name_option == 'use_code'
+          csv_field.use_code || csv_field.use_description
+        else
+          csv_field.use_description
+        end
+      end
+
+      # For events, values need to be blanked out for all rows except for the first
+      # for that particular event. These blanked-out rows contain only values in columns
+      # related to multiples.
+      #
+      # Returns true if the value should be blanked out.
+      def blank_out_value?(csv_field, counter, blank_out)
+        (blank_out && csv_field.use_description != "id" && !counter.nil? && (counter > 0))
       end
 
     end

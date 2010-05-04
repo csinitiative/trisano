@@ -1,10 +1,10 @@
 module CsvSpecHelper
 
-  def assert_values_in_result(result_arry, value_hash)
+  def assert_values_in_result(result_arry, result_row, value_hash)
     result = result_arry.collect{ |row| CSV.parse_line(row) }
     value_hash.each do |field, regex|
       index = result[0].index(field.to_s)
-      result[1][index].should =~ regex
+      result[result_row][index].should =~ regex
     end
   end
 

@@ -115,7 +115,8 @@ csv_field_00020:
   sort_order: 340
   export_group: event
   long_name: patient_hospital_admission_date
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  use_description: try(:hospitals_participation).try(:admission_date)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: morbidity_event
@@ -171,7 +172,8 @@ csv_field_00022:
   sort_order: 350
   export_group: event
   long_name: patient_hospital_discharge_date
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  use_description: try(:hospitals_participation).try(:discharge_date)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: morbidity_event
@@ -243,7 +245,8 @@ csv_field_00023:
   sort_order: 360
   export_group: event
   long_name: patient_hospital_medical_record_no
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  use_description: try(:hospitals_participation).try(:medical_record_number)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: morbidity_event
@@ -715,7 +718,8 @@ csv_field_00032:
   sort_order: 380
   export_group: event
   long_name: contact_hospital_medical_record_no
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  use_description: try(:hospitals_participation).try(:medical_record_number)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: contact_event
@@ -827,7 +831,8 @@ csv_field_00035:
   sort_order: 360
   export_group: event
   long_name: contact_hospital_admission_date
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  use_description: try(:hospitals_participation).try(:admission_date)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: contact_event
@@ -907,7 +912,8 @@ csv_field_00037:
   sort_order: 370
   export_group: event
   long_name: contact_hospital_discharge_date
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  use_description: try(:hospitals_participation).try(:discharge_date)
+  collection: hospitalization_facilities
   short_name: 
   use_code: 
   event_type: contact_event
@@ -1059,9 +1065,10 @@ csv_field_00152:
   sort_order: 350
   export_group: event
   long_name: contact_hospitalization_facility
-  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  use_description: try(:secondary_entity).try(:place).try(:name)
+  collection: hospitalization_facilities
   short_name: 
-  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  use_code: try(:secondary_entity).try(:place).try(:id)
   event_type: contact_event
 csv_field_00124: 
   sort_order: 110
@@ -1387,9 +1394,10 @@ csv_field_00019:
   sort_order: 330
   export_group: event
   long_name: patient_hospitalization_facility
-  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  use_description: try(:secondary_entity).try(:place).try(:name)
+  collection: hospitalization_facilities
   short_name: 
-  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  use_code: try(:secondary_entity).try(:place).try(:id)
   event_type: morbidity_event
 csv_field_00075: 
   sort_order: 370
