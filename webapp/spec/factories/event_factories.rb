@@ -288,6 +288,14 @@ def add_contact_to_event(event, contact_last_name)
   end
 end
 
+def add_place_to_event(event, name)
+  returning event.place_child_events.build do |child|
+    child.attributes = { :interested_place_attributes => { :place_entity_attributes => { :place_attributes => { :name => name } } } }
+    event.save!
+    child.save
+  end
+end
+
 def add_lab_to_event(event, lab_name_or_lab_place_entity, lab_result_attributes={})
   lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : create_lab!(lab_name_or_lab_place_entity)    
   lab_result = Factory.create(:lab_result, lab_result_attributes)

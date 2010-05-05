@@ -63,21 +63,30 @@ class Event < ActiveRecord::Base
   has_many :place_child_events, :class_name => 'PlaceEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
       @active_places = nil if reload
-      @active_places ||= PlaceEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+      @active_places ||= PlaceEvent.find(:all,
+        :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
+        :order => "created_at ASC"
+      )
     end
   end
 
   has_many :contact_child_events, :class_name => 'ContactEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
       @active_contacts = nil if reload
-      @active_contacts ||= ContactEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+      @active_contacts ||= ContactEvent.find(:all,
+        :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
+        :order => "created_at ASC"
+      )
     end
   end
 
   has_many :encounter_child_events, :class_name => 'EncounterEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
       @active_encounters = nil if reload
-      @active_encounters ||= EncounterEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+      @active_encounters ||= EncounterEvent.find(:all,
+        :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
+        :order => "created_at ASC"
+      )
     end
   end
 

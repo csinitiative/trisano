@@ -41,112 +41,112 @@ describe Export::Csv do
     ExternalCode.stubs(:count).returns(7)
   end
   
-    it "should expose an export method that takes an event or a list of events and an optional proc" do
-      lambda { Export::Csv.export(   MorbidityEvent.create(@event_hash)   )    }.should_not raise_error()
-      lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] )    }.should_not raise_error()
-      lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] ) { MorbidityEvent.create(@event_hash) } }.should_not raise_error()
+  it "should expose an export method that takes an event or a list of events and an optional proc" do
+    lambda { Export::Csv.export(   MorbidityEvent.create(@event_hash)   )    }.should_not raise_error()
+    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] )    }.should_not raise_error()
+    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] ) { MorbidityEvent.create(@event_hash) } }.should_not raise_error()
   
-      lambda { Export::Csv.export( Object.new) }.should raise_error(ArgumentError)
+    lambda { Export::Csv.export( Object.new) }.should raise_error(ArgumentError)
+  end
+  
+  describe "when passed a single simple event" do
+    it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
+      to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
   
-    describe "when passed a single simple event" do
-      it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-        to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
-      end
+    it "should output content for a simple event" do
+      a = to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash) ) )
+      a.size.should == 2
+      a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
+    end
+  end
   
-      it "should output content for a simple event" do
-        a = to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash) ) )
-        a.size.should == 2
-        a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
-      end
+  describe "when passed multiple simple events" do
+    it "should iterate over each event" do
+      second_person = "White"
+      deleted_person = 'Gone'
+      eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
+      dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
+  
+      e1 = MorbidityEvent.create(@event_hash)
+      e2 = MorbidityEvent.create( eh )
+      e3 = MorbidityEvent.create( dh )
+  
+      a = to_arry( Export::Csv.export( [e1, e3, e2] ) )
+      a.size.should == 3
+      a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
+      a[2].include?(second_person).should be_true
+    end
+  end
+  
+  # Debt: Does not yet test places
+  describe "when passed a complex (fully loaded) event" do
+    it "should output the right information" do
+      e = csv_mock_event(:morbidity)
+      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
+      a[0].include?("disease_specific_morb_q").should be_true
+      a[1].should == "#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}"
+    end
+  end
+  
+  describe "when passed an event w/ a contact" do
+    before do
+      @morbidity_event = Factory.create(:morbidity_event)
+      @contact_event   = Factory.create(:contact_event)
+      @contact_event.parent_event = @morbidity_event
+      @contact_event.save!
     end
   
-    describe "when passed multiple simple events" do
-      it "should iterate over each event" do
-        second_person = "White"
-        deleted_person = 'Gone'
-        eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
-        dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
-  
-        e1 = MorbidityEvent.create(@event_hash)
-        e2 = MorbidityEvent.create( eh )
-        e3 = MorbidityEvent.create( dh )
-  
-        a = to_arry( Export::Csv.export( [e1, e3, e2] ) )
-        a.size.should == 3
-        a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
-        a[2].include?(second_person).should be_true
-      end
+    it "should output the contact" do
+      result = to_arry(Export::Csv.export(@morbidity_event, :export_options => %w(contacts)))
+      assert_values_in_result(result, 1, :contact_disease => /The dreaded lurgy (\d+)/i)
     end
   
-    # Debt: Does not yet test places
-    describe "when passed a complex (fully loaded) event" do
-      it "should output the right information" do
-        e = csv_mock_event(:morbidity)
-        a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
-        a[0].include?("disease_specific_morb_q").should be_true
-        a[1].should == "#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}"
-      end
-    end
-  
-    describe "when passed an event w/ a contact" do
+    describe "and when contact promoted to cmr" do
       before do
-        @morbidity_event = Factory.create(:morbidity_event)
-        @contact_event   = Factory.create(:contact_event)
-        @contact_event.parent_event = @morbidity_event
-        @contact_event.save!
+        login_as_super_user
+        @contact_event.promote_to_morbidity_event.should be_true
       end
   
-      it "should output the contact" do
+      it "should still output contact" do
         result = to_arry(Export::Csv.export(@morbidity_event, :export_options => %w(contacts)))
         assert_values_in_result(result, 1, :contact_disease => /The dreaded lurgy (\d+)/i)
       end
+    end
+  end
   
-      describe "and when contact promoted to cmr" do
-        before do
-          login_as_super_user
-          @contact_event.promote_to_morbidity_event.should be_true
-        end
   
-        it "should still output contact" do
-          result = to_arry(Export::Csv.export(@morbidity_event, :export_options => %w(contacts)))
-          assert_values_in_result(result, 1, :contact_disease => /The dreaded lurgy (\d+)/i)
-        end
-      end
+  describe 'picking codes over descriptions' do
+    before(:each) do
+      @county = Factory.build(:external_code)
+      @county.stubs(:jurisdiction).returns(nil)
+      @address = Factory.build(:address)
+      @address.attributes = {
+        :street_number => nil,
+        :street_name => nil,
+        :unit_number => nil,
+        :city => nil,
+        :state => nil,
+        :county => @county,
+        :postal_code => nil
+      }
+      @event = Factory.create(:morbidity_event)
     end
   
-  
-    describe 'picking codes over descriptions' do
-      before(:each) do
-        @county = Factory.build(:external_code)
-        @county.stubs(:jurisdiction).returns(nil)
-        @address = Factory.build(:address)
-        @address.attributes = {
-          :street_number => nil,
-          :street_name => nil,
-          :unit_number => nil,
-          :city => nil,
-          :state => nil,
-          :county => @county,
-          :postal_code => nil
-        }
-        @event = Factory.create(:morbidity_event)
-      end
-  
-      it 'should return county code, not name' do
-        @event.stubs(:address).returns(@address)
-        @county.expects(:the_code).returns('56')
-        Export::Csv.export(@event, {'patient_address_county' => 'use_code'}).should =~ /56/i
-      end
-  
-      it 'should pick cdc code, rather then disease name' do
-        d = Factory.build(:disease)
-        d.cdc_code = '11010'
-        de = Factory.build(:disease_event, :disease => d)
-        @event.stubs(:disease_event).returns(de)
-        Export::Csv.export(@event, {'patient_disease' => 'use_code'}).should =~ /#{d.cdc_code}/i
-      end
+    it 'should return county code, not name' do
+      @event.stubs(:address).returns(@address)
+      @county.expects(:the_code).returns('56')
+      Export::Csv.export(@event, {'patient_address_county' => 'use_code'}).should =~ /56/i
     end
+  
+    it 'should pick cdc code, rather then disease name' do
+      d = Factory.build(:disease)
+      d.cdc_code = '11010'
+      de = Factory.build(:disease_event, :disease => d)
+      @event.stubs(:disease_event).returns(de)
+      Export::Csv.export(@event, {'patient_disease' => 'use_code'}).should =~ /#{d.cdc_code}/i
+    end
+  end
 
   describe "varying numbers of varying 'multiples'" do
 
@@ -175,7 +175,7 @@ describe Export::Csv do
 
       it "should render multiple hospitalization facilities" do
         output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
-        output.size.should == 3 # Header row, one row for each hospital
+        output.size.should == 3
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
         assert_values_in_result(output, 1, :patient_hospital_admission_date => /#{@hospital_one.hospitals_participation.admission_date}/)
         assert_values_in_result(output, 1, :patient_hospital_discharge_date => /#{@hospital_one.hospitals_participation.discharge_date}/)
@@ -393,23 +393,78 @@ describe Export::Csv do
       end
       
       it "should render properly when there are more hospitals than place exposures" do
-        pending
+        @hospital_three = add_hospitalization_facility_to_event(@event,
+          "Casteen Hospital",
+          :admission_date => Date.today - 15,
+          :discharge_date => Date.today - 11,
+          :medical_record_number => "12345-3"
+        )
+
+        @place_one = add_place_to_event(@event, "place_one")
+        @place_two = add_place_to_event(@event, "place_two")
+
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(places)))
+        output.size.should == 4
+        
+        assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
+        assert_values_in_result(output, 1, :place_name => /place_one/)
+
+        assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
+        assert_values_in_result(output, 2, :place_name => /place_two/)
+
+        assert_values_in_result(output, 3, :patient_hospitalization_facility => /Casteen Hospital/)
+        assert_values_in_result(output, 3, :place_name => //)
       end
       
       it "should render properly when there are more place exposures than hospitals" do
-        pending
+        @place_one = add_place_to_event(@event, "place_one")
+        @place_two = add_place_to_event(@event, "place_two")
+        @place_three = add_place_to_event(@event, "place_three")
+
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(places)))
+        output.size.should == 4
+
+        assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
+        assert_values_in_result(output, 1, :place_name => /place_one/)
+
+        assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
+        assert_values_in_result(output, 2, :place_name => /place_two/)
+
+        assert_values_in_result(output, 3, :patient_hospitalization_facility => //)
+        assert_values_in_result(output, 3, :place_name => /place_three/)
+      end
+
+      it "should not render places if that option is not passed to the export" do
+        @place_one = add_place_to_event(@event, "place_one")
+        output = to_arry(Export::Csv.export(@event))
+        output.size.should == 3
+        output[0].include?("place_name").should be_false
       end
       
       describe "and there are contacts on the main event and contacts themselves listed in the export" do
 
-        it "should not blank out contact names for any contacts on an event" do
-          pending
-        end
-
         it "should blank out demographic data on the second row of a contact event" do
-          pending
-        end
+          @contact = add_contact_to_event(@event, "contact_one")
+          @contact_hospital = add_hospitalization_facility_to_event(@contact,
+            "Contact Hospital",
+            :admission_date => Date.today - 5,
+            :discharge_date => Date.today - 1,
+            :medical_record_number => "12345-1"
+          )
+          
+          @contact_hospital_two = add_hospitalization_facility_to_event(@contact,
+            "Contact Hospital Two",
+            :admission_date => Date.today - 10,
+            :discharge_date => Date.today - 6,
+            :medical_record_number => "12345-2"
+          )
 
+          output = to_arry(Export::Csv.export([@event, @contact], :export_options => %w(contacts)))
+          output[4].include?(@contact.id.to_s).should be_true
+          output[4].include?("contact_one").should be_true
+          output[5].include?(@contact.id.to_s).should be_true
+          output[5].include?("contact_one").should be_false
+        end
       end
     end
   end
