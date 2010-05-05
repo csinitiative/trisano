@@ -253,7 +253,7 @@ class FormsController < AdminController
       render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.class.name }
     else
       flash[:error] = t("library_copy_failed", :type => @question_element.class.human_name)
-      render :template => 'rjs-error'
+      render :template => 'rjs-error', :status => :bad_request
     end
   end
 
