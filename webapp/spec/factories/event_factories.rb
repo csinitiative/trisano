@@ -280,12 +280,26 @@ Factory.sequence :hospital_record_number do |n|
   "1234-#{n}"
 end
 
+def add_contact_to_event(event, contact_last_name)
+  returning event.contact_child_events.build do |child|
+    child.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => contact_last_name } } } }
+    event.save!
+    child.save
+  end
+end
+
 def add_lab_to_event(event, lab_name_or_lab_place_entity, lab_result_attributes={})
   lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : create_lab!(lab_name_or_lab_place_entity)    
   lab_result = Factory.create(:lab_result, lab_result_attributes)
   lab = Factory.create(:lab, :secondary_entity => lab_place_entity, :lab_results => [lab_result])
   event.labs << lab
   lab
+end
+
+def add_treatment_to_event(event, treatment_attributes={})
+  treatment = Factory.create(:participations_treatment, treatment_attributes)
+  event.interested_party.treatments << treatment
+  treatment
 end
 
 def add_hospitalization_facility_to_event(event, hospital_name, hospitals_participations_attributes={})
@@ -345,6 +359,7 @@ def create_contact!(name)
   person = contact_event.interested_party.person_entity.person
   person.last_name = name
   contact_event.save!
+  contact_event
 end
 
 def human_event_with_demographic_info!(type, demographic_info={ :last_name => Factory.next(:last_name) })
