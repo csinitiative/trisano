@@ -1,2 +1,2 @@
-<% feature_root = Dir.glob('**/trisano_locales_test/features').first %>
+<% feature_root = Dir.glob('vendor/trisano/trisano_locales_test/features').first %>
 standard: <%= File.join(feature_root, 'standard') %> -r <%= File.join(feature_root, 'support') %> -r <%= File.join(feature_root, 'standard_step_definitions') %>
