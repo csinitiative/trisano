@@ -298,7 +298,7 @@ describe MorbidityEvent do
     describe "that has been invalidated by a code change" do
       before do
         DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}'",
-                                ['event_id = ?', @event.id])
+          ['event_id = ?', @event.id])
       end
 
       it "should not route event in an invalid state" do
@@ -1616,6 +1616,21 @@ describe Event, 'cloning an event' do
       @new_event.disease_event.died_id.should == @org_event.disease_event.died_id
       @new_event.disease_event.disease_onset_date.should == @org_event.disease_event.disease_onset_date
       @new_event.disease_event.date_diagnosed.should == @org_event.disease_event.date_diagnosed
+    end
+
+    it "should copy over hospitalization data even if there are no additional attributes beyond a hospital" do
+      @event_hash["hospitalization_facilities_attributes"] = [
+        { :secondary_entity_id => entities(:AVH).id },
+        { :secondary_entity_id => entities(:BRVH).id }
+      ]
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event(['clinical'])
+
+      @new_event.hospitalization_facilities.size.should == 2
+      
+      @new_event.hospitalization_facilities.each do |h|
+        h.hospitals_participation.should be_nil
+      end
     end
 
     it "should copy over hospitalization data" do

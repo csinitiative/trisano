@@ -324,9 +324,11 @@ class HumanEvent < Event
     if event_components.include?("clinical")
       self.hospitalization_facilities.each do |h|
         new_h = new_event.hospitalization_facilities.build(:secondary_entity_id => h.secondary_entity_id)
-        if attrs = h.hospitals_participation.attributes
-          attrs.delete('participation_id')
-          new_h.build_hospitals_participation(attrs)
+        unless h.hospitals_participation.nil?
+          if attrs = h.hospitals_participation.attributes
+            attrs.delete('participation_id')
+            new_h.build_hospitals_participation(attrs)
+          end
         end
       end
 
@@ -485,7 +487,7 @@ class HumanEvent < Event
 
     # Set the lab name
     lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
-                        "lab_results_attributes" => {}
+      "lab_results_attributes" => {}
     }
 
     # Create one lab result per OBX segment
@@ -596,7 +598,7 @@ class HumanEvent < Event
     county_code = self.address.try(:county).try(:the_code)
     if county_code == "OS" &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) ||
-         ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
+          ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
       errors.add(:base, :invalid_case_status, :status => ExternalCode.out_of_state.code_description, :attr => I18n.t(:county).downcase, :value => self.address.county.code_description)
     end
 
