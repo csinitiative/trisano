@@ -206,6 +206,7 @@ describe FormElementsController do
 
     it 'should update the form elements export column' do
       do_post
+      response.body.should =~ /\$\('cdc-export-info-1'\).hide\(\)/
     end
 
   end
