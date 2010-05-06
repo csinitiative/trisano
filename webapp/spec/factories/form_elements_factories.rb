@@ -43,6 +43,10 @@ end
 Factory.define :core_view_element do |cve|
 end
 
+Factory.define(:group_element) do |ge|
+  ge.name { Factory.next(:group_element_name) }
+end
+
 Factory.sequence :core_field_element_name do |n|
   "#{Faker::Lorem.words(3)} #{n}"
 end
@@ -53,4 +57,8 @@ end
 
 Factory.sequence :core_path do |n|
   "morbidity_event[test_path#{n}]"
+end
+
+Factory.sequence(:group_element_name) do |n|
+  "group_element_#{n}"
 end
