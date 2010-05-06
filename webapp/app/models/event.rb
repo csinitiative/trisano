@@ -90,9 +90,15 @@ class Event < ActiveRecord::Base
     end
   end
 
-  has_many :child_events, :class_name => 'Event', :foreign_key => 'parent_id'
+  has_many :child_events,
+    :class_name => 'Event',
+    :foreign_key => 'parent_id',
+    :order => "created_at ASC"
+
   named_scope :active, :conditions => ['deleted_at IS NULL']
-  named_scope :morbs_or_contacts, :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)]
+  named_scope :morbs_or_contacts, 
+    :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)],
+    :order => "created_at ASC"
 
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
