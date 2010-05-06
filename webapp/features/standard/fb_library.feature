@@ -16,3 +16,12 @@ Feature: Questions can be stored in a library
      When I copy the question to the library group "Awesome questions"
      Then I should get a 200 response
       And the question is in the library group
+
+  Scenario: Copying questions to an invalid group
+    Given I am logged in as a super user
+      And I already have a published form
+      And that form has one question on the default view
+     When I copy the question to an invalid library group
+     Then I should get a 400 response
+      And I should see "Unable to copy Questionelement to library"
+

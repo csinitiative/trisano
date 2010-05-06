@@ -30,3 +30,11 @@ Then /^the question is in the library group$/ do
     c.question.try(:question_text) == @question_element.question.question_text
   end.should(be_true)
 end
+
+When /^I copy the question to an invalid library group$/ do
+  @group_element = Factory.create(:group_element)
+  visit("/forms/to_library",
+        :post,
+        :reference_element_id => @question_element.id,
+        :group_element_id => @group_element.id)
+end
