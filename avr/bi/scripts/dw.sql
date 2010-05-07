@@ -372,8 +372,8 @@ SELECT
     END AS date_disease_onset_year,
     CASE
         WHEN disev.disease_onset_date IS NULL THEN NULL
-        WHEN extract(month from disev.disease_onset_date) <= 2 THEN 'Quarter 1'::TEXT
-        WHEN extract(month from disev.disease_onset_date) > 2 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.disease_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 3 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 5 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_onset_quarter,
@@ -388,8 +388,8 @@ SELECT
     END AS date_disease_diagnosed_year,
     CASE
         WHEN disev.date_diagnosed IS NULL THEN NULL
-        WHEN extract(month from disev.date_diagnosed) <= 2 THEN 'Quarter 1'::TEXT
-        WHEN extract(month from disev.date_diagnosed) > 2 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.date_diagnosed) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 3 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 5 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_diagnosed_quarter,
@@ -649,8 +649,8 @@ SELECT
     END AS date_disease_onset_year,
     CASE
         WHEN disev.disease_onset_date IS NULL THEN NULL
-        WHEN extract(month from disev.disease_onset_date) <= 2 THEN 'Quarter 1'::TEXT
-        WHEN extract(month from disev.disease_onset_date) > 2 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.disease_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 3 AND extract(month from disev.disease_onset_date) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 5 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_onset_quarter,
@@ -665,8 +665,8 @@ SELECT
     END AS date_disease_diagnosed_year,
     CASE
         WHEN disev.date_diagnosed IS NULL THEN NULL
-        WHEN extract(month from disev.date_diagnosed) <= 2 THEN 'Quarter 1'::TEXT
-        WHEN extract(month from disev.date_diagnosed) > 2 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.date_diagnosed) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 3 AND extract(month from disev.date_diagnosed) <= 5 THEN 'Quarter 2'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 5 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_diagnosed_quarter,
