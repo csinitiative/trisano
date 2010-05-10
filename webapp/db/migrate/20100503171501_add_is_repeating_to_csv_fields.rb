@@ -7,6 +7,7 @@ class AddIsRepeatingToCsvFields < ActiveRecord::Migration
        ["contact_event", "contact_hospital_discharge_date"],
        ["contact_event", "contact_hospitalization_facility"],
        ["contact_event", "contact_hospital_medical_record_no"],
+       ["morbidity_event", "patient_hospitalization_facility"],
        ["morbidity_event", "patient_hospital_admission_date"],
        ["morbidity_event", "patient_hospital_discharge_date"],
        ["morbidity_event", "patient_hospital_medical_record_no"]].each do |csv_field|
