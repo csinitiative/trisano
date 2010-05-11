@@ -691,6 +691,16 @@ describe QuestionElement do
     end
   end
 
+  describe "copying" do
+    it "copies element's question" do
+      with_question_element do |qe|
+        qe.save_and_add_to_form.should be_true
+        dupe = qe.copy(:is_template => true)
+        dupe.question.question_text.should == qe.question.question_text
+      end
+    end
+  end
+
   describe "copying from element library" do
     it "should check for short name uniqueness" do
       with_question_element do |question_element|

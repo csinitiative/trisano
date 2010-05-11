@@ -151,6 +151,12 @@ class QuestionElement < FormElement
     end
   end
 
+  def copy(options = {})
+    dupe = super
+    dupe.question = question.clone
+    dupe
+  end
+
   private
 
   def speculative_cache

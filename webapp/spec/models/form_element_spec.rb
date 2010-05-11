@@ -472,7 +472,7 @@ describe "when executing an operation that requires form element structure valid
     end
   end
 
-  describe "copying children" do
+  describe "copying" do
     include FormElementsSpecHelper
 
     before do
@@ -487,46 +487,82 @@ describe "when executing an operation that requires form element structure valid
       @next_id = FormElement.next_tree_id
     end
 
-    it "creates a copy of the node" do
-      result = @container.copy_children(@container, nil, nil, @next_id, true)
+    it "creates a shallow copy, ready to be added to a form or tree" do
+      result = @container.copy(:tree_id => @next_id, :is_template => true)
       assert_element_shallow_copy(@container, result)
       assert_element_in_tree(result, @next_id)
     end
 
     it "copies question on question elements" do
-      result = @question_element.copy_children(@question_element, nil, nil, @next_id, true)
+      result = @question_element.copy_children(@question_element,
+                                               :tree_id => @next_id,
+                                               :is_template => true)
       assert_element_in_tree(result, @next_id)
       assert_element_shallow_copy(@question_element, result)
       assert_question_is_a_copy(@question_element.question, result.question)
     end
 
-    it "copies children" do
-      result = @container.copy_children(@container, nil, nil, @next_id, true)
-      assert_element_in_tree(result, @next_id)
-      assert_element_shallow_copy(@container, result)
-      assert_element_deep_copy(@container, result)
-    end
-
-    describe "and passing a parent" do
-      it "assigns the copy to the parent" do
-        result = @question_element.copy_children(@question_element, @group_element, nil, @group_element.tree_id, true)
-        result.parent.should == @group_element
+    describe "children" do
+      it "returns a copy of the subtree rooted at self" do
+        result = @container.copy_children(@container,
+                                          :tree_id => @next_id,
+                                          :is_template => true)
+        assert_element_in_tree(result, @next_id)
+        assert_element_shallow_copy(@container, result)
+        assert_element_deep_copy(@container, result)
       end
 
-      it "raises an error if tree_id doesn't match parent's tree_id" do
-        lambda do
-          @question_element.copy_children(@question_element, @group_element, nil, @tree_id, true)
-        end.should raise_error("tree_id must match the parent element's tree_id, if parent element is not nil")
+      describe "and passing a parent" do
+        it "assigns the copy to the parent" do
+          result = @question_element.copy_children(@question_element,
+                                                   :parent => @group_element,
+                                                   :tree_id => @group_element.tree_id,
+                                                   :is_template => true)
+          result.parent.should == @group_element
+        end
+
+        it "raises an error if tree_id doesn't match parent's tree_id" do
+          lambda do
+            @question_element.copy_children(@question_element,
+                                            :parent => @group_element,
+                                            :tree_id => @tree_id,
+                                            :is_template => true)
+          end.should raise_error("tree_id must match the parent element's tree_id, if parent element is not nil")
+        end
+      end
+
+      it "copies deep nested value sets (when they are valid)" do
+        pending "A known failure, resulting in a bug. Refactoring to fix this"
+        radio_question = Factory.build(:question_element)
+        radio_question.question.data_type = 'radio_button'
+        radio_question.parent_element_id = @form.investigator_view_elements_container.id
+        radio_question.save_and_add_to_form.should be_true
+        follow_up = Factory.build(:follow_up_element)
+        follow_up.parent_element_id = radio_question.id
+        follow_up.save_and_add_to_form.should be_true
+        drop_down_question = Factory.build(:question_element)
+        drop_down_question.question.data_type = 'drop_down'
+        drop_down_question.parent_element_id = follow_up.id
+        drop_down_question.save_and_add_to_form.should be_true
+        vs = Factory.build(:value_set_element)
+        vs.parent_element_id = drop_down_question.id
+        vs.save_and_add_to_form.should be_true
+        blank = Factory.build(:value_element, :name => nil)
+        blank.parent_element_id = vs.id
+        blank.save_and_add_to_form.should be_true
+        radio_question.copy_children(radio_question, nil, nil, @next_id, true).should be_true
       end
     end
 
-    describe "when a group is copied" do
-      it "copy questions" do
+    describe "an entire group" do
+      it "copies questions" do
         lq = Factory.build(:question_element)
         lq.parent_element_id = @group_element.id
         lq.save_and_add_to_form
         container = @form.investigator_view_elements_container
-        result = container.copy_children(@group_element, nil, @form.id, nil, false)
+        result = container.copy_children(@group_element,
+                                         :form_id => @form.id,
+                                         :is_template => false)
         result.children.any? do |e|
           e.question.try(:question_text) == lq.question.question_text
         end.should be_true
@@ -537,31 +573,11 @@ describe "when executing an operation that requires form element structure valid
         vs.parent_element_id = @group_element.id
         vs.save_and_add_to_form
         container = @form.investigator_view_elements_container
-        result = container.copy_children(@group_element, nil, @form.id, nil, false)
+        result = container.copy_children(@group_element,
+                                         :form_id => @form.id,
+                                         :is_template => false)
         result.children.should == []
       end
-    end
-
-    it "copies deep nested value sets (when they are valid)" do
-      pending "A known failure, resulting in a bug. Refactoring to fix this"
-      radio_question = Factory.build(:question_element)
-      radio_question.question.data_type = 'radio_button'
-      radio_question.parent_element_id = @form.investigator_view_elements_container.id
-      radio_question.save_and_add_to_form.should be_true
-      follow_up = Factory.build(:follow_up_element)
-      follow_up.parent_element_id = radio_question.id
-      follow_up.save_and_add_to_form.should be_true
-      drop_down_question = Factory.build(:question_element)
-      drop_down_question.question.data_type = 'drop_down'
-      drop_down_question.parent_element_id = follow_up.id
-      drop_down_question.save_and_add_to_form.should be_true
-      vs = Factory.build(:value_set_element)
-      vs.parent_element_id = drop_down_question.id
-      vs.save_and_add_to_form.should be_true
-      blank = Factory.build(:value_element, :name => nil)
-      blank.parent_element_id = vs.id
-      blank.save_and_add_to_form.should be_true
-      radio_question.copy_children(radio_question, nil, nil, @next_id, true).should be_true
     end
 
   end
