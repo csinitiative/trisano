@@ -150,6 +150,9 @@ class FormElement < ActiveRecord::Base
 
   # Returns root node of the copied tree
   def copy_children(node_to_copy, parent, form_id, tree_id, is_template)
+    if parent and parent.tree_id != tree_id
+      raise("tree_id must match the parent element's tree_id, if parent element is not nil")
+    end
     e = node_to_copy.class.new
     e.form_id = form_id
     e.tree_id = tree_id

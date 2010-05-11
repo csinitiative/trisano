@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe FormElement do
+
   before(:each) do
     @form_element = FormElement.new
   end
@@ -160,10 +161,9 @@ describe "FormElement working with the library" do
     @independent_value_set.add_child(@indie_value_1)
     @independent_value_set.add_child(@indie_value_2)
 
-    @question_with_value_set = Question.create(
-      :question_text => "How's it going?",
-      :data_type => "drop_down",
-      :short_name => "how")
+    @question_with_value_set = Question.create(:question_text => 'How\'s it going?',
+                                               :data_type => "drop_down",
+                                               :short_name => "how")
     @question_element_with_value_set = QuestionElement.create(:tree_id => @group_tree_id, :question => @question_with_value_set)
     @group_element.add_child(@question_element_with_value_set)
 
@@ -205,7 +205,7 @@ describe "FormElement working with the library" do
       copied_group.children[1].is_a?(QuestionElement).should be_true
 
       copied_group.children[0].question.should_not be_nil
-      copied_group.children[0].question.question_text.should eql("How's it going?")
+      copied_group.children[0].question.question_text.should eql('How\'s it going?')
       copied_group.children[1].question.should_not be_nil
       copied_group.children[1].question.question_text.should eql("Explain.")
     end
@@ -246,14 +246,14 @@ describe "FormElement working with the library" do
 
       copied_question = copied_question_element.question
       copied_question.should_not be_nil
-      copied_question.question_text.should eql("How's it going?")
+      copied_question.question_text.should eql('How\'s it going?')
     end
 
     it 'should not copy a question to a form if the question short name is already in use' do
       to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
       to_element.save_and_add_to_form.should_not be_nil
       existing_question = QuestionElement.new( :parent_element_id => to_element.id, :question_attributes => {
-          :question_text => "How's it going?",
+          :question_text => 'How\'s it going?',
           :data_type => "drop_down",
           :short_name => "how" })
       existing_question.save_and_add_to_form.should_not be_nil
@@ -472,6 +472,97 @@ describe "when executing an operation that requires form element structure valid
     end
   end
 
+  describe "copying children" do
+    include FormElementsSpecHelper
 
+    before do
+      @form = Factory.build(:form)
+      @form.save_and_initialize_form_elements
+      @container = @form.investigator_view_elements_container
+      @question_element = Factory.build(:question_element)
+      @question_element.parent_element_id = @container.id
+      @question_element.save_and_add_to_form.should be_true
+      @group_element = Factory.build(:group_element)
+      @group_element.save_and_add_to_form.should be_true
+      @next_id = FormElement.next_tree_id
+    end
+
+    it "creates a copy of the node" do
+      result = @container.copy_children(@container, nil, nil, @next_id, true)
+      assert_element_shallow_copy(@container, result)
+      assert_element_in_tree(result, @next_id)
+    end
+
+    it "copies question on question elements" do
+      result = @question_element.copy_children(@question_element, nil, nil, @next_id, true)
+      assert_element_in_tree(result, @next_id)
+      assert_element_shallow_copy(@question_element, result)
+      assert_question_is_a_copy(@question_element.question, result.question)
+    end
+
+    it "copies children" do
+      result = @container.copy_children(@container, nil, nil, @next_id, true)
+      assert_element_in_tree(result, @next_id)
+      assert_element_shallow_copy(@container, result)
+      assert_element_deep_copy(@container, result)
+    end
+
+    describe "and passing a parent" do
+      it "assigns the copy to the parent" do
+        result = @question_element.copy_children(@question_element, @group_element, nil, @group_element.tree_id, true)
+        result.parent.should == @group_element
+      end
+
+      it "raises an error if tree_id doesn't match parent's tree_id" do
+        lambda do
+          @question_element.copy_children(@question_element, @group_element, nil, @tree_id, true)
+        end.should raise_error("tree_id must match the parent element's tree_id, if parent element is not nil")
+      end
+    end
+
+    describe "when a group is copied" do
+      it "copy questions" do
+        lq = Factory.build(:question_element)
+        lq.parent_element_id = @group_element.id
+        lq.save_and_add_to_form
+        container = @form.investigator_view_elements_container
+        result = container.copy_children(@group_element, nil, @form.id, nil, false)
+        result.children.any? do |e|
+          e.question.try(:question_text) == lq.question.question_text
+        end.should be_true
+      end
+
+      it "doesn't copy value sets" do
+        vs = Factory.build(:value_set_element)
+        vs.parent_element_id = @group_element.id
+        vs.save_and_add_to_form
+        container = @form.investigator_view_elements_container
+        result = container.copy_children(@group_element, nil, @form.id, nil, false)
+        result.children.should == []
+      end
+    end
+
+    it "copies deep nested value sets (when they are valid)" do
+      radio_question = Factory.build(:question_element)
+      radio_question.question.data_type = 'radio_button'
+      radio_question.parent_element_id = @form.investigator_view_elements_container.id
+      radio_question.save_and_add_to_form.should be_true
+      follow_up = Factory.build(:follow_up_element)
+      follow_up.parent_element_id = radio_question.id
+      follow_up.save_and_add_to_form.should be_true
+      drop_down_question = Factory.build(:question_element)
+      drop_down_question.question.data_type = 'drop_down'
+      drop_down_question.parent_element_id = follow_up.id
+      drop_down_question.save_and_add_to_form.should be_true
+      vs = Factory.build(:value_set_element)
+      vs.parent_element_id = drop_down_question.id
+      vs.save_and_add_to_form.should be_true
+      blank = Factory.build(:value_element, :name => nil)
+      blank.parent_element_id = vs.id
+      blank.save_and_add_to_form.should be_true
+      radio_question.copy_children(radio_question, nil, nil, @next_id, true).should be_true
+    end
+
+  end
 
 end

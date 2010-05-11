@@ -28,12 +28,15 @@ Factory.define :core_field_element do |cfe|
 end
 
 Factory.define(:follow_up_element) do |fue|
+  fue.condition { "Yes" }
 end
 
 Factory.define :form_element do |fe|
 end
 
 Factory.define :value_element do |ve|
+  ve.name { Factory.next(:value_element_name) }
+  ve.code { Factory.next(:value_element_code) }
 end
 
 Factory.define :value_set_element do |vse|
@@ -61,4 +64,12 @@ end
 
 Factory.sequence(:group_element_name) do |n|
   "group_element_#{n}"
+end
+
+Factory.sequence(:value_element_name) do |n|
+  "value_element_name_#{n}"
+end
+
+Factory.sequence(:value_element_code) do |n|
+  "#{n}"
 end

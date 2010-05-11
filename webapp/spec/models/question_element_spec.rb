@@ -605,6 +605,92 @@ describe QuestionElement do
 
   end
 
+  describe "copying a question to the library" do
+    before do
+      @form = Factory.build(:form)
+      @form.save_and_initialize_form_elements
+      @question_element = Factory.build(:question_element)
+      @question_element.parent_element_id = @form.investigator_view_elements_container.id
+    end
+
+    it "adds a single line text question to the library" do
+      @question_element.save_and_add_to_form
+      @question_element.add_to_library.should be_true
+      FormElement.library_roots.any? do |e|
+        e.question.try(:question_text).should == @question_element.question.question_text
+      end.should be_true
+    end
+
+    it "adds questions w/ value sets to the library" do
+      @question_element.question.data_type = 'radio_button'
+      @question_element.save_and_add_to_form.should be_true
+      value_set_element = Factory.build(:value_set_element)
+      value_set_element.parent_element_id = @question_element.id
+      value_set_element.save_and_add_to_form.should be_true
+      value_element = Factory.build(:value_element)
+      value_element.parent_element_id = value_set_element.id
+      value_element.save_and_add_to_form.should be_true
+      @question_element.add_to_library.should be_true
+
+      ve = FormElement.library_roots.map do |vse|
+        vse.children.map { |ve| ve.children }
+      end
+      ve.flatten.any? { |ve| ve.name == value_element.name }.should be_true
+    end
+
+    it "adds questions and their follow ups" do
+      @question_element.save_and_add_to_form
+      follow_up_element = Factory.build(:follow_up_element)
+      follow_up_element.parent_element_id = @question_element.id
+      follow_up_element.save_and_add_to_form.should be_true
+      @question_element.add_to_library.should be_true
+
+      FormElement.library_roots.map do |e|
+        e.children.any? { |fue| fue.condition == follow_up_element.condition }
+      end.any?.should(be_true)
+    end
+
+    it "copies questions in follow up containers" do
+      @question_element.save_and_add_to_form
+      follow_up_element = Factory.build(:follow_up_element)
+      follow_up_element.parent_element_id = @question_element.id
+      follow_up_element.save_and_add_to_form.should be_true
+      follow_up_question = Factory.build(:question_element)
+      follow_up_question.parent_element_id = follow_up_element.id
+      follow_up_question.save_and_add_to_form.should be_true
+      @question_element.add_to_library.should be_true
+
+      FormElement.library_roots.map do |qe|
+        qe.children.map do |fue|
+          fue.children.map do |fqe|
+            fqe.question.question_text == follow_up_question.question.question_text
+          end
+        end
+      end.flatten.any?.should(be_true)
+    end
+
+    it "copies child questions, even if they are of a different data type" do
+      pending "need to check something"
+      @question_element.question.data_type = 'radio_button'
+      @question_element.save_and_add_to_form
+      follow_up_element = Factory.build(:follow_up_element)
+      follow_up_element.parent_element_id = @question_element.id
+      follow_up_element.save_and_add_to_form.should be_true
+      follow_up_question = Factory.build(:question_element)
+      follow_up_question.question.data_type = 'drop_down'
+      follow_up_question.parent_element_id = follow_up_element.id
+      follow_up_question.save_and_add_to_form.should be_true
+      value_set_element = Factory.build(:value_set_element)
+      value_set_element.parent_element_id = follow_up_question.id
+      value_set_element.save_and_add_to_form.should be_true
+      value_element = Factory.build(:value_element)
+      value_element.name = nil
+      value_element.parent_element_id = value_set_element.id
+      value_element.save_and_add_to_form.should be_true
+      @question_element.add_to_library.should be_true
+    end
+  end
+
   describe "copying from element library" do
     it "should check for short name uniqueness" do
       with_question_element do |question_element|

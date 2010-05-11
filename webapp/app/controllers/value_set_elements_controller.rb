@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ValueSetElementsController <  AdminController
@@ -35,7 +35,7 @@ class ValueSetElementsController <  AdminController
       @value_set_element = ValueSetElement.new
       @value_set_element.parent_element_id = params[:form_element_id]
       @value_set_element.form_id = params[:form_id]
-      
+
       @reference_element = FormElement.find(params[:form_element_id])
       @library_elements = []
     rescue Exception => ex
@@ -54,7 +54,7 @@ class ValueSetElementsController <  AdminController
 
     respond_to do |format|
       if @value_set_element.save_and_add_to_form
-        format.xml  { render :xml => @value_set_element, :status => :created, :location => @value_set_element }
+        format.xml { render :xml => @value_set_element, :status => :created, :location => @value_set_element }
         format.js { @form = Form.find(@value_set_element.form_id)}
       else
         @value_set_element = post_transaction_refresh(@value_set_element, params[:value_set_element])
@@ -67,7 +67,7 @@ class ValueSetElementsController <  AdminController
   end
 
   def update
-    
+
     @value_set_element = ValueSetElement.find(params[:id])
 
     respond_to do |format|
@@ -92,7 +92,7 @@ class ValueSetElementsController <  AdminController
       format.xml  { head :ok }
     end
   end
-  
+
   # Debt: Maybe this should move to a value_controller. Putting here for expediency.
   def toggle_value
     begin
@@ -106,5 +106,5 @@ class ValueSetElementsController <  AdminController
       render :template => 'rjs-error'
     end
   end
-  
+
 end
