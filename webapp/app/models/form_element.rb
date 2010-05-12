@@ -107,13 +107,9 @@ class FormElement < ActiveRecord::Base
   def add_to_library(group_element=nil)
     begin
       transaction do
-        if group_element.nil?
-          tree_id = FormElement.next_tree_id
-          result = copy_children(self, nil, nil, tree_id, true)
-        else
-          tree_id = group_element.tree_id
-          result = copy_children(self, group_element, nil, tree_id, true)
-        end
+        options = { :parent => group_element, :is_template => true }
+        options[:tree_id] = group_element ? group_element.tree_id : FormElement.next_tree_id
+        result = copy_with_children(options)
         result.validate_tree_structure(self)
         return result
       end
@@ -130,7 +126,9 @@ class FormElement < ActiveRecord::Base
           errors.add(:base, :failed_copy)
           raise
         end
-        self.add_child(copy_children(library_element, nil, self.form_id, self.tree_id, false))
+        add_child(library_element.copy_with_children(:form_id => form_id,
+                                                     :tree_id => tree_id,
+                                                     :is_template => false))
         validate_form_structure
         return true
       end
@@ -148,35 +146,39 @@ class FormElement < ActiveRecord::Base
     end
   end
 
+  # use this instaead of cloning to spawn new nodes from old nodes
+  def copy(options = {})
+    options.symbolize_keys!
+    returning self.class.new do |e|
+      hash = {
+        'form_id' => options[:form_id],
+        'tree_id' => options[:tree_id],
+        'is_template' => options[:is_template],
+        'lft' => nil,
+        'rgt' => nil,
+        'parent_id' => nil
+      }
+      e.attributes = attributes.merge(hash)
+    end
+  end
+
   # Returns root node of the copied tree
-  def copy_children(node_to_copy, parent, form_id, tree_id, is_template)
-    e = node_to_copy.class.new
-    e.form_id = form_id
-    e.tree_id = tree_id
-    e.is_template = is_template
-    e.name = node_to_copy.name
-    e.description = node_to_copy.description
-    e.help_text = node_to_copy.help_text
-    e.condition = node_to_copy.condition
-    e.core_path = node_to_copy.core_path
-    e.is_active = node_to_copy.is_active
-    e.is_condition_code = node_to_copy.is_condition_code
-    e.export_column_id = node_to_copy.export_column_id
-    e.export_conversion_value_id = node_to_copy.export_conversion_value_id
-    e.code = node_to_copy.code
-    e.question = node_to_copy.question.clone if node_to_copy.is_a? QuestionElement
-    if e.is_a?(ValueElement) && self.is_a?(QuestionElement)
-      e.question = self.question.dup
+  def copy_with_children(options = {})
+    options.symbolize_keys!
+    if options[:parent] and options[:parent].tree_id != options[:tree_id]
+      raise("tree_id must match the parent element's tree_id, if parent element is not nil")
     end
+    e = copy(options)
     e.save!
-    parent.add_child e unless parent.nil?
-    node_to_copy.children.each do |child|
-      # Do not copy value sets in a group to non-questions
-      unless (child.is_a?(ValueSetElement) && child.parent.is_a?(GroupElement) && !self.is_a?(QuestionElement))
-        copy_children(child, e, form_id, tree_id, is_template)
-      end
-    end
+    options[:parent].add_child(e) if options[:parent]
+    copy_children(options.merge(:parent => e))
     e
+  end
+
+  def copy_children(options)
+    children.each do |child|
+      child.copy_with_children(options)
+    end
   end
 
   def self.filter_library(options)
@@ -255,17 +257,7 @@ class FormElement < ActiveRecord::Base
   end
 
   def can_receive_value_set?
-    begin
-      if (self.class.name == "QuestionElement")
-        future_siblings = self.children
-        existing_value_set = future_siblings.detect {|sibling| sibling.class.name == "ValueSetElement"}
-        return false unless (existing_value_set.nil?)
-      end
-    rescue Exception => ex
-      self.errors.add(:base, :parent_exception)
-      return nil
-    end
-    return true
+    return false
   end
 
   def code_condition_lookup

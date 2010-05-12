@@ -18,8 +18,14 @@
 class ValueElement < FormElement
   belongs_to :export_conversion_value
 
-  validates_presence_of :name, :if => :radio_button_question?, :message => I18n.t(:radio_button_blank_value, :scope => [:form_errors])
-  validates_presence_of :name, :if => :check_box_question?,    :message => I18n.t(:check_box_blank_value, :scope => [:form_errors])
+  validates_presence_of(:name,
+                        :if => :radio_button_question?,
+                        :message => I18n.t(:radio_button_blank_value,
+                                           :scope => [:form_errors]))
+  validates_presence_of(:name,
+                        :if => :check_box_question?,
+                        :message => I18n.t(:check_box_blank_value,
+                                           :scope => [:form_errors]))
 
   def radio_button_question?
     return false unless question
@@ -41,9 +47,17 @@ class ValueElement < FormElement
                                  :conditions => ['b.id = ?', parent_element_id])
   end
 
-  # when copying value sets, it's faster just to have the copy
-  # operation set the question, rather then try to look it up
   def question=(question)
     @question = question
+  end
+
+  # when copying value elements, it's faster just to have the copy
+  # operation set the question, rather then try to look it up
+  def copy(options = {})
+    returning super do |e|
+      if options[:question_element]
+        question = options[:question_element].question.dup
+      end
+    end
   end
 end

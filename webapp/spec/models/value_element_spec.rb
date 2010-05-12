@@ -28,13 +28,14 @@ describe ValueElement do
 
   describe "with a blank value" do
     before do
-      @value_element = Factory.build(:value_element)
+      @value_element = Factory.build(:value_element, :name => nil)
       @question = Factory.build(:question)
       @value_element.question = @question
     end
 
     it "is invalid if question type is radio button" do
       @question.data_type = :radio_button
+      @value_element.should be_radio_button_question
       @value_element.should_not be_valid
       @value_element.errors.on(:name).should == "can't be blank when question is a radio button"
     end

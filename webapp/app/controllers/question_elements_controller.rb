@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class QuestionElementsController <  AdminController
@@ -83,7 +83,7 @@ class QuestionElementsController <  AdminController
   def destroy
     render :text => t("deletion_handled_by_form_elements"), :status => 405
   end
-    
+
   def process_condition
     begin
       @question_element_id = params[:question_element_id]
@@ -95,11 +95,10 @@ class QuestionElementsController <  AdminController
       @error_message_div = "follow-up-error"
       render :template => 'rjs-error'
     end
-    
   end
-  
+
   private
-  
+
   def export_columns(disease_ids)
     ExportColumn.find(
       :all,
