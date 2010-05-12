@@ -109,7 +109,7 @@ class FormElement < ActiveRecord::Base
       transaction do
         options = { :parent => group_element, :is_template => true }
         options[:tree_id] = group_element ? group_element.tree_id : FormElement.next_tree_id
-        result = copy_children(self, options)
+        result = copy_with_children(options)
         result.validate_tree_structure(self)
         return result
       end
@@ -126,10 +126,9 @@ class FormElement < ActiveRecord::Base
           errors.add(:base, :failed_copy)
           raise
         end
-        self.add_child(copy_children(library_element,
-                                     :form_id => self.form_id,
-                                     :tree_id => self.tree_id,
-                                     :is_template => false))
+        add_child(library_element.copy_with_children(:form_id => form_id,
+                                                     :tree_id => tree_id,
+                                                     :is_template => false))
         validate_form_structure
         return true
       end
@@ -164,22 +163,22 @@ class FormElement < ActiveRecord::Base
   end
 
   # Returns root node of the copied tree
-  def copy_children(node_to_copy, options = {})
+  def copy_with_children(options = {})
     options.symbolize_keys!
     if options[:parent] and options[:parent].tree_id != options[:tree_id]
       raise("tree_id must match the parent element's tree_id, if parent element is not nil")
     end
-    e = node_to_copy.copy(options)
+    e = copy(options)
     e.save!
     options[:parent].add_child(e) if options[:parent]
-    node_to_copy.children.each do |child|
-      # Do not copy value sets in a group to non-questions
-      unless (child.is_a?(ValueSetElement) && child.parent.is_a?(GroupElement) && !self.is_a?(QuestionElement))
-        hash = options.merge(:parent => e)
-        copy_children(child, hash)
-      end
-    end
+    copy_children(options.merge(:parent => e))
     e
+  end
+
+  def copy_children(options)
+    children.each do |child|
+      child.copy_with_children(options)
+    end
   end
 
   def self.filter_library(options)
@@ -258,17 +257,7 @@ class FormElement < ActiveRecord::Base
   end
 
   def can_receive_value_set?
-    begin
-      if (self.class.name == "QuestionElement")
-        future_siblings = self.children
-        existing_value_set = future_siblings.detect {|sibling| sibling.class.name == "ValueSetElement"}
-        return false unless (existing_value_set.nil?)
-      end
-    rescue Exception => ex
-      self.errors.add(:base, :parent_exception)
-      return nil
-    end
-    return true
+    return false
   end
 
   def code_condition_lookup

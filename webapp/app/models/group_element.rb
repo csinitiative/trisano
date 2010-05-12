@@ -27,4 +27,10 @@ class GroupElement < FormElement
       end
     end
   end
+
+  def copy_children(options)
+    children.reject { |c| c.is_a?(ValueSetElement) }.each do |child|
+      child.copy_with_children(options)
+    end
+  end
 end

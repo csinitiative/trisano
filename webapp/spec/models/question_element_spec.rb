@@ -42,6 +42,23 @@ describe QuestionElement do
     @question_element.should be_valid
   end
 
+  it "can receive value sets" do
+    with_question_element do |qe|
+      qe.save_and_add_to_form
+      qe.can_receive_value_set?.should be_true
+    end
+  end
+
+  it "cannot receive value sets if it already has one" do
+    with_question_element do |qe|
+      qe.save_and_add_to_form
+      value_set = Factory.build(:value_set_element)
+      value_set.parent_element_id = qe.id
+      value_set.save_and_add_to_form
+      qe.can_receive_value_set?.should_not be_true
+    end
+  end
+
   describe 'as a new record with no parent_element_id or form_id' do
     it 'should be valid as a new question for the library' do
       @question_element.question_element_state.should == :copying_question_to_library

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -25,6 +25,10 @@ describe FormElement do
 
   it "should be valid" do
     @form_element.should be_valid
+  end
+
+  it "cannot receive value sets" do
+    @form_element.can_receive_value_set?.should_not be_true
   end
 
   it "should count children by type" do
@@ -228,7 +232,7 @@ describe "FormElement working with the library" do
 
       to_element.children.size.should eql(0)
 
-      to_element.copy_from_library(@question_element_with_value_set)
+      to_element.copy_from_library(@question_element_with_value_set).should be_true
 
       to_element.children.size.should eql(1)
       copied_question_element = to_element.children[0]
@@ -304,8 +308,12 @@ describe "FormElement working with the library" do
     end
 
     it "shouldn't copy anything if the to-element is a question element that already has a value set" do
-      question= Question.create({:question_text => "Que?", :data_type => "drop_down", :short_name => "que_q" })
-      to_element = QuestionElement.new({:parent_element_id => @form.investigator_view_elements_container.id, :question => question})
+      question= Question.create(:question_text => "Que?",
+                                :data_type => "drop_down",
+                                :short_name => "que_q" )
+      container = @form.investigator_view_elements_container
+      to_element = QuestionElement.new(:parent_element_id => container.id,
+                                       :question => question)
       to_element.save_and_add_to_form.should_not be_nil
 
       to_element.copy_from_library(@independent_value_set).should_not be_nil
@@ -494,9 +502,8 @@ describe "when executing an operation that requires form element structure valid
     end
 
     it "copies question on question elements" do
-      result = @question_element.copy_children(@question_element,
-                                               :tree_id => @next_id,
-                                               :is_template => true)
+      result = @question_element.copy_with_children(:tree_id => @next_id,
+                                                    :is_template => true)
       assert_element_in_tree(result, @next_id)
       assert_element_shallow_copy(@question_element, result)
       assert_question_is_a_copy(@question_element.question, result.question)
@@ -504,9 +511,8 @@ describe "when executing an operation that requires form element structure valid
 
     describe "children" do
       it "returns a copy of the subtree rooted at self" do
-        result = @container.copy_children(@container,
-                                          :tree_id => @next_id,
-                                          :is_template => true)
+        result = @container.copy_with_children(:tree_id => @next_id,
+                                               :is_template => true)
         assert_element_in_tree(result, @next_id)
         assert_element_shallow_copy(@container, result)
         assert_element_deep_copy(@container, result)
@@ -514,19 +520,17 @@ describe "when executing an operation that requires form element structure valid
 
       describe "and passing a parent" do
         it "assigns the copy to the parent" do
-          result = @question_element.copy_children(@question_element,
-                                                   :parent => @group_element,
-                                                   :tree_id => @group_element.tree_id,
-                                                   :is_template => true)
+          result = @question_element.copy_with_children(:parent => @group_element,
+                                                        :tree_id => @group_element.tree_id,
+                                                        :is_template => true)
           result.parent.should == @group_element
         end
 
         it "raises an error if tree_id doesn't match parent's tree_id" do
           lambda do
-            @question_element.copy_children(@question_element,
-                                            :parent => @group_element,
-                                            :tree_id => @tree_id,
-                                            :is_template => true)
+            @question_element.copy_with_children(:parent => @group_element,
+                                                 :tree_id => @tree_id,
+                                                 :is_template => true)
           end.should raise_error("tree_id must match the parent element's tree_id, if parent element is not nil")
         end
       end
@@ -549,9 +553,8 @@ describe "when executing an operation that requires form element structure valid
         blank = Factory.build(:value_element, :name => nil)
         blank.parent_element_id = vs.id
         blank.save_and_add_to_form.should be_true
-        radio_question.copy_children(radio_question,
-                                     :tree_id =>@next_id,
-                                     :is_template => true).should be_true
+        radio_question.copy_with_children(:tree_id =>@next_id,
+                                          :is_template => true).should be_true
       end
     end
 
@@ -561,9 +564,8 @@ describe "when executing an operation that requires form element structure valid
         lq.parent_element_id = @group_element.id
         lq.save_and_add_to_form
         container = @form.investigator_view_elements_container
-        result = container.copy_children(@group_element,
-                                         :form_id => @form.id,
-                                         :is_template => false)
+        result = @group_element.copy_with_children(:form_id => @form.id,
+                                                   :is_template => false)
         result.children.any? do |e|
           e.question.try(:question_text) == lq.question.question_text
         end.should be_true
@@ -574,9 +576,8 @@ describe "when executing an operation that requires form element structure valid
         vs.parent_element_id = @group_element.id
         vs.save_and_add_to_form
         container = @form.investigator_view_elements_container
-        result = container.copy_children(@group_element,
-                                         :form_id => @form.id,
-                                         :is_template => false)
+        result = @group_element.copy_with_children(:form_id => @form.id,
+                                                   :is_template => false)
         result.children.should == []
       end
     end

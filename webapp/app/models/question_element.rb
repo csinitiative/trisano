@@ -157,9 +157,18 @@ class QuestionElement < FormElement
     dupe
   end
 
-  def copy_children(node_to_copy, options)
+  def copy_with_children(options)
     options[:question_element] = self
-    super(node_to_copy, options)
+    super(options)
+  end
+
+  def can_receive_value_set?
+    begin
+      not children.any? { |child| child.is_a?(ValueSetElement) }
+    rescue Exception => ex
+      errors.add(:base, :parent_exception)
+      nil
+    end
   end
 
   private
