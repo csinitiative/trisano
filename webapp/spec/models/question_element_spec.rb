@@ -670,7 +670,6 @@ describe QuestionElement do
     end
 
     it "copies child questions, even if they are of a different data type" do
-      pending "need to check something"
       @question_element.question.data_type = 'radio_button'
       @question_element.save_and_add_to_form
       follow_up_element = Factory.build(:follow_up_element)

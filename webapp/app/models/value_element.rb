@@ -47,9 +47,17 @@ class ValueElement < FormElement
                                  :conditions => ['b.id = ?', parent_element_id])
   end
 
-  # when copying value sets, it's faster just to have the copy
-  # operation set the question, rather then try to look it up
   def question=(question)
     @question = question
+  end
+
+  # when copying value elements, it's faster just to have the copy
+  # operation set the question, rather then try to look it up
+  def copy(options = {})
+    returning super do |e|
+      if options[:question_element]
+        question = options[:question_element].question.dup
+      end
+    end
   end
 end

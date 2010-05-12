@@ -42,15 +42,15 @@ module FormElementsSpecHelper
         flunk msg
       end
     end
+  end
 
-    def assert_element_deep_copy(original, copy)
-      original.children.each_with_index do |child, i|
-        copy_child = copy.children[i]
-        assert_element_shallow_copy(child, copy_child)
-        assert_element_deep_copy(child, copy_child)
-        if child.is_a?(QuestionElement)
-          assert_question_is_a_copy(child.question, copy_child.question)
-        end
+  def assert_element_deep_copy(original, copy)
+    original.children.each_with_index do |child, i|
+      copy_child = copy.children[i]
+      assert_element_shallow_copy(child, copy_child)
+      assert_element_deep_copy(child, copy_child)
+      if child.is_a?(QuestionElement)
+        assert_question_is_a_copy(child.question, copy_child.question)
       end
     end
   end

@@ -147,19 +147,20 @@ class FormElement < ActiveRecord::Base
     end
   end
 
+  # use this instaead of cloning to spawn new nodes from old nodes
   def copy(options = {})
     options.symbolize_keys!
-    e = self.class.new
-    hash = {
-      'form_id' => options[:form_id],
-      'tree_id' => options[:tree_id],
-      'is_template' => options[:is_template],
-      'lft' => nil,
-      'rgt' => nil,
-      'parent_id' => nil
-    }
-    e.attributes = attributes.merge(hash)
-    e
+    returning self.class.new do |e|
+      hash = {
+        'form_id' => options[:form_id],
+        'tree_id' => options[:tree_id],
+        'is_template' => options[:is_template],
+        'lft' => nil,
+        'rgt' => nil,
+        'parent_id' => nil
+      }
+      e.attributes = attributes.merge(hash)
+    end
   end
 
   # Returns root node of the copied tree
@@ -169,9 +170,6 @@ class FormElement < ActiveRecord::Base
       raise("tree_id must match the parent element's tree_id, if parent element is not nil")
     end
     e = node_to_copy.copy(options)
-    if e.is_a?(ValueElement) && self.is_a?(QuestionElement)
-      e.question = self.question.dup
-    end
     e.save!
     options[:parent].add_child(e) if options[:parent]
     node_to_copy.children.each do |child|

@@ -152,9 +152,14 @@ class QuestionElement < FormElement
   end
 
   def copy(options = {})
-    dupe = super
+    dupe = super(options)
     dupe.question = question.clone
     dupe
+  end
+
+  def copy_children(node_to_copy, options)
+    options[:question_element] = self
+    super(node_to_copy, options)
   end
 
   private

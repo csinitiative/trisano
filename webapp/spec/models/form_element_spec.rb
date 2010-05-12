@@ -532,7 +532,6 @@ describe "when executing an operation that requires form element structure valid
       end
 
       it "copies deep nested value sets (when they are valid)" do
-        pending "A known failure, resulting in a bug. Refactoring to fix this"
         radio_question = Factory.build(:question_element)
         radio_question.question.data_type = 'radio_button'
         radio_question.parent_element_id = @form.investigator_view_elements_container.id
@@ -550,7 +549,9 @@ describe "when executing an operation that requires form element structure valid
         blank = Factory.build(:value_element, :name => nil)
         blank.parent_element_id = vs.id
         blank.save_and_add_to_form.should be_true
-        radio_question.copy_children(radio_question, nil, nil, @next_id, true).should be_true
+        radio_question.copy_children(radio_question,
+                                     :tree_id =>@next_id,
+                                     :is_template => true).should be_true
       end
     end
 
