@@ -21,6 +21,22 @@ Webrat.configure do |config|
   # config.application_environment = :test
 end
 
+require 'database_cleaner'
+
+# Adding our patched-in do-nothing strategy to the list of available strategies.
+#
+# See lib/database_cleaner/active_record/nothing.rb
+#
+# Getting around this: http://github.com/aslakhellesoy/cucumber-rails/issues/issue/9
+DatabaseCleaner::ActiveRecord.class_eval do
+  def self.available_strategies
+    %w[truncation transaction nothing]
+  end
+end
+
+DatabaseCleaner.strategy = :nothing
+Cucumber::Rails::World.use_transactional_fixtures = false
+
 require 'spec/expectations'
 require 'selenium'
 
