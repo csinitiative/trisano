@@ -65,11 +65,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% end %>
           <% core_element :other_data_1, f, :vert do -%>
             <%= f.label(:other_data_1) %>
-            <%= f.text_field(:other_data_1, :size => 30, :maxlength => 255) %>
+            <%= f.core_text_field(:other_data_1, {:size => 30, :maxlength => 255}, @event) %>
           <% end -%>
           <% core_element :other_data_2, f, :horiz do -%>
             <%= f.label(:other_data_2) %>
-            <%= f.text_field(:other_data_2, :size => 30, :maxlength => 255) %>
+            <%= f.core_text_field(:other_data_2, {:size => 30, :maxlength => 255}, @event) %>
           <% end -%>
         </fieldset>
       <% end %>
