@@ -18,8 +18,8 @@
 Then /^I should see all of the core field config questions$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
-    raise "Could not find before config for #{core_field.name}" if html_source.include?("#{core_field.name} before?") == false
-    raise "Could not find after config for #{core_field.name}" if html_source.include?("#{core_field.name} after?") == false
+    raise "Could not find before config for #{core_field.key}" if html_source.include?("#{core_field.key} before?") == false
+    raise "Could not find after config for #{core_field.key}" if html_source.include?("#{core_field.key} after?") == false
   end
 end
 
@@ -29,15 +29,15 @@ When /^I answer all core field config questions$/ do
   
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
-    answer_investigator_question(@browser, "#{core_field.name} before?", "#{core_field.name} before answer", html_source).should be_true
-    answer_investigator_question(@browser, "#{core_field.name} after?", "#{core_field.name} after answer", html_source).should be_true
+    answer_investigator_question(@browser, "#{core_field.key} before?", "#{core_field.key} before answer", html_source).should be_true
+    answer_investigator_question(@browser, "#{core_field.key} after?", "#{core_field.key} after answer", html_source).should be_true
   end
 end
 
 Then /^I should see all core field config answers$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
-    raise "Could not find before answer for #{core_field.name}" if html_source.include?("#{core_field.name} before answer") == false
-    raise "Could not find after answer for #{core_field.name}" if html_source.include?("#{core_field.name} after answer") == false
+    raise "Could not find before answer for #{core_field.key}" if html_source.include?("#{core_field.key} before answer") == false
+    raise "Could not find after answer for #{core_field.key}" if html_source.include?("#{core_field.key} after answer") == false
   end
 end

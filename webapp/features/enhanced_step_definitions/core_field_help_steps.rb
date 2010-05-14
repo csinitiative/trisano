@@ -33,10 +33,10 @@ Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_
   
   CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
     # Ignore lab result fields in show mode
-    unless (mode == "show" && core_field.name.include?("Lab results |"))
-      #@browser.click "//a[@id='add_reporting_agency_link']" if core_field.name == 'Reporting agency'
-      help_text = "#{core_field.name} help text"
-      raise "Could not find help text for #{core_field.name}" if html_source.include?(help_text) == false
+    unless (mode == "show" && core_field.key.include?("[labs]"))
+      #@browser.click "//a[@id='add_reporting_agency_link']" if core_field.key == 'Reporting agency'
+      help_text = "#{core_field.key} help text"
+      raise "Could not find help text for #{core_field.key}" if html_source.include?(help_text) == false
 
       # Debt: Dig into why this isn't working. The tooltip is visible as the test runs, but the
       # test to see that the tool tip is visible doesn't find the span as it should

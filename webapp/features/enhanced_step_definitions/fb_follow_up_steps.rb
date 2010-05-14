@@ -18,7 +18,7 @@
 Given /^I don't see any of the core follow up questions$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    raise "Should not not find #{core_field.name}" if html_source.include?("#{core_field.name} follow up?") == true
+    raise "Should not not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
   end
 end
 
@@ -51,21 +51,21 @@ Then /^I should see all of the core follow up questions$/ do
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    raise "Could not find #{core_field.name}" if html_source.include?("#{core_field.name} follow up?") == false
+    raise "Could not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == false
   end
 end
 
 When /^I answer all core follow up questions$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    answer_investigator_question(@browser, "#{core_field.name} follow up?", "#{core_field.name} answer", html_source)
+    answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
   end
 end
 
 Then /^I should see all follow up answers$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    raise "Could not find #{core_field.name} answer" if html_source.include?("#{core_field.name} answer") == false
+    raise "Could not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == false
   end
 end
 
@@ -102,13 +102,13 @@ Then /^I should not see any of the core follow up questions$/ do
   sleep 3 # Wait a sec or three for all of the core follow ups to disappear
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    raise "Should not find #{core_field.name}" if html_source.include?("#{core_field.name} follow up?") == true
+    raise "Should not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
   end
 end
 
 Then /^I should not see any follow up answers$/ do
   html_source = @browser.get_html_source
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
-    raise "Should not find #{core_field.name} answer" if html_source.include?("#{core_field.name} answer") == true
+    raise "Should not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == true
   end
 end

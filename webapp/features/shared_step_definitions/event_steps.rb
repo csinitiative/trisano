@@ -102,7 +102,7 @@ end
 
 Given /^all core field configs for a (.+) have help text$/ do |event_type|
   CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
-    core_field.help_text = core_field.name << " help text"
+    core_field.help_text = core_field.key << " help text"
     core_field.save!
   end
 end

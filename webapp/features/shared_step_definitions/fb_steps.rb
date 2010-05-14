@@ -157,7 +157,7 @@ Given /^that form has core follow ups configured for all core fields$/ do
       question_element = QuestionElement.new({
           :parent_element_id => follow_up_element.id,
           :question_attributes => {
-            :question_text => "#{core_field.name} follow up?",
+            :question_text => "#{core_field.key} follow up?",
             :data_type => "single_line_text",
             :short_name => Digest::MD5::hexdigest(core_field.name)
           }
@@ -183,9 +183,9 @@ Given /^that form has core field configs configured for all core fields$/ do
       before_question_element = QuestionElement.new({
           :parent_element_id => core_field_config.children[0].id,
           :question_attributes => {
-            :question_text => "#{core_field.name} before?",
+            :question_text => "#{core_field.key} before?",
             :data_type => "single_line_text",
-            :short_name => Digest::MD5::hexdigest(core_field.name + "before")
+            :short_name => Digest::MD5::hexdigest(core_field.key + "before")
           }
         })
       before_question_element.save_and_add_to_form
@@ -194,9 +194,9 @@ Given /^that form has core field configs configured for all core fields$/ do
       after_question_element = QuestionElement.new({
           :parent_element_id => core_field_config.children[1].id,
           :question_attributes => {
-            :question_text => "#{core_field.name} after?",
+            :question_text => "#{core_field.key} after?",
             :data_type => "single_line_text",
-            :short_name => Digest::MD5::hexdigest(core_field.name + "after")
+            :short_name => Digest::MD5::hexdigest(core_field.key + "after")
           }
         })
       after_question_element.save_and_add_to_form

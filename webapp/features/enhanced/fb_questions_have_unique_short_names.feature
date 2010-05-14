@@ -10,7 +10,7 @@ Feature: All questions on a form must have a unique short name
     And a Morbidity event form exists
     When I go to the Builder interface for the form
     And I try to add a question to the default section without providing a short name
-    Then I should be presented with the error message "Question short name can't be blank"
+    Then I should be presented with the error message "Short name can't be blank"
 
   @clean_forms @clean_form_elements
   Scenario: Creating a new question with a short name
@@ -57,7 +57,7 @@ Feature: All questions on a form must have a unique short name
     And the library contains a question with the same short name
     When I go to the Builder interface for the form
     And I try to add the question from the library
-    Then I should be presented with the error message "Unable to copy element to form."
+    Then I should be presented with the error message "The short name entered is already in use on this form. Please choose another."
 
   @clean_forms @clean_form_elements
   Scenario: Creating a new question on an already published form

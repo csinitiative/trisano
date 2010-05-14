@@ -531,7 +531,7 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[outbreak_name]
@@ -916,7 +916,7 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[address][district]
@@ -924,28 +924,28 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][area_code]
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][phone_number]
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][extension]
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: multi_select
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][place][place_type]
@@ -1002,7 +1002,7 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[address][district]
@@ -1012,6 +1012,7 @@
   can_follow_up: true
   field_type: single_line_text
   event_type: contact_event
+  field_type: numeric
   key: contact_event[interested_party][person_entity][person][approximate_age_no_birthday]
 
 - help_text:
@@ -1030,7 +1031,7 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   field_type: multi_select
   event_type: contact_event
   key: contact_event[interested_party][person_entity][race_ids]

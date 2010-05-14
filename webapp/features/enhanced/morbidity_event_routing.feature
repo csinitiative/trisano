@@ -13,6 +13,6 @@ Feature: Routing events through a set workflow.
     And I click the "Reopen" radio
     And I wait for the page to load
     
-    Then the event state is "Reopened By State"
+    Then the event state is "Reopened by State"
 
 

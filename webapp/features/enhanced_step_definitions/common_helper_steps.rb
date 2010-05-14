@@ -92,7 +92,7 @@ Then /^I should see "([^\"]*)"$/ do |text|
 end
 
 Then /^I should not see "([^\"]*)"$/ do |text|
-  @browser.get_html_source.should_not =~ /#{text}/i
+  @browser.get_body_text.should_not =~ /#{text}/i
 end
 
 Before('@clean') do
