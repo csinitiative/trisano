@@ -782,4 +782,18 @@ module FormsHelper
   def replacement_field_name(question)
     "replacements[#{question.id}][short_name]"
   end
+
+  def short_name_collision_error_message(compare_results)
+    contents = ''
+    contents << content_tag(:h2, t(:fix_short_names))
+    contents << content_tag(:p,  t(:question_short_names_in_use))
+    short_name_fails = compare_results.inject(0) do |sum, q|
+      sum += 1 if q.collides
+      sum
+    end
+    contents << content_tag(:ul, "<li>#{t(:x_short_names_need_fixed, :count => short_name_fails)}</li>")
+
+    content_tag(:div, contents, :id => 'errorExplanation', :name => 'errorExplanation')
+  end
+
 end

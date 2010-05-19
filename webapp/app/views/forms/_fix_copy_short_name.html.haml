@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %p
-  =error_messages_for('compare_results', :object => @compare_results)
+  =short_name_collision_error_message(@compare_results)
 
   -remote_form_for_fixing_short_names(@form_element) do
     =hidden_field_tag(:reference_element_id, @form_element.id)
