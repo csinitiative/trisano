@@ -92,6 +92,37 @@ describe FormsHelper do
     it "should select the morbidity event" do
       @element.css('option[selected]').text.should == 'Morbidity Event'
     end
+  end
+
+  describe "replacement short name fields" do
+    before do
+      @question = Factory.create(:question, :data_type => 'single_line_text')
+      @question.stubs(:collides).returns(nil)
+    end
+
+    it "renders a label and a text field" do
+      result = helper.replacement_short_name_fields(@question)
+      element = parse_html(result)
+      html_id   = "replacements_#{@question.id}_short_name"
+      html_name = "replacements[#{@question.id}][short_name]"
+      element.css("label[for='#{html_id}']").size.should == 1
+      element.css("input[id='#{html_id}'][name='#{html_name}']").size.should == 1
+      element.css("div[class='fieldWithErrors']").size.should == 0
+    end
+
+    it "renders collisions w/ label and text field wrapped in error div" do
+      @question.stubs(:collides).returns("t")
+      result = helper.replacement_short_name_fields(@question)
+      element = parse_html(result)
+      error_fields = element.css("div[class='fieldWithErrors']")
+      error_fields.size.should == 1
+      div = error_fields.first
+
+      html_id   = "replacements_#{@question.id}_short_name"
+      html_name = "replacements[#{@question.id}][short_name]"
+      div.css("label[for='#{html_id}']").size.should == 1
+      div.css("input[id='#{html_id}'][name='#{html_name}']").size.should == 1
+    end
 
   end
 end

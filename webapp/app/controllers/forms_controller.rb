@@ -260,18 +260,20 @@ class FormsController < AdminController
   def from_library
     @form_element = FormElement.find(params[:reference_element_id])
     @lib_element = FormElement.find(params[:lib_element_id])
-    if params[:short_name]
-      @lib_element.question.short_name = params[:short_name]
-    end
 
-    if !@lib_element.can_copy_to?(@form_element.id)
-      render(:template => 'forms/fix_library_copy')
-    elsif @form_element.copy_from_library(@lib_element)
-      @form = Form.find(@form_element.form_id)
-    else
+    begin
+      @compare_results = @lib_element.compare_short_names(@form_element, params[:replacements])
+      if @compare_results.any?(&:collides)
+        render(:template => 'forms/fix_library_copy')
+      else
+        @form_element.copy_from_library(@lib_element, params)
+      end
+    rescue FormElement::IllegalCopyOperation, FormElement::InvalidFormStructure, ActiveRecord::RecordInvalid
       @rjs_errors = @form_element.errors
       flash[:error] = t("element_copy_failed")
-      render :template => 'rjs-error'
+      render(:template => 'rjs-error')
+    else
+      @form = Form.find(@form_element.form_id)
     end
   end
 

@@ -872,6 +872,10 @@ en:
   fix_short_names: "Fix short names"
   applies_to_x_events: "Applies to {{x}}"
   x_elements_with_core_fields: "{{x}} with ties to core fields"
+  x_short_names_need_fixed:
+    one: 1 question needs fixed
+    other: "{{count}} questions need fixed"
+  question_short_names_in_use: "Some of the questions you are copying have short names alreay in use"
   push: "Push"
   deactivate: "Deactivate"
   form: "Form"

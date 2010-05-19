@@ -530,8 +530,6 @@ module FormsHelper
     ]
   end
 
-  private
-
   def include_in_cdc_export_link(element)
     link = link_to_function(t('add_to_cdc_export'), nil, :id => "cdc-export-#{h(element.id.to_s)}") do |page|
       page.toggle("cdc-export-for-#{h(element.id)}")
@@ -764,4 +762,38 @@ module FormsHelper
     }
     form_remote_tag(options, &block)
   end
+
+  def replacement_short_name_fields(question)
+    returning [] do |result|
+      result << (question.collides ? "<div class='fieldWithErrors'>" : "<span>")
+      result << label_tag(replacement_field_id(question),
+                          question.question_text)
+      result << text_field_tag(replacement_field_name(question),
+                               question.short_name,
+                               :id => replacement_field_id(question))
+      result << (question.collides ? "</div>" : "</span>")
+    end.join("\n")
+  end
+
+  def replacement_field_id(question)
+    "replacements_#{question.id}_short_name"
+  end
+
+  def replacement_field_name(question)
+    "replacements[#{question.id}][short_name]"
+  end
+
+  def short_name_collision_error_message(compare_results)
+    contents = ''
+    contents << content_tag(:h2, t(:fix_short_names))
+    contents << content_tag(:p,  t(:question_short_names_in_use))
+    short_name_fails = compare_results.inject(0) do |sum, q|
+      sum += 1 if q.collides
+      sum
+    end
+    contents << content_tag(:ul, "<li>#{t(:x_short_names_need_fixed, :count => short_name_fails)}</li>")
+
+    content_tag(:div, contents, :id => 'errorExplanation', :name => 'errorExplanation')
+  end
+
 end

@@ -116,13 +116,4 @@ describe ValueSetElement do
     end
   end
 
-  describe "when copying from library" do
-
-    it "can always be copied to reference element" do
-      @value_set_element.save_and_add_to_form
-      @lib_copy = @value_set_element.add_to_library
-      @lib_copy.can_copy_to?(@value_set_element.parent_element_id).should be_true
-    end
-
-  end
 end

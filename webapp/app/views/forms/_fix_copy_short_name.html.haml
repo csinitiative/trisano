@@ -14,14 +14,13 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %p
-  =error_messages_for('question', :object => @lib_element.speculative_copy(@form_element.id))
+  =short_name_collision_error_message(@compare_results)
 
   -remote_form_for_fixing_short_names(@form_element) do
-    %span
-      =label_tag(:short_name)
-      =text_field_tag(:short_name, @lib_element.question.short_name)
-      =hidden_field_tag(:reference_element_id, @form_element.id)
-      =hidden_field_tag(:lib_element_id, @lib_element.id)
+    =hidden_field_tag(:reference_element_id, @form_element.id)
+    =hidden_field_tag(:lib_element_id, @lib_element.id)
+    -@compare_results.each do |q|
+      =replacement_short_name_fields(q)
     %span
       %label
         &nbsp;

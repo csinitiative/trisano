@@ -718,12 +718,109 @@ describe QuestionElement do
   end
 
   describe "copying from element library" do
+    include LibrarySpecHelper
+
     it "should check for short name uniqueness" do
       with_question_element do |question_element|
         question_element.save_and_add_to_form.should_not be_nil
         library_entry = question_element.add_to_library
-        library_entry.can_copy_to?(question_element.parent_element_id).should be_false
+        lambda do
+          question_element.parent.copy_from_library(library_entry)
+        end.should raise_error(ActiveRecord::RecordInvalid)
       end
+    end
+
+    it "checks short name uniqueness in nested questions" do
+      with_question_element do |form_ques|
+        lib_ques = library_question do
+          library_follow_up do
+            returning library_question do
+              form_ques.question.short_name = last.question.short_name
+            end
+          end
+        end
+        form_ques.save_and_add_to_form
+        lambda do
+          form_ques.parent.copy_from_library(lib_ques.first)
+        end.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    it "corrects short name collisions on copy" do
+      with_question_element do |form_ques|
+        lib_ques = library_question do
+          library_follow_up do
+            returning library_question do
+              form_ques.question.short_name = last.question.short_name
+            end
+          end
+        end
+        form_ques.save_and_add_to_form
+        names_hash = { lib_ques.last.question.id.to_s => { 'short_name'  => '-1a-safe_short_na,me' } }
+        form_ques.parent.copy_from_library(lib_ques.first, :replacements => names_hash).should be_true
+      end
+    end
+
+    describe "comparing question short names" do
+      it "finds collisions in deep nested lib questions" do
+        with_question_element do |fq|
+          lib = library_question do
+            library_follow_up do
+              returning library_question do
+                fq.question.short_name = last.question.short_name
+              end
+            end
+          end
+          fq.save_and_add_to_form
+          questions = lib.first.compare_short_names(fq)
+          questions.size.should == 2
+          questions[0].collides.should be_nil
+          questions[1].collides.should be_true
+        end
+      end
+
+      it "considers user changes when looking for collisions" do
+        with_question_element do |fq|
+          lib = library_question do
+            library_follow_up do
+              returning library_question do
+                fq.question.short_name = last.question.short_name
+              end
+            end
+          end
+          fq.save_and_add_to_form
+          a_safe_short_name = fq.question.short_name + '-(new)'
+          user_updates_hash = { lib.last.question.id.to_s => {
+              'short_name' => a_safe_short_name } }
+          questions = lib.first.compare_short_names(fq, user_updates_hash)
+          questions.size.should == 2
+          questions[0].collides.should be_nil
+          questions[1].collides.should be_nil
+          lib.last.question(true).short_name != a_safe_short_name
+        end
+      end
+
+      it "ensures that user changes don't collide w/ each other" do
+        with_question_element do |fq|
+          lib = library_question do
+            library_follow_up do
+              returning library_question do
+                fq.question.short_name = last.question.short_name
+              end
+            end
+          end
+          fq.save_and_add_to_form
+          a_safe_short_name = fq.question.short_name + '-(new)'
+          user_updates_hash = {
+            lib.last.question.id.to_s =>  { 'short_name' => a_safe_short_name },
+            lib.first.question.id.to_s => { 'short_name' => a_safe_short_name } }
+          questions = lib.first.compare_short_names(fq, user_updates_hash)
+          questions.size.should == 2
+          questions[0].collides.should be_nil
+          questions[1].collides.should be_true
+        end
+      end
+
     end
   end
 end
