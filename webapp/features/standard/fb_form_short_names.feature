@@ -68,5 +68,5 @@ Feature: Active forms must have unique short names
     And I already have a published form
 
     When I navigate to the form edit view
-    
+
     Then I should not be able to fill in the short name field

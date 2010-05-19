@@ -89,6 +89,7 @@ Rails::Initializer.run do |config|
     require "active_record/errors.rb"
     require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
     require "active_record/scopes.rb"
+    require "active_record/rollback_transactions.rb"
     require "attachment_fu/attachment_fu_validation_patch.rb"
     require "mmwr/mmwr.rb"
     require "blankable.rb"

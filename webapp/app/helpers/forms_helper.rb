@@ -530,8 +530,6 @@ module FormsHelper
     ]
   end
 
-  private
-
   def include_in_cdc_export_link(element)
     link = link_to_function(t('add_to_cdc_export'), nil, :id => "cdc-export-#{h(element.id.to_s)}") do |page|
       page.toggle("cdc-export-for-#{h(element.id)}")
@@ -763,5 +761,25 @@ module FormsHelper
       :loading => "$('submit_short_name_fix_#{reference_element.id}').disable()"
     }
     form_remote_tag(options, &block)
+  end
+
+  def replacement_short_name_fields(question)
+    returning [] do |result|
+      result << (question.collides ? "<div class='fieldWithErrors'>" : "<span>")
+      result << label_tag(replacement_field_id(question),
+                          question.question_text)
+      result << text_field_tag(replacement_field_name(question),
+                               question.short_name,
+                               :id => replacement_field_id(question))
+      result << (question.collides ? "</div>" : "</span>")
+    end.join("\n")
+  end
+
+  def replacement_field_id(question)
+    "replacements_#{question.id}_short_name"
+  end
+
+  def replacement_field_name(question)
+    "replacements[#{question.id}][short_name]"
   end
 end

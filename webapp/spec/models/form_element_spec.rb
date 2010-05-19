@@ -218,7 +218,9 @@ describe "FormElement working with the library" do
       to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
       to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
-      to_element.copy_from_library(@group_element).should be_nil
+      lambda do
+        to_element.copy_from_library(@group_element)
+      end.should raise_error(FormElement::InvalidFormStructure)
       to_element.errors.should_not be_empty
     end
 
@@ -262,7 +264,9 @@ describe "FormElement working with the library" do
           :short_name => "how" })
       existing_question.save_and_add_to_form.should_not be_nil
       to_element.children.size.should eql(1)
-      to_element.copy_from_library(@question_element_with_value_set).should be_nil
+      lambda do
+        to_element.copy_from_library(@question_element_with_value_set)
+      end.should raise_error(ActiveRecord::RecordInvalid)
       to_element.children.size.should eql(1)
     end
 
@@ -270,7 +274,9 @@ describe "FormElement working with the library" do
       to_element = SectionElement.new(:name => "Section", :parent_element_id => @form.investigator_view_elements_container.id)
       to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
-      to_element.copy_from_library(@question_element_with_value_set).should be_nil
+      lambda do
+        to_element.copy_from_library(@question_element_with_value_set)
+      end.should raise_error(FormElement::InvalidFormStructure)
       to_element.errors.should_not be_empty
     end
 
@@ -303,7 +309,9 @@ describe "FormElement working with the library" do
       to_element.save_and_add_to_form.should_not be_nil
       invalidate_form(@form)
 
-      to_element.copy_from_library(@independent_value_set).should be_nil
+      lambda do
+        to_element.copy_from_library(@independent_value_set)
+      end.should raise_error(FormElement::InvalidFormStructure)
       to_element.errors.should_not be_empty
     end
 
@@ -319,7 +327,9 @@ describe "FormElement working with the library" do
       to_element.copy_from_library(@independent_value_set).should_not be_nil
       to_element.errors.should be_empty
 
-      to_element.copy_from_library(@independent_value_set)
+      lambda do
+        to_element.copy_from_library(@independent_value_set)
+      end.should raise_error(FormElement::IllegalCopyOperation)
       to_element.errors.should_not be_empty
     end
 

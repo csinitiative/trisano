@@ -132,28 +132,14 @@ class QuestionElement < FormElement
     return true
   end
 
-  # uses speculative_copy to determine if a question can be copied
-  # into a form.
-  def can_copy_to?(reference_element_id)
-    speculative_copy(reference_element_id).valid?
-  end
-
-  # returns a copy of the question, as though it were a new child of
-  # reference_element.
-  def speculative_copy(reference_element_id)
-    if speculative_cache.has_key?(reference_element_id)
-      speculative_cache[reference_element_id]
-    else
-      speculative_copy = self.clone
-      speculative_copy.question = self.question.clone
-      speculative_copy.parent_element_id = reference_element_id
-      speculative_cache[reference_element_id] = speculative_copy
-    end
-  end
-
   def copy(options = {})
     dupe = super(options)
     dupe.question = question.clone
+    if options[:replacements].try(:[], question.id.to_s)
+      options[:replacements][question.id.to_s].each do |k, v|
+        dupe.question.send(k + "=", v)
+      end
+    end
     dupe
   end
 
@@ -171,11 +157,41 @@ class QuestionElement < FormElement
     end
   end
 
-  private
-
-  def speculative_cache
-    @speculative_cache ||= {}
+  # return all the questions for self, w/ collisions marked
+  def compare_short_names(other_tree, replacements=nil)
+    replacements ||= {}
+    returning [] do |results|
+      in_rolled_back_transaction do
+        unless replacements.empty?
+          Question.update(replacements.keys, replacements.values)
+        end
+        results << Question.find_by_sql([<<-SQL, other_tree.tree_id, tree_id, tree_id, tree_id])
+          SELECT a.id, a.short_name, a.question_text, fi.collides, b.lft
+            FROM questions a
+            JOIN form_elements b ON a.form_element_id = b.id
+            LEFT JOIN (SELECT true as collides, i.short_name, i.id
+                         FROM questions i
+                         JOIN form_elements f ON i.form_element_id = f.id
+                        WHERE f.tree_id = ?) as fi
+                   ON fi.short_name = a.short_name
+           WHERE b.tree_id = ?
+          UNION
+          SELECT c.id, c.short_name, c.question_text, jg.collides, d.lft
+            FROM questions c
+            JOIN form_elements d ON c.form_element_id = d.id
+            LEFT JOIN (SELECT true as collides, j.short_name, j.id
+                         FROM questions j
+                         JOIN form_elements g ON j.form_element_id = g.id
+                        WHERE g.tree_id = ?) as jg
+                   ON c.short_name = jg.short_name AND c.id > jg.id
+           WHERE d.tree_id = ?
+          ORDER BY lft, collides
+        SQL
+      end
+    end.flatten.uniq
   end
+
+  private
 
   def validate_question_short_name_uniqueness
     conditions = []

@@ -509,18 +509,26 @@ describe FormsController do
       @form_element = Factory.build(:form_element)
       @form_element.stubs(:form_id).returns("1")
       @form_element.stubs(:can_copy_to?).returns(true)
-      FormElement.stubs(:find).returns(@form_element)
+      @lib_element = Factory.build(:question_element)
+      @lib_element.stubs(:compare_short_names).returns([])
+      FormElement.stubs(:find).with("1").returns(@form_element)
+      FormElement.stubs(:find).with("2").returns(@lib_element)
       Form.stubs(:find).returns(@form)
+      @expected_params =  {
+        'reference_element_id' => '1',
+        'lib_element_id' => '2',
+        'action' => 'from_library',
+        'controller' => 'forms' }
     end
 
     def do_post
-      post :from_library, :reference_element_id => "1", :lib_element_id => "2"
+      post :from_library, :reference_element_id => '1', :lib_element_id => '2'
     end
 
     it "should render forms/from_library partial on success with the investigator view branch of the form tree" do
       @ancestors = [nil, InvestigatorViewElementContainer.new]
       @form_element.stubs(:ancestors).returns(@ancestors)
-      @form_element.stubs(:copy_from_library).with(@form_element).returns(true)
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).returns(true)
       do_post
       response.should render_template('forms/from_library')
     end
@@ -528,19 +536,38 @@ describe FormsController do
     it "should render forms/from_library on success with the core view branch of the form tree" do
       @ancestors = [nil, CoreViewElementContainer.new]
       @form_element.stubs(:ancestors).returns(@ancestors)
-      @form_element.stubs(:copy_from_library).with(@form_element).returns(true)
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).returns(true)
       do_post
       response.should render_template('forms/from_library')
     end
 
-    it "should render rjs error template on failure" do
-      @form_element.stubs(:copy_from_library).with(@form_element).returns(false)
+    it "should render rjs error template on invalid form structure" do
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).raises(FormElement::InvalidFormStructure)
       do_post
       response.should render_template('rjs-error')
     end
 
+    it "should render rjs error template on illegal copy operation" do
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).raises(FormElement::IllegalCopyOperation)
+      do_post
+      response.should render_template('rjs-error')
+    end
+
+    it "should render rjs error template on record invalid" do
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).raises(ActiveRecord::RecordInvalid, @lib_element)
+      do_post
+      response.should render_template('rjs-error')
+    end
+
+    it "should fail outright on other runtime exceptions" do
+      @form_element.stubs(:copy_from_library).with(@lib_element, @expected_params).raises
+      lambda { do_post }.should raise_error
+    end
+
     it "should render fix library copy template on short name collision" do
-      @form_element.stubs(:can_copy_to?).returns(false)
+      question = Factory.build(:question)
+      question.stubs(:collides).returns("t")
+      @lib_element.stubs(:compare_short_names).returns([question])
       do_post
       response.should render_template('forms/fix_library_copy')
     end

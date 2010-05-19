@@ -34,6 +34,9 @@ class FormElement < ActiveRecord::Base
 
   @@export_lookup_separator = "|||"
 
+  class InvalidFormStructure < ActiveRecord::ActiveRecordError; end
+  class IllegalCopyOperation < ActiveRecord::ActiveRecordError; end
+
   # Generic save_and_add_to_form. Sub-classes with special needs override. Block can be used to add other
   # post-saving activities in the transaction
   def save_and_add_to_form
@@ -118,31 +121,24 @@ class FormElement < ActiveRecord::Base
     end
   end
 
-  def copy_from_library(lib_element_or_id)
+  def copy_from_library(library_element, options = {})
     begin
       transaction do
-        library_element = fetch_or_return_form_element(lib_element_or_id)
         if (library_element.class.name == "ValueSetElement" && !can_receive_value_set?)
           errors.add(:base, :failed_copy)
-          raise
+          raise IllegalCopyOperation
         end
-        add_child(library_element.copy_with_children(:form_id => form_id,
-                                                     :tree_id => tree_id,
-                                                     :is_template => false))
+        options = {
+          :form_id => form_id,
+          :tree_id => tree_id,
+          :is_template => false }.merge(options)
+        add_child(library_element.copy_with_children(options))
         validate_form_structure
         return true
       end
     rescue Exception => ex
       self.errors.add(:base, ex.message)
-      return nil
-    end
-  end
-
-  def fetch_or_return_form_element(element_or_id)
-    if element_or_id.is_a?(FormElement)
-      element_or_id
-    else
-      FormElement.find(element_or_id)
+      raise
     end
   end
 
@@ -181,6 +177,12 @@ class FormElement < ActiveRecord::Base
     end
   end
 
+  # most form elements don't have a short name, so don't bother w/ db
+  # stoofs
+  def compare_short_names(other_tree_element, options={})
+    []
+  end
+
   def self.filter_library(options)
     if options[:filter_by].blank?
       FormElement.roots(:conditions => ["form_id IS NULL"])
@@ -208,7 +210,7 @@ class FormElement < ActiveRecord::Base
       structural_errors.each do |error|
         errors.add(:base, error)
       end
-      raise errors.full_messages.join("\n")
+      raise InvalidFormStructure, errors.full_messages.join("\n")
     end
   end
 
