@@ -128,7 +128,10 @@ end
 Given /^I am not able to update events$/ do
   User.current_user.roles.each do |role|
     role.privileges.each do |priv|
-      priv.delete if priv.priv_name == 'update_event'
+      if priv.priv_name == 'update_event'
+        priv.privileges_roles.each { |pr| pr.delete }
+        priv.delete
+      end
     end
   end
 end

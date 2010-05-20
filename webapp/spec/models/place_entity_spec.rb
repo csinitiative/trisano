@@ -20,6 +20,9 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe PlaceEntity do
 
   before :all do
+    RoleMembership.delete_all
+    PrivilegesRole.delete_all
+    Place.delete_all
     PlaceEntity.delete_all
     Place.delete_all
     Code.delete_all
@@ -160,8 +163,10 @@ describe PlaceEntity do
 
   describe "using jurisdiction named scopes" do
     before do
-      PlaceEntity.delete_all
+      RoleMembership.delete_all
+      PrivilegesRole.delete_all
       Place.delete_all
+      PlaceEntity.delete_all
       Code.delete_all
     end
 
