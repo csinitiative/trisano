@@ -10,6 +10,7 @@
 # It's strongly recommended to check this file into your version control system.
 
 ActiveRecord::Schema.define(:version => 156) do
+  extend MigrationHelpers
 
   create_table "addresses", :force => true do |t|
     t.integer  "location_id"
@@ -507,7 +508,6 @@ ActiveRecord::Schema.define(:version => 156) do
   add_index (:people		, :first_name_soundex)
   add_index (:people		, :last_name_soundex)
 
-  
   create_table "people_races", :id => false, :force => true do |t|
     t.integer  "race_id"
     t.integer  "entity_id"
@@ -635,6 +635,75 @@ ActiveRecord::Schema.define(:version => 156) do
     t.datetime "updated_at"
     t.text     "event_view_settings"
   end
+
+# Add in some foreign keys
+  add_foreign_key :addresses, :county_id, :external_codes
+  add_foreign_key :addresses, :state_id,  :external_codes
+
+  add_foreign_key :disease_events, :died_id, :external_codes
+  add_foreign_key :disease_events, :disease_id, :diseases
+  add_foreign_key :disease_events, :event_id, :events
+  add_foreign_key :disease_events, :hospitalized_id, :external_codes
+
+  add_foreign_key :diseases_export_columns, :disease_id, :diseases
+  add_foreign_key :diseases_export_columns, :export_column_id, :export_columns
+
+  add_foreign_key :encounters, :event_id, :events
+
+  add_foreign_key :events, :age_type_id, :external_codes
+  add_foreign_key :events, :imported_from_id, :external_codes
+  add_foreign_key :events, :investigator_id, :users
+  add_foreign_key :events, :lhd_case_status_id, :external_codes
+  add_foreign_key :events, :state_case_status_id, :external_codes
+
+  add_foreign_key :export_columns, :export_name_id, :export_names
+
+  add_foreign_key :export_conversion_values, :export_column_id, :export_columns
+
+  add_foreign_key :hospitals_participations, :participation_id, :participations
+
+  add_foreign_key :lab_results, :participation_id, :participations
+  add_foreign_key :lab_results, :specimen_source_id, :external_codes
+
+  add_foreign_key :notes, :event_id, :events
+  add_foreign_key :notes, :user_id,  :users
+
+  add_foreign_key :participations, :participation_status_id, :codes
+  add_foreign_key :participations, :primary_entity_id,   :entities
+  add_foreign_key :participations, :secondary_entity_id, :entities
+  add_foreign_key :participations, :event_id, :events
+
+  add_foreign_key :participations_risk_factors, :day_care_association_id, :external_codes
+  add_foreign_key :participations_risk_factors, :food_handler_id, :external_codes
+  add_foreign_key :participations_risk_factors, :group_living_id, :external_codes
+  add_foreign_key :participations_risk_factors, :healthcare_worker_id, :external_codes
+  add_foreign_key :participations_risk_factors, :participation_id, :participations
+  add_foreign_key :participations_risk_factors, :pregnant_id, :external_codes
+
+  add_foreign_key :participations_treatments, :participation_id, :participations
+  add_foreign_key :participations_treatments, :treatment_given_yn_id, :external_codes
+  add_foreign_key :participations_treatments, :treatment_id, :treatments
+
+  add_foreign_key :people, :birth_gender_id, :external_codes
+  add_foreign_key :people, :ethnicity_id, :external_codes
+  add_foreign_key :people, :primary_language_id, :external_codes
+  add_foreign_key :people, :entity_id, :entities
+
+  add_foreign_key :places, :entity_id, :entities
+
+  add_foreign_key :privileges_roles, :jurisdiction_id, :entities
+  add_foreign_key :privileges_roles, :privilege_id, :privileges
+  add_foreign_key :privileges_roles, :role_id, :roles
+
+  add_foreign_key :role_memberships, :jurisdiction_id, :entities
+  add_foreign_key :role_memberships, :role_id, :roles
+  add_foreign_key :role_memberships, :user_id, :users
+
+  add_foreign_key :tasks, :event_id, :events
+  add_foreign_key :tasks, :user_id, :users
+
+  add_foreign_key :treatments, :treatment_type_id, :codes
+
 
 # Not everything can be done in ruby. Here's some of the ugliness.
   begin

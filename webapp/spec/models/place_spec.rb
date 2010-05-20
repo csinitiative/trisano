@@ -186,6 +186,8 @@ describe Place do
 
   describe "'Unassigned' is special for jurisdiction places" do
     before do
+      RoleMembership.delete_all
+      PrivilegesRole.delete_all
       Place.delete_all
       PlaceEntity.delete_all
       ActiveRecord::Base.connection.execute("DELETE FROM places_types;")
