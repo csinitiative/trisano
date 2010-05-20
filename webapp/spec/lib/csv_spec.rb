@@ -21,7 +21,7 @@ describe Export::Csv do
   include CsvSpecHelper
 
   before :all do
-    file = File.join(File.dirname(__FILE__), '../../db/defaults/csv_fields.yml')
+    file = File.join(File.dirname(__FILE__), '../../../plugins/trisano_en/config/misc/csv_fields.yml')
     CsvField.load_csv_fields(YAML.load_file(file))
   end
 

@@ -34,7 +34,7 @@ def csv_translation_files
 end
 
 def role_translation_files
-  %w(roles)
+  %w(en_roles)
 end
 
 namespace :trisano do
@@ -56,7 +56,7 @@ namespace :trisano do
 
   end
 
-  namespace :es do
+  namespace :en do
     desc "Run specs specific to the english plugin"
     Spec::Rake::SpecTask.new(:spec => [:spec_banner, 'db:test:prepare']) do |t|
       t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
