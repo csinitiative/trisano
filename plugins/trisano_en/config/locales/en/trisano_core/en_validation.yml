@@ -81,6 +81,8 @@ en:
               format: "must be 3 digits"
             extension:
               format: "must have 1 to 6 digits"
+            country_code:
+              format: "must have 1 to 3 digits"
 
         staged_message:
           attributes:

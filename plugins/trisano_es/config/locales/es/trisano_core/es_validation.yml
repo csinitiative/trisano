@@ -74,6 +74,8 @@ es:
               format: "debe ser de 3 dígitos"
             extension:
               format: "debe tener entre 1 y 6 dígitos"
+            country_code:
+              format: "debe tener entre 1 y 3 dígitos"
 
         staged_message:
           attributes:
