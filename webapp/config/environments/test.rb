@@ -26,3 +26,21 @@ config.gem 'factory_girl', :version => '>= 1.2.3'
 require 'logging'
 Logging.init :debug, :info, :warn, :error, :fatal
 DEFAULT_LOGGER = Logging::Logger['server']
+
+
+#make translation fail loud
+module Trisano
+  # We have to trick views, so changing the exception
+  class MissingTranslation < I18n::ArgumentError; end
+end
+
+I18n.instance_eval do
+  alias :translate_old :translate
+  def translate(key, options = {})
+    options = options.merge(:raise => true)
+    translate_old(key, options)
+  rescue I18n::MissingTranslationData => te
+    raise(Trisano::MissingTranslation, te.message)
+  end
+  alias :t :translate
+end
