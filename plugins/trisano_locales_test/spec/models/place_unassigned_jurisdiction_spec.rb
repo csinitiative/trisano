@@ -21,8 +21,11 @@ describe Place, "when working with the unassigned jurisdiction" do
   include PlaceSpecHelper
 
   before :all do
-    PlaceEntity.delete_all
+    Participation.delete_all
+    RoleMembership.delete_all
+    PrivilegesRole.delete_all
     Place.delete_all
+    PlaceEntity.delete_all
   end
 
   after :all do

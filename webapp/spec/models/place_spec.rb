@@ -186,6 +186,7 @@ describe Place do
 
   describe "'Unassigned' is special for jurisdiction places" do
     before do
+      Participation.delete_all
       RoleMembership.delete_all
       PrivilegesRole.delete_all
       Place.delete_all
