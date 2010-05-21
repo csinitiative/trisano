@@ -57,17 +57,6 @@ namespace :trisano do
   end
 
   namespace :en do
-    desc "Run specs specific to the english plugin"
-    Spec::Rake::SpecTask.new(:spec => [:spec_banner, 'db:test:prepare']) do |t|
-      t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
-      t.spec_files = FileList[File.join(File.dirname(__FILE__), '..', 'spec')]
-    end
-
-    task :spec_banner do
-      puts
-      puts "*** Running en specs ***"
-    end
-
     desc "Load English translations of TriSano codes"
     task :load_code_translations do
       puts "Load code translations"
@@ -94,8 +83,4 @@ namespace :trisano do
 
   end
 
-end
-
-task :spec do |t|
-  Rake::Task['trisano:en:spec'].invoke
 end
