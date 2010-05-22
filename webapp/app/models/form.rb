@@ -115,7 +115,6 @@ class Form < ActiveRecord::Base
   end
 
   def publish
-
     raise(I18n.translate('cannot_publish_already_published_version')) unless self.is_template
 
     published_form = nil;

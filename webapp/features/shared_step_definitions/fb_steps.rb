@@ -58,14 +58,14 @@ end
 # Note: Any questions added after will not be published unless another step publishes the form again
 #
 
-Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
-  @form = create_form(event_type, form_name, form_short_name, disease)
+Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) event with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
+  @form = create_form(event_type.downcase, form_name, form_short_name, disease)
   @published_form = @form.publish
   @form
 end
 
-Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) with any disease$/) do |form_name, form_short_name, event_type|
-  @form = create_form(event_type, form_name, form_short_name, get_random_disease)
+Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) event with any disease$/) do |form_name, form_short_name, event_type|
+  @form = create_form(event_type.downcase, form_name, form_short_name, get_random_disease)
   @published_form = @form.publish
   @form
 end

@@ -63,7 +63,7 @@
       = render :partial => 'events/encounters_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Encounters" }
 
-  - unless (@print_options & [t('epidemiological'), t('all')]).empty?
+  - unless (@print_options & [t('epi'), t('all')]).empty?
     .brak#epidemiological
       = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
       = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }

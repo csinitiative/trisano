@@ -467,8 +467,8 @@ en:
   responsible_jurisdiction: "Jurisdiction responsible for investigation"
   lhd_case_status: "LHD case status"
   state_case_status: "State case status"
-  outbreak_associate: "Outbreak associated"
-  outbreak_name: "Outbreak_name"
+  outbreak_associated: "Outbreak associated"
+  outbreak_name: "Outbreak name"
   event_status: "Event status"
   date_investigation_started: "Date investigation started"
   date_investigation_completed: "Date investigation completed"
@@ -503,7 +503,7 @@ en:
   user: 'User'
   note_type: "Note type"
   date_note_created: "Date note created"
-  administrative_ntoes: 'Administrative Notes'
+  administrative_notes: 'Administrative Notes'
   notes: "Notes"
 #Attachments
   file_name: "File name"
@@ -689,6 +689,10 @@ en:
   code: "Code"
   export: "Export"
   cmr_field: "CMR Field"
+  contact_field: "Contact Field"
+  place_field: "Place Field"
+  lab_field: "Lab Field"
+  treatment_field: "Treatment Field"
   events_normal_case: "Events"
   edit_morbidity_event_of: "Edit morbidity event: {{name}}"
   morbidity_event: "Morbidity Event"

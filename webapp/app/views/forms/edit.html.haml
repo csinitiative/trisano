@@ -64,9 +64,9 @@
       %td
         = h @form.jurisdiction.nil? ? t("all") : @form.jurisdiction.place.name
       %td
-        = t(h(@form.event_type.underscore))
+        =t(@form.event_type.underscore)
         .status
-          = h(t("form_statuses.#{@form.status.downcase.gsub(" ", "_")}"))
+          =t("form_statuses.#{@form.status.downcase.gsub(" ", "_")}")
       %td
         = h @form.short_name
 #rot

@@ -20,24 +20,24 @@
 # 
 
 Given /^I already have a form with the short name "([^\"]*)"$/ do |short_name|
-  @form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  @form = create_form('morbidity', 'Already created', short_name, 'African Tick Bite Fever')
   @last_used_short_name = @form.short_name
 end
 
 Given /^I already have a deactivated form with the short name "([^\"]*)"$/ do |short_name|
-  @form = create_form('Morbidity event', 'Already created', short_name, 'African Tick Bite Fever')
+  @form = create_form('morbidity', 'Already created', short_name, 'African Tick Bite Fever')
   @form.publish
   @form.deactivate
   @last_used_short_name = @form.short_name
 end
 
 Given /^I already have a published form$/ do
-  @form = create_form('Morbidity event', 'Already created', 'something_published', 'African Tick Bite Fever')
+  @form = create_form('morbidity', 'Already created', 'something_published', 'African Tick Bite Fever')
   @published_form = @form.publish
 end
 
 Given /^I already have a form with the name "([^\"]*)"$/ do |name|
-  @form = create_form('Morbidity event', name, name.underscore, 'African Tick Bite Fever')
+  @form = create_form('morbidity', name, name.underscore, 'African Tick Bite Fever')
 end
 
 

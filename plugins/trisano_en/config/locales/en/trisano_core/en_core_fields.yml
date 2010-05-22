@@ -64,6 +64,7 @@ en:
             first_name: Contact first name
             middle_name: Contact middle name
       labs:
+        name: Labs
         lab_results:
           comment: Lab results | Comment
           organism: Lab results | Organism

@@ -7,11 +7,11 @@ Features: Viewing and working with tasks via the calendar
     Given I am logged in as a super user
     And a basic morbidity event exists
     And the following tasks for the event
-    | name | category | priority | status | due_date |
-    | Visit the sick | Appointment | High | Pending | today |
-    | Call the sick | Call Back | Medium  | Complete | today |
-    | Treat the sick | Treatment | Low | Not applicable | today |
-    | Treat the sick again | Treatment | Low | Not applicable | next month |
+    | name                 | category    | priority | status         | due_date   |
+    | Visit the sick       | Appointment | high     | Pending        | today      |
+    | Call the sick        | Call Back   | medium   | Complete       | today      |
+    | Treat the sick       | Treatment   | low      | Not applicable | today      |
+    | Treat the sick again | Treatment   | low      | Not applicable | next month |
 
     When I am on the dashboard page
     And I follow "View on calendar"
@@ -27,8 +27,8 @@ Features: Viewing and working with tasks via the calendar
     Given I am logged in as a super user
     And a basic morbidity event exists
     And the following tasks for the event
-    | name | category | priority | status | due_date |
-    | Visit the sick | Appointment | High | Pending | today |
+    | name           | category    | priority | status  | due_date |
+    | Visit the sick | Appointment | high     | Pending | today    |
 
     When I am on the calendar page
     And I follow "Visit the sick"

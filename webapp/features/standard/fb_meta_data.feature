@@ -6,7 +6,7 @@ Feature: Form metadata is visible to form builders
 
   Scenario: Viewing form metadata
     Given I am logged in as a super user
-    And a published form exists with the name Metadata Form (meta_data_form) for a Morbidity event with any disease
+    And a published form exists with the name Metadata Form (meta_data_form) for a morbidity event with any disease
     And that form has one question on the default view
 
     When I navigate to the form detail view

@@ -61,7 +61,7 @@
     .brak#investigation
       = render :partial => 'events/investigation_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
 
-  - unless (@print_options & [t('clinical_notes'), t('adminstrative_notes'), t('all')]).empty?
+  - unless (@print_options & [t('clinical_notes'), t('administrative_notes'), t('all')]).empty?
     .brak#notes
       = render :partial => 'events/notes_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity, :print_options => @print_options }
 

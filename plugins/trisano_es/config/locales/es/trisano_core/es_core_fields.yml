@@ -63,6 +63,7 @@ es:
             first_name: Nombre de contacto
             middle_name: Segundo nombre de contacto
       labs:
+        name: Laboratorios
         lab_results:
           comment: Resultados de laboratorio | Comentario
           organism: Resultados de laboratorio | Organismo
@@ -165,6 +166,7 @@ es:
       investigation_started_date: Fecha de inicio de la investigación
       state_case_status_id: Estado de caso provincial
       labs:
+        name: Laboratorios
         lab_results:
           organism: Resultados de laboratorio | Organismo
           comment: Resultados de laboratorio | Comentario

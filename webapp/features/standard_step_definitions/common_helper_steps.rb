@@ -116,7 +116,6 @@ Then /^selecting "([^\"]*)" is disabled$/ do |locator|
 end
 
 Then /^"([^\"]*)" should be selected for "([^\"]*)"$/ do |value, field|
-  p field_labeled(field)
   field_labeled(field).element.search(".//option[@selected = 'selected']").inner_html.should =~ /#{value}/
 end
 

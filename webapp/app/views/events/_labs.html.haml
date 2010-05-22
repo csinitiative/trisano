@@ -55,7 +55,7 @@
                   %b= h(lab_result.result_value)
                 - unless lab_result.units.blank?
                   - no_result = false
-                  =t ct('units')
+                  =ct('units')
                   %b= h(lab_result.units)
                   %br
                 - if no_result
