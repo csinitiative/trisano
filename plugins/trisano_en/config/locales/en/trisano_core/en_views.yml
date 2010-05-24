@@ -39,6 +39,8 @@ en:
   enable_tabs: 'Enable Tabs'
   add_hospitalization_facility: 'Add a Hospitalization Facility'
   enable_save_buttons: "Enable Save Buttons"
+  previous: "Previous"
+  next: "Next"
 
   please_exit: 'Please exit'
   assigned_jurisdiction: 'Assigned Jurisdiction'

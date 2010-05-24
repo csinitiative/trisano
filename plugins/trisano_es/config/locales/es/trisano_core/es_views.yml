@@ -43,6 +43,8 @@ es:
   enable_tabs: 'Activar pestañas'
   add_hospitalization_facility: 'Agregar una Institución de Hospitalización'
   enable_save_buttons: "Activar botones de guardar"
+  previous: "Anterior"
+  next: "Próximo"
   
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
@@ -104,7 +106,7 @@ es:
   export_event_info: 'Exportar Información de Evento'
   cdc_export: 'Exportación CDC'
   ibis_export: 'Exportación IBIS'
-  disease_forms: 'Formularios Propios de Enfermedad'
+  disease_forms: 'Formularios Especificos de Enfermedad'
   manage_forms: 'Gestionar Formularios'
   manage_form_labrary: 'Gestionar Biblioteca de Formularios'
 #AVR groups
@@ -182,7 +184,7 @@ es:
   parent_cmr: 'CMR superior'
   parent_guardian: Padre/Tutor
   parent_patient: 'Paciente Principal'
-  not_elevated: "Aún no se ha traspasado a eventos de morbilidad"
+  not_elevated: "No ha sido elevado a un acontecimiento de morbilidad"
 
 #core_field_elements
   add_core_field: 'Agregar Campo Principal'
@@ -334,7 +336,7 @@ es:
   street: 'Nombre de calle'
   unit_number: 'Número de unidad'
   city: 'Ciudad'
-  state: 'Provinicia'
+  state: 'Provincia'
   zip: 'Código postal'
   county: 'Municipio'
   district: 'Distrito'
@@ -425,7 +427,7 @@ es:
   healthcare_worker: "Obrador/a de atención médica"
   group_living: "Vivienda colectiva"
   day_care_association: "Asociación de atención diurna"
-  occupation: "Oficio"
+  occupation: "Ocupación"
   imported_from: "Se importó de"
   risk_factors: "Factores de riesgo"
   risk_factors_notes: "Apuntes sobre los factores de riesgo"
@@ -794,7 +796,7 @@ es:
     contact_event: Contacto
 
   #staging_area
-  no_staged_messages: "Sin mensajes en el estado {{state}}"
+  no_staged_messages: "No hay ningunos mensajes en el estado {{state}}"
   staged_messages: "Mensajes de Fases"
   create_staged_message: "Crear mensaje de fases"
   staged_message: "Mensaje de Fase"
@@ -817,8 +819,8 @@ es:
   staging_area_states:
     pending: Pendiente
     assigned: Asignado
-    unprocessable: Incapaz de procesar
-    discarded: Dehecho
+    unprocessable: Incapaz de Procesar
+    discarded: Desechado
 
   #tasks
   no_tasks: "Sin tareas"
@@ -962,9 +964,9 @@ es:
   date_or_year_of_birth: "Fecha o año de nacimiento (mm/dd/aaaa o aaaa)"
   investigated_by: "Investigado/a(s) por"
   are_you_sure: "¿Seguro/a?"
-  person_merge: "Fusionar registros de gente"
-  merge: "Fusionar"
-  merge_into: "Fusionar a {{name}}"
+  person_merge: "Unir registros de gente"
+  merge: "Unir"
+  merge_into: "Unir a {{name}}"
   show_hide_details: "&nbsp;Mostrar&nbsp;|&nbsp;Ocultar&nbsp;Detalles&nbsp;"
   copy_to_library: "Copiar a biblioteca"
   no_group: "Sin Grupo"

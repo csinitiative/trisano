@@ -36,4 +36,4 @@
   %br
   = will_paginate @staged_messages
 - else
-  = t 'no_staged_messages', :state => @selected.downcase
+  = t('no_staged_messages', :state => t("staging_area_states.#{@selected.downcase}").downcase)

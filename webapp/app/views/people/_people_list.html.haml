@@ -46,6 +46,6 @@
               %span.data_birth_date=ld(person.birth_date)
             %td= render_person_actions(person)
   %br
-  = will_paginate @people
+  = will_paginate(@people, :previous_label => "« #{t('previous')}", :next_label => "#{t('next')} »")
 
 

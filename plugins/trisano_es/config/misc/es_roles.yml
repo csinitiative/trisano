@@ -3,7 +3,7 @@
   description: ""
 
 - role_name: "Data Entry Technician"
-  translated_role_name: "Técnico de ingreso de datos"
+  translated_role_name: "Técnico de entrada de datos"
   description: ""
 
 - role_name: "Investigator"
@@ -15,7 +15,7 @@
   description: ""
 
 - role_name: "Read-only"
-  translated_role_name: "Solo lectura"
+  translated_role_name: "Lea Sólo"
   description: ""
 
 - role_name: "State Manager"

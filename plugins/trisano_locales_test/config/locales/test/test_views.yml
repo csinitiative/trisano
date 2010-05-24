@@ -36,6 +36,8 @@ test:
   demographic_info: 'xDemographic Information'
   jurisdictions: 'xJurisdictions'
   unspecified: 'xUnspecified'
+  previous: "xPrevious"
+  next: "xNext"
 
   please_exit: 'xPlease exit'
   assigned_jurisdiction: 'xAssigned Jurisdiction'
