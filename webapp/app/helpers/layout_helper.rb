@@ -66,8 +66,6 @@ module LayoutHelper
 
   def translations_js
     case I18n.locale
-    when :en
-      javascript_include_tag("translations_en")
     when :test
       javascript_include_tag("ext/trisano_locales_test/translations_test")
     else
