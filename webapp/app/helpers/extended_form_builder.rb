@@ -166,6 +166,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :date
       html_options[:onchange] = text_answer_event if follow_ups
       html_options[:year_range] = 100.years.ago..0.years.from_now
+      html_options[:value] = @object.date_answer.strftime(I18n.t("date.formats.long")) unless @object.date_answer.nil?
       calendar_date_select(:text_answer, html_options)
     when :phone
       html_options[:size] = 14

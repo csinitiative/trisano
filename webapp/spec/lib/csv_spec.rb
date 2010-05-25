@@ -192,7 +192,6 @@ describe Export::Csv do
         assert_values_in_result(output, 1, :patient_event_id => /#{@event.id}/)
         assert_values_in_result(output, 1, :patient_record_number => /#{@event.record_number}/)
         assert_values_in_result(output, 1, :patient_last_name => /Johnson/)
-        assert_values_in_result(output, 1, :patient_jurisdiction_of_investigation => /Unassigned/)
       end
       
       
@@ -201,7 +200,6 @@ describe Export::Csv do
         assert_values_in_result(output, 2, :patient_event_id => /#{@event.id}/)
         assert_values_in_result(output, 2, :patient_record_number => //)
         assert_values_in_result(output, 2, :patient_last_name => //)
-        assert_values_in_result(output, 2, :patient_jurisdiction_of_investigation => //)
       end
       
       

@@ -20,7 +20,12 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe DiseasesHelper do
   include HtmlSpecHelper
 
-  before(:all){ Disease.delete_all }
+  before(:all) do
+    DiseaseEvent.delete_all
+    ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns;")
+    Disease.delete_all
+  end
+  
   after(:all){ Fixtures.reset_cache }
 
   it "#disease_check_boxes should style inactive diseases as inactive" do
