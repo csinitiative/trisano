@@ -26,11 +26,11 @@ def db_translations_dir
 end
 
 def code_translation_files
-  %w(codes contact_types test_results test_types)
+  %w(en_codes en_contact_types en_test_results en_test_types)
 end
 
 def csv_translation_files
-  %w(csv_fields geocode_csv_fields)
+  %w(en_csv_fields en_geocode_csv_fields)
 end
 
 def role_translation_files
