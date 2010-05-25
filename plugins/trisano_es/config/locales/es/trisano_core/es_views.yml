@@ -519,7 +519,7 @@ es:
   #Investigation
   investigative_info: "Información de Investigación"
   forms: "Formularios"
-  add_remove_forms: "Agregar/Eliminar formularios para este evento"
+  add_remove_forms: "Agregar/Eliminar formularios de este evento"
 
   dev_mode_note: "NOTA: SÓLO SE PUEDE VER ESTOS CAMPOS EN EL MÓDULO DE DESARROLLO"
 
