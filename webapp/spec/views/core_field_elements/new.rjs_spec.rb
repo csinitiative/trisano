@@ -17,29 +17,17 @@
 
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe "/forms/_form.html.haml" do
+describe "/core_field_elements/new.rjs" do
 
   before do
-    @form = Factory.build(:form)
-    @form.save_and_initialize_form_elements
-    assigns[:form] = @form
-    @f = mock
-    @f.stubs(:label)
-    @f.stubs(:text_field)
-    @f.stubs(:select)
-    @f.stubs(:collection_select)
-    @f.stubs(:object).returns(@form)
+    assigns[:available_core_fields] = []
+
+    @core_field_element = Factory.create(:core_field_element)
+    assigns[:core_field_element] = @core_field_element
   end
 
-  it "renders with short name editable" do
-    @f.expects(:text_field).with(:short_name)
-    render "forms/_form.html.haml", :locals => {:f => @f}
-  end
-
-  it "renders with short name *not* editable" do
-    @form.stubs(:short_name_editable?).returns(false)
-    render "forms/_form.html.haml", :locals => {:f => @f}
-    assert_select 'td', /#{@form.short_name}/
+  it "renders" do
+     render "core_field_elements/new.rjs"
   end
 
 end

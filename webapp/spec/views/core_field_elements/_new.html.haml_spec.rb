@@ -17,29 +17,28 @@
 
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe "/forms/_form.html.haml" do
+describe "/core_field_elements/_new.html.haml" do
 
   before do
-    @form = Factory.build(:form)
-    @form.save_and_initialize_form_elements
-    assigns[:form] = @form
-    @f = mock
-    @f.stubs(:label)
-    @f.stubs(:text_field)
-    @f.stubs(:select)
-    @f.stubs(:collection_select)
-    @f.stubs(:object).returns(@form)
+    @core_field_element = Factory.create(:core_field_element)
   end
 
-  it "renders with short name editable" do
-    @f.expects(:text_field).with(:short_name)
-    render "forms/_form.html.haml", :locals => {:f => @f}
+  it "renders with available core fields" do
+    assigns[:available_core_fields] = [Factory.create(:core_field)]
+
+    render "core_field_elements/_new.html.haml", {
+      :locals => {
+        :core_field_element => @core_field_element } }
+    response.should_not have_tag('b', I18n.t(:no_core_fields))
   end
 
-  it "renders with short name *not* editable" do
-    @form.stubs(:short_name_editable?).returns(false)
-    render "forms/_form.html.haml", :locals => {:f => @f}
-    assert_select 'td', /#{@form.short_name}/
+  it "renders message is available core fields is empty" do
+    assigns[:available_core_fields] = []
+
+    render "core_field_elements/_new.html.haml", {
+      :locals => {
+        :core_field_element => @core_field_element } }
+    response.should have_tag('b', I18n.t(:no_core_fields))
   end
 
 end
