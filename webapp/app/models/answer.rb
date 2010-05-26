@@ -52,9 +52,9 @@ class Answer < ActiveRecord::Base
   # was inserted.
   def write_export_conversion_to(result)
     write(convert_value(self.text_answer, export_conversion_value), 
-          :starting => export_conversion_value.export_column.start_position - 1, 
-          :length => export_conversion_value.export_column.length_to_output,
-          :result => result)
+      :starting => export_conversion_value.export_column.start_position - 1,
+      :length => export_conversion_value.export_column.length_to_output,
+      :result => result)
   end
 
   def date_answer
@@ -124,11 +124,13 @@ class Answer < ActiveRecord::Base
         if question.data_type == :check_box
           self.code = concat_checkbox_codes
         else
-          self.code = question.question_element.value_set_element.value_elements.find_by_name(text_answer).code
+          # Debt: This results in 3 selects for every multi-valued answer. Stick the code on the request params hash?
+          value_element = question.question_element.value_set_element.value_elements.find_by_name(text_answer)
+          self.code = value_element.code unless value_element.nil?
         end
       rescue Exception => ex
-        # Nothing above should cause an exception, unless the form structure is off, in which case this code probably wouldn't even run. Just log a warning.
         logger.warn ex
+        return nil
       end
     end
   end
