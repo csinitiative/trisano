@@ -29,11 +29,17 @@ describe "/forms/_library_elements.haml" do
 
 
   it "renders from library" do
-    render "forms/_library_elements.haml", :locals => {:direction => :from_library}
+    render "forms/_library_elements.haml", {
+      :locals => {
+        :direction => :from_library,
+        :type => "question_element" } }
   end
 
   it "renders to library" do
-    render "forms/_library_elements.haml", :locals => {:direction => :to_library}
+    render "forms/_library_elements.haml", {
+      :locals => {
+        :direction => :to_library,
+        :type => "question_element" } }
   end
 
 end
