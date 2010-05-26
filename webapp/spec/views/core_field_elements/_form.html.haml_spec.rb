@@ -17,29 +17,20 @@
 
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe "/forms/_form.html.haml" do
+describe "/core_field_elements/_form.html.haml" do
 
   before do
-    @form = Factory.build(:form)
-    @form.save_and_initialize_form_elements
-    assigns[:form] = @form
+    @available_core_fields = CoreField.all
+    assigns[:available_core_fields] = @available_core_fields
+
     @f = mock
-    @f.stubs(:label)
-    @f.stubs(:text_field)
+    @f.expects(:hidden_field).with(:parent_element_id)
     @f.stubs(:select)
-    @f.stubs(:collection_select)
-    @f.stubs(:object).returns(@form)
+    @f.stubs(:submit)
   end
 
-  it "renders with short name editable" do
-    @f.expects(:text_field).with(:short_name)
-    render "forms/_form.html.haml", :locals => {:f => @f}
-  end
-
-  it "renders with short name *not* editable" do
-    @form.stubs(:short_name_editable?).returns(false)
-    render "forms/_form.html.haml", :locals => {:f => @f}
-    assert_select 'td', /#{@form.short_name}/
+  it "renders" do
+    render "core_field_elements/_form.html.haml", :locals => {:f => @f}
   end
 
 end
