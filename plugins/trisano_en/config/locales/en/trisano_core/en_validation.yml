@@ -111,6 +111,11 @@ en:
               no_diseases: "There are no diseases associated with this form."
               publishing_error: "An error occurred while pushing the form."
               initialization_error: "An error occurred initializing form elements"
+              multiple_roots: "Multiple root elements were detected"
+              overlap: "Overlap was detected in the form element structure"
+              structure_gaps: "Gaps were detected in the form element structure"
+              orphans: "Orphaned elements were detected"
+              corrupt_nesting: "Nesting structure is corrupt"
             short_name:
               in_use: "is already being used by another active form."
               immutable: "can't be changed once the form has been published"

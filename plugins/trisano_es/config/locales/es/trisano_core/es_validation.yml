@@ -104,6 +104,11 @@ es:
               no_diseases: "No hay enfermedades relacionadas a este formulario."
               publishing_error: "Se produjo un error mientras que se pasaba el formulario."
               initialization_error: "Se produjo un error al inicializar los elementos de formulario"
+              multiple_roots: "Se descubrieron varios elementos raíz"
+              overlap: "Se descubrió un traslapo en la estructura del elemento formulario"
+              structure_gaps: "Se descubrieron espacios en la estructura del elemento formulario"
+              orphans: "Se descubrieron elementos huérfanos"
+              corrupt_nesting: "Está corrupta la estructura de anidamiento"
             short_name:
               in_use: "ya está en uso por otro formulario activo."
               immutable: "no puede cambiarse una vez que se ha publicado"
