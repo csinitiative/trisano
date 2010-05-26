@@ -15,6 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-replace_element, replace_partial = replacement_elements(@section)
-page.replace_html replace_element, :partial => replace_partial
-flash[:notice] = ""
+require File.dirname(__FILE__) + '/../../spec_helper'
+
+describe "/forms/order_section_children.rjs" do
+
+  before do
+    @section = Factory.build(:section_element)
+    @section.save_and_add_to_form
+    assigns[:section] = @section
+
+    @lib_element = Factory.create(:question_element)
+    assigns[:library_elements] = [@lib_element]
+  end
+
+  it "renders" do
+    render "forms/order_section_children.rjs"
+  end
+
+end

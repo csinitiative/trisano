@@ -41,7 +41,7 @@ es:
       treatments: Tratamientos
       interested_party:
         risk_factor:
-          occupation: Oficio
+          occupation: Ocupación
           risk_factors: Factores de riesgo
           pregnancy_due_date: Fecha programada de parto
           risk_factors_notes: Apuntes sobre los factores de riesgo
@@ -140,7 +140,7 @@ es:
       workflow_state: Estado de evento
       interested_party:
         risk_factor:
-          occupation: Oficio
+          occupation: Ocupación
           risk_factors: Factores de riesgo
           pregnancy_due_date: Fecha programada de parto
           risk_factors_notes: Apuntes sobre los factores de riesgo
