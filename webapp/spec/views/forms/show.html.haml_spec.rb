@@ -15,6 +15,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-replace_element, replace_partial = replacement_elements(@section)
-page.replace_html replace_element, :partial => replace_partial
-flash[:notice] = ""
+require File.dirname(__FILE__) + '/../../spec_helper'
+
+describe "/forms/show.html.haml" do
+
+  before do
+    @form = Factory.build(:form)
+    @form.save_and_initialize_form_elements
+  end
+
+  it "renders template" do
+    assigns[:form] = @form
+    render "forms/show.html.haml"
+    response.should have_tag('a', I18n.t(:edit))
+  end
+
+  it "renders form" do
+    assigns[:form] = @form.publish
+    render "forms/show.html.haml"
+    response.should_not have_tag('a', I18n.t(:edit))
+  end
+
+end
