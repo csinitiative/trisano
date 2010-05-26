@@ -17,6 +17,7 @@
 
   = error_messages_for :follow_up_element
 
+  -# DEBT - Local variable or instance variable. Pick one. Should probably be local
   - remote_form_for(follow_up_element, {}, :loading => "$('edit_follow_up_submit_#{@follow_up_element.id}').disabled = 'disabled';" ) do |f|
 
     = render :partial => 'form', :locals => { :f => f }
