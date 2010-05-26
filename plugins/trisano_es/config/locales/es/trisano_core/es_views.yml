@@ -189,6 +189,8 @@ es:
 #core_field_elements
   add_core_field: 'Agregar Campo Principal'
   no_core_fields: 'No están disponibles los campos principales. Utilice las configuraciones existentes del campo principal.'
+#core views
+  no_core_views: No se dispone de fichas básicas. Utilice las configuraciones existentes núcleo ficha.
 #core_fields
   edit_core_field: 'Editar Campo Principal'
   back_to_core_fields: '< Regresar a Campos esenciales'

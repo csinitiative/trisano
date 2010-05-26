@@ -184,6 +184,8 @@ en:
 #core_field_elements
   add_core_field: 'Add Core Field'
   no_core_fields: 'No core fields are available. Use existing core field configurations.'
+#core views
+  no_core_views: No core tabs are available. Use existing core tab configurations.
 #core_fields
   edit_core_field: 'Edit Core Field'
   back_to_core_fields: '< Back to Core Fields'

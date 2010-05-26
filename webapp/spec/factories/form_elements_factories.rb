@@ -44,6 +44,7 @@ Factory.define :value_set_element do |vse|
 end
 
 Factory.define :core_view_element do |cve|
+  cve.name { Factory.new(:core_view_element_name) }
 end
 
 Factory.define(:group_element) do |ge|
@@ -72,4 +73,8 @@ end
 
 Factory.sequence(:value_element_code) do |n|
   "#{n}"
+end
+
+Factory.sequence(:core_view_element_name) do |n|
+  "core_view_element_#{n}"
 end
