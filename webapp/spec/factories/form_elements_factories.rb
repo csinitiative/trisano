@@ -51,6 +51,18 @@ Factory.define(:group_element) do |ge|
   ge.name { Factory.next(:group_element_name) }
 end
 
+Factory.define(:view_element) do |ve|
+  ve.name { Factory.next(:view_element) }
+end
+
+Factory.define(:before_core_field_element) do |b|
+end
+
+Factory.define(:after_core_field_element) do |a|
+end
+
+# sequnces
+
 Factory.sequence :core_field_element_name do |n|
   "#{Faker::Lorem.words(3)} #{n}"
 end
@@ -77,4 +89,8 @@ end
 
 Factory.sequence(:core_view_element_name) do |n|
   "core_view_element_#{n}"
+end
+
+Factory.sequence(:view_element) do |n|
+  "view_element_#{n}"
 end
