@@ -23,6 +23,14 @@ describe "/question_elements/new.rjs" do
     @form = Factory.build(:form)
     @form.save_and_initialize_form_elements
     assigns[:reference_element] = @form.investigator_view_elements_container
+    parent_id = @form.investigator_view_elements_container.id
+
+    @question = Factory.build(:question_element, :parent_element_id => parent_id)
+    @question.save_and_add_to_form
+    assigns[:question_element] = @question
+
+    assigns[:library_elements] = []
+    assigns[:export_columns] = []
   end
 
   it "renders" do
