@@ -33,6 +33,10 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
       code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.all(:order => "code_description ASC").first : core_field.code_name.codes.all(:order => "code_description ASC").first
         
       @browser.select(key, code.code_description)
+    elsif core_field.key == "morbidity_event[outbreak_name]"
+      # Outbreak name is a special case in that it is the only core follow up that is a
+      # drop down that is not a code (it's a list of outbreaks in the system.
+      @browser.select(railsify_core_field_key("morbidity_event[outbreak_event_id]"), @outbreak_event.event_name)
     else
       # Originally, all non-code core fields are text inputs. Fields are incrementally
       # getting smarter. Age fields are now type numeric. The rest of the text inputs
@@ -83,6 +87,10 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
       code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.all(:order => "code_description ASC").last : core_field.code_name.codes.all(:order => "code_description ASC").last
       
       @browser.select(key, code.code_description)
+    elsif core_field.key == "morbidity_event[outbreak_name]"
+      # Outbreak name is a special case in that it is the only core follow up that is a
+      # drop down that is not a code (it's a list of outbreaks in the system.
+      @browser.select(railsify_core_field_key("morbidity_event[outbreak_event_id]"), "")
     else
       # Originally, all non-code core fields are text inputs. Fields are incrementally
       # getting smarter. Age fields are now type numeric. The rest of the text inputs

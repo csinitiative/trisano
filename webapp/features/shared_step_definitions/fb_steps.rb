@@ -142,12 +142,23 @@ Given /^that form has core follow ups configured for all core fields$/ do
         #
         # Update: Fields are incrementally getting smarter. Age fields are now type numeric. The rest of
         # the text inputs are still single_line_text
-        if core_field.field_type == "single_line_text"
+        #
+        # Update: Outbreaks are the first core follow up drop-down not driven by codes. It is driven by
+        # outbreak events. We need to find or create an outbreak event to use for the core follow up. For
+        # now, this is specific to morbidity events.
+        if core_field.key == "morbidity_event[outbreak_name]"
+          @outbreak_event = Factory.create(:outbreak_event,
+            :event_name => get_unique_name(2),
+            :disease_event => Factory.create(:disease_event, :disease => @form.diseases.first),
+            :jurisdiction => Factory.create(:jurisdiction, :place_entity => unassigned_jurisdiction.entity)
+          )
+          follow_up_element.condition = @outbreak_event.event_name
+        elsif core_field.field_type == "single_line_text"
           follow_up_element.condition = "YES"
         elsif core_field.field_type == "numeric"
           follow_up_element.condition = "1"
         end
-
+        
       end
 
       follow_up_element.parent_element_id = @default_view.id

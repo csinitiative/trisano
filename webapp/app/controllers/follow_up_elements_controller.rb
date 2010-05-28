@@ -106,7 +106,7 @@ class FollowUpElementsController <  AdminController
 
   def process_core_condition
     begin
-      @follow_ups = FollowUpElement.process_core_condition(params)
+      @follow_ups = FollowUpElement.process_core_condition(params, { :delete_irrelevant_answers => true })
       @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex

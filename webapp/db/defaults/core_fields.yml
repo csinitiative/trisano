@@ -533,7 +533,7 @@
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
-  field_type: single_line_text
+  field_type: drop_down
   key: morbidity_event[outbreak_name]
 
 - help_text:

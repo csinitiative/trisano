@@ -87,7 +87,12 @@ class QuestionElementsController <  AdminController
   def process_condition
     begin
       @question_element_id = params[:question_element_id]
-      @follow_up = QuestionElement.find(@question_element_id).process_condition(params, params[:event_id])
+      question_element = QuestionElement.find(@question_element_id)
+      @follow_up = question_element.process_condition(
+        params,
+        params[:event_id],
+        :delete_irrelevant_answers => true
+      )
       @event = Event.find(params[:event_id])
     rescue Exception => ex
       logger.info ex

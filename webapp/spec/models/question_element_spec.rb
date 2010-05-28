@@ -546,11 +546,11 @@ describe QuestionElement do
       follow_up_from_processing.should be_nil
     end
 
-    it "should delete answers to questions that no longer apply" do
+    it "should delete answers to questions that no longer apply if the delete option is provided" do
       existing_answer = answer = Answer.find(@no_follow_up_answer.id)
       existing_answer.should_not be_nil
       answer = Answer.create(:text_answer => "Yes", :question_id => @question.id)
-      follow_up_from_processing = @question_element.process_condition(answer, @event_id)
+      follow_up_from_processing = @question_element.process_condition(answer, @event_id, :delete_irrelevant_answers => true)
 
       begin
         deleted_existing_answer = Answer.find(@no_follow_up_answer.id)
@@ -562,11 +562,27 @@ describe QuestionElement do
 
     end
 
+    it "should not delete answers to questions that no longer apply if the option is not provided" do
+      existing_answer = answer = Answer.find(@no_follow_up_answer.id)
+      existing_answer.should_not be_nil
+      answer = Answer.create(:text_answer => "Yes", :question_id => @question.id)
+      follow_up_from_processing = @question_element.process_condition(answer, @event_id)
+
+      begin
+        deleted_existing_answer = Answer.find(@no_follow_up_answer.id)
+      rescue
+        # No-op
+      ensure
+        deleted_existing_answer.should_not be_nil
+      end
+
+    end
+
     it "should not delete answers if conditions apply" do
       existing_answer = answer = Answer.find(@no_follow_up_answer.id)
       existing_answer.should_not be_nil
       answer = Answer.create(:text_answer => "No", :question_id => @question.id)
-      follow_up_from_processing = @question_element.process_condition(answer, @event_id)
+      follow_up_from_processing = @question_element.process_condition(answer, @event_id, :delete_irrelevant_answers => true)
       Answer.find(@no_follow_up_answer.id).should_not be_nil
     end
 

@@ -34,6 +34,10 @@ def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
   end
 end
 
+def unassigned_jurisdiction
+  Place.all_by_name_and_types("Unassigned", 'J', true).first
+end
+
 def create_event_with_attributes(event_type, last_name, attrs, disease=nil, jurisdiction=nil)
   e = create_basic_event(event_type, last_name, disease, jurisdiction)
   e.attributes = attrs
@@ -69,7 +73,7 @@ end
 # in for nested forms. This method takes a core field key and converts it
 # to a key that can be used to identify form elements in the browser.
 def railsify_core_field_key(key)
-  key.chop!.gsub("]", "_attributes]") << "]"
+  key.chop.gsub("]", "_attributes]") << "]"
 end
 
 # Debt: Replace these with factory-based setup

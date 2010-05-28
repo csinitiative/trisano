@@ -38,23 +38,23 @@ class QuestionElement < FormElement
   end
 
   # Used to process follow-ups to questions in a form, not follow-ups to core
-  # fields. For core-field processing, see FollowUpElement#process_condition
-  def process_condition(answer, event_id, form_elements_cache=nil)
+  # fields. For core-field processing, see FollowUpElement#process_core_condition
+  def process_condition(answer, event_id, options={})
     result = nil
-    potential_follow_ups = retrieve_follow_ups(form_elements_cache)
+    potential_follow_ups = retrieve_follow_ups(options[:form_elements_cache])
     condition = parse_condition_from_answer(answer)
 
     potential_follow_ups.each do |follow_up|
       if (follow_up.condition_match?(condition))
         result = follow_up
       else
-        FormElement.delete_answers_to_follow_ups(event_id, follow_up)
+        FormElement.delete_answers_to_follow_ups(event_id, follow_up) if options[:delete_irrelevant_answers]
       end
     end
 
     result
   end
-
+  
   def question_instance
     @question_instance || question
   end

@@ -386,12 +386,12 @@ describe FollowUpElement do
       follow_ups.empty?.should be_true
     end
     
-    it "should delete answers to questions that no longer apply" do
+    it "should delete answers to questions that no longer apply if the delete flag is passed in" do
       params = {}
       params[:event_id] = @event.id
       params[:core_path] = @core_fu_core_path
       params[:response] = "no match"
-      follow_ups = FollowUpElement.process_core_condition(params)
+      follow_ups = FollowUpElement.process_core_condition(params, { :delete_irrelevant_answers => true })
       
       begin
         deleted_existing_answer = Answer.find(@no_follow_up_answer.id)
@@ -400,7 +400,22 @@ describe FollowUpElement do
       ensure
         deleted_existing_answer.should be_nil
       end
-      
+    end
+
+    it "should not delete answers to questions that no longer apply if the delete flag is not passed in" do
+      params = {}
+      params[:event_id] = @event.id
+      params[:core_path] = @core_fu_core_path
+      params[:response] = "no match"
+      follow_ups = FollowUpElement.process_core_condition(params)
+
+      begin
+        deleted_existing_answer = Answer.find(@no_follow_up_answer.id)
+      rescue
+        # No-op
+      ensure
+        deleted_existing_answer.should_not be_nil
+      end
     end
     
     it "should not delete answers if conditions apply" do
@@ -408,7 +423,7 @@ describe FollowUpElement do
       params[:event_id] = @event.id
       params[:core_path] = @core_fu_core_path
       params[:response] = @core_fu_condition
-      follow_ups = FollowUpElement.process_core_condition(params)
+      follow_ups = FollowUpElement.process_core_condition(params, { :delete_irrelevant_answers => true })
       Answer.find(@no_follow_up_answer.id).should_not be_nil
     end
 

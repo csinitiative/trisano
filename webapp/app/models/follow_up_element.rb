@@ -68,7 +68,7 @@ class FollowUpElement < FormElement
 
   # Used to process follow-ups to core-fields in a form, not follow-ups to standard
   # question elements. For question-element processing, see QuestionElement#process_condition
-  def self.process_core_condition(params)
+  def self.process_core_condition(params, options={})
     result = []
     event = Event.find(params[:event_id])
 
@@ -81,7 +81,7 @@ class FollowUpElement < FormElement
           result << ["hide", follow_up]
           
           unless (params[:event_id].blank?)
-            FormElement.delete_answers_to_follow_ups(params[:event_id], follow_up)
+            FormElement.delete_answers_to_follow_ups(params[:event_id], follow_up) if options[:delete_irrelevant_answers]
           end
         end
       end

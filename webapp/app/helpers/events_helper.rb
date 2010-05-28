@@ -135,13 +135,13 @@ module EventsHelper
     event_type = /^.+_event/.match(prefix)[0]
     url = event_type == 'morbidity_event' ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
     url = case event_type
-          when 'morbidity_event'
-            lab_form_new_cmr_path(:prefix => prefix)
-          when 'contact_event'
-            lab_form_new_contact_event_path(:prefix => prefix)
-          when 'encounter_event'
-            lab_form_new_encounter_event_path(:prefix => prefix)
-          end
+    when 'morbidity_event'
+      lab_form_new_cmr_path(:prefix => prefix)
+    when 'contact_event'
+      lab_form_new_contact_event_path(:prefix => prefix)
+    when 'encounter_event'
+      lab_form_new_encounter_event_path(:prefix => prefix)
+    end
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
@@ -149,13 +149,13 @@ module EventsHelper
   def add_lab_result_link(name, prefix, lab_id)
     event_type = /^.+_event/.match(prefix)[0]
     url = case event_type
-          when 'morbidity_event'
-            lab_result_form_new_cmr_path(:prefix => prefix)
-          when 'contact_event'
-            lab_result_form_new_contact_event_path(:prefix => prefix)
-          when 'encounter_event'
-            lab_result_form_new_encounter_event_path(:prefix => prefix)
-          end
+    when 'morbidity_event'
+      lab_result_form_new_cmr_path(:prefix => prefix)
+    when 'contact_event'
+      lab_result_form_new_contact_event_path(:prefix => prefix)
+    when 'encounter_event'
+      lab_result_form_new_encounter_event_path(:prefix => prefix)
+    end
 
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
@@ -365,11 +365,11 @@ module EventsHelper
 
   def show_and_edit_links
     Hash[
-         "MorbidityEvent", lambda { |event| links_to_show_and_edit(event, :show_cmr, :edit_cmr, :cmr_path, :edit_cmr_path) },
-         "ContactEvent"  , lambda { |event| links_to_show_and_edit(event, :show_contact, :edit_contact) },
-         "PlaceEvent"    , lambda { |event| links_to_show_and_edit(event, :show_place, :edit_place) },
-         "EncounterEvent", lambda { |event| links_to_show_and_edit(event, :show_encounter, :edit_encounter) }
-        ]
+      "MorbidityEvent", lambda { |event| links_to_show_and_edit(event, :show_cmr, :edit_cmr, :cmr_path, :edit_cmr_path) },
+      "ContactEvent"  , lambda { |event| links_to_show_and_edit(event, :show_contact, :edit_contact) },
+      "PlaceEvent"    , lambda { |event| links_to_show_and_edit(event, :show_place, :edit_place) },
+      "EncounterEvent", lambda { |event| links_to_show_and_edit(event, :show_encounter, :edit_encounter) }
+    ]
   end
 
 
@@ -878,7 +878,10 @@ module EventsHelper
         end
       end
 
-      follow_up_group = element.process_condition(@answer_object, @event.id, form_elements_cache)
+      follow_up_group = element.process_condition(
+        @answer_object,
+        @event.id,
+        :form_elements_cache => form_elements_cache)
 
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{h(element.id)}'>"
@@ -902,7 +905,7 @@ module EventsHelper
       result = ""
 
       unless element.core_path.blank?
-        result << render_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
+        result << render_investigator_core_follow_up(form_elements_cache, element, f)
         return result
       end
 
@@ -1040,7 +1043,13 @@ module EventsHelper
       result << answer.text_answer unless answer.nil?
       result << "</div>"
 
-      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
+      unless answer.nil?
+        follow_up_group = element.process_condition(
+          {:response => answer.text_answer},
+          @event.id,
+          :form_elements_cache => form_elements_cache
+        )
+      end
 
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{element.id}'>"
@@ -1302,7 +1311,7 @@ module EventsHelper
       }
     JS
   end
-          # insertion: Insertion.Bottom
+  # insertion: Insertion.Bottom
 
   def live_search(label, options = {})
     options[:search_field] ||= 'search_field'

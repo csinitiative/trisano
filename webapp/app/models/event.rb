@@ -53,7 +53,7 @@ class Event < ActiveRecord::Base
   belongs_to :event_queue
   has_many :form_references, :order => 'created_at ASC'
   has_many :forms, :through => :form_references
-  has_many :answers, :autosave => true
+  has_many :answers, :autosave => true, :include => [:question]
   has_many :tasks, :order => 'due_date ASC'
   has_many :notes, :order => 'created_at ASC', :dependent => :destroy
   has_many :attachments, :order => 'updated_at DESC'
