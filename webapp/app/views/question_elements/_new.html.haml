@@ -25,7 +25,7 @@
       - unless @export_columns.empty?
         %p
           =f.label :export_column_id
-          =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => "Select a CDC export field if applicable")
+          =f.collection_select(:export_column_id, @export_columns, :id, :name, :include_blank => t(:select_cdc_export_field))
 
       - f.fields_for("question_attributes", @question_element.question)  do |q|
         =q.label :data_type

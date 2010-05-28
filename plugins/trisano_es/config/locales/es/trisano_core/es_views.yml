@@ -569,6 +569,7 @@ es:
   master_copy: 'copia original'
   element: 'elemento'
   cdc_export_question: "Pregunta de exportación CDC"
+  select_cdc_export_field: Seleccione un campo de la exportación CDC en su caso
   form_created_at: 'Se creó formulario'
   form_last_updated: 'Última actualización de formulario'
   elements_last_updated: 'Última actualización de elementos'

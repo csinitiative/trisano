@@ -566,6 +566,7 @@ en:
   master_copy: 'master copy'
   element: 'element'
   cdc_export_question: "CDC export question"
+  select_cdc_export_field: "Select a CDC export field if applicable"
   form_created_at: 'Form created'
   form_last_updated: 'Form last updated'
   elements_last_updated: 'Elements last updated'
