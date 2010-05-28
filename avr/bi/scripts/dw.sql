@@ -1098,40 +1098,6 @@ ALTER TABLE dw_contact_clinicians
 CREATE INDEX dw_contact_clinicians_event_id_ix
     ON dw_contact_clinicians (dw_contact_events_id);
 
-EXPLAIN
-SELECT
-    CASE
-        WHEN events.type = 'MorbidityEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_morbidity_events_id,
-    CASE
-        WHEN events.type = 'ContactEvent' THEN events.id
-        ELSE NULL::INTEGER
-    END AS dw_contact_events_id,
-    pl.name AS name,
-    c.code_description AS place_type,
-    pl.id AS place_id
-FROM
-    events
-    JOIN participations p
-        ON (p.event_id = events.id)
-    JOIN places pl
-        ON (pl.entity_id = p.secondary_entity_id)
-    JOIN (
-        -- Just in case there are places with multiple types. We only want it to create one record
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
-    ) pt
-        ON (pt.place_id = pl.id)
-    JOIN codes c
-        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
---    RIGHT JOIN events
---        ON (p.event_id = events.id)
-WHERE
-    p.type = 'DiagnosticFacility' AND
-    events.type in ('MorbidityEvent', 'ContactEvent') AND
-    events.deleted_at IS NULL
-;
-
 CREATE TABLE dw_events_diagnostic_facilities AS
 SELECT
     CASE
