@@ -32,7 +32,6 @@ fi
 GEM_DIR=../lib/gems/
 
 echo "installing gems"
-$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-openssl-0.2.3.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/pg-0.8.0.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/builder-2.1.2.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hpricot-0.6.gem
