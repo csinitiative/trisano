@@ -87,12 +87,12 @@
           %div#event_criteria{:style => "margin-top: 5px"}
             %div{ :class => "horiz" }
               %label= t 'event_status'
-              %select{ :name => "workflow_state"}
+              %select{ :id => :workflow_state, :name => "workflow_state"}
                 %option
                 = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
             %div{ :class => "horiz" }
               %label= t 'event_type'
-              %select{ :name => "event_type"}
+              %select{ :id => :event_type, :name => "event_type"}
                 %option
                 - for event_type in @event_types
                   %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
@@ -121,7 +121,7 @@
               = case_status_select(:lhd_case_status_ids, array_of_strs_to_ints(params[:lhd_case_status_ids]), false, true)
             %div{ :class => "horiz" }
               %label{:for => 'investigator_ids'}= t 'investigated_by'
-              = investigators_select :investigator_ids, array_of_strs_to_ints(params[:investigator_ids])
+              = investigators_select :investigator_ids, @investigators, array_of_strs_to_ints(params[:investigator_ids])
 
         %div.search_group.clearfix
           = link_to_function t("show_hide_epi_and_reporting_criteria"), "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"
@@ -140,7 +140,7 @@
               = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
 
     %input{ :value => t('submit_query'), :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 12em; width:130px;" }
-= button_to(t("start_over"), search_cmrs_path, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
+= button_to(t("start_over"), search_cmrs_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
 %br
 
 - if !@cmrs.blank?
