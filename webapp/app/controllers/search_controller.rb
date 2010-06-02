@@ -53,6 +53,8 @@ class SearchController < ApplicationController
 
     @counties = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'county'")
 
+    @investigators = User.investigators
+
     begin
       if not params.values_blank?
 

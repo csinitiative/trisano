@@ -166,6 +166,16 @@ class User < ActiveRecord::Base
     investigators.uniq.sort_by { |investigator| investigator.best_name }
   end
 
+  def self.investigators
+    find_by_sql(<<-SQL)
+      SELECT DISTINCT ON(a.id) a.* FROM users a
+        JOIN role_memberships b ON b.user_id = a.id
+        JOIN privileges_roles c ON c.role_id = b.role_id
+        JOIN privileges d ON d.id = c.privilege_id
+       WHERE d.priv_name = 'investigate_event'
+    SQL
+  end
+
   def self.task_assignees_for_jurisdictions(jurisdictions)
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
     assignees = []

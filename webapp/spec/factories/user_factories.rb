@@ -93,7 +93,7 @@ def remove_privileges_for(user, privs = nil)
   return user
 end
 
-# for when you place_entity *really* needs to be a jurisdiction
+# for when your place_entity *really* needs to be a jurisdiction
 def create_jurisdiction_entity(options = {})
   place_attributes = options.delete(:place_attributes) || {}
   returning(Factory(:place_entity, options)) do |entity|

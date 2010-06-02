@@ -10,11 +10,13 @@ require 'nokogiri'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
+  require File.expand_path(f)
+end
 
 # Load up factories
 Dir[File.join(File.dirname(__FILE__), '..', '{spec,vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
-  require f
+  require File.expand_path(f)
 end
 
 Spec::Runner.configure do |config|
@@ -273,11 +275,6 @@ def mock_person_entity
 end
 
 require File.join(File.dirname(__FILE__), 'rails_ext') unless ActiveRecord::Base.respond_to? :_find_by_sql_with_capture
-
-# load other spec helpers
-Dir[File.join(RAILS_ROOT, 'spec', 'spec_helpers', '*.rb')].each do |f|
-  require f
-end
 
 # now look for trisano plugin spec helpers
 Dir[File.join(RAILS_ROOT, 'vendor', 'trisano', '*', 'spec', 'spec_helpers', '*.rb')].each do |f|

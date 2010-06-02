@@ -259,16 +259,10 @@ module ApplicationHelper
     code_select :case, name, selected, empty_option, multi
   end
 
-  def investigators_select(name, selected=nil, empty_option=false)
-    investigate_event = Privilege.investigate_event
-    options = []
-    investigate_event.roles.all.each do |r|
-      options += r.users.find(:all, :select => 'DISTINCT ON (users.id) users.*').collect do |u|
-        [u.best_name, u.id]
-      end
-    end
+  def investigators_select(name, investigators, selected=nil, empty_option=false)
+    return "" if investigators.nil?
+    options = investigators.sort_by(&:best_name).map { |i| [i.best_name, i.id] }
     options = options.unshift([nil, nil]) if empty_option
-    options = options.uniq
     select_tag name.to_s, options_for_select(options, :selected => selected), {:multiple => true, :size => [7, options.size].min}
   end
 
