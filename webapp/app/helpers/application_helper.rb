@@ -277,9 +277,17 @@ module ApplicationHelper
     "<label for=\"#{name.to_s}\">#{check_box_tag(name, 1, params[name])}#{label_text.to_s.humanize}</label>"
   end
 
+  # content is concatenated directly to output
   def scroll_pane(&block)
     haml_tag :div, {:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'} do
       haml_tag :div, {:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}, &block
+    end
+  end
+
+  # scroll pane, but contents returned, rather then concatenated to output
+  def scroll_panel(&block)
+    div_tag(:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;') do
+      div_tag(:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;', &block)
     end
   end
 
@@ -330,8 +338,26 @@ module ApplicationHelper
     end
   end
 
+  def div_tag(options = {})
+    returning "" do |div|
+      div << tag(:div, options, true)
+      div << yield if block_given?
+      div << "</div>"
+    end
+  end
+
   def birthdate_select_tag(name, value)
     calendar_date_select_tag(name, value, :year_range => 100.years.ago..0.years.from_now)
+  end
+
+  def code_description_select_tag(name, codes, *selected_and_options)
+    options = selected_and_options.extract_options!
+    options.symbolize_keys!
+    selected = selected_and_options.first
+
+    codes = codes.unshift(Code.new) if options.delete(:include_blank)
+    option_tags = options_from_collection_for_select(codes, :id, :code_description, selected)
+    select_tag(name, option_tags, options)
   end
 
   def render_actions(actions)

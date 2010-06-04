@@ -41,4 +41,5 @@ describe Code do
       Code.jurisdiction_place_type.should_not be_nil
     end
   end
+
 end

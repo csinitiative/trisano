@@ -47,11 +47,8 @@ module Trisano
 
       class HaveOption < Base
 
-        def initialize(content)
-          if content.nil?
-            raise ArgumentError, "must pass content or use 'has_blank_option' matcher"
-          end
-          @content = content
+        def initialize(options)
+          @options = (options || {}).stringify_keys
         end
 
         def matches?(document)
@@ -59,21 +56,41 @@ module Trisano
           nodes = nodes_as_strings(document)
           nodes.any? do |html|
             doc = parse(html)
-            doc.xpath("//option[normalize-space(text())='#{@content}']").size > 0
+            doc.xpath(generate_xpath).size > 0
           end
         end
 
         def failure_message_for_should
-          "option '#@content' was not found"
+          "option w/ predicates [#{xpath_predicates}] was not found"
         end
 
         def failure_message_for_should_not
-          "did not expect to find option '#@content'"
+          "did not expect to find option w/ predicates [#{xpath_predicates}]"
         end
+
+        private
+
+        def generate_xpath
+          "//option[#{xpath_predicates}]"
+        end
+
+        def xpath_predicates
+          @options.map do |key, value|
+            case key
+            when 'text'
+              "normalize-space(text())='#{value}'"
+            when 'selected'
+              value ? "@selected" : "not(@selected)"
+            else
+              value.nil? ? "@#{key}" : "@#{key}='#{value}'"
+            end
+          end.join(' and ')
+        end
+
       end
 
-      def have_option(expected)
-        HaveOption.new(expected)
+      def have_option(options)
+        HaveOption.new(options)
       end
 
       class HaveLabledCheckBox < Base

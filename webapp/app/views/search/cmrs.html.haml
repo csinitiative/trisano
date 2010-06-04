@@ -24,104 +24,30 @@
 
     %div.search_group.clearfix
       = link_to_function t('show_hide_name_criteria'), "Effect.toggle('name_criteria', 'blind', { duration: 0 })"
-
       %div#name_criteria{:style => "margin-top: 5px"}
-        %div{ :class => "horiz" }
-          %label=t 'full_text_name'
-          = text_field_tag :name, params[:name], :size => "30", :class => "search"
-          %br
-          %small
-            =t 'uses_soundex'
-        %div{ :class => "horiz" }
-          %label=t 'starts_with_first_name'
-          = text_field_tag :sw_first_name, params[:sw_first_name], :class => "search"
-          %br
-          %small
-            =t 'ignore_fts'
-        %div{ :class => "horiz" }
-          %label= t 'starts_with_last_name'
-          = text_field_tag :sw_last_name, params[:sw_last_name], :class => "search"
+        =name_criteria_fields(params).join
 
     %div.search_group.clearfix
       = link_to_function t('show_hide_other_criteria'), "Effect.toggle('all_other_criteria', 'blind', { duration: 0 })"
-
       %div#all_other_criteria{:style => "margin-top: 5px; display: none"}
 
         %div.search_group.clearfix
           = link_to_function t("show_hide_demographic_criteria"), "Effect.toggle('demographic_criteria', 'blind', { duration: 0 })"
 
           %div#demographic_criteria{:style => "margin-top: 5px"}
-            %div{ :class => "horiz" }
-              %label=t 'city'
-              = model_auto_completer("city", params[:city], "", "", { :allow_free_text => true}, { :size => 25 }, { :skip_style => false } )
-            %div{ :class => "horiz" }
-              %label=t 'county'
-              %select{ :name => "county"}
-                %option
-                - for county in @counties
-                  %option{ :value => county.id, :selected => county.id == (params[:county].to_i) ? "selected" : nil}
-                    = "#{h(county.code_description)}"
-            %div{ :class => "horiz" }
-              =gender_select_search_tag(@genders)
-            %div{ :class => "horiz" }
-              %label=t('date_or_year_of_birth')
-              = text_field_tag :birth_date, params[:birth_date], :size => "10"
+            =demographic_criteria_fields(params, @counties, @genders).join
 
         %div.search_group.clearfix
           = link_to_function t("show_hide_clinical_criteria"), "Effect.toggle('clinical_criteria', 'blind', { duration: 0 })"
 
           %div#clinical_criteria{:style => "margin-top: 5px"}
-            %div{ :class => "horiz" }
-              %label=t('diseases')
-              %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
-                %div{:style => 'background:#fff; overflow:auto;height: 10em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
-                  - @diseases.each do |disease|
-                    = "<label>" + check_box_tag("diseases[]", disease.id, (params[:diseases] || []).include?(disease.id.to_s), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
-            %div{ :class => "horiz" }
-              %label{ :for => 'pregnant_id' }=t 'pregnant'
-              = yesno_select(:pregnant_id, params['pregnant_id'].to_i)
+            =clinical_criteria_fields(params, @diseases).join
 
         %div.search_group.clearfix
           = link_to_function t("show_hide_event_criteria"), "Effect.toggle('event_criteria', 'blind', { duration: 0 })"
 
           %div#event_criteria{:style => "margin-top: 5px"}
-            %div{ :class => "horiz" }
-              %label= t 'event_status'
-              %select{ :id => :workflow_state, :name => "workflow_state"}
-                %option
-                = options_for_select(@workflow_states.collect{|ws| [ws.description, ws.workflow_state.to_s]}, :selected => params[:workflow_state])
-            %div{ :class => "horiz" }
-              %label= t 'event_type'
-              %select{ :id => :event_type, :name => "event_type"}
-                %option
-                - for event_type in @event_types
-                  %option{ :value => event_type[:value], :selected => event_type[:value] == (params[:event_type]) ? "selected" : nil}
-                    = h("#{event_type[:name]}")
-            %div{ :class => "horiz" }
-              %label{:for => 'sent_to_cdc'}= t 'sent_to_cdc'
-              = select_tag 'sent_to_cdc', options_for_select([[nil, nil],[t(:yes_true), 'true'], [t(:no_false), 'false']], :selected => params[:sent_to_cdc])
-            %p{:style => "clear: both"}
-            %div{ :class => "horiz" }
-              %label=t 'entered_on_date_range'
-              = text_field_tag :entered_on_start, params[:entered_on_start], :size => "10"
-              &nbsp;-&nbsp;
-              = text_field_tag :entered_on_end, params[:entered_on_end], :size => "10"
-            %div{ :class => "horiz" }
-              %label{ :for => 'record_number' }=t 'record_number'
-              = text_field_tag :record_number, params[:record_number], :size => "15"
-            %p{:style => "clear: both"}
-            %div{ :class => "horiz" }
-              %label=t 'jurisdiction_of_investigation'
-              = select_tag 'jurisdiction_ids', options_from_collection_for_select(@jurisdictions, 'entity_id', 'short_name', array_of_strs_to_ints(params[:jurisdiction_ids]) ), {:multiple => true, :size => 7}
-            %div{ :class => "horiz" }
-              %label{:for => 'state_case_status_ids'}=t 'state_case_status'
-              = case_status_select(:state_case_status_ids, array_of_strs_to_ints(params[:state_case_status_ids]), false, true)
-            %div{ :class => "horiz" }
-              %label{:for => 'lhd_case_status_ids'}= t 'lhd_case_status'
-              = case_status_select(:lhd_case_status_ids, array_of_strs_to_ints(params[:lhd_case_status_ids]), false, true)
-            %div{ :class => "horiz" }
-              %label{:for => 'investigator_ids'}= t 'investigated_by'
-              = investigators_select :investigator_ids, @investigators, array_of_strs_to_ints(params[:investigator_ids])
+            =event_criteria_fields(params, @workflow_states, @event_types, @jurisdictions, @investigators).join
 
         %div.search_group.clearfix
           = link_to_function t("show_hide_epi_and_reporting_criteria"), "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"

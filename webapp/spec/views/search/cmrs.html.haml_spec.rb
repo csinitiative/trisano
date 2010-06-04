@@ -34,7 +34,7 @@ describe "search/cmrs.html.haml" do
   def workflow_mock(description)
     mock(description) do
       stubs(:description).returns(description)
-      stubs(:workflow_state).returns(description.underscore)
+      stubs(:workflow_state).returns(description.downcase.gsub(' ', '_'))
     end
   end
 
@@ -43,14 +43,14 @@ describe "search/cmrs.html.haml" do
   end
 
   def default_assigns
-    assigns[:jurisdictions] = [jurisdiction('Summit County')]
-    assigns[:counties] = [Factory.create(:county, :code_description => 'Bear River')]
-    assigns[:genders] =  [Factory.create(:gender, :code_description => 'Male'),
+    assigns[:jurisdictions] ||= [jurisdiction('Summit County')]
+    assigns[:counties] ||= [Factory.create(:county, :code_description => 'Bear River')]
+    assigns[:genders] ||=  [Factory.create(:gender, :code_description => 'Male'),
                           Factory.create(:gender, :code_description => 'Female')]
-    assigns[:diseases] = [Factory.create(:disease, :disease_name => 'Diphtheria')]
-    assigns[:workflow_states] = [workflow_mock('Assigned to Investigator')]
-    assigns[:event_types] = [{:name => 'Morbidity Event', :value => 'MorbidityEvent'}]
-    assigns[:investigators] = [Factory.create(:user, :first_name => 'Jon', :last_name => 'Dough')]
+    assigns[:diseases] ||= [Factory.create(:disease, :disease_name => 'Diphtheria')]
+    assigns[:workflow_states] ||= [workflow_mock('Assigned to Investigator')]
+    assigns[:event_types] ||= [['Morbidity Event','MorbidityEvent']]
+    assigns[:investigators] ||= [Factory.create(:user, :first_name => 'Jon', :last_name => 'Dough')]
   end
 
   def do_render(options={})
@@ -98,14 +98,26 @@ describe "search/cmrs.html.haml" do
         demo.should have_tag("input[name='city']")
         demo.should have_tag("select[name='county']") do |county|
           county.should have_blank_option
-          county.should have_option("Bear River")
+          county.should have_option(:text => "Bear River", :selected => false)
         end
         demo.should have_tag("select[name='gender']") do |gender|
           gender.should have_blank_option
-          gender.should have_option('Male')
-          gender.should have_option('Female')
+          gender.should have_option(:text => 'Male')
+          gender.should have_option(:text => 'Female')
         end
         demo.should have_tag("input[name='birth_date']")
+      end
+    end
+  end
+
+  it "county from search criteria is selected by default" do
+    county = Factory.create(:county, :code_description => 'Some County')
+    assigns[:counties] = [county]
+    params[:county] = county.id.to_s
+    do_render
+    assert_in_other_criteria do |div|
+      div.should have_tag("select[name='county']") do |county|
+        county.should have_option(:text => 'Some County', :selected => true)
       end
     end
   end
@@ -114,51 +126,96 @@ describe "search/cmrs.html.haml" do
     do_render
     assert_in_other_criteria do |div|
       div.should have_tag("div[id='clinical_criteria']") do |clinical|
-        clinical.should have_labeled_check_box('Diphtheria')
-        clinical.should have_tag('select#pregnant_id') do |preg|
-          preg.should have_blank_option
-          preg.should have_option('Yes')
-          preg.should have_option('No')
+        clinical.should have_tag('div.horiz') do |horiz|
+          horiz.should have_tag('label', 'Diseases')
+          horiz.should have_tag('div div') do |panel|
+            panel.should have_labeled_check_box('Diphtheria')
+          end
+        end
+        clinical.should have_tag('div.horiz') do |horiz|
+          horiz.should have_tag("label[for='pregnant_id']")
+          horiz.should have_tag('select#pregnant_id') do |preg|
+            preg.should have_blank_option
+            preg.should have_option(:text => 'Yes')
+            preg.should have_option(:text => 'No')
+          end
         end
       end
     end
   end
 
   it "renders event search fields" do
+    params[:workflow_state] = 'assigned_to_investigator'
+    params[:event_type] = 'MorbidityEvent'
+    params[:sent_to_cdc] = 'false'
+    j = jurisdiction('Boys Town')
+    assigns[:jurisdictions] = [j]
+    params[:jurisdiction_ids] = [j.entity_id]
     do_render
     assert_in_other_criteria do |div|
       div.should have_tag("div[id='event_criteria']") do |event|
-        event.should have_tag("select#workflow_state") do |state|
-          state.should have_blank_option
-          state.should have_option('Assigned to Investigator')
+        event.should have_tag('div.horiz') do |horiz|
+          horiz.should have_tag('label[for=?]', 'workflow_state')
+          horiz.should have_tag("select#workflow_state") do |state|
+            state.should have_blank_option
+            state.should have_option(:text => 'Assigned to Investigator',
+                                     :selected => true)
+          end
         end
-        event.should have_tag("select#event_type") do |et|
-          et.should have_blank_option
-          et.should have_option('Morbidity Event')
+        event.should have_tag('div.horiz') do |horiz|
+          horiz.should have_tag("label[for=?]", 'event_type')
+          horiz.should have_tag("select#event_type") do |et|
+            et.should have_blank_option
+            et.should have_option(:text => 'Morbidity Event',
+                                  :selected => true)
+          end
         end
-        event.should have_tag("select#sent_to_cdc") do |cdc|
-          cdc.should have_blank_option
-          cdc.should have_option('Yes')
-          cdc.should have_option('No')
+        event.should have_tag('div.horiz') do |horiz|
+          horiz.should have_tag('label[for=?]', 'sent_to_cdc')
+          horiz.should have_tag("select#sent_to_cdc") do |cdc|
+            cdc.should have_blank_option
+            cdc.should have_option(:text => 'Yes')
+            cdc.should have_option(:text => 'No',
+                                   :selected => true)
+          end
         end
-        event.should have_tag("input#entered_on_start")
-        event.should have_tag("input#entered_on_end")
-        event.should have_tag("input#record_number")
-        event.should have_tag("select#jurisdiction_ids") do |j|
-          j.should_not have_blank_option
-          j.should have_option('Summit County')
+        event.should have_tag("div.vert") do |vert|
+          vert.should have_tag("label[for=?]", 'entered_on_start')
+          vert.should have_tag("input#entered_on_start")
+          vert.should have_tag("input#entered_on_end")
         end
-        event.should have_tag("select#state_case_status_ids") do |scs|
-          scs.should_not have_blank_option
-          scs.should have_option('Confirmed')
+        event.should have_tag("div.horiz") do |horiz|
+          horiz.should have_tag("label[for=?]", 'record_number')
+          horiz.should have_tag("input#record_number")
         end
-        event.should have_tag("select#lhd_case_status_ids") do |lcs|
-          lcs.should_not have_blank_option
-          lcs.should have_option('Confirmed')
+        event.should have_tag("div.vert") do |vert|
+          vert.should have_tag("label[for=?]", 'jurisdiction_ids')
+          vert.should have_tag("select#jurisdiction_ids") do |j|
+            j.should_not have_blank_option
+            j.should have_option(:text => 'Boys Town',
+                                 :selected => true)
+          end
         end
-        event.should have_tag("select#investigator_ids") do |i|
-          i.should_not have_blank_option
-          i.should have_option('Jon Dough')
+        event.should have_tag("div.horiz") do |horiz|
+          horiz.should have_tag("label[for=?]", 'state_case_status_ids')
+          horiz.should have_tag("select#state_case_status_ids") do |scs|
+            scs.should_not have_blank_option
+            scs.should have_option(:text => 'Confirmed')
+          end
+        end
+        event.should have_tag("div.horiz") do |horiz|
+          horiz.should have_tag("label[for=?]", 'lhd_case_status_ids')
+          horiz.should have_tag("select#lhd_case_status_ids") do |lcs|
+            lcs.should_not have_blank_option
+            lcs.should have_option(:text => 'Confirmed')
+          end
+        end
+        event.should have_tag("div.horiz") do |horiz|
+          horiz.should have_tag("label[for=?]", 'investigator_ids')
+          horiz.should have_tag("select#investigator_ids") do |i|
+            i.should_not have_blank_option
+            i.should have_option(:text => 'Jon Dough')
+          end
         end
       end
     end

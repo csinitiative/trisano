@@ -41,8 +41,8 @@ class SearchController < ApplicationController
     @last_name = ""
     @birth_date = ""
 
-    @event_types = [{:name => I18n.t(:event_search_type_morb),    :value => "MorbidityEvent"},
-                    {:name => I18n.t(:event_search_type_contact), :value => "ContactEvent"}]
+    @event_types = [[I18n.t(:event_search_type_morb), "MorbidityEvent"],
+                    [I18n.t(:event_search_type_contact), "ContactEvent"]]
 
     @diseases = Disease.find(:all, :order => "disease_name")
 
