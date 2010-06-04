@@ -81,7 +81,7 @@ class Answer < ActiveRecord::Base
   def radio_button_answer
     self.text_answer.nil? ? [] : self.text_answer.split("\n")
   end
-
+  
   def required
     question.is_required
   end
@@ -109,7 +109,7 @@ class Answer < ActiveRecord::Base
       self.text_answer = date_answer.to_s
     end
 
-    set_answer_code
+    concat_checkbox_codes if question.data_type == :check_box
   end
 
   def short_name
@@ -118,31 +118,8 @@ class Answer < ActiveRecord::Base
 
   private
 
-  def set_answer_code
-    if (question.is_multi_valued? && question.question_element.export_column_id.blank?)
-      begin
-        if question.data_type == :check_box
-          self.code = concat_checkbox_codes
-        else
-          # Debt: This results in 3 selects for every multi-valued answer. Stick the code on the request params hash?
-          value_element = question.question_element.value_set_element.value_elements.find_by_name(text_answer)
-          self.code = value_element.code unless value_element.nil?
-        end
-      rescue Exception => ex
-        logger.warn ex
-        return nil
-      end
-    end
-  end
-
   def concat_checkbox_codes
-    codes = []
-
-    self.text_answer.split("\n").each do |check_box_value|
-      codes << question.question_element.value_set_element.value_elements.find_by_name(check_box_value).code
-    end
-
-    codes.join("\n")
+    self.code = self.code.split(",").join("\n") if self.code
   end
 
 end

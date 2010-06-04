@@ -45,7 +45,7 @@ describe PlaceEvent do
     end
 
     describe "When event has one place exposure and a disease" do
-      fixtures :users
+      fixtures :users, :entities
 
       before(:each) do
         mock_user

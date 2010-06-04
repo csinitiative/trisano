@@ -372,6 +372,10 @@ class Event < ActiveRecord::Base
     self.notes << Note.new(:note => message, :note_type => note_type)
   end
 
+  def eager_load_answers
+    self.answers
+  end
+
   # Walks through all unsaved children of this event and assigns them the parent's disease and
   # jurisdiction.  Expected to be called after parent and children have been initially created
   # but not saved, i.e., from the morbidity_event controller, but should be called as needed.
@@ -479,11 +483,24 @@ class Event < ActiveRecord::Base
   end
 
   def new_checkboxes=(attributes)
-    attributes.each { |key, value| answers.build(:question_id => key, :check_box_answer => value[:check_box_answer]) }
+    attributes.each do |key, value|
+      answers.build(
+        :question_id => key,
+        :check_box_answer => value[:check_box_answer],
+        :code => value[:code]
+      )
+    end
   end
 
   def new_radio_buttons=(attributes)
-    attributes.each { |key, value| answers.build(:question_id => key, :radio_button_answer => value[:radio_button_answer], :export_conversion_value_id => value[:export_conversion_value_id]) }
+    attributes.each do |key, value|
+      answers.build(
+        :question_id => key,
+        :radio_button_answer => value[:radio_button_answer],
+        :export_conversion_value_id => value[:export_conversion_value_id],
+        :code => value[:code]
+      )
+    end
   end
 
   def get_or_initialize_answer(question_id)

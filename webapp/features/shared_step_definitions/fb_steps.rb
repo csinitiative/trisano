@@ -46,7 +46,7 @@ Given /^a "([^\"]*)" event form named "([^\"]*)" with the following questions:$/
   table.map_headers! 'Question' => :question_text, 'Short name' => :short_name, 'Data type' => :data_type
   table.hashes.each do |question_attr|
     question_element = QuestionElement.new(:parent_element_id => @form.investigator_view_elements_container.children[0].id,
-                                           :question_attributes => question_attr)
+      :question_attributes => question_attr)
     question_element.save_and_add_to_form
   end
 end
@@ -76,40 +76,16 @@ end
 
 Given(/^that form has (.+) questions$/) do |number_of_questions|
   number_of_questions.to_i.times do |question|
-    question_element = QuestionElement.new({
-        :parent_element_id => @form.investigator_view_elements_container.children[0].id,
-        :question_attributes => {
-          :question_text =>  "#{get_unique_name(3)} #{question}",
-          :data_type => "single_line_text",
-          :short_name => get_unique_name(2)
-        }
-      })
-    question_element.save_and_add_to_form
+    create_question_on_form(@form, { :question_text => "#{get_unique_name(3)} #{question}" })
   end
 end
 
 Given(/^that form has one question on the default view$/) do
-  @question_element = QuestionElement.new({
-      :parent_element_id => @form.investigator_view_elements_container.children[0].id,
-      :question_attributes => {
-        :question_text =>  get_unique_name(3),
-        :data_type => "single_line_text",
-        :short_name => get_unique_name(2)
-      }
-    })
-  @question_element.save_and_add_to_form
+  @question_element = create_question_on_form(@form, { :question_text => get_unique_name(3) })
 end
 
 Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
-  @question_element = QuestionElement.new({
-      :parent_element_id => @form.investigator_view_elements_container.children[0].id,
-      :question_attributes => {
-        :question_text => "I have a short name?",
-        :data_type => "single_line_text",
-        :short_name => short_name
-      }
-    })
-  @question_element.save_and_add_to_form
+  @question_element = create_question_on_form(@form, { :question_text => "I have a short name?", :short_name => short_name })
 end
 
 
@@ -165,15 +141,8 @@ Given /^that form has core follow ups configured for all core fields$/ do
       follow_up_element.save_and_add_to_form
 
       # Add question to follow up container
-      question_element = QuestionElement.new({
-          :parent_element_id => follow_up_element.id,
-          :question_attributes => {
-            :question_text => "#{core_field.key} follow up?",
-            :data_type => "single_line_text",
-            :short_name => Digest::MD5::hexdigest(core_field.name)
-          }
-        })
-      question_element.save_and_add_to_form
+      create_question_on_form(@form, { :question_text => "#{core_field.key} follow up?", :short_name => Digest::MD5::hexdigest(core_field.name) }, follow_up_element)
+      
     end
   end
 end
@@ -191,26 +160,18 @@ Given /^that form has core field configs configured for all core fields$/ do
       core_field_config.save_and_add_to_form
 
       # Add question to before config
-      before_question_element = QuestionElement.new({
-          :parent_element_id => core_field_config.children[0].id,
-          :question_attributes => {
-            :question_text => "#{core_field.key} before?",
-            :data_type => "single_line_text",
-            :short_name => Digest::MD5::hexdigest(core_field.key + "before")
-          }
-        })
-      before_question_element.save_and_add_to_form
+      create_question_on_form(@form, {
+          :question_text => "#{core_field.key} before?",
+          :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
+        core_field_config.children[0]
+      )
 
       # Add question to after config
-      after_question_element = QuestionElement.new({
-          :parent_element_id => core_field_config.children[1].id,
-          :question_attributes => {
-            :question_text => "#{core_field.key} after?",
-            :data_type => "single_line_text",
-            :short_name => Digest::MD5::hexdigest(core_field.key + "after")
-          }
-        })
-      after_question_element.save_and_add_to_form
+      create_question_on_form(@form, { 
+          :question_text => "#{core_field.key} after?",
+          :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
+        core_field_config.children[1]
+      )
     end
   end
 end
@@ -225,15 +186,10 @@ Given /^that form has core view configs configured for all core views$/ do
     @core_view_element.name = core_view[0]
     @core_view_element.save_and_add_to_form
 
-    question_element = QuestionElement.new({
-        :parent_element_id => @core_view_element.id,
-        :question_attributes => {
-          :question_text => "#{core_view[0]} question?",
-          :data_type => "single_line_text",
-          :short_name => Digest::MD5::hexdigest(core_view[0])
-        }
-      })
-    question_element.save_and_add_to_form
+    create_question_on_form(@form, { :question_text => "#{core_view[0]} question?", :short_name => Digest::MD5::hexdigest(core_view[0]) }, @core_view_element)
   end
 
 end
+
+
+

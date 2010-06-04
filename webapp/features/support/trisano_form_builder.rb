@@ -37,6 +37,41 @@ def save_new_form(form_name)
   response.should contain(form_name)
 end
 
+def create_question_on_form(form, form_attributes, question_parent=nil)
+  question_text = form_attributes[:question_text].blank? ? "#{get_unique_name(3)} question" : form_attributes[:question_text]
+  data_type = form_attributes[:data_type].blank? ? "single_line_text" : form_attributes[:data_type]
+  short_name = form_attributes[:short_name].blank? ? get_unique_name(2) : form_attributes[:short_name]
+  question_parent = question_parent.nil? ? form.investigator_view_elements_container.children[0] : question_parent
+
+  question_element = QuestionElement.new({
+      :parent_element_id => question_parent.id,
+      :question_attributes => {
+        :question_text =>  question_text,
+        :data_type => data_type,
+        :short_name => short_name
+      }
+    }
+  )
+
+  question_element.save_and_add_to_form
+  question_element
+end
+
+def add_value_set_to_question(question_element, value_set_name, values)
+  value_set_element = ValueSetElement.new({
+      :parent_element_id => question_element.id,
+      :name => value_set_name
+    }
+  )
+  value_set_element.save_and_add_to_form
+  
+  values.each do |value_array|
+    value_set_element.add_child ValueElement.create!(:name => value_array[0], :code => value_array[1], :tree_id => value_set_element.tree_id)
+    value_set_element.save!
+  end
+end
+
+
 def create_value_elements_in_value_set(value_set_element, values_table)
   values_table.rows.each do |row|
     value_set_element.add_child ValueElement.create!(:name => row.first, :code => row.last, :tree_id => value_set_element.tree_id)

@@ -98,6 +98,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
 
     cdc_attributes = []
+    codes = []
     input_element = case question.data_type
     when :single_line_text
       unless (question.size.nil?)
@@ -111,16 +112,36 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       html_options[:onchange] = text_answer_event if follow_ups
       text_area(:text_answer, html_options)
     when :drop_down
+      field_name = @object_name
+      field_index = @object.new_record? ? "" : index.to_s
+      field_id = @object.new_record? ? question.id.to_s : index.to_s
+      
+      select_list = ""
+      selected_code = ""
+      
       html_options[:onclick] = select_answer_event if follow_ups
-      # collection_select(:single_answer_id, question.value_sets, :id, :value, {}, html_options)
       select_values = []
       get_values(form_elements_cache, question_element).each do |value_hash|
+        codes << {:value => value_hash[:value], :code => value_hash[:code]}
+        if @object.text_answer
+          selected_code = @object.text_answer.include?(value_hash[:value]) ? value_hash[:code] : "" unless !selected_code.blank?
+        end
+
         unless question_element.export_column.blank?
           cdc_attributes << {:value => value_hash[:value], :export_conversion_value_id => value_hash[:export_conversion_value_id]}
         end
         select_values << value_hash[:value]
       end
-      select(:text_answer, select_values, {}, html_options)
+
+      if selected_code.blank?
+        selected_code = codes[0][:code]
+      end
+
+      select_list << select(:text_answer, select_values, {}, html_options)
+      select_list << @template.hidden_field_tag(field_name + "[" + field_index + "][code]",
+        selected_code,
+        :id => field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_id}_code"
+      )
     when :check_box
 
       if @object.new_record?
@@ -133,11 +154,17 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       i = 0
       name = field_name + "[" + field_index + "][check_box_answer][]"
+      selected_codes = []
+
       get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value_hash|
         html_options[:id] =  "#{id}_#{i += 1}"
+        codes << {:id => html_options[:id], :code => value_hash[:code]}
+        selected_codes << value_hash[:code] if @object.check_box_answer.include?(value_hash[:value])
         check_boxes += @template.check_box_tag(name, value_hash[:value], @object.check_box_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
+        check_boxes += @template.hidden_field_tag("", value_hash[:code], { :id => "#{html_options[:id]}_code"})
       end
       check_boxes += @template.hidden_field_tag(name, "")
+      check_boxes += @template.hidden_field_tag(field_name + "[" + field_index + "][code]", selected_codes.reject{|code|code.blank?}.join(","))
     when :radio_button
 
       if @object.new_record?
@@ -150,19 +177,22 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
-
+      selected_code = ""
+      
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value_hash|
-
         html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onclick] = select_answer_event if follow_ups
-
+        codes << {:id => html_options[:id], :code => value_hash[:code]}
+        
         unless question_element.export_column.blank?
           cdc_attributes << {:id => html_options[:id], :export_conversion_value_id => value_hash[:export_conversion_value_id]}
         end
 
+        selected_code = @object.radio_button_answer.include?(value_hash[:value]) ? value_hash[:code] : "" unless !selected_code.blank?
         radio_buttons += @template.radio_button_tag(name, value_hash[:value], @object.radio_button_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
       end
       radio_buttons += @template.hidden_field_tag(name, "")
+      radio_buttons += @template.hidden_field_tag(field_name + "[" + field_index + "][code]", selected_code)
     when :date
       html_options[:onchange] = text_answer_event if follow_ups
       html_options[:year_range] = 100.years.ago..0.years.from_now
@@ -177,6 +207,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if question.data_type == :check_box || question.data_type == :radio_button
       result += @template.content_tag(:label, sanitize(question.question_text, :tags => %w(br))) + " " + input_element
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
+      result << code_js(codes, field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_code", question.data_type)
+
       unless question_element.export_column.blank?
         export_conv_field_name = field_name + "[#{field_index}]" + '[export_conversion_value_id]'
         export_conv_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'export_conversion_value_id'
@@ -199,6 +231,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
           result += "\n" + hidden_field(:export_conversion_value_id, :index => index, :value => question_element.export_column.export_conversion_values.first.id )
         end
       end
+
+      if question.data_type == :drop_down
+        result << drop_down_code_js(codes, id, field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_id}_code")
+      end
     end
 
     result << follow_up_spinner_for(:id => id)
@@ -207,7 +243,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def get_values(form_elements_cache, question_element)
-    form_elements_cache.children(form_elements_cache.children(question_element).find { |child| child.is_a?(ValueSetElement) }).collect { |value| {:value => value.name, :export_conversion_value_id => value.export_conversion_value_id} }
+    form_elements_cache.children(form_elements_cache.children(question_element).find { |child| child.is_a?(ValueSetElement) }).collect { |value| {:value => value.name, :export_conversion_value_id => value.export_conversion_value_id, :code => value.code} }
   end
 
   def core_path
@@ -262,10 +298,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     returning "" do |result|
       result << '&nbsp;' * 2
       result << @template.image_tag('redbox_spinner.gif',
-                                    :id => spinner_id,
-                                    :alt => 'Working...',
-                                    :size => '16x16',
-                                    :style => 'display: none;')
+        :id => spinner_id,
+        :alt => 'Working...',
+        :size => '16x16',
+        :style => 'display: none;')
     end
   end
 
@@ -278,6 +314,76 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       if conversion_value.value_from == value_from
         return conversion_value.id
       end
+    end
+  end
+
+  def code_js(options, id, data_type)
+    case data_type
+    when :radio_button
+      radio_button_code_js(options, id)
+    when :check_box
+      check_box_code_js(options, id)
+    else
+      ""
+    end
+  end
+  
+  def radio_button_code_js(radio_buttons, id)
+    @template.on_loaded_or_eval do
+      radio_buttons.collect do |radio_button|
+        <<-JS
+            $('#{radio_button[:id]}').observe('click', function() {
+              $('#{id}').writeAttribute('value', '#{radio_button[:code]}')
+            });
+        JS
+      end.join
+    end
+  end
+
+  def check_box_code_js(check_boxen, id)
+    @template.on_loaded_or_eval do
+      check_boxen.collect do |check_box|
+        <<-JS
+            $('#{check_box[:id]}').observe('click', function() {
+              var check_box_name = $('#{check_box[:id]}').name
+              var codes = new Array();
+
+              $$('input[type="checkbox"][name="' + check_box_name + '"]').each(function (elem) {
+                if (elem.checked) {
+                  code_value = $(elem.id + '_code').value;
+                  if (code_value.length > 0) {
+                    codes.push(code_value)
+                  }
+                }
+              })
+              $('#{id}').writeAttribute('value', codes.join(","))
+            });
+        JS
+      end.join
+    end
+  end
+
+  def drop_down_code_js(options, id, hidden_field)
+    @template.on_loaded_or_eval do
+      script = "$('#{id}').observe('change', function() {\n"
+      options.each do |option|
+        script << "  if (this.value == '#{option[:value]}') { "
+        script << "$('#{hidden_field}').writeAttribute('value', '#{option[:code]}') }\n"
+      end
+      script << "});"
+      script
+    end
+  end
+  
+  def dd_code_js(option_elements, hidden_code_field, id)
+    @template.on_loaded_or_eval do
+      script = "$('#{id}').observe('change', function() {\n"
+      option_elements.each do |option_element|
+        script << "  if (this.value == '#{option_element[:value]}') { "
+        script << "$('#{hidden_code_field}').writeAttribute('value', '#{option_element[:code]}') }\n"
+      end
+      script << "});"
+      script
     end
   end
 

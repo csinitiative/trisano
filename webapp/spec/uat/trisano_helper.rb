@@ -390,7 +390,7 @@ module TrisanoHelper
   def answer_check_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
-      browser.click("investigator_answer_#{answer_id}_#{answer}") == "OK"
+      browser.click("//input[contains(@id, 'investigator_answer_#{answer_id}') and @value='#{answer}']") == "OK"
     rescue
       return false
     end
@@ -400,7 +400,7 @@ module TrisanoHelper
   def answer_radio_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
-      browser.click("investigator_answer_#{answer_id}_#{answer}") == "OK"
+      browser.click("//input[contains(@id, 'investigator_answer_#{answer_id}') and @value='#{answer}']") == "OK"
     rescue
       return false
     end
