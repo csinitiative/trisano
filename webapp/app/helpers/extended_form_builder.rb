@@ -375,17 +375,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
   
-  def dd_code_js(option_elements, hidden_code_field, id)
-    @template.on_loaded_or_eval do
-      script = "$('#{id}').observe('change', function() {\n"
-      option_elements.each do |option_element|
-        script << "  if (this.value == '#{option_element[:value]}') { "
-        script << "$('#{hidden_code_field}').writeAttribute('value', '#{option_element[:code]}') }\n"
-      end
-      script << "});"
-      script
-    end
-  end
 
   def rb_export_js(radio_buttons, id)
     @template.on_loaded_or_eval do
