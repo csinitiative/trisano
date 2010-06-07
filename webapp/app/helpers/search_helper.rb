@@ -18,6 +18,7 @@
 require 'csv'
 
 module SearchHelper
+  extensible_helper
 
   # Debt: This is here because it's a special case of finding a record
   # for search csv and it makes mocking the view logic easier. Also, I
