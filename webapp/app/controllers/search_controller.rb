@@ -39,7 +39,6 @@ class SearchController < ApplicationController
     @first_name = ""
     @middle_name = ""
     @last_name = ""
-    @birth_date = ""
 
     @event_types = [[I18n.t(:event_search_type_morb), "MorbidityEvent"],
                     [I18n.t(:event_search_type_contact), "ContactEvent"]]
@@ -61,9 +60,9 @@ class SearchController < ApplicationController
         if !params[:birth_date].blank?
           begin
             if (params[:birth_date].length == 4 && params[:birth_date].to_i != 0)
-              @birth_date = params[:birth_date]
+              params[:parsed_birth_date] = params[:birth_date]
             else
-              @birth_date = parse_american_date(params[:birth_date])
+              params[:parsed_birth_date] = parse_american_date(params[:birth_date])
             end
           rescue
             error_details << t("invalid_birth_date_format")
@@ -72,7 +71,7 @@ class SearchController < ApplicationController
 
         if !params[:entered_on_start].blank?
           begin
-            entered_on_start = parse_american_date(params[:entered_on_start])
+            params[:parsed_entered_start_date] = parse_american_date(params[:entered_on_start])
           rescue
             error_details << t("invalid_entered_on_start_date_format")
           end
@@ -80,7 +79,7 @@ class SearchController < ApplicationController
 
         if !params[:entered_on_end].blank?
           begin
-            entered_on_end = parse_american_date(params[:entered_on_end], 1)
+            params[:parsed_entered_end_date] = parse_american_date(params[:entered_on_end], 1)
           rescue
             error_details << t("invalid_entered_on_end_date_format")
           end
@@ -88,31 +87,7 @@ class SearchController < ApplicationController
 
         raise if (!error_details.empty?)
 
-        @cmrs = Event.find_by_criteria(:fulltext_terms => params[:name],
-                                       :diseases => params[:diseases],
-                                       :gender => params[:gender],
-                                       :sw_last_name => params[:sw_last_name],
-                                       :sw_first_name => params[:sw_first_name],
-                                       :workflow_state => params[:workflow_state],
-                                       :birth_date => @birth_date,
-                                       :entered_on_start => entered_on_start,
-                                       :entered_on_end => entered_on_end,
-                                       :city => params[:city],
-                                       :county => params[:county],
-                                       :jurisdiction_ids => params[:jurisdiction_ids],
-                                       :event_type => params[:event_type],
-                                       :record_number => params[:record_number],
-                                       :pregnant_id => params[:pregnant_id],
-                                       :state_case_status_ids => params[:state_case_status_ids],
-                                       :lhd_case_status_ids => params[:lhd_case_status_ids],
-                                       :sent_to_cdc => params[:sent_to_cdc],
-                                       :first_reported_PH_date_start => params[:first_reported_PH_date_start],
-                                       :first_reported_PH_date_end => params[:first_reported_PH_date_end],
-                                       :investigator_ids => params[:investigator_ids],
-                                       :other_data_1 => params[:other_data_1],
-                                       :other_data_2 => params[:other_data_2],
-                                       :limit => max_search_results
-                                       )
+        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params))
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]
@@ -185,5 +160,32 @@ class SearchController < ApplicationController
   def max_search_results
     max_limit = config_option(:max_search_results).to_i
     max_limit <= 0 ? 500 : max_limit
+  end
+
+  def convert_to_search_criteria(params)
+    Hash[:fulltext_terms,   params[:name],
+         :diseases,         params[:diseases],
+         :gender,           params[:gender],
+         :sw_last_name,     params[:sw_last_name],
+         :sw_first_name,    params[:sw_first_name],
+         :workflow_state,   params[:workflow_state],
+         :birth_date,       params[:parsed_birth_date],
+         :entered_on_start, params[:parsed_entered_start_date],
+         :entered_on_end,   params[:parsed_entered_end_date],
+         :city,             params[:city],
+         :county,           params[:county],
+         :jurisdiction_ids, params[:jurisdiction_ids],
+         :event_type,       params[:event_type],
+         :record_number,    params[:record_number],
+         :pregnant_id,      params[:pregnant_id],
+         :state_case_status_ids, params[:state_case_status_ids],
+         :lhd_case_status_ids,   params[:lhd_case_status_ids],
+         :sent_to_cdc,           params[:sent_to_cdc],
+         :first_reported_PH_date_start, params[:first_reported_PH_date_start],
+         :first_reported_PH_date_end,   params[:first_reported_PH_date_end],
+         :investigator_ids, params[:investigator_ids],
+         :other_data_1,     params[:other_data_1],
+         :other_data_2,     params[:other_data_2],
+         :limit,            max_search_results]
   end
 end
