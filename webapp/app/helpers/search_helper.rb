@@ -221,6 +221,27 @@ module SearchHelper
      end]
   end
 
+  def epi_criteria_fields(params)
+    [div_tag(:class => :horiz) do
+       html =  label_tag(:other_data_1, t(:other_data_1))
+       html << text_field_tag(:other_data_1, params[:other_data_1], :size => 15)
+     end,
+     div_tag(:class => :horiz) do
+       html =  label_tag(:other_data_2, t(:other_data_2))
+       html << text_field_tag(:other_data_2, params[:other_data_2], :size => 15)
+     end,
+     div_tag(:class => :horiz) do
+       html =  label_tag(:first_reported_PH_date_start, t(:first_reported_date_range))
+       html << text_field_tag(:first_reported_PH_date_start,
+                              params[:first_reported_PH_date_start],
+                              :size => 10)
+       html << "&nbsp;-&nbsp;"
+       html << text_field_tag(:first_reported_PH_date_end,
+                              params[:first_reported_PH_date_end],
+                              :size => 10)
+     end]
+  end
+
   def workflow_states_select_tag(workflow_states, selected=nil)
     list =  [[nil, nil]]
     list += workflow_states.map { |s| [s.description, s.workflow_state.to_s] }
