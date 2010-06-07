@@ -53,17 +53,7 @@
           = link_to_function t("show_hide_epi_and_reporting_criteria"), "Effect.toggle('epi_reporting_criteria', 'blind', { duration: 0 } )"
 
           %div#epi_reporting_criteria{:style => "margin-top: 5px"}
-            %div{ :class => "horiz" }
-              %label{ :for => 'other_data_1' }=t 'other_data_1'
-              = text_field_tag :other_data_1, params[:other_data_1], :size => "15"
-            %div{ :class => "horiz" }
-              %label{ :for => 'other_data_2' }=t 'other_data_2'
-              = text_field_tag :other_data_2, params[:other_data_2], :size => "15"
-            %div{ :class => "horiz" }
-              %label= t 'first_reported_date_range'
-              = text_field_tag :first_reported_PH_date_start, params[:first_reported_PH_date_start], :size => "10"
-              &nbsp;-&nbsp;
-              = text_field_tag :first_reported_PH_date_end, params[:first_reported_PH_date_end], :size => "10"
+            =epi_criteria_fields(params).join
 
     %input{ :value => t('submit_query'), :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 12em; width:130px;" }
 = button_to(t("start_over"), search_cmrs_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")

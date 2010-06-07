@@ -225,8 +225,11 @@ describe "search/cmrs.html.haml" do
     do_render
     assert_in_other_criteria do |div|
       div.should have_tag("div[id='epi_reporting_criteria']") do |epi|
+        epi.should have_tag("label[for=?]", "other_data_1")
         epi.should have_tag("input#other_data_1")
+        epi.should have_tag("label[for=?]", "other_data_2")
         epi.should have_tag("input#other_data_2")
+        epi.should have_tag("label[for=?]", "first_reported_PH_date_start")
         epi.should have_tag("input#first_reported_PH_date_start")
         epi.should have_tag("input#first_reported_PH_date_end")
       end
