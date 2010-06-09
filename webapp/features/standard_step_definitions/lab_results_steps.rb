@@ -51,9 +51,11 @@ Given /^the lab result references the common test type$/ do
 end
 
 Then /^all common test types should be available for selection$/ do
-  response.should have_xpath("//form[contains(@class, '_event')]//select[contains(@id, 'test_type_id')]") do |options|
-    CommonTestType.all.each do |test_type|
-      options.should contain(test_type.common_name)
+  response.should have_tag("form[class *= '_event']") do |form|
+    form.should have_tag("select[id *= 'test_type_id']") do |select|
+      CommonTestType.all.each do |test_type|
+        select.should have_option(:text => test_type.common_name)
+      end
     end
   end
 end
