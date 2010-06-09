@@ -66,3 +66,4 @@ $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_gi
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/freshy_filter_chain-0.1.0.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/validates_timeliness-2.2.2.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mocha-0.9.8.gem
+$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/webrat-0.7.2.pre.gem
