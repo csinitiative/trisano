@@ -310,7 +310,7 @@ module EventSearch
         if options[end_k].blank?
           conditions = ["#{table.to_s}.\"#{field.to_s}\" >= ?", options[start_k]]
         else
-          conditions = ["#{table.to_s}.\"#{field.to_s}\" BETEEN ? AND ?", options[start_k], options[end_k]]
+          conditions = ["#{table.to_s}.\"#{field.to_s}\" BETWEEN ? AND ?", options[start_k], options[end_k]]
         end
       end
       sanitize_sql_for_conditions(conditions) if defined? conditions
