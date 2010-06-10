@@ -20,7 +20,7 @@
 # install the .gem files that are required to run the system
 # Pass in 0 if you don't want sudo to be used
 
-if test $1 -eq 0
+if [ -z "$1" ]
 then
   command=""
 else
