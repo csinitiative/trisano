@@ -24,6 +24,7 @@
 GEM_DIR=../lib/gems/
 
 echo "installing gems"
+jruby -S gem update --system
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/jruby-openssl-0.2.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-jdbc-adapter-0.9.1.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/activerecord-jdbcpostgresql-adapter-0.9.1.gem
