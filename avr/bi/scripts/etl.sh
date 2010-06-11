@@ -42,12 +42,7 @@ PGSQL_PATH=/usr/bin
 # outside etl.sh
 echo "Testing plugin directory: $TRISANO_PLUGIN_DIRECTORY"
 if [[ -z $TRISANO_PLUGIN_DIRECTORY ||  ! -d $TRISANO_PLUGIN_DIRECTORY ]]; then
-    TRISANO_PLUGIN_DIRECTORY=<%= dw_dir %>/plugins
-    echo "Testing plugin directory: $TRISANO_PLUGIN_DIRECTORY"
-    if [[ -z $TRISANO_PLUGIN_DIRECTORY ||  ! -d $TRISANO_PLUGIN_DIRECTORY ]]; then
-        echo "All plugin dirs failed. Using defaults"
-        TRISANO_PLUGIN_DIRECTORY=../../../plugins
-    fi
+    TRISANO_PLUGIN_DIRECTORY=../../../plugins
 fi
 echo "Plugin directory: $TRISANO_PLUGIN_DIRECTORY"
 ## END OF CONFIG
@@ -144,27 +139,27 @@ $PGDUMP -s -O -x -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \
 # Drop bucardo again
 $PSQL -X -q -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
     -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;"
-echo "   Dropping constraints on dumped tables"
-CONSTRAINTS=$($PSQL -t -q -A -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME <<DROPCONSTRAINT
-SELECT
-    'ALTER TABLE public.' || pc.relname || ' DROP CONSTRAINT ' || pcon.conname || ' CASCADE;
-    '
-FROM
-    pg_catalog.pg_constraint pcon
-    JOIN pg_catalog.pg_class pc
-        ON (pcon.conrelid = pc.oid)
-    JOIN pg_catalog.pg_namespace pn
-        ON (pc.relnamespace = pn.oid)
-WHERE
-    pn.nspname = 'public' AND
-    confrelid = 0;
-DROPCONSTRAINT
-)
-
-( for CONSTRAINT in $CONSTRAINTS ; do echo $CONSTRAINT ; done ) | \
-    $PSQL -X -q -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-     -d $DEST_DB_NAME
+#echo "   Dropping constraints on dumped tables"
+#CONSTRAINTS=$($PSQL -t -q -A -X -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
+#    -d $DEST_DB_NAME <<DROPCONSTRAINT
+#SELECT
+#    'ALTER TABLE public.' || pc.relname || ' DROP CONSTRAINT ' || pcon.conname || ' CASCADE;
+#    '
+#FROM
+#    pg_catalog.pg_constraint pcon
+#    JOIN pg_catalog.pg_class pc
+#        ON (pcon.conrelid = pc.oid)
+#    JOIN pg_catalog.pg_namespace pn
+#        ON (pc.relnamespace = pn.oid)
+#WHERE
+#    pn.nspname = 'public' AND
+#    confrelid = 0;
+#DROPCONSTRAINT
+#)
+#
+#( for CONSTRAINT in $CONSTRAINTS ; do echo $CONSTRAINT ; done ) | \
+#    $PSQL -X -q -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
+#     -d $DEST_DB_NAME
 
 echo "   Doing main dump"
 $PGDUMP --disable-triggers -a -O -x -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT \

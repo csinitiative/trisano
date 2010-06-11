@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -313,20 +313,39 @@ end
 
 def formbuilder_hstore_query(name, prefix, dg)
     return %{
-        SELECT key FROM (
-            SELECT DISTINCT trisano.skeys(#{prefix}_formbuilder) AS key
-            FROM trisano.#{name}
-            WHERE
-                '#{dg}' = 'All tables' OR
-                disease_id IN (
-                    SELECT DISTINCT disease_id
-                    FROM
-                        trisano.avr_groups_diseases_view agd
-                        JOIN trisano.avr_groups_view a
-                            ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
-                )
-       ) f
-       ORDER BY substring(key, 1, strpos(key, '|')-1), key
+        SELECT key, data_type, f_short, q_short FROM (
+            SELECT
+                key,
+                -- If a field has had multiple data types, one of which was a date type, 
+                -- assume the field is a date field
+                MAX(CASE WHEN qv.data_type = 'date' THEN 2 ELSE 1 END) AS data_type,
+                f_short,
+                q_short
+            FROM
+                (
+                    SELECT
+                        key,
+                        split_part(key, '|', 1) AS f_short,
+                        split_part(key, '|', 2) AS q_short
+                    FROM (
+                        SELECT DISTINCT trisano.skeys(#{prefix}_formbuilder) AS key
+                        FROM trisano.#{name}
+                        WHERE
+                            '#{dg}' = 'All tables' OR
+                            disease_id IN (
+                                SELECT DISTINCT disease_id
+                                FROM
+                                    trisano.avr_groups_diseases_view agd
+                                    JOIN trisano.avr_groups_view a
+                                        ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
+                            )
+                    ) f1
+                ) f2
+                LEFT JOIN trisano.questions_view qv
+                    ON (qv.short_name = q_short AND qv.form_short_name = f_short)
+                GROUP BY key, f_short, q_short
+        ) f3
+        ORDER BY substring(key, 1, strpos(key, '|')-1), key
     }
 end
 
@@ -362,7 +381,14 @@ def add_formbuilder_categories(prefix, sourcetable, pt, bt, dg, meta, formbuilde
         secure category
         formbuilder_categories << category
       end
-      pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}", colname, 1, nil, "trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
+
+      if fbkey['data_type'].to_i == 2
+        formula = "trisano.format_date(trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text))"
+      else
+        formula = "trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
+      end
+
+      pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}", colname, fbkey['data_type'].to_i, nil, formula
       bc = add_single_business_column(bt, pt, pc, "#{fbkey['key']}_#{type_num}", fbkey['key'], colname, category, 'TRUE')
     end
 end

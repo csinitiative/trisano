@@ -530,6 +530,15 @@ END;
 $addlang$;
 
 SELECT trisano.addlang('plperl');
+SELECT trisano.addlang('plperlu');
+
+CREATE OR REPLACE FUNCTION trisano.format_date(inputval TEXT) RETURNS TIMESTAMP AS $$
+  use Date::Parse;
+  use Date::Format;
+
+  my $a = str2time($_[0]);
+  return defined($a) ? ctime($a) : undef;
+$$ LANGUAGE plperlu STRICT IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION trisano.array_median(i double precision[]) RETURNS double precision
     LANGUAGE plperl IMMUTABLE
