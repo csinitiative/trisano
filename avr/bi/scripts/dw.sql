@@ -949,7 +949,11 @@ SELECT
     c.code_description AS lab_type,
     sm.hl7_message,
     sm.state AS staged_message_state,
-    sm.note AS staged_message_note
+    sm.note AS staged_message_note,
+    org.organism_name,
+    org.snomed_id,
+    org.snomed_code,
+    org.snomed_name
 FROM
     lab_results lr
     LEFT JOIN staged_messages sm
@@ -977,6 +981,8 @@ FROM
         ON (pt.place_id = places.id)
     LEFT JOIN codes c
         ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+    LEFT JOIN organisms org
+        ON (org.id = lr.organism_id)
 ;
 
 --ALTER TABLE dw_lab_results
