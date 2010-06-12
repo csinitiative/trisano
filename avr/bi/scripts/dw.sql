@@ -1325,10 +1325,17 @@ SELECT
 FROM
     email_addresses e;
 
+ALTER TABLE questions ADD form_short_name TEXT;
+
+UPDATE questions q SET form_short_name = f.short_name
+    FROM forms f, form_elements fe
+    WHERE f.id = fe.form_id AND q.form_element_id = fe.id;
+
 ANALYZE;
 
 TRUNCATE trisano.etl_success;
 INSERT INTO trisano.etl_success (success) VALUES (TRUE);
 
-
 COMMIT;
+
+VACUUM questions;
