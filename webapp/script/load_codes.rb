@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 puts "Loading codes"
@@ -21,7 +21,7 @@ puts "Loading codes"
 # loading into models.
 
 code_names = YAML::load_file "#{RAILS_ROOT}/db/defaults/code_names.yml"
-# Hash used by the code loading logic to shortcut external lookup  
+# Hash used by the code loading logic to shortcut external lookup
 @quick_external = {}
 # Can't simply delete all and insert as the delete may trigger a future FK constraint
 CodeName.transaction do
@@ -43,13 +43,13 @@ Code.transaction do
   codes.each do |code|
     begin
       if(@quick_external[code['code_name']])
-        c = ExternalCode.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
-                                                                      :the_code => code['the_code'], 
+        c = ExternalCode.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'],
+                                                                      :the_code => code['the_code'],
                                                                       :code_description => code['code_description'],
                                                                       :sort_order => code['sort_order'])
       else
-        c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'], 
-                                                              :the_code => code['the_code'], 
+        c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'],
+                                                              :the_code => code['the_code'],
                                                               :code_description => code['code_description'],
                                                               :sort_order => code['sort_order'])
       end

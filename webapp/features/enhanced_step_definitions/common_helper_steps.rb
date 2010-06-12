@@ -104,5 +104,17 @@ After('@clean') do
 end
 
 def cleanable_classes
-  [CommonTestType, LabResult, Address, Note, Event, Form, FormElement, LoincCode, Organism]
+  [CommonTestType,
+   LabResult,
+   Address,
+   Note,
+   ParticipationsTreatment,
+   ParticipationsRiskFactor,
+   Participation,
+   DiseaseEvent,
+   Event,
+   Form,
+   FormElement,
+   LoincCode,
+   Organism]
 end

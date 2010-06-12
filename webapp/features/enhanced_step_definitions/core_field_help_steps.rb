@@ -30,7 +30,7 @@ end
 
 Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_type, mode|
   html_source = @browser.get_html_source
-  
+
   CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
     # Ignore lab result fields in show mode
     unless (mode == "show" && core_field.key.include?("[labs]"))
