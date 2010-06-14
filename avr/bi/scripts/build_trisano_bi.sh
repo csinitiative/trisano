@@ -137,10 +137,10 @@ cp $TRISANO_SOURCE_HOME/avr/bi/schema/index.xml $BI_SERVER_HOME/pentaho-solution
 cp $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.rb $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp --preserve=mode $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.sh $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
-cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/lib
+cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.3.1.jar $BI_SERVER_HOME/lib
 cp $TRISANO_SOURCE_HOME/avr/pentaho-metadata-2.2.0-SNAPSHOT.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/pentaho-metadata-2.2.0.jar
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/trisano.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/
-cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.2.0.jar $BI_SERVER_HOME/pentaho-solutions/TriSano
+cp $TRISANO_SOURCE_HOME/webapp/lib/jruby-complete-1.3.1.jar $BI_SERVER_HOME/pentaho-solutions/TriSano
 
 # Removing sample repositories
 rm -fr $BI_SERVER_HOME/pentaho-solutions/steel-wheels

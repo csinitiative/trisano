@@ -37,6 +37,6 @@ export BI_USER_PASSWORD=password
 # for some things.
 cd $BI_SERVER_PATH/pentaho-solutions/TriSano
 
-java -cp $BI_SERVER_PATH/lib/jruby-complete-1.2.0.jar org.jruby.Main \
+java -cp $BI_SERVER_PATH/lib/jruby-complete-1.3.1.jar org.jruby.Main \
     $BI_SERVER_PATH/pentaho-solutions/TriSano/update_metadata.rb
 
