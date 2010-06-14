@@ -31,12 +31,8 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
       # look at the core field's field type to know how to tell Selenium how to fill
       # in the answer
       code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.all(:order => "code_description ASC").first : core_field.code_name.codes.all(:order => "code_description ASC").first
-        
+
       @browser.select(key, code.code_description)
-    elsif core_field.key == "morbidity_event[outbreak_name]"
-      # Outbreak name is a special case in that it is the only core follow up that is a
-      # drop down that is not a code (it's a list of outbreaks in the system.
-      @browser.select(railsify_core_field_key("morbidity_event[outbreak_event_id]"), @outbreak_event.event_name)
     else
       # Originally, all non-code core fields are text inputs. Fields are incrementally
       # getting smarter. Age fields are now type numeric. The rest of the text inputs
@@ -46,7 +42,7 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
       elsif core_field.field_type == "numeric"
         @browser.type(key, "1")
       end
-      
+
     end
   end
 end
@@ -76,7 +72,7 @@ end
 When /^I answer all of the core follow ups with a non\-matching condition$/ do
   CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
     key = railsify_core_field_key(core_field.key)
-    
+
     if core_field.code_name
 
       # For now, all core condition follow ups are drop downs. Later, we might have to
@@ -85,12 +81,8 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
       #
       # Use the last code for a non-match. First is used for the match.
       code = core_field.code_name.codes.empty? ? core_field.code_name.external_codes.all(:order => "code_description ASC").last : core_field.code_name.codes.all(:order => "code_description ASC").last
-      
+
       @browser.select(key, code.code_description)
-    elsif core_field.key == "morbidity_event[outbreak_name]"
-      # Outbreak name is a special case in that it is the only core follow up that is a
-      # drop down that is not a code (it's a list of outbreaks in the system.
-      @browser.select(railsify_core_field_key("morbidity_event[outbreak_event_id]"), "")
     else
       # Originally, all non-code core fields are text inputs. Fields are incrementally
       # getting smarter. Age fields are now type numeric. The rest of the text inputs

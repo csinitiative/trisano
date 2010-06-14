@@ -57,7 +57,7 @@ Feature: All questions on a form must have a unique short name
     And the library contains a question with the same short name
     When I go to the Builder interface for the form
     And I try to add the question from the library
-    Then I should be presented with the error message "The short name entered is already in use on this form. Please choose another."
+    Then I should be presented with the error message "Some of the questions you are copying have short names alreay in use"
 
   @clean_forms @clean_form_elements
   Scenario: Creating a new question on an already published form
