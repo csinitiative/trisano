@@ -145,3 +145,52 @@ describe ExtendedFormBuilder, 'drop down export js' do
   end
 
 end
+
+describe ExtendedFormBuilder, "rendering a dynamic question" do
+
+  describe 'with a drop down select' do
+
+    it 'should not raise an error with a nil select option value' do
+      configure_request
+      # don't care about rendering.
+      @template.stubs(:select).returns('')
+      @template.stubs(:hidden_field_tag).returns('')
+      @template.stubs(:content_tag).returns('')
+      object = mock('answer') do
+        stubs(:id).returns(1)
+        stubs(:question_id).returns(1)
+        stubs(:new_record?).returns(true)
+        stubs(:text_answer).returns('some answer')
+      end
+      question = mock('question') do
+        stubs(:id).returns(1)
+        stubs(:is_multi_valued?).returns(false)
+        stubs(:data_type).returns(:drop_down)
+        stubs(:question_text).returns("This is a question?")
+      end
+      question_element = mock('question_element') do
+        stubs(:question).returns(question)
+        stubs(:export_column).returns(nil)
+      end
+      form_elements_cache = mock('form_elements_cache') do
+        stubs(:children).returns([Object.new])
+        stubs(:children_by_type).returns([])
+      end
+      select_options = [{:value => nil, :export_conversion_value_id => nil},
+                        {:value => 1,   :export_conversion_value_id => 200},
+                        {:value => 2,   :export_conversion_value_id => 201}]
+      form_builder = ExtendedFormBuilder.new('object_name', object, @template, nil, nil)
+      form_builder.stubs(:hidden_field).returns('')
+      form_builder.stubs(:get_values).returns(select_options)
+      form_builder.stubs(:follow_up_spinner_for).returns('')
+      lambda do
+        form_builder.send(:dynamic_question,
+                          form_elements_cache,
+                          question_element,
+                          nil,
+                          nil)
+      end.should_not raise_error
+    end
+
+  end
+end

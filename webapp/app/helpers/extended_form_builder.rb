@@ -124,7 +124,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       get_values(form_elements_cache, question_element).each do |value_hash|
         codes << {:value => value_hash[:value], :code => value_hash[:code]}
         if @object.text_answer
-          selected_code = @object.text_answer.include?(value_hash[:value]) ? value_hash[:code] : "" unless !selected_code.blank?
+          selected_code = @object.text_answer == value_hash[:value] ? value_hash[:code] : "" unless !selected_code.blank?
         end
 
         unless question_element.export_column.blank?
@@ -178,12 +178,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       i = 0
       name = field_name + "[" + field_index + "][radio_button_answer][]"
       selected_code = ""
-      
+
       get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value_hash|
         html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onclick] = select_answer_event if follow_ups
         codes << {:id => html_options[:id], :code => value_hash[:code]}
-        
+
         unless question_element.export_column.blank?
           cdc_attributes << {:id => html_options[:id], :export_conversion_value_id => value_hash[:export_conversion_value_id]}
         end
