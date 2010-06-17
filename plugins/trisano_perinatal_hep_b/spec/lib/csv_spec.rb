@@ -18,10 +18,14 @@
 require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
 
 describe Export::Csv do
+  include CsvSpecHelper
   include PerinatalHepBSpecHelper
 
   before :all do
     file = File.join(File.dirname(__FILE__), '../../../trisano_en/config/misc/en_csv_fields.yml')
+    CsvField.load_csv_fields(YAML.load_file(file))
+
+    file = File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml')
     CsvField.load_csv_fields(YAML.load_file(file))
   end
 
@@ -39,8 +43,12 @@ describe Export::Csv do
     )
   end
 
-  it "should expected delivery facility information in CSV export" do
+  it "should include expected delivery facility information in CSV export" do
     @event.expected_delivery_facility.nil?.should be_false
+
+    output = to_arry(Export::Csv.export(@event))
+    assert_values_in_result(output, 1, :expected_delivery_facility_name => /Allen Hospital/)
+    
   end
   
 end

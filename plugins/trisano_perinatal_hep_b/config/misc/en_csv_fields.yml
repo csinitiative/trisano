@@ -1,0 +1,12 @@
+--- 
+csv_field_expected_delivery_facility_name:
+  sort_order: 391
+  export_group: event
+  long_name: expected_delivery_facility_name
+  use_description: safe_call_chain(:expected_delivery_facility, :secondary_entity, :place, :name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+
+
+
