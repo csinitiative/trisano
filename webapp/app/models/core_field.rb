@@ -19,6 +19,8 @@ class CoreField < ActiveRecord::Base
   include I18nCoreField
 
   belongs_to :code_name
+  has_many :core_fields_diseases, :dependent => :destroy
+  has_many :diseases, :through => :core_fields_diseases
 
   before_validation :normalize_attributes
   after_save :flush_caches
@@ -27,7 +29,10 @@ class CoreField < ActiveRecord::Base
 
     def find_event_fields_for(event_type, *args)
       return [] if event_type.blank?
-      with_scope(:find => {:conditions => ["event_type=?", event_type]}) do
+      with_scope(:find => {
+                   :conditions => ["event_type=?", event_type],
+                   :include => :core_fields_diseases
+                 }) do
         find(*args)
       end
     end
@@ -60,9 +65,29 @@ class CoreField < ActiveRecord::Base
     CoreField.flush_memoization_cache
   end
 
+  def rendered?(conditions)
+    if assoc = disease_association(conditions[:disease])
+      assoc.rendered
+    else
+      if disease_specific
+        return false
+      else
+        return true
+      end
+    end
+  end
+
   private
 
   def normalize_attributes
     self.event_type = self.event_type.to_s if self.event_type
   end
+
+  # do this instead of going to the db
+  def disease_association(disease)
+    core_fields_diseases.select do |cfd|
+      cfd.disease_id == disease.try(:id)
+    end.first
+  end
+
 end
