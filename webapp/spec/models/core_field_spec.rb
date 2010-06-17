@@ -32,6 +32,9 @@ describe CoreField do
 
   after { I18n.locale = :en }
 
+  it { should have_many(:core_fields_diseases) }
+  it { should have_many(:diseases) }
+
   it "should update help text" do
     @core_field.help_text = 'Here is some help text'
     @core_field.save.should be_true
@@ -84,4 +87,77 @@ describe CoreField do
     cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
     cf.name_key.should == 'places'
   end
+
+  shared_examples_for "disease is associated" do
+
+    it "should be rendered if disease association is for showing the field" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.should be_rendered(:disease => @disease)
+    end
+
+    it "should not be rendered if association is for hiding field" do
+      Factory.create(:core_fields_disease,
+                     :disease => @disease,
+                     :core_field => @cf,
+                     :rendered => false)
+      @cf.should_not be_rendered({:disease => @disease})
+    end
+
+  end
+
+  describe "disease specific core fields" do
+    before do
+      @disease = Factory.create(:disease)
+      @cf = Factory.create(:core_field, :disease_specific => true)
+    end
+
+    it "should be disease specific" do
+      @cf.should be_disease_specific
+    end
+
+    it "should not be rendered if no disease is associated" do
+      @cf.should_not be_rendered(:disease => @disease)
+    end
+
+    it "should not be rendered if disease condition isn't passed" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.should_not be_rendered({})
+    end
+
+    it "should not rendered if disease is not associated" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.should_not be_rendered(:disease => Factory.create(:disease))
+    end
+
+    it_should_behave_like "disease is associated"
+
+  end
+
+  describe "regular ol' core fields" do
+    before do
+      @disease = Factory.create(:disease)
+      @cf = Factory.create(:core_field)
+    end
+
+    it "should not be disease specific" do
+      @cf.should_not be_disease_specific
+    end
+
+    it "should be rendered if no disease is associated" do
+      @cf.should be_rendered(:disease => @disease)
+    end
+
+    it "should be rendered if disease condition isn't passed" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.should be_rendered({})
+    end
+
+    it "should be rendered if disease is not associated" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.should be_rendered(:disease => Factory.create(:disease))
+    end
+
+    it_should_behave_like "disease is associated"
+  end
+
 end
