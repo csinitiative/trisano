@@ -181,6 +181,11 @@ Factory.define :avr_group do |t|
 end
 
 Factory.define :telephone do |t|
+  t.country_code "1"
+  t.area_code "503"
+  t.phone_number "555-3333"
+  t.extension "100"
+  t.entity { Factory.build(:place_entity) }
 end
 
 Factory.define :diagnostic_facility do |df|
