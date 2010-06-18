@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExpectedDeliveryFacilitiesParticipation < ActiveRecord::Base
+  reloadable!
   belongs_to :particpations
 
 end

@@ -3,7 +3,7 @@ csv_field_expected_delivery_facility_name:
   sort_order: 391
   export_group: event
   long_name: expected_delivery_facility_name
-  use_description: expected_delivery_facility.try(:secondary_entity).try(:place).try(:name)
+  use_description: expected_delivery_facility.try(:place_entity).try(:place).try(:name)
   short_name: 
   use_code: 
   event_type: morbidity_event
@@ -12,7 +12,7 @@ csv_field_expected_delivery_facility_area_code:
   sort_order: 392
   export_group: event
   long_name: expected_delivery_facility_area_code
-  use_description: expected_delivery_facility.try(:secondary_entity).try(:telephones).try(:last).try(:area_code)
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:area_code)
   short_name:
   use_code:
   event_type: morbidity_event
@@ -21,7 +21,7 @@ csv_field_expected_delivery_facility_phone_number:
   sort_order: 393
   export_group: event
   long_name: expected_delivery_facility_phone_number
-  use_description: expected_delivery_facility.try(:secondary_entity).try(:telephones).try(:last).try(:phone_number)
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:phone_number)
   short_name:
   use_code:
   event_type: morbidity_event
@@ -30,7 +30,7 @@ csv_field_expected_delivery_facility_extension:
   sort_order: 394
   export_group: event
   long_name: expected_delivery_facility_extension
-  use_description: expected_delivery_facility.try(:secondary_entity).try(:telephones).try(:last).try(:extension)
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:extension)
   short_name:
   use_code:
   event_type: morbidity_event

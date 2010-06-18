@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ExpectedDeliveryFacility < Participation
+  reloadable!
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   has_one :expected_delivery_facilities_participation, :foreign_key => :participation_id, :dependent => :destroy
   
