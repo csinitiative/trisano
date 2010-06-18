@@ -65,8 +65,9 @@ class CoreField < ActiveRecord::Base
     CoreField.flush_memoization_cache
   end
 
-  def rendered?(conditions)
-    if assoc = disease_association(conditions[:disease])
+  def rendered?(event)
+    disease = event.try(:disease_event).try(:disease)
+    if assoc = disease_association(disease)
       assoc.rendered
     else
       if disease_specific

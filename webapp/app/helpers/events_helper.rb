@@ -33,9 +33,13 @@ module EventsHelper
   end
 
   def core_element(attribute, form_builder, css_class, &block)
+    cf = form_builder.core_field(attribute)
+    if cf
+      return if not cf.rendered?(@event)
+    end
     concat_core_field(:edit, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_renderers[form_builder.core_path[attribute].to_s]
+    if renderer = core_element_renderers[(form_builder.core_path << attribute).to_s]
       concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
     else
       block.call
@@ -48,7 +52,7 @@ module EventsHelper
   def core_element_show(attribute, form_builder, css_class, &block)
     concat_core_field(:show, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_show_renderers[form_builder.core_path[attribute].to_s]
+    if renderer = core_element_show_renderers[(form_builder.core_path << attribute).to_s]
       concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
     else
       block.call
@@ -61,7 +65,7 @@ module EventsHelper
   def core_element_print(attribute, form_builder, css_class, &block)
     concat_core_field(:print, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_show_renderers[form_builder.core_path[attribute].to_s]
+    if renderer = core_element_show_renderers[(form_builder.core_path << attribute).to_s]
       concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
     else
       block.call
@@ -694,7 +698,7 @@ module EventsHelper
   def concat_core_field(mode, before_or_after, attribute, form_builder)
     return if  (@event.nil? || @event.form_references.nil?)
     @event.form_references.each do |form_reference|
-      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{form_builder.core_path[attribute].to_s}")
+      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{(form_builder.core_path << attribute).to_s}")
       configs.each do |config|
         element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
 
@@ -848,8 +852,7 @@ module EventsHelper
 
   def render_core_field_help_text(attribute, form_builder, event)
     return "" unless event
-    core_path = form_builder.core_path[attribute].to_s
-    core_field = CoreField.event_fields(event)[core_path]
+    core_field = form_builder.core_field(attribute)
     core_field ? render_help_text(core_field) : ""
   end
 

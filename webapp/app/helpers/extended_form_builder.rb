@@ -247,9 +247,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def core_path
-    core_path = @options[:core_path] || @object_name.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
-    return if core_path.nil?
-    CorePath[core_path]
+    cp = @options[:core_path] || @object_name.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
+    return if cp.nil?
+    CorePath[cp]
+  end
+
+  def core_field(attribute)
+    cp = core_path << attribute
+    CoreField.event_fields(cp.first)[cp.to_s]
   end
 
   def core_follow_up(attribute, options = {}, event = nil)
@@ -272,20 +277,23 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return [] unless core_path && event.try(:form_references)
     returning [] do |follow_ups|
       event.form_references.each do |fr|
-        follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{core_path[attribute]}")
+        path = core_path << attribute
+        follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{path.to_s}")
       end
     end.flatten
   end
 
   def core_follow_up_event(attribute, event, value_attribute = nil)
-    this_or_node = value_attribute ? "$('#{core_path[value_attribute].underscore}')" : 'this'
+    value_path = core_path << value_attribute
+    this_or_node = value_attribute ? "$('#{value_path.underscore}')" : 'this'
+    path = core_path << attribute
     returning "" do |js|
       js << "sendCoreConditionRequest("
       js <<   "'#{process_core_condition_path}',"
       js <<   " #{this_or_node},"
       js <<   "'#{event.id}',"
-      js <<   "'#{core_path[attribute]}',"
-      js <<   "'#{core_path[attribute].underscore}_spinner'"
+      js <<   "'#{path.to_s}',"
+      js <<   "'#{path.underscore}_spinner'"
       js <<   ");"
     end
   end
@@ -294,7 +302,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     options = args.extract_options!
     options.symbolize_keys!
     attribute = args.first
-    spinner_id = (options[:id] || core_path[attribute].underscore) + "_spinner"
+    spinner_id = (options[:id] || (core_path << attribute).underscore) + "_spinner"
     returning "" do |result|
       result << '&nbsp;' * 2
       result << @template.image_tag('redbox_spinner.gif',
@@ -306,7 +314,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def default_spinner_id(attribute)
-    "#{core_path[attribute].underscore}_spinner"
+    path = core_path << attribute
+    "#{path.underscore}_spinner"
   end
 
   def conversion_id_for(question_element, value_from)
@@ -404,33 +413,35 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     answer.export_conversion_value_id unless answer.nil?
   end
 
-end
+  class CorePath < Array
 
-class CorePath
-
-  class << self
-    def [](base)
-      new base
+    class << self
+      def [](base)
+        new base
+      end
     end
+
+    def to_s
+      bracketed
+    end
+
+    def bracketed
+      slice(1..-1).inject(first) do |memo, s|
+        memo << "[#{s}]"
+      end
+    end
+
+    def underscore
+      join('_')
+    end
+
+    def initialize(base)
+      self << base.gsub(/\[.*$/, '')
+      base.scan(/\[([^\[|.]*)\]/).flatten.each { |s| self << s }
+    end
+
   end
 
-  def [](attribute)
-    @path += "[#{attribute}]"
-    self
-  end
-
-  def to_s
-    @path
-  end
-
-  def underscore
-    @path.gsub('[', '_').gsub(']', '')
-  end
-
-  private
-
-  def initialize(base)
-    @path = base
-  end
 
 end
+

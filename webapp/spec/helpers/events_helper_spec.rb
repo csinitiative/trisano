@@ -132,8 +132,9 @@ describe EventsHelper do
                                         :help_text => "Here is some help text"})
       @event = Factory.create(:morbidity_event)
       @fb = mock
-      @fb.stubs(:core_path).returns(:test_attribute => "morbidity_event[test_attribute]")
-      helper.render_core_field_help_text(:test_attribute, @fb, @event).should =~ /Here is some help text/i
+      @fb.expects(:core_field).with(:test_attribute).returns(@core_field)
+      result = helper.render_core_field_help_text(:test_attribute, @fb, @event)
+      result.should have_tag('p', "Here is some help text")
     end
   end
 
@@ -155,5 +156,62 @@ describe EventsHelper do
       assert_event_links(:encounter_event, 'Show Encounter', 'Edit Encounter')
     end
 
+  end
+
+end
+
+describe EventsHelper, "rendering core elements" do
+  describe "on an event" do
+    before do
+      @core_field = Factory.create(:cmr_core_field,
+                                   :key => 'morbidity_event[test_attribute]',
+                                   :disease_specific => true)
+      @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
+      helper.stubs(:core_element_renderers).returns({})
+      helper.output_buffer = ""
+      @event = Factory.create(:morbidity_event)
+      assigns[:event] = @event
+    end
+
+    it "does nothing if core field isn't rendered for this event" do
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        fail "block shouldn't be called"
+      end
+      helper.output_buffer.should == ""
+    end
+
+    it "renders field if field should be rendered for this event" do
+      @core_field.update_attributes!(:disease_specific => false)
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        helper.concat('<p>This should render</p>')
+      end
+      helper.output_buffer.should have_tag('p', 'This should render')
+    end
+  end
+
+  describe "on person entity" do
+    before do
+      @core_field = Factory.create(:cmr_core_field,
+                                   :key => 'person_entity[test_attribute]',
+                                   :disease_specific => true)
+      @fb = ExtendedFormBuilder.new('person_entity', nil, nil, {}, nil)
+      helper.stubs(:core_element_renderers).returns({})
+      helper.output_buffer = ""
+    end
+
+    it "ignores rendered? for disease specific fields" do
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        helper.concat('<p>This should render</p>')
+      end
+      helper.output_buffer.should have_tag('p', 'This should render')
+    end
+
+    it "ignores rendered? for core fields" do
+      @core_field.update_attributes!(:disease_specific => false)
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        helper.concat('<p>This should render</p>')
+      end
+      helper.output_buffer.should have_tag('p', 'This should render')
+    end
   end
 end

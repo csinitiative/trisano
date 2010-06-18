@@ -92,7 +92,7 @@ describe CoreField do
 
     it "should be rendered if disease association is for showing the field" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should be_rendered(:disease => @disease)
+      @cf.should be_rendered(@event)
     end
 
     it "should not be rendered if association is for hiding field" do
@@ -100,14 +100,16 @@ describe CoreField do
                      :disease => @disease,
                      :core_field => @cf,
                      :rendered => false)
-      @cf.should_not be_rendered({:disease => @disease})
+      @cf.should_not be_rendered(@event)
     end
 
   end
 
   describe "disease specific core fields" do
     before do
+      @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
+      @event.build_disease_event(:disease => @disease).save!
       @cf = Factory.create(:core_field, :disease_specific => true)
     end
 
@@ -115,18 +117,19 @@ describe CoreField do
       @cf.should be_disease_specific
     end
 
-    it "should not be rendered if no disease is associated" do
-      @cf.should_not be_rendered(:disease => @disease)
+    it "should not render if no disease is associated" do
+      @cf.should_not be_rendered(@event)
     end
 
-    it "should not be rendered if disease condition isn't passed" do
+    it "should not be rendered if event is nil" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should_not be_rendered({})
+      @cf.should_not be_rendered(nil)
     end
 
-    it "should not rendered if disease is not associated" do
+    it "should not render if event's disease is not associated" do
+      @event.disease_event.update_attributes!(:disease => Factory.create(:disease))
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should_not be_rendered(:disease => Factory.create(:disease))
+      @cf.should_not be_rendered(@event)
     end
 
     it_should_behave_like "disease is associated"
@@ -135,7 +138,9 @@ describe CoreField do
 
   describe "regular ol' core fields" do
     before do
+      @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
+      @event.build_disease_event(:disease => @disease).save!
       @cf = Factory.create(:core_field)
     end
 
@@ -143,18 +148,20 @@ describe CoreField do
       @cf.should_not be_disease_specific
     end
 
-    it "should be rendered if no disease is associated" do
-      @cf.should be_rendered(:disease => @disease)
+    it "should be rendered if event's disease is associated" do
+      @cf.should be_rendered(@event)
     end
 
-    it "should be rendered if disease condition isn't passed" do
+    it "should be rendered if event is nil" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should be_rendered({})
+      @cf.should be_rendered(nil)
     end
 
-    it "should be rendered if disease is not associated" do
-      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should be_rendered(:disease => Factory.create(:disease))
+    it "should be rendered if event's disease is not associated" do
+      Factory.create(:core_fields_disease,
+                     :disease => Factory.create(:disease),
+                     :core_field => @cf)
+      @cf.should be_rendered(@event)
     end
 
     it_should_behave_like "disease is associated"

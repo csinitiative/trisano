@@ -191,6 +191,78 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
                           nil)
       end.should_not raise_error
     end
+  end
+end
 
+describe ExtendedFormBuilder, "returning a core field" do
+  before do
+    configure_request
+    @form_builder = ExtendedFormBuilder.new('morbidity_event', nil, @template, {}, nil)
+    @core_field = Factory.create(:cmr_core_field,
+                                 :key => 'morbidity_event[test_attribute]')
+  end
+
+  it "should return core field" do
+    @form_builder.core_field(:test_attribute).should == @core_field
+  end
+
+  it "should return nil if core field doesn't exist" do
+    @form_builder.core_field(:bogus_attribute).should be_nil
+  end
+
+  it "should return nil if event doesn't have that core field" do
+    @form_builder = ExtendedFormBuilder.new('contact_event', nil, @template, {}, nil)
+    @form_builder.core_field(:test_attribute).should be_nil
+  end
+end
+
+describe ExtendedFormBuilder::CorePath do
+
+  before do
+    @core_path = ExtendedFormBuilder::CorePath['morbidity_event']
+  end
+
+  describe "with a base only" do
+    it "should generate the default (bracketed) form (for html names)" do
+      @core_path.to_s.should == 'morbidity_event'
+    end
+
+    it "should generate an underscored form (for html ids)" do
+      @core_path.underscore.should == 'morbidity_event'
+    end
+
+    it "should return the first segment" do
+      @core_path.first.should == 'morbidity_event'
+    end
+  end
+
+  shared_examples_for "a complex core path" do
+    it "should generate the default (bracketed) form (for html names)" do
+      @core_path.to_s.should == 'morbidity_event[interested_party][person_entity]'
+    end
+
+    it "should generate an underscored form (for html ids)" do
+      @core_path.underscore.should == 'morbidity_event_interested_party_person_entity'
+    end
+
+    it "should return the first segment" do
+      @core_path.first.should == 'morbidity_event'
+    end
+  end
+
+  describe "building a complex path" do
+    before do
+      @core_path << 'interested_party' << 'person_entity'
+    end
+
+    it_should_behave_like "a complex core path"
+  end
+
+  describe "starting w/ a complex base" do
+    before do
+      @core_path = ExtendedFormBuilder::CorePath['morbidity_event[interested_party][person_entity]']
+    end
+
+    it_should_behave_like "a complex core path"
   end
 end
