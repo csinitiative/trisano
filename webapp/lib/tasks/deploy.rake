@@ -17,7 +17,7 @@
 
 require 'ftools'
 require 'fileutils'
-gem 'mechanize', "< 0.8.0"
+gem 'mechanize'
 require 'mechanize'
 require 'rexml/document'
 require 'rest-open-uri'
