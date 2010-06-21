@@ -55,10 +55,6 @@ Factory.define :section_element do |se|
   se.name { Factory.next(:long_name) }
 end
 
-Factory.define :view_element do |ve|
-  ve.name { Factory.next(:long_name) }
-end
-
 Factory.define :person do |p|
   p.last_name { Factory.next(:last_name) }
 end

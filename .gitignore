@@ -25,3 +25,4 @@ webrat-*
 /install
 /webapp/public/javascripts/ext
 /webapp/public/images/ext
+/webapp/.bundle/config
