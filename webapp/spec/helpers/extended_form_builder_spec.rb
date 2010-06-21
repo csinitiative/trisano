@@ -206,13 +206,23 @@ describe ExtendedFormBuilder, "returning a core field" do
     @form_builder.core_field(:test_attribute).should == @core_field
   end
 
-  it "should return nil if core field doesn't exist" do
-    @form_builder.core_field(:bogus_attribute).should be_nil
+  it "should return a sentinal core field if core field doesn't exist" do
+    @form_builder.core_field(:bogus_attribute).should_not be_nil
   end
 
-  it "should return nil if event doesn't have that core field" do
+  it "sentinal if event doesn't have that core field" do
     @form_builder = ExtendedFormBuilder.new('contact_event', nil, @template, {}, nil)
-    @form_builder.core_field(:test_attribute).should be_nil
+    @form_builder.core_field(:test_attribute).should_not be_nil
+  end
+
+  it "sentinal will always return true from #rendered?" do
+    sentinal = @form_builder.core_field(:bogus_attribute)
+    sentinal.rendered?.should be_true
+  end
+
+  it "sentinal will return the key that was used in the look up" do
+    sentinal = @form_builder.core_field(:bogus_attribute)
+    sentinal.key.should == 'morbidity_event[bogus_attribute]'
   end
 end
 

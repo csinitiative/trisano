@@ -28,6 +28,7 @@ module EventsHelper
   def show
     return "[#{t 'show'}]"
   end
+
   def ct(*args)
     return t('colon_after', :text => t(*args))
   end
