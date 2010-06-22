@@ -146,17 +146,14 @@ namespace :trisano do
         sleep 10
         puts "executing smoke test"
 
-        Hpricot.buffer_size = 65536
-        #agent = WWW::Mechanize.new {|a| a.log = Logger.new(STDERR) }
         agent = WWW::Mechanize.new
         agent.read_timeout = 300
-        #agent.set_proxy("localhost", "8118")
 
         puts "GET / to #{TRISANO_URL}/trisano/"
         url = TRISANO_URL + '/trisano'
         page = agent.get(url)
 
-        raise "GET content invalid" unless (page.search("//#errorExplanation")).empty?
+        raise "GET content invalid" unless (page.search("#errorExplanation")).empty?
 
         puts "smoke test success"
       rescue => error
