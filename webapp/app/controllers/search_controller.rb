@@ -98,7 +98,7 @@ class SearchController < ApplicationController
 
       end
     rescue Exception => ex
-      flash[:error] = t("problem_with_search_criteria")
+      flash.now[:error] = t("problem_with_search_criteria")
 
       # Debt: Error display details are pretty weak. Good enough for now.
       if (!error_details.empty?)
