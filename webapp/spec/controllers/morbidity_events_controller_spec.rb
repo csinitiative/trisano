@@ -1,19 +1,18 @@
-
 # Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -29,13 +28,13 @@ describe MorbidityEventsController do
       @event = mock_event
       Event.stubs(:find_by_sql).returns([@event])
       @user.stubs(:jurisdiction_ids_for_privilege).with(:view_event).returns([75])
-      @event.stubs(:read_attribute).returns('MorbidityEvent') 
+      @event.stubs(:read_attribute).returns('MorbidityEvent')
     end
-  
+
     def do_get
       get :index
     end
-  
+
     it "should be successful" do
       do_get
       response.should be_success
@@ -45,12 +44,12 @@ describe MorbidityEventsController do
       do_get
       response.should render_template('index')
     end
-  
+
     it "should find all events" do
       MorbidityEvent.expects(:find_all_for_filtered_view).with(kind_of(Hash)).returns([@event])
       do_get
     end
-  
+
     it "should assign the found events for the view" do
       do_get
       assigns[:events].should == [@event]
@@ -64,9 +63,9 @@ describe MorbidityEventsController do
       @event = mock_event
       Event.stubs(:find).returns(@event)
       @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
-      @event.stubs(:read_attribute).returns('MorbidityEvent') 
+      @event.stubs(:read_attribute).returns('MorbidityEvent')
     end
-  
+
     def do_get
       get :show, :id => "75"
     end
@@ -75,17 +74,17 @@ describe MorbidityEventsController do
       do_get
       response.should be_success
     end
-  
+
     it "should render show template" do
       do_get
       response.should render_template('show')
     end
-  
+
     it "should find the event requested" do
       Event.expects(:find).once().with("75").returns(@event)
       do_get
     end
-  
+
     it "should assign the found event for the view" do
       do_get
       assigns[:event].should equal(@event)
@@ -99,9 +98,9 @@ describe MorbidityEventsController do
       @event = mock_event
       Event.stubs(:find).returns(@event)
       @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
-      @event.stubs(:read_attribute).returns('ContactEvent') 
+      @event.stubs(:read_attribute).returns('ContactEvent')
     end
-  
+
     def do_get
       get :show, :id => "75"
     end
@@ -122,7 +121,7 @@ describe MorbidityEventsController do
     end
 
   end
-  
+
   describe "handling GET /events/1 without view entitlement" do
 
     before(:each) do
@@ -131,9 +130,9 @@ describe MorbidityEventsController do
       @event.stubs(:add_note)
       Event.stubs(:find).returns(@event)
       @user.stubs(:is_entitled_to_in?).returns(false)
-      @event.stubs(:read_attribute).returns('MorbidityEvent') 
+      @event.stubs(:read_attribute).returns('MorbidityEvent')
     end
-  
+
     def do_get
       get :show, :id => "75"
     end
@@ -142,49 +141,49 @@ describe MorbidityEventsController do
       Event.expects(:find).with("75").returns(@event)
       do_get
     end
-  
+
     it "should log access and be successful" do
       @event.expects(:add_note)
       do_get
       response.should be_success
     end
-  
+
   end
-  
+
   describe "handling GET /events/new" do
-  
+
     before(:each) do
       mock_user
       @event = mock_event
       MorbidityEvent.stubs(:new).returns(@event)
       @user.stubs(:is_entitled_to?).with(:create_event).returns(true)
-      @event.stubs(:read_attribute).returns('MorbidityEvent') 
+      @event.stubs(:read_attribute).returns('MorbidityEvent')
     end
-    
+
     def do_get
       get :new
     end
-  
+
     it "should be successful" do
       do_get
       response.should be_success
     end
-    
+
     it "should render new template" do
       do_get
       response.should render_template('new')
     end
-    
+
     it "should create an new event" do
       MorbidityEvent.expects(:new).returns(@event)
       do_get
     end
-    
+
     it "should not save the new event" do
       @event.expects(:save).never
       do_get
     end
-    
+
     it "should assign the new event for the view" do
       do_get
       assigns[:event].should equal(@event)
@@ -213,17 +212,17 @@ describe MorbidityEventsController do
       do_get
       response.should be_success
     end
-  
+
     it "should render edit template" do
       do_get
       response.should render_template('edit')
     end
-  
+
     it "should find the event requested" do
       Event.expects(:find).returns(@event)
       do_get
     end
-  
+
     it "should assign the found MorbidityEvent for the view" do
       do_get
       assigns[:event].should equal(@event)
@@ -258,11 +257,11 @@ describe MorbidityEventsController do
         @event.expects(:save!)
         post :jurisdiction, :id => "1", :jurisdiction_id => "2"
       end
-      
+
       it "should find the event requested" do
         do_route_event
       end
-      
+
       it "should redirect to the where it was called from" do
         do_route_event
         response.should redirect_to("http://test.host/some_path")
@@ -333,7 +332,7 @@ describe MorbidityEventsController do
       it "should find the event requested" do
         do_change_state
       end
-      
+
       it "should redirect to the where it was called from" do
         do_change_state
         response.should redirect_to("http://test.host/some_path")
@@ -341,7 +340,7 @@ describe MorbidityEventsController do
     end
 
     describe "with bad state argument" do
-      
+
       def do_change_state
         mock_user
         event = Factory.build(:morbidity_event)
@@ -354,7 +353,7 @@ describe MorbidityEventsController do
 
       it "should respond with a 403" do
         do_change_state
-        response.code.should == "403"        
+        response.code.should == "403"
       end
     end
 
@@ -375,9 +374,9 @@ describe MorbidityEventsController do
     end
 
   end
-  
+
   describe "handling successful POST /cmrs/1/soft_delete with update entitlement" do
-    
+
     before(:each) do
       mock_user
       @event = mock_event
@@ -386,7 +385,7 @@ describe MorbidityEventsController do
       @user.stubs(:is_entitled_to_in?).returns(true)
       @event.stubs(:add_note).returns(true)
     end
-    
+
     def do_post
       request.env['HTTP_REFERER'] = "/some_path"
       post :soft_delete, :id => "1"
@@ -397,16 +396,16 @@ describe MorbidityEventsController do
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
-    
+
     it "should set the flash notice to a success message" do
       @event.expects(:soft_delete).returns(true)
       do_post
       flash[:notice].should eql("The event was successfully marked as deleted.")
     end
   end
-  
+
   describe "handling failed POST /cmrs/1/soft_delete with update entitlement" do
-    
+
     before(:each) do
       mock_user
       @event = mock_event
@@ -415,7 +414,7 @@ describe MorbidityEventsController do
       @user.stubs(:is_entitled_to_in?).returns(true)
       @event.stubs(:add_note).returns(true)
     end
-    
+
     def do_post
       request.env['HTTP_REFERER'] = "/some_path"
       post :soft_delete, :id => "1"
@@ -426,7 +425,7 @@ describe MorbidityEventsController do
       do_post
       response.should redirect_to("http://test.host/some_path")
     end
-    
+
     it "should set the flash error to an error message" do
       @event.expects(:soft_delete).returns(false)
       do_post
@@ -439,9 +438,9 @@ describe MorbidityEventsController do
       do_post
     end
   end
-  
+
   describe "handling POST /cmrs/1/soft_delete without update entitlement" do
-    
+
     before(:each) do
       mock_user
       @event = mock_event
@@ -450,7 +449,7 @@ describe MorbidityEventsController do
       @user.stubs(:is_entitled_to_in?).returns(false)
       @event.stubs(:add_note).returns(true)
     end
-    
+
     def do_post
       request.env['HTTP_REFERER'] = "/some_path"
       post :soft_delete, :id => "1"

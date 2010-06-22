@@ -33,6 +33,11 @@ module Trisano
               :foreign_key => "event_id",
               :order => 'created_at ASC',
               :dependent => :destroy
+
+            base.accepts_nested_attributes_for :expected_delivery_facility, {
+              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :allow_destroy => true }
+
           end
         end
       end

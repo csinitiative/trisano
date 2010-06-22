@@ -28,31 +28,39 @@ module EventsHelper
   def show
     return "[#{t 'show'}]"
   end
+
   def ct(*args)
     return t('colon_after', :text => t(*args))
   end
 
   def core_element(attribute, form_builder, css_class, &block)
     cf = form_builder.core_field(attribute)
-    if cf
-      return if not cf.rendered?(@event)
+    return if not cf.rendered?(@event)
+    before_core_partials[cf.key].each do |before_partial|
+      before_partial[:locals] = { :f => form_builder}.merge(before_partial[:locals] || {})
+      concat render(before_partial)
     end
     concat_core_field(:edit, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_renderers[(form_builder.core_path << attribute).to_s]
-      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
+    if replacement = core_replacement_partial[cf.key]
+      replacement[:locals] = { :f => form_builder }.merge(replacement[:locals] || {})
+      concat render(replacement)
     else
       block.call
     end
     concat(render_core_field_help_text(attribute, form_builder, @event))
     concat("</span>")
     concat_core_field(:edit, :after, attribute, form_builder)
+    after_core_partials[cf.key].each do |after_partial|
+      after_partial[:locals] = { :f => form_builder}.merge(after_partial[:locals] || {})
+      concat render(after_partial)
+    end
   end
 
   def core_element_show(attribute, form_builder, css_class, &block)
     concat_core_field(:show, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_show_renderers[(form_builder.core_path << attribute).to_s]
+    if renderer = core_replacement_partial[(form_builder.core_path << attribute).to_s]
       concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
     else
       block.call
@@ -65,7 +73,7 @@ module EventsHelper
   def core_element_print(attribute, form_builder, css_class, &block)
     concat_core_field(:print, :before, attribute, form_builder)
     concat("<span class='#{css_class}'>")
-    if renderer = core_element_show_renderers[(form_builder.core_path << attribute).to_s]
+    if renderer = core_replacement_partial[(form_builder.core_path << attribute).to_s]
       concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
     else
       block.call

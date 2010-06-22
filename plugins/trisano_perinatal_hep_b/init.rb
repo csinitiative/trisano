@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Include hook code here
+I18n.load_path += Dir[File.join(File.dirname(__FILE__), 'config', 'locales', '**', '*.{rb,yml}')]
+
 Dir[File.join(File.dirname(__FILE__), 'lib', '**', '*.rb')].each do |f|
   require f
 end

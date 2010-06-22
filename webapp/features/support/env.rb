@@ -53,9 +53,6 @@ include TrisanoContactsHelper
 include Trisano::HTML::Matchers
 
 # Load up factories
-Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'spec', 'factories', '*.rb')) do |f|
-  require File.expand_path(f)
-end
 require 'factory_girl/step_definitions'
 
 # explicitly load support files

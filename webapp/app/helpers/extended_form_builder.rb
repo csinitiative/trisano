@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+require 'ostruct'
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::SanitizeHelper
@@ -247,14 +248,19 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def core_path
-    cp = @options[:core_path] || @object_name.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
+    cp = @options[:core_path] || @object_name.to_s.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
     return if cp.nil?
     CorePath[cp]
   end
 
   def core_field(attribute)
     cp = core_path << attribute
-    CoreField.event_fields(cp.first)[cp.to_s]
+    core_field = CoreField.event_fields(cp.first)[cp.to_s]
+    if core_field
+      core_field
+    else
+      OpenStruct.new(:key => cp.to_s, :rendered? => true)
+    end
   end
 
   def core_follow_up(attribute, options = {}, event = nil)
@@ -336,7 +342,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       ""
     end
   end
-  
+
   def radio_button_code_js(radio_buttons, id)
     @template.on_loaded_or_eval do
       radio_buttons.collect do |radio_button|
@@ -383,7 +389,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       script
     end
   end
-  
 
   def rb_export_js(radio_buttons, id)
     @template.on_loaded_or_eval do
@@ -427,7 +432,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
     def bracketed
       slice(1..-1).inject(first) do |memo, s|
-        memo << "[#{s}]"
+        memo += "[#{s}]"
       end
     end
 

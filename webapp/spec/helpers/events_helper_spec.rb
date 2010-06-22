@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
 
+
 describe EventsHelper do
   include ApplicationHelper
   include EventsHelperSpecHelper
@@ -161,19 +162,43 @@ describe EventsHelper do
 end
 
 describe EventsHelper, "rendering core elements" do
+  def given_before_partials
+    mock = helper.stubs(:before_core_partials)
+    mock.returns({ 'morbidity_event[test_attribute]' => [{:partial => 'before_partial'}],
+                   'person_entity[test_attribute]'   => [] })
+    helper.stubs(:render).with({:partial => 'before_partial', :locals => {:f => @fb}}).returns('<p>before partial</p>')
+  end
+
+  def given_after_partials
+    mock = helper.stubs(:after_core_partials)
+    mock.returns({ 'morbidity_event[test_attribute]' => [{:partial => 'after_partial'}],
+                   'person_entity[test_attribute]'   => [] })
+    helper.stubs(:render).with({:partial => 'after_partial', :locals => {:f => @fb}}).returns('<p>after partial</p>')
+  end
+
+  def given_no_replacement_partials
+    mock = helper.stubs(:core_replacement_partial)
+    mock = mock.returns({})
+  end
+
   describe "on an event" do
     before do
       @core_field = Factory.create(:cmr_core_field,
                                    :key => 'morbidity_event[test_attribute]',
-                                   :disease_specific => true)
+                                   :disease_specific => false)
       @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
       helper.stubs(:core_element_renderers).returns({})
       helper.output_buffer = ""
       @event = Factory.create(:morbidity_event)
       assigns[:event] = @event
+
+      given_before_partials
+      given_after_partials
+      given_no_replacement_partials
     end
 
     it "does nothing if core field isn't rendered for this event" do
+      @core_field.update_attributes!(:disease_specific => true)
       helper.core_element(:test_attribute, @fb, :horiz) do
         fail "block shouldn't be called"
       end
@@ -181,12 +206,26 @@ describe EventsHelper, "rendering core elements" do
     end
 
     it "renders field if field should be rendered for this event" do
-      @core_field.update_attributes!(:disease_specific => false)
       helper.core_element(:test_attribute, @fb, :horiz) do
         helper.concat('<p>This should render</p>')
       end
       helper.output_buffer.should have_tag('p', 'This should render')
     end
+
+    it "renders before partials" do
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        helper.concat('<p>This should render</p>')
+      end
+      helper.output_buffer.should have_tag('p', 'before partial')
+    end
+
+    it "renders after partials" do
+      helper.core_element(:test_attribute, @fb, :horiz) do
+        helper.concat('<p>This should render</p>')
+      end
+      helper.output_buffer.should have_tag('p', 'after partial')
+    end
+
   end
 
   describe "on person entity" do
@@ -197,6 +236,10 @@ describe EventsHelper, "rendering core elements" do
       @fb = ExtendedFormBuilder.new('person_entity', nil, nil, {}, nil)
       helper.stubs(:core_element_renderers).returns({})
       helper.output_buffer = ""
+
+      given_before_partials
+      given_after_partials
+      given_no_replacement_partials
     end
 
     it "ignores rendered? for disease specific fields" do
