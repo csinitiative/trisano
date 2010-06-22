@@ -1,5 +1,39 @@
+actual_delivery_facility_name:
+  fb_accessible: false
+  can_follow_up: false
+  event_type: morbidity_event
+  field_type: single_line_text
+  key: morbidity_event[actual_delivery_facility][place_entity][place][name]
+
+actual_delivery_facility_area_code:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[actual_delivery_facility][place_entity][telephones][area_code]
+
+actual_delivery_facility_phone_number:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[actual_delivery_facility][place_entity][telephones][phone_number]
+
+actual_delivery_facility_extension:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[actual_delivery_facility][place_entity][telephones][extension]
+
+actual_delivery_facility_actual_delivery_date:
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[actual_delivery_facility][actual_delivery_facilities_participation][actual_delivery_date]
+
 expected_delivery_facility_name:
-  help_text:
   fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
@@ -7,7 +41,6 @@ expected_delivery_facility_name:
   key: morbidity_event[expected_delivery_facility][place_entity][place][name]
 
 expected_delivery_facility_area_code:
-  help_text:
   fb_accessible: true
   can_follow_up: false
   field_type: single_line_text
@@ -15,7 +48,6 @@ expected_delivery_facility_area_code:
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][area_code]
 
 expected_delivery_facility_phone_number:
-  help_text:
   fb_accessible: true
   can_follow_up: false
   field_type: single_line_text
@@ -23,7 +55,6 @@ expected_delivery_facility_phone_number:
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][phone_number]
 
 expected_delivery_facility_extension:
-  help_text:
   fb_accessible: true
   can_follow_up: false
   field_type: single_line_text
@@ -31,9 +62,9 @@ expected_delivery_facility_extension:
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][extension]
 
 expected_delivery_facility_expected_delivery_date:
-  help_text:
   fb_accessible: true
   can_follow_up: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][expected_delivery_facilities_participation][expected_delivery_date]
+  
