@@ -26,11 +26,11 @@ class ApplicationController < ActionController::Base
   before_filter :prep_extensions
 
   helper_method :static_error_page_path
-  helper_method :core_element_renderers, :core_element_show_renderers
   helper_method :javascript_include_renderers, :dom_loaded_javascripts
   helper_method :address_extension_renderers
   helper_method :cmr_contacts_extension_renderers, :cmr_place_exposure_extensions
   helper_method :search_extensions
+  helper_method :before_core_partials, :after_core_partials, :core_replacement_partial
 
   class << self
     def ignore_plugin_renderers?
@@ -165,15 +165,19 @@ class ApplicationController < ActionController::Base
   # optional renderers for replacing core fields.
   # Debt: Probably should move API bits into their own module
   # PLUGIN_API
-
-  def core_element_renderers
-    return {} if ApplicationController.ignore_plugin_renderers?
-    @core_element_renderers ||= {}
+  def before_core_partials
+    return Hash.new {|hash, key| hash[key] = []} if ApplicationController.ignore_plugin_renderers?
+    @before_core_partials ||= Hash.new {|hash, key| hash[key] = []}
   end
 
-  def core_element_show_renderers
+  def after_core_partials
+    return Hash.new {|hash, key| hash[key] = []} if ApplicationController.ignore_plugin_renderers?
+    @after_core_partials ||= Hash.new {|hash, key| hash[key] = []}
+  end
+
+  def core_replacement_partial
     return {} if ApplicationController.ignore_plugin_renderers?
-    @core_element_show_renderers ||= {}
+    @replace_core_partials ||= {}
   end
 
   # PLUGIN_API render for add javascript_include_tags

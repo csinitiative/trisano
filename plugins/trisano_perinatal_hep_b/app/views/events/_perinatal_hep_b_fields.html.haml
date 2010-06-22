@@ -1,0 +1,7 @@
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+        -core_element(:name, p, :horiz) do
+          =p.label(:name, t(:expected_delivery_facility_name, :scope => :perinatal_hep_b_management))
+          =p.text_field(:name)

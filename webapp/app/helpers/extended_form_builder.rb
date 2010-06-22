@@ -248,7 +248,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def core_path
-    cp = @options[:core_path] || @object_name.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
+    cp = @options[:core_path] || @object_name.to_s.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
     return if cp.nil?
     CorePath[cp]
   end

@@ -33,7 +33,7 @@ module Trisano
             end
           end
         end
-        
+
       end
     end
   end
