@@ -15,13 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
+class CreateActualDeliveryFacilitiesParticipations < ActiveRecord::Migration
+  extend MigrationHelpers
 
-describe HumanEvent, "in the Perinatal Hep B plugin" do
+  def self.up
+    create_table :actual_delivery_facilities_participations do |t|
+      t.integer :participation_id
+      t.date :actual_delivery_date
 
-  describe "a morbidity event" do
-    it { should have_one(:expected_delivery_facility) }
-    it { should have_one(:actual_delivery_facility) }
+      t.timestamps
+    end
+
+    add_foreign_key :actual_delivery_facilities_participations, :participation_id, :participations
   end
 
+  def self.down
+    remove_foreign_key :actual_delivery_facilities_participations, :participation_id
+    drop_table :actual_delivery_facilities_participations
+  end
 end

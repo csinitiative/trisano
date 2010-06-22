@@ -19,10 +19,6 @@ require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_he
 
 describe ExpectedDeliveryFacility do
 
-  it "should have an expected_delivery_facilities_participation association" do
-    expected_delivery_facility = ExpectedDeliveryFacility.new
-    expected_delivery_facility.expected_delivery_facilities_participation = ExpectedDeliveryFacilitiesParticipation.new
-    expected_delivery_facility.expected_delivery_facilities_participation.should_not be_nil
-  end
+  it { should have_one(:expected_delivery_facilities_participation) }
 
 end

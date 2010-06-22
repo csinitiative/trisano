@@ -26,6 +26,10 @@ module Trisano
           def included(base)
             base.class_eval do
               class << self
+                def actual_delivery_type_codes
+                  %w(H C O)
+                end
+
                 def expected_delivery_type_codes
                   %w(H C O)
                 end

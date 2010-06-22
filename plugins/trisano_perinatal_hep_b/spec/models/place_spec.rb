@@ -26,4 +26,11 @@ describe Place, "in the Perinatal Hep B plugin" do
     end
   end
 
+  it "should return actual delivery facility place types" do
+    Place.actual_delivery_type_codes.size.should == 3
+    ["H", "C", "O"].each do |place_type_code|
+      Place.actual_delivery_type_codes.include?(place_type_code).should be_true
+    end
+  end
+
 end

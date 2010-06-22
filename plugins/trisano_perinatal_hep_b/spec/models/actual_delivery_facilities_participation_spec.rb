@@ -17,11 +17,14 @@
 
 require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
 
-describe HumanEvent, "in the Perinatal Hep B plugin" do
+describe ActualDeliveryFacilitiesParticipation do
 
-  describe "a morbidity event" do
-    it { should have_one(:expected_delivery_facility) }
-    it { should have_one(:actual_delivery_facility) }
+  before(:each) do
+    @adfp = ActualDeliveryFacilitiesParticipation.create
+  end
+
+  it "should be valid" do
+    @adfp.should be_valid
   end
 
 end

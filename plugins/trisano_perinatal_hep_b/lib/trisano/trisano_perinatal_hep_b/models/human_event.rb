@@ -28,6 +28,11 @@ module Trisano
               :foreign_key => "event_id",
               :order => 'created_at ASC',
               :dependent => :destroy
+
+            base.has_one :actual_delivery_facility,
+              :foreign_key => "event_id",
+              :order => 'created_at ASC',
+              :dependent => :destroy
           end
         end
       end
