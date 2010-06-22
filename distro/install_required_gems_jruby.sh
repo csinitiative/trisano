@@ -58,7 +58,7 @@ jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionpack
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmailer-2.3.5.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
-jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_girl-1.2.3.gem
+jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_girl-1.3.0.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/freshy_filter_chain-0.1.0.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/validates_timeliness-2.2.2.gem
 jruby -S gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mocha-0.9.8.gem
