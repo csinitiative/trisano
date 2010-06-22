@@ -38,7 +38,7 @@ describe Export::Csv do
     )
   end
 
-  it "should still render CSV export properly for events without an expected delivery facility" do
+  it "should still render CSV export properly for events without any P-Hep-B data" do
     output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
     output.size.should == 2
     assert_values_in_result(output, 1, :patient_last_name => /#{@event.interested_party.person_entity.person.last_name}/)
@@ -78,6 +78,42 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :expected_delivery_facility_phone_number => /5553333/)
       assert_values_in_result(output, 1, :expected_delivery_facility_extension => /200/)
       assert_values_in_result(output, 1, :expected_delivery_facility_expected_delivery_date => //)
+    end
+  end
+
+  describe "events with an actual delivery facility" do
+
+    before(:each) do
+      @actual_delivery_facility = add_actual_delivery_facility_to_event(@event,
+        "Actual Hospital",
+        :actual_delivery_date => Date.today + 15
+      )
+
+      @telephone_number = Factory.create(:telephone,
+        :area_code => "555",
+        :phone_number => "555-3333",
+        :extension => "200",
+        :entity => @event.actual_delivery_facility.secondary_entity
+      )
+    end
+
+    it "should include actual delivery facility information in CSV export" do
+      output = to_arry(Export::Csv.export(@event))
+      assert_values_in_result(output, 1, :actual_delivery_facility_name => /Actual Hospital/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_area_code => /555/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_phone_number => /5553333/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_extension => /200/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_actual_delivery_date => /#{@actual_delivery_facility.actual_delivery_facilities_participation.actual_delivery_date}/)
+    end
+
+    it "should include actual delivery facility information in CSV export even when there is no actual_delivery_facilities_participation" do
+      @actual_delivery_facility.actual_delivery_facilities_participation.destroy
+      output = to_arry(Export::Csv.export(@event))
+      assert_values_in_result(output, 1, :actual_delivery_facility_name => /Actual Hospital/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_area_code => /555/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_phone_number => /5553333/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_extension => /200/)
+      assert_values_in_result(output, 1, :actual_delivery_facility_actual_delivery_date => //)
     end
   end
 

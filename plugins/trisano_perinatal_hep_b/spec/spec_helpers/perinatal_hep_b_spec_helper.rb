@@ -18,7 +18,7 @@
 module PerinatalHepBSpecHelper
 
   def add_expected_delivery_facility_to_event(event, facility_name, expected_delivery_facilities_participations_attributes={})
-    facility_place_entity = create_expected_delivery_facility!(facility_name)
+    facility_place_entity = create_delivery_facility!(:expected_delivery, facility_name)
     expected_delivery_facilities_participation = Factory.create(:expected_delivery_facilities_participation, expected_delivery_facilities_participations_attributes)
     expected_delivery_facility = Factory.create(:expected_delivery_facility,
       :place_entity => facility_place_entity,
@@ -29,8 +29,20 @@ module PerinatalHepBSpecHelper
     expected_delivery_facility
   end
 
-  def create_expected_delivery_facility!(name)
-    create_place!(:expected_delivery, name)
+  def add_actual_delivery_facility_to_event(event, facility_name, actual_delivery_facilities_participations_attributes={})
+    facility_place_entity = create_delivery_facility!(:actual_delivery, facility_name)
+    actual_delivery_facilities_participation = Factory.create(:actual_delivery_facilities_participation, actual_delivery_facilities_participations_attributes)
+    actual_delivery_facility = Factory.create(:actual_delivery_facility,
+      :place_entity => facility_place_entity,
+      :actual_delivery_facilities_participation => actual_delivery_facilities_participation
+    )
+    event.actual_delivery_facility = actual_delivery_facility
+    event.save!
+    actual_delivery_facility
+  end
+
+  def create_delivery_facility!(type, name)
+    create_place!(type, name)
   end
 
 end

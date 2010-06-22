@@ -18,10 +18,19 @@
 require 'factory_girl'
 
 Factory.define :expected_delivery_facility do |edf|
-  edf.place_entity { create_expected_delivery_facility!("hospital name") }
+  edf.place_entity { create_delivery_facility!(:expected_delivery, "hospital name") }
   edf.expected_delivery_facilities_participation { Factory.build(:expected_delivery_facilities_participation) }
+end
+
+Factory.define :actual_delivery_facility do |adf|
+  adf.place_entity { create_delivery_facility!(:actual_delivery, "hospital name") }
+  adf.actual_delivery_facilities_participation { Factory.build(:actual_delivery_facilities_participation) }
 end
 
 Factory.define :expected_delivery_facilities_participation do |edfp|
   edfp.expected_delivery_date Date.today + 15.days
+end
+
+Factory.define :actual_delivery_facilities_participation do |adfp|
+  adfp.actual_delivery_date Date.today + 15.days
 end
