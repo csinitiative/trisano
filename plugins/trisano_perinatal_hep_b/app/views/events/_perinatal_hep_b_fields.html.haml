@@ -1,3 +1,6 @@
+-edf = @event.expected_delivery_facility || @event.build_expected_delivery_facility
+-pe = edf.place_entity || edf.build_place_entity
+-pe.place || pe.build_place
 -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
   -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
     -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|

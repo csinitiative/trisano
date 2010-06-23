@@ -33,53 +33,58 @@ module EventsHelper
     return t('colon_after', :text => t(*args))
   end
 
-  def core_element(attribute, form_builder, css_class, &block)
+  def rendering_core_field(attribute, form_builder)
     cf = form_builder.core_field(attribute)
-    return if not cf.rendered?(@event)
-    before_core_partials[cf.key].each do |before_partial|
-      before_partial[:locals] = { :f => form_builder}.merge(before_partial[:locals] || {})
-      concat render(before_partial)
+    if cf.rendered?(@event)
+      concat_before_core_partials(cf.key, form_builder)
+      yield(cf)
+      concat_after_core_partials(cf.key, form_builder)
     end
-    concat_core_field(:edit, :before, attribute, form_builder)
-    concat("<span class='#{css_class}'>")
-    if replacement = core_replacement_partial[cf.key]
-      replacement[:locals] = { :f => form_builder }.merge(replacement[:locals] || {})
-      concat render(replacement)
+  end
+
+  def concat_before_core_partials(key, form_builder)
+    before_core_partials[key].each do |before_partial|
+      locals = before_partial[:locals] || {}
+      before_partial[:locals] = {:f => form_builder}.merge(locals)
+      concat(render(before_partial))
+    end
+  end
+
+  def concat_after_core_partials(key, form_builder)
+    after_core_partials[key].each do |after_partial|
+      locals = after_partial[:locals] || {}
+      after_partial[:locals] = { :f => form_builder }.merge(locals)
+      concat(render(after_partial))
+    end
+  end
+
+  def concat_block_or_replacement(key, form_builder, &block)
+    if replacement = core_replacement_partial[key]
+      locals = replacement[:locals] || {}
+      replacement[:locals] = { :f => form_builder }.merge(locals)
+      concat(render(replacement))
     else
       block.call
     end
-    concat(render_core_field_help_text(attribute, form_builder, @event))
-    concat("</span>")
-    concat_core_field(:edit, :after, attribute, form_builder)
-    after_core_partials[cf.key].each do |after_partial|
-      after_partial[:locals] = { :f => form_builder}.merge(after_partial[:locals] || {})
-      concat render(after_partial)
+  end
+
+  def core_element(attribute, form_builder, css_class, mode=:edit, &block)
+    rendering_core_field(attribute, form_builder) do |cf|
+      concat_core_field(mode, :before, attribute, form_builder)
+      concat("<span class='#{css_class}'>")
+      concat_block_or_replacement(cf.key, form_builder, &block)
+      concat(render_core_field_help_text(attribute, form_builder, @event))
+      concat("&nbsp;</span>")
+      concat_core_field(mode, :after, attribute, form_builder)
     end
   end
 
   def core_element_show(attribute, form_builder, css_class, &block)
-    concat_core_field(:show, :before, attribute, form_builder)
-    concat("<span class='#{css_class}'>")
-    if renderer = core_replacement_partial[(form_builder.core_path << attribute).to_s]
-      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
-    else
-      block.call
-    end
-    concat(render_core_field_help_text(attribute, form_builder, @event))
-    concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
-    concat_core_field(:show, :after, attribute, form_builder)
+    core_element(attribute, form_builder, css_class, :show, &block)
   end
 
   def core_element_print(attribute, form_builder, css_class, &block)
-    concat_core_field(:print, :before, attribute, form_builder)
-    concat("<span class='#{css_class}'>")
-    if renderer = core_replacement_partial[(form_builder.core_path << attribute).to_s]
-      concat render(:partial => renderer[:partial], :locals => {:f => form_builder}.merge(renderer[:locals] || {}))
-    else
-      block.call
-    end
-    concat("&nbsp;</span>") # The &nbsp; is there to help resolve wrapping issues
-    concat_core_field(:print, :after, attribute, form_builder)
+    core_element(attribute, form_builder, css_class, :print, &block)
   end
 
   def render_investigator_view(view, f, form=nil)
