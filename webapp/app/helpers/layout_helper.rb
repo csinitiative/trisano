@@ -119,7 +119,7 @@ module LayoutHelper
       end
       if user.is_entitled_to? :access_avr
         items << {
-          :link => config_option(:bi_server),
+          :link => config_option(:bi_server_url),
           :t => :avr,
           :options => {:popup => true}}
       end
