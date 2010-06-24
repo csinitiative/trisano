@@ -227,6 +227,9 @@ def path_to(page_name)
   when /the places search page/i
     places_path
 
+  when /view all core fields/i
+    core_fields_path
+
   else
     ifnone = lambda { raise "Can't find mapping from \"#{page_name}\" to a path." }
     path_name = @@extension_path_names.find(ifnone) do |p|

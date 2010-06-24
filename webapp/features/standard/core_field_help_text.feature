@@ -33,3 +33,8 @@ Feature: Help text is available for all core fields
       And there is an associated encounter event
      When I am on the encounter event edit page
      Then I should see help text for all encounter event core fields
+
+  Scenario: Viewing all the core fields
+    Given I am logged in as a super user
+     When I go to view all core fields
+     Then I should see all the core fields
