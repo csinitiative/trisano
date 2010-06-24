@@ -131,7 +131,7 @@ Given /^that form has core field configs configured for all core fields$/ do
   @core_field_container = @form.core_field_elements_container
 
   # Create a core field config for every core field
-  CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and disease_specific != true', @form.event_type]).each do |core_field|
     if core_field.fb_accessible
       core_field_config = CoreFieldElement.new
 

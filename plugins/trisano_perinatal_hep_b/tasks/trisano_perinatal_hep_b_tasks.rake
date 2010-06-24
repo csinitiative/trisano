@@ -5,6 +5,10 @@ namespace :trisano do
     task :load_defaults do
       Rake::Task['trisano:perinatal_hep_b:load_defaults'].invoke
     end
+
+    task :feature_prep => :environment do
+      Rake::Task['trisano:perinatal_hep_b:feature_prep'].invoke
+    end
   end
 
   namespace :perinatal_hep_b do
@@ -25,6 +29,12 @@ namespace :trisano do
       puts "Loading Perinatal Hep B default data"
       load_defaults = File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')
       sh("#{RAILS_ROOT}/script/runner #{load_defaults}")
+    end
+
+    task :feature_prep do |t|
+      puts "Prepping perinatal hep b default data"
+      load_defaults = File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')
+      sh("#{RAILS_ROOT}/script/runner -e test #{load_defaults}")
     end
 
   end

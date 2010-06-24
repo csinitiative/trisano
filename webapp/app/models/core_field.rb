@@ -23,7 +23,6 @@ class CoreField < ActiveRecord::Base
   has_many :diseases, :through => :core_fields_diseases
 
   before_validation :normalize_attributes
-  after_save :flush_caches
 
   class << self
 
@@ -59,10 +58,6 @@ class CoreField < ActiveRecord::Base
 
   def core_path
     self.key
-  end
-
-  def flush_caches
-    CoreField.flush_memoization_cache
   end
 
   def rendered?(event)

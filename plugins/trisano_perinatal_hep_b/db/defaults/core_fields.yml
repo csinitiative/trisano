@@ -4,6 +4,7 @@ actual_delivery_facility_name:
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[actual_delivery_facility][place_entity][place][name]
+  disease_specific: true
 
 actual_delivery_facility_area_code:
   fb_accessible: true
@@ -11,6 +12,7 @@ actual_delivery_facility_area_code:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][area_code]
+  disease_specific: true
 
 actual_delivery_facility_phone_number:
   fb_accessible: true
@@ -18,6 +20,7 @@ actual_delivery_facility_phone_number:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][phone_number]
+  disease_specific: true
 
 actual_delivery_facility_extension:
   fb_accessible: true
@@ -25,6 +28,7 @@ actual_delivery_facility_extension:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][extension]
+  disease_specific: true
 
 actual_delivery_facility_actual_delivery_date:
   fb_accessible: true
@@ -32,6 +36,7 @@ actual_delivery_facility_actual_delivery_date:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][actual_delivery_facilities_participation][actual_delivery_date]
+  disease_specific: true
 
 expected_delivery_facility_name:
   fb_accessible: false
@@ -39,6 +44,7 @@ expected_delivery_facility_name:
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[expected_delivery_facility][place_entity][place][name]
+  disease_specific: true
 
 expected_delivery_facility_area_code:
   fb_accessible: true
@@ -46,6 +52,7 @@ expected_delivery_facility_area_code:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][area_code]
+  disease_specific: true
 
 expected_delivery_facility_phone_number:
   fb_accessible: true
@@ -53,6 +60,7 @@ expected_delivery_facility_phone_number:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][phone_number]
+  disease_specific: true
 
 expected_delivery_facility_extension:
   fb_accessible: true
@@ -60,6 +68,7 @@ expected_delivery_facility_extension:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][extension]
+  disease_specific: true
 
 expected_delivery_facility_expected_delivery_date:
   fb_accessible: true
@@ -67,4 +76,4 @@ expected_delivery_facility_expected_delivery_date:
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][expected_delivery_facilities_participation][expected_delivery_date]
-  
+  disease_specific: true
