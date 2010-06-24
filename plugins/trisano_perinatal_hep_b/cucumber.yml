@@ -1,0 +1,2 @@
+<% feature_root = Dir['vendor/trisano/trisano_perinatal_hep_b/features'].first %>
+standard: <%= File.join(feature_root, 'standard') %> -r <%= File.join(feature_root, 'shared_steps') %>

@@ -10,6 +10,7 @@ CoreField.transaction do
   end
 end
 
+
 puts "Loading Perinatal Hep B CSV fields"
 
 csv_fields = YAML::load_file(File.join(File.dirname(__FILE__), '..', 'config', 'misc', 'en_csv_fields.yml'))

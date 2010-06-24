@@ -16,14 +16,14 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Then /^I should see all of the core field config questions$/ do
-  CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     response.should contain("#{core_field.key} before?")
     response.should contain("#{core_field.key} after?")
   end
 end
 
 When /^I answer all core field config questions$/ do
-  CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     fill_in("#{core_field.key} before?", :with => "#{core_field.key} before answer")
     fill_in("#{core_field.key} after?", :with => "#{core_field.key} after answer")
   end
@@ -38,7 +38,7 @@ When /^I save the event$/i do
 end
 
 Then /^I should see all core field config answers$/ do
-  CoreField.find_all_by_event_type_and_fb_accessible(@form.event_type, true).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     response.should contain("#{core_field.key} before answer")
     response.should contain("#{core_field.key} after answer")
   end
