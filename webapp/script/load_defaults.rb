@@ -19,14 +19,7 @@ puts "Loading defaults"
 
 # core fields
 core_fields = YAML::load_file("#{RAILS_ROOT}/db/defaults/core_fields.yml")
-CoreField.transaction do
-  core_fields.each do |v|
-    if (code_name = v.delete('code_name'))
-      v['code_name'] = CodeName.find_by_code_name(code_name)
-    end
-    CoreField.create!(v)
-  end
-end
+CoreField.load!(core_fields)
 
 # Privileges are represented as an array of strings
 puts "Loading privileges"

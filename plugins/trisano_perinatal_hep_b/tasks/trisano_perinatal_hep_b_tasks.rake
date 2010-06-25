@@ -29,6 +29,7 @@ namespace :trisano do
       puts "Loading Perinatal Hep B default data"
       load_defaults = File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')
       sh("#{RAILS_ROOT}/script/runner #{load_defaults}")
+      sh("#{RAILS_ROOT}/script/runner 'CoreFieldsDisease.create_perinatal_hep_b_associations'")
     end
 
     task :feature_prep do |t|

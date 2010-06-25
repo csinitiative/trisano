@@ -17,21 +17,23 @@
 
 require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
 
-describe HumanEvent, "in the Perinatal Hep B plugin" do
+describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
+  include DiseaseSpecHelper
 
-  describe "a morbidity event" do
-    it { should have_one(:expected_delivery_facility) }
-    it { should have_one(:actual_delivery_facility) }
-  end
-
-  describe "preparing hep b data" do
+  describe "creating default associations" do
     before do
-      @event = Factory.create(:morbidity_event)
+      given_a_disease_named('Hepatitis B, acute')
+      @core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml')).values
+      CoreField.load!(@core_fields)
     end
 
-    it "should build out objects that compose hep b data" do
-      @event.prepare_perinatal_hep_b_data
-      @event.expected_delivery_facility.place_entity.place.should_not be_nil
+    it "should associate hep b core fields w/ acute Hep B" do
+      lambda do
+        CoreFieldsDisease.create_perinatal_hep_b_associations
+      end.should change(CoreFieldsDisease, :count).by(@core_fields.size)
+      Disease.find_by_disease_name('Hepatitis B, acute').core_fields.size.should == @core_fields.size
     end
+
   end
+
 end
