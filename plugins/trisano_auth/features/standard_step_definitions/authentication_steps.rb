@@ -22,7 +22,6 @@ end
 
 When /^I login with good credentials$/ do
   user = User.create(Factory.attributes_for(:user,
-        :email => "#{rand(1000)}@oops.com",
         :password => 'changeme',
         :password_confirmation => 'changeme'))
   puts user.inspect
@@ -33,7 +32,6 @@ end
 
 When /^I login with a bad password$/ do
   user = User.create(Factory.attributes_for(:user,
-        :email => "#{rand(1000)}@oops.com",
         :password => 'changeme',
         :password_confirmation => 'changeme'))
   puts user.inspect
@@ -44,7 +42,6 @@ end
 
 When /^I login with a bad user name$/ do
   user = User.create(Factory.attributes_for(:user,
-        :email => "#{rand(1000)}@oops.com",
         :password => 'changeme',
         :password_confirmation => 'changeme'))
   puts user.inspect
