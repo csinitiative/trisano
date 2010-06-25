@@ -9,8 +9,8 @@ Adds AuthLogic support to TriSano (R).
 
 To enable this plugin, you need to:
 1) script/generate trisano_auth
-2) smackdb (you can't just migrate)
-3) Remove any auth related parameters in site_config.yml (or setup.yml).
+2) Remove any auth related parameters in site_config.yml.
+3) smackdb (you can't just migrate)
 
 The default password for all default users is 'changeme'.
 
