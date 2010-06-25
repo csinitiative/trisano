@@ -49,6 +49,19 @@ class CoreField < ActiveRecord::Base
       @event_fields_hash = nil
     end
 
+    def load!(hashes)
+      transaction do
+        hashes.each do |attrs|
+          unless self.find_by_key(attrs['key'])
+            if (code_name = attrs.delete('code_name'))
+              attrs['code_name'] = CodeName.find_by_code_name(code_name)
+            end
+            CoreField.create!(attrs)
+          end
+        end
+      end
+    end
+
     private
 
     def event_fields_hash

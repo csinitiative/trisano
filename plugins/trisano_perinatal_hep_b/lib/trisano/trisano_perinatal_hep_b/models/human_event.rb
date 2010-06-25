@@ -40,6 +40,12 @@ module Trisano
 
           end
         end
+
+        def prepare_perinatal_hep_b_data
+          edf = self.expected_delivery_facility || self.build_expected_delivery_facility
+          pe = edf.place_entity || edf.build_place_entity
+          pe.place || pe.build_place
+        end
       end
     end
   end
