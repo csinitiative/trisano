@@ -1,0 +1,11 @@
+# Copyright (C) 2009, 2010, Collaborative Software Initiative
+#
+# This file is part of CSI TriSano Enterprise Edition..
+
+en:
+  trisano_auth:
+    login: "Log in"
+    logout: "LOG OUT"
+    username: "User Name"
+    password: "Password"
+    submit: "Submit"

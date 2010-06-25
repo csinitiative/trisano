@@ -1,0 +1,17 @@
+-# Copyright (C) 2009, 2010, Collaborative Software Initiative
+-#
+-# This file is part of CSI TriSano Enterprise Edition..
+
+-content_for :title do
+  =t('trisano_auth.login')
+- form_for @user_session do |form|
+  = form.error_messages
+  .formList
+    %li
+      = form.label :user_name, t('trisano_auth.username')
+      = form.text_field :user_name
+    %li
+      = form.label :password, t("trisano_auth.password")
+      = form.password_field :password
+    %li
+      = form.submit(t("trisano_auth.submit"))

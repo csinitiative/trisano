@@ -1,0 +1,23 @@
+Copyright (C) 2009, 2010, Collaborative Software Initiative
+
+This file is part of CSI TriSano Enterprise Edition..
+
+TrisanoAuth
+================
+
+Adds AuthLogic support to TriSano (R).
+
+To enable this plugin, you need to:
+1) script/generate trisano_auth
+2) smackdb (you can't just migrate)
+3) Remove any auth related parameters in site_config.yml (or setup.yml).
+
+The default password for all default users is 'changeme'.
+
+To run the features:
+1) Add features/standard vendor/plugins/trisano_auth/features/standard  -r vendor/plugins/trisano_auth/features/standard_step_definitions -r vendor/plugins/trisano_auth/features/support to cucumber.yml in the root dir
+2) cucumber vendor/plugins/trisano_auth/features/standard -p standard
+
+NOTE: Currently, installing this plugin will cause many of the specs and features to fail.
+
+Also, don't use auth_logic and the user switcher option. They aren't meant to be together.
