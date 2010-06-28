@@ -19,17 +19,41 @@ BEGIN;
 
 SET search_path = staging, public;
 
-ALTER TABLE dw_morbidity_events ADD expected_delivery_facility TEXT;
+ALTER TABLE dw_morbidity_events
+    ADD expected_delivery_facility TEXT, 
+    ADD expected_delivery_date DATE,
+    ADD actual_delivery_facility TEXT,
+    ADD actual_delivery_date DATE;
 
-UPDATE dw_morbidity_events
-    SET expected_delivery_facility = edf.name
-    FROM (
-        SELECT par.event_id, pl.name
-        FROM
-            participations par
-            JOIN places pl
-                ON (pl.entity_id = par.secondary_entity_id)
-        WHERE par.type = 'ExpectedDeliveryFacility'
-    ) edf
+UPDATE dw_morbidity_events SET
+    expected_delivery_facility = edf.name,
+    expected_delivery_date     = edf.expected_delivery_date
+    FROM
+        (
+            SELECT par.event_id, pl.name, edfp.expected_delivery_date
+            FROM
+                participations par
+                JOIN places pl
+                    ON (pl.entity_id = par.secondary_entity_id)
+                LEFT JOIN expected_delivery_facilities_participations edfp
+                    ON (par.id = edfp.participation_id)
+            WHERE par.type = 'ExpectedDeliveryFacility'
+        ) edf
     WHERE edf.event_id = dw_morbidity_events.id;
+
+UPDATE dw_morbidity_events SET
+    actual_delivery_facility = adf.name,
+    actual_delivery_date     = adf.actual_delivery_date
+    FROM
+        (
+            SELECT par.event_id, pl.name, adfp.actual_delivery_date
+            FROM
+                participations par
+                JOIN places pl
+                    ON (pl.entity_id = par.secondary_entity_id)
+                LEFT JOIN actual_delivery_facilities_participations adfp
+                    ON (par.id = adfp.participation_id)
+            WHERE par.type = 'ActualDeliveryFacility'
+        ) adf
+    WHERE adf.event_id = dw_morbidity_events.id;
 COMMIT;
