@@ -49,8 +49,7 @@
         %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital'
 
     %fieldset.form
-      %legend= t 'status'
-      = error_messages_for :object => f.object.interested_party.risk_factor
+      %legend= t 'mortality_status'
       - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
         - core_element :died_id, d, :horiz do
           = d.label(:died_id)
@@ -63,6 +62,10 @@
               = person.label(:date_of_death)
               = person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event)
 
+    = error_messages_for :object => f.object.interested_party.risk_factor
+    %fieldset.form
+      %legend= t(:pregnancy_status)
+      - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
         - current_patient.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |rf|
           - core_element :pregnant_id, rf, :horiz do
             = rf.label(:pregnant_id)

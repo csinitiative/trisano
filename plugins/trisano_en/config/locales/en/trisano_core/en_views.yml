@@ -667,6 +667,8 @@ en:
   export_all_to_csv: "Export all to CSV"
   change_view: "Change View"
   status: 'Status'
+  mortality_status: 'Mortality Status'
+  pregnancy_status: 'Pregnancy Status'
   event_investigation_status: "Event Investigation Status"
   create_new_morbidity_report: "Create New Morbidity Report"
   queues: "Queues"
