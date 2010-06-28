@@ -1,10 +1,15 @@
--edf = @event.expected_delivery_facility || @event.build_expected_delivery_facility
--pe = edf.place_entity || edf.build_place_entity
--pe.place || pe.build_place
+-@event.prepare_perinatal_hep_b_data
+%legend.vert Expected Delivery
 -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
   -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for(:expected_delivery_facilities_participation, :builder => ExtendedFormBuilder) do |dfp|
+      -core_element(:expected_delivery_date, dfp, :vert) do
+        =dfp.label(:expected_delivery_date)
+        =dfp.calendar_date_select(:expected_delivery_date)
     -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
       -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
-        -core_element(:name, p, :horiz) do
+        -core_element(:name, p, :vert) do
           =p.label(:name, t(:expected_delivery_facility_name, :scope => :perinatal_hep_b_management))
           =p.text_field(:name)
+      -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
+        =edit_telephones(t)

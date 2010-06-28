@@ -43,8 +43,10 @@ module Trisano
 
         def prepare_perinatal_hep_b_data
           edf = self.expected_delivery_facility || self.build_expected_delivery_facility
+          edfp = edf.expected_delivery_facilities_participation || edf.build_expected_delivery_facilities_participation
           pe = edf.place_entity || edf.build_place_entity
           pe.place || pe.build_place
+          pe.telephones.build if pe.telephones.empty?
         end
       end
     end

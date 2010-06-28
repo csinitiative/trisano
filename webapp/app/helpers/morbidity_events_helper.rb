@@ -186,7 +186,7 @@ module MorbidityEventsHelper
   def edit_phone_field(field, fields_or_form, options={})
     core_element(field, fields_or_form, :horiz) do
       concat(fields_or_form.label(field))
-      concat(fields_or_form.core_text_field(fields, options))
+      concat(fields_or_form.core_text_field(field, options))
     end
   end
 

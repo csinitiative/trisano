@@ -22,9 +22,10 @@ Feature: Hep B specific pregnancy fields
       And a morbidity event exists with the disease Hepatitis B, acute
       And "Hepatitis B, acute" has disease specific core fields
      When I go to edit the CMR
-      And I fill in "Expected delivery facility" with "Delivery Here Clinic"
+     Then I should see expected delivery facility fields
+     When I fill in "Expected delivery facility" with "Delivery Here Clinic"
       And I save the edit event form
      Then I should be on the show CMR page
-      And I should see expected delivery data:
-        | Label                      | Value                |
-        | Expected delivery facility | Delivery Here Clinic |
+      And I should see expected delivery data
+
+
