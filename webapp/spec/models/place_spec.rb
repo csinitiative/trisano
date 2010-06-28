@@ -186,6 +186,7 @@ describe Place do
 
   describe "'Unassigned' is special for jurisdiction places" do
     before do
+      HospitalsParticipation.delete_all
       Participation.delete_all
       RoleMembership.delete_all
       PrivilegesRole.delete_all
