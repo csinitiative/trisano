@@ -156,7 +156,7 @@ module MorbidityEventsHelper
   def show_phone_field(field, fields_or_form)
     core_element_show field, fields_or_form, :horiz do
       concat(fields_or_form.label(field))
-      concat(h(fields_or_form.object.try(field)))
+      concat(h(fields_or_form.object.configurable_format(field)))
     end
   end
 

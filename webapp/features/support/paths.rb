@@ -45,6 +45,9 @@ def path_to(page_name)
   when /the CMR show page/i
     cmr_path @event
 
+  when /view the CMR/i
+    cmr_path @event
+
   when /the export CMR as csv page/i
     export_single_cmr_path @event, :format => 'csv'
 

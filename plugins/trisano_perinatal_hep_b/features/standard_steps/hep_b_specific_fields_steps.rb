@@ -26,7 +26,29 @@ end
 Then /^I should see expected delivery data$/ do
   response.should have_tag('#clinical_tab fieldset .form') do
     with_tag('fieldset.vert legend', 'Expected Delivery') do
+      with_tag('~ .vert label', 'Expected delivery date')
       with_tag('~ .horiz label', 'Expected delivery facility')
+      with_tag('~ .horiz label', 'Area code')
+      with_tag('~ .horiz label', 'Phone number')
+      with_tag('~ .horiz label', 'Extension')
     end
   end
 end
+
+When /^I enter the expected delivery facility phone number as:/ do |phone_number_table|
+  name_prefix =  'morbidity_event[expected_delivery_facility_attributes][place_entity_attributes][telephones_attributes][0]'
+  phone_number_table.hashes.each do |hash|
+    hash.each do |k, v|
+      fill_in(name_prefix + "[#{k}]", :with => v)
+    end
+  end
+end
+
+Then /^I should see the expected delivery facility phone number as:/ do |phone_number_table|
+  phone_number_table.hashes.each do |hash|
+    hash.values.each do |v|
+      assert_contain(v)
+    end
+  end
+end
+

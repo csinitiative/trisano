@@ -238,7 +238,7 @@ Then /^I should see the pregnancy fields in the right place$/ do
   end
 end
 
-Then /^I should see the death fields in the right place$/ do
+Then /^I should see the mortality fields in the right place$/ do
   response.should have_tag('#disease_info_form .form') do
     with_tag('legend', 'Mortality Status') do
       with_tag('~ .horiz label', 'Died')
@@ -247,3 +247,23 @@ Then /^I should see the death fields in the right place$/ do
     end
   end
 end
+
+Then /^I should see the pregnancy data in the right place$/ do
+  response.should have_tag('#clinical_tab .form') do
+    with_tag('legend', 'Pregnancy Status') do
+      with_tag('~ .horiz label', 'Pregnant')
+      with_tag('~ .horiz label', 'Pregnancy due date')
+    end
+  end
+end
+
+Then /^I should see the mortality data in the right place$/ do
+  response.should have_tag('#clinical_tab .form') do
+    with_tag('legend', 'Mortality Status') do
+      with_tag('~ .horiz label', 'Died')
+      with_tag('~ .horiz label', 'Date of death')
+      without_tag('~ .horiz label', 'Pregnant')
+    end
+  end
+end
+

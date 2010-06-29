@@ -30,11 +30,13 @@
       - core_element_show :date_diagnosed, d, :horiz do
         = d.label(:date_diagnosed)
         = ld(@event.safe_call_chain(:disease_event, :date_diagnosed))
-      %span.vert-break
+
+  %fieldset.form
+    %legend=t(:mortality_status)
+    - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
       - core_element_show :died_id, d, :horiz do
         = d.label(:died_id)
         = h(l(@event.safe_call_chain(:disease_event, :died)))
-
     - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
       - active_patient_form.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |primary_form|
         - primary_form.fields_for(:person, @event.interested_party.person_entity.person, :builder => ExtendedFormBuilder) do |person_form|
@@ -42,6 +44,8 @@
             = person_form.label(:date_of_death)
             = ld(@event.interested_party.person_entity.person.date_of_death)
 
+  %fieldset.form
+    %legend=t(:pregnancy_status)
     - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |patient_fields|
       - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
         - core_element_show :pregnant_id, risk_factor_form, :horiz do
