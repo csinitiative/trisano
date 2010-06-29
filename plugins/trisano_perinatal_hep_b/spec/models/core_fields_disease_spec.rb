@@ -22,7 +22,7 @@ describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
 
   describe "creating default associations" do
     before do
-      given_a_disease_named('Hepatitis B, acute')
+      given_a_disease_named('Hepatitis B Pregnancy Event')
       @core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml')).values
       CoreField.load!(@core_fields)
     end
@@ -31,7 +31,7 @@ describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
       lambda do
         CoreFieldsDisease.create_perinatal_hep_b_associations
       end.should change(CoreFieldsDisease, :count).by(@core_fields.size)
-      Disease.find_by_disease_name('Hepatitis B, acute').core_fields.size.should == @core_fields.size
+      Disease.find_by_disease_name('Hepatitis B Pregnancy Event').core_fields.size.should == @core_fields.size
     end
 
   end

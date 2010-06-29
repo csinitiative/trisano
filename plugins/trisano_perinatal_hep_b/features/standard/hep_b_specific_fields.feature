@@ -2,7 +2,7 @@ Feature: Hep B specific pregnancy fields
 
   In order to properly manage perinatal Hep B cases, Epidemiologists
   need to be able to enter additional pregnancy information about
-  woman w/ chronic or acute hep b
+  woman /w Hepatitis B
 
   Scenario: Viewing a new cmr event
     Given I am logged in as a super user
@@ -17,10 +17,10 @@ Feature: Hep B specific pregnancy fields
      Then I should see "Edit morbidity event"
       And I should not see expected delivery fields
 
-  Scenario: Editing an event w/ Acute Hepatitis B
+  Scenario: Editing an event w/ Hepatitis B Pregnancy Event
     Given I am logged in as a super user
-      And a morbidity event exists with the disease Hepatitis B, acute
-      And "Hepatitis B, acute" has disease specific core fields
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And "Hepatitis B Pregnancy Event" has disease specific core fields
      When I go to edit the CMR
      Then I should see expected delivery facility fields
      When I fill in "Expected delivery facility" with "Delivery Here Clinic"

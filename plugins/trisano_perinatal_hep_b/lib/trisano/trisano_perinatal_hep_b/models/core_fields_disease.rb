@@ -16,7 +16,7 @@ module Trisano
         module ClassMethods
           def create_perinatal_hep_b_associations
             fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../../../db/defaults/core_fields.yml')).values
-            self.create_associations('Hepatitis B, acute', fields)
+            self.create_associations('Hepatitis B Pregnancy Event', fields)
           end
         end
       end
