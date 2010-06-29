@@ -52,3 +52,20 @@ Then /^I should see the expected delivery facility phone number as:/ do |phone_n
   end
 end
 
+Then /^I should see printed expected delivery fields$/ do
+  response.should have_tag('.section-header') do
+    assert_contain('Clinical Information')
+    with_tag('~ .vert .print-label', 'Expected delivery date:')
+    with_tag('~ .horiz .print-label', 'Expected delivery facility:')
+  end
+end
+
+Then /^I should see printed expected delivery facility phone numbers:$/ do |phone_number_table|
+  phone_number_table.hashes.each do |hash|
+    hash.each do |k, v|
+      response.should have_tag('.horiz .print-label', k.to_s + ':')
+      response.should have_tag('.horiz .print-value', v)
+    end
+  end
+end
+

@@ -36,7 +36,9 @@ Feature: Hep B specific pregnancy fields
       And I should see the expected delivery facility phone number as:
         | area_code | phone_number | extension |
         | (123)     |     456-7890 |        88 |
-
-
-
+     When I go to print the Clinical CMR data
+     Then I should see printed expected delivery fields
+      And I should see printed expected delivery facility phone numbers:
+        | Area code | Phone number | Extension |
+        | (123)     |     456-7890 |        88 |
 

@@ -206,4 +206,35 @@ module MorbidityEventsHelper
     edit_phone_field(:extension, fields_or_form, :size => 6)
   end
 
+  def print_telephones(fields_or_form)
+    print_country_code(fields_or_form) if Telephone.use?(:country_code)
+    print_area_code(fields_or_form)    if Telephone.use?(:area_code)
+    print_phone_number(fields_or_form)
+    print_extension(fields_or_form)
+  end
+
+  def print_phone_field(field, fields_or_form)
+    core_element_print(field, fields_or_form, :horiz) do
+      concat(content_tag(:span, ct(field, :scope => [:activerecord, :attributes, :telephone]), :class => 'print-label'))
+      concat("\n")
+      concat(content_tag(:span, h(fields_or_form.object.configurable_format(field)), :class => 'print-value'))
+    end
+  end
+
+  def print_country_code(fields_or_form)
+    print_phone_field(:country_code, fields_or_form)
+  end
+
+  def print_area_code(fields_or_form)
+    print_phone_field(:area_code, fields_or_form)
+  end
+
+  def print_phone_number(fields_or_form)
+    print_phone_field(:phone_number, fields_or_form)
+  end
+
+  def print_extension(fields_or_form)
+    print_phone_field(:extension, fields_or_form)
+  end
+
 end

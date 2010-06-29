@@ -48,6 +48,9 @@ def path_to(page_name)
   when /view the CMR/i
     cmr_path @event
 
+  when /print the Clinical CMR data/i
+    cmr_path(@event, :format => :print, 'print_options[]' => 'Clinical')
+
   when /the export CMR as csv page/i
     export_single_cmr_path @event, :format => 'csv'
 
