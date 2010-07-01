@@ -28,7 +28,6 @@ Factory.define :actual_delivery_facility do |adf|
 end
 
 Factory.define :expected_delivery_facilities_participation do |edfp|
-  edfp.expected_delivery_date Date.today + 15.days
 end
 
 Factory.define :actual_delivery_facilities_participation do |adfp|

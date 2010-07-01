@@ -233,7 +233,7 @@ Then /^I should see the pregnancy fields in the right place$/ do
   response.should have_tag('#disease_info_form .form') do
     with_tag('legend', 'Pregnancy Status') do
       with_tag('~ .horiz label', 'Pregnant')
-      with_tag('~ .horiz label', 'Pregnancy due date')
+      with_tag('~ .horiz label', 'Expected delivery date')
     end
   end
 end
@@ -252,7 +252,7 @@ Then /^I should see the pregnancy data in the right place$/ do
   response.should have_tag('#clinical_tab .form') do
     with_tag('legend', 'Pregnancy Status') do
       with_tag('~ .horiz label', 'Pregnant')
-      with_tag('~ .horiz label', 'Pregnancy due date')
+      with_tag('~ .horiz label', 'Expected delivery date')
     end
   end
 end

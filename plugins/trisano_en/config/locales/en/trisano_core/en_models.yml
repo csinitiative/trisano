@@ -98,7 +98,7 @@ en:
 
       participations_risk_factor:
         pregnant_id: Pregnant
-        pregnancy_due_date: Pregnancy due date
+        pregnancy_due_date: Expected delivery date
         food_handler_id: Food handler
         healthcare_worker_id: Health care worker
         group_living_id: Group living

@@ -47,7 +47,7 @@
       %span.print-label=ct 'pregnant'
       %span.print-value= h(l(@event.safe_call_chain(:interested_party, :risk_factor, :pregnant)))
     - core_element_print :pregnancy_due_date, risk_factor_form, :horiz do
-      %span.print-label=ct 'pregnancy_due_date'
+      %span.print-label=ct('pregnancy_due_date', :scope => [:activerecord, :attributes, :participations_risk_factor])
       %span.print-value= ld(@event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date))
 
 %span.subsection-header=t 'hospitalized_health_facilities'

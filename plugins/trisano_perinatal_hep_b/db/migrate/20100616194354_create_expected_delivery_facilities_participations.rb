@@ -21,7 +21,6 @@ class CreateExpectedDeliveryFacilitiesParticipations < ActiveRecord::Migration
   def self.up
     create_table :expected_delivery_facilities_participations do |t|
       t.integer :participation_id
-      t.date :expected_delivery_date
 
       t.timestamps
     end
