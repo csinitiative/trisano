@@ -51,5 +51,5 @@
       = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
   - else
     %span.horiz
-      = person_form.label :_delete
-      = person_form.check_box :_delete
+      = person_form.label :_destroy
+      = person_form.check_box :_destroy

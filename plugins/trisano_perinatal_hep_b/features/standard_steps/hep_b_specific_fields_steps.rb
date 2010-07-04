@@ -4,17 +4,19 @@ end
 
 Then /^I should see expected delivery facility fields$/ do
   response.should have_tag('#disease_info_form .form') do
-    with_tag('.vert:nth-of-type(3) label', 'Expected delivery facility') do
-      with_tag('+ input')
-    end
-    with_tag('.horiz:nth-of-type(4) label', 'Area code') do
-      with_tag('+ input')
-    end
-    with_tag('.horiz:nth-of-type(5) label', 'Phone number') do
-      with_tag('+ input')
-    end
-    with_tag('.horiz:nth-of-type(6) label', 'Extension') do
-      with_tag('+ input')
+    with_tag("#expected_delivery_facility") do
+      with_tag('.vert:nth-of-type(1) label', 'Expected delivery facility') do
+        with_tag('+ input')
+      end
+      with_tag('.horiz:nth-of-type(3) label', 'Area code') do
+        with_tag('+ input')
+      end
+      with_tag('.horiz:nth-of-type(4) label', 'Phone number') do
+        with_tag('+ input')
+      end
+      with_tag('.horiz:nth-of-type(5) label', 'Extension') do
+        with_tag('+ input')
+      end
     end
   end
 end

@@ -394,3 +394,34 @@ function useGoogleApi(action) {
 function googleMapsLoaded() {
   googleMapsInit();
 }
+
+Trisano = {
+  baseUrl: null,
+
+  url: function(path) {
+    return Trisano.baseUrl + path.gsub(/^\/+/, '');
+  },
+
+  setBaseUrl: function(url) {
+    Trisano.baseUrl = url || $$("script[@src*='javascripts/prototype.js']")[0]
+      .getAttribute('src').gsub(/javascripts\/prototype.js.*$/, '');
+  },
+
+  flashError: function(msg) {
+    if (!Object.isElement($('flash-message'))) {
+      $$('#title_area .container')[0].insert( { top: new Element('div', { id: 'flash-message' }) } );
+    }
+    var element = $('flash-message');
+    element.setAttribute('class', 'error-message');
+    element.update(msg).show();
+    return element;
+  }
+};
+
+Trisano.setBaseUrl();
+
+document.observe('trisano:dom:loaded', function() {
+  if ($('flash-message')) {
+    $('flash-message').fade({ delay: 3.0 });
+  }
+});

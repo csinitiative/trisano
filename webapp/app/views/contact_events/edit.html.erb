@@ -1,9 +1,5 @@
 
 
-<script type="text/javascript">
-  setTimeout("Element.update('flash-message');", 3000);
-</script>
-
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
