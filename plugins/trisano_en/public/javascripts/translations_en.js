@@ -14,5 +14,6 @@ var i18n = new I18n('en', {
   unsupported_browser: 'You are using an unsupported browser:',
   please_switch_to: 'Please switch to',
   or_higher: 'or higher',
-  or: 'or'
+  or: 'or',
+  operation_failed: 'Operation failed. Please try again.'
 });

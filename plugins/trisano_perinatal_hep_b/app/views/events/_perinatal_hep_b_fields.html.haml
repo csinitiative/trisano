@@ -1,10 +1,28 @@
 -@event.prepare_perinatal_hep_b_data
--fields_for(@event, :builder => ExtendedFormBuilder) do |e|
-  -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
-    -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
-      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
-        -core_element(:name, p, :vert) do
-          =p.label(:name, t(:expected_delivery_facility_name, :scope => :perinatal_hep_b_management))
-          =p.text_field(:name)
-      -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
-        =edit_telephones(t)
+#expected_delivery_facility
+  -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+    -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
+      -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+        -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+          -core_element(:name, p, :vert) do
+            =p.label(:name, t(:expected_delivery_facility_name, :scope => :perinatal_hep_b_management))
+            -if p.object.new_record?
+              =p.text_field(:name, 'data-live-search' => true, 'data-url' => url_for(:action => :auto_complete_for_expected_delivery_facilities), 'data-update-url' => update_expected_delivery_facility_path(@event))
+            -else
+              =h(p.object.name)
+          -core_element(:places_types, p, :horiz) do
+            -if p.object.new_record?
+              =render_type_selector(p, 'expected_delivery_types')
+            -else
+              =p.label(:place_types)
+              =h(p.object.formatted_place_descriptions)
+        -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
+          -if t.object.new_record?
+            =edit_telephones(t)
+          -else
+            =show_telephones(t)
+        -unless pe.object.new_record?
+          %span.horiz
+            =pe.label(nil, "&nbsp;")
+            %a{ :href => remove_expected_delivery_facility_path(@event), 'data-update-link' => 'true' }
+              = t(:remove)

@@ -1,0 +1,3 @@
+page[:expected_delivery_facility].replace(render(:partial => 'events/perinatal_hep_b_fields'))
+page << "Trisano.Ajax.hookLiveSearchFields('#expected_delivery_facility [data-live-search=true]');"
+page << "Trisano.Ajax.hookUpdateLinks('#expected_delivery_facility a[data-update-link=true]');"

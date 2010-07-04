@@ -15,34 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-module Trisano
-  module TrisanoPerinatalHepB
-    module Models
-      module Place
-        hook! "Place"
-        reloadable!
+ActionController::Routing::Routes.draw do |map|
 
-        class << self
-          def included(base)
-            base.class_eval do
-              class << self
-                def actual_delivery_type_codes
-                  %w(H C O)
-                end
-
-                def expected_delivery_type_codes
-                  %w(H C O)
-                end
-
-                def expected_delivery_types
-                  place_types(expected_delivery_type_codes)
-                end
-              end
-            end
-          end
-        end
-
-      end
-    end
+  map.with_options :controller => 'morbidity_events' do |cmr|
+    cmr.auto_complete_for_expected_delivery_facilities 'cmrs/auto_complete_for_expected_delivery_facilities', :conditions => { :method => :get }, :action => 'auto_complete_for_expected_delivery_facilities'
+    cmr.remove_expected_delivery_facility  'cmrs/:id/remove_expected_delivery_facility', :conditions => { :method => :post }, :action => 'remove_expected_delivery_facility'
+    cmr.update_expected_delivery_facility  'cmrs/:id/update_expected_delivery_facility', :conditions => { :method => :post }, :action => 'update_expected_delivery_facility'
   end
+
 end

@@ -5,6 +5,7 @@ en:
         place_entity:
           place:
             name: Expected delivery facility
+            places_types: Expected delivery facility type
           telephones:
             area_code: Area code
             extension: Extension

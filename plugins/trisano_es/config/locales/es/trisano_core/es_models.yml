@@ -21,6 +21,7 @@ es:
         results_reported_to_clinician_date: Fecha en que se reportaron los resultados al clínico
         first_reported_PH_date: Fecha en que primero se reportó al departamento de la salud pública
         _delete: Eliminar
+        _destroy: Eliminar
 
       person:
         last_name: Apellido
@@ -68,10 +69,12 @@ es:
         phone_number: Número telefónico
         extension: Extensión
         _delete: Eliminar
+        _destroy: Eliminar
 
       email_address:
         email_address: Correo electrónico
         _delete: Eliminar
+        _destroy: Eliminar
 
       disease_event:
         disease_id: Enfermedad
@@ -114,6 +117,7 @@ es:
         treatment_date: Fecha de tratamiento
         stop_treatment_date: Fecha de conclusión del tratamiento
         _delete: Eliminar
+        _destroy: Eliminar
 
       participations_contact:
         disposition: dispocisión
@@ -135,12 +139,15 @@ es:
 
       participation:
         _delete: Eliminar
+        _destroy: Eliminar
 
       clinician:
         _delete: Eliminar
+        _destroy: Eliminar
 
       reporter:
         _delete: Eliminar
+        _destroy: Eliminar
 
       juristiction:
         secondary_entity_id: Jurisdicción encargada de la investigación

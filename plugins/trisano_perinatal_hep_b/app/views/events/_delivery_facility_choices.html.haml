@@ -1,0 +1,5 @@
+%ul
+  - @places.map do |p|
+    %li{:id => p.id}<
+      =h(p.name)
+      %span.informal=h(p.formatted_place_descriptions)

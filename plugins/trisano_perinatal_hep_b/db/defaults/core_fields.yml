@@ -54,6 +54,14 @@ expected_delivery_facility_area_code:
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][area_code]
   disease_specific: true
 
+expected_delivery_facility_places_types:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: multi_select
+  event_type: morbidity_event
+  key: morbidity_event[expected_delivery_facility][place_entity][place][places_types]
+  disease_specific: true
+
 expected_delivery_facility_phone_number:
   fb_accessible: true
   can_follow_up: false

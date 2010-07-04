@@ -21,6 +21,7 @@ en:
         results_reported_to_clinician_date: Results reported to clinician date
         first_reported_PH_date: Date first reported to public health
         _delete: Remove
+        _destroy: Remove
 
       person:
         last_name: Last name
@@ -68,10 +69,12 @@ en:
         phone_number: Phone number
         extension: Extension
         _delete: Remove
+        _destroy: Remove
 
       email_address:
         email_address: Email address
         _delete: Remove
+        _destroy: Remove
 
       disease_event:
         disease_id: Disease
@@ -114,6 +117,7 @@ en:
         treatment_date: Date of treatment
         stop_treatment_date: Date treatment stopped
         _delete: Remove
+        _destroy: Remove
 
       participations_contact:
         disposition: Disposition
@@ -135,12 +139,15 @@ en:
 
       participation:
         _delete: Remove
+        _destroy: Remove
 
       clinician:
         _delete: Remove
+        _destroy: Remove
 
       reporter:
         _delete: Remove
+        _destroy: Remove
 
       jurisdiction:
         secondary_entity_id: Jurisdiction responsible for investigation

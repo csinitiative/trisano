@@ -1,14 +1,17 @@
 var I18n = Class.create({
+  locale: null,
+  translations: null,
+
   initialize: function(locale, translations) {
-    this.locale = locale;
-    this.translations = $H(translations);
+    I18n.locale = locale;
+    I18n.translations = $H(translations);
   },
 
   t: function(key, interpolations) {
     if (typeof interpolations == 'undefined') {
       interpolations = {};
     }
-    var value = this.translations.get(key);
+    var value = I18n.translations.get(key);
     if (typeof value == 'undefined') {
       return '';
     } else {

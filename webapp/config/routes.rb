@@ -113,14 +113,14 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs,
     :controller => :morbidity_events,
     :collection => {
-    :event_search => :get,
-    :export => :post,  # Don't want to do this, but IE can't handle URLs > 2k
+      :event_search => :get,
+      :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
     },
     :member => {
       :state => :post,
       :jurisdiction => :post,
       :soft_delete => :post,
-      :export_single => :post,  # Don't want to do this, but IE can't handle URLs > 2k
+      :export_single => :post
     },
     :new => {
       :lab_form => :get,
