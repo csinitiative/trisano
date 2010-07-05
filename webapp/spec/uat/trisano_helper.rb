@@ -724,7 +724,7 @@ module TrisanoHelper
   end
 
   def remove_clinician(browser, index=1)
-    browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_delete')]")
+    browser.click("//div[@id='clinicians']//div[@class='existing_clinician'][#{index}]//input[contains(@id, '_destroy')]")
   end
 
   #
