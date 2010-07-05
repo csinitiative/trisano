@@ -32,7 +32,6 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
     it "should build out objects that compose hep b data" do
       @event.prepare_perinatal_hep_b_data
       @event.expected_delivery_facility.place_entity.place.should_not be_nil
-      @event.expected_delivery_facility.expected_delivery_facilities_participation.should_not be_nil
       @event.expected_delivery_facility.place_entity.telephones.should_not be_empty
     end
   end

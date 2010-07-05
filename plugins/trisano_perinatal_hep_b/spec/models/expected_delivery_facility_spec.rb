@@ -19,6 +19,4 @@ require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_he
 
 describe ExpectedDeliveryFacility do
 
-  it { should have_one(:expected_delivery_facilities_participation) }
-
 end

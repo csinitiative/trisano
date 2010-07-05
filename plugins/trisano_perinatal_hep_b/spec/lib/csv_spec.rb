@@ -69,15 +69,6 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :expected_delivery_facility_expected_delivery_date => /#{@risk_factors.pregnancy_due_date}/)
     end
 
-    it "should include expected delivery facility information in CSV export even when there is no expected_delivery_facilities_participation" do
-      @expected_delivery_facility.expected_delivery_facilities_participation.destroy
-      output = to_arry(Export::Csv.export(@event))
-      assert_values_in_result(output, 1, :expected_delivery_facility_name => /Allen Hospital/)
-      assert_values_in_result(output, 1, :expected_delivery_facility_area_code => /555/)
-      assert_values_in_result(output, 1, :expected_delivery_facility_phone_number => /5553333/)
-      assert_values_in_result(output, 1, :expected_delivery_facility_extension => /200/)
-      assert_values_in_result(output, 1, :expected_delivery_facility_expected_delivery_date => //)
-    end
   end
 
   describe "events with an actual delivery facility" do
