@@ -48,4 +48,3 @@ module TrisanoAuth
 
   end
 end
-
