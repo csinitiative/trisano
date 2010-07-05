@@ -11,7 +11,6 @@ module TrisanoAuth
       module ClassMethods
         def set_default_admin_uid_with_auth(uid, options={})
           auth_options = {
-            :email => "#{uid}@whatever.com",
             :password => 'changeme',
             :password_confirmation => 'changeme',
           }
@@ -24,7 +23,6 @@ module TrisanoAuth
           
           users.each do |u|
             auth_options = {
-              "email" => "#{u["uid"]}xxxx@whatever.com",
               "password" => 'changeme',
               "password_confirmation" => 'changeme',
             }

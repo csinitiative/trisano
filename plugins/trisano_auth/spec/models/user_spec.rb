@@ -20,12 +20,6 @@ describe User do
       @user.should be_valid
     end
 
-    it 'should not be valid without an email' do
-      @user.should_not be_valid
-      @user.save.should be_false
-      @user.errors.empty?.should be_false
-    end
-
     it 'should not be valid without a password' do
       user = User.new(Factory.attributes_for(:user))
       user.should_not be_valid
@@ -85,14 +79,8 @@ describe User do
       @user.errors.empty?.should be_false
     end
 
-    it 'should not be valid with a duplicate email' do
-      @user.save
-      @user2 = User.new(Factory.attributes_for(:user))
-      @user2.should_not be_valid
-      @user2.save.should be_false
-      @user2.errors.empty?.should be_false
-    end
   end
+
   describe "loading default users" do
     it 'should load default users with auth attributes' do
       u = [
