@@ -1,0 +1,6 @@
+plugins:
+- trisano_es
+- trisano_locales
+- trisano_en
+- trisano_auth
+- authlogic
