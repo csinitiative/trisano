@@ -1,2 +1,0 @@
-class PasswordResetsController < ApplicationController
-end
