@@ -1,6 +1,19 @@
-# Copyright (C) 2009, 2010, Collaborative Software Initiative
+# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
-# This file is part of CSI TriSano Enterprise Edition..
+# This file is part of TriSano.
+#
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module TrisanoAuth
   module Models
@@ -11,7 +24,6 @@ module TrisanoAuth
       module ClassMethods
         def set_default_admin_uid_with_auth(uid, options={})
           auth_options = {
-            :email => "#{uid}@whatever.com",
             :password => 'changeme',
             :password_confirmation => 'changeme',
           }
@@ -24,7 +36,6 @@ module TrisanoAuth
           
           users.each do |u|
             auth_options = {
-              "email" => "#{u["uid"]}xxxx@whatever.com",
               "password" => 'changeme',
               "password_confirmation" => 'changeme',
             }
@@ -41,6 +52,7 @@ module TrisanoAuth
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'
             c.logged_in_timeout = 10.minutes
+            c.perishable_token_valid_for 1.day
           end
           base.class_eval do
             extend ClassMethods

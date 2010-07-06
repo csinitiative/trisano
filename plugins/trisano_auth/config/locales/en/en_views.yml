@@ -9,3 +9,6 @@ en:
     username: "User Name"
     password: "Password"
     submit: "Submit"
+    manage_passwords_link: "Manage User Passwords"
+    reset_password: "Reset Password"
+    reset_explanation: "Provide the following link to {{user}} to allow them to set their password. This link will expire on {{expiry}} and can only be used once."

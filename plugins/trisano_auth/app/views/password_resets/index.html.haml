@@ -1,0 +1,65 @@
+-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+
+  =t 'users'
+
+/- content_for :name do
+/  Users
+
+-content_for :tools do
+  =link_to_toggle_sort_tools t("change_sorting")
+
+.vert-break{:id => 'sort-tools', :style => 'display: none;'}
+  -form_tag users_path, :method => :get do
+    %span.horiz
+      =label_tag(:sort_by, t(:sort_by))
+      =user_sort_by_select_tag
+    %span.horiz
+      =label_tag(:sort_direction, t(:sort_direction))
+      =select_tag :sort_direction, options_for_select([[t(:ascending), 'ASC'], [t(:descending), 'DESC']], params[:sort_direction] || 'ASC')
+    %span.horiz
+      =label_tag  '&nbsp;'
+      =submit_tag t(:sort), :name => 'do'
+    %span.horiz
+      =label_tag  '&nbsp;'
+      =link_to_toggle_sort_tools t("close")
+
+.vert-break#rot
+  %table.list
+    %tr
+      %th.forminformation
+        =t 'users'
+      %th
+        =t 'status'
+      %th
+    - for user in @users
+      %tr.roll
+        %td.forminformation
+          .tools
+            = link_to(h("#{user.first_name} #{user.user_name}"), user)
+          .formname
+            =ct 'uid'
+            = link_to h(user.uid), user
+          .tools
+            = h(user.user_name)
+            %br
+        %td
+          %span.user-status
+            =h(t("user_statuses.#{user.status.downcase}"))
+        %td
+          .tools{:style => "position: absolute; right: 15px;"}
+            = link_to t('trisano_auth.reset_password'), new_password_reset_path(:user_id => user.id)
