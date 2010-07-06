@@ -15,15 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^I don't see any of the core follow up questions$/ do
+Given /^I don\'t see any of the core follow up questions$/ do
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     raise "Should not not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
   end
 end
 
 When(/^I answer all of the core follow ups with a matching condition$/) do
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     key = railsify_core_field_key(core_field.key)
 
     if core_field.code_name
@@ -50,27 +52,31 @@ end
 Then /^I should see all of the core follow up questions$/ do
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     raise "Could not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == false
   end
 end
 
 When /^I answer all core follow up questions$/ do
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
   end
 end
 
 Then /^I should see all follow up answers$/ do
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     raise "Could not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == false
   end
 end
 
 When /^I answer all of the core follow ups with a non\-matching condition$/ do
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     key = railsify_core_field_key(core_field.key)
 
     if core_field.code_name
@@ -101,14 +107,16 @@ end
 Then /^I should not see any of the core follow up questions$/ do
   sleep 3 # Wait a sec or three for all of the core follow ups to disappear
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     raise "Should not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
   end
 end
 
 Then /^I should not see any follow up answers$/ do
   html_source = @browser.get_html_source
-  CoreField.find_all_by_event_type_and_can_follow_up(@form.event_type, true).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields.each do |core_field|
     raise "Should not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == true
   end
 end

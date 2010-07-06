@@ -27,3 +27,4 @@ webrat-*
 /webapp/public/images/ext
 /webapp/.bundle/config
 /webapp/unicron-conf.rb
+/webapp/unicorn-conf.rb

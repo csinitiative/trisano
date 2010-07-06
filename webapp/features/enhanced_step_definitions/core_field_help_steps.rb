@@ -31,7 +31,8 @@ end
 Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_type, mode|
   html_source = @browser.get_html_source
 
-  CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? and disease_specific = ?', event_type.gsub(" ", "_"), false])
+  @core_fields.each do |core_field|
     # Ignore lab result fields in show mode
     unless (mode == "show" && core_field.key.include?("[labs]"))
       #@browser.click "//a[@id='add_reporting_agency_link']" if core_field.key == 'Reporting agency'
