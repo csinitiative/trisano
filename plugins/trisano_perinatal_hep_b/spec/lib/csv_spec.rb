@@ -66,7 +66,7 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :expected_delivery_facility_area_code => /555/)
       assert_values_in_result(output, 1, :expected_delivery_facility_phone_number => /5553333/)
       assert_values_in_result(output, 1, :expected_delivery_facility_extension => /200/)
-      assert_values_in_result(output, 1, :expected_delivery_facility_expected_delivery_date => /#{@risk_factors.pregnancy_due_date}/)
+      assert_values_in_result(output, 1, :patient_pregnancy_due_date => /#{@risk_factors.pregnancy_due_date}/)
     end
 
   end

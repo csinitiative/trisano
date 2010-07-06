@@ -35,15 +35,6 @@ csv_field_expected_delivery_facility_extension:
   use_code:
   event_type: morbidity_event
 
-csv_field_expected_delivery_facility_expected_delivery_date:
-  sort_order: 834
-  export_group: event
-  long_name: expected_delivery_facility_expected_delivery_date
-  use_description: interested_party.try(:risk_factor).try(:pregnancy_due_date)
-  short_name:
-  use_code:
-  event_type: morbidity_event
-
 csv_field_actual_delivery_facility_name:
   sort_order: 835
   export_group: event

@@ -4,6 +4,7 @@ module CsvSpecHelper
     result = result_arry.collect{ |row| CSV.parse_line(row) }
     value_hash.each do |field, regex|
       index = result[0].index(field.to_s)
+      raise "Field #{field.to_s} not found" if index.nil?
       result[result_row][index].should =~ regex
     end
   end
@@ -137,6 +138,7 @@ module CsvSpecHelper
       header_array << "#{lead_in}_died"
       header_array << "#{lead_in}_date_of_death"
       header_array << "#{lead_in}_pregnant"
+      header_array << "#{lead_in}_pregnancy_due_date"
       header_array << "#{lead_in}_clinician_last_name"
       header_array << "#{lead_in}_clinician_first_name"
       header_array << "#{lead_in}_clinician_middle_name"
@@ -234,6 +236,7 @@ module CsvSpecHelper
     out << '"",'
     out << "#{@disease.died.code_description},"
     out << "#{@person.date_of_death},"
+    out << '"",'
     out << '"",'
     out << '"",'
     out << '"",'

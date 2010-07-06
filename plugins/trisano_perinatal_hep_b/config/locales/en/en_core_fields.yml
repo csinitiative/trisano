@@ -10,8 +10,6 @@ en:
             area_code: Area code
             extension: Extension
             phone_number: Phone number
-        expected_delivery_facilities_participation:
-          expected_delivery_date: Expected delivery date
       actual_delivery_facility:
         place_entity:
           place:
