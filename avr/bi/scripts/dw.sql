@@ -398,9 +398,41 @@ SELECT
     extract(day from disev.date_diagnosed)::TEXT AS date_disease_diagnosed_day,
 
     upsert_date(events.results_reported_to_clinician_date) AS results_reported_to_clinician_date,
+
     upsert_date(events."first_reported_PH_date") AS date_reported_to_public_health,
+    CASE
+        WHEN events."first_reported_PH_date" IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from events."first_reported_PH_date")::TEXT
+    END AS date_reported_to_public_health_year,
+    CASE
+        WHEN events."first_reported_PH_date" IS NULL THEN NULL
+        WHEN extract(month from events."first_reported_PH_date") <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from events."first_reported_PH_date") > 3 AND extract(month from events."first_reported_PH_date") <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from events."first_reported_PH_date") > 5 AND extract(month from events."first_reported_PH_date") <= 8 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_reported_to_public_health_quarter,
+    to_char(events."first_reported_PH_date", 'Month') AS date_reported_to_public_health_month,
+    'Week ' || (extract(week from events."first_reported_PH_date"))::TEXT AS date_reported_to_public_health_week,
+    extract(day from events."first_reported_PH_date")::TEXT AS date_reported_to_public_health_day,
 
     upsert_date(events.event_onset_date) AS date_entered_into_system,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from events.event_onset_date)::TEXT
+    END AS date_entered_into_system_year,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN NULL
+        WHEN extract(month from events.event_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from events.event_onset_date) > 3 AND extract(month from events.event_onset_date) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from events.event_onset_date) > 5 AND extract(month from events.event_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_entered_into_system_quarter,
+    to_char(events.event_onset_date, 'Month') AS date_entered_into_system_month,
+    'Week ' || (extract(week from events.event_onset_date))::TEXT AS date_entered_into_system_week,
+    extract(day from events.event_onset_date)::TEXT AS date_entered_into_system_day,
+
+    events.event_onset_date - ppl.birth_date AS event_onset_age_days,
+
     upsert_date(events.investigation_started_date) AS date_investigation_started,
     upsert_date(events."investigation_completed_LHD_date") AS date_investigation_completed,
     upsert_date(events.review_completed_by_state_date) AS review_completed_by_state_date,
@@ -675,6 +707,23 @@ SELECT
     extract(day from disev.date_diagnosed)::TEXT AS date_disease_diagnosed_day,
 
     upsert_date(events.event_onset_date) AS date_entered_into_system,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from events.event_onset_date)::TEXT
+    END AS date_entered_into_system_year,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN NULL
+        WHEN extract(month from events.event_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from events.event_onset_date) > 3 AND extract(month from events.event_onset_date) <= 5 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from events.event_onset_date) > 5 AND extract(month from events.event_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_entered_into_system_quarter,
+    to_char(events.event_onset_date, 'Month') AS date_entered_into_system_month,
+    'Week ' || (extract(week from events.event_onset_date))::TEXT AS date_entered_into_system_week,
+    extract(day from events.event_onset_date)::TEXT AS date_entered_into_system_day,
+
+    events.event_onset_date - ppl.birth_date AS event_onset_age_days,
+
     upsert_date(events.investigation_started_date) AS date_investigation_started,
     upsert_date(events."investigation_completed_LHD_date") AS date_investigation_completed,
     upsert_date(events.review_completed_by_state_date) AS review_completed_by_state_date,
