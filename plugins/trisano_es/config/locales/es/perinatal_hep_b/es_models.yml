@@ -1,6 +1,0 @@
-es:
-
-  activerecord:
-    attributes:
-      expected_delivery_facilities_participation:
-        expected_delivery_date: Expected delivery date (EN)
