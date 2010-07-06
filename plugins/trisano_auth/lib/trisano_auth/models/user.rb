@@ -52,6 +52,7 @@ module TrisanoAuth
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'
             c.logged_in_timeout = 10.minutes
+            c.perishable_token_valid_for 1.day
           end
           base.class_eval do
             extend ClassMethods
