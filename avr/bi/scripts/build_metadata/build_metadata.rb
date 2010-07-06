@@ -643,7 +643,7 @@ if __FILE__ == $0
     if File.directory?(plugin_directory) then
       Dir.glob(File.join(plugin_directory, '*')).each do |this_plugin|
         puts "Testing #{this_plugin}"
-        if File.directory?(File.join(this_plugin, 'avr')) then
+        if File.directory? File.join(this_plugin, 'avr' ) and File.exist? File.join(this_plugin, 'avr', 'build_metadata.rb') then
           require File.join(this_plugin, 'avr', 'build_metadata.rb')
           puts "Found plugin #{this_plugin}"
           # What else might I need to pass to the plugin?
