@@ -1,0 +1,22 @@
+es:
+  event_fields:
+    morbidity_event:
+      expected_delivery_facility:
+        place_entity:
+          place:
+            name: Expected delivery facility (EN)
+            places_types: Expected delivery facility type (EN)
+          telephones:
+            area_code: Area code (EN)
+            extension: Extension (EN)
+            phone_number: Phone number (EN)
+      actual_delivery_facility:
+        place_entity:
+          place:
+            name: Actual delivery facility (EN)
+          telephones:
+            area_code: Area code (EN)
+            extension: Extension (EN)
+            phone_number: Phone number (EN)
+        actual_delivery_facilities_participation:
+          actual_delivery_date: Actual delivery date (EN)
