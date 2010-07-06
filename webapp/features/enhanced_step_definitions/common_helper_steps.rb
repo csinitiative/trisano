@@ -104,7 +104,8 @@ After('@clean') do
 end
 
 def cleanable_classes
-  [CommonTestType,
+  [Attachment,
+   CommonTestType,
    LabResult,
    Address,
    Note,
