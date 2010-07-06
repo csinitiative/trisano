@@ -48,7 +48,7 @@
 				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
-        <Dimension type="StandardDimension" name="Investigation">
+        <Dimension type="StandardDimension" name="Jurisdiction">
             <Hierarchy hasAll="true" allMemberName="All Jurisdictions">
                 <Level type="String" name="Jurisdiction" column="investigating_jurisdiction"></Level>
                 <Level type="String" name="Investigator" column="investigator"></Level>
@@ -364,7 +364,7 @@
 				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
 			</Hierarchy>
 		</Dimension>
-        <Dimension type="StandardDimension" name="Investigation">
+        <Dimension type="StandardDimension" name="Jurisdiction">
             <Hierarchy hasAll="true" allMemberName="All Jurisdictions">
                 <Level type="String" name="Jurisdiction" column="investigating_jurisdiction"></Level>
                 <Level type="String" name="Investigator" column="investigator"></Level>
