@@ -13,6 +13,8 @@ describe CsvField do
     }
   end
 
+  it { should belong_to(:core_field) }
+  
   it "should create a new instance given valid attributes" do
     CsvField.create!(@valid_attributes)
   end

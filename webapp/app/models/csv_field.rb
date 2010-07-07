@@ -1,4 +1,6 @@
 class CsvField < ActiveRecord::Base
+  belongs_to :core_field
+  
   default_scope :order => 'sort_order'
 
   named_scope :morbidity_event_fields, :conditions => { :event_type => 'morbidity_event' }
@@ -25,7 +27,9 @@ class CsvField < ActiveRecord::Base
 
   def self.load_csv_fields(csv_fields)
     transaction do
+      attributes = CsvField.new.attribute_names
       csv_fields.each do |k, v|
+        v.delete_if { |key, value| !attributes.include?(key) } # Remove any extra attributes in the YAML that are not attributes on the model
         csv_field = CsvField.find_or_initialize_by_long_name(v)
         csv_field.save!
       end
