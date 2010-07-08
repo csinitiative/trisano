@@ -25,6 +25,11 @@ Given(/^I am logged in as a lhd manager$/) do
   User.current_user = User.find_by_user_name('lhd_manager')
 end
 
+Given /^I am logged in as "(.+)"$/ do |user_name|
+  visit(home_path)
+  select(user_name, :from => "user_id")
+end
+
 When(/^I click the "(.+)" link$/) do |link|
   @browser.click("link=#{link}")
   @browser.wait_for_page_to_load($load_time)

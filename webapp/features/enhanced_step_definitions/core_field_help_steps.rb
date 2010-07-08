@@ -17,10 +17,10 @@
 
 When /^I fill in enough (.+) data to enable all core fields to show up in show mode$/ do |event_type|
   event_type = event_type.gsub(" ", "_")
-  
+
   # Street number to get the address
   @browser.type("#{event_type}[address_attributes][street_number]", "12")
-  
+
   # Lab name and type for contact and morbidity events
   if event_type == "morbidity_event" || event_type == "contact_event"
     common_test_type = CommonTestType.first.nil? ? CommonTestType.create(:common_name => "Common Test Type") : CommonTestType.first
