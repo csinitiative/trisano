@@ -10,6 +10,7 @@ class CreateCoreFieldsDiseases < ActiveRecord::Migration
     end
     add_foreign_key :core_fields_diseases, :core_field_id, :core_fields
     add_foreign_key :core_fields_diseases, :disease_id, :diseases
+    add_index :core_fields_diseases, [:disease_id, :core_field_id], :unique => true
   end
 
   def self.down

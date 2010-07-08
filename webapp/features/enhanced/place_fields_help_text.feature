@@ -3,6 +3,7 @@ Feature: Place event, viewing core field help text
   To better enable a user to fill in an event form
   An investigator should see help text on core fields
 
+  @flush_core_fields_cache
   Scenario: Viewing place event help text
     Given I am logged in as a super user
     And all core field configs for a place event have help text

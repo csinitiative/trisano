@@ -3,6 +3,7 @@ Feature: Editing hep b specific fields
   In order to track hep b mothers so they know when and where to send HBIG
   Epi's need to be able to enter delivery dates and locations into a CMR
 
+  @flush_core_fields_cache
   Scenario: Editing expected delivery data on a Hepatitis B Pregnancy Event
     Given I am logged in as a super user
       And disease "Hepatitis B Pregnancy Event" exists
