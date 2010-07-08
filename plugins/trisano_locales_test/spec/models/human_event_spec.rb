@@ -3,6 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_hel
 describe "Finding translated gender" do
 
   before :all do
+    DiseaseEvent.delete_all
     Event.delete_all
     PersonEntity.delete_all
     Person.delete_all
