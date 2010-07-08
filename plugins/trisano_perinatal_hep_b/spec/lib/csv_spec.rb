@@ -39,7 +39,10 @@ describe Export::Csv do
     @disease = Disease.find_by_disease_name(disease_name)
   end
 
-  after(:all) { CsvField.destroy_all }
+  after(:all) do
+    CoreFieldsDisease.destroy_all
+    CsvField.destroy_all
+  end
 
   before(:each) do
     @event = human_event_with_demographic_info!(
