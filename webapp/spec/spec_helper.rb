@@ -7,6 +7,7 @@ require 'spec/autorun'
 require 'spec/rails'
 require 'spec/custom_matchers'
 require 'nokogiri'
+require 'validates_timeliness/matcher'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
