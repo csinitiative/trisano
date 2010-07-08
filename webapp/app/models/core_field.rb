@@ -75,6 +75,7 @@ class CoreField < ActiveRecord::Base
 
   def rendered?(event)
     disease = event.try(:disease_event).try(:disease)
+
     if assoc = disease_association(disease)
       assoc.rendered
     else

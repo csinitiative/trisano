@@ -19,30 +19,71 @@ require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_he
 
 describe Export::Csv do
   include CsvSpecHelper
+  include DiseaseSpecHelper
+  include CoreFieldSpecHelper
   include PerinatalHepBSpecHelper
 
   before :all do
-    file = File.join(File.dirname(__FILE__), '../../../trisano_en/config/misc/en_csv_fields.yml')
-    CsvField.load_csv_fields(YAML.load_file(file))
+    disease_name = 'Hepatitis B Pregnancy Event'
 
-    file = File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml')
-    CsvField.load_csv_fields(YAML.load_file(file))
+    given_a_disease_named(disease_name)
+    given_core_fields_loaded
+    given_csv_fields_loaded
+    
+    given_p_hep_b_core_fields_loaded
+    given_p_hep_b_csv_fields_loaded
+
+    CoreFieldsDisease.create_perinatal_hep_b_associations
+    CsvField.create_perinatal_hep_b_associations
+
+    @disease = Disease.find_by_disease_name(disease_name)
   end
 
   after(:all) { CsvField.destroy_all }
 
   before(:each) do
     @event = human_event_with_demographic_info!(
-      :morbidity_event,
+      :event_with_disease_event,
+      :last_name => "Johnson"
+    )
+
+    @event.disease_event.disease = @disease
+    @event.save!
+
+    @second_event = human_event_with_demographic_info!(
+      :event_with_disease_event,
       :last_name => "Johnson"
     )
   end
 
   it "should still render CSV export properly for events without any P-Hep-B data" do
-    output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+    output = to_arry(Export::Csv.export(@event, :show_disease_specific_fields => true))
     output.size.should == 2
     assert_values_in_result(output, 1, :patient_last_name => /#{@event.interested_party.person_entity.person.last_name}/)
     assert_values_in_result(output, 1, :expected_delivery_facility_name => //)
+  end
+
+  it "should not render P-Hep-B data if the event's disease is not mapped to P-Hep-B fields" do
+    @event.disease_event.disease = Factory.create(:disease)
+    @event.save!
+    output = to_arry(Export::Csv.export(@event))
+    output.size.should == 2
+    assert_values_in_result(output, 1, :patient_last_name => /#{@event.interested_party.person_entity.person.last_name}/)
+    output[0].include?("expected_delivery_facility_name").should be_false
+  end
+
+  it "should not render P-Hep-B data if the :show_disease_specific_fields is not present and there is more than one event to export" do
+    output = to_arry(Export::Csv.export([@event, @second_event]))
+    output.size.should == 3
+    assert_values_in_result(output, 1, :patient_last_name => /#{@event.interested_party.person_entity.person.last_name}/)
+    output[0].include?("expected_delivery_facility_name").should be_false
+  end
+
+  it "should not render P-Hep-B data if the :show_disease_specific_fields is false and there is more than one event to export" do
+    output = to_arry(Export::Csv.export([@event, @second_event], :show_disease_specific_fields => false))
+    output.size.should == 3
+    assert_values_in_result(output, 1, :patient_last_name => /#{@event.interested_party.person_entity.person.last_name}/)
+    output[0].include?("expected_delivery_facility_name").should be_false
   end
 
   describe "events with an expected delivery facility" do
@@ -95,7 +136,7 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :actual_delivery_facility_extension => /200/)
       assert_values_in_result(output, 1, :actual_delivery_facility_actual_delivery_date => /#{@actual_delivery_facility.actual_delivery_facilities_participation.actual_delivery_date}/)
     end
-
+    
     it "should include actual delivery facility information in CSV export even when there is no actual_delivery_facilities_participation" do
       @actual_delivery_facility.actual_delivery_facilities_participation.destroy
       output = to_arry(Export::Csv.export(@event))

@@ -38,6 +38,7 @@ module Export
       # Formbuilder answers are only displayed if there is only one row to output or the user chose a specific
       # disease in the event search form, which sets the show_answers option.
       options[:show_answers] = events.size == 1 ? true : false unless options[:show_answers]
+      options[:show_disease_specific_fields] = events.size == 1 ? true : false unless options[:show_disease_specific_fields]
       options[:export_options] ||= []
       options[:disease] = disease_for_single_event(events.first) if ((events.size == 1) && (options[:disease].nil?))
 
@@ -122,6 +123,10 @@ module Export
         options[:show_answers]
       end
 
+      def showing_disease_specific_fields?
+        options[:show_disease_specific_fields]
+      end
+
       private
 
       def export_options
@@ -140,7 +145,7 @@ module Export
       end
 
       def event_headers(event)
-        event_data(event).map { |event_datum| event_datum.first }
+        event_data(event).map { |event_datum| event_datum.first unless event_datum.nil? }
       end
 
       def lab_headers
@@ -221,16 +226,19 @@ module Export
       def event_values(event, count, csv_fields_meth = nil)
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
           event_data(event, count, csv_fields_meth).collect do |event_datum|
-            begin
-              value = event.instance_eval(event_datum.last).to_s
-              if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
-                Time.parse(value).strftime('%Y-%m-%d %H:%M')
-              else
-                value
+            unless event_datum.nil?
+              begin
+                value = event.instance_eval(event_datum.last).to_s
+                if event_datum.last == 'updated_at' || event_datum.last == 'created_at'
+                  Time.parse(value).strftime('%Y-%m-%d %H:%M')
+                else
+                  value
+                end
+              rescue Exception => ex
+                raise "#{ex.message}: #{event_datum.join('|')}"
               end
-            rescue Exception => ex
-              raise "#{ex.message}: #{event_datum.join('|')}"
             end
+            
           end
         else
           # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
@@ -266,7 +274,7 @@ module Export
         clazz = event_or_class.is_a?(Class) ? event_or_class : event_or_class.class
         meth = csv_fields_meth || "#{clazz.to_s.underscore}_fields"
         event_data = CsvField.send(meth).map do |csv_field|
-          [csv_field.send(short_or_long_name), script_for(csv_field, count, blank_out)]
+          [csv_field.send(short_or_long_name), script_for(csv_field, count, blank_out)] if render_field?(event_or_class, csv_field)
         end
         if showing_answers? and event_or_class.respond_to?(:answers)
           event_data += event_answers(event_or_class)
@@ -333,6 +341,18 @@ module Export
       # Returns true if the value should be blanked out.
       def blank_out_value?(csv_field, counter, blank_out)
         (blank_out && csv_field.use_description != "id" && !counter.nil? && (counter > 0))
+      end
+
+      def render_field?(event_or_class, csv_field)
+        (
+          (csv_field.disease_specific == false) ||
+            (csv_field.disease_specific == true &&
+              showing_disease_specific_fields? &&
+              !event_or_class.is_a?(Class) &&
+              !csv_field.core_field.nil? &&
+              csv_field.core_field.rendered?(event_or_class)
+          )
+        )
       end
 
     end

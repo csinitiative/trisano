@@ -1,5 +1,13 @@
 module CsvSpecHelper
 
+  def given_csv_fields_loaded
+    CsvField.load_csv_fields(csv_fields)
+  end
+
+  def csv_fields
+    YAML::load_file(File.join(RAILS_ROOT, 'vendor', 'trisano', 'trisano_en', 'config', 'misc', 'en_csv_fields.yml'))
+  end
+
   def assert_values_in_result(result_arry, result_row, value_hash)
     result = result_arry.collect{ |row| CSV.parse_line(row) }
     value_hash.each do |field, regex|
@@ -11,9 +19,9 @@ module CsvSpecHelper
 
   def simple_reference
     @reference ||= OpenStruct.new(:code_description => "a code",
-                                  :best_name => "A Name",
-                                  :disease_name => "A Disease",
-                                  :name => "Another Name")
+      :best_name => "A Name",
+      :disease_name => "A Disease",
+      :name => "Another Name")
   end
 
   def csv_mock_disease

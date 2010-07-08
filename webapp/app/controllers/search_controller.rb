@@ -115,6 +115,7 @@ class SearchController < ApplicationController
     # formbuilder answers to be output and limit the repeating elements, respectively.
     if !params[:diseases].blank? and params[:diseases].size == 1
       @show_answers = true
+      @show_disease_specific_fields = true
       @disease = Disease.find(params[:diseases][0])
     end
 

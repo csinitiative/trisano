@@ -17,6 +17,10 @@
 
 module PerinatalHepBSpecHelper
 
+  def p_hep_b_path
+    File.join(RAILS_ROOT, 'vendor', 'trisano', 'trisano_perinatal_hep_b')
+  end
+
   def add_expected_delivery_facility_to_event(event, facility_name)
     facility_place_entity = create_delivery_facility!(:expected_delivery, facility_name)
     expected_delivery_facility = Factory.create(:expected_delivery_facility,
@@ -43,4 +47,20 @@ module PerinatalHepBSpecHelper
     create_place!(type, name)
   end
 
+  def given_p_hep_b_core_fields_loaded
+    CoreField.load!(p_hep_b_core_fields.values)
+  end
+
+  def p_hep_b_core_fields
+    YAML.load_file(File.join(p_hep_b_path, 'db', 'defaults', 'core_fields.yml'))
+  end
+
+  def given_p_hep_b_csv_fields_loaded
+    CsvField.load_csv_fields(p_hep_b_csv_fields)
+  end
+
+  def p_hep_b_csv_fields
+    YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
+  end
+  
 end
