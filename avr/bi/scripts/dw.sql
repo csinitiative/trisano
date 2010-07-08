@@ -95,6 +95,7 @@ WHERE
     schemaname = 'staging' AND
     tablename IN (
         'dw_morbidity_events',
+        'dw_entity_telephones',
         'dw_contact_events',
         'dw_outbreak_events',
         'dw_secondary_jurisdictions',
@@ -150,143 +151,23 @@ WHERE
 COMMIT;
 
 BEGIN;
---CREATE TABLE dw_morbidity_patients AS
---SELECT
---    people.id,
---    people.entity_id,            -- Keeping this just in case
---    birth_gender_ec.code_description AS birth_gender,            -- code_description?
---    ethnicity_ec.code_description AS ethnicity,                -- code_description?
---    primary_language_ec.code_description AS primary_language,        -- code_description?
---    people.first_name,
---    people.middle_name,
---    people.last_name,
---    upsert_date(people.birth_date) AS birth_date,
---    upsert_date(people.date_of_death) AS date_of_death
---FROM
---    people
---    LEFT JOIN external_codes birth_gender_ec
---        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
---    LEFT JOIN external_codes ethnicity_ec
---        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
---    LEFT JOIN external_codes primary_language_ec
---        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
---    INNER JOIN (
---        SELECT
---            part.primary_entity_id
---        FROM
---            participations part
---            INNER JOIN events
---                ON (events.id = part.event_id AND events.deleted_at IS NULL)
---        WHERE
---            part.type = 'InterestedParty' AND
---            events.type = 'MorbidityEvent'
---        GROUP BY part.primary_entity_id
---    ) f
---        ON (f.primary_entity_id = people.entity_id)
---;
---
---ALTER TABLE dw_morbidity_patients
---    ADD CONSTRAINT dw_morbidity_patients_pkey PRIMARY KEY (id);
---CREATE INDEX dw_morbidity_patients_entity_ix ON dw_morbidity_patients (entity_id);
---CREATE INDEX dw_morbidity_patients_birth_gender_ix
---    ON dw_morbidity_patients (birth_gender);
---CREATE INDEX dw_morbidity_patients_ethnicity_ix ON dw_morbidity_patients (ethnicity);
---CREATE INDEX dw_morbidity_patients_birth_date_ix
---    ON dw_morbidity_patients (birth_date);
---CREATE INDEX dw_morbidity_patients_date_of_death_ix
---    ON dw_morbidity_patients (date_of_death);
+CREATE TABLE dw_entity_telephones AS
+    SELECT
+        entity_id,
+        trisano.text_join_agg(
+            COALESCE(e.code_description || ': ', '') ||     -- Phone number type
+            COALESCE(t.country_code || ' ', '') ||
+            COALESCE(t.area_code || ' ', '') ||
+            COALESCE(t.phone_number || ' ', '') ||
+            COALESCE(t.extension || ' ', '')
+        , ', ') AS phones
+    FROM
+        telephones t
+        LEFT JOIN external_codes e
+            ON (e.id = t.entity_location_type_id)
+    GROUP BY entity_id;
 
---CREATE TABLE dw_contact_patients AS
---SELECT
---    people.id,
---    people.entity_id,            -- Keeping this just in case
---    birth_gender_ec.code_description AS birth_gender,            -- code_description?
---    ethnicity_ec.code_description AS ethnicity,                -- code_description?
---    primary_language_ec.code_description AS primary_language,        -- code_description?
---    people.first_name,
---    people.middle_name,
---    people.last_name,
---    upsert_date(people.birth_date) AS birth_date,
---    upsert_date(people.date_of_death) AS date_of_death
---FROM
---    people
---    LEFT JOIN external_codes birth_gender_ec
---        ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
---    LEFT JOIN external_codes ethnicity_ec
---        ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec IS NULL)
---    LEFT JOIN external_codes primary_language_ec
---        ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
---    INNER JOIN (
---        SELECT
---            part.primary_entity_id
---        FROM
---            participations part
---            INNER JOIN events
---                ON (events.id = part.event_id AND events.deleted_at IS NULL)
---        WHERE
---            part.type = 'InterestedParty' AND
---            events.type = 'ContactEvent'
---        GROUP BY part.primary_entity_id
---    ) f
---        ON (f.primary_entity_id = people.entity_id)
---;
---
---ALTER TABLE dw_contact_patients
---    ADD CONSTRAINT dw_contact_patients_pkey PRIMARY KEY (id);
---CREATE INDEX dw_contact_patients_entity_ix ON dw_contact_patients (entity_id);
---CREATE INDEX dw_contact_patients_birth_gender_ix
---    ON dw_contact_patients (birth_gender);
---CREATE INDEX dw_contact_patients_ethnicity_ix ON dw_contact_patients (ethnicity);
---CREATE INDEX dw_contact_patients_birth_date_ix
---    ON dw_contact_patients (birth_date);
---CREATE INDEX dw_contact_patients_date_of_death_ix
---    ON dw_contact_patients (date_of_death);
---
--- CREATE TABLE dw_encounter_patients AS
--- SELECT
---     people.id,
---     people.entity_id,            -- Keeping this just in case
---     birth_gender_ec.code_description AS birth_gender,            -- code_description?
---     ethnicity_ec.code_description AS ethnicity,                -- code_description?
---     primary_language_ec.code_description AS primary_language,        -- code_description?
---     people.first_name,
---     people.middle_name,
---     people.last_name,
---     upsert_date(people.birth_date) AS birth_date,
---     upsert_date(people.date_of_death) AS date_of_death
--- FROM
---     people
---     LEFT JOIN external_codes birth_gender_ec
---         ON (birth_gender_ec.id = people.birth_gender_id AND birth_gender_ec.deleted_at IS NULL)
---     LEFT JOIN external_codes ethnicity_ec
---         ON (ethnicity_ec.id = people.ethnicity_id AND ethnicity_ec.deleted_at IS NULL)
---     LEFT JOIN external_codes primary_language_ec
---         ON (primary_language_ec.id = people.primary_language_id AND primary_language_ec.deleted_at IS NULL)
---     INNER JOIN (
---         SELECT
---             part.primary_entity_id
---         FROM
---             participations part
---             INNER JOIN events
---                 ON (events.id = part.event_id AND events.deleted_at IS NULL)
---         WHERE
---             part.type = 'InterestedParty' AND
---             events.type = 'EncounterEvent'
---         GROUP BY part.primary_entity_id
---     ) f
---         ON (f.primary_entity_id = people.entity_id)
--- ;
---
--- ALTER TABLE dw_encounter_patients
---     ADD CONSTRAINT dw_encounter_patients_pkey PRIMARY KEY (id);
--- CREATE INDEX dw_encounter_patients_entity_ix ON dw_encounter_patients (entity_id);
--- CREATE INDEX dw_encounter_patients_birth_gender_ix
---     ON dw_encounter_patients (birth_gender);
--- CREATE INDEX dw_encounter_patients_ethnicity_ix ON dw_encounter_patients (ethnicity);
--- CREATE INDEX dw_encounter_patients_birth_date_ix
---     ON dw_encounter_patients (birth_date);
--- CREATE INDEX dw_encounter_patients_date_of_death_ix
---     ON dw_encounter_patients (date_of_death);
+CREATE UNIQUE INDEX phns_entity_ix ON dw_entity_telephones (entity_id);
 
 CREATE TABLE dw_morbidity_events AS
 SELECT
@@ -325,9 +206,11 @@ SELECT
     reppl.first_name AS rep_first_name,
     reppl.middle_name AS rep_middle_name,
     reppl.last_name AS rep_last_name,
+    repphn.phones AS rep_phone_numbers,
 
     repagpl.name AS rep_ag_name,
     repagc.code_description AS rep_ag_place_type,
+    repag_phn.phones AS rep_ag_phone_numbers,
 
     events.age_at_onset AS actual_age_at_onset,
     agetypeec.code_description AS actual_age_type,
@@ -544,10 +427,14 @@ FROM events
         ON (reppart.event_id = events.id AND reppart.type = 'Reporter')
     LEFT JOIN people reppl
         ON (reppl.entity_id = reppart.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones repphn
+        ON (repphn.entity_id = reppart.secondary_entity_id)
     LEFT JOIN participations repagpart
         ON (repagpart.event_id = events.id AND repagpart.type = 'ReportingAgency')
     LEFT JOIN places repagpl
         ON (repagpl.entity_id = repagpart.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones repag_phn
+        ON (repag_phn.entity_id = repagpart.secondary_entity_id)
     LEFT JOIN (
         SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
     ) repagpt
@@ -1109,13 +996,16 @@ SELECT
     pl.entity_id,
     pl.first_name,
     pl.last_name,
-    pl.middle_name
+    pl.middle_name,
+    tel.phones
 FROM
     events
     JOIN participations p
         ON (p.event_id = events.id AND events.type = 'MorbidityEvent')
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones tel
+        ON (p.secondary_entity_id = tel.entity_id)
 --    RIGHT JOIN events e
 --        ON (p.event_id = e.id AND e.type = 'MorbidityEvent')
 WHERE
@@ -1134,13 +1024,16 @@ SELECT
     events.id AS dw_contact_events_id,
     pl.first_name,
     pl.last_name,
-    pl.middle_name
+    pl.middle_name,
+    t.phones
 FROM
     events
     JOIN participations p
         ON (events.id = p.event_id AND events.type = 'ContactEvent')
     JOIN people pl
         ON (pl.entity_id = p.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones t
+        ON (pl.entity_id = t.entity_id)
 --    RIGHT JOIN events
 --        ON (p.event_id = events.id AND events.type = 'ContactEvent')
 WHERE
