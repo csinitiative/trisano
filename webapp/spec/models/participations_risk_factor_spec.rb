@@ -15,16 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class ParticipationsRiskFactor < ActiveRecord::Base
-  belongs_to :participations
-  belongs_to :food_handler, :class_name => 'ExternalCode'
-  belongs_to :healthcare_worker, :class_name => 'ExternalCode'
-  belongs_to :group_living, :class_name => 'ExternalCode'
-  belongs_to :day_care_association, :class_name => 'ExternalCode'
-  belongs_to :pregnant, :class_name => 'ExternalCode'
+require File.dirname(__FILE__) + '/../spec_helper'
 
-  validates_length_of :risk_factors, :maximum => 255, :allow_blank => true
-  validates_length_of :occupation, :maximum => 255, :allow_blank => true
-  validates_date :pregnancy_due_date, :allow_blank => true,
-                                      :on_or_after => lambda { Date.today }
+describe ParticipationsRiskFactor do
+
+  before do
+    @risk_factor = Factory.create(:participations_risk_factor)
+  end
+
+  it "should validate expected delivery date" do
+    @risk_factor.should validate_date(:pregnancy_due_date)
+  end
+
 end
