@@ -1009,14 +1009,6 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
-  field_type: single_line_text
-  event_type: contact_event
-  field_type: numeric
-  key: contact_event[interested_party][person_entity][person][approximate_age_no_birthday]
-
-- help_text:
-  fb_accessible: true
   can_follow_up: false
   field_type: single_line_text
   event_type: contact_event
