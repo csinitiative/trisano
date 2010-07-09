@@ -21,13 +21,14 @@ module Trisano
 
         def remove_expected_delivery_facility
           @event = MorbidityEvent.find(params[:id], :include => :expected_delivery_facility)
-          @event.expected_delivery_facility.update_attributes(:place_entity => nil, :expected_delivery_facilities_participation => nil)
+          @event.remove_expected_delivery_data
           render(:template => 'events/update_expected_delivery_facility')
         end
 
         def update_expected_delivery_facility
-          @event = MorbidityEvent.find(params[:id], :include => :expected_delivery_facility)
-          @event.expected_delivery_facility.update_attributes(:secondary_entity_id => params[:place_entity_id])
+          @event = MorbidityEvent.find(params[:id], :include => {:expected_delivery_facility => { :place_entity => [:telephones, :place] } })
+          @place_entity = PlaceEntity.find(params[:place_entity_id])
+          @event.expected_delivery_facility.update_attributes(:place_entity => @place_entity)
           render(:template => 'events/update_expected_delivery_facility')
         end
 

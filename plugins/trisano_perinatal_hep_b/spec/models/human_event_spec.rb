@@ -35,4 +35,20 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
       @event.expected_delivery_facility.place_entity.telephones.should_not be_empty
     end
   end
+
+  describe "removing expected delivery data" do
+    before do
+      @event = Factory.create(:morbidity_event)
+      entity = create_place!('expected_delivery', 'Arkham')
+      @event.build_expected_delivery_facility(:place_entity => entity).save!
+    end
+
+    it "should remove place entity" do
+      lambda do
+        @event.remove_expected_delivery_data
+      end.should_not raise_error
+      @event.expected_delivery_facility.place_entity.should == nil
+    end
+  end
+
 end

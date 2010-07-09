@@ -47,6 +47,11 @@ module Trisano
           pe.place || pe.build_place
           pe.telephones.build if pe.telephones.empty?
         end
+
+        def remove_expected_delivery_data
+          self.expected_delivery_facility.update_attributes(:place_entity => nil)
+        end
+
       end
     end
   end

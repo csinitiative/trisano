@@ -18,7 +18,7 @@
 require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
 
 describe Place, "in the Perinatal Hep B plugin" do
-  
+
   it "should return expected delivery facility place types" do
     Place.expected_delivery_type_codes.size.should == 3
     ["H", "C", "O"].each do |place_type_code|
@@ -31,6 +31,16 @@ describe Place, "in the Perinatal Hep B plugin" do
     ["H", "C", "O"].each do |place_type_code|
       Place.actual_delivery_type_codes.include?(place_type_code).should be_true
     end
+  end
+
+  it "should return active, expected delivery facilities" do
+    good = create_place!('expected_delivery', 'Hillcrest')
+    Place.expected_delivery_facilities.include?(good.place).should be_true
+    deleted = create_place!('expected_delivery', 'Gonecrest')
+    deleted.update_attributes!(:deleted_at => DateTime.now)
+    Place.expected_delivery_facilities.include?(deleted.place).should be_false
+    wrong = create_place!('lab', 'Wrongcrest')
+    Place.expected_delivery_facilities.include?(wrong.place).should be_false
   end
 
 end
