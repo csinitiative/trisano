@@ -15,39 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-module Trisano
-  module TrisanoPerinatalHepB
-    module Models
-      module Place
-        hook! "Place"
-        reloadable!
+require File.dirname(__FILE__) + '/../spec_helper'
 
-        class << self
-          def included(base)
-            base.class_eval do
-              class << self
-                def actual_delivery_type_codes
-                  %w(H C O)
-                end
+describe ParticipationsRiskFactor do
 
-                def expected_delivery_type_codes
-                  %w(H C O)
-                end
-
-                def expected_delivery_types
-                  place_types(expected_delivery_type_codes)
-                end
-
-                def expected_delivery_facilities
-                  self.active.types(self.expected_delivery_type_codes)
-                end
-
-              end
-            end
-          end
-        end
-
-      end
-    end
+  before do
+    @risk_factor = Factory.create(:participations_risk_factor)
   end
+
+  it "should validate expected delivery date" do
+    @risk_factor.should validate_date(:pregnancy_due_date)
+  end
+
 end

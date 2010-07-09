@@ -32,6 +32,17 @@ class Place < ActiveRecord::Base
   end
   validates_presence_of :short_name, :if => :is_a_jurisdiction?
 
+  named_scope :active, {
+    :include => :entity,
+    :conditions => {:entities => {:deleted_at => nil}}
+  }
+
+  named_scope :types, lambda { |types|
+    { :include => :place_types,
+      :conditions => { :codes => {:code_name => 'placetype', :the_code => types} },
+    }
+  }
+
   class << self
 
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.
