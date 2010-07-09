@@ -22,6 +22,7 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
   describe "a morbidity event" do
     it { should have_one(:expected_delivery_facility) }
     it { should have_one(:actual_delivery_facility) }
+    it { should have_one(:health_care_provider) }
   end
 
   describe "preparing hep b data" do

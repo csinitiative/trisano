@@ -34,6 +34,11 @@ module Trisano
               :order => 'created_at ASC',
               :dependent => :destroy
 
+            base.has_one :health_care_provider,
+              :foreign_key => "event_id",
+              :order => 'created_at ASC',
+              :dependent => :destroy
+
             base.accepts_nested_attributes_for :expected_delivery_facility, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
