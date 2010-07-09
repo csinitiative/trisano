@@ -134,10 +134,10 @@ health_care_provider_extension:
   key: morbidity_event[health_care_provider][person_entity][telephones][extension]
   disease_specific: true
 
-health_care_provider_speciality:
-  fb_accessible: true
-  can_follow_up: true
-  field_type: drop_down
-  event_type: morbidity_event
-  key: morbidity_event[health_care_provider][health_care_providers_participation][speciality_id]
-  disease_specific: true
+#health_care_provider_speciality:
+#  fb_accessible: true
+#  can_follow_up: true
+#  field_type: drop_down
+#  event_type: morbidity_event
+#  key: morbidity_event[health_care_provider][health_care_providers_participation][speciality_id]
+#  disease_specific: true

@@ -29,3 +29,13 @@ end
 Factory.define :actual_delivery_facilities_participation do |adfp|
   adfp.actual_delivery_date Date.today + 15.days
 end
+
+Factory.define :health_care_provider do |hcp|
+  hcp.person_entity :person_entity
+  hcp.health_care_providers_participation { Factory.build(:health_care_providers_participation) }
+end
+
+
+Factory.define :health_care_providers_participation do |hcpp|
+  # hcpp.speciality XXX
+end

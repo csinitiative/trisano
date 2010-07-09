@@ -151,5 +151,41 @@ describe Export::Csv do
     end
   end
 
+  describe "events with a health care provider" do
+
+    before(:each) do
+      @health_care_provider = add_health_care_provider_to_event(@event,
+        { :first_name => "Johnny", :last_name => "Thompson" }
+      )
+
+      @telephone_number = Factory.create(:telephone,
+        :area_code => "555",
+        :phone_number => "555-3333",
+        :extension => "200",
+        :entity => @event.health_care_provider.secondary_entity
+      )
+    end
+
+    it "should include health care provider information in CSV export" do
+      output = to_arry(Export::Csv.export(@event))
+      assert_values_in_result(output, 1, :health_care_provider_first_name => /Johnny/)
+      assert_values_in_result(output, 1, :health_care_provider_last_name => /Thompson/)
+      assert_values_in_result(output, 1, :health_care_provider_middle_name => //)
+      assert_values_in_result(output, 1, :health_care_provider_area_code => /555/)
+      assert_values_in_result(output, 1, :health_care_provider_phone_number => /5553333/)
+      assert_values_in_result(output, 1, :health_care_provider_extension => /200/)
+    end
+
+    it "should include health care provider information in CSV export even when there is no health_care_providers_participation" do
+      @health_care_provider.health_care_providers_participation.destroy
+      output = to_arry(Export::Csv.export(@event))
+      assert_values_in_result(output, 1, :health_care_provider_first_name => /Johnny/)
+      assert_values_in_result(output, 1, :health_care_provider_last_name => /Thompson/)
+      assert_values_in_result(output, 1, :health_care_provider_middle_name => //)
+      assert_values_in_result(output, 1, :health_care_provider_area_code => /555/)
+      assert_values_in_result(output, 1, :health_care_provider_phone_number => /5553333/)
+      assert_values_in_result(output, 1, :health_care_provider_extension => /200/)
+    end
+  end
 
 end
