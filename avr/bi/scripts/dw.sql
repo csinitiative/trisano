@@ -912,6 +912,7 @@ FROM
         ON (places.entity_id = p.secondary_entity_id)
     LEFT JOIN (
         -- Just in case there are places with multiple types. We only want it to create one record
+        -- XXX erm, this won't work. It's on Josh's TODO list
         SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
     ) pt
         ON (pt.place_id = places.id)
