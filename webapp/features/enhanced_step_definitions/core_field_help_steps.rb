@@ -52,3 +52,16 @@ Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_
     end
   end
 end
+
+Before('@flush_core_fields_cache') do
+  require 'net/http'
+  cf = CoreField.first
+  http = Net::HTTP.new('localhost', '8080')
+  request = Net::HTTP::Put.new("/trisano/core_fields/#{cf.id}")
+  request.set_form_data({"core_field[help_text]" => cf.help_text})
+  request['Accept'] = 'application/xml'
+  response = http.request(request)
+  unless response.code == '200'
+    puts "Failed to flush core field cache. Response status #{response.code}"
+  end
+end
