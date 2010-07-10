@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <property name="name">Report</property>
+    <child type="org.pentaho.reportdesigner.crm.report.model.dataset.DataSetsReportElement">
+        <property name="name">Element@22845412</property>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@13390588</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">100</property>
+            <query queryName="default">
+                <property name="query">SELECT
+     COALESCE(trim(dw_morbidity_events_view.last_name), &apos;&apos;) || &apos;, &apos; || COALESCE(dw_morbidity_events_view.first_name, &apos;&apos;) AS name,
+     &quot;dw_morbidity_events_view&quot;.&quot;record_number&quot;,
+     &quot;dw_morbidity_events_view&quot;.&quot;expected_delivery_facility&quot;,
+     &quot;dw_morbidity_events_view&quot;.&quot;expected_delivery_facility_phone&quot;,
+     &quot;dw_morbidity_events_view&quot;.&quot;pregnancy_due_date&quot;
+FROM
+     trisano.dw_morbidity_events_view
+WHERE
+     disease_name = &apos;Hepatitis B Pregnancy Event&apos;</property>
+            </query>
+            <columnInfo columnName="name" friendlyColumnName="name" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="record_number" friendlyColumnName="record_number" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="expected_delivery_facility" friendlyColumnName="expected_delivery_facility" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="expected_delivery_facility_phone" friendlyColumnName="expected_delivery_facility_phone" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="pregnancy_due_date" friendlyColumnName="pregnancy_due_date" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://myubuntu/trisano_warehouse" userName="josh" password=""></selectedJNDIDataSource>
+        </child>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
+        <property name="name">Element@27841632</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_HEADER">
+        <property name="name">Band2148614</property>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@20611829</property>
+            <property name="minimumSize">555.0, 20.0</property>
+            <property name="font">Dialog,16,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hepatitis B Perinatal</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@10651914</property>
+            <property name="position">0.0, 24.0</property>
+            <property name="minimumSize">555.0, 26.0</property>
+            <property name="font">Dialog,16,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Expected Delivery Action Report</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@4846027</property>
+            <property name="position">290.0, 60.0</property>
+            <property name="minimumSize">100.0, 21.0</property>
+            <property name="font">Dialog,14,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">field7</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text">=TODAY();</property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@22983797</property>
+            <property name="position">160.0, 60.0</property>
+            <property name="minimumSize">120.0, 17.0</property>
+            <property name="font">Dialog,14,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">RIGHT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Report Date:</property>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">103.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_HEADER">
+        <property name="name">Band14765441</property>
+        <property name="background">204, 204, 204, 255</property>
+        <elementBorder sameBorderForAllSides="true">
+            <borderTop width="1.0" borderType="SOLID" color="0, 0, 0, 255"></borderTop>
+            <borderBottom width="1.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+            <borderLeft width="1.0" borderType="SOLID" color="0, 0, 0, 255"></borderLeft>
+            <borderRight width="1.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+            <borderBreak width="2.2" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+            <topRightEdge radii="0.0, 0.0"></topRightEdge>
+            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+        </elementBorder>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@3961222</property>
+            <property name="position">0.0, 17.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Mother&apos;s Name</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@30187398</property>
+            <property name="position">140.0, 10.0</property>
+            <property name="minimumSize">70.0, 30.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Record Number</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@26579196</property>
+            <property name="position">235.0, 17.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hospital Name</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@1486879</property>
+            <property name="position">375.0, 10.0</property>
+            <property name="minimumSize">80.0, 30.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hospital Phone</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@1107827</property>
+            <property name="position">475.0, 0.0</property>
+            <property name="minimumSize">80.0, 50.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Expected Delivery Date</property>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">47.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelItemReportElement" bandToplevelType="ITEM_BAND">
+        <property name="name">Band21403224</property>
+        <elementBorder sameBorderForAllSides="true">
+            <borderTop width="1.0" borderType="SOLID" color="0, 0, 0, 255"></borderTop>
+            <borderBottom width="1.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+            <borderLeft width="1.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
+            <borderRight width="1.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+            <topRightEdge radii="0.0, 0.0"></topRightEdge>
+            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+        </elementBorder>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@18955842</property>
+            <property name="minimumSize">130.0, 15.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">name</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@18033825</property>
+            <property name="position">135.0, 0.0</property>
+            <property name="minimumSize">85.0, 16.0</property>
+            <property name="maximumSize">100.0, 30.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">record_number</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@3451272</property>
+            <property name="position">224.75, 0.0</property>
+            <property name="minimumSize">145.25, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">expected_delivery_facility</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@7640160</property>
+            <property name="position">375.0, 0.0</property>
+            <property name="minimumSize">95.0, 16.0</property>
+            <property name="maximumSize">100.0, 30.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">expected_delivery_facility_phone</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@14075354</property>
+            <property name="position">470.0, 0.0</property>
+            <property name="minimumSize">80.0, 16.0</property>
+            <property name="maximumSize">100.0, 30.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">pregnancy_due_date</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">18.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <rowBandingDefinition enabled="false" color="192, 192, 192, 255" startState="true" switchItemCount="1"></rowBandingDefinition>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_FOOTER">
+        <property name="name">Band5369678</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_FOOTER">
+        <property name="name">Band7189308</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="NO_DATA_BAND">
+        <property name="name">Band20666938</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="WATERMARK">
+        <property name="name">Band22571162</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportGroups">
+        <property name="name">Element@1205211</property>
+    </child>
+    <property name="defaultLocale">en_US_</property>
+    <horizontalLinealModel></horizontalLinealModel>
+    <pageDefinition pageSize="595.0, 842.0" topBorder="20.0" bottomBorder="20.0" leftBorder="20.0" rightBorder="20.0"></pageDefinition>
+    <reportConfiguration></reportConfiguration>
+    <property name="useMaxCharBounds">true</property>
+</report>
