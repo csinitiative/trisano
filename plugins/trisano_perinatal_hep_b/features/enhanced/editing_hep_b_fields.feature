@@ -10,7 +10,11 @@ Feature: Editing hep b specific fields
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
      When I am on the event edit page
-     Then I should see the expected delivery facility fields
      When I complete the expected delivery facility fields
       And I save and continue
-     Then I should see the deliver facility data
+     Then I should see the expected delivery facility data
+     When I remove the expected delivery data
+     Then I should see the expected delivery facility fields
+     When I search for an expected delivery facility
+      And I select an expected delivery facility from the list
+     Then I should see the expected delivery facility data
