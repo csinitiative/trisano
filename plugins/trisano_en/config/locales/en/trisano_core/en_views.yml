@@ -79,7 +79,6 @@ en:
   patient_name: "Patient Name"
   contact_name: "Contact Name"
   place_name: "Place Name"
-  or: "or"
   brief_note: Brief note
   action_required: Action required
 #Admin view
