@@ -209,7 +209,7 @@ SELECT
     repphn.phones AS rep_phone_numbers,
 
     repagpl.name AS rep_ag_name,
-    repagc.code_description AS rep_ag_place_type,
+    repagpt.place_types AS rep_ag_place_type,
     repag_phn.phones AS rep_ag_phone_numbers,
 
     events.age_at_onset AS actual_age_at_onset,
@@ -436,11 +436,16 @@ FROM events
     LEFT JOIN dw_entity_telephones repag_phn
         ON (repag_phn.entity_id = repagpart.secondary_entity_id)
     LEFT JOIN (
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+        SELECT place_id, trisano.text_join_agg(code_description, ', ') AS place_types
+        FROM
+            codes repagc
+            JOIN places_types repag_pt
+                ON (repag_pt.type_id = repagc.id)
+        GROUP BY place_id 
     ) repagpt
         ON (repagpt.place_id = repagpl.id)
-    LEFT JOIN codes repagc
-        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
+--    LEFT JOIN codes repagc
+--        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
     LEFT JOIN (
         SELECT
             a.event_id,
@@ -882,7 +887,8 @@ SELECT
     tsec.code_description AS test_status,
     lr.comment,
     places.name,
-    c.code_description AS lab_type,
+    pt.place_types AS lab_type,
+    -- c.code_description AS lab_type,
     sm.hl7_message,
     sm.state AS staged_message_state,
     sm.note AS staged_message_note,
@@ -911,13 +917,23 @@ FROM
     LEFT JOIN places
         ON (places.entity_id = p.secondary_entity_id)
     LEFT JOIN (
-        -- Just in case there are places with multiple types. We only want it to create one record
-        -- XXX erm, this won't work. It's on Josh's TODO list
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+        SELECT place_id, trisano.text_join_agg(code_description, ', ') AS place_types
+        FROM
+            codes
+            JOIN places_types
+                ON (places_types.type_id = codes.id)
+        GROUP BY place_id 
     ) pt
         ON (pt.place_id = places.id)
-    LEFT JOIN codes c
-        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+--    LEFT JOIN codes repagc
+--        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
+--    LEFT JOIN (
+--        -- Just in case there are places with multiple types. We only want it to create one record
+--        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+--    ) pt
+--        ON (pt.place_id = places.id)
+--    LEFT JOIN codes c
+--        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
     LEFT JOIN organisms org
         ON (org.id = lr.organism_id)
 ;
@@ -1058,7 +1074,7 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
     pl.name AS name,
-    c.code_description AS place_type,
+    pt.place_types AS place_type,
     pl.id AS place_id
 FROM
     events
@@ -1066,14 +1082,15 @@ FROM
         ON (p.event_id = events.id)
     JOIN places pl
         ON (pl.entity_id = p.secondary_entity_id)
-    JOIN (
-        -- Just in case there are places with multiple types, we only want it
-        -- to create one record but we don't really care of what place type
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+    LEFT JOIN (
+        SELECT place_id, trisano.text_join_agg(code_description, ', ') AS place_types
+        FROM
+            codes repagc
+            JOIN places_types repag_pt
+                ON (repag_pt.type_id = repagc.id)
+        GROUP BY place_id 
     ) pt
         ON (pt.place_id = pl.id)
-    JOIN codes c
-        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
 --    RIGHT JOIN events
 --        ON (p.event_id = events.id)
 WHERE
@@ -1094,7 +1111,7 @@ SELECT
     events.id,
     events.parent_id AS dw_morbidity_events_id,
     p.name,
-    c.code_description AS place_type,
+    pt.place_types AS place_type,
     prtpl.date_of_exposure,
     ad.street_number,
     ad.street_name,
@@ -1118,12 +1135,21 @@ FROM
     JOIN places p
         ON (p.entity_id = part.primary_entity_id)
     LEFT JOIN (
-        -- Just in case there are places with multiple types. We only want it to create one event
-        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+        SELECT place_id, trisano.text_join_agg(code_description, ', ') AS place_types
+        FROM
+            codes
+            JOIN places_types
+                ON (places_types.type_id = codes.id)
+        GROUP BY place_id 
     ) pt
         ON (pt.place_id = p.id)
-    LEFT JOIN codes c
-        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
+--    LEFT JOIN (
+--        -- Just in case there are places with multiple types. We only want it to create one event
+--        SELECT DISTINCT ON (place_id) place_id, type_id FROM places_types
+--    ) pt
+--        ON (pt.place_id = p.id)
+--    LEFT JOIN codes c
+--        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
     LEFT JOIN participations_places prtpl
         ON (prtpl.id = events.participations_place_id)
     LEFT JOIN disease_events disev
