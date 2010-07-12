@@ -17,6 +17,14 @@ Feature: Hep B specific pregnancy fields
      Then I should see "Edit morbidity event"
       And I should not see expected delivery fields
 
+  Scenario: Viewing an event w/ no disease specific fields
+    Given I am logged in as a super user
+      And a morbidity event exists with the disease African Tick Bite Fever
+     When I go to view the CMR
+     Then I should see "View Morbidity Event"
+      And I should not see expected delivery data
+
+
   Scenario: Editing an event w/ Hepatitis B Pregnancy Event
     Given I am logged in as a super user
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event

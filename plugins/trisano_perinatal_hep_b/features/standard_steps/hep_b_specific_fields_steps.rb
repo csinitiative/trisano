@@ -24,10 +24,19 @@ end
 Then /^I should see expected delivery data$/ do
   response.should have_tag('#clinical_tab fieldset .form') do
     with_tag('.vert label', 'Expected delivery facility')
+    with_tag('.horiz label', 'Place type')
     with_tag('.horiz label', 'Area code')
     with_tag('.horiz label', 'Phone number')
     with_tag('.horiz label', 'Extension')
   end
+end
+
+Then /^I should not see expected delivery data$/ do
+  doc = Webrat::XML.html_document(response.body)
+  nodes = doc.xpath("//fieldset[@class='form']/legend[text()='Pregnancy Status']")
+  labels = nodes.xpath("../span/label").map(&:text)
+  assert(!labels.include?('Expected delivery facility'), "Should not see 'Expected delivery facility' label")
+  assert(!labels.include?("Place type"), "Should not see 'Place type' label")
 end
 
 When /^I enter the expected delivery facility phone number as:/ do |phone_number_table|

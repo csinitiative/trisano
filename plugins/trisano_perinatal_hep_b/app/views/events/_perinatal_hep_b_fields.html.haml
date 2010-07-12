@@ -14,7 +14,7 @@
             -if p.object.new_record?
               =render_type_selector(p, 'expected_delivery_types')
             -else
-              =p.label(:place_types)
+              =p.label(:places_types, t(:place_type))
               =h(p.object.formatted_place_descriptions)
         -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
           -if t.object.new_record?
