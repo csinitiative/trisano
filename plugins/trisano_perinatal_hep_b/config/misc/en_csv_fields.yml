@@ -1,0 +1,87 @@
+--- 
+csv_field_expected_delivery_facility_name:
+  sort_order: 830
+  export_group: event
+  long_name: expected_delivery_facility_name
+  use_description: expected_delivery_facility.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  use_code: 
+  event_type: morbidity_event
+
+csv_field_expected_delivery_facility_area_code:
+  sort_order: 831
+  export_group: event
+  long_name: expected_delivery_facility_area_code
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:area_code)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_expected_delivery_facility_phone_number:
+  sort_order: 832
+  export_group: event
+  long_name: expected_delivery_facility_phone_number
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_expected_delivery_facility_extension:
+  sort_order: 833
+  export_group: event
+  long_name: expected_delivery_facility_extension
+  use_description: expected_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:extension)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_actual_delivery_facility_name:
+  sort_order: 835
+  export_group: event
+  long_name: actual_delivery_facility_name
+  use_description: actual_delivery_facility.try(:place_entity).try(:place).try(:name)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_actual_delivery_facility_area_code:
+  sort_order: 836
+  export_group: event
+  long_name: actual_delivery_facility_area_code
+  use_description: actual_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:area_code)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_actual_delivery_facility_phone_number:
+  sort_order: 837
+  export_group: event
+  long_name: actual_delivery_facility_phone_number
+  use_description: actual_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_actual_delivery_facility_extension:
+  sort_order: 838
+  export_group: event
+  long_name: actual_delivery_facility_extension
+  use_description: actual_delivery_facility.try(:place_entity).try(:telephones).try(:last).try(:extension)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+csv_field_actual_delivery_facility_actual_delivery_date:
+  sort_order: 839
+  export_group: event
+  long_name: actual_delivery_facility_actual_delivery_date
+  use_description: actual_delivery_facility.try(:actual_delivery_facilities_participation).try(:actual_delivery_date)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+
+
+
+
+
+
