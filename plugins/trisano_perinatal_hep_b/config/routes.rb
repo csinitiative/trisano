@@ -21,6 +21,10 @@ ActionController::Routing::Routes.draw do |map|
     cmr.auto_complete_for_expected_delivery_facilities 'cmrs/auto_complete_for_expected_delivery_facilities', :conditions => { :method => :get }, :action => 'auto_complete_for_expected_delivery_facilities'
     cmr.remove_expected_delivery_facility  'cmrs/:id/remove_expected_delivery_facility', :conditions => { :method => :post }, :action => 'remove_expected_delivery_facility'
     cmr.update_expected_delivery_facility  'cmrs/:id/update_expected_delivery_facility', :conditions => { :method => :post }, :action => 'update_expected_delivery_facility'
+
+    cmr.auto_complete_for_actual_delivery_facilities 'cmrs/auto_complete_for_actual_delivery_facilities', :conditions => { :method => :get }, :action => 'auto_complete_for_actual_delivery_facilities'
+    cmr.remove_actual_delivery_facility  'cmrs/:id/remove_actual_delivery_facility', :conditions => { :method => :post }, :action => 'remove_actual_delivery_facility'
+    cmr.update_actual_delivery_facility  'cmrs/:id/update_actual_delivery_facility', :conditions => { :method => :post }, :action => 'update_actual_delivery_facility'
   end
 
 end

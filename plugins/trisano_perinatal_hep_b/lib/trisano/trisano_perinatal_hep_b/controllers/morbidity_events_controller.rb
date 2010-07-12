@@ -32,6 +32,25 @@ module Trisano
           render(:template => 'events/update_expected_delivery_facility')
         end
 
+        def auto_complete_for_actual_delivery_facilities
+          place_name = params[:morbidity_event][:actual_delivery_facility_attributes][:place_entity_attributes][:place_attributes][:name]
+          places_by_name_and_types(place_name, Place.actual_delivery_type_codes)
+          render :partial => 'events/delivery_facility_choices'
+        end
+
+        def remove_actual_delivery_facility
+          @event = MorbidityEvent.find(params[:id], :include => :actual_delivery_facility)
+          @event.remove_actual_delivery_data
+          render(:template => 'events/update_actual_delivery_facility')
+        end
+
+        def update_actual_delivery_facility
+          @event = MorbidityEvent.find(params[:id], :include => {:actual_delivery_facility => { :place_entity => [:telephones, :place] } })
+          @place_entity = PlaceEntity.find(params[:place_entity_id])
+          @event.actual_delivery_facility.update_attributes(:place_entity => @place_entity)
+          render(:template => 'events/update_actual_delivery_facility')
+        end
+
         private
 
         def render_perinatal_hep_b_fields

@@ -38,18 +38,39 @@ module Trisano
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
 
+            base.accepts_nested_attributes_for :actual_delivery_facility, {
+              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :allow_destroy => true }
+
           end
         end
 
         def prepare_perinatal_hep_b_data
+          prepare_expected_delivery_facility
+          prepare_actual_delivery_facility
+        end
+
+        def prepare_expected_delivery_facility
           edf = self.expected_delivery_facility || self.build_expected_delivery_facility
           pe = edf.place_entity || edf.build_place_entity
           pe.place || pe.build_place
           pe.telephones.build if pe.telephones.empty?
         end
 
+        def prepare_actual_delivery_facility
+          adf = self.actual_delivery_facility || self.build_actual_delivery_facility
+          adf.actual_delivery_facilities_participation || adf.build_actual_delivery_facilities_participation
+          pe = adf.place_entity || adf.build_place_entity
+          pe.place || pe.build_place
+          pe.telephones.build if pe.telephones.empty?
+        end
+
         def remove_expected_delivery_data
           self.expected_delivery_facility.update_attributes(:place_entity => nil)
+        end
+
+        def remove_actual_delivery_data
+          self.actual_delivery_facility.update_attributes(:place_entity => nil)
         end
 
       end

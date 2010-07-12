@@ -1,0 +1,26 @@
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -e.fields_for("#{facility_type}_facility", :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+        -core_element(:name, p, :vert) do
+          =p.label(:name, t("#{facility_type}_facility_name", :scope => :perinatal_hep_b_management))
+          -if p.object.new_record?
+            =p.text_field(:name, 'data-live-search' => true, 'data-url' => url_for(:action => "auto_complete_for_#{facility_type}_facilities"), 'data-update-url' => send("update_#{facility_type}_facility_path", @event))
+          -else
+            =h(p.object.name)
+        -core_element(:places_types, p, :horiz) do
+          -if p.object.new_record?
+            =render_type_selector(p, "#{facility_type}_types")
+          -else
+            =p.label(:places_types, t(:place_type))
+            =h(p.object.formatted_place_descriptions)
+      -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
+        -if t.object.new_record?
+          =edit_telephones(t)
+        -else
+          =show_telephones(t)
+      -unless pe.object.new_record?
+        %span.horiz
+          =pe.label(nil, "&nbsp;")
+          %a{ :href => send("remove_#{facility_type}_facility_path", @event), 'data-update-link' => 'true' }
+            = t(:remove)

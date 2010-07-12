@@ -2,3 +2,4 @@ es:
   perinatal_hep_b_management:
     expected_delivery_info: Expected Delivery (EN)
     expected_delivery_facility_name: Expected delivery facility (EN)
+    actual_delivery_facility_name: Actual delivery facility (EN)

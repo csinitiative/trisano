@@ -38,6 +38,10 @@ module Trisano
                   place_types(expected_delivery_type_codes)
                 end
 
+                def actual_delivery_types
+                  place_types(expected_delivery_type_codes)
+                end
+
                 def expected_delivery_facilities
                   self.active.types(self.expected_delivery_type_codes)
                 end

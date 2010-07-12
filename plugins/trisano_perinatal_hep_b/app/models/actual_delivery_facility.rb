@@ -19,7 +19,7 @@ class ActualDeliveryFacility < Participation
   reloadable!
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   has_one :actual_delivery_facilities_participation, :foreign_key => :participation_id, :dependent => :destroy
-  
+
   accepts_nested_attributes_for :place_entity, :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :actual_delivery_facilities_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 end
