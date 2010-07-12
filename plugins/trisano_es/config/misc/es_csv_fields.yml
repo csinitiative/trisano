@@ -446,12 +446,12 @@ csv_field_00056:
   short_name: 
   use_code: interested_party.try(:risk_factor).try(:pregnant).try(:the_code)
   event_type: contact_event
-csv_field_00185: 
-  sort_order: 410
+csv_field_00185:
+  sort_order: 411
   export_group: event
   long_name: contacto_fecha_programada_de_parto
-  use_description: interested_party.try(:risk_factor).try(:pregnancy_due_date)
-  short_name: 
+  use_description: interested_party.try(:risk_factor).try(:pregnancy_due_date)	
+  short_name:
   use_code: interested_party.try(:risk_factor).try(:pregnancy_due_date)
   event_type: contact_event
 csv_field_00111: 
@@ -566,13 +566,13 @@ csv_field_00059:
   short_name: 
   use_code: interested_party.try(:risk_factor).try(:pregnant).try(:the_code)
   event_type: morbidity_event
-csv_field_00186: 
-  sort_order: 390
+csv_field_00186:
+  sort_order: 391
   export_group: event
   long_name: paciente_fecha_programada_de_parto
   use_description: interested_party.try(:risk_factor).try(:pregnancy_due_date)
-  short_name: 
-  use_code: interested_party.try(:risk_factor).try(:pregnancy_due_date)
+  short_name:
+  use_code: interested_party.try(:risk_factor).try(:pregnancy_due_date)	
   event_type: morbidity_event
 csv_field_00114: 
   sort_order: 780
