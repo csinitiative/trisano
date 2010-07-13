@@ -1,10 +1,9 @@
 -@event.prepare_perinatal_hep_b_data
+=render(:partial => 'events/delivery_data', :locals => { :facility_type => 'expected' })
 -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
-  -e.fields_for(:expected_delivery_facility, :builder => ExtendedFormBuilder) do |df|
-    -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
-      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
-        -core_element_print(:name, p, :horiz) do
-          %span.print-label= ct(:expected_delivery_facility_name, :scope => :perinatal_hep_b_management)
-          %span.print-value= h(p.object.name)
-      -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
-        =print_telephones(t)
+  -e.fields_for("actual_delivery_facility", :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for("actual_delivery_facilities_participation", :builder => ExtendedFormBuilder) do |dfp|
+      -core_element_print(:actual_delivery_date, dfp, :horiz) do
+        %span.print-label=ct(:actual_delivery_date, :scope => :perinatal_hep_b_management)
+        %span.print-value=ld(dfp.object.actual_delivery_date)
+=render(:partial => 'events/delivery_data', :locals => { :facility_type => 'actual' })

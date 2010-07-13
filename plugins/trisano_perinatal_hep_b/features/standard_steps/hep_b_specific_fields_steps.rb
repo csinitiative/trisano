@@ -1,46 +1,21 @@
-Then /^I should not see expected delivery fields$/ do
-  response.should_not have_tag('span', 'Expected delivery facility')
+Then /^I should not see (.+) delivery fields$/ do |type|
+  assert_no_delivery_fields(type)
 end
 
-Then /^I should see expected delivery facility fields$/ do
-  response.should have_tag('#disease_info_form .form') do
-    with_tag("#expected_delivery_facility") do
-      with_tag('.vert:nth-of-type(1) label', 'Expected delivery facility') do
-        with_tag('+ input')
-      end
-      with_tag('.horiz:nth-of-type(3) label', 'Area code') do
-        with_tag('+ input')
-      end
-      with_tag('.horiz:nth-of-type(4) label', 'Phone number') do
-        with_tag('+ input')
-      end
-      with_tag('.horiz:nth-of-type(5) label', 'Extension') do
-        with_tag('+ input')
-      end
-    end
-  end
+Then /^I should see (.+) delivery facility fields$/ do |type|
+  assert_delivery_fields(type)
 end
 
-Then /^I should see expected delivery data$/ do
-  response.should have_tag('#clinical_tab fieldset .form') do
-    with_tag('.vert label', 'Expected delivery facility')
-    with_tag('.horiz label', 'Place type')
-    with_tag('.horiz label', 'Area code')
-    with_tag('.horiz label', 'Phone number')
-    with_tag('.horiz label', 'Extension')
-  end
+Then /^I should see (.+) delivery data$/ do |type|
+  assert_delivery_fields(type)
 end
 
-Then /^I should not see expected delivery data$/ do
-  doc = Webrat::XML.html_document(response.body)
-  nodes = doc.xpath("//fieldset[@class='form']/legend[text()='Pregnancy Status']")
-  labels = nodes.xpath("../span/label").map(&:text)
-  assert(!labels.include?('Expected delivery facility'), "Should not see 'Expected delivery facility' label")
-  assert(!labels.include?("Place type"), "Should not see 'Place type' label")
+Then /^I should not see (.+) delivery data$/ do |type|
+  assert_no_delivery_fields(type)
 end
 
-When /^I enter the expected delivery facility phone number as:/ do |phone_number_table|
-  name_prefix =  'morbidity_event[expected_delivery_facility_attributes][place_entity_attributes][telephones_attributes][0]'
+When /^I enter the (.+) delivery facility phone number as:/ do |type, phone_number_table|
+  name_prefix =  "morbidity_event[#{type}_delivery_facility_attributes][place_entity_attributes][telephones_attributes][0]"
   phone_number_table.hashes.each do |hash|
     hash.each do |k, v|
       fill_in(name_prefix + "[#{k}]", :with => v)
@@ -48,7 +23,7 @@ When /^I enter the expected delivery facility phone number as:/ do |phone_number
   end
 end
 
-Then /^I should see the expected delivery facility phone number as:/ do |phone_number_table|
+Then /^I should see the (.+) delivery facility phone number as:/ do |type, phone_number_table|
   phone_number_table.hashes.each do |hash|
     hash.values.each do |v|
       assert_contain(v)
@@ -56,15 +31,12 @@ Then /^I should see the expected delivery facility phone number as:/ do |phone_n
   end
 end
 
-Then /^I should see printed expected delivery fields$/ do
-  response.should have_tag('.section-header') do
-    assert_contain('Clinical Information')
-    with_tag('~ .horiz .print-label', 'Expected delivery date:')
-    with_tag('~ .horiz .print-label', 'Expected delivery facility:')
-  end
+Then /^I should see printed (.*) delivery fields$/ do |type|
+  assert_printed_field(:clinical, "#{type.capitalize} delivery date:")
+  assert_printed_field(:clinical, "#{type.capitalize} delivery facility:")
 end
 
-Then /^I should see printed expected delivery facility phone numbers:$/ do |phone_number_table|
+Then /^I should see printed (.+) delivery facility phone numbers:$/ do |type, phone_number_table|
   phone_number_table.hashes.each do |hash|
     hash.each do |k, v|
       response.should have_tag('.horiz .print-label', k.to_s + ':')
