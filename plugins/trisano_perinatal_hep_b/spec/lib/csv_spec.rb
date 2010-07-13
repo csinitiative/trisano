@@ -29,7 +29,7 @@ describe Export::Csv do
     given_a_disease_named(disease_name)
     given_core_fields_loaded
     given_csv_fields_loaded
-    
+
     given_p_hep_b_core_fields_loaded
     given_p_hep_b_csv_fields_loaded
 
@@ -139,7 +139,7 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :actual_delivery_facility_extension => /200/)
       assert_values_in_result(output, 1, :actual_delivery_facility_actual_delivery_date => /#{@actual_delivery_facility.actual_delivery_facilities_participation.actual_delivery_date}/)
     end
-    
+
     it "should include actual delivery facility information in CSV export even when there is no actual_delivery_facilities_participation" do
       @actual_delivery_facility.actual_delivery_facilities_participation.destroy
       output = to_arry(Export::Csv.export(@event))
@@ -151,6 +151,5 @@ describe Export::Csv do
     end
   end
 
-  
-end
 
+end

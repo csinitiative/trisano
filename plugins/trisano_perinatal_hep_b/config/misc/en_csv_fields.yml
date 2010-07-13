@@ -1,11 +1,11 @@
---- 
+---
 csv_field_expected_delivery_facility_name:
   sort_order: 830
   export_group: event
   long_name: expected_delivery_facility_name
   use_description: expected_delivery_facility.try(:place_entity).try(:place).try(:name)
-  short_name: 
-  use_code: 
+  short_name:
+  use_code:
   event_type: morbidity_event
   core_field_key: morbidity_event[expected_delivery_facility][place_entity][place][name]
 
@@ -88,7 +88,6 @@ csv_field_actual_delivery_facility_actual_delivery_date:
   use_code:
   event_type: morbidity_event
   core_field_key: morbidity_event[actual_delivery_facility][actual_delivery_facilities_participation][actual_delivery_date]
-
 
 
 

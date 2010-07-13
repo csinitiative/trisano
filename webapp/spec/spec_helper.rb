@@ -16,9 +16,9 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
 end
 
 # Load up factories
-Dir[File.join(File.dirname(__FILE__), '..', '{spec,vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
-  require File.expand_path(f)
-end
+#Dir[File.join(File.dirname(__FILE__), '..', '{vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
+#  require File.expand_path(f)
+#end
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
