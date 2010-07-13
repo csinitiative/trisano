@@ -27,4 +27,8 @@ describe ActualDeliveryFacilitiesParticipation do
     @adfp.should be_valid
   end
 
+  it "should validate the actual delivery date" do
+    @adfp.should validate_date(:actual_delivery_date)
+  end
+
 end

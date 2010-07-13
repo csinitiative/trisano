@@ -120,7 +120,7 @@ describe Export::Csv do
     before(:each) do
       @actual_delivery_facility = add_actual_delivery_facility_to_event(@event,
         "Actual Hospital",
-        :actual_delivery_date => Date.today + 15
+        :actual_delivery_date => Date.today - 15
       )
 
       @telephone_number = Factory.create(:telephone,

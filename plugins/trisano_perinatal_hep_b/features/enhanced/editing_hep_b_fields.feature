@@ -37,3 +37,27 @@ Feature: Editing hep b specific fields
       And I select an actual delivery facility from the list
      Then I should see the actual delivery data
       And I should see the actual delivery date field
+
+  @flush_core_fields_cache
+  Scenario: Selecting an expected delivery facility on an event
+    Given I am logged in as a super user
+      And disease "Hepatitis B Pregnancy Event" exists
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And "Hepatitis B Pregnancy Event" has disease specific core fields
+      And there is an expected delivery facility named "New Expected Delivery Facility"
+     When I am on the event edit page
+      And I search for an expected delivery facility
+      And I select an expected delivery facility from the list
+     Then I should see the expected delivery facility data
+
+  @flush_core_fields_cache
+  Scenario: Selecting an actual delivery facility on an event
+    Given I am logged in as a super user
+      And disease "Hepatitis B Pregnancy Event" exists
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And "Hepatitis B Pregnancy Event" has disease specific core fields
+      And there is an actual delivery facility named "New Actual Delivery Facility"
+     When I am on the event edit page
+      And I search for an actual delivery facility
+      And I select an actual delivery facility from the list
+     Then I should see the actual delivery data

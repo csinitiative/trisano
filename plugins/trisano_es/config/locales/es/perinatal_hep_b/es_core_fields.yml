@@ -14,6 +14,7 @@ es:
         place_entity:
           place:
             name: Actual delivery facility (EN)
+            places_types: Actual delivery facility type (EN)
           telephones:
             area_code: Area code (EN)
             extension: Extension (EN)

@@ -110,3 +110,7 @@ When /^I select an actual delivery facility from the list$/ do
   @browser.type_keys("xpath=//label[text()='Actual delivery facility']/../input", "\t")
   @browser.wait_for_ajax
 end
+
+Given /^there is an (.+) facility named "([^\"]*)"$/ do |type, name|
+  create_place!(type.gsub(' ', '_'), name)
+end

@@ -6,6 +6,14 @@ actual_delivery_facility_name:
   key: morbidity_event[actual_delivery_facility][place_entity][place][name]
   disease_specific: true
 
+actual_delivery_facility_places_types:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: multi_select
+  event_type: morbidity_event
+  key: morbidity_event[actual_delivery_facility][place_entity][place][places_types]
+  disease_specific: true
+
 actual_delivery_facility_area_code:
   fb_accessible: true
   can_follow_up: false

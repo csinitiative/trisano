@@ -19,4 +19,8 @@ class ActualDeliveryFacilitiesParticipation < ActiveRecord::Base
   reloadable!
   belongs_to :particpations
 
+  validates_date :actual_delivery_date, {
+    :allow_blank => true,
+    :on_or_before => lambda { Date.today }
+  }
 end
