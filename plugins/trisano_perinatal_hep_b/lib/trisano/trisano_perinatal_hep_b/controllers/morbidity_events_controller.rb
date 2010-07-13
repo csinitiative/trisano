@@ -28,7 +28,11 @@ module Trisano
         def update_expected_delivery_facility
           @event = MorbidityEvent.find(params[:id], :include => {:expected_delivery_facility => { :place_entity => [:telephones, :place] } })
           @place_entity = PlaceEntity.find(params[:place_entity_id])
-          @event.expected_delivery_facility.update_attributes(:place_entity => @place_entity)
+          if @event.expected_delivery_facility
+            @event.expected_delivery_facility.update_attributes!(:place_entity => @place_entity)
+          else
+            @event.build_expected_delivery_facility(:place_entity => @place_entity).save!
+          end
           render(:template => 'events/update_expected_delivery_facility')
         end
 
@@ -47,7 +51,11 @@ module Trisano
         def update_actual_delivery_facility
           @event = MorbidityEvent.find(params[:id], :include => {:actual_delivery_facility => { :place_entity => [:telephones, :place] } })
           @place_entity = PlaceEntity.find(params[:place_entity_id])
-          @event.actual_delivery_facility.update_attributes(:place_entity => @place_entity)
+          if @event.actual_delivery_facility
+            @event.actual_delivery_facility.update_attributes!(:place_entity => @place_entity)
+          else
+            @event.build_actual_delivery_facility(:place_entity => @place_entity).save!
+          end
           render(:template => 'events/update_actual_delivery_facility')
         end
 
