@@ -60,7 +60,7 @@ Feature: Hep B specific pregnancy fields
      When I go to edit the CMR
      Then I should see actual delivery facility fields
      When I fill in "Actual delivery facility" with "Delivery Here Clinic"
-      And I fill in "Actual delivery date" with "January 10, 2020"
+      And I fill in "Actual delivery date" with "January 10, 2009"
       And I enter the actual delivery facility phone number as:
         | area_code | phone_number | extension |
         |       123 |     456-7890 |        88 |
@@ -68,7 +68,7 @@ Feature: Hep B specific pregnancy fields
      Then I should be on the show CMR page
       And I should see actual delivery data
       And I should see "Delivery Here Clinic"
-      And I should see "2020-01-10"
+      And I should see "2009-01-10"
       And I should see the actual delivery facility phone number as:
         | area_code | phone_number | extension |
         | (123)     |     456-7890 |        88 |
