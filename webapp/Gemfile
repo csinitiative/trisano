@@ -1,3 +1,4 @@
+source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
 gem "pg"
