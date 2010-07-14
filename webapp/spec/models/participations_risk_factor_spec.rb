@@ -20,11 +20,18 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ParticipationsRiskFactor do
 
   before do
-    @risk_factor = Factory.create(:participations_risk_factor)
+    @event = Factory.create(:morbidity_event)
+    @event.interested_party.risk_factor = @risk_factor
+    @event.interested_party.save!
+    @risk_factor = @event.interested_party.build_risk_factor
+    @risk_factor.save!
   end
 
   it "should validate expected delivery date" do
     @risk_factor.should validate_date(:pregnancy_due_date)
+    @risk_factor.pregnancy_due_date = @event.created_at - 1.day
+    @risk_factor.save
+    @risk_factor.errors.on(:pregnancy_due_date).should =~ /must be on or after/
   end
 
 end

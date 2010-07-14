@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ParticipationsRiskFactor < ActiveRecord::Base
-  belongs_to :participations
+  belongs_to :participation
   belongs_to :food_handler, :class_name => 'ExternalCode'
   belongs_to :healthcare_worker, :class_name => 'ExternalCode'
   belongs_to :group_living, :class_name => 'ExternalCode'
@@ -27,6 +27,8 @@ class ParticipationsRiskFactor < ActiveRecord::Base
   validates_length_of :occupation, :maximum => 255, :allow_blank => true
   validates_date :pregnancy_due_date, {
     :allow_blank => true,
-    :on_or_after => lambda { Date.today }
+    :on_or_after =>  lambda { |record|
+      record.participation.try(:event).try(:created_at)
+    }
   }
 end
