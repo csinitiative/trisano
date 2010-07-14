@@ -211,6 +211,11 @@ namespace :trisano do
       puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
       ruby "-S rake trisano:deploy:create_db_config"
       ruby "-S rake -f ../webapp/Rakefile trisano:distro:package_app"
+      ruby "-S rake trisano:deploy:core_prod_release"
+    end
+
+    desc "Core release tasks for a production release"
+    task :core_prod_release do
       core_release_tasks(false)
     end
 
