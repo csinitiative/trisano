@@ -298,6 +298,28 @@ STORAGE         text;
 COMMIT;
 
 BEGIN;
+
+-- Pentaho's reporting tool doesn't work well with non-text user-specified
+-- parameters. This function converts text input to a date, trapping the
+-- exception and using a fallback alternate date when the text can't be
+-- converted to a date
+CREATE FUNCTION make_date(input_date text, alternate date) RETURNS date
+    AS $$
+DECLARE
+    converted_date DATE;
+BEGIN
+    BEGIN
+        converted_date := input_date::DATE;
+    EXCEPTION
+        WHEN data_exception THEN 
+            converted_date := alternate;
+            RAISE NOTICE 'Invalid input syntax for date type: %', input_date;
+    END;
+    RETURN converted_date;
+END;
+$$
+    LANGUAGE plpgsql IMMUTABLE;
+
 CREATE OR REPLACE FUNCTION trisano.hstoreagg(trisano.hstore, text, text) RETURNS trisano.hstore AS $$
     SELECT trisano.hs_concat($1, trisano.tconvert($2, $3));
 $$ LANGUAGE SQL;
