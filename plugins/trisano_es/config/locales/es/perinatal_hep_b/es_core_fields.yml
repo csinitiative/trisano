@@ -21,3 +21,21 @@ es:
             phone_number: Phone number (EN)
         actual_delivery_facilities_participation:
           actual_delivery_date: Actual delivery date (EN)
+      health_care_provider:
+        person_entity:
+          person:
+            first_name: First name (EN)
+            last_name: Last name (EN)
+            middle_name: Middle name (EN)
+          addresses:
+            street_number: Street number (EN)
+            street_name: Street name (EN)
+            unit_number: Unit number (EN)
+            city: City (EN)
+            state: State (EN)
+            county: County (EN)
+            postal_code: Zip code (EN)
+          telephones:
+            area_code: Area code (EN)
+            extension: Extension (EN)
+            phone_number: Phone number (EN)
