@@ -7,3 +7,4 @@
         %span.print-label=ct(:actual_delivery_date, :scope => :perinatal_hep_b_management)
         %span.print-value=ld(dfp.object.actual_delivery_date)
 =render(:partial => 'events/delivery_data', :locals => { :facility_type => 'actual' })
+=render(:partial => 'events/health_care_provider_data')
