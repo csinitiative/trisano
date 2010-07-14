@@ -1,0 +1,10 @@
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -e.fields_for("#{facility_type}_delivery_facility", :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+        -core_element_print(:name, p, :horiz) do
+          %span.print-label= ct("#{facility_type}_delivery_facility_name", :scope => :perinatal_hep_b_management)
+          %span.print-value= h(p.object.name)
+      -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
+        =print_telephones(t)
+%br

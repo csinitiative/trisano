@@ -3,3 +3,4 @@ en:
     expected_delivery_info: Expected Delivery
     expected_delivery_facility_name: Expected delivery facility
     actual_delivery_facility_name: Actual delivery facility
+    actual_delivery_date: Actual delivery date
