@@ -27,14 +27,6 @@ es:
             first_name: First name (EN)
             last_name: Last name (EN)
             middle_name: Middle name (EN)
-          addresses:
-            street_number: Street number (EN)
-            street_name: Street name (EN)
-            unit_number: Unit number (EN)
-            city: City (EN)
-            state: State (EN)
-            county: County (EN)
-            postal_code: Zip code (EN)
           telephones:
             area_code: Area code (EN)
             extension: Extension (EN)
