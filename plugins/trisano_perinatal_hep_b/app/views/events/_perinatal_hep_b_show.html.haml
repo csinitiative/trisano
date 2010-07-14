@@ -9,5 +9,6 @@
           =dfp.label(:actual_delivery_date)
           =ld(dfp.object.actual_delivery_date)
   =render(:partial => 'events/delivery_data', :locals => {:facility_type => 'actual'})
+%br{ :clear => 'all' }
 #health_care_provider
   =render(:partial => 'events/health_care_provider_data')
