@@ -114,3 +114,13 @@ end
 Given /^there is an (.+) facility named "([^\"]*)"$/ do |type, name|
   create_place!(type.gsub(' ', '_'), name)
 end
+
+When /^I fill in the actual delivery date$/ do
+  @browser.type('morbidity_event_actual_delivery_facility_attributes_actual_delivery_facilities_participation_attributes_actual_delivery_date',
+                'January 10, 2010')
+end
+
+Then /^I should see the actual delivery date filled in$/ do
+  value = @browser.get_value("morbidity_event_actual_delivery_facility_attributes_actual_delivery_facilities_participation_attributes_actual_delivery_date")
+  assert_equal("January 10, 2010", value)
+end

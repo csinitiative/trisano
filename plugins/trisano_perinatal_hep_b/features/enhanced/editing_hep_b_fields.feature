@@ -61,3 +61,30 @@ Feature: Editing hep b specific fields
       And I search for an actual delivery facility
       And I select an actual delivery facility from the list
      Then I should see the actual delivery data
+
+  @flush_core_fields_cache
+  Scenario: Updating an actual delivery facility should not reset date
+    Given I am logged in as a super user
+     And disease "Hepatitis B Pregnancy Event" exists
+     And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+     And "Hepatitis B Pregnancy Event" has disease specific core fields
+     And there is an actual delivery facility named "New Actual Delivery Facility"
+    When I am on the event edit page
+     And I fill in the actual delivery date
+     And I search for an actual delivery facility
+     And I select an actual delivery facility from the list
+    Then I should see the actual delivery date filled in
+     And I should see the actual delivery data
+
+  @flush_core_fields_cache
+  Scenario: Removing an actual delivery facility in the same session it was added
+    Given I am logged in as a super user
+      And disease "Hepatitis B Pregnancy Event" exists
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And "Hepatitis B Pregnancy Event" has disease specific core fields
+     When I am on the event edit page
+      And I search for an actual delivery facility
+      And I select an actual delivery facility from the list
+     Then I should see the actual delivery data
+     When I remove the actual delivery data
+     Then I should see the actual delivery facility fields
