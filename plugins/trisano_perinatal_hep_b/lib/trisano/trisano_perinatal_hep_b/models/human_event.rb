@@ -46,7 +46,10 @@ module Trisano
             base.accepts_nested_attributes_for :actual_delivery_facility, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
-
+            
+            base.accepts_nested_attributes_for :health_care_provider, {
+              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :allow_destroy => true }
           end
         end
 
@@ -60,6 +63,12 @@ module Trisano
           pe = edf.place_entity || edf.build_place_entity
           pe.place || pe.build_place
           pe.telephones.build if pe.telephones.empty?
+          
+          hcp = self.health_care_provider || self.build_health_care_provider
+          person_entity = hcp.person_entity || hcp.build_person_entity
+          person_entity.person || person_entity.build_person
+          person_entity.telephones.build if person_entity.telephones.empty?
+          person_entity.addresses.build if person_entity.addresses.empty?
         end
 
         def prepare_actual_delivery_facility

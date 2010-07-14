@@ -21,3 +21,13 @@ en:
             phone_number: Phone number
         actual_delivery_facilities_participation:
           actual_delivery_date: Actual delivery date
+      health_care_provider:
+        person_entity:
+          person:
+            first_name: First name
+            last_name: Last name
+            middle_name: Middle name
+          telephones:
+            area_code: Area code
+            extension: Extension
+            phone_number: Phone number

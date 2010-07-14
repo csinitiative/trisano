@@ -1,0 +1,12 @@
+%fieldset.form
+  %legend=t('health_care_provider', :scope => 'perinatal_hep_b_management')
+  -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+    -e.fields_for(:health_care_provider, :builder => ExtendedFormBuilder) do |hcp|
+      -hcp.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+        = render(:partial => 'people/name_show', :locals => {:f => pe, :event => @event, :event_form => nil })
+
+        %fieldset.form
+          %legend="#{t 'telephone'}"
+          -pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |t|
+            =show_telephones(t)
+

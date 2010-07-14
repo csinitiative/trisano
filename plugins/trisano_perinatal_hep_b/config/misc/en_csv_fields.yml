@@ -120,7 +120,7 @@ csv_field_health_care_provider_middle_name:
   core_field_key: morbidity_event[health_care_provider][person_entity][person][middle_name]
 
 csv_field_health_care_provider_area_code:
-  sort_order: 853
+  sort_order: 870
   export_group: event
   long_name: health_care_provider_area_code
   use_description: health_care_provider.try(:person_entity).try(:telephones).try(:last).try(:area_code)
@@ -130,7 +130,7 @@ csv_field_health_care_provider_area_code:
   core_field_key: morbidity_event[health_care_provider][person_entity][telephones][area_code]
 
 csv_field_health_care_provider_phone_number:
-  sort_order: 854
+  sort_order: 871
   export_group: event
   long_name: health_care_provider_phone_number
   use_description: health_care_provider.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
@@ -140,7 +140,7 @@ csv_field_health_care_provider_phone_number:
   core_field_key: morbidity_event[health_care_provider][person_entity][telephones][phone_number]
 
 csv_field_health_care_provider_extension:
-  sort_order: 855
+  sort_order: 872
   export_group: event
   long_name: health_care_provider_extension
   use_description: health_care_provider.try(:person_entity).try(:telephones).try(:last).try(:extension)
@@ -148,14 +148,3 @@ csv_field_health_care_provider_extension:
   use_code:
   event_type: morbidity_event
   core_field_key: morbidity_event[health_care_provider][person_entity][telephones][extension]
-
-#csv_field_health_care_provider_specialty:
-#  sort_order: 856
-#  export_group: event
-#  long_name: health_care_provider_specialty
-#  use_description: health_care_provider.try(:health_care_providers_participation).try(:speciality).try(:code_description)
-#  short_name:
-#  use_code: health_care_provider.try(:health_care_providers_participation).try(:speciality).try(:the_code)
-#  event_type: morbidity_event
-#  core_field_key: morbidity_event[health_care_provider][health_care_providers_participation][speciality_id]
-

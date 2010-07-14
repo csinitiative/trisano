@@ -20,7 +20,7 @@ class HealthCareProvider < Participation
   belongs_to :person_entity,  :foreign_key => :secondary_entity_id
   has_one :health_care_providers_participation, :foreign_key => :participation_id, :dependent => :destroy
   
-  accepts_nested_attributes_for :person_entity, :reject_if => proc { |attrs| attrs["person_attributes"].all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :person_entity, :reject_if => proc { |attrs| attrs["person_attributes"].nil? || attrs["person_attributes"].all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :health_care_providers_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 end
 
