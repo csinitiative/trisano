@@ -1,7 +1,13 @@
 source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
-gem "pg"
+if RUBY_PLATFORM =~ /java/
+  gem "activerecord-jdbc-adapter", "0.9.1"
+  gem "activerecord-jdbcpostgresql-adapter", "0.9.1"
+  gem "jdbc-postgres", "8.2"
+else
+  gem "pg"
+end
 gem "mechanize"
 gem "rest-open-uri"
 gem "ci_reporter"
@@ -20,7 +26,9 @@ gem "mislav-will_paginate"
 gem "rubyzip"
 gem "webrat", :git => "git://github.com/kofno/webrat.git"
 gem "mongrel"
-gem "unicorn"
+unless RUBY_PLATFORM =~ /java/
+  gem "unicorn"
+end
 gem "wirble"
 gem "database_cleaner"
 gem "selenium-client"
