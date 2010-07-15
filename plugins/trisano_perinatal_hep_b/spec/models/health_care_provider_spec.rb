@@ -19,6 +19,4 @@ require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_he
 
 describe HealthCareProvider do
 
-  it { should have_one(:health_care_providers_participation) }
-
 end

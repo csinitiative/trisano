@@ -175,17 +175,7 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :health_care_provider_phone_number => /5553333/)
       assert_values_in_result(output, 1, :health_care_provider_extension => /200/)
     end
-
-    it "should include health care provider information in CSV export even when there is no health_care_providers_participation" do
-      @health_care_provider.health_care_providers_participation.destroy
-      output = to_arry(Export::Csv.export(@event))
-      assert_values_in_result(output, 1, :health_care_provider_first_name => /Johnny/)
-      assert_values_in_result(output, 1, :health_care_provider_last_name => /Thompson/)
-      assert_values_in_result(output, 1, :health_care_provider_middle_name => //)
-      assert_values_in_result(output, 1, :health_care_provider_area_code => /555/)
-      assert_values_in_result(output, 1, :health_care_provider_phone_number => /5553333/)
-      assert_values_in_result(output, 1, :health_care_provider_extension => /200/)
-    end
+    
   end
 
 end

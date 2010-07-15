@@ -46,11 +46,7 @@ module PerinatalHepBSpecHelper
   def add_health_care_provider_to_event(event, person_attributes={}, health_care_providers_participations_attributes={})
     provider_person = Factory.create(:person, person_attributes)
     provider_person_entity = Factory.create(:person_entity, :person => provider_person)
-    health_care_providers_participation = Factory.create(:health_care_providers_participation, health_care_providers_participations_attributes)
-    health_care_provider = Factory.create(:health_care_provider,
-      :person_entity => provider_person_entity,
-      :health_care_providers_participation => health_care_providers_participation
-    )
+    health_care_provider = Factory.create(:health_care_provider, :person_entity => provider_person_entity)
     event.health_care_provider = health_care_provider
     event.save!
     health_care_provider
