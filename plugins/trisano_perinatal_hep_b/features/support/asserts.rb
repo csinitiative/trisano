@@ -18,9 +18,9 @@ Cucumber::Rails::World.class_eval do
     assert_tag 'label', ancestor_hash.merge(:content => 'Extension')
   end
 
-  def assert_printed_field(section, content)
+  def assert_printed_field(section, content, html_class=:horiz)
     assert_tag 'span', {
-      :attributes => { :class => 'horiz' },
+      :attributes => { :class => html_class.to_s },
       :child => {
         :tag => 'span',
         :attributes => { :class => 'print-label' },
