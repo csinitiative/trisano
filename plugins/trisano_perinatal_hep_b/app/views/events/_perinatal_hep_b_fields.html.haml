@@ -1,4 +1,10 @@
 =render(:partial => 'events/expected_delivery_fields')
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -e.fields_for(:actual_delivery_facility, :builder => ExtendedFormBuilder) do |df|
+    -df.fields_for(:actual_delivery_facilities_participation, :builder => ExtendedFormBuilder) do |dfp|
+      -core_element(:actual_delivery_date, dfp, :vert) do
+        =dfp.label(:actual_delivery_date)
+        =dfp.calendar_date_select(:actual_delivery_date, :year_range => 5.years.ago..1.year.from_now)
 =render(:partial => 'events/actual_delivery_fields')
 %br{ :clear => 'all' }
 =render(:partial => 'events/health_care_provider_fields')
