@@ -148,3 +148,13 @@ csv_field_health_care_provider_extension:
   use_code:
   event_type: morbidity_event
   core_field_key: morbidity_event[health_care_provider][person_entity][telephones][extension]
+
+csv_field_perinatal_hep_b_state_manager_extension:
+  sort_order: 880
+  export_group: event
+  long_name: perinatal_hep_b_state_manager
+  use_description: state_manager.try(:best_name)
+  short_name:
+  use_code:
+  event_type: morbidity_event
+  core_field_key: morbidity_event[state_manager_id]

@@ -175,7 +175,20 @@ describe Export::Csv do
       assert_values_in_result(output, 1, :health_care_provider_phone_number => /5553333/)
       assert_values_in_result(output, 1, :health_care_provider_extension => /200/)
     end
-    
+
   end
 
+  describe "events associated with a state manager" do
+    before do
+      create_role_with_privileges!('State Manager', :accept_event_at_state)
+      manager = create_user_in_role!('State Manager', "Harold Zoid")
+      @event.update_attributes!(:state_manager => manager)
+    end
+
+    it "should include the state manager" do
+      output = to_arry(Export::Csv.export(@event))
+      assert_values_in_result(output, 1, :perinatal_hep_b_state_manager => /Harold Zoid/)
+    end
+
+  end
 end

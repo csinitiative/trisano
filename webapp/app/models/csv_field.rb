@@ -1,6 +1,6 @@
 class CsvField < ActiveRecord::Base
   belongs_to :core_field
-  
+
   default_scope :order => 'sort_order'
 
   named_scope :morbidity_event_fields, :conditions => { :event_type => 'morbidity_event' }
