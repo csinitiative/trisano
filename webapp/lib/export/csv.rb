@@ -145,7 +145,7 @@ module Export
       end
 
       def event_headers(event)
-        event_data(event).map { |event_datum| event_datum.first unless event_datum.nil? }
+        event_data(event).map { |event_datum| event_datum.first unless event_datum.nil? }.compact
       end
 
       def lab_headers
@@ -168,7 +168,7 @@ module Export
         loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, num_hospitals, 1].max
 
         # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.
-        # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhaused.  There's probably a better way.
+        # The next line is to consist of the next of everything.  And so on until the largest repeating item is exhausted.  There's probably a better way.
         loop_event = event
         loop_ctr.times do |ctr|
           csv_row = event_values(loop_event, ctr).map { |value| value.to_s.gsub(/,/,' ') }
@@ -225,7 +225,7 @@ module Export
 
       def event_values(event, count, csv_fields_meth = nil)
         if (event.is_a?(HumanEvent) && event.interested_party) || (event.is_a?(PlaceEvent) && event.interested_place)
-          event_data(event, count, csv_fields_meth).collect do |event_datum|
+          event_data(event, count, csv_fields_meth).collect { |event_datum|
             unless event_datum.nil?
               begin
                 value = event.instance_eval(event_datum.last).to_s
@@ -239,7 +239,7 @@ module Export
               end
             end
             
-          end
+          }.compact
         else
           # A little optimization.  No sense in evaling all the attributes if the event is empty due to being blanked out for following rows.
           ed = event_data(event).collect { nil }
