@@ -86,6 +86,14 @@ expected_delivery_facility_extension:
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][extension]
   disease_specific: true
 
+health_care_provider_section:
+  fb_accessible: false
+  can_follow_up: false
+  event_type: morbidity_event
+  field_type: section
+  key: morbidity_event[health_care_provider][section]
+  disease_specific: true
+
 health_care_provider_first_name:
   fb_accessible: true
   can_follow_up: true

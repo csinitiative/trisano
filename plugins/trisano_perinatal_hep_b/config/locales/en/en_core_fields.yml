@@ -22,6 +22,7 @@ en:
         actual_delivery_facilities_participation:
           actual_delivery_date: Actual delivery date
       health_care_provider:
+        section: Health Care Provider
         person_entity:
           person:
             first_name: First name

@@ -64,7 +64,7 @@ Spec::Runner.configure do |config|
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
 
   config.after(:each) {
-     User.current_user = nil
+    User.current_user = nil
   }
 end
 
@@ -281,3 +281,6 @@ require File.join(File.dirname(__FILE__), 'rails_ext') unless ActiveRecord::Base
 Dir[File.join(RAILS_ROOT, 'vendor', 'trisano', '*', 'spec', 'spec_helpers', '*.rb')].each do |f|
   require f
 end
+
+I18n.load_path << File.join(File.dirname(__FILE__), 'fixtures', 'files', 'test_translations.yml')
+I18n.reload!

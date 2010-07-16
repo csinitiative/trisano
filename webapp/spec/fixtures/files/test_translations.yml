@@ -1,0 +1,4 @@
+en:
+  event_fields:
+    morbidity_event:
+      test_attribute: Test Attribute

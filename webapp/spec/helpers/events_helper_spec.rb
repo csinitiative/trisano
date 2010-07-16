@@ -129,8 +129,8 @@ describe EventsHelper do
   describe 'rendering' do
     it "should render core field help text" do
       @core_field = CoreField.create!({ :event_type => :morbidity_event,
-                                        :key => "morbidity_event[test_attribute]",
-                                        :help_text => "Here is some help text"})
+          :key => "morbidity_event[test_attribute]",
+          :help_text => "Here is some help text"})
       @event = Factory.create(:morbidity_event)
       @fb = mock
       @fb.expects(:core_field).with(:test_attribute).returns(@core_field)
@@ -161,18 +161,18 @@ describe EventsHelper do
 
 end
 
-describe EventsHelper, "rendering core elements" do
+describe EventsHelper, "rendering core elements and sections" do
   def given_before_partials
     mock = helper.stubs(:before_core_partials)
     mock.returns({ 'morbidity_event[test_attribute]' => [{:partial => 'before_partial'}],
-                   'person_entity[test_attribute]'   => [] })
+        'person_entity[test_attribute]'   => [] })
     helper.stubs(:render).with({:partial => 'before_partial', :locals => {:f => @fb}}).returns('<p>before partial</p>')
   end
 
   def given_after_partials
     mock = helper.stubs(:after_core_partials)
     mock.returns({ 'morbidity_event[test_attribute]' => [{:partial => 'after_partial'}],
-                   'person_entity[test_attribute]'   => [] })
+        'person_entity[test_attribute]'   => [] })
     helper.stubs(:render).with({:partial => 'after_partial', :locals => {:f => @fb}}).returns('<p>after partial</p>')
   end
 
@@ -232,8 +232,8 @@ describe EventsHelper, "rendering core elements" do
   describe "on an event" do
     before do
       @core_field = Factory.create(:cmr_core_field,
-                                   :key => 'morbidity_event[test_attribute]',
-                                   :disease_specific => false)
+        :key => 'morbidity_event[test_attribute]',
+        :disease_specific => false)
       @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
       helper.output_buffer = ""
       @event = Factory.create(:morbidity_event)
@@ -242,29 +242,37 @@ describe EventsHelper, "rendering core elements" do
       given_before_partials
       given_after_partials
       given_no_replacement_partials
+
+      
     end
 
-    describe "in edit mode" do
+    describe "core element in edit mode" do
       before { @method_to_test = :core_element }
       it_should_behave_like "event core element renderer"
     end
 
-    describe "in show mode" do
+    describe "core element in show mode" do
       before { @method_to_test = :core_element_show }
       it_should_behave_like "event core element renderer"
     end
 
-    describe "in print mode" do
+    describe "core element in print mode" do
       before { @method_to_test = :core_element_print }
       it_should_behave_like "event core element renderer"
     end
+
+    describe "core section in edit or show" do
+      before { @method_to_test = :core_section }
+      it_should_behave_like "event core element renderer"
+    end
+
   end
 
   describe "on person entity" do
     before do
       @core_field = Factory.create(:cmr_core_field,
-                                   :key => 'person_entity[test_attribute]',
-                                   :disease_specific => true)
+        :key => 'person_entity[test_attribute]',
+        :disease_specific => true)
       @fb = ExtendedFormBuilder.new('person_entity', nil, nil, {}, nil)
       helper.output_buffer = ""
 
