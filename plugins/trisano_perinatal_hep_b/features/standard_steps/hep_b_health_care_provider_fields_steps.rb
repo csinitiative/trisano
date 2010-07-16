@@ -8,7 +8,7 @@ end
 
 Then /^I should not see health care provider fields$/ do
   response.should have_tag('#health_care_provider') do
-    with_tag('fieldset legend', 'Health Care Provider') # This will fail once we have disease-specific sections
+    without_tag('fieldset legend', 'Health Care Provider') # This will fail once we have disease-specific sections
     without_tag("#{path_to_hcp_name_fieldset} div span:nth-of-type(1) label", 'Last name')
   end
 end

@@ -44,5 +44,3 @@ Feature: Hep B specific health care provider fields
         | Area code | Phone number | Extension |
         | (123)     |     456-7890 |        88 |
 
-
-

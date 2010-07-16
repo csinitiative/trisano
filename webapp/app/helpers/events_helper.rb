@@ -68,6 +68,15 @@ module EventsHelper
     end
   end
 
+  def core_section(attribute, form_builder, css_class='form', &block)
+    rendering_core_field(attribute, form_builder) do |cf|
+      concat("<fieldset class='#{css_class}'>")
+      concat("<legend>#{form_builder.core_field(attribute).name}</legend>")
+      concat_block_or_replacement(cf.key, form_builder, &block)
+      concat("</fieldset>")
+    end
+  end
+
   def core_element(attribute, form_builder, css_class, mode=:edit, &block)
     rendering_core_field(attribute, form_builder) do |cf|
       concat_core_field(mode, :before, attribute, form_builder)

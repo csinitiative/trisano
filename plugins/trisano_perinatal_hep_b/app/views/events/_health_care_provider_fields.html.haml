@@ -1,9 +1,8 @@
 -@event.prepare_perinatal_hep_b_data
 #health_care_provider
-  %fieldset.form
-    %legend=t('health_care_provider', :scope => 'perinatal_hep_b_management')
-    -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
-      -e.fields_for(:health_care_provider, :builder => ExtendedFormBuilder) do |hcp|
+  -fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+    -e.fields_for(:health_care_provider, :builder => ExtendedFormBuilder) do |hcp|
+      -core_section(:section, hcp) do
         -hcp.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
           =render :partial => 'people/name_form', :locals => {:f => pe, :event => @event, :event_form => nil}
 
