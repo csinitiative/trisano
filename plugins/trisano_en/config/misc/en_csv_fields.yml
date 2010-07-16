@@ -666,6 +666,14 @@ csv_field_00172:
   short_name: 
   use_code: participations_contact.try(:disposition).try(:the_code)
   event_type: contact_event
+csv_field_00173:
+  sort_order: 281
+  export_group: event
+  long_name: contact_disposition_date
+  use_description: participations_contact.try(:disposition_date)
+  short_name:
+  use_code: 
+  event_type: contact_event
 csv_field_00030: 
   sort_order: 460
   export_group: event

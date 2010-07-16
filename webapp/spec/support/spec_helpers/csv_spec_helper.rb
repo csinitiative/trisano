@@ -130,6 +130,7 @@ module CsvSpecHelper
 
     if event_type == :contact
       header_array << "contact_disposition"
+      header_array << "contact_disposition_date"
       header_array << "contact_type"
     end
 
@@ -232,6 +233,7 @@ module CsvSpecHelper
     if event_type == :contact
       out << "#{@person.disposition.code_description},"
       out << "#{@person.disposition.code_description},"
+      out << "#{@person.disposition_date},"
     end
     out << "#{@disease.disease.disease_name},"
     out << "#{@disease.disease_onset_date},"
@@ -336,6 +338,7 @@ module CsvSpecHelper
     @person.stubs(:ethnicity).returns(simple_reference)
     @person.stubs(:primary_language).returns(simple_reference)
     @person.stubs(:disposition).returns(simple_reference)
+    @person.stubs(:disposition_date).returns("2008-01-02")
 
     entity = Factory.build(:person_entity)
     entity.stubs(:telephones).returns([])
@@ -351,6 +354,7 @@ module CsvSpecHelper
     @contact = Factory.build(:participations_contact)
     @contact.stubs(:contact_type).returns(simple_reference)
     @contact.stubs(:disposition).returns(simple_reference)
+    @contact.stubs(:disposition_date).returns("2009-02-01")
 
     patient = Factory.build(:interested_party)
     patient.stubs(:person_entity).returns(entity)

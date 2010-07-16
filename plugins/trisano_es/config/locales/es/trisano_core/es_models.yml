@@ -120,8 +120,9 @@ es:
         _destroy: Eliminar
 
       participations_contact:
-        disposition: dispocisión
-        disposition_id: dispocisión
+        disposition: Dispocisión
+        disposition_id: Dispocisión
+        disposition_date: Fecha de dispocisión
         contact_type_id: Tipo de contacto
 
       participations_encounter:

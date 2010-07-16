@@ -500,6 +500,7 @@ en:
   contacts: "Contacts"
   contact_type: "Contact type"
   disposition: "Disposition"
+  disposition_date: "Disposition date"
   this_patient_is_a_contact_of: "This patient is a contact of"
   copy_from_original_patient: "Copy From Original Patient"
 #Notes

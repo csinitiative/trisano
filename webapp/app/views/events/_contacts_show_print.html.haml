@@ -89,6 +89,11 @@
               = h(contact_event_data.disposition.code_description) if contact_event_data and contact_event_data.disposition
           .left
             %span.print-label
+              =ct 'disposition_date'
+            %span.print-value
+              = h(contact_event_data.disposition_date) if contact_event_data
+          .left
+            %span.print-label
               =ct 'contact_type'
             %span.print-value
               = h(contact_event_data.contact_type.code_description) if contact_event_data and contact_event_data.contact_type
