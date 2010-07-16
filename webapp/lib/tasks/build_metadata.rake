@@ -34,7 +34,7 @@ if RUBY_PLATFORM =~ /java/
         ENV['TRISANO_DB_USER'] || 'dw_priv_user'
       end
 
-      def database_password
+     def database_password
         ENV['TRISANO_DB_PASSWORD'] || 'dw_priv_user'
       end
 
@@ -102,34 +102,37 @@ if RUBY_PLATFORM =~ /java/
       require_jars Dir.glob(File.join(server_dir, 'tomcat/webapps/pentaho/WEB-INF/lib', '*.jar'))
       require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'postgres*.jar'))
 
-      AllTablesGroupName = 'All Formbuilder Tables';
-      DefaultFieldType = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
-      MaxX = 800
+      # hide these in a method for now, until this is ready to go (keeps breaking the build)
+      def load_java_constants
+        AllTablesGroupName = 'All Formbuilder Tables';
+        DefaultFieldType = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
+        MaxX = 800
 
-      CWM = Java::OrgPentahoPmsCore::CWM
-      CwmSchemaFactory = Java::OrgPentahoPmsFactory::CwmSchemaFactory
-      Relationship = Java::OrgPentahoPmsSchema::RelationshipMeta
-      BusinessModel = Java::OrgPentahoPmsSchema::BusinessModel
-      BusinessTable = Java::OrgPentahoPmsSchema::BusinessTable
-      BusinessCategory = Java::OrgPentahoPmsSchema::BusinessCategory
-      BusinessColumn = Java::OrgPentahoPmsSchema::BusinessColumn
-      PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
-      PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
-      PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
-      SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
-      SchemaMeta = Java::OrgPentahoPmsSchema::SchemaMeta
-      AggregationSettings = Java::OrgPentahoPmsSchemaConceptTypesAggregation::AggregationSettings
-      Concept = Java::OrgPentahoPmsSchemaConcept::Concept
-      ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
-      ConceptPropertyString = Java::OrgPentahoPmsSchemaConceptTypesString::ConceptPropertyString
-      ConceptPropertyTableType = Java::OrgPentahoPmsSchemaConceptTypesTabletype::ConceptPropertyTableType
-      ConceptPropertyNumber = Java::OrgPentahoPmsSchemaConceptTypesNumber::ConceptPropertyNumber
-      DataTypeSettings = Java::OrgPentahoPmsSchemaConceptTypesDatatype::DataTypeSettings
-      LocalizedStringSettings = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::LocalizedStringSettings
-      TableTypeSettings = Java::OrgPentahoPmsSchemaConceptTypesTabletype::TableTypeSettings
-      DatabaseMeta = Java::OrgPentahoDiCoreDatabase::DatabaseMeta
-      SecurityService = Java::OrgPentahoPmsSchemaSecurity::SecurityService
-      SecurityReference = Java::OrgPentahoPmsSchemaSecurity::SecurityReference
+        CWM = Java::OrgPentahoPmsCore::CWM
+        CwmSchemaFactory = Java::OrgPentahoPmsFactory::CwmSchemaFactory
+        Relationship = Java::OrgPentahoPmsSchema::RelationshipMeta
+        BusinessModel = Java::OrgPentahoPmsSchema::BusinessModel
+        BusinessTable = Java::OrgPentahoPmsSchema::BusinessTable
+        BusinessCategory = Java::OrgPentahoPmsSchema::BusinessCategory
+        BusinessColumn = Java::OrgPentahoPmsSchema::BusinessColumn
+        PhysicalColumn = Java::OrgPentahoPmsSchema::PhysicalColumn
+        PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
+        PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
+        SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
+        SchemaMeta = Java::OrgPentahoPmsSchema::SchemaMeta
+        AggregationSettings = Java::OrgPentahoPmsSchemaConceptTypesAggregation::AggregationSettings
+        Concept = Java::OrgPentahoPmsSchemaConcept::Concept
+        ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
+        ConceptPropertyString = Java::OrgPentahoPmsSchemaConceptTypesString::ConceptPropertyString
+        ConceptPropertyTableType = Java::OrgPentahoPmsSchemaConceptTypesTabletype::ConceptPropertyTableType
+        ConceptPropertyNumber = Java::OrgPentahoPmsSchemaConceptTypesNumber::ConceptPropertyNumber
+        DataTypeSettings = Java::OrgPentahoPmsSchemaConceptTypesDatatype::DataTypeSettings
+        LocalizedStringSettings = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::LocalizedStringSettings
+        TableTypeSettings = Java::OrgPentahoPmsSchemaConceptTypesTabletype::TableTypeSettings
+        DatabaseMeta = Java::OrgPentahoDiCoreDatabase::DatabaseMeta
+        SecurityService = Java::OrgPentahoPmsSchemaSecurity::SecurityService
+        SecurityReference = Java::OrgPentahoPmsSchemaSecurity::SecurityReference
+      end
 
       $event_types = {}
 
