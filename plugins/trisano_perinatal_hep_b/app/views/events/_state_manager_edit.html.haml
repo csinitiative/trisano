@@ -1,0 +1,4 @@
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -core_element(:state_manager_id, e, :horiz) do
+    =e.label(:state_manager_id, t(:state_manager, :scope => :perinatal_hep_b_management))
+    =e.select(:state_manager_id, state_managers_for_select, :include_blank => true)

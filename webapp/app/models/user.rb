@@ -167,14 +167,23 @@ class User < ActiveRecord::Base
   end
 
   def self.investigators
-    find_by_sql(<<-SQL)
-      SELECT DISTINCT ON(a.id) a.* FROM users a
-        JOIN role_memberships b ON b.user_id = a.id
-        JOIN privileges_roles c ON c.role_id = b.role_id
-        JOIN privileges d ON d.id = c.privilege_id
-       WHERE d.priv_name = 'investigate_event'
-    SQL
+    self.users_by_priv_name('investigate_event')
   end
+
+  def self.state_managers
+    self.users_by_priv_name('approve_event_at_state')
+  end
+
+  named_scope :users_by_priv_name, lambda { |priv_name|
+    { :conditions => { :privileges => { :priv_name => priv_name } },
+      :select => "DISTINCT ON(users.id) users.*",
+      :joins => [ "INNER JOIN role_memberships ON role_memberships.user_id = users.id",
+                  "INNER JOIN privileges_roles ON privileges_roles.role_id = role_memberships.role_id",
+                  "INNER JOIN privileges ON privileges.id = privileges_roles.privilege_id" ]
+    }
+  }
+
+  named_scope :active, :conditions => { :status => 'active' }
 
   def self.task_assignees_for_jurisdictions(jurisdictions)
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
@@ -244,6 +253,10 @@ class User < ActiveRecord::Base
 
       role_memberships.build(attributes)
     end
+  end
+
+  def state_manager?
+    is_entitled_to?(:approve_event_at_state)
   end
 
   def can_create?

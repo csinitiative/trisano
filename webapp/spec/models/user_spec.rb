@@ -137,7 +137,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       before(:each) do
         @admin_role =Factory.create(:role, :role_name => "Administrator")
         @administer_privilege = Factory.create(:privilege, :priv_name => "administer")
-        add_privilege_to_role_in_all_jurisditcions(@administer_privilege, @admin_role)
+        add_privilege_to_role_in_all_jurisdictions(@administer_privilege, @admin_role)
 
         @user.attributes = {
           :role_membership_attributes => [
@@ -340,7 +340,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @state_manager_role =Factory.create(:role, :role_name => "State Manager")
 
         ["view_event", "create_event", "update_event", "approve_event_at_state", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @state_manager_role)
+          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @state_manager_role)
         end
         
         @user.attributes = {
@@ -437,7 +437,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @lhd_manager_role =Factory.create(:role, :role_name => "LHD Manager")
 
         ["view_event", "create_event", "update_event", "approve_event_at_state", "approve_event_at_lhd", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @lhd_manager_role)
+          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @lhd_manager_role)
         end
         
         @user.attributes = {
@@ -529,7 +529,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @surveillance_manager_role =Factory.create(:role, :role_name => "Surveillance Manager")
 
         ["view_event", "create_event", "update_event", "accept_event_for_lhd", "route_event_to_investigator", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisditcions(Factory(:privilege, :priv_name => priv_name), @surveillance_manager_role)
+          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @surveillance_manager_role)
         end
 
         @user.attributes = {
@@ -767,3 +767,37 @@ describe User, 'task view settings' do
 
 end
 
+describe User do
+
+  before do
+    create_role_with_privileges!('State Manager', :approve_event_at_state)
+    create_user_in_role!('State Manager', 'Spongebob Squarepants')
+    create_user_in_role!('State Manager', 'Patrick Star').disable
+  end
+
+  it "should find all state managers" do
+    results = User.state_managers
+    assert(results.map(&:best_name).include?('Spongebob Squarepants'),
+           "'Spongebob' should have been included in state managers")
+    assert(results.map(&:best_name).include?('Patrick Star'),
+           "'Patrick Star' should have been included in state managers")
+
+    non_managers = results.reject(&:state_manager?)
+    non_managers.each {|nm| p nm.privs}
+    assert(non_managers.empty?,
+           "Expected zero non-managers, but received #{non_managers.inspect}")
+  end
+
+  it "should find active state managers" do
+    results = User.state_managers.active
+    assert(results.map(&:best_name).include?('Spongebob Squarepants'),
+           "'Spongebob' should have been included in active state managers")
+    assert(!results.map(&:best_name).include?('Patrick Star'),
+           "'Patrick Star' should not have been included in active state managers")
+
+    non_managers = results.reject(&:state_manager?)
+    non_managers.each {|nm| p nm.privs}
+    assert(non_managers.empty?,
+           "Expected zero non-managers, but received #{non_managers.inspect}")
+  end
+end

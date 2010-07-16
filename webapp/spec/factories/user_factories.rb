@@ -119,10 +119,10 @@ end
 
 def create_super_role
   @super_role = Factory(:privileged_role)
-  Privilege.all.each { |p| add_privilege_to_role_in_all_jurisditcions(p, @super_role) }
+  Privilege.all.each { |p| add_privilege_to_role_in_all_jurisdictions(p, @super_role) }
 end
 
-def add_privilege_to_role_in_all_jurisditcions(privilege, role)
+def add_privilege_to_role_in_all_jurisdictions(privilege, role)
   Place.jurisdictions.each do |j|
     attr = {:jurisdiction_id => j.entity_id, :privilege => privilege}
     role.privileges_roles.build(attr).save!
@@ -132,3 +132,47 @@ end
 def logout
   User.current_user = nil
 end
+
+def create_role_with_privileges!(role_name, *privileges)
+  role = create_role!(role_name)
+  privileges.each do |priv_name|
+    privilege = create_privilege!(priv_name.to_s)
+    add_privilege_to_role_in_all_jurisdictions(privilege, role)
+  end
+  role
+end
+
+def create_privilege!(priv_name)
+  priv = Privilege.first(:conditions => { :priv_name => priv_name })
+  unless priv
+    priv = Factory.create(:privilege, :priv_name => priv_name.to_s)
+  end
+  priv
+end
+
+def create_role!(role_name)
+  role = Role.first(:conditions => ['lower(role_name) = ?', role_name.downcase])
+  unless role
+    role = Factory.create(:role, :role_name => role_name)
+  end
+  raise "Role '#{role_name}' couldn't be found" unless role
+  role
+end
+
+def create_user_in_role!(role_name, user_name)
+  name = user_name.split(' ')
+  user = Factory.create(:user, {
+                          :first_name => name.first,
+                          :last_name => name.last,
+                          :uid => name.join('_')
+                        })
+  role = create_role!(role_name)
+  Place.jurisdictions.each do |j|
+    RoleMembership.create!({ :jurisdiction_id => j.entity_id,
+                             :user_id => user.id,
+                             :role_id => role.id })
+  end
+  yield user if block_given?
+  user
+end
+

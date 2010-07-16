@@ -70,4 +70,8 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
     end
   end
 
+  it "should belong to a state manager" do
+    should belong_to(:state_manager)
+  end
+
 end

@@ -39,6 +39,10 @@ module Trisano
               :order => 'created_at ASC',
               :dependent => :destroy
 
+            base.belongs_to :state_manager, {
+              :class_name => User
+            }
+
             base.accepts_nested_attributes_for :expected_delivery_facility, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
@@ -46,7 +50,7 @@ module Trisano
             base.accepts_nested_attributes_for :actual_delivery_facility, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
-            
+
             base.accepts_nested_attributes_for :health_care_provider, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
@@ -56,6 +60,7 @@ module Trisano
         def prepare_perinatal_hep_b_data
           prepare_expected_delivery_facility
           prepare_actual_delivery_facility
+          prepare_health_care_provider
         end
 
         def prepare_expected_delivery_facility
@@ -63,7 +68,9 @@ module Trisano
           pe = edf.place_entity || edf.build_place_entity
           pe.place || pe.build_place
           pe.telephones.build if pe.telephones.empty?
-          
+        end
+
+        def prepare_health_care_provider
           hcp = self.health_care_provider || self.build_health_care_provider
           person_entity = hcp.person_entity || hcp.build_person_entity
           person_entity.person || person_entity.build_person

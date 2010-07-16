@@ -45,3 +45,18 @@ Then /^I should see printed (.+) delivery facility phone numbers:$/ do |type, ph
   end
 end
 
+Given /^a Hepatitis B Pregnancy Event exists$/ do
+  @event = create_basic_event('morbidity', 'Squarepants', 'Hepatitis B Pregnancy Event')
+end
+
+Then /^I should see state manager "([^\"]*)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+When /^I print the Administrative CMR data$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see state manager "([^\"]*)" printed$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end

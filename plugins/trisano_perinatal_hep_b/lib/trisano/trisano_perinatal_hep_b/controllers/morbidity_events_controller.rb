@@ -10,6 +10,7 @@ module Trisano
             base.before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type, :remove_expected_delivery_facility]
             base.before_filter :render_perinatal_hep_b_fields, :only => [:new, :edit, :update, :create]
             base.before_filter :render_perinatal_hep_b_show,   :only => [:show]
+            base.before_filter :render_state_manager_fields,   :only => [:new, :edit, :update, :create]
           end
         end
 
@@ -62,18 +63,28 @@ module Trisano
         private
 
         def render_perinatal_hep_b_fields
-          after_core_partials[core_field_key] << {
+          after_core_partials[due_date_core_field] << {
             :partial => 'events/perinatal_hep_b_fields'
           }
         end
 
         def render_perinatal_hep_b_show
-          after_core_partials[core_field_key] << {
+          after_core_partials[due_date_core_field] << {
             :partial => 'events/perinatal_hep_b_show'
           }
         end
 
-        def core_field_key
+        def render_state_manager_fields
+          after_core_partials[event_name_core_field] << {
+            :partial => 'events/state_manager_edit'
+          }
+        end
+
+        def event_name_core_field
+          "morbidity_event[event_name]"
+        end
+
+        def due_date_core_field
           "morbidity_event[interested_party][risk_factor][pregnancy_due_date]"
         end
 
