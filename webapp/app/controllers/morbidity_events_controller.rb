@@ -109,7 +109,7 @@ class MorbidityEventsController < EventsController
 
   def update
     go_back = params.delete(:return)
-    
+
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.attributes = params[:morbidity_event]
 

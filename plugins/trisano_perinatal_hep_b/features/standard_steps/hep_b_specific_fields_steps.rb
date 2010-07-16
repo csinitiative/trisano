@@ -49,14 +49,20 @@ Given /^a Hepatitis B Pregnancy Event exists$/ do
   @event = create_basic_event('morbidity', 'Squarepants', 'Hepatitis B Pregnancy Event')
 end
 
-Then /^I should see state manager "([^\"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Then /^I should see state manager "([^\"]*)"$/ do |name|
+  assert_state_manager_data(name)
 end
 
-When /^I print the Administrative CMR data$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^I should see state manager "([^\"]*)" printed$/ do |manager_name|
+  assert_printed_field(:administrative, "State manager:")
 end
 
-Then /^I should see state manager "([^\"]*)" printed$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Then /^I should not see the "([^\"]*)" select$/ do |label_text|
+  assert_no_tag 'label', {
+    :content => label_text,
+    :before => {
+      :tag => 'select'
+    }
+  }
 end
+

@@ -1,6 +1,7 @@
 es:
   event_fields:
     morbidity_event:
+      state_manager_id: State manager (Perinatal Hep B) (EN)
       expected_delivery_facility:
         place_entity:
           place:

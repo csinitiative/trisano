@@ -1,0 +1,4 @@
+-fields_for(@event, :builder => ExtendedFormBuilder) do |e|
+  -core_element_show(:state_manager_id, e, :horiz) do
+    =e.label(:state_manager_id, t(:state_manager, :scope => :perinatal_hep_b_management))
+    %span=h(e.object.state_manager.try(:best_name))

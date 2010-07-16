@@ -40,7 +40,7 @@ module Trisano
               :dependent => :destroy
 
             base.belongs_to :state_manager, {
-              :class_name => User
+              :class_name => 'User'
             }
 
             base.accepts_nested_attributes_for :expected_delivery_facility, {

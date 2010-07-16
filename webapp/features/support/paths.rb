@@ -48,8 +48,8 @@ def path_to(page_name)
   when /view the CMR/i
     cmr_path @event
 
-  when /print the Clinical CMR data/i
-    cmr_path(@event, :format => :print, 'print_options[]' => 'Clinical')
+  when /print the (.+) CMR data/i
+    cmr_path(@event, :format => :print, 'print_options[]' => $1)
 
   when /the export CMR as csv page/i
     export_single_cmr_path @event, :format => 'csv'
