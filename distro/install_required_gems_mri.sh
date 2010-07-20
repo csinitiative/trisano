@@ -38,7 +38,7 @@ $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hpricot-0.
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rubyforge-1.0.0.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/hoe-1.7.0.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-0.7.6.gem
-$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.3.3.gem
+$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/nokogiri-1.4.2.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mechanize-0.9.2.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ci_reporter-1.5.1.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rest-open-uri-1.0.0.gem
