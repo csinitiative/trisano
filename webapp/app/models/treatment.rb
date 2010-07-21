@@ -20,19 +20,28 @@ class Treatment < ActiveRecord::Base
   
   validates_presence_of :treatment_name, :treatment_type_id
 
-  def self.load!(hashes)
-    transaction do
-      attributes = Treatment.new.attribute_names
-      hashes.each do |attrs|
-        treatment_type_code = attrs.fetch('treatment_type_code')
-        code = Code.find_by_code_name_and_the_code('treatment_type', treatment_type_code)
-        raise "Could not find treatment_type code for #{treatment_type_code}" if code.nil?
-        unless self.find_by_treatment_type_id_and_treatment_name(code.id, attrs["treatment_name"])
-          load_attrs = attrs.reject { |key, value| !attributes.include?(key) }
-          load_attrs.merge!(:treatment_type_id => code.id)
-          Treatment.create!(load_attrs)
+  class << self
+
+    def all_by_type(type_code)
+      raise ArgumentError unless type_code.is_a?(Code)
+      self.find(:all, :conditions => ["treatment_type_id = ?", type_code.id], :include => :treatment_type)
+    end
+    
+    def load!(hashes)
+      transaction do
+        attributes = Treatment.new.attribute_names
+        hashes.each do |attrs|
+          treatment_type_code = attrs.fetch('treatment_type_code')
+          code = Code.find_by_code_name_and_the_code('treatment_type', treatment_type_code)
+          raise "Could not find treatment_type code for #{treatment_type_code}" if code.nil?
+          unless self.find_by_treatment_type_id_and_treatment_name(code.id, attrs["treatment_name"])
+            load_attrs = attrs.reject { |key, value| !attributes.include?(key) }
+            load_attrs.merge!(:treatment_type_id => code.id)
+            Treatment.create!(load_attrs)
+          end
         end
       end
     end
   end
+
 end

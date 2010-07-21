@@ -25,6 +25,10 @@ Factory.define(:gender, :parent => :external_code) do |g|
   g.code_name 'gender'
 end
 
+Factory.define(:treatment_type, :parent => :code) do |g|
+  g.code_name 'treatment_type'
+end
+
 # sequences
 
 Factory.sequence(:code_name) do |n|

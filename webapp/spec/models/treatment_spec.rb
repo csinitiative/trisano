@@ -19,10 +19,34 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Treatment do
 
-  it "should return treatments by treatment type" do
-    pending
-  end
+  describe "returning treatments" do
+    before(:each) do
+      @treatment_type_one = Factory.create(:treatment_type, :the_code => "TT1", :code_description => "Treatment Type 1")
+      @treatment_type_two = Factory.create(:treatment_type, :the_code => "TT2", :code_description => "Treatment Type 2")
+      @treatment_type_three = Factory.create(:treatment_type, :the_code => "TT3", :code_description => "Treatment Type 2")
 
+      @treatment_type_one_first = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+      @treatment_type_one_second = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+      @treatment_type_one_third = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+
+      @treatment_type_two_first = Factory.create(:treatment, :treatment_type => @treatment_type_two)
+      @treatment_type_two_second = Factory.create(:treatment, :treatment_type => @treatment_type_two)
+    end
+
+    describe "by type" do
+      it "should raise an error if not passed a code" do
+        lambda { Treatment.all_by_type("TT1") }.should raise_error(ArgumentError)
+      end
+
+      it "should return treatments by treatment type" do
+        Treatment.all_by_type(@treatment_type_one).size.should == 3
+        Treatment.all_by_type(@treatment_type_two).size.should == 2
+        Treatment.all_by_type(@treatment_type_three).size.should == 0
+      end
+    end
+    
+  end
+  
   describe "loading" do
     before(:each) do
       @code = Factory.create(:code, :code_name => "treatment_type", :the_code => "TC", :code_description => "Test Code")
