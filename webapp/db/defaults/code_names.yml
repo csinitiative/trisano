@@ -75,3 +75,6 @@
 
 - code_name: "loinc_scale"
   external: true
+
+- code_name: "treatment_type"
+  external: false

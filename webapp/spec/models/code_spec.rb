@@ -42,4 +42,51 @@ describe Code do
     end
   end
 
+  describe "loading" do
+
+    before(:each) do
+      @code_name = Factory.create(:code_name, :code_name => "test_codes")
+      @code_hashes = [
+        {"sort_order"=>nil, "the_code"=>"TC1", "code_name"=>"#{@code_name.code_name}", "code_description"=>"Test Code 1"},
+        {"sort_order"=>nil, "the_code"=>"TC2", "code_name"=>"#{@code_name.code_name}", "code_description"=>"Test Code 2"}
+      ]
+    end
+    
+    it "should load codes into the database" do
+      lambda {Code.load!(@code_hashes)}.should change {Code.count}.by(2)
+      Code.find_by_code_name_and_the_code(@code_name.code_name, 'TC1').should_not be_nil
+      Code.find_by_code_name_and_the_code(@code_name.code_name, 'TC2').should_not be_nil
+    end
+
+    it "should fail if an element in the hash is missing code_name" do
+      @code_hashes << {"sort_order"=>nil, "the_code"=>"TC3", "code_description"=>"Test Code 3"}
+      lambda {Code.load!(@code_hashes)}.should raise_error(RuntimeError)
+    end
+    
+    it "should fail if an element in the hash is missing the_code" do
+      @code_hashes << {"sort_order"=>nil, "code_name"=>"#{@code_name.code_name}", "code_description"=>"Test Code 3"}
+      lambda {Code.load!(@code_hashes)}.should raise_error(ActiveRecord::RecordInvalid)
+    end
+    
+    it "should fail if an element in the hash is missing code_description" do
+      @code_hashes << {"sort_order"=>nil, "the_code"=>"TC3", "code_name"=>"#{@code_name.code_name}"}
+      lambda {Code.load!(@code_hashes)}.should raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "should fail if the code name provided is not found" do
+      @code_hashes << {"sort_order"=>nil, "code_name" => "missing_code_name", "the_code"=>"TC3", "code_description"=>"Test Code 3"}
+      lambda {Code.load!(@code_hashes)}.should raise_error(RuntimeError)
+    end
+
+    it "should not fail if there are extra attributes in the hash" do
+      @code_hashes << {"sort_order"=>nil, "code_name"=>"#{@code_name.code_name}", "the_code"=>"TC3", "code_description"=>"Test Code 3", "extra_attribute" => "extra_stuff_needed_for_load_logic"}
+      lambda {Code.load!(@code_hashes)}.should change {Code.count}.by(3)
+    end
+
+    it "should not change anything if the values have already been loaded" do
+      lambda {Code.load!(@code_hashes)}.should change {Code.count}.by(2)
+      lambda {Code.load!(@code_hashes)}.should change {Code.count}.by(0)
+    end
+  end
+
 end

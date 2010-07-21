@@ -71,6 +71,19 @@ class Code < ActiveRecord::Base
     self.lab_place_type.id if self.lab_place_type
   end
 
+  def self.load!(hashes)
+    transaction do
+      attributes = Code.new.attribute_names
+      hashes.each do |attrs|
+        raise "Could not find code name #{attrs["code_name"]}" unless CodeName.find_by_code_name(attrs["code_name"])
+        unless self.find_by_code_name_and_the_code(attrs["code_name"], attrs["the_code"])
+          load_attrs = attrs.reject { |key, value| !attributes.include?(key) }
+          Code.create!(load_attrs)
+        end
+      end
+    end
+  end
+
   private
 
   def self.safe_table_access

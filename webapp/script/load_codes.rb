@@ -27,7 +27,7 @@ code_names = YAML::load_file "#{RAILS_ROOT}/db/defaults/code_names.yml"
 CodeName.transaction do
   code_names.each do |code_name|
     c = CodeName.find_or_initialize_by_code_name(:code_name => code_name['code_name'],
-                                                 :external => code_name['external'])
+      :external => code_name['external'])
     c.attributes = code_name unless c.new_record?
     c.save!
 
@@ -44,14 +44,14 @@ Code.transaction do
     begin
       if(@quick_external[code['code_name']])
         c = ExternalCode.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'],
-                                                                      :the_code => code['the_code'],
-                                                                      :code_description => code['code_description'],
-                                                                      :sort_order => code['sort_order'])
+          :the_code => code['the_code'],
+          :code_description => code['code_description'],
+          :sort_order => code['sort_order'])
       else
         c = Code.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'],
-                                                              :the_code => code['the_code'],
-                                                              :code_description => code['code_description'],
-                                                              :sort_order => code['sort_order'])
+          :the_code => code['the_code'],
+          :code_description => code['code_description'],
+          :sort_order => code['sort_order'])
       end
       c.attributes = code unless c.new_record?
       c.save!
@@ -68,9 +68,9 @@ def load_codes(model, codes)
   model.transaction do
     codes.each do |code|
       c = model.find_or_initialize_by_code_name_and_the_code(:code_name => code['code_name'],
-                                                             :the_code => code['the_code'],
-                                                             :code_description => code['code_description'],
-                                                             :sort_order => code['sort_order'])
+        :the_code => code['the_code'],
+        :code_description => code['code_description'],
+        :sort_order => code['sort_order'])
       c.attributes = code unless c.new_record?
       c.save!
     end

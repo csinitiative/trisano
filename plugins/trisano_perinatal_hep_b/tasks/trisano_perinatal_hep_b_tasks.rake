@@ -26,17 +26,18 @@ namespace :trisano do
 
     desc "Perinatal Hep B defaults"
     task :load_defaults => :environment do |t|
+      puts "Loading Perinatal Hep B codes"
+      sh("#{RAILS_ROOT}/script/runner #{File.join(File.dirname(__FILE__), '..', 'script', 'load_codes.rb')}")
       puts "Loading Perinatal Hep B default data"
-      load_defaults = File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')
-      sh("#{RAILS_ROOT}/script/runner #{load_defaults}")
+      sh("#{RAILS_ROOT}/script/runner #{File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')}")
       sh("#{RAILS_ROOT}/script/runner 'CoreFieldsDisease.create_perinatal_hep_b_associations'")
       sh("#{RAILS_ROOT}/script/runner 'CsvField.create_perinatal_hep_b_associations'")
     end
 
     task :feature_prep do |t|
       puts "Prepping perinatal hep b default data"
-      load_defaults = File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')
-      sh("#{RAILS_ROOT}/script/runner -e test #{load_defaults}")
+      sh("#{RAILS_ROOT}/script/runner -e test #{File.join(File.dirname(__FILE__), '..', 'script', 'load_codes.rb')}")
+      sh("#{RAILS_ROOT}/script/runner -e test #{File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')}")
     end
 
   end

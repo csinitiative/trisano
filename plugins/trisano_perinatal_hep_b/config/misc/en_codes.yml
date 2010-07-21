@@ -1,0 +1,6 @@
+   ### Treatment Types ###
+
+- code_name:        "treatment_type"
+  the_code:         "PHBV"
+  code_description: "Perinatal Hepatitis B Vaccinations"
+  sort_order:       

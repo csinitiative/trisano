@@ -26,3 +26,4 @@ es:
     test_result: Resultado de prueba
     test_status: Estado de prueba
     loinc_scale: Escala
+    treatment_type: Treatment Type (EN)

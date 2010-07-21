@@ -26,3 +26,4 @@ en:
     test_result: Test Result
     test_status: Test Status
     loinc_scale: Scale
+    treatment_type: Treatment Type
