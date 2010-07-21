@@ -24,9 +24,9 @@ base:
     extension: "^(\d{1,6})$"
 
   # Customize to include country codes
-    use_country_code: true
-    country_code: "^(\d{1,3})$"
-    country_code_format: "+%s"
+  # use_country_code: true
+  # country_code: "^(\d{1,3})$"
+  # country_code_format: "+%s"
 
   # Configure the format of a phone number in custom forms created in formbuilder
   answer:
