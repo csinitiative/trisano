@@ -115,6 +115,7 @@ PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
 PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
 SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
 SchemaMeta = Java::OrgPentahoPmsSchema::SchemaMeta
+#KettleEnvironment = Java::OrgPentahoDiCore::KettleEnvironment
 AggregationSettings = Java::OrgPentahoPmsSchemaConceptTypesAggregation::AggregationSettings
 Concept = Java::OrgPentahoPmsSchemaConcept::Concept
 ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
@@ -127,6 +128,7 @@ TableTypeSettings = Java::OrgPentahoPmsSchemaConceptTypesTabletype::TableTypeSet
 DatabaseMeta = Java::OrgPentahoDiCoreDatabase::DatabaseMeta
 SecurityService = Java::OrgPentahoPmsSchemaSecurity::SecurityService
 SecurityReference = Java::OrgPentahoPmsSchemaSecurity::SecurityReference
+BooleanProperty = Java::OrgPentahoPmsSchemaConceptTypesBool::ConceptPropertyBoolean
 
 $event_types = {}
 
@@ -256,13 +258,15 @@ end
 
 def initialize_model(model, meta)
   model.set_connection meta.find_database('TriSano')
+# Sample code so we know how to push outer join conditions into the WHERE clause if need be
+#  model.concept.add_property BooleanProperty.new('delay_outer_join_conditions', true)
   secure model
   return model
 end
 
 def initialize_meta(meta)
   setup_security_reference meta
-  dm = DatabaseMeta.new('TriSano', 'POSTGRESQL', 'Native', trisano_db_host, trisano_db_name, trisano_db_port, trisano_db_user, trisano_db_password)
+  dm = DatabaseMeta.new('TriSano', 'PostgreSQL', 'Native', trisano_db_host, trisano_db_name, trisano_db_port, trisano_db_user, trisano_db_password)
   meta.add_database dm
   return meta
 end
@@ -635,6 +639,8 @@ if __FILE__ == $0
   metadatadir = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage')
   FileUtils.mkdir metadatadir if (not File.exist?(metadatadir))
   metadataxmi = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', 'metadata.xmi')
+# Sample code so we know how to work with Pentaho 3.6
+  #KettleEnvironment.init()
 
   db_connection do |conn|
     # load plugins
