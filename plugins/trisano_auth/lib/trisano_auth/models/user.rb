@@ -44,6 +44,16 @@ module TrisanoAuth
 
           load_default_users_without_auth(new_users)
         end
+        
+        def new(params = nil)
+          user = super(params)
+          random_string = ActiveSupport::SecureRandom.hex(16)
+          
+          user.password = random_string
+          user.password_confirmation = random_string
+          
+          return user
+        end
       end
 
       def self.included(base)
