@@ -769,7 +769,11 @@ end
 
 describe User do
 
-  before do
+  before(:all) do
+    Fixtures.reset_cache
+  end
+
+  before(:each) do
     create_role_with_privileges!('State Manager', :approve_event_at_state)
     create_user_in_role!('State Manager', 'Spongebob Squarepants')
     create_user_in_role!('State Manager', 'Patrick Star').disable
