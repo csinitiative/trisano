@@ -1,0 +1,38 @@
+-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- unless association_recorded?(@event.interested_party.treatments)
+  %b{ :style => 'font-size: 11px' }=t('no_treatments', :thing => h(@event.class.name.underscore.humanize.downcase))
+- else
+  .three-valued-row
+    .short
+      %span.print-label= ct('treatment_given')
+    .short
+      %span.print-label= ct('treatment_name')
+    .short
+      %span.print-label= ct('treatment_date')
+    .right
+      %span.print-label= ct('stop_treatment_date')
+    %br
+    - for treatment in @event.interested_party.treatments
+      .three-valued-row
+        .short
+          %span.print-value= h(l(treatment.treatment_given_yn))
+        .short
+          %span.print-value= h(treatment.treatment.try(:treatment_name))
+        .short
+          %span.print-value= ld(treatment.treatment_date)
+        .right
+          %span.print-value= ld(treatment.stop_treatment_date)
