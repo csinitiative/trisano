@@ -25,7 +25,7 @@ describe 'Adding partial treatments to a CMR' do
     @browser.open '/trisano/cmrs'
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, { :last_name => "Smith", :first_name => "Jersey" })
-    add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes"})
+    add_treatment(@browser, {:treatment_name => "Leeches", :treatment_given => "label=Yes"})
     save_cmr(@browser).should be_true
     @browser.is_text_present('Treatment Date').should be_true
     @browser.is_text_present('Leeches').should be_true

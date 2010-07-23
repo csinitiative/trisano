@@ -17,6 +17,7 @@
 
 class ParticipationsTreatment < ActiveRecord::Base
   belongs_to :participation
+  belongs_to :treatment
   belongs_to :treatment_given_yn, :class_name => 'ExternalCode'
 
   validates_date :treatment_date, :allow_blank => true,
@@ -26,5 +27,5 @@ class ParticipationsTreatment < ActiveRecord::Base
                                        :on_or_before => lambda { Date.today },
                                        :on_or_after => :treatment_date
 
-  validates_length_of :treatment, :maximum => 255, :allow_blank => true
+  validates_length_of :treatment_name, :maximum => 255, :allow_blank => true
 end

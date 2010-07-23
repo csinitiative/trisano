@@ -55,7 +55,7 @@ describe 'Encounter event treatments' do
   it 'should add a treatment to the encounter' do
     @browser.click("link=Edit Encounter")
     @browser.wait_for_page_to_load($load_time)
-    add_treatment(@browser, { :treatment_given => "Yes", :treatment => @treatment_name, :treatment_date => @treatment_date })
+    add_treatment(@browser, { :treatment_given => "Yes", :treatment_name => @treatment_name, :treatment_date => @treatment_date })
     save_and_exit(@browser)
     @browser.is_text_present(@treatment_name).should be_true
     @browser.is_text_present("2009-03-11").should be_true

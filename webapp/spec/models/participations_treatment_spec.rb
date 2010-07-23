@@ -27,7 +27,7 @@ describe ParticipationsTreatment do
   end
   
   it "should be valid with any treatment text and treatment received y/n" do
-    @pt.treatment = "Foot massage"
+    @pt.treatment_name = "Foot massage"
     @pt.treatment_given_yn_id = 1401
     @pt.should be_valid
   end

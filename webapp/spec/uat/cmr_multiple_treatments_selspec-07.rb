@@ -38,12 +38,12 @@ describe 'Adding multiple treatments to a CMR' do
     @browser.click "link=Add a Treatment"
     sleep(1)
 
-    add_treatment(@browser, {:treatment => "Leeches", :treatment_given => "label=Yes", :treatment_date => display_date})
+    add_treatment(@browser, {:treatment_name => "Leeches", :treatment_given => "label=Yes", :treatment_date => display_date})
 
     save_cmr(@browser).should be_true
     edit_cmr(@browser).should be_true
 
-    add_treatment(@browser, {:treatment => "Whiskey", :treatment_given => "label=Yes", :treatment_date => display_date}, 2)
+    add_treatment(@browser, {:treatment_name => "Whiskey", :treatment_given => "label=Yes", :treatment_date => display_date}, 2)
     save_cmr(@browser).should be_true
 
     @browser.is_text_present("Leeches").should be_true

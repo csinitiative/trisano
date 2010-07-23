@@ -3,9 +3,14 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_hel
 describe "Finding translated codes" do
 
   before :all do
+    DiseaseEvent.delete_all
+    ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns;")
+    Disease.delete_all
+    HospitalsParticipation.delete_all
+    Participation.delete_all
     Event.delete_all
-    PersonEntity.delete_all
     Person.delete_all
+    PersonEntity.delete_all
   end
 
   after :all do

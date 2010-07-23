@@ -458,8 +458,8 @@ csv_field_00028:
 csv_field_00085: 
   sort_order: 20
   export_group: treatment
-  long_name: treatment
-  use_description: treatment.treatment
+  long_name: treatment_name
+  use_description: treatment.treatment_name
   short_name: 
   use_code: 
   event_type: 

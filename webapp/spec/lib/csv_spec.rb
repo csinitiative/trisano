@@ -300,45 +300,45 @@ describe Export::Csv do
           :medical_record_number => "12345-3"
         )
         
-        @treatment_one = add_treatment_to_event(@event, :treatment => "Foot massage")
-        @treatment_two = add_treatment_to_event(@event, :treatment => "Some pills")
+        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
+        @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
 
         output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
-        assert_values_in_result(output, 1, :treatment => /Foot massage/)
+        assert_values_in_result(output, 1, :treatment_name => /Foot massage/)
 
         assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
-        assert_values_in_result(output, 2, :treatment => /Some pills/)
+        assert_values_in_result(output, 2, :treatment_name => /Some pills/)
 
         assert_values_in_result(output, 3, :patient_hospitalization_facility => /Casteen Hospital/)
-        assert_values_in_result(output, 3, :treatment => //)
+        assert_values_in_result(output, 3, :treatment_name => //)
       end
       
       it "should render properly when there are more treatments than hospitals" do
-        @treatment_one = add_treatment_to_event(@event, :treatment => "Foot massage")
-        @treatment_two = add_treatment_to_event(@event, :treatment => "Some pills")
-        @treatment_three = add_treatment_to_event(@event, :treatment => "Lots of love")
+        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
+        @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
+        @treatment_three = add_treatment_to_event(@event, :treatment_name => "Lots of love")
         
         output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
-        assert_values_in_result(output, 1, :treatment => /Foot massage/)
+        assert_values_in_result(output, 1, :treatment_name => /Foot massage/)
 
         assert_values_in_result(output, 2, :patient_hospitalization_facility => /Peabody Hospital/)
-        assert_values_in_result(output, 2, :treatment => /Some pills/)
+        assert_values_in_result(output, 2, :treatment_name => /Some pills/)
 
         assert_values_in_result(output, 3, :patient_hospitalization_facility => //)
-        assert_values_in_result(output, 3, :treatment => /Lots of love/)
+        assert_values_in_result(output, 3, :treatment_name => /Lots of love/)
       end
 
       it "should not render treatments if that option is not passed to the export" do
-        @treatment_one = add_treatment_to_event(@event, :treatment => "Foot massage")
+        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
         output = to_arry(Export::Csv.export(@event))
         output.size.should == 3
-        output[0].include?("treatment").should be_false
+        output[0].include?("treatment_name").should be_false
       end
 
       it "should render properly when there are more hospitals than contacts" do

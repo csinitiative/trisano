@@ -1679,13 +1679,13 @@ describe Event, 'cloning an event' do
           :treatment_given_yn_id => external_codes(:yesno_no).id,
           :treatment_date => Date.today,
           :stop_treatment_date => Date.today + 1,
-          :treatment => "Leeches"
+          :treatment_name => "Leeches"
         },
         {
           :treatment_given_yn_id => external_codes(:yesno_yes).id,
           :treatment_date => Date.today - 2,
           :stop_treatment_date => Date.today - 1,
-          :treatment => "Maggots"
+          :treatment_name => "Maggots"
         }
       ]
       @org_event = MorbidityEvent.create(@event_hash)
@@ -1693,11 +1693,11 @@ describe Event, 'cloning an event' do
 
       @new_event.interested_party.treatments.size.should == 2
       @new_event.interested_party.treatments.each do |t|
-        if t.treatment == "Leeches"
+        if t.treatment_name == "Leeches"
           t.treatment_given_yn_id.should == external_codes(:yesno_no).id
           t.treatment_date.should == Date.today
           t.stop_treatment_date.should == Date.today + 1
-        elsif t.treatment == "Maggots"
+        elsif t.treatment_name == "Maggots"
           t.treatment_given_yn_id.should == external_codes(:yesno_yes).id
           t.treatment_date.should == Date.today - 2
           t.stop_treatment_date.should == Date.today - 1

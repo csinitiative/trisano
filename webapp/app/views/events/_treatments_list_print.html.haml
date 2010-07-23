@@ -20,7 +20,7 @@
     .short
       %span.print-label= ct('treatment_given')
     .short
-      %span.print-label= ct('treatment')
+      %span.print-label= ct('treatment_name')
     .short
       %span.print-label= ct('treatment_date')
     .right
@@ -31,7 +31,7 @@
         .short
           %span.print-value= h(l(treatment.treatment_given_yn))
         .short
-          %span.print-value= h(treatment.treatment)
+          %span.print-value= h(treatment.treatment_name)
         .short
           %span.print-value= ld(treatment.treatment_date)
         .right

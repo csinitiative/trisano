@@ -402,7 +402,7 @@ en:
   no_treatments: "No treatments have been recorded for this {{thing}}"
   treatments: "Treatments"
   treatment_given: 'Treatment Given'
-  treatment: 'Treatment'
+  treatment_name: 'Treatment'
   treatment_date: 'Treatment Date'
   stop_treatment_date: 'Stop Treatment Date'
   add_treatment: "Add a Treatment"

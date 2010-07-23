@@ -64,7 +64,7 @@ module CsvSpecHelper
   def treatment_header
     %w(treatment_record_id
     treatment_given
-    treatment
+    treatment_name
     treatment_date
     stop_treatment_date).join(",")
   end
@@ -320,7 +320,7 @@ module CsvSpecHelper
     out = ""
     out << '"",' # treatment.id
     out << "#{@treatment.treatment_given_yn.code_description},"
-    out << "#{@treatment.treatment},"
+    out << "#{@treatment.treatment_name},"
     out << "#{@treatment.treatment_date},"
     out << "#{@treatment.stop_treatment_date}"
   end
@@ -347,7 +347,7 @@ module CsvSpecHelper
 
     @treatment = Factory.build(:participations_treatment)
     @treatment.stubs(:treatment_given_yn).returns(simple_reference)
-    @treatment.stubs(:treatment).returns("Antibiotics")
+    @treatment.stubs(:treatment_name).returns("Antibiotics")
     @treatment.stubs(:treatment_date).returns("2008-02-01")
     @treatment.stubs(:stop_treatment_date).returns("2009-02-01")
 

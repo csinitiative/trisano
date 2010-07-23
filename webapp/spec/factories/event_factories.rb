@@ -95,7 +95,7 @@ Factory.define :participations_risk_factor do |rf|
 end
 
 Factory.define :participations_treatment do |pt|
-  pt.treatment { Factory.next(:treatment_name) }
+  pt.treatment_name { Factory.next(:treatment_name) }
 end
 
 Factory.define :participations_contact do |pc|

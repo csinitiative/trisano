@@ -113,7 +113,7 @@ en:
       participations_treatment:
         treatment_given_yn_id: Treatment given
         treatment_given_yn: Treatment given
-        treatment: Treatment
+        treatment_name: Treatment
         treatment_date: Date of treatment
         stop_treatment_date: Date treatment stopped
         _delete: Remove

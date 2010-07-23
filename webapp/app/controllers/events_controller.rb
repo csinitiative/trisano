@@ -33,14 +33,14 @@ class EventsController < ApplicationController
   end
 
   def auto_complete_for_treatment
-    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (treatment) treatment
+    @items = ExternalCode.find_by_sql(["SELECT DISTINCT on (treatment_name) treatment_name
                                         FROM participations_treatments
-                                        WHERE LOWER(treatment) LIKE ?
-                                        ORDER BY treatment
+                                        WHERE LOWER(treatment_name) LIKE ?
+                                        ORDER BY treatment_name
                                         LIMIT 20",
         '%' + params[:treatment].downcase + '%'])
 
-    render :inline => "<%= auto_complete_result(@items, 'treatment') %>"
+    render :inline => "<%= auto_complete_result(@items, 'treatment_name') %>"
   end
 
   def auto_complete_for_clinicians_search

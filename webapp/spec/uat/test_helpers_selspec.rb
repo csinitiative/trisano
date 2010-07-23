@@ -42,7 +42,7 @@ describe 'Trisano helper methods' do
   
   it 'should save the treatment info' do
     edit_cmr(@browser).should be_true
-    add_treatment(@browser, {:treatment_given => 'label=Yes', :treatment => 'Leaches'}, 1)
+    add_treatment(@browser, {:treatment_given => 'label=Yes', :treatment_name => 'Leaches'}, 1)
     save_cmr(@browser).should be_true
   end
   

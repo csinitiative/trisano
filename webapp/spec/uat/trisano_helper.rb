@@ -512,7 +512,7 @@ module TrisanoHelper
       "morbidity_event_new_diagnostic_attributes__secondary_entity_id" => "Alta View Hospital",
       #Treatment fields
       "morbidity_event_active_patient__new_treatment_attributes__treatment_given_yn_id" => "Yes",
-      "morbidity_event_active_patient__new_treatment_attributes__treatment" => NedssHelper.get_unique_name(1),
+      "morbidity_event_active_patient__new_treatment_attributes__treatment_name" => NedssHelper.get_unique_name(1),
       #Clinician fields
       "morbidity_event_new_clinician_attributes__last_name" => NedssHelper.get_unique_name(1),
       "morbidity_event_new_clinician_attributes__first_name" => NedssHelper.get_unique_name(1),
@@ -706,7 +706,7 @@ module TrisanoHelper
     browser.click("link=Add a Treatment") unless index == 1
     sleep(1)
     browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment]')]",    attributes[:treatment])
+    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment_name]')]",    attributes[:treatment_name])
     browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
   end
 

@@ -3,10 +3,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_hel
 describe "Finding translated gender" do
 
   before :all do
+    HospitalsParticipation.delete_all
+    Participation.delete_all
     DiseaseEvent.delete_all
     Event.delete_all
-    PersonEntity.delete_all
     Person.delete_all
+    PersonEntity.delete_all
   end
 
   after :all do
@@ -20,11 +22,11 @@ describe "Finding translated gender" do
     @gender.code_translations.build(:locale => 'test', :code_description => 'xMale').save!
     @event = returning Factory.build(:morbidity_event) do |event|
       event.update_attributes!({
-        :interested_party_attributes => {
-          :person_entity_attributes => {
-            :person_attributes => {
-              :last_name    => 'James',
-              :birth_gender => @gender}}}})
+          :interested_party_attributes => {
+            :person_entity_attributes => {
+              :person_attributes => {
+                :last_name    => 'James',
+                :birth_gender => @gender}}}})
     end
   end
 

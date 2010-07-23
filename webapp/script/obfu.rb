@@ -144,7 +144,7 @@ def get_obfu_config
         {:field_loc => 7, :type => 'date', :keep_year => true} # date_diagnosed
       ]
     },
-    {#COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, treatment)
+    {#COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, treatment_name)
       :table_name => 'participations_treatments', :fields => [
         {:field_loc => 5, :type => 'date', :keep_year => true} # treatment_date
       ]

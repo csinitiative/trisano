@@ -406,7 +406,7 @@ es:
   no_treatments: "No se han registrado los tratamientos para este/a {{thing}}"
   treatments: "Tratamientos"
   treatment_given: 'Tratamiento Administrado'
-  treatment: 'Tratamiento'
+  treatment_name: 'Tratamiento'
   treatment_date: 'Fecha de Tratamiento'
   stop_treatment_date: 'Fecha del Fin de Tratamiento'
   add_treatment: "Agregar Tratamiento"

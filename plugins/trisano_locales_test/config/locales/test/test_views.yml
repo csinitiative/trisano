@@ -391,7 +391,7 @@ test:
   no_treatments: "xNo treatments have been recorded for this {{thing}}"
   treatments: "xTreatments"
   treatment_given: 'xTreatment Given'
-  treatment: 'xTreatment'
+  treatment_name: 'xTreatment'
   treatment_date: 'xTreatment Date'
   stop_treatment_date: 'xStop Treatment Date'
   add_treatment: "xAdd a Treatment"

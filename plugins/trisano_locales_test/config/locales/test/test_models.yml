@@ -110,7 +110,7 @@ test:
       participations_treatment:
         treatment_given_yn_id: xTreatment given
         treatment_given_yn: xTreatment given
-        treatment: xTreatment
+        treatment_name: xTreatment
         treatment_date: xDate of treatment
         stop_treatment_date: xDate treatment stopped
         _delete: xRemove
