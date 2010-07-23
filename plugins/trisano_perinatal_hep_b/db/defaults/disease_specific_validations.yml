@@ -1,0 +1,2 @@
+- disease_name: 'Hepatitis B Pregnancy Event'
+  validation_key: 'treatment_date_required'

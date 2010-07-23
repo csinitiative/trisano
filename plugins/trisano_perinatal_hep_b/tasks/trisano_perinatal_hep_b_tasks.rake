@@ -32,6 +32,7 @@ namespace :trisano do
       sh("#{RAILS_ROOT}/script/runner #{File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')}")
       sh("#{RAILS_ROOT}/script/runner 'CoreFieldsDisease.create_perinatal_hep_b_associations'")
       sh("#{RAILS_ROOT}/script/runner 'CsvField.create_perinatal_hep_b_associations'")
+      sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificValidation.create_perinatal_hep_b_associations'")
     end
 
     task :feature_prep do |t|
