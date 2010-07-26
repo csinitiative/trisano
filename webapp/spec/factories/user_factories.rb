@@ -123,6 +123,7 @@ def create_super_role
 end
 
 def add_privilege_to_role_in_all_jurisdictions(privilege, role)
+  create_jurisdiction_entity if Place.jurisdictions.empty?
   Place.jurisdictions.each do |j|
     attr = {:jurisdiction_id => j.entity_id, :privilege => privilege}
     role.privileges_roles.build(attr).save!
@@ -143,7 +144,7 @@ def create_role_with_privileges!(role_name, *privileges)
 end
 
 def create_privilege!(priv_name)
-  priv = Privilege.first(:conditions => { :priv_name => priv_name })
+  priv = Privilege.first(:conditions => { :priv_name => priv_name.to_s })
   unless priv
     priv = Factory.create(:privilege, :priv_name => priv_name.to_s)
   end

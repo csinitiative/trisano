@@ -175,7 +175,7 @@ class User < ActiveRecord::Base
   end
 
   named_scope :users_by_priv_name, lambda { |priv_name|
-    { :conditions => { :privileges => { :priv_name => priv_name } },
+    { :conditions => { :privileges => { :priv_name => priv_name.to_s } },
       :select => "DISTINCT ON(users.id) users.*",
       :joins => [ "INNER JOIN role_memberships ON role_memberships.user_id = users.id",
                   "INNER JOIN privileges_roles ON privileges_roles.role_id = role_memberships.role_id",
