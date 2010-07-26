@@ -26,7 +26,7 @@
 
     - core_element :treatment_date, f, :horiz do
       = f.label :treatment_date
-      = f.core_calendar_date_select(:treatment_date, {:size => 20, :year_range => 100.years.ago..1.years.from_now})
+      = f.core_calendar_date_select(:treatment_date, {:size => 20, :year_range => 100.years.ago..1.years.from_now, :class => "required_if_others"})
 
     %span.horiz
       - unless f.object.new_record?
