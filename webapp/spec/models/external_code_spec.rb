@@ -22,6 +22,10 @@ describe ExternalCode do
     @external_code = ExternalCode.new
   end
 
+  it "should have many diseases with this cdc export status" do
+    should have_and_belong_to_many(:diseases)
+  end
+
   it "should be not valid when blank" do
     @external_code.should_not be_valid
   end

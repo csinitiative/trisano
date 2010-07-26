@@ -26,6 +26,10 @@ describe Disease do
   it { should have_many(:core_fields_diseases) }
   it { should have_many(:core_fields) }
 
+  it "should have many exportable statuses" do
+    should have_and_belong_to_many(:external_codes)
+  end
+
   it "should be valid" do
     @disease.should be_valid
   end
