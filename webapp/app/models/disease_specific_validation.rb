@@ -22,7 +22,7 @@ class DiseaseSpecificValidation < ActiveRecord::Base
   
   class << self
     def diseases_ids_for_key(validation_key)
-      DiseaseSpecificValidation.find_all_by_validation_key(validation_key).collect {|dsv| dsv.disease_id}
+      DiseaseSpecificValidation.find_all_by_validation_key(validation_key.to_s).collect {|dsv| dsv.disease_id}
     end
   
     def create_associations(validations)

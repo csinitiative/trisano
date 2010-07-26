@@ -3,6 +3,7 @@ require 'faker'
 
 Factory.define(:treatment) do |t|
   t.treatment_name { Factory.next(:treatment_name) }
+  t.treatment_type { Factory.create(:treatment_type) }
 end
 
 

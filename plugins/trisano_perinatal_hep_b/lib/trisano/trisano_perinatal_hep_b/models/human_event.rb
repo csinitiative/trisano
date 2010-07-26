@@ -54,6 +54,28 @@ module Trisano
             base.accepts_nested_attributes_for :health_care_provider, {
               :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
+
+            base.class_eval do
+              def validate_with_p_hep_b_validate
+                validate_without_p_hep_b_validate
+
+                disease = try(:disease).try(:disease)
+                if self.is_a?(::ContactEvent) &&
+                    !disease.nil? &&
+                    ::DiseaseSpecificValidation.diseases_ids_for_key(:treatment_date_required).include?(disease.id)
+
+                  self.interested_party.treatments.each do |pt|
+                    unless pt.treatment.id.blank?
+                      pt.errors.add_on_blank(:treatment_date)
+                      self.errors.add_to_base("#{I18n.t(:treatment_date)} #{I18n.t(:blank, :scope => 'activerecord.errors.messages')}") if pt.treatment_date.blank?
+                    end
+                  end
+
+                end
+              end
+            end
+
+            base.alias_method_chain :validate, :p_hep_b_validate
           end
         end
 

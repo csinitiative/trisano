@@ -33,3 +33,16 @@ end
 Factory.define :health_care_provider do |hcp|
   hcp.person_entity :person_entity
 end
+
+Factory.define :disease_specific_validation do |dsv|
+  dsv.validation_key { Factory.next(:validation_key) }
+  dsv.association :disease
+end
+
+#
+# Sequences
+#
+
+Factory.sequence :validation_key do |n|
+  "validation_key_#{n}"
+end
