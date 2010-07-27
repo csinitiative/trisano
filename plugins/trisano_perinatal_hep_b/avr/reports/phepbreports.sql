@@ -62,10 +62,10 @@ SELECT
 -- Main query:
 SELECT
     id,
-    COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name, 
+    COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name,
     COALESCE(dme.street_number || ' ', '') ||
     COALESCE(dme.street_name || ' ', '') ||
-    COALESCE(dme.unit_number, '') || 
+    COALESCE(dme.unit_number, '') ||
     COALESCE(dme.city || ', ', '') ||
     COALESCE(dme.state || ' ', '') ||
     COALESCE(dme.postal_code, '') AS address,
@@ -237,10 +237,10 @@ FROM
     (
         SELECT
             id,
-            COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name, 
+            COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name,
             COALESCE(dme.street_number || ' ', '') ||
             COALESCE(dme.street_name || ' ', '') ||
-            COALESCE(dme.unit_number, '') || 
+            COALESCE(dme.unit_number, '') ||
             COALESCE(dme.city || ', ', '') ||
             COALESCE(dme.state || ' ', '') ||
             COALESCE(dme.postal_code, '') AS address,
@@ -260,7 +260,7 @@ FROM
             dme.pregnant = 'Yes'
         GROUP BY
             id, name, address
-    ) name_addr   
+    ) name_addr
     LEFT JOIN (
         SELECT
             parent_id,
@@ -342,15 +342,15 @@ FROM
                 --          'anti_hbs_result'
                     WHEN dce.contact_type = 'Newborn' THEN
                         CASE
-                            WHEN 'hbig_vaccination_date' IS NULL AND 'hepb_dose1_date' IS NULL THEN
+                            WHEN hbig IS NULL AND hepb_dose1_date IS NULL THEN
                                 1 -- fdd = dob, act = 'Needs HBIG and Vaccine #1'
-                            WHEN 'hbig_vaccination_date' IS NOT NULL AND 'hepb_dose1_date' IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NULL THEN
                                 2 -- fdd = dob, act = 'Needs Vaccine #1'
-                            WHEN 'hbig_vaccination_date' IS NULL AND 'hepb_dose1_date' IS NOT NULL THEN
+                            WHEN hbig IS NULL AND hepb_dose1_date IS NOT NULL THEN
                                 3 -- fdd = dob, act = 'Needs HBIG'
-                            WHEN 'hbig_vaccination_date' IS NOT NULL AND 'hepb_dose1_date' IS NOT NULL AND 'hepb_dose2_date' IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NULL THEN
                                 4 -- fdd = dob + 1 mo., act = 'Needs Vaccine #2'
-                            WHEN 'hbig_vaccination_date' IS NOT NULL AND 'hepb_dose1_date' IS NOT NULL AND 'hepb_dose2_date' IS NOT NULL AND 'hepb_dose3_date' IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NULL THEN
                                 5 -- fdd = dob + 6 mo., act = 'Needs 6-month vaccine dose'
                             WHEN COALESCE(
                                     (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
@@ -366,17 +366,15 @@ FROM
                         CASE
                             WHEN 'pre_immun_hbsag_date' IS NULL OR 'anti_hbs_date' IS NULL THEN
                                 8 -- fdd = report date, act = 'Needs Pre-Immunization Serology'
-                            -- XXX Replace hardcoded 'F' with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN 'hepb_dose1_date' IS NULL AND NOT 'F'::BOOLEAN AND NOT 'F'::BOOLEAN THEN
+                                -- XXX Check out logic here
+                            WHEN hepb_dose1_date IS NULL AND 'pre_immun_hbsag_result' != 'Positive' AND 'anti_hbs_result' != 'Positive' THEN
                                 9 -- fdd = report date, act = 'Needs Vaccine #1'
-                            -- XXX Replace hardcoded 'F' with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN 'hepb_dose1_date' IS NOT NULL AND 'hepb_dose2_date' IS NULL AND NOT 'F'::BOOLEAN AND NOT 'F'::BOOLEAN THEN
+                            WHEN hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NULL AND 'pre_immun_hbsag_result' != 'Positive' AND 'anti_hbs_result' != 'Positive' THEN
                                 10 -- fdd = 'hepb_dose1_date' + 1 mo., act = 'Needs Vaccine #2'
-                            -- XXX Replace hardcoded 'F' with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN 'hepb_dose1_date' IS NOT NULL AND 'hepb_dose2_date' IS NOT NULL AND 'hepb_dose3_date' IS NULL AND NOT 'F'::BOOLEAN AND NOT 'F'::BOOLEAN THEN
+                            WHEN hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NULL AND 'pre_immun_hbsag_result' != 'Positive' AND 'anti_hbs_result' != 'Positive' THEN
                                 11 -- fdd = 'hepb_dose1_date' + 6 mo., act = 'Needs Vaccine #3'
                             -- XXX Replace hardcoded 'F' with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN 'hepb_dose1_date' IS NOT NULL AND 'hepb_dose2_date' IS NOT NULL AND 'hepb_dose3_date' IS NOT NULL AND NOT 'F'::BOOLEAN AND NOT 'F'::BOOLEAN THEN
+                            WHEN hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND 'pre_immun_hbsag_result' != 'Positive' AND 'anti_hbs_result' != 'Positive' THEN
                                 12 -- fdd = 'hepb_dose3_date' + 1 mo., act = 'Needs Post Immunization Serology'
                             WHEN 'perinatal_prevention_status_date' IS NOT NULL THEN -- XXX This should probably be the *firt* non-newborn check
                                 13 -- fdd = report date, act = 'Close Contact'
@@ -386,7 +384,38 @@ FROM
                 END AS fdd_act_code
             FROM
                 trisano.dw_contact_events_view dce
-            ) foo
+                LEFT JOIN (
+                    SELECT
+                        dw_contact_events_id AS contact_event_id,
+                        trisano.text_join_agg(COALESCE(hbig_vacc_date, ''), '') AS hbig,
+                        trisano.text_join_agg(COALESCE(hebp_dose1_date, ''), '') AS hepb_dose1_date,
+                        trisano.text_join_agg(COALESCE(hepb_dose2_date, ''), '') AS hepb_dose2_date,
+                        trisano.text_join_agg(COALESCE(hepb_dose3_date, ''), '') AS hepb_dose3_date,
+                        trisano.text_join_agg(COALESCE(hepb_dose4_date, ''), '') AS hepb_dose4_date,
+                        trisano.text_join_agg(COALESCE(hepb_dose5_date, ''), '') AS hepb_dose5_date,
+                        trisano.text_join_agg(COALESCE(hepb_dose6_date, ''), '') AS hepb_dose6_date
+                    FROM (
+                        SELECT
+                            dw_contact_events_id,
+                            CASE WHEN treatment_name = 'HBIG' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hbig_vacc_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hebp_dose1_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose2_date,
+                            -- The ~ is intentional
+                            CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose3_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose4_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose5_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose6_date
+                        FROM
+                            trisano.dw_contact_treatments_events_view dct
+                            JOIN trisano.treatments_view tv
+                                ON (tv.id = dct.treatment_id)
+                        WHERE
+                            treatment_given = 'Yes'
+                    ) treatments_split
+                    GROUP BY 1
+                ) treatments_agg
+                    ON (treatments_agg.contact_event_id = dce.id)
+        ) foo
     ) contact_stuff
         ON (name_addr.id = contact_stuff.parent_id)
 ;
@@ -433,12 +462,12 @@ SELECT
     COUNT(CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE NULL END) AS f37,
     COUNT(CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE NULL END) AS f38,
     COUNT(CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE NULL END) AS f39,
-    COUNT(CASE WHEN contact_type = 'infant' AND post_immun_hbsag_date <= birth_date + INTERVAL '12 months' AND post_immun_antihb_date <= birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END) AS f40,
-    COUNT(CASE WHEN contact_type = 'infant' AND post_immun_hbsag_date <= birth_date + INTERVAL '15 months' AND post_immun_antihb_date <= birth_date + INTERVAL '15 months' THEN 1 ELSE NULL END) AS f41,
-    COUNT(CASE WHEN contact_type = 'infant' AND (post_immun_hbsag_date IS NULL OR post_immun_antihb_date IS NULL) THEN 1 ELSE NULL END) AS f42,
-    COUNT(CASE WHEN contact_type = 'infant' AND post_immun_hbsag_result = 'positive' THEN 1 ELSE NULL END) AS f43,
-    COUNT(CASE WHEN contact_type = 'infant' AND post_immun_antihb_result = 'positive' THEN 1 ELSE NULL END) AS f44,
-    COUNT(CASE WHEN contact_type = 'infant' AND com_vax_vacc_date IS NOT NULL THEN 1 ELSE NULL END) AS f45,
+    COUNT(CASE WHEN contact_type = 'infant' AND 'post_immun_hbsag_date' <= birth_date + INTERVAL '12 months' AND 'post_immun_antihb_date' <= birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END) AS f40,
+    COUNT(CASE WHEN contact_type = 'infant' AND 'post_immun_hbsag_date' <= birth_date + INTERVAL '15 months' AND 'post_immun_antihb_date' <= birth_date + INTERVAL '15 months' THEN 1 ELSE NULL END) AS f41,
+    COUNT(CASE WHEN contact_type = 'infant' AND ('post_immun_hbsag_date' IS NULL OR 'post_immun_antihb_date' IS NULL) THEN 1 ELSE NULL END) AS f42,
+    COUNT(CASE WHEN contact_type = 'infant' AND 'post_immun_hbsag_result' = 'positive' THEN 1 ELSE NULL END) AS f43,
+    COUNT(CASE WHEN contact_type = 'infant' AND 'post_immun_antihb_result' = 'positive' THEN 1 ELSE NULL END) AS f44,
+    COUNT(CASE WHEN contact_type = 'infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE NULL END) AS f45,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') THEN 1 ELSE NULL END) AS f46,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition IS NULL THEN 1 ELSE NULL END) AS f47,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Completed' THEN 1 ELSE NULL END) AS f48,
@@ -449,9 +478,9 @@ SELECT
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Died' THEN 1 ELSE NULL END) AS f53,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'False positive mother/case' THEN 1 ELSE NULL END) AS f54,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Other' THEN 1 ELSE NULL END) AS f55,
-    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND (pre_immun_hbsag_result IS NOT NULL OR pre_immun_antihb_result IS NOT NULL) THEN 1 ELSE NULL END) AS f56,
-    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND post_immun_hbsag_result = 'Positive' THEN 1 ELSE NULL END) AS f57,
-    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND post_immun_antihb_result = 'Positive' THEN 1 ELSE NULL END) AS f58,
+    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND ('pre_immun_hbsag_result' IS NOT NULL OR 'pre_immun_antihb_result' IS NOT NULL) THEN 1 ELSE NULL END) AS f56,
+    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND 'post_immun_hbsag_result' = 'Positive' THEN 1 ELSE NULL END) AS f57,
+    COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND 'post_immun_antihb_result' = 'Positive' THEN 1 ELSE NULL END) AS f58,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL THEN 1 ELSE NULL END) AS f59,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE NULL END) AS f60,
     COUNT(CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE NULL END) AS f61,
@@ -461,6 +490,38 @@ SELECT
     COUNT(CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE NULL END) AS f66,
     COUNT(CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date < birth_date + INTERVAL '8 months' AND hepb_dose2_date < birth_date + INTERVAL '8 months' AND hepb_dose3_date < birth_date + INTERVAL '8 months' AND hbig_vacc_date < birth_date + INTERVAL '8 months' THEN 1 ELSE NULL END) AS f67,
     COUNT(CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date < birth_date + INTERVAL '8 months' AND hepb_dose2_date < birth_date + INTERVAL '12 months' AND hepb_dose3_date < birth_date + INTERVAL '12 months' AND hbig_vacc_date < birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END) AS f68
-FROM trisano.dw_contact_events_view
+FROM
+    trisano.dw_contact_events_view dce
+    LEFT JOIN (
+        SELECT
+            dw_contact_events_id AS contact_event_id,
+            trisano.text_join_agg(COALESCE(hbig_vacc_date, ''), '') AS hbig_vacc_date,
+            trisano.text_join_agg(COALESCE(hebp_dose1_date, ''), '') AS hepb_dose1_date,
+            trisano.text_join_agg(COALESCE(hepb_dose2_date, ''), '') AS hepb_dose2_date,
+            trisano.text_join_agg(COALESCE(hepb_dose3_date, ''), '') AS hepb_dose3_date,
+            trisano.text_join_agg(COALESCE(hepb_dose4_date, ''), '') AS hepb_dose4_date,
+            trisano.text_join_agg(COALESCE(hepb_dose5_date, ''), '') AS hepb_dose5_date,
+            trisano.text_join_agg(COALESCE(hepb_dose6_date, ''), '') AS hepb_dose6_date
+        FROM (
+            SELECT
+                dw_contact_events_id,
+                CASE WHEN treatment_name = 'HBIG' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hbig_vacc_date,
+                CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hebp_dose1_date,
+                CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose2_date,
+                -- The ~ is intentional
+                CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose3_date,
+                CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose4_date,
+                CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose5_date,
+                CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose6_date
+            FROM
+                trisano.dw_contact_treatments_events_view dct
+                JOIN trisano.treatments_view tv
+                    ON (tv.id = dct.treatment_id)
+            WHERE
+                treatment_given = 'Yes'
+        ) treatments_split
+        GROUP BY 1
+    ) treatments_agg
+        ON (treatments_agg.contact_event_id = dce.id)
 WHERE disease_name = 'Hepatitis B Pregnancy Event'
 ;
