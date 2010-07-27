@@ -326,6 +326,7 @@ SELECT
 
     events.sent_to_cdc,
 
+    partcon.disposition_date,
     partcon_disp_ec.code_description AS disposition_if_once_a_contact,        -- the_code?
     partcon_cont_ec.code_description AS contact_type_if_once_a_contact,        -- the_code?
 
@@ -624,6 +625,7 @@ SELECT
     events.updated_at AS date_updated,
     events.deleted_at AS date_deleted,
 
+    partcon.disposition_date,
     partcon_disp_ec.code_description AS disposition,        -- the_code?
     partcon_cont_ec.code_description AS contact_type,        -- the_code?
 
