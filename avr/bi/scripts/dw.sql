@@ -983,7 +983,7 @@ SELECT
     pt.treatment_id,
     tgec.code_description AS treatment_given,
     upsert_date(pt.treatment_date) AS date_of_treatment,
-    pt.treatment AS treatment_notes,
+    pt.treatment_name,
     pt.stop_treatment_date
 FROM
     participations_treatments pt
