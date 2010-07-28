@@ -21,7 +21,7 @@ if RUBY_PLATFORM =~ /java/
   require 'yaml'
 
   namespace :trisano do
-    namespace :metadata do
+    namespace :avr do
       def server_dir
         ENV['BI_SERVER_PATH'] || '/usr/local/pentaho/server/biserver-ce'
       end
