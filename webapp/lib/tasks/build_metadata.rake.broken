@@ -118,6 +118,7 @@ if RUBY_PLATFORM =~ /java/
       PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
       SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
       SchemaMeta = Java::OrgPentahoPmsSchema::SchemaMeta
+      KettleEnvironment = Java::OrgPentahoDiCore::KettleEnvironment
       AggregationSettings = Java::OrgPentahoPmsSchemaConceptTypesAggregation::AggregationSettings
       Concept = Java::OrgPentahoPmsSchemaConcept::Concept
       ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
@@ -683,7 +684,10 @@ if RUBY_PLATFORM =~ /java/
       task :build_metadata => :init_metadata do
         old_dir = Dir.pwd
         Dir.chdir File.join(server_dir, 'pentaho-solutions', 'TriSano')
+        puts "Current directory: " + Dir.pwd
         metadataxmi = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', 'metadata.xmi')
+        KettleEnvironment.init()
+
         db_connection do |conn|
           # load plugins
           plugin_objects = []
