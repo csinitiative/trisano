@@ -130,7 +130,7 @@ class CdcExport < ActiveRecord::Base
         INNER JOIN people p ON p.entity_id = ip.primary_entity_id
         INNER JOIN
         (
-          SELECT d.cdc_code, c.disease_id, c.external_code_id FROM diseases_external_codes c
+          SELECT d.cdc_code, c.disease_id, c.external_code_id FROM cdc_disease_export_statuses c
            JOIN diseases d on c.disease_id = d.id
           WHERE d.cdc_code is not null
         ) diseases ON (diseases.disease_id = de.disease_id AND e.state_case_status_id = diseases.external_code_id)

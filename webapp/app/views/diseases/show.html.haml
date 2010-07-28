@@ -52,7 +52,7 @@
             %b
               = t('cdc_send_status')
             %br
-            = h(@disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', '))
+            = h(@disease.cdc_disease_export_statuses.map(&:code_description).join(', '))
 
         %td
           .tools{:style => "position: absolute; right: 15px;"}
@@ -101,7 +101,7 @@
     %tr
       %td.forminformation
         - if @disease.avr_groups.empty?
-          %span=t ('no_avr_groups_configured')
+          %span=t('no_avr_groups_configured')
         - else
           %ul
             - @disease.avr_groups.each do |avr_group|

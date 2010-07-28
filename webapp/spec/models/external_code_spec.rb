@@ -23,7 +23,7 @@ describe ExternalCode do
   end
 
   it "should have many diseases with this cdc export status" do
-    should have_and_belong_to_many(:diseases)
+    should have_and_belong_to_many(:cdc_exportable_diseases)
   end
 
   it "should be not valid when blank" do

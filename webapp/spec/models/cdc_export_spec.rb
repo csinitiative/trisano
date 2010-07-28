@@ -88,7 +88,7 @@ describe CdcExport do
   end
 
   describe 'running cdc export' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
+    fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     it 'should produce core data records (no disease specific fields) that are 60 chars long' do
       with_cdc_records do |records|
@@ -440,7 +440,7 @@ describe CdcExport do
   end
 
   describe 'finding deleted cdc records' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
+    fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     before(:each)do
       delete_a_record
@@ -490,7 +490,7 @@ describe CdcExport do
   end
 
   describe 'soft deleted records' do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
+    fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     describe 'that have already been sent' do
 
@@ -557,7 +557,7 @@ describe CdcExport do
   end
 
   describe "multiple verification records" do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
+    fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     before :each do
       with_sent_events
@@ -580,13 +580,13 @@ describe CdcExport do
   end
 
   describe "runnning export w/ no valid disease exports" do
-    fixtures :events, :disease_events, :diseases, :diseases_external_codes, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
+    fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     before :all do
     end
 
     it "should not blow up if there are no disease export statuses" do
-      ActiveRecord::Base.connection.execute('truncate table diseases_external_codes')
+      ActiveRecord::Base.connection.execute('truncate table cdc_disease_export_statuses')
       CdcExport.verification_records(Mmwr.new.mmwr_year)
     end
   end
@@ -605,8 +605,8 @@ describe CdcExport do
         @morbidity_event.save!
 
         disease = @morbidity_event.disease_event.disease
-        disease.external_codes << external_codes(:case_status_probable)
-        disease.external_codes << external_codes(:case_status_confirmed)
+        disease.cdc_disease_export_statuses << external_codes(:case_status_probable)
+        disease.cdc_disease_export_statuses << external_codes(:case_status_confirmed)
         disease.save!
       end
 
@@ -644,8 +644,8 @@ describe CdcExport do
         @probable_event.save!
 
         disease = @probable_event.disease_event.disease
-        disease.external_codes << external_codes(:case_status_probable)
-        disease.external_codes << external_codes(:case_status_confirmed)
+        disease.cdc_disease_export_statuses << external_codes(:case_status_probable)
+        disease.cdc_disease_export_statuses << external_codes(:case_status_confirmed)
         disease.save!
 
         @confirmed_event = Factory.build :morbidity_event
@@ -678,7 +678,7 @@ describe CdcExport do
       @morb.save!
 
       @disease = @morb.disease_event.disease
-      @disease.external_codes << external_codes(:case_status_confirmed)
+      @disease.cdc_disease_export_statuses << external_codes(:case_status_confirmed)
       @disease.active = true
       @disease.save!
 

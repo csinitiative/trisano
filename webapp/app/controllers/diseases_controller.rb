@@ -67,7 +67,7 @@ class DiseasesController < AdminController
     @disease = Disease.find params[:id]
 
     if params[:disease]
-      params[:disease][:external_code_ids] ||= []
+      params[:disease][:cdc_disease_export_status_ids] ||= []
       params[:disease][:avr_group_ids] ||= []
     end
 

@@ -23,7 +23,9 @@ class Disease < ActiveRecord::Base
 
   validates_presence_of :disease_name
 
-  has_and_belongs_to_many :external_codes
+  has_and_belongs_to_many(:cdc_disease_export_statuses,
+                          :join_table => 'cdc_disease_export_statuses',
+                          :class_name => 'ExternalCode')
   has_and_belongs_to_many :export_columns
   has_and_belongs_to_many :avr_groups
 
@@ -78,7 +80,7 @@ class Disease < ActiveRecord::Base
     end
 
     def with_no_export_status
-      ids = ActiveRecord::Base.connection.select_all('select distinct disease_id from diseases_external_codes')
+      ids = ActiveRecord::Base.connection.select_all('select distinct disease_id from cdc_disease_export_statuses')
       find(:all, :conditions => ['id not in (?)', ids.collect{|id| id['disease_id']}])
     end
 
@@ -122,15 +124,19 @@ class Disease < ActiveRecord::Base
   end
 
   def case_status_where_clause
-    codes = external_codes.collect(&:id)
-    # Why can't I use sanitize_sql_for_conditions here?  Should be safe though since id field.
-    "(disease_id=#{self.id.untaint} AND state_case_status_id IN (#{codes.collect{ |id| id.untaint }.join(',')}))" unless codes.empty?
+    unless self.cdc_disease_export_status_ids.empty?
+      self.class.send(:sanitize_sql, ["(disease_id=? AND state_case_status_id IN (?))",
+                                      self.id,
+                                      self.cdc_disease_export_status_ids])
+    end
   end
 
   def invalid_case_status_where_clause
-    codes = external_codes.collect(&:id)
-    # Why can't I use sanitize_sql_for_conditions here?  Should be safe though since id field.
-    "(disease_id='#{self.id.untaint}' AND state_case_status_id NOT IN (#{codes.collect{ |id| id.untaint }.join(',')}))" unless codes.empty?
+    unless self.cdc_disease_export_status_ids.empty?
+      self.class.send(:sanitize_sql, ["(disease_id = ? and state_case_status_id NOT IN (?))",
+                                      self.id,
+                                      self.cdc_disease_export_status_ids])
+    end
   end
 
   private

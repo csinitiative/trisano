@@ -22,7 +22,9 @@ class ExternalCode < ActiveRecord::Base
   # DEBT: this really should be a normal relationship using a code_name_id
   belongs_to :code_group, :class_name => 'CodeName', :foreign_key => :code_name, :primary_key => :code_name
 
-  has_and_belongs_to_many :diseases
+  has_and_belongs_to_many(:cdc_exportable_diseases,
+                          :join_table => 'cdc_disease_export_statuses',
+                          :class_name => 'Disease')
 
   named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order, the_code'
   named_scope :case, :conditions => "code_name = 'case'"

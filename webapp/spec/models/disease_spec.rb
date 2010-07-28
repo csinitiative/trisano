@@ -27,7 +27,7 @@ describe Disease do
   it { should have_many(:core_fields) }
 
   it "should have many exportable statuses" do
-    should have_and_belong_to_many(:external_codes)
+    should have_and_belong_to_many(:cdc_disease_export_statuses)
   end
 
   it "should be valid" do
@@ -112,7 +112,7 @@ describe Disease do
       disease.cdc_code.should == "99100"
     end
 
-    it "should default created diseases to active" do
+    it 'should default created diseases to active' do
       Disease.load_from_yaml(@yaml)
       disease = Disease.find_by_disease_name 'Clumsy'
       disease.should_not be_nil
@@ -143,7 +143,7 @@ describe Disease do
 
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
-      @disease.external_codes.should be_empty
+      @disease.cdc_disease_export_statuses.should be_empty
     end
 
     describe 'associating cases' do
@@ -151,20 +151,20 @@ describe Disease do
       it 'should add export case status' do
         codes = ExternalCode.find_cases(:all).select {|s| %w(Probable Suspect).include?(s.code_description)}
         codes.length.should == 2
-        @disease.update_attributes( 'external_code_ids' => codes.map{|c| c.id} )
+        @disease.update_attributes('cdc_disease_export_status_ids' => codes.map(&:id))
         @disease.save!
-        @disease.external_codes.length.should == 2
+        @disease.cdc_disease_export_statuses.length.should == 2
       end
     end
 
   end
 
   describe 'diseases w/ no export status' do
-    fixtures :diseases, :external_codes, :diseases_external_codes
+    fixtures :diseases, :external_codes, :cdc_disease_export_statuses
 
     it 'should only return diseases with no specified cdc export status' do
       Disease.with_no_export_status.each do |disease|
-        disease.external_codes.length.should == 0
+        disease.cdc_disease_export_statuses.length.should == 0
       end
     end
 

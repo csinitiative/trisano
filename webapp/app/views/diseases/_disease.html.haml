@@ -34,7 +34,7 @@
       %b
         =t('cdc_send_status')
       %br
-      = h(disease.external_codes.collect { |ex_code| ex_code.code_description }.join(', '))
+      = h(disease.cdc_disease_export_statuses.map(&:code_description).join(', '))
 
   %td
     .tools
