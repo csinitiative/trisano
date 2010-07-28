@@ -1,0 +1,376 @@
+#INSERT INTO trisano.core_columns (target_table, target_column, column_name, column_description, make_category_column) VALUES
+'trisano.avr_groups_diseases_view',                  'avr_group_id',                       'avr_group_id',                       '',                          false
+'trisano.avr_groups_diseases_view',                  'created_at',                         'created_at',                         '',                          false
+'trisano.avr_groups_diseases_view',                  'disease_id',                         'disease_id',                         '',                          false
+'trisano.avr_groups_diseases_view',                  'updated_at',                         'updated_at',                         '',                          false
+'trisano.avr_groups_view',                           'created_at',                         'created_at',                         '',                          false
+'trisano.avr_groups_view',                           'id',                                 'id',                                 '',                          false
+'trisano.avr_groups_view',                           'name',                               'name',                               'Dis Grp Nm',                true
+'trisano.avr_groups_view',                           'updated_at',                         'updated_at',                         '',                          false
+'trisano.dw_contact_clinicians_view',                'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_clinicians_view',                'first_name',                         'first_name',                         'CC Frst Nm',                true
+'trisano.dw_contact_clinicians_view',                'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_clinicians_view',                'last_name',                          'last_name',                          'CC Lst Nm',                 true
+'trisano.dw_contact_clinicians_view',                'middle_name',                        'middle_name',                        'CC Mid Nm',                 true
+'trisano.dw_contact_clinicians_view',                'phones',                             'phones',                             'CC Phn Nbrs',               true
+'trisano.dw_contact_diagnostic_facilities_view',     'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_diagnostic_facilities_view',     'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_contact_diagnostic_facilities_view',     'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_diagnostic_facilities_view',     'name',                               'name',                               'CDF Nm',                    true
+'trisano.dw_contact_diagnostic_facilities_view',     'place_id',                           'place_id',                           '',                          false
+'trisano.dw_contact_diagnostic_facilities_view',     'place_type',                         'place_type',                         'CDF Typ',                   true
+'trisano.dw_contact_email_addresses_view',           'email_address',                      'email_address',                      'CP Email Addr',             true
+'trisano.dw_contact_email_addresses_view',           'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_contact_events_view',                    'active',                             'active',                             'CD Act',                    true
+'trisano.dw_contact_events_view',                    'actual_age_at_onset',                'actual_age_at_onset',                'CE Actl Age at Onst',       true
+'trisano.dw_contact_events_view',                    'actual_age_type',                    'actual_age_type',                    'CE Actl Age Typ',           true
+'trisano.dw_contact_events_view',                    'additional_risk_factors',            'additional_risk_factors',            'CE Addtl Risk Fctrs',       true
+'trisano.dw_contact_events_view',                    'age_in_years',                       'age_in_years',                       'CE Age in Yrs',             true
+'trisano.dw_contact_events_view',                    'event_onset_age_days',               'event_onset_age_days',               'CE Onst Age in Days',       true
+'trisano.dw_contact_events_view',                    'always_one',                         'always_one',                         '',                          false
+'trisano.dw_contact_events_view',                    'birth_date',                         'birth_date',                         'CP Brth Dt',                true
+'trisano.dw_contact_events_view',                    'birth_gender',                       'birth_gender',                       'CP Brth Gndr',              true
+'trisano.dw_contact_events_view',                    'cdc_code',                           'cdc_code',                           'CD CDC Cd',                 true
+'trisano.dw_contact_events_view',                    'city',                               'city',                               'CE City',                   true
+'trisano.dw_contact_events_view',                    'contact_lead_in',                    'contact_lead_in',                    'CD Cntct Lead-in',          true
+'trisano.dw_contact_events_view',                    'contact_type',                       'contact_type',                       'CE Cntct Typ',              true
+'trisano.dw_contact_events_view',                    'county',                             'county',                             'CE Cnty',                   true
+'trisano.dw_contact_events_view',                    'date_created',                       'date_created',                       '',                          false
+'trisano.dw_contact_events_view',                    'date_deleted',                       'date_deleted',                       '',                          false
+'trisano.dw_contact_events_view',                    'date_disease_diagnosed',             'date_disease_diagnosed',             'CE Dt Dis Diag',            true
+'trisano.dw_contact_events_view',                    'date_disease_onset',                 'date_disease_onset',                 'CE Dt Dis Onst',            true
+'trisano.dw_contact_events_view',                    'date_entered_into_system',           'date_entered_into_system',           'CE Event Date',             true
+'trisano.dw_contact_events_view',                    'date_investigation_completed',       'date_investigation_completed',       'CE Dt Inv Cmpl',            true
+'trisano.dw_contact_events_view',                    'date_investigation_started',         'date_investigation_started',         'CE Dt Inv Strtd',           true
+'trisano.dw_contact_events_view',                    'date_of_death',                      'date_of_death',                      'CP Dt of Death',            true
+'trisano.dw_contact_events_view',                    'date_updated',                       'date_updated',                       '',                          false
+'trisano.dw_contact_events_view',                    'day_care_association',               'day_care_association',               'CE Day Care Assoc',         true
+'trisano.dw_contact_events_view',                    'disease_event_died',                 'disease_event_died',                 'CE Died',                   true
+'trisano.dw_contact_events_view',                    'disease_event_hospitalized',         'disease_event_hospitalized',         'CE Hospitalized',           true
+'trisano.dw_contact_events_view',                    'disease_id',                         'disease_id',                         '',                          false
+'trisano.dw_contact_events_view',                    'disease_name',                       'disease_name',                       'CD Dis Nm',                 true
+'trisano.dw_contact_events_view',                    'disposition',                        'disposition',                        'CE Dsp',                    true
+'trisano.dw_contact_events_view',                    'disposition_date',                   'disposition_date',                   'CE Dsp Dt',                 true
+'trisano.dw_contact_events_view',                    'dw_patients_id',                     'dw_patients_id',                     '',                          false
+'trisano.dw_contact_events_view',                    'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_contact_events_view',                    'estimated_age_at_onset',             'estimated_age_at_onset',             'CE Est Age at Onst',        true
+'trisano.dw_contact_events_view',                    'estimated_age_type',                 'estimated_age_type',                 'CE Est Age Typ',            true
+'trisano.dw_contact_events_view',                    'ethnicity',                          'ethnicity',                          'CP Ethncty',                true
+'trisano.dw_contact_events_view',                    'event_queue_id',                     'event_queue_id',                     '',                          false
+'trisano.dw_contact_events_view',                    'first_name',                         'first_name',                         'CP Frst Nm',                true
+'trisano.dw_contact_events_view',                    'first_name_soundex',                 'first_name_soundex',                 '',                          false
+'trisano.dw_contact_events_view',                    'food_handler',                       'food_handler',                       'CE Food Hdlr',              true
+'trisano.dw_contact_events_view',                    'group_living',                       'group_living',                       'CE Grp Lvng',               true
+'trisano.dw_contact_events_view',                    'healthcare_worker',                  'healthcare_worker',                  'CE Hlthcare Wrkr',          true
+'trisano.dw_contact_events_view',                    'ibis_updated_at',                    'ibis_updated_at',                    'CE IBIS Updtd',             true
+'trisano.dw_contact_events_view',                    'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_events_view',                    'imported_from_code',                 'imported_from_code',                 '',                          false
+'trisano.dw_contact_events_view',                    'investigating_jurisdiction',         'investigating_jurisdiction',         'CE Inv Jur',                true
+'trisano.dw_contact_events_view',                    'investigating_jurisdiction_id',      'investigating_jurisdiction_id',      '',                          false
+'trisano.dw_contact_events_view',                    'investigator',                       'investigator',                       'CE Invstgtr',               true
+'trisano.dw_contact_events_view',                    'jurisdiction_of_residence',          'jurisdiction_of_residence',          'CE Jur of Res',             true
+'trisano.dw_contact_events_view',                    'jurisdiction_of_residence_id',       'jurisdiction_of_residence_id',       '',                          false
+'trisano.dw_contact_events_view',                    'last_name',                          'last_name',                          'CP Lst Nm',                 true
+'trisano.dw_contact_events_view',                    'last_name_soundex',                  'last_name_soundex',                  '',                          false
+'trisano.dw_contact_events_view',                    'middle_name',                        'middle_name',                        'CP Mid Nm',                 true
+'trisano.dw_contact_events_view',                    'occupation',                         'occupation',                         'CE Occ',                    true
+'trisano.dw_contact_events_view',                    'other_data_1',                       'other_data_1',                       'CE Othr Data 1',            true
+'trisano.dw_contact_events_view',                    'other_data_2',                       'other_data_2',                       'CE Othr Data 2',            true
+'trisano.dw_contact_events_view',                    'parent_id',                          'parent_id',                          '',                          false
+'trisano.dw_contact_events_view',                    'patient_entity_id',                  'patient_entity_id',                  '',                          false
+'trisano.dw_contact_events_view',                    'place_lead_in',                      'place_lead_in',                      'CD Plc Lead-in',            true
+'trisano.dw_contact_events_view',                    'postal_code',                        'postal_code',                        'CE Pstl Cd',                true
+'trisano.dw_contact_events_view',                    'pregnancy_due_date',                 'pregnancy_due_date',                 'CE Pregnancy Due Dt',       true
+'trisano.dw_contact_events_view',                    'pregnant',                           'pregnant',                           'CE Preg',                   true
+'trisano.dw_contact_events_view',                    'primary_language',                   'primary_language',                   'CP Prim Lng',               true
+'trisano.dw_contact_events_view',                    'public_health_status',               'public_health_status',               'CE PH Stat',                true
+'trisano.dw_contact_events_view',                    'review_completed_by_state_date',     'review_completed_by_state_date',     'CE Rvw Cmpl by St',         true
+'trisano.dw_contact_events_view',                    'risk_factor_details',                'risk_factor_details',                'CE Risk Fctr Dtls',         true
+'trisano.dw_contact_events_view',                    'sent_to_ibis',                       'sent_to_ibis',                       'CE Snt to IBIS',            true
+'trisano.dw_contact_events_view',                    'state',                              'state',                              'CE St',                     true
+'trisano.dw_contact_events_view',                    'street_name',                        'street_name',                        'CE Street Nm',              true
+'trisano.dw_contact_events_view',                    'street_number',                      'street_number',                      'CE Street Nbr',             true
+'trisano.dw_contact_events_view',                    'treatment_lead_in',                  'treatment_lead_in',                  'CD Trtmnt Lead-in',         true
+'trisano.dw_contact_events_view',                    'unit_number',                        'unit_number',                        'CE Unit Nbr',               true
+'trisano.dw_contact_hospitals_view',                 'admission_date',                     'admission_date',                     'CH Admsn Dt',               true
+'trisano.dw_contact_hospitals_view',                 'discharge_date',                     'discharge_date',                     'CH Dschg Dt',               true
+'trisano.dw_contact_hospitals_view',                 'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_hospitals_view',                 'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_contact_hospitals_view',                 'hospital_name',                      'hospital_name',                      'CH Hosp Nm',                true
+'trisano.dw_contact_hospitals_view',                 'hospital_record_number',             'hospital_record_number',             'CH Hosp Rec Nbr',           true
+'trisano.dw_contact_hospitals_view',                 'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_hospitals_view',                 'medical_record_number',              'medical_record_number',              'CH Med Rec Nbr',            true
+'trisano.dw_contact_lab_results_view',               'collection_date',                    'collection_date',                    'CLR Clct Dt',               true
+'trisano.dw_contact_lab_results_view',               'comment',                            'comment',                            'CLR Cmt',                   true
+'trisano.dw_contact_lab_results_view',               'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_lab_results_view',               'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_contact_lab_results_view',               'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_contact_lab_results_view',               'hl7_message',                        'hl7_message',                        'CLR HL7 Msg',               true
+'trisano.dw_contact_lab_results_view',               'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_lab_results_view',               'lab_test_date',                      'lab_test_date',                      'CLR Lab Tst Dt',            true
+'trisano.dw_contact_lab_results_view',               'lab_type',                           'lab_type',                           'CLR Lab Typ',               true
+'trisano.dw_contact_lab_results_view',               'loinc_code',                         'loinc_code',                         'CLR LOINC Cd',              true
+'trisano.dw_contact_lab_results_view',               'name',                               'name',                               'CLR Nm',                    true
+'trisano.dw_contact_lab_results_view',               'organism_name',                      'organism_name',                      'CLR Org Nm',                true
+'trisano.dw_contact_lab_results_view',               'reference_range',                    'reference_range',                    'CLR Ref Rng',               true
+'trisano.dw_contact_lab_results_view',               'result_value',                       'result_value',                       'CLR Rslt Val',              true
+'trisano.dw_contact_lab_results_view',               'specimen_sent_to_state',             'specimen_sent_to_state',             'CLR Spec Snt to St',        true
+'trisano.dw_contact_lab_results_view',               'specimen_source',                    'specimen_source',                    'CLR Spec Src',              true
+'trisano.dw_contact_lab_results_view',               'staged_message_note',                'staged_message_note',                'CLR Stgd Msg Note',         true
+'trisano.dw_contact_lab_results_view',               'staged_message_state',               'staged_message_state',               'CLR Stgd Msg St',           true
+'trisano.dw_contact_lab_results_view',               'test_result',                        'test_result',                        'CLR Tst Rslt',              true
+'trisano.dw_contact_lab_results_view',               'test_status',                        'test_status',                        'CLR Tst Stat',              true
+'trisano.dw_contact_lab_results_view',               'test_type',                          'test_type',                          'CLR Tst Typ',               true
+'trisano.dw_contact_lab_results_view',               'units',                              'units',                              'CLR Units',                 true
+'trisano.dw_contact_patients_races_view',            'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_patients_races_view',            'person_id',                          'person_id',                          '',                          false
+'trisano.dw_contact_patients_races_view',            'race',                               'race',                               'CP Race',                   true
+'trisano.dw_contact_secondary_jurisdictions_view',   'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_secondary_jurisdictions_view',   'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_contact_secondary_jurisdictions_view',   'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_secondary_jurisdictions_view',   'jurisdiction_id',                    'jurisdiction_id',                    '',                          false
+'trisano.dw_contact_secondary_jurisdictions_view',   'name',                               'name',                               'CSJ Nm',                    true
+'trisano.dw_contact_telephones_view',                'area_code',                          'area_code',                          'CP Area Cd',                true
+'trisano.dw_contact_telephones_view',                'country_code',                       'country_code',                       'CP Cntry Cd',               true
+'trisano.dw_contact_telephones_view',                'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_contact_telephones_view',                'extension',                          'extension',                          'CP Ext',                    true
+'trisano.dw_contact_telephones_view',                'phone_number',                       'phone_number',                       'CP Phn Nbr',                true
+'trisano.dw_contact_telephones_view',                'phone_type',                         'phone_type',                         'CP Phn Typ',                true
+'trisano.dw_contact_treatments_events_view',         'date_of_treatment',                  'date_of_treatment',                  'CT Dt of Trtmnt',           true
+'trisano.dw_contact_treatments_events_view',         'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_contact_treatments_events_view',         'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_contact_treatments_events_view',         'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_contact_treatments_events_view',         'id',                                 'id',                                 '',                          false
+'trisano.dw_contact_treatments_events_view',         'stop_treatment_date',                'stop_treatment_date',                'CT Dt Trtmnt Stppd',        true
+'trisano.dw_contact_treatments_events_view',         'treatment_given',                    'treatment_given',                    'CT Trtmnt Gvn',             true
+'trisano.dw_contact_treatments_events_view',         'treatment_id',                       'treatment_id',                       '',                          false
+'trisano.dw_contact_treatments_events_view',         'treatment_name',                     'treatment_name',                     'CT Trtmnt Nm',              true
+'trisano.dw_encounter_email_addresses_view',         'email_address',                      'email_address',                      'EP Email Addr',             true
+'trisano.dw_encounter_email_addresses_view',         'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_encounter_events_view',                  'birth_date',                         'birth_date',                         'EP Brth Dt',                true
+'trisano.dw_encounter_events_view',                  'birth_gender',                       'birth_gender',                       'EP Brth Gndr',              true
+'trisano.dw_encounter_events_view',                  'date_of_death',                      'date_of_death',                      'EP Dt of Death',            true
+'trisano.dw_encounter_events_view',                  'description',                        'description',                        'EE Desc',                   true
+'trisano.dw_encounter_events_view',                  'dw_patients_id',                     'dw_patients_id',                     '',                          false
+'trisano.dw_encounter_events_view',                  'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_encounter_events_view',                  'encounter_date',                     'encounter_date',                     'EE Dt',                     true
+'trisano.dw_encounter_events_view',                  'encounter_event_id',                 'encounter_event_id',                 '',                          false
+'trisano.dw_encounter_events_view',                  'ethnicity',                          'ethnicity',                          'EP Ethncty',                true
+'trisano.dw_encounter_events_view',                  'first_name',                         'first_name',                         'EP Frst Nm',                true
+'trisano.dw_encounter_events_view',                  'id',                                 'id',                                 '',                          false
+'trisano.dw_encounter_events_view',                  'investigator_id',                    'investigator_id',                    'EE Invstgtr',               true
+'trisano.dw_encounter_events_view',                  'last_name',                          'last_name',                          'EP Lst Nm',                 true
+'trisano.dw_encounter_events_view',                  'location',                           'location',                           'EE Loc',                    true
+'trisano.dw_encounter_events_view',                  'middle_name',                        'middle_name',                        'EP Mid Nm',                 true
+'trisano.dw_encounter_events_view',                  'patient_entity_id',                  'patient_entity_id',                  '',                          false
+'trisano.dw_encounter_events_view',                  'primary_language',                   'primary_language',                   'EP Prim Lng',               true
+'trisano.dw_encounter_patients_races_view',          'id',                                 'id',                                 '',                          false
+'trisano.dw_encounter_patients_races_view',          'person_id',                          'person_id',                          '',                          false
+'trisano.dw_encounter_patients_races_view',          'race',                               'race',                               'EP Race',                   true
+'trisano.dw_encounters_lab_results_view',            'collection_date',                    'collection_date',                    'ELR Clct Dt',               true
+'trisano.dw_encounters_lab_results_view',            'comment',                            'comment',                            'ELR Cmt',                   true
+'trisano.dw_encounters_lab_results_view',            'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_encounters_lab_results_view',            'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_encounters_lab_results_view',            'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_encounters_lab_results_view',            'hl7_message',                        'hl7_message',                        'ELR HL7 Msg',               true
+'trisano.dw_encounters_lab_results_view',            'id',                                 'id',                                 'EE Lab Rslts ',             true
+'trisano.dw_encounters_lab_results_view',            'lab_test_date',                      'lab_test_date',                      'ELR Lab Tst Dt',            true
+'trisano.dw_encounters_lab_results_view',            'lab_type',                           'lab_type',                           'ELR Lab Typ',               true
+'trisano.dw_encounters_lab_results_view',            'loinc_code',                         'loinc_code',                         'ELR LOINC Cd',              true
+'trisano.dw_encounters_lab_results_view',            'name',                               'name',                               'ELR Lab Nm',                true
+'trisano.dw_encounters_lab_results_view',            'organism_name',                      'organism_name',                      'ELR Org Nm',                true
+'trisano.dw_encounters_lab_results_view',            'reference_range',                    'reference_range',                    'ELR Ref Rng',               true
+'trisano.dw_encounters_lab_results_view',            'result_value',                       'result_value',                       'ELR Rslt Val',              true
+'trisano.dw_encounters_lab_results_view',            'specimen_sent_to_state',             'specimen_sent_to_state',             'ELR Spec Snt to St',        true
+'trisano.dw_encounters_lab_results_view',            'specimen_source',                    'specimen_source',                    'ELR Spec Src',              true
+'trisano.dw_encounters_lab_results_view',            'staged_message_note',                'staged_message_note',                'ELR Stgd Msg Note',         true
+'trisano.dw_encounters_lab_results_view',            'staged_message_state',               'staged_message_state',               'ELR Stgd Msg St',           true
+'trisano.dw_encounters_lab_results_view',            'test_result',                        'test_result',                        'ELR Tst Rslt',              true
+'trisano.dw_encounters_lab_results_view',            'test_status',                        'test_status',                        'ELR Tst Stat',              true
+'trisano.dw_encounters_lab_results_view',            'test_type',                          'test_type',                          'ELR Tst Typ',               true
+'trisano.dw_encounters_lab_results_view',            'units',                              'units',                              'ELR Units',                 true
+'trisano.dw_encounters_treatments_events_view',      'date_of_treatment',                  'date_of_treatment',                  'ET Dt of Trtmnt',           true
+'trisano.dw_encounters_treatments_events_view',      'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_encounters_treatments_events_view',      'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_encounters_treatments_events_view',      'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_encounters_treatments_events_view',      'id',                                 'id',                                 '',                          false
+'trisano.dw_encounters_treatments_events_view',      'stop_treatment_date',                'stop_treatment_date',                'ET Dt Trtmnt Stppd',        true
+'trisano.dw_encounters_treatments_events_view',      'treatment_given',                    'treatment_given',                    'ET Trtmnt Gvn',             true
+'trisano.dw_encounters_treatments_events_view',      'treatment_id',                       'treatment_id',                       '',                          false
+'trisano.dw_encounters_treatments_events_view',      'treatment_name',                     'treatment_name',                     'ET Trtmnt Nm',              true
+'trisano.dw_encounter_telephones_view',              'area_code',                          'area_code',                          'EP Area Cd',                true
+'trisano.dw_encounter_telephones_view',              'country_code',                       'country_code',                       'EP Cntry Cd',               true
+'trisano.dw_encounter_telephones_view',              'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_encounter_telephones_view',              'extension',                          'extension',                          'EP Ext',                    true
+'trisano.dw_encounter_telephones_view',              'phone_number',                       'phone_number',                       'EP Phn Nbr',                true
+'trisano.dw_encounter_telephones_view',              'phone_type',                         'phone_type',                         'EP Phn Typ',                true
+'trisano.dw_morbidity_clinicians_view',              'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_clinicians_view',              'first_name',                         'first_name',                         'MC Frst Nm',                true
+'trisano.dw_morbidity_clinicians_view',              'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_clinicians_view',              'last_name',                          'last_name',                          'MC Lst Nm',                 true
+'trisano.dw_morbidity_clinicians_view',              'middle_name',                        'middle_name',                        'MC Mid Nm',                 true
+'trisano.dw_morbidity_clinicians_view',              'phones',                             'phones',                             'MC Phn Nbrs',               true
+'trisano.dw_morbidity_diagnostic_facilities_view',   'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_morbidity_diagnostic_facilities_view',   'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_diagnostic_facilities_view',   'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_diagnostic_facilities_view',   'name',                               'name',                               'MDF Nm',                    true
+'trisano.dw_morbidity_diagnostic_facilities_view',   'place_id',                           'place_id',                           '',                          false
+'trisano.dw_morbidity_diagnostic_facilities_view',   'place_type',                         'place_type',                         'MDF Typ',                   true
+'trisano.dw_morbidity_email_addresses_view',         'email_address',                      'email_address',                      'MP Email Addr',             true
+'trisano.dw_morbidity_email_addresses_view',         'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_morbidity_events_view',                  'active',                             'active',                             'MD Act',                    true
+'trisano.dw_morbidity_events_view',                  'actual_age_at_onset',                'actual_age_at_onset',                'ME Actl Age at Onst',       true
+'trisano.dw_morbidity_events_view',                  'actual_age_type',                    'actual_age_type',                    'ME Actl Age Typ',           true
+'trisano.dw_morbidity_events_view',                  'acuity',                             'acuity',                             'ME Acuity',                 true
+'trisano.dw_morbidity_events_view',                  'additional_risk_factors',            'additional_risk_factors',            'ME Addtl Risk Fctrs',       true
+'trisano.dw_morbidity_events_view',                  'age_in_years',                       'age_in_years',                       'ME Age in Yrs',             true
+'trisano.dw_morbidity_events_view',                  'event_onset_age_days',               'event_onset_age_days',               'ME Onst Age in Days',       true
+'trisano.dw_morbidity_events_view',                  'always_one',                         'always_one',                         '',                          false
+'trisano.dw_morbidity_events_view',                  'birth_date',                         'birth_date',                         'MP Brth Dt',                true
+'trisano.dw_morbidity_events_view',                  'birth_gender',                       'birth_gender',                       'MP Brth Gndr',              true
+'trisano.dw_morbidity_events_view',                  'cdc_code',                           'cdc_code',                           'MD CDC Cd',                 true
+'trisano.dw_morbidity_events_view',                  'city',                               'city',                               'ME City',                   true
+'trisano.dw_morbidity_events_view',                  'contact_lead_in',                    'contact_lead_in',                    'MD Cntct Lead-in',          true
+'trisano.dw_morbidity_events_view',                  'contact_type_if_once_a_contact',     'contact_type_if_once_a_contact',     'ME Cntct Typ',              true
+'trisano.dw_morbidity_events_view',                  'county',                             'county',                             'ME Cnty',                   true
+'trisano.dw_morbidity_events_view',                  'date_created',                       'date_created',                       '',                          false
+'trisano.dw_morbidity_events_view',                  'date_deleted',                       'date_deleted',                       '',                          false
+'trisano.dw_morbidity_events_view',                  'date_disease_diagnosed',             'date_disease_diagnosed',             'ME Dt Dis Diag',            true
+'trisano.dw_morbidity_events_view',                  'date_disease_onset',                 'date_disease_onset',                 'ME Dt Dis Onst',            true
+'trisano.dw_morbidity_events_view',                  'date_entered_into_system',           'date_entered_into_system',           'ME Event Date',             true
+'trisano.dw_morbidity_events_view',                  'date_investigation_completed',       'date_investigation_completed',       'ME Dt Inv Cmpl',            true
+'trisano.dw_morbidity_events_view',                  'date_investigation_started',         'date_investigation_started',         'ME Dt Inv Strtd',           true
+'trisano.dw_morbidity_events_view',                  'date_of_death',                      'date_of_death',                      'MP Dt of Death',            true
+'trisano.dw_morbidity_events_view',                  'date_reported_to_public_health',     'date_reported_to_public_health',     'ME Dt Rptd to PH',          true
+'trisano.dw_morbidity_events_view',                  'date_updated',                       'date_updated',                       'ME Dt Updtd',               true
+'trisano.dw_morbidity_events_view',                  'day_care_association',               'day_care_association',               'ME Day Care Assoc',         true
+'trisano.dw_morbidity_events_view',                  'disease_event_died',                 'disease_event_died',                 'ME Died',                   true
+'trisano.dw_morbidity_events_view',                  'disease_event_hospitalized',         'disease_event_hospitalized',         'ME Hospitalized',           true
+'trisano.dw_morbidity_events_view',                  'disease_id',                         'disease_id',                         '',                          false
+'trisano.dw_morbidity_events_view',                  'disease_name',                       'disease_name',                       'MD Dis Nm',                 true
+'trisano.dw_morbidity_events_view',                  'disposition_if_once_a_contact',      'disposition_if_once_a_contact',      'ME Dsp',                    true
+'trisano.dw_morbidity_events_view',                  'disposition_date',                   'disposition_date',                   'ME Dsp Dt',                 true
+'trisano.dw_morbidity_events_view',                  'dw_patients_id',                     'dw_patients_id',                     '',                          false
+'trisano.dw_morbidity_events_view',                  'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_morbidity_events_view',                  'estimated_age_at_onset',             'estimated_age_at_onset',             'ME Est Age at Onst',        true
+'trisano.dw_morbidity_events_view',                  'estimated_age_type',                 'estimated_age_type',                 'ME Est Age Typ',            true
+'trisano.dw_morbidity_events_view',                  'ethnicity',                          'ethnicity',                          'MP Ethncty',                true
+'trisano.dw_morbidity_events_view',                  'event_name',                         'event_name',                         'ME Evnt Nm',                true
+'trisano.dw_morbidity_events_view',                  'event_queue_id',                     'event_queue_id',                     '',                          false
+'trisano.dw_morbidity_events_view',                  'first_name',                         'first_name',                         'MP Frst Nm',                true
+'trisano.dw_morbidity_events_view',                  'first_name_soundex',                 'first_name_soundex',                 '',                          false
+'trisano.dw_morbidity_events_view',                  'food_handler',                       'food_handler',                       'ME Food Hdlr',              true
+'trisano.dw_morbidity_events_view',                  'group_living',                       'group_living',                       'ME Grp Lvng',               true
+'trisano.dw_morbidity_events_view',                  'healthcare_worker',                  'healthcare_worker',                  'ME Hlthcare Wrkr',          true
+'trisano.dw_morbidity_events_view',                  'ibis_updated_at',                    'ibis_updated_at',                    'ME Dt IBIS Updtd',          true
+'trisano.dw_morbidity_events_view',                  'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_events_view',                  'imported_from_code',                 'imported_from_code',                 '',                          false
+'trisano.dw_morbidity_events_view',                  'investigating_jurisdiction_id',      'investigating_jurisdiction_id',      '',                          false
+'trisano.dw_morbidity_events_view',                  'investigating_jurisdiction',         'investigating_jurisdiction',         'ME Inv Jur',                true
+'trisano.dw_morbidity_events_view',                  'investigator',                       'investigator',                       'ME Invstgtr',               true
+'trisano.dw_morbidity_events_view',                  'jurisdiction_of_residence_id',       'jurisdiction_of_residence_id',       '',                          false
+'trisano.dw_morbidity_events_view',                  'jurisdiction_of_residence',          'jurisdiction_of_residence',          'ME Jur of Res',             true
+'trisano.dw_morbidity_events_view',                  'last_name',                          'last_name',                          'MP Lst Nm',                 true
+'trisano.dw_morbidity_events_view',                  'last_name_soundex',                  'last_name_soundex',                  '',                          false
+'trisano.dw_morbidity_events_view',                  'lhd_case_status_code',               'lhd_case_status_code',               'ME LHD Case Stat Cd',       true
+'trisano.dw_morbidity_events_view',                  'middle_name',                        'middle_name',                        'MP Mid Nm',                 true
+'trisano.dw_morbidity_events_view',                  'mmwr_week',                          'mmwr_week',                          'ME MMWR Wk',                true
+'trisano.dw_morbidity_events_view',                  'mmwr_year',                          'mmwr_year',                          'ME MMWR Yr',                true
+'trisano.dw_morbidity_events_view',                  'occupation',                         'occupation',                         'ME Occ',                    true
+'trisano.dw_morbidity_events_view',                  'other_data_1',                       'other_data_1',                       'ME Othr Data 1',            true
+'trisano.dw_morbidity_events_view',                  'other_data_2',                       'other_data_2',                       'ME Othr Data 2',            true
+'trisano.dw_morbidity_events_view',                  'outbreak_associated_code',           'outbreak_associated_code',           'ME Outbrk Assoc Cd',        true
+'trisano.dw_morbidity_events_view',                  'outbreak_name',                      'outbreak_name',                      'ME Outbrk Nm',              true
+'trisano.dw_morbidity_events_view',                  'parent_guardian',                    'parent_guardian',                    'ME Prnt/Guard',             true
+'trisano.dw_morbidity_events_view',                  'parent_id',                          'parent_id',                          '',                          false
+'trisano.dw_morbidity_events_view',                  'patient_entity_id',                  'patient_entity_id',                  '',                          false
+'trisano.dw_morbidity_events_view',                  'place_lead_in',                      'place_lead_in',                      'MD Plc Lead-in',            true
+'trisano.dw_morbidity_events_view',                  'postal_code',                        'postal_code',                        'ME Pstl Cd',                true
+'trisano.dw_morbidity_events_view',                  'pregnancy_due_date',                 'pregnancy_due_date',                 'ME Pregnancy Due Dt',       true
+'trisano.dw_morbidity_events_view',                  'pregnant',                           'pregnant',                           'ME Preg',                   true
+'trisano.dw_morbidity_events_view',                  'primary_language',                   'primary_language',                   'MP Prim Lng',               true
+'trisano.dw_morbidity_events_view',                  'public_health_status',               'public_health_status',               'ME PH Stat',                true
+'trisano.dw_morbidity_events_view',                  'record_number',                      'record_number',                      'ME Rec Nbr',                true
+'trisano.dw_morbidity_events_view',                  'rep_ag_name',                        'rep_ag_name',                        'MRA Nm',                    true
+'trisano.dw_morbidity_events_view',                  'rep_ag_place_type',                  'rep_ag_place_type',                  'MRA Typ',                   true
+'trisano.dw_morbidity_events_view',                  'rep_ag_phone_numbers',               'rep_ag_phone_numbers',               'MRA Phn Nbrs',              true
+'trisano.dw_morbidity_events_view',                  'rep_first_name',                     'rep_first_name',                     'MR Frst Nm',                true
+'trisano.dw_morbidity_events_view',                  'rep_last_name',                      'rep_last_name',                      'MR Lst Nm',                 true
+'trisano.dw_morbidity_events_view',                  'rep_middle_name',                    'rep_middle_name',                    'MR Mid Nm',                 true
+'trisano.dw_morbidity_events_view',                  'rep_phone_numbers',                  'rep_phone_numbers',                  'MR Phn Nbrs',               true
+'trisano.dw_morbidity_events_view',                  'results_reported_to_clinician_date', 'results_reported_to_clinician_date', 'ME Rslts Rptd to Clin',     true
+'trisano.dw_morbidity_events_view',                  'review_completed_by_state_date',     'review_completed_by_state_date',     'ME Dt Rvw Cmpl by St',      true
+'trisano.dw_morbidity_events_view',                  'risk_factor_details',                'risk_factor_details',                'ME Risk Fctr Dtls',         true
+'trisano.dw_morbidity_events_view',                  'sent_to_cdc',                        'sent_to_cdc',                        'ME Snt to CDC',             true
+'trisano.dw_morbidity_events_view',                  'sent_to_ibis',                       'sent_to_ibis',                       'ME Snt to IBIS',            true
+'trisano.dw_morbidity_events_view',                  'state_case_status_code',             'state_case_status_code',             'ME St Case Stat Cd',        true
+'trisano.dw_morbidity_events_view',                  'state',                              'state',                              'ME St',                     true
+'trisano.dw_morbidity_events_view',                  'street_name',                        'street_name',                        'ME Street Nm',              true
+'trisano.dw_morbidity_events_view',                  'street_number',                      'street_number',                      'ME Street Nbr',             true
+'trisano.dw_morbidity_events_view',                  'treatment_lead_in',                  'treatment_lead_in',                  'MD Trtmnt Lead-In',         true
+'trisano.dw_morbidity_events_view',                  'unit_number',                        'unit_number',                        'ME Unit Nbr',               true
+'trisano.dw_morbidity_hospitals_view',               'admission_date',                     'admission_date',                     'MH Admsn Dt',               true
+'trisano.dw_morbidity_hospitals_view',               'discharge_date',                     'discharge_date',                     'MH Dschg Dt',               true
+'trisano.dw_morbidity_hospitals_view',               'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_morbidity_hospitals_view',               'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_hospitals_view',               'hospital_name',                      'hospital_name',                      'MH Hosp Nm',                true
+'trisano.dw_morbidity_hospitals_view',               'hospital_record_number',             'hospital_record_number',             'MH Hosp Rec Nbr',           true
+'trisano.dw_morbidity_hospitals_view',               'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_hospitals_view',               'medical_record_number',              'medical_record_number',              'MH Med Rec Nbr',            true
+'trisano.dw_morbidity_lab_results_view',             'collection_date',                    'collection_date',                    'MLR Clct Dt',               true
+'trisano.dw_morbidity_lab_results_view',             'comment',                            'comment',                            'MLR Cmt',                   true
+'trisano.dw_morbidity_lab_results_view',             'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_morbidity_lab_results_view',             'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_morbidity_lab_results_view',             'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_lab_results_view',             'hl7_message',                        'hl7_message',                        'MLR HL7 Msg',               true
+'trisano.dw_morbidity_lab_results_view',             'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_lab_results_view',             'lab_test_date',                      'lab_test_date',                      'MLR Lab Tst Dt',            true
+'trisano.dw_morbidity_lab_results_view',             'lab_type',                           'lab_type',                           'MLR Lab Typ',               true
+'trisano.dw_morbidity_lab_results_view',             'loinc_code',                         'loinc_code',                         'MLR LOINC Cd',              true
+'trisano.dw_morbidity_lab_results_view',             'name',                               'name',                               'MLR Nm',                    true
+'trisano.dw_morbidity_lab_results_view',             'organism_name',                      'organism_name',                      'MLR Org Nm',                true
+'trisano.dw_morbidity_lab_results_view',             'reference_range',                    'reference_range',                    'MLR Ref Rng',               true
+'trisano.dw_morbidity_lab_results_view',             'result_value',                       'result_value',                       'MLR Rslt Val',              true
+'trisano.dw_morbidity_lab_results_view',             'specimen_sent_to_state',             'specimen_sent_to_state',             'MLR Spec Snt to St',        true
+'trisano.dw_morbidity_lab_results_view',             'specimen_source',                    'specimen_source',                    'MLR Spec Src',              true
+'trisano.dw_morbidity_lab_results_view',             'staged_message_note',                'staged_message_note',                'MLR Stgd Msg Note',         true
+'trisano.dw_morbidity_lab_results_view',             'staged_message_state',               'staged_message_state',               'MLR Stgd Msg St',           true
+'trisano.dw_morbidity_lab_results_view',             'test_result',                        'test_result',                        'MLR Tst Rslt',              true
+'trisano.dw_morbidity_lab_results_view',             'test_status',                        'test_status',                        'MLR Tst Stat',              true
+'trisano.dw_morbidity_lab_results_view',             'test_type',                          'test_type',                          'MLR Tst Typ',               true
+'trisano.dw_morbidity_lab_results_view',             'units',                              'units',                              'MLR Units',                 true
+'trisano.dw_morbidity_patients_races_view',          'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_patients_races_view',          'person_id',                          'person_id',                          '',                          false
+'trisano.dw_morbidity_patients_races_view',          'race',                               'race',                               'MP Race',                   true
+'trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_morbidity_secondary_jurisdictions_view', 'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_secondary_jurisdictions_view', 'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_secondary_jurisdictions_view', 'jurisdiction_id',                    'jurisdiction_id',                    '',                          false
+'trisano.dw_morbidity_secondary_jurisdictions_view', 'name',                               'name',                               'MSJ Nm',                    true
+'trisano.dw_morbidity_telephones_view',              'area_code',                          'area_code',                          'MP Area Cd',                true
+'trisano.dw_morbidity_telephones_view',              'country_code',                       'country_code',                       'MP Cntry Cd',               true
+'trisano.dw_morbidity_telephones_view',              'entity_id',                          'entity_id',                          '',                          false
+'trisano.dw_morbidity_telephones_view',              'extension',                          'extension',                          'MP Ext',                    true
+'trisano.dw_morbidity_telephones_view',              'phone_number',                       'phone_number',                       'MP Phn Nbr',                true
+'trisano.dw_morbidity_telephones_view',              'phone_type',                         'phone_type',                         'MP Phn Typ',                true
+'trisano.dw_morbidity_treatments_events_view',       'date_of_treatment',                  'date_of_treatment',                  'MT Dt of Trtmnt',           true
+'trisano.dw_morbidity_treatments_events_view',       'dw_contact_events_id',               'dw_contact_events_id',               '',                          false
+'trisano.dw_morbidity_treatments_events_view',       'dw_encounter_events_id',             'dw_encounter_events_id',             '',                          false
+'trisano.dw_morbidity_treatments_events_view',       'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_morbidity_treatments_events_view',       'id',                                 'id',                                 '',                          false
+'trisano.dw_morbidity_treatments_events_view',       'stop_treatment_date',                'stop_treatment_date',                'MT Dt Trtmnt Stppd',        true
+'trisano.dw_morbidity_treatments_events_view',       'treatment_given',                    'treatment_given',                    'MT Trtmnt Gvn',             true
+'trisano.dw_morbidity_treatments_events_view',       'treatment_id',                       'treatment_id',                       '',                          false
+'trisano.dw_morbidity_treatments_events_view',       'treatment_name',                     'treatment_name',                     'MT Trtmnt Nm',              true
+'trisano.dw_place_events_view',                      'city',                               'city',                               'PX City',                   true
+'trisano.dw_place_events_view',                      'county',                             'county',                             'PX Cnty',                   true
+'trisano.dw_place_events_view',                      'date_of_exposure',                   'date_of_exposure',                   'PX Dt of Expsr',            true
+'trisano.dw_place_events_view',                      'dw_morbidity_events_id',             'dw_morbidity_events_id',             '',                          false
+'trisano.dw_place_events_view',                      'id',                                 'id',                                 '',                          false
+'trisano.dw_place_events_view',                      'name',                               'name',                               'PX Plc Nm',                 true
+'trisano.dw_place_events_view',                      'place_type',                         'place_type',                         'PX Plc Typ',                true
+'trisano.dw_place_events_view',                      'postal_code',                        'postal_code',                        'PX Pstl Cd',                true
+'trisano.dw_place_events_view',                      'state',                              'state',                              'PX St',                     true
+'trisano.dw_place_events_view',                      'street_name',                        'street_name',                        'PX Street Nm',              true
+'trisano.dw_place_events_view',                      'street_number',                      'street_number',                      'PX Street Nbr',             true
+'trisano.dw_place_events_view',                      'unit_number',                        'unit_number',                        'PX Unit Nbr',               true

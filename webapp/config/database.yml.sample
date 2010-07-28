@@ -20,6 +20,12 @@ development:
   password: password
   host: localhost
   port: 5432
+  warehouse_host: localhost
+  warehouse_port: 5432
+  warehouse_username: trisano_su
+  warehouse_password: password
+  warehouse_database: trisano_warehouse
+  warehouse_driver: org.postgresql.Driver
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -51,6 +57,12 @@ test:
   password: password
   host: localhost
   port: 5432
+  warehouse_host: localhost
+  warehouse_port: 5432
+  warehouse_username: trisano_su
+  warehouse_password: password
+  warehouse_database: trisano_warehouse
+  warehouse_driver: org.postgresql.Driver
 
 production:
   <% if RUBY_PLATFORM =~ /java/ %>
@@ -64,3 +76,9 @@ production:
   password: password
   host: localhost
   port: 5432
+  warehouse_host: localhost
+  warehouse_port: 5432
+  warehouse_username: trisano_su
+  warehouse_password: password
+  warehouse_database: trisano_warehouse
+  warehouse_driver: org.postgresql.Driver

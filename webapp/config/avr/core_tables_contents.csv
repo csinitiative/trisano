@@ -1,0 +1,30 @@
+# make_category, table_name, table_description, target_table, order_num, formbuilder_prefix
+'true',  'dw_morbidity_events_view',                  'Morbidity Events',                  'trisano.dw_morbidity_events_view',                  1,  'Morbidity'
+'true',  'dw_morbidity_clinicians_view',              'Morbidity Clinicians',              'trisano.dw_morbidity_clinicians_view',              2,  NULL
+'true',  'dw_morbidity_diagnostic_facilities_view',   'Morbidity Diagnostic Facilities',   'trisano.dw_morbidity_diagnostic_facilities_view',   2,  NULL
+'true',  'dw_morbidity_email_addresses_view',         'Morbidity Email Addresses',         'trisano.dw_morbidity_email_addresses_view',         2,  NULL
+'true',  'dw_morbidity_hospitals_view',               'Morbidity Hospitals',               'trisano.dw_morbidity_hospitals_view',               2,  NULL
+'true',  'dw_morbidity_lab_results_view',             'Morbidity Lab Results',             'trisano.dw_morbidity_lab_results_view',             2,  NULL
+'true',  'dw_morbidity_patients_races_view',          'Morbidity Patients Races',          'trisano.dw_morbidity_patients_races_view',          2,  NULL
+'true',  'dw_morbidity_secondary_jurisdictions_view', 'Morbidity Secondary Jurisdictions', 'trisano.dw_morbidity_secondary_jurisdictions_view', 2,  NULL
+'true',  'dw_morbidity_telephones_view',              'Morbidity Telephone Numbers',       'trisano.dw_morbidity_telephones_view',              2,  NULL
+'true',  'dw_morbidity_treatments_events_view',       'Morbidity Treatments Events',       'trisano.dw_morbidity_treatments_events_view',       2,  NULL
+'true',  'dw_contact_events_view',                    'Contact Events',                    'trisano.dw_contact_events_view',                    3,  'Contact'
+'true',  'dw_contact_clinicians_view',                'Contact Clinicians',                'trisano.dw_contact_clinicians_view',                4,  NULL
+'true',  'dw_contact_diagnostic_facilities_view',     'Contact Diagnostic Facilities',     'trisano.dw_contact_diagnostic_facilities_view',     4,  NULL
+'true',  'dw_contact_email_addresses_view',           'Contact Email Addresses',           'trisano.dw_contact_email_addresses_view',           4,  NULL
+'true',  'dw_contact_hospitals_view',                 'Contact Hospitals',                 'trisano.dw_contact_hospitals_view',                 4,  NULL
+'true',  'dw_contact_lab_results_view',               'Contact Lab Results',               'trisano.dw_contact_lab_results_view',               4,  NULL
+'true',  'dw_contact_patients_races_view',            'Contact Patients Races',            'trisano.dw_contact_patients_races_view',            4,  NULL
+'true',  'dw_contact_secondary_jurisdictions_view',   'Contact Secondary Jurisdictions',   'trisano.dw_contact_secondary_jurisdictions_view',   4,  NULL
+'true',  'dw_contact_telephones_view',                'Contact Telephone Numbers',         'trisano.dw_contact_telephones_view',                4,  NULL
+'true',  'dw_contact_treatments_events_view',         'Contact Treatments Events',         'trisano.dw_contact_treatments_events_view',         4,  NULL
+'true',  'dw_encounter_events_view',                  'Encounters',                        'trisano.dw_encounter_events_view',                  5,  'Encounter'
+'true',  'dw_encounter_email_addresses_view',         'Encounter Email Addresses',         'trisano.dw_encounter_email_addresses_view',         6,  NULL
+'true',  'dw_encounters_lab_results_view',            'Encounters Lab Results',            'trisano.dw_encounters_lab_results_view',            6,  NULL
+'true',  'dw_encounter_patients_races_view',          'Encounter Patients Races',          'trisano.dw_encounter_patients_races_view',          6,  NULL
+'true',  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',       'trisano.dw_encounter_telephones_view',              6,  NULL
+'true',  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',      'trisano.dw_encounters_treatments_events_view',      6,  NULL
+'true',  'dw_place_events_view',                      'Place Events',                      'trisano.dw_place_events_view',                      7,  'Place'
+'true',  'avr_groups_view',                           'Disease Groups',                    'trisano.avr_groups_view',                           9,  NULL
+'false', 'avr_groups_diseases_view',                  'avr_groups_diseases_view',          'trisano.avr_groups_diseases_view',                  9,  NULL

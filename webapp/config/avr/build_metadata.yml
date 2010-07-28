@@ -1,0 +1,38 @@
+core_tables:
+    - BEGIN;
+    - DROP TABLE IF EXISTS core_tables;
+    - CREATE TABLE trisano.core_tables (
+            table_name NAME PRIMARY KEY,
+            table_description TEXT,
+            target_table TEXT NOT NULL,
+            order_num INTEGER NOT NULL,
+            make_category BOOLEAN DEFAULT true,
+            formbuilder_prefix TEXT
+        );
+    - COMMIT;
+
+core_columns:
+    - BEGIN;
+    - DROP TABLE IF EXISTS trisano.core_columns;
+    - CREATE TABLE trisano.core_columns (
+          target_column NAME,
+          target_table TEXT,
+          PRIMARY KEY (target_column, target_table),
+          column_name TEXT,
+          column_description TEXT,
+          make_category_column BOOLEAN DEFAULT true
+      );
+    - COMMIT;
+
+core_relationships:
+    - BEGIN;
+    - DROP TABLE IF EXISTS trisano.core_relationships;
+    - CREATE TABLE trisano.core_relationships (
+          from_column NAME NOT NULL,
+          from_table TEXT NOT NULL,
+          to_column NAME NOT NULL,
+          to_table TEXT NOT NULL,
+          relation_type TEXT DEFAULT '0:N',
+          join_order TEXT NOT NULL DEFAULT 'zzzzzzzzz'
+      );
+    - COMMIT;
