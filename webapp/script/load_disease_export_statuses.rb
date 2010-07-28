@@ -39,7 +39,7 @@ end
 
 Disease.transaction do
   cdc_diseases.each do |disease|
-    statuses_for(disease).each {|status| disease.external_codes << status}
+    statuses_for(disease).each {|status| disease.cdc_disease_export_statuses << status}
     disease.save!
   end
 end
