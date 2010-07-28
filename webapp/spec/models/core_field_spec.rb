@@ -97,15 +97,15 @@ describe CoreField do
 
     it "should not be rendered if association is for hiding field" do
       Factory.create(:core_fields_disease,
-                     :disease => @disease,
-                     :core_field => @cf,
-                     :rendered => false)
+        :disease => @disease,
+        :core_field => @cf,
+        :rendered => false)
       @cf.should_not be_rendered(@event)
     end
 
   end
 
-  describe "disease specific core fields" do
+  describe "rendering disease specific core fields" do
     before do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
@@ -136,6 +136,8 @@ describe CoreField do
 
   end
 
+
+
   describe "regular ol' core fields" do
     before do
       @event = Factory.create(:morbidity_event)
@@ -159,12 +161,47 @@ describe CoreField do
 
     it "should be rendered if event's disease is not associated" do
       Factory.create(:core_fields_disease,
-                     :disease => Factory.create(:disease),
-                     :core_field => @cf)
+        :disease => Factory.create(:disease),
+        :core_field => @cf)
       @cf.should be_rendered(@event)
     end
 
     it_should_behave_like "disease is associated"
+  end
+
+  describe "replacing regular ol' core fields" do
+    before do
+      @event = Factory.create(:morbidity_event)
+      @disease = Factory.create(:disease)
+      @event.build_disease_event(:disease => @disease).save!
+      @cf = Factory.create(:core_field, :disease_specific => false)
+    end
+    
+    it "should not replace if no disease is associated" do
+      @cf.should_not be_replaced(@event)
+    end
+
+    it "should not be replaced if event is nil" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf, :rendered => true, :replaced => true)
+      @cf.should_not be_replaced(nil)
+    end
+
+    it "should not replace if event's disease is not associated" do
+      @event.disease_event.update_attributes!(:disease => Factory.create(:disease))
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf, :rendered => true, :replaced => true)
+      @cf.should_not be_replaced(@event)
+    end
+
+    it "should replace if disease association is for replacing the field" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf, :rendered => true, :replaced => true)
+      @cf.should be_replaced(@event)
+    end
+
+    it "should not replace if disease association is not for replacing the field" do
+      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf, :rendered => true, :replaced => false)
+      @cf.should_not be_replaced(@event)
+    end
+
   end
 
 end

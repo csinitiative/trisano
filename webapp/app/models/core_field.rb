@@ -87,6 +87,16 @@ class CoreField < ActiveRecord::Base
     end
   end
 
+  def replaced?(event)
+    disease = event.try(:disease_event).try(:disease)
+
+    if assoc = disease_association(disease)
+      assoc.replaced
+    else
+      false
+    end
+  end
+
   private
 
   def normalize_attributes
