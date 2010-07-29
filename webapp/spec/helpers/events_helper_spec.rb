@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
 
-
 describe EventsHelper do
   include ApplicationHelper
   include EventsHelperSpecHelper
@@ -242,8 +241,6 @@ describe EventsHelper, "rendering core elements and sections" do
       given_before_partials
       given_after_partials
       given_no_replacement_partials
-
-      
     end
 
     describe "core element in edit mode" do
@@ -297,4 +294,75 @@ describe EventsHelper, "rendering core elements and sections" do
     end
 
   end
+end
+
+describe EventsHelper, "rendering replacement partials" do
+
+  def given_no_before_partials
+    mock = helper.stubs(:before_core_partials)
+    mock.returns(Hash.new {|hash, key| hash[key] = []})
+  end
+
+  def given_no_after_partials
+    mock = helper.stubs(:after_core_partials)
+    mock.returns(Hash.new {|hash, key| hash[key] = []})
+  end
+
+  def given_replacement_partials
+    mock = helper.stubs(:core_replacement_partial)
+    mock = mock.returns({"morbidity_event[test_attribute]"=>{:partial=> 'replacement_partial'}})
+    helper.stubs(:render).with({:partial => 'replacement_partial', :locals => {:f => @fb}}).returns('<p>replacement partial</p>')
+  end
+
+  shared_examples_for "event core element replacer" do
+    it "renders the original content if core field isn't replaced for this event" do
+      helper.send(@method_to_test, :test_attribute, @fb, :horiz) do
+        helper.concat('<p>original content</p>')
+      end
+      
+      helper.output_buffer.should have_tag('p', 'original content')
+    end
+
+    it "renders the replacement content if core field is replaced for the event" do
+      Factory.create(:core_fields_disease, :core_field => @core_field, :disease => @event.disease.disease, :rendered => true, :replaced => true)
+      helper.send(@method_to_test, :test_attribute, @fb, :horiz) do
+        helper.concat('<p>original content</p>')
+      end
+
+      helper.output_buffer.should have_tag('p', 'replacement partial')
+    end
+  end
+
+  describe "on an event" do
+    before(:each) do
+      @core_field = Factory.create(:cmr_core_field,
+        :key => 'morbidity_event[test_attribute]',
+        :disease_specific => false)
+      @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
+      helper.output_buffer = ""
+      @event = Factory.create(:event_with_disease_event)
+      assigns[:event] = @event
+
+      given_no_before_partials
+      given_no_after_partials
+      given_replacement_partials
+    end
+
+    describe "in edit mode" do
+      before { @method_to_test = :core_element }
+      it_should_behave_like "event core element replacer"
+    end
+
+    describe "in show mode" do
+      before { @method_to_test = :core_element_show }
+      it_should_behave_like "event core element replacer"
+    end
+
+    describe "in print mode" do
+      before { @method_to_test = :core_element_print }
+      it_should_behave_like "event core element replacer"
+    end
+
+  end
+  
 end

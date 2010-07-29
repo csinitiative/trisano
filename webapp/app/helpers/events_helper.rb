@@ -58,8 +58,9 @@ module EventsHelper
     end
   end
 
-  def concat_block_or_replacement(key, form_builder, &block)
-    if replacement = core_replacement_partial[key]
+  def concat_block_or_replacement(core_field, form_builder, &block)
+    replacement = core_replacement_partial[core_field.key]
+    if replacement && core_field.replaced?(@event)
       locals = replacement[:locals] || {}
       replacement[:locals] = { :f => form_builder }.merge(locals)
       concat(render(replacement))
@@ -72,7 +73,7 @@ module EventsHelper
     rendering_core_field(attribute, form_builder) do |cf|
       concat("<fieldset class='#{css_class}'>")
       concat("<legend>#{form_builder.core_field(attribute).name}</legend>")
-      concat_block_or_replacement(cf.key, form_builder, &block)
+      concat_block_or_replacement(cf, form_builder, &block)
       concat("</fieldset>")
     end
   end
@@ -81,7 +82,7 @@ module EventsHelper
     rendering_core_field(attribute, form_builder) do |cf|
       concat_core_field(mode, :before, attribute, form_builder)
       concat("<span class='#{css_class}'>")
-      concat_block_or_replacement(cf.key, form_builder, &block)
+      concat_block_or_replacement(cf, form_builder, &block)
       concat(render_core_field_help_text(attribute, form_builder, @event))
       concat("&nbsp;</span>")
       concat_core_field(mode, :after, attribute, form_builder)
