@@ -19,19 +19,20 @@ require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_he
 
 describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
   include DiseaseSpecHelper
+  include PerinatalHepBSpecHelper
 
   describe "creating default associations" do
     before do
       given_a_disease_named('Hepatitis B Pregnancy Event')
-      @core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml')).values
-      CoreField.load!(@core_fields)
+      given_p_hep_b_core_fields_loaded
+      given_ce_core_fields_to_replace_loaded
     end
 
     it "should associate hep b core fields w/ acute Hep B" do
       lambda do
         CoreFieldsDisease.create_perinatal_hep_b_associations
-      end.should change(CoreFieldsDisease, :count).by(@core_fields.size)
-      Disease.find_by_disease_name('Hepatitis B Pregnancy Event').core_fields.size.should == @core_fields.size
+      end.should change(CoreFieldsDisease, :count).by(@core_fields.size + @replacement_core_fields.size)
+      Disease.find_by_disease_name('Hepatitis B Pregnancy Event').core_fields.size.should == @core_fields.size + @replacement_core_fields.size
     end
 
   end

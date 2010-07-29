@@ -14,7 +14,8 @@ class CoreFieldsDisease < ActiveRecord::Base
           core_field = CoreField.find_by_key(field['key'])
           attributes = Hash[:disease, disease,
                             :core_field, core_field,
-                            :rendered, field['rendered'] || true]
+                            :rendered, field['rendered'] || true,
+                            :replaced, field['replaced'] || false]
           if core_fields_disease = self.find_by_disease_id_and_core_field_id(disease.id, core_field.id)
             core_fields_disease.update_attributes!(attributes)
           else
