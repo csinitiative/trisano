@@ -20,6 +20,7 @@ if RUBY_PLATFORM =~ /java/
   require 'fileutils'
   require 'yaml'
   require 'csv'
+  require 'jdbc/postgres'
 
   namespace :trisano do
     namespace :avr do
@@ -149,7 +150,13 @@ if RUBY_PLATFORM =~ /java/
       task :metadata_schema_core => [:recreate_core_tables, :recreate_core_columns, :recreate_core_relationships]
 
       task :metadata_schema_plugins => [:metadata_schema_core] do
-        # XXX Flesh this out.
+        db_connection do |conn|
+          FileList.new('vendor/trisano/*/avr/build_metadata_schema.rb').each do |avr_file|
+            require avr_file
+            puts "Running metadata_schema for plugin from #{avr_file}"
+            TriSano_metadata_plugin.new(conn, lambda { |x, y| get_query_results(x, y) })
+          end
+        end
       end
 
       desc "Set up the AVR metadata schema tables"
