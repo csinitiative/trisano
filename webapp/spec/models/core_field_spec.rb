@@ -135,9 +135,7 @@ describe CoreField do
     it_should_behave_like "disease is associated"
 
   end
-
-
-
+  
   describe "regular ol' core fields" do
     before do
       @event = Factory.create(:morbidity_event)
@@ -169,12 +167,12 @@ describe CoreField do
     it_should_behave_like "disease is associated"
   end
 
-  describe "replacing regular ol' core fields" do
+  describe "replacing disease-specific core fields" do
     before do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
       @event.build_disease_event(:disease => @disease).save!
-      @cf = Factory.create(:core_field, :disease_specific => false)
+      @cf = Factory.create(:core_field, :disease_specific => true)
     end
     
     it "should not replace if no disease is associated" do
@@ -201,7 +199,23 @@ describe CoreField do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf, :rendered => true, :replaced => false)
       @cf.should_not be_replaced(@event)
     end
+  end
 
+  describe "replacing non-disease-specific core fields" do
+    before do
+      @event = Factory.create(:morbidity_event)
+      @disease = Factory.create(:disease)
+      @event.build_disease_event(:disease => @disease).save!
+      @cf = Factory.create(:core_field, :disease_specific => false)
+    end
+
+    it "should replace if no disease is associated" do
+      @cf.should be_replaced(@event)
+    end
+
+    it "should be replaced if event is nil" do
+      @cf.should be_replaced(nil)
+    end
   end
 
 end

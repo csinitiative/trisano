@@ -29,9 +29,9 @@ class CoreField < ActiveRecord::Base
     def find_event_fields_for(event_type, *args)
       return [] if event_type.blank?
       with_scope(:find => {
-                   :conditions => ["event_type=?", event_type],
-                   :include => :core_fields_diseases
-                 }) do
+          :conditions => ["event_type=?", event_type],
+          :include => :core_fields_diseases
+        }) do
         find(*args)
       end
     end
@@ -93,7 +93,11 @@ class CoreField < ActiveRecord::Base
     if assoc = disease_association(disease)
       assoc.replaced
     else
-      false
+      if disease_specific
+        return false
+      else
+        return true
+      end
     end
   end
 
