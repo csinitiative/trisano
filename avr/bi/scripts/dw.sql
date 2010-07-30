@@ -985,7 +985,7 @@ SELECT
     pt.treatment_id,
     tgec.code_description AS treatment_given,
     upsert_date(pt.treatment_date) AS date_of_treatment,
-    pt.treatment_name,
+    t.treatment_name,
     pt.stop_treatment_date
 FROM
     participations_treatments pt
@@ -995,6 +995,8 @@ FROM
         ON (events.id = p.event_id AND events.deleted_at IS NULL)
     LEFT JOIN external_codes tgec
         ON (tgec.id = pt.treatment_given_yn_id AND tgec.deleted_at IS NULL)
+    JOIN treatments t
+        ON (t.id = pt.treatment_id)
 ;
 
 ALTER TABLE dw_events_treatments
