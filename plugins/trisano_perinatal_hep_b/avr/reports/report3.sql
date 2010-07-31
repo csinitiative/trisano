@@ -1,25 +1,93 @@
+UPDATE warehouse_b.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
+UPDATE warehouse_a.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
+UPDATE warehouse_b.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
+UPDATE warehouse_a.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
+
 -- Report 3
 -- No longer requires a subreport
 
 CREATE OR REPLACE FUNCTION trisano.get_contact_lab_before(INTEGER, TEXT, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE STRICT AS
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
 $$
     SELECT * FROM trisano.dw_contact_lab_results_view
     WHERE
-        dw_contact_events_id = $1 AND test_type = $2 AND lab_test_date < $3
+        dw_contact_events_id = $1 AND test_type = $2 AND
+        (lab_test_date < $3 OR $3 IS NULL)
     ORDER BY lab_test_date DESC LIMIT 1;
 $$;
 
 CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE STRICT AS
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
 $$
     SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antigen (HBsAg)', $2);
 $$;
 
 CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE STRICT AS
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
 $$
     SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antibody (HBsAb)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_lab_after(INTEGER, TEXT, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.dw_contact_lab_results_view
+    WHERE
+        dw_contact_events_id = $1 AND test_type = $2 AND
+        (lab_test_date > $3 OR $3 IS NULL)
+    ORDER BY lab_test_date ASC LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_after(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antigen (HBsAg)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_after(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antibody (HBsAb)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION earliest_date(arr DATE[])
+    RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
+$$
+DECLARE
+    i INTEGER;
+    result DATE;
+BEGIN
+    result := arr[array_lower(arr, 1)];
+    FOR i IN array_lower(arr, 1)..array_upper(arr, 1) LOOP
+        IF (result IS NULL OR result > arr[i]) THEN
+            result := arr[i];
+        END IF;
+    END LOOP;
+    RETURN result;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION latest_date(arr DATE[])
+    RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
+$$
+DECLARE
+    i INTEGER;
+    result DATE;
+BEGIN
+    result := arr[array_lower(arr, 1)];
+    FOR i IN array_lower(arr, 1)..array_upper(arr, 1) LOOP
+        IF (result IS NULL OR result < arr[i]) THEN
+            result := arr[i];
+        END IF;
+    END LOOP;
+    RETURN result;
+END;
 $$;
 
 SELECT
@@ -106,6 +174,7 @@ FROM
             SELECT
                 dce.parent_id,
                 dce.contact_type,
+                -- XXX it appears middle_name isn't often NULL; check these for NULL or ''
                 COALESCE(dce.first_name || ' ', '') || COALESCE(dce.middle_name || ' ', '') || COALESCE(dce.last_name, '') AS name,
                 dce.birth_date,
                 hepb_dose1_date::TIMESTAMPTZ,
@@ -141,15 +210,17 @@ FROM
                                 4 -- fdd = dob + 1 mo., act = 'Needs Vaccine #2'
                             WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NULL THEN
                                 5 -- fdd = dob + 6 mo., act = 'Needs 6-month vaccine dose'
-                            WHEN COALESCE(
+                            WHEN
+                                COALESCE(
                                     (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
                                     dce.age_in_years BETWEEN .6 AND 1.5
-                                ) THEN
-                                6 -- fdd = dob + 9 mo., act = 'Needs serology 3 months after 9-month dose'
+                                ) AND
+                                (get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL
+                                    THEN 6 -- fdd = dob + 9 mo., act = 'Needs serology 3 months after 9-month dose'
                             WHEN COALESCE((now() - dce.birth_date) >= INTERVAL '365 days' * 2, dce.age_in_years >= 2) THEN
                                 7 -- fdd = dob + 24 mo., act = 'Close Newborn Contact'
                             ELSE
-                                -1 -- XXX What do we do here?
+                                -1 -- XXX What do we do here? We can hit this, for instance, if we have all our tests and aren't yet 2 yrs old.
                         END
                     ELSE -- Not a newborn contact
                         CASE
@@ -160,28 +231,28 @@ FROM
                                 -- XXX Check out logic here
                             WHEN
                                 hepb_dose1_date IS NULL AND
-                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result != 'Positive' AND
-                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result != 'Positive'
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
                                     THEN 9 -- fdd = report date, act = 'Needs Vaccine #1'
                             WHEN
                                 hepb_dose1_date IS NOT NULL AND
                                 hepb_dose2_date IS NULL AND
-                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result != 'Positive' AND
-                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result != 'Positive'
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
                                     THEN 10 -- fdd = 'hepb_dose1_date' + 1 mo., act = 'Needs Vaccine #2'
                             WHEN
                                 hepb_dose1_date IS NOT NULL AND
                                 hepb_dose2_date IS NOT NULL AND
                                 hepb_dose3_date IS NULL AND
-                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result != 'Positive' AND
-                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result != 'Positive'
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
                                     THEN 11 -- fdd = 'hepb_dose1_date' + 6 mo., act = 'Needs Vaccine #3'
                             WHEN
                                 hepb_dose1_date IS NOT NULL AND
                                 hepb_dose2_date IS NOT NULL AND
                                 hepb_dose3_date IS NOT NULL AND
-                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result != 'Positive' AND
-                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result != 'Positive'
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
                                     THEN 12 -- fdd = 'hepb_dose3_date' + 1 mo., act = 'Needs Post Immunization Serology'
                             WHEN disposition_date IS NOT NULL
                                 -- XXX This should possibly be the *firt* non-newborn check
@@ -195,24 +266,24 @@ FROM
                 LEFT JOIN (
                     SELECT
                         dw_contact_events_id AS contact_event_id,
-                        trisano.text_join_agg(COALESCE(hbig_vacc_date, ''), '')::DATE AS hbig,
-                        trisano.text_join_agg(COALESCE(hebp_dose1_date, ''), '')::DATE AS hepb_dose1_date,
-                        trisano.text_join_agg(COALESCE(hepb_dose2_date, ''), '')::DATE AS hepb_dose2_date,
-                        trisano.text_join_agg(COALESCE(hepb_dose3_date, ''), '')::DATE AS hepb_dose3_date,
-                        trisano.text_join_agg(COALESCE(hepb_dose4_date, ''), '')::DATE AS hepb_dose4_date,
-                        trisano.text_join_agg(COALESCE(hepb_dose5_date, ''), '')::DATE AS hepb_dose5_date,
-                        trisano.text_join_agg(COALESCE(hepb_dose6_date, ''), '')::DATE AS hepb_dose6_date
+                        earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig,
+                        earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                        earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+                        earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+                        earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+                        earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+                        earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
                     FROM (
                         SELECT
                             dw_contact_events_id,
-                            CASE WHEN treatment_name = 'HBIG' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hbig_vacc_date,
-                            CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hebp_dose1_date,
-                            CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose2_date,
+                            CASE WHEN treatment_name = 'HBIG' THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
                             -- The ~ is intentional
-                            CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose3_date,
-                            CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose4_date,
-                            CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose5_date,
-                            CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose6_date
+                            CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                            CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
                         FROM
                             trisano.dw_contact_treatments_events_view dct
                         WHERE

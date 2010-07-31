@@ -73,28 +73,26 @@ FROM
     LEFT JOIN (
         SELECT
             dw_contact_events_id AS contact_event_id,
-            trisano.text_join_agg(COALESCE(hbig_vacc_date, ''), '') AS hbig_vacc_date,
-            trisano.text_join_agg(COALESCE(hebp_dose1_date, ''), '') AS hepb_dose1_date,
-            trisano.text_join_agg(COALESCE(hepb_dose2_date, ''), '') AS hepb_dose2_date,
-            trisano.text_join_agg(COALESCE(hepb_dose3_date, ''), '') AS hepb_dose3_date,
-            trisano.text_join_agg(COALESCE(hepb_dose4_date, ''), '') AS hepb_dose4_date,
-            trisano.text_join_agg(COALESCE(hepb_dose5_date, ''), '') AS hepb_dose5_date,
-            trisano.text_join_agg(COALESCE(hepb_dose6_date, ''), '') AS hepb_dose6_date
+            earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig_vacc_date,
+            earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+            earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+            earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+            earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+            earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+            earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
         FROM (
             SELECT
                 dw_contact_events_id,
-                CASE WHEN treatment_name = 'HBIG' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hbig_vacc_date,
-                CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hebp_dose1_date,
-                CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose2_date,
+                CASE WHEN treatment_name = 'HBIG' THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
+                CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
+                CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
                 -- The ~ is intentional
-                CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose3_date,
-                CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose4_date,
-                CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose5_date,
-                CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN TO_CHAR(date_of_treatment, 'YYYY-MM-DD') ELSE NULL END AS hepb_dose6_date
+                CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
             FROM
                 trisano.dw_contact_treatments_events_view dct
-                JOIN trisano.treatments_view tv
-                    ON (tv.id = dct.treatment_id)
             WHERE
                 treatment_given = 'Yes'
         ) treatments_split
