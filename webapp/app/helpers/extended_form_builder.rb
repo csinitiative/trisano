@@ -53,19 +53,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    if(is_external_code?(code_name))
-      @external_codes = ExternalCode.active
-      @ret = @external_codes.select {|code| code.code_name == code_name}
-    else
-      @codes = Code.active
-
-      # DEBT:  Clean this up some day, but for now remove the 'jurisdiction' code type so that the user
-      # doesn't accidentally create one.
-      @codes.delete_if { |code| code.the_code == 'J' } if code_name == 'placetype'
-
-      @ret = @codes.select {|code| code.code_name == code_name}
-    end
-    @ret
+    CodeName.drop_down_selections(code_name, event)
   end
 
   # TODO: refactor me!
@@ -273,12 +261,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end.join
   end
 
-  # DEBT:  Get rid of / dry this up someday
-  def is_external_code?(code_name)
-    cn = CodeName.find_by_code_name(code_name)
-    return cn.external
-  end
-
   def follow_ups_for(attribute, event)
     return [] unless core_path && event.try(:form_references)
     returning [] do |follow_ups|
@@ -416,6 +398,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def export_conversion_value_id(event, question)
     answer = event.answers.find_by_question_id(question.id)
     answer.export_conversion_value_id unless answer.nil?
+  end
+
+  def event
+    @template.instance_eval { @event }
+  end
+
+  def disease
+    event.try(:disease_event).try(:disease)
   end
 
   class CorePath < Array

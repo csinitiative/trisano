@@ -30,6 +30,10 @@ describe Disease do
     should have_and_belong_to_many(:cdc_disease_export_statuses)
   end
 
+  it "should have many disease specific selections" do
+    should have_many(:disease_specific_selections)
+  end
+
   it "should be valid" do
     @disease.should be_valid
   end

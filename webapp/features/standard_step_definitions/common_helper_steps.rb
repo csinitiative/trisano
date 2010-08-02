@@ -123,6 +123,22 @@ Then /^I should see (an|a) "([^\"]*)" tab$/ do |a, tab|
   response.should have_xpath("//ul[@class='yui-nav']/li/a/em[text()='#{tab}']")
 end
 
+Then /^I should see these select options:$/ do |select_options|
+  select_options.hashes.each do |option|
+    assert_tag(:tag => 'option',
+               :content => option['text'],
+               :parent => { :tag => 'select' })
+  end
+end
+
+Then /^I should not see these select options:$/ do |select_options|
+  select_options.hashes.each do |option|
+    assert_no_tag(:tag => 'option',
+                  :content => option['text'],
+                  :parent => { :tag => 'select' })
+  end
+end
+
 
 #
 # define tag behavior

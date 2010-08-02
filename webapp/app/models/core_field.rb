@@ -75,16 +75,7 @@ class CoreField < ActiveRecord::Base
 
   def rendered?(event)
     disease = event.try(:disease_event).try(:disease)
-
-    if assoc = disease_association(disease)
-      assoc.rendered
-    else
-      if disease_specific
-        return false
-      else
-        return true
-      end
-    end
+    disease_associated?(disease) ? render_on_disease?(disease) : render_default?
   end
 
   def replaced?(event)
@@ -107,11 +98,23 @@ class CoreField < ActiveRecord::Base
     self.event_type = self.event_type.to_s if self.event_type
   end
 
+  def render_on_disease?(disease)
+    disease_association(disease).rendered
+  end
+
+  def disease_associated?(disease)
+    not disease_association(disease).nil?
+  end
+
   # do this instead of going to the db
   def disease_association(disease)
+    return if disease.nil?
     core_fields_diseases.select do |cfd|
       cfd.disease_id == disease.try(:id)
     end.first
   end
 
+  def render_default?
+    not disease_specific
+  end
 end

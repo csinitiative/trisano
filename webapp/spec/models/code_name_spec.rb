@@ -18,6 +18,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CodeName do
+  include CodeSpecHelper
+
   before(:each) do
     @code_name = CodeName.new()
   end
@@ -47,5 +49,38 @@ describe CodeName do
     @code_name.code_name = "eventtype"
     @code_name.description.should == "Event Type"
   end
+
+  describe "drop down selections" do
+    before do
+      given_external_codes('fakeext', %w(Y N UNK))
+      given_codes('fakeint', %w(ALT TLT))
+      given_codes('placetype', %w(C J H L))
+      @disease = given_disease_specific_external_codes('Dengue', 'fakeext', %w(M))
+      @event = Factory.create(:morbidity_event)
+      @event.create_disease_event(:disease => @disease)
+    end
+
+    it "should return external codes by code name" do
+      results = CodeName.drop_down_selections('fakeext')
+      results.map(&:the_code).sort.should == %w(N UNK Y)
+    end
+
+    it "should return internal codes for drop down selections, by code name" do
+      results = CodeName.drop_down_selections('fakeint')
+      results.map(&:the_code).sort.should == %w(ALT TLT)
+    end
+
+    it "should exclude jurisdictions from drop down selections to prevent accidental jurisdiction creation" do
+      results = CodeName.drop_down_selections('placetype')
+      results.should_not be_empty
+      results.map(&:the_code).include?('J').should be_false
+    end
+
+    it "should return disease specific external codes for drop down selections" do
+      results = CodeName.drop_down_selections('fakeext', @event)
+      results.map(&:the_code).sort.should == %w(M N UNK Y)
+    end
+  end
+
 end
 

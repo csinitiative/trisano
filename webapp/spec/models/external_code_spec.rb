@@ -23,7 +23,11 @@ describe ExternalCode do
   end
 
   it "should have many diseases with this cdc export status" do
-    should have_and_belong_to_many(:cdc_exportable_diseases)
+    should have_and_belong_to_many(:cdc_disease_export_statuses)
+  end
+
+  it "should be a drop down selection for many diseases" do
+    should have_many(:disease_specific_selections)
   end
 
   it "should be not valid when blank" do
@@ -36,6 +40,10 @@ describe ExternalCode do
     @external_code.code_description = 'Test Code'
     @external_code.should be_valid
     @external_code.save.should be_true
+  end
+
+  it "should *not* be disease specific by default" do
+    @external_code.disease_specific.should be_false
   end
 
   describe 'telephone location type ids' do
@@ -141,6 +149,65 @@ describe ExternalCode do
 
     it 'should return nil if loinc scale not in the db' do
       ExternalCode.loinc_scale_by_the_code('Doc').should be_nil
+    end
+  end
+
+  describe "disease specific selections" do
+    before do
+      @code_selection = external_code!('yesno', 'M', :disease_specific => true)
+      @disease = disease!('Dengue')
+      @event = Factory.create(:morbidity_event)
+      @event.build_disease_event(:disease => @disease).save!
+      @association = @disease.disease_specific_selections.create(:external_code => @code_selection, :rendered => true)
+    end
+
+    it "should be rendered if associated disease is the current disease" do
+      @code_selection.should be_rendered(@event)
+    end
+
+    it "should not be rendered if associated disease is not the current disease" do
+      @event.disease_event.update_attributes!(:disease => disease!('The Trots'))
+      @code_selection.should_not be_rendered(@event)
+    end
+
+    it "should not be rendered if there is no current disease" do
+      @event.update_attributes!(:disease_event => nil)
+      @code_selection.should_not be_rendered(@event)
+    end
+
+    it "should not be rendered if there is no associated disease" do
+      @association.destroy
+      @code_selection.should_not be_rendered(@event)
+    end
+  end
+
+  describe "'core' selections" do
+    before do
+      @code_selection = external_code!('yesno', 'Y')
+      @disease = disease!('Dengue')
+      @event = Factory.create(:morbidity_event)
+      @event.build_disease_event(:disease => @disease).save!
+      @association = @disease.disease_specific_selections.build(:external_code => @code_selection, :rendered => false)
+      @association.save!
+    end
+
+    it "should be rendered if there is no associated disease" do
+      @association.destroy
+      @code_selection.should be_rendered(@event)
+    end
+
+    it "should be rendered if there is no current disease" do
+      @event.update_attributes!(:disease_event => nil)
+      @code_selection.should be_rendered(@event)
+    end
+
+    it "should be rendered if the associated disease is not the current disease" do
+      @event.disease_event.update_attributes!(:disease => disease!('The Trots'))
+      @code_selection.should be_rendered(@event)
+    end
+
+    it "should not be rendered if the associated disease is the current disease" do
+      @code_selection.should_not be_rendered(@event)
     end
   end
 end

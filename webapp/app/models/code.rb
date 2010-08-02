@@ -24,7 +24,12 @@ class Code < ActiveRecord::Base
   validates_length_of :code_name, :maximum => 50
   validates_uniqueness_of :the_code, :scope => :code_name
 
-  named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order'
+  named_scope :active, :conditions => 'deleted_at IS NULL', :order => 'sort_order' do
+    def exclude_jurisdiction
+      delete_if { |c| c.code_name == 'placetype' && c.the_code == 'J' }
+    end
+  end
+
   named_scope :placetypes, :conditions => {:code_name => 'placetype'}, :order => 'sort_order, the_code'
 
   def self.other_place_type_id

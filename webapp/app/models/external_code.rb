@@ -19,10 +19,10 @@ class ExternalCode < ActiveRecord::Base
 
   belongs_to :jurisdiction, :class_name => 'Place', :foreign_key => :jurisdiction_id
 
-  # DEBT: this really should be a normal relationship using a code_name_id
   belongs_to :code_group, :class_name => 'CodeName', :foreign_key => :code_name, :primary_key => :code_name
 
-  has_and_belongs_to_many(:cdc_exportable_diseases,
+  has_many :disease_specific_selections, :dependent => :destroy
+  has_and_belongs_to_many(:cdc_disease_export_statuses,
                           :join_table => 'cdc_disease_export_statuses',
                           :class_name => 'Disease')
 
@@ -125,6 +125,11 @@ class ExternalCode < ActiveRecord::Base
     not deleted_at.nil?
   end
 
+  def rendered?(event)
+    disease = event.try(:disease_event).try(:disease)
+    disease_selection_associated?(disease) ? render_on_disease?(disease) : render_default?
+  end
+
   def soft_delete
     if self.deleted_at.nil?
       self.deleted_at = Time.new
@@ -137,5 +142,24 @@ class ExternalCode < ActiveRecord::Base
       self.deleted_at = nil
       self.save(false)
     end
+  end
+
+  private
+
+  def render_on_disease?(disease)
+    disease_specific_selection(disease).rendered
+  end
+
+  def disease_specific_selection(disease)
+    return unless disease
+    disease_specific_selections.first(:conditions => ['disease_id = ?' , disease.id])
+  end
+
+  def disease_selection_associated?(disease)
+    not disease_specific_selection(disease).nil?
+  end
+
+  def render_default?
+    not disease_specific
   end
 end

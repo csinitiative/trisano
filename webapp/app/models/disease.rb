@@ -35,6 +35,8 @@ class Disease < ActiveRecord::Base
   has_many :core_fields_diseases, :dependent => :destroy
   has_many :core_fields, :through => :core_fields_diseases
 
+  has_many :disease_specific_selections, :dependent => :destroy
+
   has_many :organisms, :finder_sql => %q{
     SELECT DISTINCT ON (organisms.id) organisms.* FROM organisms
       LEFT JOIN loinc_codes ON organisms.id = loinc_codes.organism_id

@@ -402,3 +402,11 @@ def searchable_person!(last_name)
           :last_name => last_name}})
   end
 end
+
+def disease!(disease_name)
+  disease = Disease.find_by_disease_name(disease_name)
+  unless disease
+    disease = Factory.create(:disease, :disease_name => disease_name)
+  end
+  disease
+end
