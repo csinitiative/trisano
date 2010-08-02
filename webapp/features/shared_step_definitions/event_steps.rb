@@ -73,6 +73,42 @@ Given /^a simple (.+) event in jurisdiction (.+) for the full name of (.+)$/ do 
   @event = create_event_with_attributes(event_type, last_name, attrs, nil, jurisdiction)
 end
 
+Given /^the morbidity event has the following contacts:$/ do |contacts|
+  contacts.hashes.each do |contact|
+    hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => contact
+        }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
+    }
+
+    if disease_id = @event.try(:disease_event).try(:disease).try(:id)
+      hash.merge!({ "disease_event_attributes"=> { "disease_id"=> disease_id }})
+    end
+
+    @event.contact_child_events << ContactEvent.create!(hash)
+  end
+  @event.save!
+end
+
+Given /^the morbidity event has the following deleted contacts:$/ do |contacts|
+  contacts.hashes.each do |contact|
+    hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => contact
+        }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
+    }
+    @event.contact_child_events << ContactEvent.create(hash)
+    @event.contact_child_events.last.transactional_soft_delete
+  end
+  @event.save!
+end
+
 Given(/^there is a contact event$/) do
   @contact_event = Factory.build(:contact_event)
   @contact_event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)

@@ -15,15 +15,19 @@ module Trisano
         private
 
         def render_perinatal_hep_b_fields
-          core_replacement_partial[treatments_core_field] = {
-            :partial => 'events/perinatal_hep_b_treatment_fields'
-          }
+          core_replacement_partial[treatments_core_field] = { :partial => 'events/perinatal_hep_b_treatment_fields' } if replace_fields?
         end
 
         def render_perinatal_hep_b_show
-          core_replacement_partial[treatments_core_field] = {
-            :partial => 'events/perinatal_hep_b_treatment_show'
-          }
+          core_replacement_partial[treatments_core_field] = { :partial => 'events/perinatal_hep_b_treatment_show' } if replace_fields?
+        end
+
+        def replace_fields?
+          core_field = CoreField.event_fields(@event)[treatments_core_field]
+          if core_field
+            association = core_field.disease_association(@event.try(:disease_event).try(:disease))
+            association && association.replaced
+          end
         end
 
         def treatments_core_field

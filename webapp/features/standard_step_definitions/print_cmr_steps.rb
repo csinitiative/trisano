@@ -15,36 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^the morbidity event has the following contacts:$/ do |contacts|
-  contacts.hashes.each do |contact|
-    hash = {
-      "interested_party_attributes" => {
-        "person_entity_attributes" => {
-          "person_attributes" => contact
-        }
-      },
-      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
-    }
-    @event.contact_child_events << ContactEvent.create!(hash)
-  end
-  @event.save!
-end
 
-Given /^the morbidity event has the following deleted contacts:$/ do |contacts|
-  contacts.hashes.each do |contact|
-    hash = {
-      "interested_party_attributes" => {
-        "person_entity_attributes" => {
-          "person_attributes" => contact
-        }
-      },
-      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
-    }    
-    @event.contact_child_events << ContactEvent.create(hash)
-    @event.contact_child_events.last.transactional_soft_delete    
-  end
-  @event.save!
-end
 
 When /^I print the morbidity event with "([^\"]*)"$/ do |option|
   visit cmr_path(@event, :format => :print, :print_options => [option])

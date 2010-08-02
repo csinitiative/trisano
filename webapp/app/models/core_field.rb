@@ -92,6 +92,13 @@ class CoreField < ActiveRecord::Base
     end
   end
 
+  def disease_association(disease)
+    return if disease.nil?
+    core_fields_diseases.select do |cfd|
+      cfd.disease_id == disease.try(:id)
+    end.first
+  end
+
   private
 
   def normalize_attributes
@@ -104,14 +111,6 @@ class CoreField < ActiveRecord::Base
 
   def disease_associated?(disease)
     not disease_association(disease).nil?
-  end
-
-  # do this instead of going to the db
-  def disease_association(disease)
-    return if disease.nil?
-    core_fields_diseases.select do |cfd|
-      cfd.disease_id == disease.try(:id)
-    end.first
   end
 
   def render_default?
