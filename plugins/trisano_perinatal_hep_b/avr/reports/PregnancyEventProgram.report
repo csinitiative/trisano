@@ -1,0 +1,2298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <property name="name">Report</property>
+    <property name="position">8.5, 0.0</property>
+    <child type="org.pentaho.reportdesigner.crm.report.model.dataset.DataSetsReportElement">
+        <property name="name">Element@12848854</property>
+        <property name="position">8.5, 0.0</property>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@158107</property>
+            <property name="position">8.5, 0.0</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="default">
+                <property name="query">SELECT
+--    start_date, end_date, total,
+--    active, trisano.no_error_div(active, total * 100) AS active_perc,
+--    completed, trisano.no_error_div(completed, total * 100) AS completed_perc,
+--    provider_refusal, trisano.no_error_div(provider_refusal, total * 100) AS provider_refusal_perc,
+--    mother_fam_refusal, trisano.no_error_div(mother_fam_refusal, total * 100) AS mother_fam_refusal_perc,
+--    moved, trisano.no_error_div(moved, total * 100) AS moved_perc,
+--    unable_locate, trisano.no_error_div(unable_locate, total * 100) AS unable_locate_perc,
+--    infant_died, trisano.no_error_div(infant_died, total * 100) AS infant_died_perc,
+--    infant_adopted, trisano.no_error_div(infant_adopted, total * 100) AS infant_adopted_perc,
+--    false_pos, trisano.no_error_div(false_pos, total * 100) AS false_pos_perc,
+--    miscarriage, trisano.no_error_div(miscarriage, total * 100) AS miscarriage_perc,
+--    other, trisano.no_error_div(other, total * 100) AS other_perc,
+--
+--    both_24, trisano.no_error_div(both_24, total * 100) AS both_24_perc,
+--    dose1_24, trisano.no_error_div(dose1_24, total * 100) AS dose1_24_perc,
+--    hbig_24, trisano.no_error_div(hbig_24, total * 100) AS hbig_24_perc,
+--    neither_24, trisano.no_error_div(neither_24, total * 100) AS neither_24_perc,
+--    both_48, trisano.no_error_div(both_48, total * 100) AS both_48_perc,
+--    dose1_48, trisano.no_error_div(dose1_48, total * 100) AS dose1_48_perc,
+--    hbig_48, trisano.no_error_div(hbig_48, total * 100) AS hbig_48_perc,
+--    neither_48, trisano.no_error_div(neither_48, total * 100) AS neither_48_perc,
+--    both_7d, trisano.no_error_div(both_7d, total * 100) AS both_7d_perc,
+--    dose1_7d, trisano.no_error_div(dose1_7d, total * 100) AS dose1_7d_perc,
+--    hbig_7d, trisano.no_error_div(hbig_7d, total * 100) AS hbig_7d_perc,
+--    neither_7d, trisano.no_error_div(neither_7d, total * 100) AS neither_7d_perc,
+--    both_2m, trisano.no_error_div(both_2m, total * 100) AS both_2m_perc,
+--    dose1_2m, trisano.no_error_div(dose1_2m, total * 100) AS dose1_2m_perc,
+--    hbig_2m, trisano.no_error_div(hbig_2m, total * 100) AS hbig_2m_perc,
+--    neither_2m, trisano.no_error_div(neither_2m, total * 100) AS neither_2m_perc,
+--    both_8m, trisano.no_error_div(both_8m, total * 100) AS both_8m_perc,
+--    dose1_8m, trisano.no_error_div(dose1_8m, total * 100) AS dose1_8m_perc,
+--    hbig_8m, trisano.no_error_div(hbig_8m, total * 100) AS hbig_8m_perc,
+--    neither_8m, trisano.no_error_div(neither_8m, total * 100) AS neither_8m_perc,
+--    both_12m, trisano.no_error_div(both_12m, total * 100) AS both_12m_perc,
+--    dose1_12m, trisano.no_error_div(dose1_12m, total * 100) AS dose1_12m_perc,
+--    hbig_12m, trisano.no_error_div(hbig_12m, total * 100) AS hbig_12m_perc,
+--    neither_12m, trisano.no_error_div(neither_12m, total * 100) AS neither_12m_perc,
+--    four_dose, trisano.no_error_div(four_dose, total * 100) AS four_dose_perc,
+--    five_dose, trisano.no_error_div(five_dose, total * 100) AS five_dose_perc,
+--    six_dose, trisano.no_error_div(six_dose, total * 100) AS six_dose_perc,
+--    serotest_12m, trisano.no_error_div(serotest_12m, total * 100) AS serotest_12m_perc,
+--    serotest_15m, trisano.no_error_div(serotest_15m, total * 100) AS serotest_15m_perc,
+--    total_serotest, trisano.no_error_div(total_serotest, total * 100) AS total_serotest_perc,
+--    positive_antihb, trisano.no_error_div(positive_antihb, total * 100) AS positive_antihb_perc,
+--    positive_hbsag, trisano.no_error_div(positive_hbsag, total * 100) AS positive_hbsag_perc,
+--    received_comvax, trisano.no_error_div(received_comvax, total * 100) AS received_comvax_perc,
+--    total_hs,
+--    active_hs, trisano.no_error_div(active_hs, total_hs * 100) AS active_hs_perc,
+--    completed_hs, trisano.no_error_div(completed_hs, total_hs * 100) AS completed_hs_perc,
+--    provider_refusal_hs, trisano.no_error_div(provider_refusal_hs, total_hs * 100) AS provider_refusal_hs_perc,
+--    refused_treatment_hs, trisano.no_error_div(refused_treatment_hs, total_hs * 100) AS refused_treatment_hs_perc,
+--    moved_hs, trisano.no_error_div(moved_hs, total_hs * 100) AS moved_hs_perc,
+--    unable_to_locate_hs, trisano.no_error_div(unable_to_locate_hs, total_hs * 100) AS unable_to_locate_hs_perc,
+--    died_hs, trisano.no_error_div(died_hs, total_hs * 100) AS died_hs_perc,
+--    false_positive_hs, trisano.no_error_div(false_positive_hs, total_hs * 100) AS false_positive_hs_perc,
+--    other_hs, trisano.no_error_div(other_hs, total_hs * 100) AS other_hs_perc,
+--    total_hs_tested, trisano.no_error_div(total_hs_tested, total_hs * 100) AS total_hs_tested_perc,
+--    hbsag_pos_hs, trisano.no_error_div(hbsag_pos_hs, total_hs * 100) AS hbsag_pos_hs_perc,
+--    antihb_pos_hs, trisano.no_error_div(antihb_pos_hs, total_hs * 100) AS antihb_pos_hs_perc,
+--    dose1_hs, trisano.no_error_div(dose1_hs, total_hs * 100) AS dose1_hs_perc,
+--    dose2_hs, trisano.no_error_div(dose2_hs, total_hs * 100) AS dose2_hs_perc,
+--    dose3_hs, trisano.no_error_div(dose3_hs, total_hs * 100) AS dose3_hs_perc,
+--    dose1_hbig_trans, trisano.no_error_div(dose1_hbig_trans, moved * 100) AS dose1_hbig_trans_perc,
+--    hbig_trans, trisano.no_error_div(hbig_trans, moved * 100) AS hbig_trans_perc,
+--    dose1_trans, trisano.no_error_div(dose1_trans, moved * 100) AS dose1_trans_perc,
+--    neither_trans, trisano.no_error_div(neither_trans, moved * 100) AS neither_trans_perc,
+--    all_8m_trans, trisano.no_error_div(all_8m_trans, moved * 100) AS all_8m_trans_perc,
+--    all_12m_trans, trisano.no_error_div(all_12m_trans, moved * 100) AS all_12m_tran_perc
+--FROM (
+--    SELECT
+        trisano.make_date(&apos;${START_DATE}&apos;::TEXT, CURRENT_DATE) AS start_date,
+        trisano.make_date(&apos;${END_DATE}&apos;::TEXT, CURRENT_DATE) AS end_date,
+        COUNT(*) AS total,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition IS NULL THEN 1 ELSE NULL END) AS active,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;completed&apos; THEN 1 ELSE NULL END) AS completed,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;provider refusal&apos; THEN 1 ELSE NULL END) AS provider_refusal,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Mother/family refusal&apos; THEN 1 ELSE NULL END) AS mother_fam_refusal,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; THEN 1 ELSE NULL END) AS moved,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Unable to locate&apos; THEN 1 ELSE NULL END) AS unable_locate,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Died&apos; THEN 1 ELSE NULL END) AS infant_died,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Adopted&apos; THEN 1 ELSE NULL END) AS infant_adopted,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;False positive mother/case&apos; THEN 1 ELSE NULL END) AS false_pos,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Miscarriage or termination&apos; THEN 1 ELSE NULL END) AS miscarriage,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Other&apos; THEN 1 ELSE NULL END) AS other,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;1 day&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;1 day&apos; THEN 1 ELSE NULL END) AS both_24,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;1 day&apos; THEN 1 ELSE NULL END) AS dose1_24,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;1 day&apos; THEN 1 ELSE NULL END) AS hbig_24,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;1 day&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_24,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;2 days&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;2 days&apos; THEN 1 ELSE NULL END) AS both_48,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;2 days&apos; THEN 1 ELSE NULL END) AS dose1_48,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + interval &apos;2 days&apos; THEN 1 ELSE NULL END) AS hbig_48,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;2 days&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_48,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;7 days&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;7 days&apos; THEN 1 ELSE NULL END) AS both_7d,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;7 days&apos; THEN 1 ELSE NULL END) AS dose1_7d,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + interval &apos;7 days&apos; THEN 1 ELSE NULL END) AS hbig_7d,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;7 days&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_7d,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;2 months&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;7 days&apos; THEN 1 ELSE NULL END) AS both_2m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;2 months&apos; THEN 1 ELSE NULL END) AS dose1_2m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + interval &apos;2 months&apos; THEN 1 ELSE NULL END) AS hbig_2m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;2 months&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_2m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;8 months&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;7 days&apos; THEN 1 ELSE NULL END) AS both_8m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;8 months&apos; THEN 1 ELSE NULL END) AS dose1_8m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + interval &apos;8 months&apos; THEN 1 ELSE NULL END) AS hbig_8m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;8 months&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_8m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;12 months&apos; AND hbig_vacc_date &lt;= dce.birth_date + INTERVAL &apos;7 days&apos; THEN 1 ELSE NULL END) AS both_12m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date &lt;= dce.birth_date + interval &apos;12 months&apos; THEN 1 ELSE NULL END) AS dose1_12m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hbig_vacc_date &lt;= dce.birth_date + interval &apos;12 months&apos; THEN 1 ELSE NULL END) AS hbig_12m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NULL AND (hbig_vacc_date &gt; dce.birth_date + INTERVAL &apos;12 months&apos; OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END) AS neither_12m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE NULL END) AS four_dose,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE NULL END) AS five_dose,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE NULL END) AS six_dose,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND (get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date &lt;= dce.birth_date + INTERVAL &apos;12 months&apos; AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date &lt;= dce.birth_date + INTERVAL &apos;12 months&apos; THEN 1 ELSE NULL END) AS serotest_12m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND (get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date &lt;= dce.birth_date + INTERVAL &apos;15 months&apos; AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date &lt;= dce.birth_date + INTERVAL &apos;15 months&apos; THEN 1 ELSE NULL END) AS serotest_15m,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND ((get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE NULL END) AS total_serotest,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND (get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ &apos;Positive&apos; THEN 1 ELSE NULL END) AS positive_antihb,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ &apos;Positive&apos; THEN 1 ELSE NULL END) AS positive_hbsag,
+        -- XXX Still have com vax vacc date here, to fix
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND &apos;com_vax_vacc_date&apos; IS NOT NULL THEN 1 ELSE NULL END) AS received_comvax,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) THEN 1 ELSE NULL END) AS total_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition IS NULL THEN 1 ELSE NULL END) AS active_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Completed&apos; THEN 1 ELSE NULL END) AS completed_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Provider refusal&apos; THEN 1 ELSE NULL END) AS provider_refusal_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Refused preventative treatment&apos; THEN 1 ELSE NULL END) AS refused_treatment_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Moved&apos; THEN 1 ELSE NULL END) AS moved_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Unable to locate&apos; THEN 1 ELSE NULL END) AS unable_to_locate_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Died&apos; THEN 1 ELSE NULL END) AS died_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;False positive mother/case&apos; THEN 1 ELSE NULL END) AS false_positive_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND disposition = &apos;Other&apos; THEN 1 ELSE NULL END) AS other_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND ((get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL OR (get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL) THEN 1 ELSE NULL END) AS total_hs_tested,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND (get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ &apos;Positive&apos; THEN 1 ELSE NULL END) AS hbsag_pos_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ &apos;Positive&apos; THEN 1 ELSE NULL END) AS antihb_pos_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND hepb_dose1_date IS NOT NULL THEN 1 ELSE NULL END) AS dose1_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE NULL END) AS dose2_hs,
+        COUNT(CASE WHEN contact_type IN (&apos;Sexual&apos;, &apos;Household&apos;) AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE NULL END) AS dose3_hs,
+        -- This labels field 62 as &apos;&lt;6&gt;&apos;, suggesting it&apos;s a copy of field 6.
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date IS NOT NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE NULL END) AS dose1_hbig_trans,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE NULL END) AS hbig_trans,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date IS NOT NULL AND hbig_vacc_date IS NULL THEN 1 ELSE NULL END) AS dose1_trans,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE NULL END) AS neither_trans,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date &lt; dce.birth_date + INTERVAL &apos;8 months&apos; AND hepb_dose2_date &lt; dce.birth_date + INTERVAL &apos;8 months&apos; AND hepb_dose3_date &lt; dce.birth_date + INTERVAL &apos;8 months&apos; AND hbig_vacc_date &lt; dce.birth_date + INTERVAL &apos;8 months&apos; THEN 1 ELSE NULL END) AS all_8m_trans,
+        COUNT(CASE WHEN contact_type = &apos;infant&apos; AND disposition = &apos;Moved&apos; AND hepb_dose1_date &lt; dce.birth_date + INTERVAL &apos;8 months&apos; AND hepb_dose2_date &lt; dce.birth_date + INTERVAL &apos;12 months&apos; AND hepb_dose3_date &lt; dce.birth_date + INTERVAL &apos;12 months&apos; AND hbig_vacc_date &lt; dce.birth_date + INTERVAL &apos;12 months&apos; THEN 1 ELSE NULL END) AS all_12m_trans
+    FROM
+        trisano.dw_contact_events_view dce
+        JOIN trisano.dw_morbidity_events_view dme
+            ON (dce.parent_id = dme.id)
+        LEFT JOIN (
+            SELECT
+                dw_contact_events_id AS contact_event_id,
+                earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig_vacc_date,
+                earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+                earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+                earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+                earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+                earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+            FROM (
+                SELECT
+                    dw_contact_events_id,
+                    CASE WHEN treatment_name = &apos;HBIG&apos; THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
+                    CASE WHEN treatment_name = &apos;Hep B Dose 1 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
+                    CASE WHEN treatment_name = &apos;Hep B Dose 2 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
+                    -- The ~ is intentional
+                    CASE WHEN treatment_name ~ &apos;Hep B Dose 3 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                    CASE WHEN treatment_name = &apos;Hep B Dose 4 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                    CASE WHEN treatment_name = &apos;Hep B Dose 5 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                    CASE WHEN treatment_name = &apos;Hep B Dose 6 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
+                FROM
+                    trisano.dw_contact_treatments_events_view dct
+                WHERE
+                    treatment_given = &apos;Yes&apos;
+            ) treatments_split
+            GROUP BY dw_contact_events_id
+        ) treatments_agg
+            ON (treatments_agg.contact_event_id = dce.id)
+    WHERE
+        dce.disease_name = &apos;Hepatitis B Pregnancy Event&apos; AND
+        dme.actual_delivery_date BETWEEN trisano.make_date(&apos;${START_DATE}&apos;::TEXT, CURRENT_DATE) AND trisano.make_date(&apos;${END_DATE}&apos;::TEXT, CURRENT_DATE)
+--) foo
+;
+</property>
+            </query>
+            <columnInfo columnName="start_date" friendlyColumnName="start_date" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <columnInfo columnName="end_date" friendlyColumnName="end_date" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <columnInfo columnName="total" friendlyColumnName="total" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="active" friendlyColumnName="active" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="completed" friendlyColumnName="completed" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="provider_refusal" friendlyColumnName="provider_refusal" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="mother_fam_refusal" friendlyColumnName="mother_fam_refusal" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="moved" friendlyColumnName="moved" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="unable_locate" friendlyColumnName="unable_locate" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="infant_died" friendlyColumnName="infant_died" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="infant_adopted" friendlyColumnName="infant_adopted" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="false_pos" friendlyColumnName="false_pos" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="miscarriage" friendlyColumnName="miscarriage" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="other" friendlyColumnName="other" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_24" friendlyColumnName="both_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_24" friendlyColumnName="dose1_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_24" friendlyColumnName="hbig_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_24" friendlyColumnName="neither_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_48" friendlyColumnName="both_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_48" friendlyColumnName="dose1_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_48" friendlyColumnName="hbig_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_48" friendlyColumnName="neither_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_7d" friendlyColumnName="both_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_7d" friendlyColumnName="dose1_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_7d" friendlyColumnName="hbig_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_7d" friendlyColumnName="neither_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_2m" friendlyColumnName="both_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_2m" friendlyColumnName="dose1_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_2m" friendlyColumnName="hbig_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_2m" friendlyColumnName="neither_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_8m" friendlyColumnName="both_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_8m" friendlyColumnName="dose1_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_8m" friendlyColumnName="hbig_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_8m" friendlyColumnName="neither_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_12m" friendlyColumnName="both_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_12m" friendlyColumnName="dose1_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_12m" friendlyColumnName="hbig_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_12m" friendlyColumnName="neither_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="four_dose" friendlyColumnName="four_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="five_dose" friendlyColumnName="five_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="six_dose" friendlyColumnName="six_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="serotest_12m" friendlyColumnName="serotest_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="serotest_15m" friendlyColumnName="serotest_15m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="total_serotest" friendlyColumnName="total_serotest" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="positive_antihb" friendlyColumnName="positive_antihb" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="positive_hbsag" friendlyColumnName="positive_hbsag" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="received_comvax" friendlyColumnName="received_comvax" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="total_hs" friendlyColumnName="total_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="active_hs" friendlyColumnName="active_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="completed_hs" friendlyColumnName="completed_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="provider_refusal_hs" friendlyColumnName="provider_refusal_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="refused_treatment_hs" friendlyColumnName="refused_treatment_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="moved_hs" friendlyColumnName="moved_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="unable_to_locate_hs" friendlyColumnName="unable_to_locate_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="died_hs" friendlyColumnName="died_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="false_positive_hs" friendlyColumnName="false_positive_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="other_hs" friendlyColumnName="other_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="total_hs_tested" friendlyColumnName="total_hs_tested" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbsag_pos_hs" friendlyColumnName="hbsag_pos_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="antihb_pos_hs" friendlyColumnName="antihb_pos_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_hs" friendlyColumnName="dose1_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose2_hs" friendlyColumnName="dose2_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose3_hs" friendlyColumnName="dose3_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_hbig_trans" friendlyColumnName="dose1_hbig_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_trans" friendlyColumnName="hbig_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_trans" friendlyColumnName="dose1_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_trans" friendlyColumnName="neither_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="all_8m_trans" friendlyColumnName="all_8m_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="all_12m_trans" friendlyColumnName="all_12m_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
+        <property name="name">Element@16404315</property>
+        <property name="position">8.5, 0.0</property>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">active_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">active</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">completed_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">completed</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">provider_refusal_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">provider_refusal</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">mother_fam_refusal_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">mother_fam_refusal</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">moved_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">moved</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">unable_locate_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">unable_locate</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">infant_died_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">infant_died</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">false_pos_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">false_pos</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">miscarriage_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">miscarriage</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">other_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">other</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.ColumnSumExpression_DesignerWrapper">
+            <property name="name">total_part_1</property>
+            <property name="dependencyLevel">0</property>
+            <property name="field" array="true">
+                <property name="0">active</property>
+                <property name="1">completed</property>
+                <property name="2">provider_refusal</property>
+                <property name="3">mother_fam_refusal</property>
+                <property name="4">moved</property>
+                <property name="5">unable_locate</property>
+                <property name="6">infant_died</property>
+                <property name="7">infant_adopted</property>
+                <property name="8">false_pos</property>
+                <property name="9">other</property>
+            </property>
+            <property name="preserve">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">infant_adopted_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">infant)_adopted</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">both_24_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">both_24</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">dose1_24_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">dose1_24</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">hbig_24_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">hbig_24</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">neither_24_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">neither_24</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">both_48_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">both_48</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">dose1_48_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">dose1_48</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">hbig_48_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">hbig_48</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">neither_48_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">neither_48</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">both_7d_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">both_7d</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">dose1_7d_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">dose1_7d</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">hbig_7d_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">hbig_7d</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+        <child type="org.jfree.report.function.PercentageExpression_DesignerWrapper">
+            <property name="name">neither_7d_perc</property>
+            <property name="dependencyLevel">0</property>
+            <property name="dividend">neither_7d</property>
+            <property name="divisor">total</property>
+            <property name="preserve">false</property>
+            <property name="roundingMode">4</property>
+            <property name="scale">14</property>
+            <property name="useDifference">false</property>
+        </child>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_HEADER">
+        <property name="name">Band9080772</property>
+        <property name="position">8.5, 0.0</property>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@10262776</property>
+            <property name="position">8.5, 0.0</property>
+            <property name="minimumSize">555.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hepatitis B Pregnancy Event Program Report</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@18217702</property>
+            <property name="position">78.5, 20.0</property>
+            <property name="minimumSize">110.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Report Start Date:</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@18217702</property>
+            <property name="position">303.5, 20.0</property>
+            <property name="minimumSize">110.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Report End Date:</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@16149859</property>
+            <property name="position">198.5, 20.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">start_date</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@2115466</property>
+            <property name="position">422.5, 20.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">end_date</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">42.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_HEADER">
+        <property name="name">Band11854753</property>
+        <property name="position">8.5, 0.0</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">5.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelItemReportElement" bandToplevelType="ITEM_BAND">
+        <property name="name">Band12914162</property>
+        <property name="position">8.5, 0.0</property>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@23628267</property>
+            <property name="position">8.5, 10.0</property>
+            <property name="minimumSize">555.0, 16.0</property>
+            <property name="background">51, 51, 51, 255</property>
+            <property name="font">Dialog,12,1</property>
+            <property name="foreground">255, 255, 255, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Infant Status Outcomes</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@30350900</property>
+            <property name="position">10.5, 35.0</property>
+            <property name="minimumSize">218.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Total Hepatitis B Pregnancy Events:</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@2089335</property>
+            <property name="position">240.5, 35.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">total</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@9793281</property>
+            <property name="position">63.5, 60.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Active Follow-Up</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@32310749</property>
+            <property name="position">63.5, 80.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Completed</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@25096469</property>
+            <property name="position">63.5, 100.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Provider Refusal</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@1312254</property>
+            <property name="position">63.5, 120.0</property>
+            <property name="minimumSize">165.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Mother/Family Refusal</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@8507583</property>
+            <property name="position">63.5, 140.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Moved</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@27452734</property>
+            <property name="position">63.5, 160.0</property>
+            <property name="minimumSize">115.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Unable to Locate</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@1491272</property>
+            <property name="position">63.5, 180.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Infant Died</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@30820502</property>
+            <property name="position">63.5, 200.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Infant Adopted</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@32128205</property>
+            <property name="position">63.5, 220.0</property>
+            <property name="minimumSize">128.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">False Positive Mother</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@2101238</property>
+            <property name="position">63.5, 240.0</property>
+            <property name="minimumSize">170.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Miscarriage or Termination</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@7003891</property>
+            <property name="position">63.5, 260.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Other</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@7979570</property>
+            <property name="position">258.5, 60.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">active</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@27002429</property>
+            <property name="position">381.5, 60.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">active_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@3633690</property>
+            <property name="position">258.5, 80.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">completed</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@3132039</property>
+            <property name="position">381.5, 80.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">completed_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@32389580</property>
+            <property name="position">258.5, 100.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">provider_refusal</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@29584618</property>
+            <property name="position">381.5, 100.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">provider_refusal_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@14046632</property>
+            <property name="position">258.5, 120.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">mother_fam_refusal</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@27508102</property>
+            <property name="position">381.5, 120.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">mother_fam_refusal_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@11439125</property>
+            <property name="position">258.5, 140.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">moved</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@21314123</property>
+            <property name="position">381.5, 140.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">moved_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@3912182</property>
+            <property name="position">258.5, 160.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">unable_locate</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@4175142</property>
+            <property name="position">381.5, 160.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">unable_locate_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@6324836</property>
+            <property name="position">258.5, 180.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">infant_died</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@18431547</property>
+            <property name="position">381.5, 180.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">infant_died_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@24151224</property>
+            <property name="position">258.5, 200.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">infant_adopted</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@27094477</property>
+            <property name="position">381.5, 200.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">infant_adopted_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@8954174</property>
+            <property name="position">258.5, 220.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">false_pos</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@16921942</property>
+            <property name="position">381.5, 220.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">false_pos_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@30769862</property>
+            <property name="position">258.5, 240.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">miscarriage</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@29748518</property>
+            <property name="position">381.5, 240.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">miscarriage_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@8111976</property>
+            <property name="position">258.5, 260.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">other</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@11801566</property>
+            <property name="position">381.5, 260.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">other_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@427116</property>
+            <property name="position">205.0, 290.0</property>
+            <property name="minimumSize">46.0, 16.0</property>
+            <property name="font">Dialog,12,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Total</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@31055290</property>
+            <property name="position">258.5, 290.0</property>
+            <property name="minimumSize">132.0, 16.0</property>
+            <property name="font">Dialog,12,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">total_part_1</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@23628267</property>
+            <property name="position">8.5, 315.0</property>
+            <property name="minimumSize">555.0, 16.0</property>
+            <property name="background">51, 51, 51, 255</property>
+            <property name="font">Dialog,12,1</property>
+            <property name="foreground">255, 255, 255, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Infant Treatment Statistics</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@21758212</property>
+            <property name="position">8.5, 340.0</property>
+            <property name="minimumSize">130.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Total Infant Contacts:</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@6468769</property>
+            <property name="position">145.0, 340.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">total</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@27763991</property>
+            <property name="position">63.5, 365.0</property>
+            <property name="minimumSize">157.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Received within 24 hours</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@15919896</property>
+            <property name="position">63.5, 395.0</property>
+            <property name="minimumSize">134.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 / HBIG</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@21390969</property>
+            <property name="position">63.5, 415.0</property>
+            <property name="minimumSize">116.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@26501254</property>
+            <property name="position">63.5, 435.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">HBIG only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@13619530</property>
+            <property name="position">63.5, 455.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Neither</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@12468693</property>
+            <property name="position">258.5, 395.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_24</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@2817765</property>
+            <property name="position">258.5, 415.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_24</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23838842</property>
+            <property name="position">258.5, 435.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_24</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23730790</property>
+            <property name="position">258.5, 455.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_24</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@23475864</property>
+            <property name="position">381.5, 395.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_24_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@28870578</property>
+            <property name="position">381.5, 415.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_24_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@7813534</property>
+            <property name="position">381.5, 435.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_24_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@17609105</property>
+            <property name="position">381.5, 455.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_24_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@27763991</property>
+            <property name="position">63.5, 490.0</property>
+            <property name="minimumSize">157.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Received within 48 hours</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@15919896</property>
+            <property name="position">63.5, 520.0</property>
+            <property name="minimumSize">134.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 / HBIG</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@21390969</property>
+            <property name="position">63.5, 540.0</property>
+            <property name="minimumSize">116.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@26501254</property>
+            <property name="position">63.5, 560.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">HBIG only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@13619530</property>
+            <property name="position">63.5, 580.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Neither</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@12468693</property>
+            <property name="position">258.5, 520.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_48</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@2817765</property>
+            <property name="position">258.5, 540.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_48</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23838842</property>
+            <property name="position">258.5, 560.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_48</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23730790</property>
+            <property name="position">258.5, 580.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_48</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@23475864</property>
+            <property name="position">381.5, 520.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_48_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@28870578</property>
+            <property name="position">381.5, 540.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_48_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@7813534</property>
+            <property name="position">381.5, 560.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_48_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@17609105</property>
+            <property name="position">381.5, 580.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_48_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@27763991</property>
+            <property name="position">63.5, 615.0</property>
+            <property name="minimumSize">157.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Received within 7 days</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@15919896</property>
+            <property name="position">63.5, 645.0</property>
+            <property name="minimumSize">134.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 / HBIG</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@21390969</property>
+            <property name="position">63.5, 665.0</property>
+            <property name="minimumSize">116.5, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hep B, dose 1 only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@26501254</property>
+            <property name="position">63.5, 685.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">HBIG only</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@13619530</property>
+            <property name="position">63.5, 705.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Neither</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@12468693</property>
+            <property name="position">258.5, 645.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_7d</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@2817765</property>
+            <property name="position">258.5, 665.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_7d</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23838842</property>
+            <property name="position">258.5, 685.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_7d</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
+            <property name="name">TextField@23730790</property>
+            <property name="position">258.5, 705.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_7d</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+            <property name="format">#,##0.###</property>
+            <property name="excelNumberFormat"></property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@23475864</property>
+            <property name="position">381.5, 645.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">both_7d_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@28870578</property>
+            <property name="position">381.5, 665.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">dose1_7d_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@7813534</property>
+            <property name="position">381.5, 685.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">hbig_7d_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">TextField@17609105</property>
+            <property name="position">381.5, 705.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">neither_7d_perc</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">835.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <rowBandingDefinition enabled="false" color="192, 192, 192, 255" startState="true" switchItemCount="1"></rowBandingDefinition>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_FOOTER">
+        <property name="name">Band30170979</property>
+        <property name="position">8.5, 0.0</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_FOOTER">
+        <property name="name">Band14994883</property>
+        <property name="position">8.5, 0.0</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="NO_DATA_BAND">
+        <property name="name">Band17883230</property>
+        <property name="position">8.5, 0.0</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="WATERMARK">
+        <property name="name">Band18254659</property>
+        <property name="position">8.5, 0.0</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportGroups">
+        <property name="name">Element@25221994</property>
+        <property name="position">8.5, 0.0</property>
+    </child>
+    <property name="defaultLocale">en_US_</property>
+    <horizontalLinealModel></horizontalLinealModel>
+    <pageDefinition pageSize="612.0, 792.0" topBorder="20.0" bottomBorder="20.0" leftBorder="20.0" rightBorder="20.0"></pageDefinition>
+    <reportConfiguration></reportConfiguration>
+    <property name="useMaxCharBounds">true</property>
+</report>
