@@ -43,7 +43,7 @@ describe ExternalCode do
   end
 
   it "should *not* be disease specific by default" do
-    @external_code.disease_specific.should be_false
+    @external_code.disease_specific.should_not be_true
   end
 
   describe 'telephone location type ids' do
