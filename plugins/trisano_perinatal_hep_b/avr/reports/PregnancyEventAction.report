@@ -6,10 +6,10 @@
         <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.properties.PropertiesDataSetReportElement">
             <property name="name">Element@1367891</property>
             <properties>
-                <property name="page.footer" type="java.lang.String">- - - edit in data source properties - - -</property>
-                <property name="page.header" type="java.lang.String">- - - edit in data source properties - - -</property>
-                <property name="report.footer" type="java.lang.String">- - - edit in data source properties - - -</property>
-                <property name="report.header" type="java.lang.String">- - - edit in data source properties - - -</property>
+                <property name="page.footer" type="java.lang.String">Pregnancy Event Action Report</property>
+                <property name="page.header" type="java.lang.String"></property>
+                <property name="report.footer" type="java.lang.String"></property>
+                <property name="report.header" type="java.lang.String">Pregnancy Event Action Report</property>
                 <property name="report.name" type="java.lang.String">Perinatal Hep-B report 3</property>
             </properties>
         </child>
@@ -30,18 +30,18 @@
     name_addr.phone,
     contact_stuff.contact_type,
     contact_stuff.name AS contact_name,
-    contact_stuff.birth_date AS contact_birth_date,
+    to_char(contact_stuff.birth_date, &apos;MM/DD/YYYY&apos;) AS contact_birth_date,
     contact_stuff.age AS contact_age,
-    contact_stuff.first_due_date::date,
+    TO_CHAR(contact_stuff.first_due_date, &apos;MM/DD/YYYY&apos;) AS first_due_date,
     contact_stuff.action
 FROM
     (
         SELECT
             id,
-            COALESCE(dme.first_name || &apos; &apos;, &apos;&apos;) || COALESCE(dme.last_name, &apos;&apos;) AS name, 
+            COALESCE(dme.first_name || &apos; &apos;, &apos;&apos;) || COALESCE(dme.last_name, &apos;&apos;) AS name,
             COALESCE(dme.street_number || &apos; &apos;, &apos;&apos;) ||
             COALESCE(dme.street_name || &apos; &apos;, &apos;&apos;) ||
-            COALESCE(dme.unit_number, &apos;&apos;) || 
+            COALESCE(dme.unit_number, &apos;&apos;) ||
             COALESCE(dme.city || &apos;, &apos;, &apos;&apos;) ||
             COALESCE(dme.state || &apos; &apos;, &apos;&apos;) ||
             COALESCE(dme.postal_code, &apos;&apos;) AS address,
@@ -61,7 +61,7 @@ FROM
             dme.pregnant = &apos;Yes&apos;
         GROUP BY
             id, name, address
-    ) name_addr   
+    ) name_addr
     LEFT JOIN (
         SELECT
             parent_id,
@@ -80,13 +80,10 @@ FROM
                 WHEN fdd_act_code =  7 THEN birth_date + (INTERVAL &apos;30 days&apos; * 24)
                 WHEN fdd_act_code =  8 THEN now()::DATE
                 WHEN fdd_act_code =  9 THEN now()::DATE
-                -- XXX Replace NOW() with hepb_dose1_date
-                WHEN fdd_act_code = 10 THEN NOW() + (INTERVAL &apos;30 days&apos; * 1)
-                -- XXX Replace NOW() with hepb_dose1_date
-                WHEN fdd_act_code = 11 THEN NOW() + (INTERVAL &apos;30 days&apos; * 6)
-                -- XXX Replace NOW() with hepb_dose3_date
-                WHEN fdd_act_code = 12 THEN NOW() + (INTERVAL &apos;30 days&apos; * 1)
-                WHEN fdd_act_code = 13 THEN now()::DATE
+                WHEN fdd_act_code = 10 THEN hepb_dose1_date + (INTERVAL &apos;30 days&apos; * 1)
+                WHEN fdd_act_code = 11 THEN hepb_dose1_date + (INTERVAL &apos;30 days&apos; * 6)
+                WHEN fdd_act_code = 12 THEN hepb_dose3_date + (INTERVAL &apos;30 days&apos; * 1)
+                WHEN fdd_act_code = 13 THEN hepb_dose3_date
                 ELSE NULL -- If we get here, there&apos;s a problem
             END AS first_due_date,
             CASE
@@ -110,8 +107,12 @@ FROM
             SELECT
                 dce.parent_id,
                 dce.contact_type,
-                COALESCE(dce.first_name || &apos; &apos;, &apos;&apos;) || COALESCE(dce.middle_name || &apos; &apos;, &apos;&apos;) || COALESCE(dce.last_name, &apos;&apos;) AS name,
+                CASE WHEN dce.first_name IS NULL OR dce.first_name = &apos;&apos; THEN &apos;&apos; ELSE dce.first_name || &apos; &apos; END ||
+                CASE WHEN dce.middle_name IS NULL OR dce.middle_name = &apos;&apos; THEN &apos;&apos; ELSE dce.middle_name || &apos; &apos; END ||
+                CASE WHEN dce.last_name IS NULL OR dce.last_name = &apos;&apos; THEN &apos;&apos; ELSE dce.last_name || &apos; &apos; END AS name,
                 dce.birth_date,
+                hepb_dose1_date::TIMESTAMPTZ,
+                hepb_dose3_date::TIMESTAMPTZ,
                 CASE
                     WHEN dce.birth_date IS NOT NULL THEN
                         CASE
@@ -131,67 +132,103 @@ FROM
                     ELSE &apos;&apos;
                 END AS age,
                 CASE
-                -- XXX Using fake fields:
-                --          &apos;hbig_vaccination_date&apos;
-                --          &apos;hepb_dose1_date&apos;
-                --          &apos;hepb_dose2_date&apos;
-                --          &apos;hepb_dose3_date&apos;
-                --          &apos;post_immun_hbsag&apos;
-                --          &apos;pre_immun_hbsag_date&apos;
-                --          &apos;pre_immun_hbsag_result&apos;
-                --          &apos;anti_hbs_date&apos;
-                --          &apos;anti_hbs_result&apos;
                     WHEN dce.contact_type = &apos;Newborn&apos; THEN
                         CASE
-                            WHEN &apos;hbig_vaccination_date&apos; IS NULL AND &apos;hepb_dose1_date&apos; IS NULL THEN
+                            WHEN hbig IS NULL AND hepb_dose1_date IS NULL THEN
                                 1 -- fdd = dob, act = &apos;Needs HBIG and Vaccine #1&apos;
-                            WHEN &apos;hbig_vaccination_date&apos; IS NOT NULL AND &apos;hepb_dose1_date&apos; IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NULL THEN
                                 2 -- fdd = dob, act = &apos;Needs Vaccine #1&apos;
-                            WHEN &apos;hbig_vaccination_date&apos; IS NULL AND &apos;hepb_dose1_date&apos; IS NOT NULL THEN
+                            WHEN hbig IS NULL AND hepb_dose1_date IS NOT NULL THEN
                                 3 -- fdd = dob, act = &apos;Needs HBIG&apos;
-                            WHEN &apos;hbig_vaccination_date&apos; IS NOT NULL AND &apos;hepb_dose1_date&apos; IS NOT NULL AND &apos;hepb_dose2_date&apos; IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NULL THEN
                                 4 -- fdd = dob + 1 mo., act = &apos;Needs Vaccine #2&apos;
-                            WHEN &apos;hbig_vaccination_date&apos; IS NOT NULL AND &apos;hepb_dose1_date&apos; IS NOT NULL AND &apos;hepb_dose2_date&apos; IS NOT NULL AND &apos;hepb_dose3_date&apos; IS NULL THEN
+                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NULL THEN
                                 5 -- fdd = dob + 6 mo., act = &apos;Needs 6-month vaccine dose&apos;
-                            WHEN COALESCE(
+                            WHEN
+                                COALESCE(
                                     (now() - dce.birth_date) BETWEEN (interval &apos;30 days&apos; * 9) AND (interval &apos;30 days&apos; * 18),
                                     dce.age_in_years BETWEEN .6 AND 1.5
-                                ) THEN
-                                6 -- fdd = dob + 9 mo., act = &apos;Needs serology 3 months after 9-month dose&apos;
+                                ) AND
+                                (get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL
+                                    THEN 6 -- fdd = dob + 9 mo., act = &apos;Needs serology 3 months after 9-month dose&apos;
                             WHEN COALESCE((now() - dce.birth_date) &gt;= INTERVAL &apos;365 days&apos; * 2, dce.age_in_years &gt;= 2) THEN
                                 7 -- fdd = dob + 24 mo., act = &apos;Close Newborn Contact&apos;
                             ELSE
-                                -1 -- XXX What do we do here?
+                                -1 -- XXX What do we do here? We can hit this, for instance, if we have all our tests and aren&apos;t yet 2 yrs old.
                         END
                     ELSE -- Not a newborn contact
                         CASE
-                            WHEN &apos;pre_immun_hbsag_date&apos; IS NULL OR &apos;anti_hbs_date&apos; IS NULL THEN
-                                8 -- fdd = report date, act = &apos;Needs Pre-Immunization Serology&apos;
-                            -- XXX Replace hardcoded &apos;F&apos; with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN &apos;hepb_dose1_date&apos; IS NULL AND NOT &apos;F&apos;::BOOLEAN AND NOT &apos;F&apos;::BOOLEAN THEN
-                                9 -- fdd = report date, act = &apos;Needs Vaccine #1&apos;
-                            -- XXX Replace hardcoded &apos;F&apos; with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN &apos;hepb_dose1_date&apos; IS NOT NULL AND &apos;hepb_dose2_date&apos; IS NULL AND NOT &apos;F&apos;::BOOLEAN AND NOT &apos;F&apos;::BOOLEAN THEN
-                                10 -- fdd = &apos;hepb_dose1_date&apos; + 1 mo., act = &apos;Needs Vaccine #2&apos;
-                            -- XXX Replace hardcoded &apos;F&apos; with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN &apos;hepb_dose1_date&apos; IS NOT NULL AND &apos;hepb_dose2_date&apos; IS NOT NULL AND &apos;hepb_dose3_date&apos; IS NULL AND NOT &apos;F&apos;::BOOLEAN AND NOT &apos;F&apos;::BOOLEAN THEN
-                                11 -- fdd = &apos;hepb_dose1_date&apos; + 6 mo., act = &apos;Needs Vaccine #3&apos;
-                            -- XXX Replace hardcoded &apos;F&apos; with pre_immun_hbsag_result and anti_hbs_result
-                            WHEN &apos;hepb_dose1_date&apos; IS NOT NULL AND &apos;hepb_dose2_date&apos; IS NOT NULL AND &apos;hepb_dose3_date&apos; IS NOT NULL AND NOT &apos;F&apos;::BOOLEAN AND NOT &apos;F&apos;::BOOLEAN THEN
-                                12 -- fdd = &apos;hepb_dose3_date&apos; + 1 mo., act = &apos;Needs Post Immunization Serology&apos;
-                            WHEN &apos;perinatal_prevention_status_date&apos; IS NOT NULL THEN -- XXX This should probably be the *firt* non-newborn check
-                                13 -- fdd = report date, act = &apos;Close Contact&apos;
+                            WHEN
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL
+                                    THEN 8 -- fdd = report date, act = &apos;Needs Pre-Immunization Serology&apos;
+                            WHEN
+                                hepb_dose1_date IS NULL AND
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos; AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos;
+                                    THEN 9 -- fdd = report date, act = &apos;Needs Vaccine #1&apos;
+                            WHEN
+                                hepb_dose1_date IS NOT NULL AND
+                                hepb_dose2_date IS NULL AND
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos; AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos;
+                                    THEN 10 -- fdd = &apos;hepb_dose1_date&apos; + 1 mo., act = &apos;Needs Vaccine #2&apos;
+                            WHEN
+                                hepb_dose1_date IS NOT NULL AND
+                                hepb_dose2_date IS NOT NULL AND
+                                hepb_dose3_date IS NULL AND
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos; AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos;
+                                    THEN 11 -- fdd = &apos;hepb_dose1_date&apos; + 6 mo., act = &apos;Needs Vaccine #3&apos;
+                            WHEN
+                                hepb_dose1_date IS NOT NULL AND
+                                hepb_dose2_date IS NOT NULL AND
+                                hepb_dose3_date IS NOT NULL AND
+                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos; AND
+                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ &apos;Positive&apos;
+                                    THEN 12 -- fdd = &apos;hepb_dose3_date&apos; + 1 mo., act = &apos;Needs Post Immunization Serology&apos;
+                            WHEN disposition_date IS NOT NULL
+                                -- XXX This should possibly be the *first* non-newborn check
+                                THEN 13 -- fdd = report date, act = &apos;Close Contact&apos;
                             ELSE
                                 -1 -- XXX What do we do here?
                         END
                 END AS fdd_act_code
             FROM
                 trisano.dw_contact_events_view dce
-            ) foo
+                LEFT JOIN (
+                    SELECT
+                        dw_contact_events_id AS contact_event_id,
+                        earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig,
+                        earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                        earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+                        earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+                        earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+                        earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+                        earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+                    FROM (
+                        SELECT
+                            dw_contact_events_id,
+                            CASE WHEN treatment_name = &apos;HBIG&apos; THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
+                            CASE WHEN treatment_name = &apos;Hep B Dose 1 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
+                            CASE WHEN treatment_name = &apos;Hep B Dose 2 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
+                            -- The ~ is intentional
+                            CASE WHEN treatment_name ~ &apos;Hep B Dose 3 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                            CASE WHEN treatment_name = &apos;Hep B Dose 4 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                            CASE WHEN treatment_name = &apos;Hep B Dose 5 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                            CASE WHEN treatment_name = &apos;Hep B Dose 6 Vaccination&apos; THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
+                        FROM
+                            trisano.dw_contact_treatments_events_view dct
+                        WHERE
+                            treatment_given = &apos;Yes&apos;
+                    ) treatments_split
+                    GROUP BY 1
+                ) treatments_agg
+                    ON (treatments_agg.contact_event_id = dce.id)
+        ) foo
     ) contact_stuff
         ON (name_addr.id = contact_stuff.parent_id)
-;
-</property>
+;</property>
             </query>
             <columnInfo columnName="id" friendlyColumnName="id" columnClassName="java.lang.Integer" tableName=""></columnInfo>
             <columnInfo columnName="name" friendlyColumnName="name" columnClassName="java.lang.String" tableName=""></columnInfo>
@@ -199,11 +236,11 @@ FROM
             <columnInfo columnName="phone" friendlyColumnName="phone" columnClassName="java.lang.String" tableName=""></columnInfo>
             <columnInfo columnName="contact_type" friendlyColumnName="contact_type" columnClassName="java.lang.String" tableName=""></columnInfo>
             <columnInfo columnName="contact_name" friendlyColumnName="contact_name" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="contact_birth_date" friendlyColumnName="contact_birth_date" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <columnInfo columnName="contact_birth_date" friendlyColumnName="contact_birth_date" columnClassName="java.lang.String" tableName=""></columnInfo>
             <columnInfo columnName="contact_age" friendlyColumnName="contact_age" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="first_due_date" friendlyColumnName="first_due_date" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <columnInfo columnName="first_due_date" friendlyColumnName="first_due_date" columnClassName="java.lang.String" tableName=""></columnInfo>
             <columnInfo columnName="action" friendlyColumnName="action" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/myubuntu" userName="trisano_ro" password=""></selectedJNDIDataSource>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
         </child>
     </child>
     <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
@@ -397,6 +434,46 @@ FROM
                 <property name="text"></property>
             </formula>
         </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@28208946</property>
+            <property name="position">2.0, 22.0</property>
+            <property name="minimumSize">83.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Report Date:</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@30627488</property>
+            <property name="position">91.0, 22.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">field21</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text">=NOW();</property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
         <property name="pageBreakBefore">false</property>
         <property name="pageBreakAfter">false</property>
         <property name="showInLayoutGUI">true</property>
@@ -419,8 +496,8 @@ FROM
         </elementBorder>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">contact_typeElement</property>
-            <property name="position">170.0, 0.0</property>
-            <property name="minimumSize">85.00000000000001, 15.0</property>
+            <property name="position">130.0, 0.0</property>
+            <property name="minimumSize">55.000000000000014, 15.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -452,7 +529,7 @@ FROM
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">contact_nameElement</property>
-            <property name="minimumSize">145.0, 10.0</property>
+            <property name="minimumSize">125.0, 15.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -484,8 +561,8 @@ FROM
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">contact_birth_dateElement</property>
-            <property name="position">325.0, 0.0</property>
-            <property name="minimumSize">59.2, 12.0</property>
+            <property name="position">260.0, 0.0</property>
+            <property name="minimumSize">70.00000000000001, 15.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -517,8 +594,8 @@ FROM
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">contact_ageElement</property>
-            <property name="position">260.0, 0.0</property>
-            <property name="minimumSize">59.2, 12.0</property>
+            <property name="position">195.0, 0.0</property>
+            <property name="minimumSize">60.000000000000014, 15.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -548,45 +625,10 @@ FROM
                 <property name="text"></property>
             </formula>
         </child>
-        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
-            <property name="name">first_due_dateElement</property>
-            <property name="position">425.0, 0.0</property>
-            <property name="minimumSize">59.2, 12.0</property>
-            <property name="maximumSize">32767.0, 32767.0</property>
-            <elementBorder sameBorderForAllSides="false">
-                <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-            </elementBorder>
-            <property name="font">Arial,9,0</property>
-            <property name="foreground">0, 0, 0, 255</property>
-            <property name="underline">false</property>
-            <property name="strikethrough">false</property>
-            <property name="embedFont">false</property>
-            <property name="lineHeight">0.0</property>
-            <property name="verticalAlignment">MIDDLE</property>
-            <property name="horizontalAlignment">LEFT</property>
-            <property name="reservedLiteral">..</property>
-            <property name="trimTextContent">false</property>
-            <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">first_due_date</property>
-            <property name="nullString">-</property>
-            <formula>
-                <property name="text"></property>
-            </formula>
-            <property name="format">M/d/yy h:mm a</property>
-            <property name="excelDateFormat"></property>
-        </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">actionElement</property>
-            <property name="position">530.0, 0.0</property>
-            <property name="minimumSize">59.2, 12.0</property>
+            <property name="position">415.0, 0.0</property>
+            <property name="minimumSize">174.99999999999994, 15.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -611,6 +653,39 @@ FROM
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
             <property name="fieldName">action</property>
+            <property name="nullString">-</property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
+            <property name="name">contact_birth_dateElement</property>
+            <property name="position">335.0, 0.0</property>
+            <property name="minimumSize">75.00000000000001, 15.0</property>
+            <property name="maximumSize">32767.0, 32767.0</property>
+            <elementBorder sameBorderForAllSides="false">
+                <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
+                <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+                <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
+                <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+                <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+                <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+                <topRightEdge radii="0.0, 0.0"></topRightEdge>
+                <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+                <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+            </elementBorder>
+            <property name="font">Arial,9,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">MIDDLE</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">false</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">first_due_date</property>
             <property name="nullString">-</property>
             <formula>
                 <property name="text"></property>
@@ -844,10 +919,11 @@ FROM
                 <child type="org.pentaho.reportdesigner.crm.report.model.BandReportElement">
                     <property name="name">DummyGroupDataBandElement</property>
                     <property name="position">0.0, 85.0</property>
-                    <property name="minimumSize">592.0, 19.0</property>
+                    <property name="minimumSize">592.0, 30.0</property>
                     <property name="maximumSize">32767.0, 32767.0</property>
-                    <elementBorder sameBorderForAllSides="false">
-                        <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
+                    <property name="background">51, 51, 51, 255</property>
+                    <elementBorder sameBorderForAllSides="true">
+                        <borderTop width="1.0" borderType="SOLID" color="0, 0, 0, 255"></borderTop>
                         <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
                         <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
                         <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
@@ -857,117 +933,9 @@ FROM
                         <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
                         <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
                     </elementBorder>
-                    <child type="org.pentaho.reportdesigner.crm.report.model.RectangleReportElement">
-                        <property name="name">anonymousElement@7131385</property>
-                        <property name="minimumSize">592.0, 18.0</property>
-                        <property name="maximumSize">32767.0, 32767.0</property>
-                        <elementBorder sameBorderForAllSides="false">
-                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                        </elementBorder>
-                        <property name="color">0, 0, 0, 255</property>
-                        <property name="arcWidth">0.0</property>
-                        <property name="arcHeight">0.0</property>
-                        <property name="drawBorder">false</property>
-                        <property name="fill">true</property>
-                        <borderDefinition color="0, 0, 0, 255" width="1.0" join="0" cap="2" miterlimit="10.0" dashPhase="0.0"></borderDefinition>
-                    </child>
-                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
-                        <property name="name">anonymousElement@4712691</property>
-                        <property name="minimumSize">160.0, 18.0</property>
-                        <property name="maximumSize">32767.0, 32767.0</property>
-                        <elementBorder sameBorderForAllSides="false">
-                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                        </elementBorder>
-                        <property name="font">Arial,10,0</property>
-                        <property name="foreground">255, 255, 255, 255</property>
-                        <property name="underline">false</property>
-                        <property name="strikethrough">false</property>
-                        <property name="embedFont">false</property>
-                        <property name="lineHeight">0.0</property>
-                        <property name="verticalAlignment">MIDDLE</property>
-                        <property name="horizontalAlignment">LEFT</property>
-                        <property name="reservedLiteral">..</property>
-                        <property name="trimTextContent">false</property>
-                        <property name="wrapTextInExcel">false</property>
-                        <property name="text">contact_name</property>
-                    </child>
-                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
-                        <property name="name">anonymousElement@3885383</property>
-                        <property name="position">175.0, 0.0</property>
-                        <property name="minimumSize">59.19999999999999, 18.0</property>
-                        <property name="maximumSize">32767.0, 32767.0</property>
-                        <elementBorder sameBorderForAllSides="false">
-                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                        </elementBorder>
-                        <property name="font">Arial,10,0</property>
-                        <property name="foreground">255, 255, 255, 255</property>
-                        <property name="underline">false</property>
-                        <property name="strikethrough">false</property>
-                        <property name="embedFont">false</property>
-                        <property name="lineHeight">0.0</property>
-                        <property name="verticalAlignment">MIDDLE</property>
-                        <property name="horizontalAlignment">LEFT</property>
-                        <property name="reservedLiteral">..</property>
-                        <property name="trimTextContent">false</property>
-                        <property name="wrapTextInExcel">false</property>
-                        <property name="text">contact_type</property>
-                    </child>
-                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
-                        <property name="name">anonymousElement@27525947</property>
-                        <property name="position">260.0, 0.0</property>
-                        <property name="minimumSize">59.19999999999999, 18.0</property>
-                        <property name="maximumSize">32767.0, 32767.0</property>
-                        <elementBorder sameBorderForAllSides="false">
-                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                        </elementBorder>
-                        <property name="font">Arial,10,0</property>
-                        <property name="foreground">255, 255, 255, 255</property>
-                        <property name="underline">false</property>
-                        <property name="strikethrough">false</property>
-                        <property name="embedFont">false</property>
-                        <property name="lineHeight">0.0</property>
-                        <property name="verticalAlignment">MIDDLE</property>
-                        <property name="horizontalAlignment">LEFT</property>
-                        <property name="reservedLiteral">..</property>
-                        <property name="trimTextContent">false</property>
-                        <property name="wrapTextInExcel">false</property>
-                        <property name="text">contact_age</property>
-                    </child>
                     <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                         <property name="name">anonymousElement@17748133</property>
-                        <property name="position">330.0, 0.0</property>
+                        <property name="position">255.0, 0.0</property>
                         <property name="minimumSize">59.19999999999999, 18.0</property>
                         <property name="maximumSize">32767.0, 32767.0</property>
                         <elementBorder sameBorderForAllSides="false">
@@ -992,12 +960,12 @@ FROM
                         <property name="reservedLiteral">..</property>
                         <property name="trimTextContent">false</property>
                         <property name="wrapTextInExcel">false</property>
-                        <property name="text">contact_birth_date</property>
+                        <property name="text">Birth Date</property>
                     </child>
                     <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                         <property name="name">anonymousElement@25368155</property>
-                        <property name="position">532.8000000000002, 0.0</property>
-                        <property name="minimumSize">59.19999999999982, 18.0</property>
+                        <property name="position">410.0, 0.0</property>
+                        <property name="minimumSize">112.0, 18.0</property>
                         <property name="maximumSize">32767.0, 32767.0</property>
                         <elementBorder sameBorderForAllSides="false">
                             <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -1021,12 +989,70 @@ FROM
                         <property name="reservedLiteral">..</property>
                         <property name="trimTextContent">false</property>
                         <property name="wrapTextInExcel">false</property>
-                        <property name="text">action</property>
+                        <property name="text">Action Required</property>
+                    </child>
+                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+                        <property name="name">anonymousElement@3885383</property>
+                        <property name="position">130.0, 0.0</property>
+                        <property name="minimumSize">50.0, 18.0</property>
+                        <property name="maximumSize">32767.0, 32767.0</property>
+                        <elementBorder sameBorderForAllSides="false">
+                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
+                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
+                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
+                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+                        </elementBorder>
+                        <property name="font">Arial,10,0</property>
+                        <property name="foreground">255, 255, 255, 255</property>
+                        <property name="underline">false</property>
+                        <property name="strikethrough">false</property>
+                        <property name="embedFont">false</property>
+                        <property name="lineHeight">0.0</property>
+                        <property name="verticalAlignment">MIDDLE</property>
+                        <property name="horizontalAlignment">LEFT</property>
+                        <property name="reservedLiteral">..</property>
+                        <property name="trimTextContent">false</property>
+                        <property name="wrapTextInExcel">false</property>
+                        <property name="text">Type</property>
+                    </child>
+                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+                        <property name="name">anonymousElement@27525947</property>
+                        <property name="position">190.0, 0.0</property>
+                        <property name="minimumSize">30.0, 18.0</property>
+                        <property name="maximumSize">32767.0, 32767.0</property>
+                        <elementBorder sameBorderForAllSides="false">
+                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
+                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
+                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
+                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+                        </elementBorder>
+                        <property name="font">Arial,10,0</property>
+                        <property name="foreground">255, 255, 255, 255</property>
+                        <property name="underline">false</property>
+                        <property name="strikethrough">false</property>
+                        <property name="embedFont">false</property>
+                        <property name="lineHeight">0.0</property>
+                        <property name="verticalAlignment">MIDDLE</property>
+                        <property name="horizontalAlignment">LEFT</property>
+                        <property name="reservedLiteral">..</property>
+                        <property name="trimTextContent">false</property>
+                        <property name="wrapTextInExcel">false</property>
+                        <property name="text">Age</property>
                     </child>
                     <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                         <property name="name">anonymousElement@13639298</property>
-                        <property name="position">425.0, 0.0</property>
-                        <property name="minimumSize">59.200000000000045, 18.0</property>
+                        <property name="position">330.0, 0.0</property>
+                        <property name="minimumSize">70.0, 26.0</property>
                         <property name="maximumSize">32767.0, 32767.0</property>
                         <elementBorder sameBorderForAllSides="false">
                             <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -1050,7 +1076,35 @@ FROM
                         <property name="reservedLiteral">..</property>
                         <property name="trimTextContent">false</property>
                         <property name="wrapTextInExcel">false</property>
-                        <property name="text">first_due_date</property>
+                        <property name="text">First Due Date</property>
+                    </child>
+                    <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+                        <property name="name">anonymousElement@4712691</property>
+                        <property name="minimumSize">110.0, 18.0</property>
+                        <property name="maximumSize">32767.0, 32767.0</property>
+                        <elementBorder sameBorderForAllSides="false">
+                            <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
+                            <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
+                            <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
+                            <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
+                            <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
+                            <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
+                            <topRightEdge radii="0.0, 0.0"></topRightEdge>
+                            <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
+                            <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
+                        </elementBorder>
+                        <property name="font">Arial,10,0</property>
+                        <property name="foreground">255, 255, 255, 255</property>
+                        <property name="underline">false</property>
+                        <property name="strikethrough">false</property>
+                        <property name="embedFont">false</property>
+                        <property name="lineHeight">0.0</property>
+                        <property name="verticalAlignment">MIDDLE</property>
+                        <property name="horizontalAlignment">LEFT</property>
+                        <property name="reservedLiteral">..</property>
+                        <property name="trimTextContent">false</property>
+                        <property name="wrapTextInExcel">false</property>
+                        <property name="text">Name</property>
                     </child>
                     <property name="reportLayoutManagerType">NULL</property>
                     <property name="showInLayoutGUI">true</property>
@@ -1066,6 +1120,7 @@ FROM
                     <property name="embedFont">false</property>
                     <property name="lineHeight">0.0</property>
                     <property name="verticalAlignment">TOP</property>
+                    <property name="horizontalAlignment">LEFT</property>
                     <property name="reservedLiteral">..</property>
                     <property name="trimTextContent">true</property>
                     <property name="wrapTextInExcel">false</property>
@@ -1088,6 +1143,7 @@ FROM
                     <property name="embedFont">false</property>
                     <property name="lineHeight">0.0</property>
                     <property name="verticalAlignment">TOP</property>
+                    <property name="horizontalAlignment">LEFT</property>
                     <property name="reservedLiteral">..</property>
                     <property name="trimTextContent">true</property>
                     <property name="wrapTextInExcel">false</property>
@@ -1108,6 +1164,7 @@ FROM
                     <property name="embedFont">false</property>
                     <property name="lineHeight">0.0</property>
                     <property name="verticalAlignment">TOP</property>
+                    <property name="horizontalAlignment">LEFT</property>
                     <property name="reservedLiteral">..</property>
                     <property name="trimTextContent">true</property>
                     <property name="wrapTextInExcel">false</property>
@@ -1128,6 +1185,7 @@ FROM
                     <property name="embedFont">false</property>
                     <property name="lineHeight">0.0</property>
                     <property name="verticalAlignment">TOP</property>
+                    <property name="horizontalAlignment">LEFT</property>
                     <property name="reservedLiteral">..</property>
                     <property name="trimTextContent">true</property>
                     <property name="wrapTextInExcel">false</property>
@@ -1208,7 +1266,7 @@ FROM
                 <property name="pageBreakBefore">false</property>
                 <property name="pageBreakAfter">false</property>
                 <property name="showInLayoutGUI">true</property>
-                <property name="visualHeight">104.0</property>
+                <property name="visualHeight">118.0</property>
                 <verticalLinealModel></verticalLinealModel>
                 <property name="repeat">true</property>
             </child>
@@ -1248,74 +1306,6 @@ FROM
                     <property name="drawBorder">false</property>
                     <property name="fill">true</property>
                     <borderDefinition color="0, 0, 0, 255" width="1.0" join="0" cap="2" miterlimit="10.0" dashPhase="0.0"></borderDefinition>
-                </child>
-                <child type="org.pentaho.reportdesigner.crm.report.model.NumberFieldReportElement">
-                    <property name="name">anonymousElement@3737059</property>
-                    <property name="position">-0.0, 2.0</property>
-                    <property name="minimumSize">59.2, 16.0</property>
-                    <property name="maximumSize">32767.0, 32767.0</property>
-                    <elementBorder sameBorderForAllSides="false">
-                        <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                        <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                        <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                        <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                        <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                        <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                        <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                        <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                        <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                    </elementBorder>
-                    <property name="font">Arial,12,1</property>
-                    <property name="foreground">0, 0, 0, 255</property>
-                    <property name="underline">false</property>
-                    <property name="strikethrough">false</property>
-                    <property name="embedFont">false</property>
-                    <property name="lineHeight">0.0</property>
-                    <property name="verticalAlignment">MIDDLE</property>
-                    <property name="horizontalAlignment">RIGHT</property>
-                    <property name="reservedLiteral">..</property>
-                    <property name="trimTextContent">false</property>
-                    <property name="wrapTextInExcel">false</property>
-                    <property name="fieldName">Summary_idExpression</property>
-                    <property name="nullString"></property>
-                    <formula>
-                        <property name="text"></property>
-                    </formula>
-                    <property name="format">#,##0.###</property>
-                    <property name="excelNumberFormat"></property>
-                </child>
-                <child type="org.pentaho.reportdesigner.crm.report.model.MessageFieldReportElement">
-                    <property name="name">anonymousElement@28408632</property>
-                    <property name="position">-0.0, 2.0</property>
-                    <property name="minimumSize">-0.0, 16.0</property>
-                    <property name="maximumSize">32767.0, 32767.0</property>
-                    <elementBorder sameBorderForAllSides="false">
-                        <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                        <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                        <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                        <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                        <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                        <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                        <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                        <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                        <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-                    </elementBorder>
-                    <property name="font">Arial,12,1</property>
-                    <property name="foreground">0, 0, 0, 255</property>
-                    <property name="underline">false</property>
-                    <property name="strikethrough">false</property>
-                    <property name="embedFont">false</property>
-                    <property name="lineHeight">0.0</property>
-                    <property name="verticalAlignment">MIDDLE</property>
-                    <property name="horizontalAlignment">LEFT</property>
-                    <property name="reservedLiteral">..</property>
-                    <property name="trimTextContent">false</property>
-                    <property name="wrapTextInExcel">false</property>
-                    <property name="formatString">Grand Total</property>
-                    <property name="nullString"></property>
-                    <formula>
-                        <property name="text"></property>
-                    </formula>
                 </child>
                 <property name="pageBreakBefore">false</property>
                 <property name="pageBreakAfter">false</property>

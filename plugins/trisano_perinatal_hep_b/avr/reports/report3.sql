@@ -1,94 +1,11 @@
-UPDATE warehouse_b.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
-UPDATE warehouse_a.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
-UPDATE warehouse_b.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
-UPDATE warehouse_a.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
+-- UPDATE warehouse_b.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
+-- UPDATE warehouse_a.dw_contact_events set contact_type = 'Noodles' where last_name = 'Williams';
+-- UPDATE warehouse_b.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
+-- UPDATE warehouse_a.dw_contact_events set contact_type = 'Newborn' where last_name = 'Dodge';
 
 -- Report 3
+-- Pregnancy Event Action report
 -- No longer requires a subreport
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_lab_before(INTEGER, TEXT, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.dw_contact_lab_results_view
-    WHERE
-        dw_contact_events_id = $1 AND test_type = $2 AND
-        (lab_test_date < $3 OR $3 IS NULL)
-    ORDER BY lab_test_date DESC LIMIT 1;
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antigen (HBsAg)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antibody (HBsAb)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_lab_after(INTEGER, TEXT, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.dw_contact_lab_results_view
-    WHERE
-        dw_contact_events_id = $1 AND test_type = $2 AND
-        (lab_test_date > $3 OR $3 IS NULL)
-    ORDER BY lab_test_date ASC LIMIT 1;
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_after(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antigen (HBsAg)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_after(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antibody (HBsAb)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION earliest_date(arr DATE[])
-    RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
-$$
-DECLARE
-    i INTEGER;
-    result DATE;
-BEGIN
-    result := arr[array_lower(arr, 1)];
-    FOR i IN array_lower(arr, 1)..array_upper(arr, 1) LOOP
-        IF (result IS NULL OR result > arr[i]) THEN
-            result := arr[i];
-        END IF;
-    END LOOP;
-    RETURN result;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION latest_date(arr DATE[])
-    RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
-$$
-DECLARE
-    i INTEGER;
-    result DATE;
-BEGIN
-    result := arr[array_lower(arr, 1)];
-    FOR i IN array_lower(arr, 1)..array_upper(arr, 1) LOOP
-        IF (result IS NULL OR result < arr[i]) THEN
-            result := arr[i];
-        END IF;
-    END LOOP;
-    RETURN result;
-END;
-$$;
 
 SELECT
     name_addr.id,
@@ -97,9 +14,9 @@ SELECT
     name_addr.phone,
     contact_stuff.contact_type,
     contact_stuff.name AS contact_name,
-    contact_stuff.birth_date AS contact_birth_date,
+    to_char(contact_stuff.birth_date, 'MM/DD/YYYY') AS contact_birth_date,
     contact_stuff.age AS contact_age,
-    contact_stuff.first_due_date,
+    to_char(contact_stuff.first_due_date, 'MM/DD/YYYY') AS first_due_date,
     contact_stuff.action
 FROM
     (
@@ -174,8 +91,9 @@ FROM
             SELECT
                 dce.parent_id,
                 dce.contact_type,
-                -- XXX it appears middle_name isn't often NULL; check these for NULL or ''
-                COALESCE(dce.first_name || ' ', '') || COALESCE(dce.middle_name || ' ', '') || COALESCE(dce.last_name, '') AS name,
+                CASE WHEN dce.first_name IS NULL OR dce.first_name = '' THEN '' ELSE dce.first_name || ' ' END ||
+                CASE WHEN dce.middle_name IS NULL OR dce.middle_name = '' THEN '' ELSE dce.middle_name || ' ' END ||
+                CASE WHEN dce.last_name IS NULL OR dce.last_name = '' THEN '' ELSE dce.last_name || ' ' END AS name,
                 dce.birth_date,
                 hepb_dose1_date::TIMESTAMPTZ,
                 hepb_dose3_date::TIMESTAMPTZ,
@@ -228,7 +146,6 @@ FROM
                                 (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR
                                 (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL
                                     THEN 8 -- fdd = report date, act = 'Needs Pre-Immunization Serology'
-                                -- XXX Check out logic here
                             WHEN
                                 hepb_dose1_date IS NULL AND
                                 (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
@@ -255,7 +172,7 @@ FROM
                                 (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
                                     THEN 12 -- fdd = 'hepb_dose3_date' + 1 mo., act = 'Needs Post Immunization Serology'
                             WHEN disposition_date IS NOT NULL
-                                -- XXX This should possibly be the *firt* non-newborn check
+                                -- XXX This should possibly be the *first* non-newborn check
                                 THEN 13 -- fdd = report date, act = 'Close Contact'
                             ELSE
                                 -1 -- XXX What do we do here?
