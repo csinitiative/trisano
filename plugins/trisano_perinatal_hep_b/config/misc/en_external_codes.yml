@@ -1,0 +1,49 @@
+- code_name:        contactdispositiontype
+  code_description: Provider refusal
+  the_code:         PR
+  disease_specific: true
+  sort_order:       10
+
+- code_name:        contactdispositiontype
+  code_description: Mother/family refusal
+  the_code:         MFR
+  disease_specific: true
+  sort_order:       20
+
+- code_name:        contactdispositiontype
+  code_description: False positive mother
+  the_code:         FPM
+  disease_specific: true
+  sort_order:       30
+
+- code_name:        contactdispositiontype
+  code_description: Infant adopted
+  the_code:         IA
+  disease_specific: true
+  sort_order:       40
+
+- code_name:        contactdispositiontype
+  code_description: Infant died
+  the_code:         ID
+  disease_specific: true
+  sort_order:       50
+
+- code_name:        contactdispositiontype
+  code_description: Miscarriage/termination
+  the_code:         MT
+  disease_specific: true
+  sort_order:       60
+
+- code_name:        contactdispositiontype
+  code_description: Completed
+  the_code:         C
+  disease_specific: true
+  sort_order:       70
+
+- code_name:        contactdispositiontype
+  code_description: Active follow up
+  the_code:         AFU
+  disease_specific: true
+  sort_order:       80
+
+

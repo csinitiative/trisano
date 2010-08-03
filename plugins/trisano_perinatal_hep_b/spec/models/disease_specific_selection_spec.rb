@@ -15,7 +15,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-codes = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'misc', 'en_codes.yml'))
-Code.load!(codes)
+require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
 
-ExternalCode.load_hep_b_external_codes!
+describe DiseaseSpecificSelection, "in the Perinatal Hep B plugin" do
+  include PerinatalHepBSpecHelper
+  include DiseaseSpecHelper
+  include CodeSpecHelper
+
+  before do
+    given_a_disease_named('Hepatitis B Pregnancy Event')
+    given_contact_disposition_type_codes_loaded
+    given_hep_b_external_codes_loaded
+  end
+
+  it "should associate hep b specific external codes for hep b selections based on disease" do
+    lambda do
+      DiseaseSpecificSelection.create_perinatal_hep_b_associations
+    end.should change(DiseaseSpecificSelection, :count).by(19)
+  end
+
+end

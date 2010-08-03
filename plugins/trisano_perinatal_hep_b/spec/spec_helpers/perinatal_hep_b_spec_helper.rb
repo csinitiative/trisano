@@ -76,6 +76,10 @@ module PerinatalHepBSpecHelper
     CoreField.load!(@ce_core_fields_to_load)
   end
 
+  def given_hep_b_external_codes_loaded
+    ExternalCode.load_hep_b_external_codes!
+  end
+
   def p_hep_b_core_fields
     YAML.load_file(File.join(p_hep_b_path, 'db', 'defaults', 'core_fields.yml'))
   end

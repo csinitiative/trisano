@@ -15,7 +15,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-codes = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'config', 'misc', 'en_codes.yml'))
-Code.load!(codes)
+module Trisano
+  module TrisanoPerinatalHepB
+    module Models
+      module ExternalCode
+        hook! "ExternalCode"
+        reloadable!
 
-ExternalCode.load_hep_b_external_codes!
+        class << self
+          def included(base)
+            base.extend(ClassMethods)
+          end
+        end
+
+        module ClassMethods
+          def load_hep_b_external_codes!
+            transaction do
+              load!(hep_b_external_code_attributes)
+            end
+          end
+
+          private
+
+          def hep_b_external_code_attributes
+            YAML::load_file(File.dirname(__FILE__) + '/../../../../config/misc/en_external_codes.yml')
+          end
+        end
+
+      end
+    end
+  end
+end
+

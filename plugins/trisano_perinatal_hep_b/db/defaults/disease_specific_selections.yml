@@ -1,0 +1,59 @@
+Hepatitis B Pregnancy Event:
+  external_codes:
+    - code_name: contactdispositiontype
+      the_code:  PR
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  MFR
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  FPM
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  IA
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  ID
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  MT
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  C
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  AFU
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  OOJ
+      rendered:  true
+    - code_name: contactdispositiontype
+      the_code:  PT
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  RPT
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  IBT
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  INT
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  PTFTI
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  NI
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  IIBI
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  UTL
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  LR
+      rendered:  false
+    - code_name: contactdispositiontype
+      the_code:  O
+      rendered:  false
