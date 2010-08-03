@@ -15,6 +15,7 @@ Feature: Editing contacts on morbidity events
       And I press "Save & Exit"
     Then I should be on the show CMR page
       And I should see "Not infected"
+      And the disposition date of 2 days ago should be visible in show format
     When I follow "Edit contact"
     Then I should see "Not infected"
       And the disposition date of 2 days ago should be visible in edit format

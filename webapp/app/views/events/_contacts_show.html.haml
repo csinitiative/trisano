@@ -2,6 +2,7 @@
   %tr
     %th= t 'name'
     %th= t 'disposition'
+    %th= t 'disposition_date'
     %th= t 'contact_type'
     %th= t 'phone'
     %th
@@ -20,6 +21,7 @@
     %tr
       %td{style}= h(person.last_comma_first)
       %td{style}= h(contact_event_data.disposition.code_description) if contact_event_data and contact_event_data.disposition
+      %td{style}= ld(contact_event_data.disposition_date) if contact_event_data
       %td{style}= h(contact_event_data.contact_type.code_description) if contact_event_data and contact_event_data.contact_type
 
       %td{style} 
