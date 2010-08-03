@@ -21,10 +21,10 @@ Feature: Hep B specific contact treatment fields
       And I follow "Edit Contact"
     Then I should see the p-hep-b treatment fields
     When I select "Yes" from "Treatment given"
-      And I select "Hep B Dose 1 Vaccination" from "contact_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
+      And I select "HBIG" from "contact_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
       And I enter a valid treatment date of 2 days ago
       And I press "Save & Exit"
-    Then I should see "Hep B Dose 1 Vaccination"
+    Then I should see "HBIG"
       And the treatment date of 2 days ago should be visible in show format
 
 
