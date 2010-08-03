@@ -24,7 +24,7 @@ class ParticipationsContact < ActiveRecord::Base
     :unless => lambda { |pc| pc.disposition_date.blank? }
   
   validates_date :disposition_date, :allow_blank => true,
-                                    :on_or_before => lambda { Date.today + 1.week }
+                                    :on_or_before => lambda { Date.today }
 
   def disposition_description
     disposition.code_description unless disposition.nil?

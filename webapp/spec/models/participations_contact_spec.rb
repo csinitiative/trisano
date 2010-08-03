@@ -42,11 +42,9 @@ describe ParticipationsContact do
       @pc.errors.on(:disposition_date).should be_nil
     end
 
-    it 'should not be valid for disposition dates more than one week in the future' do
-      @pc.update_attributes(:disposition_date => 7.days.from_now)
-      @pc.errors.on(:disposition_date).should be_nil
-      @pc.update_attributes(:disposition_date => 8.days.from_now)
-      @pc.errors.on(:disposition_date).should == "must be on or before " + (7.days.from_now).strftime("%Y-%m-%d")
+    it 'should not be valid for disposition dates in the future' do
+      @pc.update_attributes(:disposition_date => 1.day.from_now)
+      @pc.errors.on(:disposition_date).should == "must be on or before " + (Time.now).strftime("%Y-%m-%d")
     end
 
     it 'should force the requirement of a disposition' do
