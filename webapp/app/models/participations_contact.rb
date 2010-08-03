@@ -20,6 +20,9 @@ class ParticipationsContact < ActiveRecord::Base
   belongs_to :disposition, :class_name => 'ExternalCode'
   belongs_to :contact_type, :class_name => 'ExternalCode'
 
+  validates_presence_of :disposition, 
+    :unless => lambda { |pc| pc.disposition_date.blank? }
+  
   validates_date :disposition_date, :allow_blank => true,
                                     :on_or_before => lambda { Date.today + 1.week }
 

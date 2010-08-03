@@ -39,7 +39,6 @@ describe ParticipationsContact do
 
     it 'should be valid for disposition dates in the past' do
       @pc.update_attributes(:disposition_date => Date.yesterday)
-      @pc.should be_valid
       @pc.errors.on(:disposition_date).should be_nil
     end
 
@@ -48,6 +47,13 @@ describe ParticipationsContact do
       @pc.errors.on(:disposition_date).should be_nil
       @pc.update_attributes(:disposition_date => 8.days.from_now)
       @pc.errors.on(:disposition_date).should == "must be on or before " + (7.days.from_now).strftime("%Y-%m-%d")
+    end
+
+    it 'should force the requirement of a disposition' do
+      @pc.update_attributes(:disposition_date => 7.days.from_now)
+      @pc.errors.on(:disposition).should == "is required when a disposition date is present"
+      @pc.update_attributes(:disposition => Factory.create(:external_code))
+      @pc.errors.on(:disposition).should be_nil
     end
   end
 

@@ -141,6 +141,11 @@ es:
             base:
               before_bday: "La(s) fecha(s) del encuentro precede(n) la fecha de nacimiento"
 
+        participations_contact:
+          attributes:
+            disposition:
+              blank: "is required when a disposition date is present (EN)"
+
         participations_encounter:
           attributes:
             encounter_date:

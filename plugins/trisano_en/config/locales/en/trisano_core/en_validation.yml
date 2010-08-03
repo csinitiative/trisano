@@ -148,6 +148,11 @@ en:
             base:
               before_bday: "Encounter date(s) precede birth date"
 
+        participations_contact:
+          attributes:
+            disposition:
+              blank: "is required when a disposition date is present"
+
         participations_encounter:
           attributes:
             encounter_date:
