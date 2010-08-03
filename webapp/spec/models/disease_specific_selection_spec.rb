@@ -24,4 +24,20 @@ describe DiseaseSpecificSelection do
   it { should validate_presence_of(:disease_id) }
   it { should validate_presence_of(:external_code_id) }
 
+  it "should create a new instance based on an search conditions" do
+    disease = disease!('The Trots')
+    code = external_code!('toilet_paper_type', 'C', :code_description => 'Coarse')
+    disease_conditions = { 'disease' => { 'disease_name' => 'The Trots' } }
+    external_code_conditions = {
+      'external_code' => {
+        'code_name' => 'toilet_paper_type',
+        'the_code' => 'C'
+      }
+    }
+    lambda do
+      DiseaseSpecificSelection.load! [ disease_conditions.merge(external_code_conditions) ]
+    end.should change(DiseaseSpecificSelection, :count).by(1)
+    code.disease_specific_selections.map(&:disease_id).should == [disease.id]
+  end
+
 end

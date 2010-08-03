@@ -21,4 +21,19 @@ class DiseaseSpecificSelection < ActiveRecord::Base
 
   validates_presence_of :disease_id
   validates_presence_of :external_code_id
+
+  class << self
+    def load!(selections)
+      transaction do
+        selections.map do |selection|
+          disease = Disease.find(:first, :conditions => selection['disease'])
+          external_code = ExternalCode.find(:first, :conditions => selection['external_code'])
+          DiseaseSpecificSelection.create!(:disease => disease,
+                                           :external_code => external_code,
+                                           :rendered => selection['rendered'] ||= true)
+        end
+      end
+    end
+  end
+
 end

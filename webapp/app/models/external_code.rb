@@ -121,6 +121,12 @@ class ExternalCode < ActiveRecord::Base
     loinc_scale_by_the_code('Nom')
   end
 
+  def self.load!(hashes)
+    transaction do
+      hashes.map { |attribs| create!(attribs) }
+    end
+  end
+
   def deleted?
     not deleted_at.nil?
   end

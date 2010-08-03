@@ -29,4 +29,18 @@ module CodeSpecHelper
     CodeName.delete_all(['code_name = ?', code_name])
     Factory.create(:code_name, :code_name => code_name, :external => external)
   end
+
+  def given_contact_disposition_type_codes_loaded
+    contact_disposition_type_attributes.map do |attributes|
+      ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
+    end
+  end
+
+  def contact_disposition_type_attributes
+    default_code_attributes.select { |attributes| attributes['code_name'] == 'contactdispositiontype' }
+  end
+
+  def default_code_attributes
+    YAML::load_file(File.dirname(__FILE__) + '/../../../vendor/trisano/trisano_en/config/misc/en_codes.yml')
+  end
 end

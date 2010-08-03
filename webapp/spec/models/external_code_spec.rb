@@ -46,6 +46,15 @@ describe ExternalCode do
     @external_code.disease_specific.should_not be_true
   end
 
+  it "should insert an external code from an array of attribute hashes" do
+    hashes = [ { :the_code => 'HOB',
+                 :code_description => 'Hobbit',
+                 :code_name => 'race' } ]
+    lambda do
+      ExternalCode.load!(hashes)
+    end.should change(ExternalCode, :count).by(1)
+  end
+
   describe 'telephone location type ids' do
 
     it 'should be able to provide a list of telephone location type ids' do
