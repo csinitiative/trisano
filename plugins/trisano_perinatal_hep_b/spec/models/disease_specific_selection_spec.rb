@@ -25,13 +25,15 @@ describe DiseaseSpecificSelection, "in the Perinatal Hep B plugin" do
   before do
     given_a_disease_named('Hepatitis B Pregnancy Event')
     given_contact_disposition_type_codes_loaded
+    given_contact_type_codes_loaded
+    given_race_codes_loaded
     given_hep_b_external_codes_loaded
   end
 
   it "should associate hep b specific external codes for hep b selections based on disease" do
     lambda do
       DiseaseSpecificSelection.create_perinatal_hep_b_associations
-    end.should change(DiseaseSpecificSelection, :count).by(19)
+    end.should change(DiseaseSpecificSelection, :count).by(54)
   end
 
 end

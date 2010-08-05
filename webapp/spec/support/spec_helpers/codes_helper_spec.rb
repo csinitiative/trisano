@@ -36,11 +36,33 @@ module CodeSpecHelper
     end
   end
 
+  def given_contact_type_codes_loaded
+    contact_type_attributes.map do |attributes|
+      ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
+    end
+  end
+
+  def given_race_codes_loaded
+    race_type_attributes.map do |attributes|
+      ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
+    end
+  end
+
   def contact_disposition_type_attributes
     default_code_attributes.select { |attributes| attributes['code_name'] == 'contactdispositiontype' }
   end
 
+  def contact_type_attributes
+    default_code_attributes.select { |attributes| attributes['code_name'] == 'contact_type' }
+  end
+
+  def race_type_attributes
+    default_code_attributes.select { |attributes| attributes['code_name'] == 'race' }
+  end
+
   def default_code_attributes
-    YAML::load_file(File.dirname(__FILE__) + '/../../../vendor/trisano/trisano_en/config/misc/en_codes.yml')
+    codes = YAML::load_file(File.dirname(__FILE__) + '/../../../vendor/trisano/trisano_en/config/misc/en_codes.yml')
+    contact_types = YAML::load_file(File.dirname(__FILE__) + '/../../../vendor/trisano/trisano_en/config/misc/en_contact_types.yml')
+    codes + contact_types
   end
 end

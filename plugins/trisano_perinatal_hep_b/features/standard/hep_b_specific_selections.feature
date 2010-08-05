@@ -9,15 +9,124 @@ Feature: Select options specific to Hepatitis B Pregnancy Event
       And the hep b disease specific selections are loaded
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
      When I go to edit the CMR
-     Then I should see only these contact disposition select options:
-       | content                 |
-       |                         |
-       | Provider refusal        |
-       | Mother/family refusal   |
-       | False positive mother   |
-       | Infant adopted          |
-       | Infant died             |
-       | Miscarriage/termination |
-       | Completed               |
-       | Active follow up        |
-       | Out of jurisdiction     |
+     Then I should see only these disposition select options:
+        | content                    |
+        |                            |
+        | Active follow up           |
+        | Completed                  |
+        | Provider refusal           |
+        | Mother/family refusal      |
+        | Moved                      |
+        | Unable to locate           |
+        | Adopted                    |
+        | Died                       |
+        | False positive mother/case |
+        | Miscarriage/termination    |
+        | Other                      |
+
+  Scenario: Contact disposition selection on a Contact event
+    Given I am logged in as a super user
+      And the hep b disease specific selections are loaded
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And the morbidity event has the following contacts:
+        | last_name |
+        | Chandler  |
+     When I go to the first CMR contact's edit page
+     Then I should see only these disposition select options:
+        | content                    |
+        |                            |
+        | Active follow up           |
+        | Completed                  |
+        | Provider refusal           |
+        | Mother/family refusal      |
+        | Moved                      |
+        | Unable to locate           |
+        | Adopted                    |
+        | Died                       |
+        | False positive mother/case |
+        | Miscarriage/termination    |
+        | Other                      |
+
+  Scenario: Contact type selection on a CMR
+    Given I am logged in as a super user
+      And the hep b disease specific selections are loaded
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+     When I go to edit the CMR
+     Then I should see only these contact type select options:
+        | content                   |
+        |                           |
+        | Infant                    |
+        | Adult household           |
+        | Child by case mother      |
+        | Child by other mother     |
+        | Non-spouse sexual contact |
+        | Spouse sexual contact     |
+
+  Scenario: Contact type selection on a Contact event
+    Given I am logged in as a super user
+      And the hep b disease specific selections are loaded
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And the morbidity event has the following contacts:
+        | last_name |
+        | Chandler  |
+     When I go to the first CMR contact's edit page
+     Then I should see only these contact type select options:
+        | content                   |
+        |                           |
+        | Infant                    |
+        | Adult household           |
+        | Child by case mother      |
+        | Child by other mother     |
+        | Non-spouse sexual contact |
+        | Spouse sexual contact     |
+
+  Scenario: Race selection on a CMR
+    Given I am logged in as a super user
+      And the hep b disease specific selections are loaded
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+     When I go to edit the CMR
+     Then I should see only these race ID select options:
+        | content                          |
+        | White                            |
+        | Black / African-American         |
+        | American Indian / Alaskan Native |
+        | Chinese                          |
+        | Japanese                         |
+        | Asian Indian                     |
+        | Korean                           |
+        | Vietnamese                       |
+        | Filipino                         |
+        | Asian unspecified                |
+        | Hawaiian Native                  |
+        | Samoan                           |
+        | Tongan                           |
+        | Guatemalan                       |
+        | Other Pacific Islander           |
+        | Other                            |
+
+  Scenario: Contact type selection on a Contact event
+    Given I am logged in as a super user
+      And the hep b disease specific selections are loaded
+      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And the morbidity event has the following contacts:
+        | last_name |
+        | Chandler  |
+     When I go to the first CMR contact's edit page
+     Then I should see only these race ID select options:
+        | content                          |
+        | White                            |
+        | Black / African-American         |
+        | American Indian / Alaskan Native |
+        | Chinese                          |
+        | Japanese                         |
+        | Asian Indian                     |
+        | Korean                           |
+        | Vietnamese                       |
+        | Filipino                         |
+        | Asian unspecified                |
+        | Hawaiian Native                  |
+        | Samoan                           |
+        | Tongan                           |
+        | Guatemalan                       |
+        | Other Pacific Islander           |
+        | Other                            |
