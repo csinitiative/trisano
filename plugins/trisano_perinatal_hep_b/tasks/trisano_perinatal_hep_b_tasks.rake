@@ -34,6 +34,7 @@ namespace :trisano do
       sh("#{RAILS_ROOT}/script/runner 'CsvField.create_perinatal_hep_b_associations'")
       sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificValidation.create_perinatal_hep_b_associations'")
       sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificSelection.create_perinatal_hep_b_associations'")
+      sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificCallback.create_perinatal_hep_b_associations'")
     end
 
     task :feature_prep do |t|
