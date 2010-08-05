@@ -139,6 +139,30 @@ Then /^I should not see these select options:$/ do |select_options|
   end
 end
 
+Then /^I should see only these (.+) select options:$/ do |select_id, options|
+  id_regex = Regexp.new(select_id.downcase.gsub(/ +/, '_'))
+  options.hashes.each_cons(2) do |this_tag, next_tag|
+    assert_tag 'option', {
+      :parent => {
+        :tag => 'select',
+        :attributes => {
+          :id => id_regex
+        }
+      },
+      :before => { :tag => 'option' }.merge(next_tag)
+    }.merge(this_tag)
+  end
+  assert_tag 'select', {
+    :attributes => { :id => id_regex },
+    :children => { :count => options.rows.size }
+  }
+end
+
+Then /^I should see the following:$/ do |values|
+  values.hashes.each do |hash|
+    assert_contain(hash[:text])
+  end
+end
 
 #
 # define tag behavior
