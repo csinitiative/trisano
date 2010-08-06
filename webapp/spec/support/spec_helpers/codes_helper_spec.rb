@@ -30,6 +30,12 @@ module CodeSpecHelper
     Factory.create(:code_name, :code_name => code_name, :external => external)
   end
 
+  def given_task_category_codes_loaded
+    task_category_attributes.map do |attributes|
+      ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
+    end
+  end
+
   def given_contact_disposition_type_codes_loaded
     contact_disposition_type_attributes.map do |attributes|
       ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
@@ -46,6 +52,10 @@ module CodeSpecHelper
     race_type_attributes.map do |attributes|
       ExternalCode.find_or_create_by_the_code_and_code_name(attributes)
     end
+  end
+
+  def task_category_attributes
+    default_code_attributes.select { |attributes| attributes['code_name'] == 'task_category' }
   end
 
   def contact_disposition_type_attributes

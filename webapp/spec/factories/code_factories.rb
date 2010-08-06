@@ -13,6 +13,10 @@ Factory.define(:external_code) do |code|
   code.code_description { Factory.next(:code_description) }
 end
 
+Factory.define(:contact_type, :parent => :external_code) do |code|
+  code.code_name "contact_type"
+end
+
 Factory.define(:place_type, :parent => 'code') do |code|
   code.code_name "placetype"
 end

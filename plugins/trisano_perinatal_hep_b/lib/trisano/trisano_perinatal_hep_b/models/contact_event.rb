@@ -27,22 +27,68 @@ module Trisano
 
             base.class_eval do
 
-              def after_save_with_p_hep_b_after_save
-                after_save_without_p_hep_b_after_save
-                generate_p_hep_b_tasks
+              def before_save_with_p_hep_b_before_save
+                before_save_without_p_hep_b_before_save
+                assign_p_hep_b_tasks
               end
 
               private
 
-              def generate_p_hep_b_tasks
-                investigator_treatment_date_task
+              def assign_p_hep_b_tasks
+                begin
+                  disease = try(:disease).try(:disease)
+                  assign_investigator_treatment_date_task if assign_investigator_treatment_task?(disease)
+                rescue Exception => ex
+                  I18nLogger.error("task_assignment_failed")
+                  DEFAULT_LOGGER.error(ex.message)
+                  DEFAULT_LOGGER.error(ex.backtrace)
+                  self.errors.add_to_base(I18n.t('task_assignment_failed'))
+                  return false
+                end
               end
 
-              def investigator_treatment_date_task
-                # Impl coming
+              def assign_investigator_treatment_task?(disease)
+                (!disease.nil? &&
+                    ::DiseaseSpecificCallback.diseases_ids_for_key(:investigator_treatment_date_task).include?(disease.id) &&
+                    self.participations_contact.try(:contact_type_id) == ::ExternalCode.infant_contact_type.try(:id) &&
+                    !parent_event.investigator.nil?
+                )
+              end
+
+              def assign_investigator_treatment_date_task
+                self.interested_party.treatments.each do |pt|
+                  if pt.treatment_date_changed? || pt.treatment_id_changed?
+                    assign_task("Post serological testing due for Hepatitis B infant contact.", pt.treatment_date+1.month, 'hep_b_dose_three') if pt.treatment.try(:treatment_name) == "Hepatitis B Dose 3"
+                    assign_task("Post serological testing due for Hepatitis B infant contact.", pt.treatment_date+1.month, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
+                  end
+                end
+              end
+
+              def assign_task(task_name, due_date, task_tracking_key)
+                task = existing_task_for_event?(task_tracking_key)
+                task.nil? ? create_vaccination_task(task_name, due_date, task_tracking_key) : update_vaccination_task(task, due_date)
+              end
+
+              def existing_task_for_event?(task_tracking_key)
+                Task.find_by_event_id_and_task_tracking_key(self.id, task_tracking_key)
+              end
+
+              def create_vaccination_task(name, due_date, task_tracking_key)
+                Task.create!(:name => name,
+                  :event => self,
+                  :user => parent_event.investigator,
+                  :due_date => due_date,
+                  :category => ::ExternalCode.find_by_code_name_and_the_code('task_category', 'TM'),
+                  :status => "pending",
+                  :task_tracking_key => task_tracking_key.to_s
+                )
+              end
+
+              def update_vaccination_task(task, new_due_date)
+                task.update_attributes!(:due_date => new_due_date)
               end
               
-              base.alias_method_chain :after_save, :p_hep_b_after_save
+              base.alias_method_chain :before_save, :p_hep_b_before_save
             end
           end
 

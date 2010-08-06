@@ -17,19 +17,24 @@
 
 require 'factory_girl'
 
-Factory.define :expected_delivery_facility do |edf|
-  edf.place_entity { create_delivery_facility!(:expected_delivery, "hospital name") }
+Factory.define :disease_specific_validation do |dsv|
+  dsv.validation_key { Factory.next(:validation_key) }
+  dsv.association :disease
 end
 
-Factory.define :actual_delivery_facility do |adf|
-  adf.place_entity { create_delivery_facility!(:actual_delivery, "hospital name") }
-  adf.actual_delivery_facilities_participation { Factory.build(:actual_delivery_facilities_participation) }
+Factory.define :disease_specific_callback do |dsc|
+  dsc.callback_key { Factory.next(:callback_key) }
+  dsc.association :disease
 end
 
-Factory.define :actual_delivery_facilities_participation do |adfp|
-  adfp.actual_delivery_date Date.today + 15.days
+#
+# Sequences
+#
+
+Factory.sequence :validation_key do |n|
+  "validation_key_#{n}"
 end
 
-Factory.define :health_care_provider do |hcp|
-  hcp.person_entity :person_entity
+Factory.sequence :callback_key do |n|
+  "callback_key_#{n}"
 end

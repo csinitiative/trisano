@@ -123,7 +123,10 @@ class ExternalCode < ActiveRecord::Base
 
   def self.load!(hashes)
     transaction do
-      hashes.map { |attribs| create!(attribs) }
+      hashes.map do |attribs|
+        code = find_by_code_name_and_the_code(attribs["code_name"], attribs["the_code"])
+        create!(attribs) unless code
+      end
     end
   end
 

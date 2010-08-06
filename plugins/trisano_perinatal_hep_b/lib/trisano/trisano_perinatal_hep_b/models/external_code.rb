@@ -29,6 +29,10 @@ module Trisano
         end
 
         module ClassMethods
+          def infant_contact_type
+            find(:first, :conditions => "code_name = 'contact_type' and the_code = 'INFANT'")
+          end
+
           def load_hep_b_external_codes!
             transaction do
               load!(hep_b_external_code_attributes)
@@ -46,4 +50,3 @@ module Trisano
     end
   end
 end
-
