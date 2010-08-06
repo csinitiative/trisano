@@ -18,22 +18,28 @@
 module Trisano
   module TrisanoPerinatalHepB
     module Models
-      module DiseaseSpecificCallback
-        hook! "DiseaseSpecificCallback"
+      module MorbidityEvent
+        hook! "MorbidityEvent"
         reloadable!
 
         class << self
-
           def included(base)
-            base.extend(ClassMethods)
+            base.before_save :generate_state_manager_tasks
           end
-
         end
 
-        module ClassMethods
-          def create_perinatal_hep_b_associations
-            callbacks = YAML::load_file(File.join(File.dirname(__FILE__), '../../../../db/defaults/disease_specific_callbacks.yml'))
-            self.create_associations(callbacks)
+        private
+
+        def generate_state_manager_tasks
+          return unless ::DiseaseSpecificCallback.callbacks(self.disease_event.try(:disease)).include?('state_manager_expected_delivery_date_task')
+          if self.state_manager && self.interested_party.risk_factor.try(:pregnancy_due_date)
+            if self.interested_party.risk_factor.pregnancy_due_date_changed?
+              tasks.build(:user => self.state_manager,
+                          :due_date => self.interested_party.risk_factor.pregnancy_due_date,
+                          :name => I18n.t(:expected_delivery_date_entered,
+                                          :scope => :perinatal_hep_b_management,
+                                          :loacle => I18n.default_locale))
+            end
           end
         end
 

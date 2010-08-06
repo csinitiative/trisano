@@ -176,4 +176,3 @@ def create_user_in_role!(role_name, user_name)
   yield user if block_given?
   user
 end
-

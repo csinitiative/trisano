@@ -80,6 +80,10 @@ module PerinatalHepBSpecHelper
     ExternalCode.load_hep_b_external_codes!
   end
 
+  def given_hep_b_callbacks_loaded
+    DiseaseSpecificCallback.create_perinatal_hep_b_associations
+  end
+
   def p_hep_b_core_fields
     YAML.load_file(File.join(p_hep_b_path, 'db', 'defaults', 'core_fields.yml'))
   end
@@ -91,5 +95,5 @@ module PerinatalHepBSpecHelper
   def p_hep_b_csv_fields
     YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
   end
-  
+
 end

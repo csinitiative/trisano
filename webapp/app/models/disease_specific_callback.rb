@@ -24,6 +24,11 @@ class DiseaseSpecificCallback < ActiveRecord::Base
     def diseases_ids_for_key(callback_key)
       DiseaseSpecificCallback.find_all_by_callback_key(callback_key.to_s).collect {|dsc| dsc.disease_id}
     end
+
+    def callbacks(disease)
+      return [] if disease.nil?
+      DiseaseSpecificCallback.all(:conditions => { :disease_id => disease }).map(&:callback_key)
+    end
   
     def create_associations(callbacks)
       transaction do

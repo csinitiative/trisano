@@ -1,2 +1,4 @@
 - disease_name: 'Hepatitis B Pregnancy Event'
   callback_key: 'investigator_treatment_date_task'
+- disease_name: 'Hepatitis B Pregnancy Event'
+  callback_key: 'state_manager_expected_delivery_date_task'

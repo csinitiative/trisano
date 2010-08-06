@@ -88,6 +88,7 @@ Then /^I should not see a link to "([^\"]*)"$/ do |link_text|
   response.should_not have_xpath("//a[text()='#{link_text}']")
 end
 
+#
 # Other stuff
 #
 
