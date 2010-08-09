@@ -36,14 +36,9 @@ module Trisano
 
               def assign_p_hep_b_tasks
                 begin
-                  disease = try(:disease).try(:disease)
-                  assign_investigator_treatment_date_task if assign_investigator_treatment_task?(disease)
+                  assign_investigator_treatment_date_task if assign_investigator_treatment_task?(try(:disease).try(:disease))
                 rescue Exception => ex
-                  I18nLogger.error("task_assignment_failed")
-                  DEFAULT_LOGGER.error(ex.message)
-                  DEFAULT_LOGGER.error(ex.backtrace)
-                  self.errors.add_to_base(I18n.t('task_assignment_failed'))
-                  return false
+                  log_task_assignment_error(ex)
                 end
               end
 
@@ -62,6 +57,7 @@ module Trisano
                     assign_task("Post serological testing due for Hepatitis B infant contact.", pt.treatment_date+1.month, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
                   end
                 end
+                return true
               end
 
               def assign_task(task_name, due_date, task_tracking_key)
@@ -86,6 +82,14 @@ module Trisano
 
               def update_vaccination_task(task, new_due_date)
                 task.update_attributes!(:due_date => new_due_date)
+              end
+
+              def log_task_assignment_error(exception)
+                I18nLogger.error("task_assignment_failed")
+                DEFAULT_LOGGER.error(exception.message)
+                DEFAULT_LOGGER.error(exception.backtrace)
+                self.errors.add_to_base(I18n.t('task_assignment_failed'))
+                return false
               end
               
               base.alias_method_chain :before_save, :p_hep_b_before_save
