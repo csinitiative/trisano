@@ -22,7 +22,6 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
   include PerinatalHepBSpecHelper
 
   describe "updating expected delivery date" do
-
     before do
       @disease = disease!('Hepatitis B Pregnancy Event')
       given_hep_b_callbacks_loaded
@@ -66,5 +65,21 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
       lambda { @event.save! }.should_not change(Task, :count)
     end
 
+    it "deletes the existing task creates a new one when the delivery date is changed" do
+      @event.save!
+      lambda do
+        @event.interested_party.risk_factor.pregnancy_due_date = Date.today + 3
+        @event.save!
+      end.should_not change(Task, :count)
+      @event.tasks.any? { |task| task.due_date = Date.today + 3 }.should be_true
+    end
+
+    it "deletes the existing task when the expected delivery date is removed" do
+      @event.save!
+      lambda do
+        @event.interested_party.risk_factor.pregnancy_due_date = nil
+        @event.save!
+      end.should change(Task, :count).by(-1)
+    end
   end
 end

@@ -32,13 +32,20 @@ module Trisano
 
         def generate_state_manager_tasks
           return unless ::DiseaseSpecificCallback.callbacks(self.disease_event.try(:disease)).include?('state_manager_expected_delivery_date_task')
-          if self.state_manager && self.interested_party.risk_factor.try(:pregnancy_due_date)
-            if self.interested_party.risk_factor.pregnancy_due_date_changed?
-              tasks.build(:user => self.state_manager,
-                          :due_date => self.interested_party.risk_factor.pregnancy_due_date,
-                          :name => I18n.t(:expected_delivery_date_entered,
-                                          :scope => :perinatal_hep_b_management,
-                                          :loacle => I18n.default_locale))
+          if self.state_manager
+            if self.interested_party.try(:risk_factor).try(:pregnancy_due_date_changed?)
+              task = tasks.find(:first, :conditions => { :task_tracking_key => 'state_manager_expected_delivery_date_task' })
+              if task
+                task.destroy
+              end
+              unless self.interested_party.risk_factor.pregnancy_due_date.nil?
+                tasks.build(:task_tracking_key => 'state_manager_expected_delivery_date_task',
+                            :user => self.state_manager,
+                            :due_date => self.interested_party.risk_factor.pregnancy_due_date,
+                            :name => I18n.t(:expected_delivery_date_entered,
+                                            :scope => :perinatal_hep_b_management,
+                                            :loacle => I18n.default_locale))
+              end
             end
           end
         end
