@@ -22,12 +22,3 @@
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B - Comvax Dose 4"
 
-- treatment_type_code: "PHBV"
-  treatment_name: "Hepatitis B Dose 4"
-
-- treatment_type_code: "PHBV"
-  treatment_name: "Hepatitis B Dose 5"
-
-- treatment_type_code: "PHBV"
-  treatment_name: "Hepatitis B Dose 6"
-
