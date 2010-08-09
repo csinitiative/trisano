@@ -36,7 +36,7 @@ Warbler::Config.new do |config|
   # overwrite the value
   # config.gems = ["activerecord-jdbc-adapter", "jruby-openssl"]
   # config.gems << "tzinfo"
-  config.gems = ["mechanize","hoe", "ci_reporter","hpricot", "rest-open-uri", "logging", "little-plugger", "json_pure", "rubyzip", "mislav-will_paginate", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter', 'haml', 'rack', 'ruby-hl7', 'freshy_filter_chain','validates_timeliness']
+  config.gems = ["mechanize","hoe", "ci_reporter","hpricot", "rest-open-uri", "logging", "little-plugger", "json_pure", "rubyzip", "mislav-will_paginate", 'jdbc-postgres', 'activerecord-jdbc-adapter', 'activerecord-jdbcpostgresql-adapter', 'haml', 'rack', 'ruby-hl7', 'rails_inheritable_attributes_manager','validates_timeliness']
   config.gems << 'rails'
 
   # Include gem dependencies not mentioned specifically
