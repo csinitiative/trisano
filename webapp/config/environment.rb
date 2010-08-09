@@ -23,7 +23,7 @@ Rails::Initializer.run do |config|
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
-  config.plugins = [ :freshy_filter_chain, :trisano_locales, :all ]
+  config.plugins = [ :rails_inheritable_attributes_manager, :trisano_locales, :all ]
   config.plugin_paths << "#{RAILS_ROOT}/vendor/trisano"
 
   # Add additional load paths for your own custom dirs
@@ -79,12 +79,13 @@ Rails::Initializer.run do |config|
 
   # time to start managing dependencies here
   config.gem 'rack', :version => '= 1.0.1'
-  config.gem 'freshy_filter_chain', :version => '= 0.1.0'
+  config.gem 'rails_inheritable_attributes_manager'
   config.gem 'validates_timeliness', :version =>'>= 2.2.2'
   config.gem 'haml', :version => '= 2.0.7'
   # For datetime validation plugin to switch to U.S. format (month/day/year)
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README
   config.after_initialize do
+    require 'rails_inheritable_attributes_manager'
     require 'validates_timeliness_formats'
     require "active_record/errors.rb"
     require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
