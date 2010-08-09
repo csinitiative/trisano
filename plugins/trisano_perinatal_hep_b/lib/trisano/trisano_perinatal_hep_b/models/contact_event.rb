@@ -45,8 +45,8 @@ module Trisano
               def assign_investigator_treatment_task?(disease)
                 (!disease.nil? &&
                     ::DiseaseSpecificCallback.diseases_ids_for_key(:investigator_treatment_date_task).include?(disease.id) &&
-                    self.participations_contact.try(:contact_type_id) == ::ExternalCode.infant_contact_type.try(:id) &&
-                    !parent_event.investigator.nil?
+                    self.try(:participations_contact).try(:contact_type_id) == ::ExternalCode.infant_contact_type.try(:id) &&
+                    !parent_event.try(:investigator).nil?
                 )
               end
 
