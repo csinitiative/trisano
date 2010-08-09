@@ -24,7 +24,7 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
   describe "updating expected delivery date" do
     before do
       @disease = disease!('Hepatitis B Pregnancy Event')
-      given_hep_b_callbacks_loaded
+      given_p_hep_b_disease_specific_callbacks_loaded
       @event = human_event_with_demographic_info!(:morbidity_event)
       @event.build_disease_event(:disease => @disease)
       @event.update_attributes!(:state_manager => create_user_in_role!('State Manager', 'Joey Bagadonuts'))

@@ -28,6 +28,7 @@ Factory.define :contact_event do |e|
   e.association :jurisdiction
   e.association :disease_event
   e.association :parent_event, :factory => :morbidity_event
+  e.association :participations_contact
 end
 
 Factory.define :encounter_event do |e|
@@ -99,7 +100,7 @@ Factory.define :participations_treatment do |pt|
 end
 
 Factory.define :participations_contact do |pc|
-  pc.contact_event { Factory.build(:contact_event) }
+  pc.association :contact_type
 end
 
 Factory.define :jurisdiction do |j|

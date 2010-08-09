@@ -76,16 +76,29 @@ module PerinatalHepBSpecHelper
     CoreField.load!(@ce_core_fields_to_load)
   end
 
+  def given_hep_b_codes_loaded
+    code_name = CodeName.find_or_initialize_by_code_name(:code_name => 'treatment_type', :external => false)
+    code_name.save! if code_name.new_record?
+    codes = YAML.load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_codes.yml'))
+    Code.load!(codes)
+  end
+
   def given_hep_b_external_codes_loaded
     ExternalCode.load_hep_b_external_codes!
   end
 
-  def given_hep_b_callbacks_loaded
+  def given_p_hep_b_treatments_loaded
+    given_hep_b_codes_loaded
+    treatments = YAML.load_file(File.join(File.dirname(__FILE__), '../../db/defaults/treatments.yml'))
+    Treatment.load!(treatments)
+  end
+
+  def given_p_hep_b_disease_specific_callbacks_loaded
     DiseaseSpecificCallback.create_perinatal_hep_b_associations
   end
 
   def p_hep_b_core_fields
-    YAML.load_file(File.join(p_hep_b_path, 'db', 'defaults', 'core_fields.yml'))
+    YAML.load_file(File.join(p_hep_b_path, 'db/defaults/core_fields.yml'))
   end
 
   def given_p_hep_b_csv_fields_loaded
