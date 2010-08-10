@@ -65,4 +65,26 @@
           = ca.label(:postal_code)
           = ca.text_field(:postal_code, {:size => 7, :maxlength=> 10})
 
-   
+    %tr
+      %th.forminformation
+        =t "edit_phone"
+
+    %tr
+      %td
+        - phone = f.object.telephones.last
+        - f.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
+          -if Telephone.use?(:country_code)
+            %span{ :class => "horiz" }
+              = phone_fields.label(:country_code)
+              = phone_fields.text_field(:country_code, {:size => 3})
+          -if Telephone.use?(:area_code)
+            %span{ :class => "horiz" }
+              = phone_fields.label(:area_code)
+              = phone_fields.text_field(:area_code, {:size => 3})
+          %span{ :class => "horiz" }
+            = phone_fields.label(:phone_number)
+            = phone_fields.text_field(:phone_number, {:size => 8})
+          %span{ :class => "horiz" }
+            = phone_fields.label(:extension)
+            = phone_fields.text_field(:extension, {:size => 6})
+

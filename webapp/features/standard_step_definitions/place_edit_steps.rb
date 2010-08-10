@@ -74,3 +74,10 @@ end
 Then(/^the place edit form should be redisplayed with an error message$/) do
   response.should have_xpath("//div[contains(@id, 'errorExplanation')]")
 end
+
+Then /^the phone number should be displayed on the show page$/ do
+  response.should contain("111")
+  response.should contain("222-3333")
+  response.should contain("Ext. 4")
+end
+

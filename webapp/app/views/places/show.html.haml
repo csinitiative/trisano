@@ -43,6 +43,11 @@
               =h address.county.code_description unless address.county.nil?
               =h address.state.code_description unless address.state.nil?
               =h address.postal_code
+
+            - phone = @place_entity.telephones.last
+            - unless phone.nil?
+              %br
+              = phone.simple_format
         %td
           =h(@place_entity.place.formatted_place_descriptions)
         %td.tools

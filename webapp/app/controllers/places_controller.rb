@@ -36,6 +36,7 @@ class PlacesController < ApplicationController
 
     @place_entity = PlaceEntity.find(params[:id])
     @place_entity.build_canonical_address if @place_entity.canonical_address.nil?
+    @place_entity.telephones << Telephone.new if @place_entity.telephones.empty?
   end
 
   def update
@@ -50,6 +51,7 @@ class PlacesController < ApplicationController
       redirect_to(place_url(@place_entity))
     else
       @place_entity.build_canonical_address if @place_entity.canonical_address.nil?
+      @place_entity.telephones << Telephone.new if @place_entity.telephones.empty?
       render :action => "edit"
     end
   end
@@ -70,6 +72,7 @@ class PlacesController < ApplicationController
     @place_entity = PlaceEntity.new
     @place_entity.place = Place.new
     @place_entity.canonical_address = Address.new
+    @place_entity.telephones << Telephone.new
   end
 
   def create
@@ -85,6 +88,7 @@ class PlacesController < ApplicationController
       flash[:notice] = t("place_created")
       redirect_to(place_url(@place_entity))
     else
+      @place_entity.telephones << Telephone.new
       @place_entity.canonical_address = Address.new
       render :action => "new"
     end
