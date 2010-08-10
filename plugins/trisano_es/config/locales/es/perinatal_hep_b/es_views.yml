@@ -6,3 +6,5 @@ es:
     actual_delivery_date: Actual delivery date (EN)
     health_care_provider: Health Care Provider (EN)
     state_manager: State manager (EN)
+    expected_delivery_date_entered: "Hepatitis B Pregnancy Event: expected delivery date entered (EN)"
+    expected_delivery_facility_data_entered: "Hepatitis B Pregnancy Event: expected delivery date and hospital entered (EN)"
