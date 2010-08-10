@@ -21,48 +21,51 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
   include DiseaseSpecHelper
   include PerinatalHepBSpecHelper
 
-  describe "updating expected delivery date" do
+  before do
+    @disease = disease!('Hepatitis B Pregnancy Event')
+    given_p_hep_b_disease_specific_callbacks_loaded
+    @event = human_event_with_demographic_info!(:morbidity_event)
+    @event.build_disease_event(:disease => @disease)
+    @event.update_attributes!(:state_manager => create_user_in_role!('State Manager', 'Joey Bagadonuts'))
+  end
+
+  describe "generating a task for expected delivery date" do
     before do
-      @disease = disease!('Hepatitis B Pregnancy Event')
-      given_p_hep_b_disease_specific_callbacks_loaded
-      @event = human_event_with_demographic_info!(:morbidity_event)
-      @event.build_disease_event(:disease => @disease)
-      @event.update_attributes!(:state_manager => create_user_in_role!('State Manager', 'Joey Bagadonuts'))
       @event.interested_party.build_risk_factor(:pregnancy_due_date => Date.today + 2)
     end
 
-    it "onlys generate task if disease is appropriate (ie, Hep B Pregnancy Event)" do
+    it "only generate a task if disease is Hepatitis B Pregnancy Event" do
       @event.build_disease_event(:disease => disease!('The Trots'))
       lambda { @event.save! }.should_not change(Task, :count)
     end
 
-    it "should generate one task if expected delivery date entered" do
+    it "generate one task if expected delivery date entered" do
       lambda { @event.save! }.should change(Task, :count).by(1)
     end
 
-    it "should not generate more then one task per event for expected delivery date" do
+    it "do not generate a task if expected delivery date hasn't changed" do
       @event.save!
       lambda { @event.save! }.should_not change(Task, :count)
     end
 
-    it "should generate the task for the state manager" do
+    it "generates the task for the state manager" do
       @event.save!
       @event.tasks.any? { |task| task.user == @event.state_manager }.should be_true
-    end
-
-    it "should generate the task with the due date set to the expected delivery date" do
-      @event.save!
-      @event.tasks.any? { |task| task.due_date == @event.interested_party.risk_factor.pregnancy_due_date }.should be_true
-    end
-
-    it "should generate the task with the name 'Hepatitis B Pregnancy Event: expected delivery date entered'" do
-      @event.save!
-      @event.tasks.any? { |task| task.name == "Hepatitis B Pregnancy Event: expected delivery date entered" }.should be_true
     end
 
     it "does not generate a task if there is no state manager" do
       @event.update_attributes!(:state_manager => nil)
       lambda { @event.save! }.should_not change(Task, :count)
+    end
+
+    it "should generate the task with the due date set to today" do
+      @event.save!
+      @event.tasks.any? { |task| task.due_date == Date.today }.should be_true
+    end
+
+    it "generates the task with the name 'Hepatitis B Pregnancy Event: expected delivery date entered'" do
+      @event.save!
+      @event.tasks.any? { |task| task.name == "Hepatitis B Pregnancy Event: expected delivery date entered" }.should be_true
     end
 
     it "deletes the existing task creates a new one when the delivery date is changed" do
@@ -81,5 +84,48 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
         @event.save!
       end.should change(Task, :count).by(-1)
     end
+  end
+
+  describe "generating a task for expected delivery facility" do
+    before do
+      @event.interested_party.build_risk_factor(:pregnancy_due_date => Date.today + 2)
+      @event.build_expected_delivery_facility(:place_entity => Factory.create(:place_entity))
+    end
+
+    it "only generates a task if disease is Hepatitis B Pregnancy Event" do
+      @event.build_disease_event(:disease => disease!('The Trots'))
+      lambda { @event.save! }.should_not change(Task, :count)
+    end
+
+    it "if the due date *and* the expected delivery facility are entered, generate an additional task for the delivery facility" do
+      lambda { @event.save! }.should change(Task, :count).by(2)
+    end
+
+    it "generates tasks with due date set to today" do
+      @event.save!
+      @event.tasks.all? { |task| task.due_date == Date.today }.should be_true
+    end
+
+    it "generates the delivery facility task when the facility is entered, if the due date already exists" do
+      @event.expected_delivery_facility = nil
+      @event.save!
+      @event.build_expected_delivery_facility(:place_entity => Factory.create(:place_entity))
+      lambda { @event.save! }.should change(Task, :count).by(1)
+    end
+
+    it "generates the both tasks when the due date is entered, if the expected delivery facility already exists" do
+      @event.interested_party.risk_factor.pregnancy_due_date = nil
+      lambda { @event.save! }.should_not change(Task, :count)
+      @event.interested_party.build_risk_factor(:pregnancy_due_date => Date.today + 2)
+      lambda { @event.save! }.should change(Task, :count).by(2)
+    end
+
+    it "generates the task with the name 'Hepatitis B Pregnancy Event: expected delivery date and hospital entered'" do
+      @event.save!
+      @event.tasks.any? do |task|
+        task.name == 'Hepatitis B Pregnancy Event: expected delivery date and hospital entered'
+      end.should be_true
+    end
+
   end
 end

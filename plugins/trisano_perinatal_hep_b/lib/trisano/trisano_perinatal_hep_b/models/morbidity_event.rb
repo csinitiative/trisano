@@ -28,26 +28,58 @@ module Trisano
           end
         end
 
-        private
-
         def generate_state_manager_tasks
           return unless ::DiseaseSpecificCallback.callbacks(self.disease_event.try(:disease)).include?('state_manager_expected_delivery_date_task')
-          if self.state_manager
-            if self.interested_party.try(:risk_factor).try(:pregnancy_due_date_changed?)
-              task = tasks.find(:first, :conditions => { :task_tracking_key => 'state_manager_expected_delivery_date_task' })
-              if task
-                task.destroy
-              end
-              unless self.interested_party.risk_factor.pregnancy_due_date.nil?
-                tasks.build(:task_tracking_key => 'state_manager_expected_delivery_date_task',
-                            :user => self.state_manager,
-                            :due_date => self.interested_party.risk_factor.pregnancy_due_date,
-                            :name => I18n.t(:expected_delivery_date_entered,
-                                            :scope => :perinatal_hep_b_management,
-                                            :loacle => I18n.default_locale))
-              end
-            end
+          return unless state_manager
+
+          if expected_due_date_updated?
+            remove_expected_due_date_tasks
+            generate_expected_due_date_task unless expected_due_date_blank?
           end
+
+          if expected_delivery_facility_data_updated?
+            generate_expected_due_date_and_delivery_facility_task unless expected_delivery_facility_data_incomplete?
+          end
+        end
+
+
+        def expected_due_date_updated?
+          self.interested_party.try(:risk_factor).try(:pregnancy_due_date_changed?)
+        end
+
+        def expected_due_date_blank?
+          self.interested_party.try(:risk_factor).try(:pregnancy_due_date).blank?
+        end
+
+        def expected_delivery_facility_data_updated?
+          expected_due_date_updated? || self.expected_delivery_facility.try(:secondary_entity_id_changed?)
+        end
+
+        def expected_delivery_facility_data_incomplete?
+          self.expected_delivery_facility.try(:place_entity).try(:place).nil? || expected_due_date_blank?
+        end
+
+        def remove_expected_due_date_tasks
+          tasks.find(:all, :conditions => { :task_tracking_key => 'state_manager_expected_delivery_date_task' }).each do |task|
+            task.destroy
+          end
+        end
+
+        def generate_expected_due_date_task
+          tasks.build(:task_tracking_key => 'state_manager_expected_delivery_date_task',
+                      :user => self.state_manager,
+                      :due_date => Date.today,
+                      :name => I18n.t(:expected_delivery_date_entered,
+                                      :scope => :perinatal_hep_b_management,
+                                      :locale => I18n.default_locale))
+        end
+
+        def generate_expected_due_date_and_delivery_facility_task
+          tasks.build(:user => self.state_manager,
+                      :due_date => Date.today,
+                      :name => I18n.t(:expected_delivery_facility_data_entered,
+                                      :scope => :perinatal_hep_b_management,
+                                      :locale => I18n.default_locale))
         end
 
       end
