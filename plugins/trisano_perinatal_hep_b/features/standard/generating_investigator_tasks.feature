@@ -18,12 +18,12 @@ Feature: Generating tasks for investigators
       And I enter a valid treatment date of 2 days ago
       And I press "Save & Exit"
     Then I should see "Hepatitis B Dose 3"
-      And I should only see 1 "Post serological testing due for Hepatitis B infant contact." task
+      And I should only see 1 "Post serological testing due." task
     When I go to edit the CMR
       And I follow "Edit Contact"
       And I enter a valid treatment date of 3 days ago
       And I press "Save & Exit"
-    Then I should only see 1 "Post serological testing due for Hepatitis B infant contact." task
+    Then I should only see 1 "Post serological testing due." task
 
 
   @perinatal_hep_b_callbacks
@@ -44,11 +44,11 @@ Feature: Generating tasks for investigators
       And I enter a valid treatment date of 2 days ago
       And I press "Save & Exit"
     Then I should see "Hepatitis B - Comvax Dose 4"
-      And I should only see 1 "Post serological testing due for Hepatitis B infant contact." task
+      And I should only see 1 "Post serological testing due." task
     When I go to edit the CMR
       And I follow "Edit Contact"
       And I enter a valid treatment date of 3 days ago
       And I press "Save & Exit"
-    Then I should only see 1 "Post serological testing due for Hepatitis B infant contact." task
+    Then I should only see 1 "Post serological testing due." task
 
 

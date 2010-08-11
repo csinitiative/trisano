@@ -140,7 +140,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
 
       before(:each) do
         @treatment = @dose_three_treatment
-        @task_name = "Post serological testing due for Hepatitis B infant contact."
+        @task_name = "Post serological testing due."
         @due_date = Date.today + 1.month
         @task_tracking_key = 'hep_b_dose_three'
       end
@@ -153,7 +153,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
 
       before(:each) do
         @treatment = @comvax_dose_four_treatment
-        @task_name = "Post serological testing due for Hepatitis B infant contact."
+        @task_name = "Post serological testing due."
         @due_date = Date.today + 1.month
         @task_tracking_key = 'hep_b_comvax_dose_four'
       end
@@ -195,10 +195,10 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         lambda { @contact_event.save! }.should change(Task, :count).by(0)
       end
 
-      it "should not generate a task when the contact type isn't a match" do
+      it "should generate a task regardless of contact type" do
         @contact_event.update_attributes!(:participations_contact => Factory.create(:participations_contact))
         change_treatment_to_trigger_callback(@treatment)
-        lambda { @contact_event.save! }.should change(Task, :count).by(0)
+        lambda { @contact_event.save! }.should change(Task, :count).by(1)
       end
     end
 

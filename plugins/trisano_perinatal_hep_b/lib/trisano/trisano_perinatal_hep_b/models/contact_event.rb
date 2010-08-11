@@ -45,7 +45,6 @@ module Trisano
               def assign_investigator_treatment_task?(disease)
                 (!disease.nil? &&
                     ::DiseaseSpecificCallback.diseases_ids_for_key(:investigator_treatment_date_task).include?(disease.id) &&
-                    self.try(:participations_contact).try(:contact_type_id) == ::ExternalCode.infant_contact_type.try(:id) &&
                     !parent_event.try(:investigator).nil?
                 )
               end
@@ -53,8 +52,8 @@ module Trisano
               def assign_investigator_treatment_date_task
                 self.interested_party.treatments.each do |pt|
                   if pt.treatment_date_changed? || pt.treatment_id_changed?
-                    assign_task("Post serological testing due for Hepatitis B infant contact.", pt.treatment_date+1.month, 'hep_b_dose_three') if pt.treatment.try(:treatment_name) == "Hepatitis B Dose 3"
-                    assign_task("Post serological testing due for Hepatitis B infant contact.", pt.treatment_date+1.month, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
+                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+1.month, 'hep_b_dose_three') if pt.treatment.try(:treatment_name) == "Hepatitis B Dose 3"
+                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+1.month, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
                   end
                 end
                 return true

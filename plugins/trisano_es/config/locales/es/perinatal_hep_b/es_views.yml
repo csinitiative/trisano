@@ -8,3 +8,4 @@ es:
     state_manager: State manager (EN)
     expected_delivery_date_entered: "Hepatitis B Pregnancy Event: expected delivery date entered (EN)"
     expected_delivery_facility_data_entered: "Hepatitis B Pregnancy Event: expected delivery date and hospital entered (EN)"
+    post_serological_investigator_task_name: "Post serological testing due. (EN)"
