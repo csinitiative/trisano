@@ -109,11 +109,13 @@ module Trisano
         end
 
         def remove_expected_delivery_data
-          self.expected_delivery_facility.update_attributes(:place_entity => nil)
+          expected_delivery_facility.place_entity = nil
+          save!
         end
 
         def remove_actual_delivery_data
-          self.actual_delivery_facility.update_attributes(:place_entity => nil)
+          actual_delivery_facility.place_entity = nil
+          save!
         end
 
       end
