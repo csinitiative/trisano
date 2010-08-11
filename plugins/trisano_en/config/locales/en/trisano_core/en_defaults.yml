@@ -237,7 +237,7 @@ en:
     workflow_approved_at: "Approved at {{jurisdiction_name}}.\n{{note}}"
     workflow_routed_to_queue: "Routed to queue {{name}}.\n{{note}}"
     workflow_routed_to_investigator: "Routed to investigator {{name}}.\n{{note}}"
-    workflow_accepted_by_investigator: "Accepted by Investigator {{name}}.\n{{note}}"
+    workflow_accepted_by_investigator: "Accepted by investigator {{name}}.\n{{note}}"
     workflow_rejected_for_investigation: "Rejected for investigation.\n{{note}}"
     workflow_completed_investigation: "Completed investigation.\n{{note}}"
     workflow_investigator_closed_investigation: "Investigator closed investigation.\n{{note}}"
