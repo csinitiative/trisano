@@ -132,8 +132,9 @@ module Routing
         unless self.jurisdiction.allows_current_user_to? :accept_event_for_investigation
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
-        add_note(I18n.translate("system_notes.workflow_rejected_for_investigation",
+        add_note(I18n.translate("system_notes.workflow_accepted_by_investigator",
             :note => note,
+            :name => self.investigator.try(:best_name),
             :locale => I18n.default_locale)
         )
       end
