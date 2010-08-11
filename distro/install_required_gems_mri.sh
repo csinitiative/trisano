@@ -63,7 +63,7 @@ $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/actionmail
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/ruby-hl7-0.3.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/faker-0.3.1.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/factory_girl-1.3.0.gem
-$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails_inheritable_attributes_manager-0.3.0.gem
+$command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/rails_inheritable_attributes_manager-0.3.1.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/validates_timeliness-2.2.2.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/mocha-0.9.8.gem
 $command gem install --no-ri --no-rdoc --ignore-dependencies $GEM_DIR/webrat-0.7.2.pre.gem
