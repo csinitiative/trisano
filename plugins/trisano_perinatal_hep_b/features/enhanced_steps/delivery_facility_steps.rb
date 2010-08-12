@@ -120,7 +120,16 @@ When /^I fill in the actual delivery date$/ do
                 'January 10, 2010')
 end
 
+When /^I fill in the expected delivery date$/ do
+  @browser.type('morbidity_event_interested_party_attributes_risk_factor_attributes_pregnancy_due_date',
+                Date.today + 2)
+end
+
 Then /^I should see the actual delivery date filled in$/ do
   value = @browser.get_value("morbidity_event_actual_delivery_facility_attributes_actual_delivery_facilities_participation_attributes_actual_delivery_date")
   assert_equal("January 10, 2010", value)
+end
+
+Given /^Perinatal Hep B specific callbacks are loaded$/i do
+  DiseaseSpecificCallback.create_perinatal_hep_b_associations
 end
