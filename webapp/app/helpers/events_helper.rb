@@ -1200,7 +1200,7 @@ module EventsHelper
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
       result << "</div>"
 
-      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, form_elements_cache) unless answer.nil?
+      follow_up_group = element.process_condition({:response => answer.text_answer}, @event.id, :form_elements_cache => form_elements_cache) unless answer.nil?
 
       unless follow_up_group.nil?
         result << "<div id='follow_up_investigate_#{element.id}'>"
