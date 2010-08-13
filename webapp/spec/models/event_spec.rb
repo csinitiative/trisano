@@ -203,6 +203,13 @@ describe MorbidityEvent do
           @event.notes.first.note_type.should == "clinical"
         end
 
+        it "should accept a hash for setting other, less common note attributes" do
+          @event.add_note("New nore", "clinical", :user => author = Factory.create(:user))
+          @event.notes.first.note.should == 'New nore'
+          @event.notes.first.note_type.should == 'clinical'
+          @event.notes.first.user.should == author
+        end
+
       end
 
     end
