@@ -368,8 +368,12 @@ class Event < ActiveRecord::Base
     self.disease_event
   end
 
-  def add_note(message, note_type="administrative")
-    self.notes << Note.new(:note => message, :note_type => note_type)
+  def add_note(message, *note_type_and_options)
+    options = note_type_and_options.extract_options!
+    note_type = note_type_and_options.first || 'administrative'
+    note = Note.new options.merge(:note => message, :note_type => note_type)
+    self.notes << note
+    note
   end
 
   def eager_load_answers
