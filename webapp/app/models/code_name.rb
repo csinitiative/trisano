@@ -31,9 +31,12 @@ class CodeName < ActiveRecord::Base
       code_group = drop_down_code_name(code_name)
       return [] unless code_group
       if code_group.external
-        ExternalCode.active.all(:include => :disease_specific_selections).select do |code|
-          code.code_name == code_name && code.rendered?(event)
+        if disease = event.try(:disease_event).try(:disease)
+          selections = ExternalCode.selections_for_disease(disease)
+        else
+          selections = ExternalCode.active.core
         end
+        selections.select { |code| code.code_name == code_name }
       else
         Code.active.exclude_jurisdiction.select do |code|
           code.code_name == code_name

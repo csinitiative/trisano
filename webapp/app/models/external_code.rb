@@ -30,6 +30,7 @@ class ExternalCode < ActiveRecord::Base
   named_scope :case, :conditions => "code_name = 'case'"
   named_scope :loinc_scales, :conditions => {:code_name => 'loinc_scale'}, :order => 'sort_order, the_code'
   named_scope :counties, :conditions => {:code_name => 'county'}, :order => 'sort_order, the_code'
+  named_scope :core, :conditions => 'disease_specific = false OR disease_specific IS NULL'
 
   validates_presence_of :code_name
   validates_presence_of :the_code
@@ -119,6 +120,21 @@ class ExternalCode < ActiveRecord::Base
 
   def self.loinc_scale_nominal
     loinc_scale_by_the_code('Nom')
+  end
+
+  def self.selections_for_disease(disease)
+    return [] unless disease
+    sql = <<-SQL
+      (disease_specific = true AND
+        disease_specific_selections.disease_id = ? AND
+        disease_specific_selections.rendered = true)
+      OR
+      ((disease_specific = false OR disease_specific IS NULL) AND
+        (disease_specific_selections.disease_id IS NULL OR
+          (disease_specific_selections.disease_id = ? AND disease_specific_selections.rendered = true)))
+    SQL
+    active.all(:conditions => [sql, disease.id, disease.id],
+               :include => :disease_specific_selections)
   end
 
   def self.load!(hashes)
