@@ -110,3 +110,28 @@ describe Code, 'translated ordering in an association' do
   end
 
 end
+
+describe ExternalCode, "finder sql with included associations" do
+  before do
+    @code = Factory.create :external_code
+    @code.update_attributes!(:code_description => 'sample code')
+    @code.code_translations.build(:locale => 'test', :code_description => 'test sample code').save!
+    @code_name = Factory.create :code_name, :code_name => @code.code_name
+
+    I18n.locale = :test
+    @code.reload
+  end
+
+  after { I18n.locale = :en }
+
+  it "still pulls the translated code_description" do
+    results = ExternalCode.find(:all,
+                                :include => :disease_specific_selections,
+                                :conditions => ['disease_specific_selections.disease_id is NULL AND the_code = ?', @code.the_code])
+    results.any? do |code|
+      code.code_description == 'test sample code'
+    end.should be_true
+    results.size.should == 1
+  end
+end
+

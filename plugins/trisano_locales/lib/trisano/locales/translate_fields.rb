@@ -84,6 +84,16 @@ module Trisano
           make_translation_explicit(super)
         end
 
+        def construct_finder_sql_with_included_associations(options, join_dependency)
+          use_translated_field_values(super)
+        end
+
+        def find_with_associations(options = {})
+          options[:include] = merge_includes(options[:include], translation_relationship)
+          options[:conditions] = merge_conditions(options[:conditions], {translation_table_name => { :locale => I18n.locale.to_s }})
+          super(options)
+        end
+
         def translation_table_name
           "#{table_name.chop}_translations"
         end
@@ -118,6 +128,27 @@ module Trisano
           end
         end
 
+        private
+
+        def use_translated_field_values(sql)
+          result = sql
+          translated_fields.each do |translated_field|
+            result = use_translated_field_value(result, translated_field)
+          end
+          result
+        end
+
+        def use_translated_field_value(sql, field)
+          sql.gsub(original_field_regex(field), translated_field_replacement(field))
+        end
+
+        def original_field_regex(field)
+          /"#{table_name}"\."#{field}"/
+        end
+
+        def translated_field_replacement(field)
+          %Q("#{translation_table_name}"."#{field}")
+        end
       end
     end
   end
