@@ -52,7 +52,9 @@ module Trisano
         end
 
         def expected_delivery_facility_data_updated?
-          expected_due_date_updated? || self.expected_delivery_facility.try(:secondary_entity_id_changed?)
+          expected_due_date_updated? or
+            self.expected_delivery_facility.try(:secondary_entity_id_changed?) or
+            self.expected_delivery_facility.try(:place_entity).try(:new_record?)
         end
 
         def expected_delivery_facility_data_incomplete?
