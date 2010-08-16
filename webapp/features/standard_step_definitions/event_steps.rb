@@ -229,6 +229,11 @@ Given /^max_search_results \+ 1 basic (.*) events/i do |event_type|
   end
 end
 
+Given /^the event has a (.+) note authored by "([^\"]*)"$/ do |note_type, author_uid|
+  author = User.find_by_user_name(author_uid)
+  @event.add_note("My God, it's full of stars", note_type, :user => author)
+end
+
 Then /^I should see the pregnancy fields in the right place$/ do
   response.should have_tag('#disease_info_form .form') do
     with_tag('legend', 'Pregnancy Status') do

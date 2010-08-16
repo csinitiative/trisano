@@ -1890,9 +1890,34 @@ describe Event, 'cloning an event' do
       new_notes = @new_event.notes.size.should == 1
       @new_event.notes.first.note.should == "note 1"
     end
-
   end
 end
+
+describe Event, "deep copied event" do
+  before do
+    @event = Factory.create(:morbidity_event)
+    p @note_user = Factory.create(:user)
+    p @current_user = Factory.create(:user)
+    @event.save!
+    @event.add_note('Just a sample note', 'clinical', :user => @note_user)
+    User.current_user = @current_user
+    @new_event = MorbidityEvent.new
+    @event.copy_event @new_event, ['notes']
+    @new_event.save!
+    p @new_event.notes
+  end
+
+  it "should have copies of clinical notes, if notes component was specified" do
+    @new_event.notes.select { |note| note.note_type == 'clinical' }.size.should == 1
+  end
+
+  it "has copied notes from the original note user" do
+    @new_event.notes.select { |note| note.note_type == 'clinical' }.each do |note|
+      note.user.should == @note_user
+    end
+  end
+end
+
 
 describe Event, "when saving events with deleted entities" do
 
