@@ -7,3 +7,12 @@ Given /^a state manager is assigned to the event$/ do
   @event.save!
 end
 
+Given /^the expected delivery date is set to (\d+) days from now$/ do |days|
+  if @event.interested_party.risk_factor
+    @event.interested_party.risk_factor.pregnancy_due_date = Date.today + days.to_i
+  else
+    @event.interested_party.build_risk_factor(:pregnancy_due_date => Date.today + days.to_i)
+  end
+  @event.save!
+end
+
