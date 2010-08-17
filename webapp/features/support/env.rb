@@ -52,10 +52,13 @@ include TrisanoPlacesHelper
 include TrisanoContactsHelper
 include Trisano::HTML::Matchers
 
+require 'factory_girl'
+
 # Load up factories
-#Dir[File.join(File.dirname(__FILE__), '..', '..', '{vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
-#  require File.expand_path(f)
-#end
+Dir[File.join(File.dirname(__FILE__), '..', '..', '{spec,vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
+  require File.expand_path(f)
+end
+
 require 'factory_girl/step_definitions'
 
 # explicitly load support files

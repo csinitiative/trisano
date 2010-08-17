@@ -21,7 +21,7 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-config.gem 'factory_girl', :version => '>= 1.2.3'
+config.gem 'factory_girl'
 
 require 'logging'
 Logging.init :debug, :info, :warn, :error, :fatal
