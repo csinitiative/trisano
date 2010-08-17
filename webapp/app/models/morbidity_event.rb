@@ -197,11 +197,13 @@ class MorbidityEvent < HumanEvent
   private
 
   def generate_mmwr
-    epi_dates = { :onsetdate => disease.nil? ? nil : disease.disease_onset_date,
-      :diagnosisdate => disease.nil? ? nil : disease.date_diagnosed,
+    mmwr = Mmwr.new({
+      :onsetdate => disease.try(:disease_onset_date),
+      :diagnosisdate => disease.try(:date_diagnosed),
       :labresultdate => definitive_lab_collection_date,
-      :firstreportdate => self.first_reported_PH_date }
-    mmwr = Mmwr.new(epi_dates)
+      :firstreportdate => self.first_reported_PH_date,
+      :event_created_date => new_record? ? Date.today : self.created_at.to_date
+    })
 
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
@@ -256,7 +258,7 @@ class MorbidityEvent < HumanEvent
       if treatment.treatment_date
         treatment.errors.add(:treatment_date,message ) unless self.disease_event.disease_onset_date <= treatment.treatment_date
       end
-  
+
       if treatment.stop_treatment_date
         treatment.errors.add(:stop_treatment_date,message ) unless self.disease_event.disease_onset_date <= treatment.stop_treatment_date
       end
