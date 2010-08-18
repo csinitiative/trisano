@@ -349,7 +349,7 @@ $$
     SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antibody (HBsAb)', $2);
 $$;
 
-CREATE OR REPLACE FUNCTION earliest_date(arr DATE[])
+CREATE OR REPLACE FUNCTION trisano.earliest_date(arr DATE[])
     RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
 $$
 DECLARE
