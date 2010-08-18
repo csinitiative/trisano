@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Event Summary Report</title>
+  <version>1</version>
+  <documentation> 
+    <author>joe</author>  
+    <description>EventSummaryReport</description>  
+    <icon>PentahoReporting.png</icon>  
+    <help/>  
+    <result-type>report</result-type> 
+  </documentation>
+
+  <inputs> 
+    <outputType type="string"> 
+      <sources> 
+        <request>outputType</request>  
+        <request>type</request> 
+      </sources>  
+      <default-value><![CDATA[html]]></default-value> 
+    </outputType>  
+    <outputTypeList type="property-map-list"> 
+      <sources> 
+        <runtime>outputTypeList</runtime> 
+      </sources>  
+      <default-value type="property-map-list"> 
+        <property-map> 
+          <entry key="report-output-desc">PDF</entry>  
+          <entry key="report-output-type-id">pdf</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Excel</entry>  
+          <entry key="report-output-type-id">xls</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Word</entry>  
+          <entry key="report-output-type-id">rtf</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Web Page</entry>  
+          <entry key="report-output-type-id">html</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Comma Separated Value</entry>  
+          <entry key="report-output-type-id">csv</entry> 
+        </property-map> 
+      </default-value> 
+    </outputTypeList>  
+    <start_date type="string"> 
+      <default-value/>  
+      <sources> 
+        <request>start_date</request> 
+      </sources> 
+    </start_date>  
+    <end_date type="string"> 
+      <default-value/>  
+      <sources> 
+        <request>end_date</request> 
+      </sources> 
+    </end_date> 
+  </inputs>
+
+  <outputs/>
+
+  <resources> 
+    <report-definition> 
+      <solution-file> 
+        <location>Event Summary Report.xml</location>  
+        <mime-type>text/xml</mime-type> 
+      </solution-file> 
+    </report-definition> 
+  </resources>
+  
+  <actions> 
+    <action-definition> 
+      <component-name>SecureFilterComponent</component-name>
+      <action-type>Secure Filter Description</action-type>
+      <action-inputs> 
+        <outputTypeList type="property-map-list"/>  
+        <outputType type="string"/>  
+        <start_date type="string"/>  
+        <end_date type="string"/> 
+      </action-inputs>
+      <component-definition> 
+        <selections> 
+          <outputType style="select"> 
+            <title>Choose Report Format</title>  
+            <filter value-col-name="report-output-type-id" display-col-name="report-output-desc">outputTypeList</filter> 
+          </outputType>  
+          <start_date filter="none" style="text-box"> 
+            <title>Choose start date</title> 
+          </start_date>  
+          <end_date filter="none" style="text-box"> 
+            <title>Choose end date</title> 
+          </end_date> 
+        </selections> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>MQLRelationalDataComponent</component-name>
+      <action-inputs> 
+        <start_date type="string"/>  
+        <end_date type="string"/> 
+      </action-inputs>
+      <action-outputs> 
+        <query-result type="result-set" mapping="list"/> 
+      </action-outputs>
+      <component-definition> 
+        <query><![CDATA[<mql>
+  <domain_type>relational</domain_type>
+  <domain_id>TriSanoPHEPB</domain_id>
+  <model_id>BV_MODEL_1</model_id>
+  <model_name>Perinatal Hepatitis B</model_name>
+  <options>
+    <disable_distinct>false</disable_distinct>
+  </options>
+  <selections>
+    <selection>
+      <view>BC_REPORT2</view>
+      <column>BC_REPORT2_YEAR</column>
+    </selection>
+    <selection>
+      <view>BC_REPORT2</view>
+      <column>BC_REPORT2_PROSPECTIVE_INFANTS</column>
+    </selection>
+    <selection>
+      <view>BC_REPORT2</view>
+      <column>BC_REPORT2_RETROSPECTIVE_INFANTS</column>
+    </selection>
+    <selection>
+      <view>BC_REPORT2</view>
+      <column>BC_REPORT2_CONTACT_INFANTS</column>
+    </selection>
+    <selection>
+      <view>BC_REPORT2</view>
+      <column>BC_REPORT2_CURRENTLY_ACTIVE</column>
+    </selection>
+  </selections>
+  <constraints>
+    <constraint>
+      <operator/>
+      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &gt;="{start_date}"</condition>
+    </constraint>
+    <constraint>
+      <operator>AND</operator>
+      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &lt;="{end_date}"</condition>
+    </constraint>
+  </constraints>
+  <orders/>
+</mql>]]></query> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JFreeReportComponent</component-name>
+      <action-type>report</action-type>
+      <action-inputs> 
+        <output-type type="string" mapping="outputType"/>  
+        <data type="result-set" mapping="list"/>  
+        <start_date type="string"/>
+        <end_date type="string"/>
+      </action-inputs>
+      <action-resources> 
+        <report-definition type="resource"/> 
+      </action-resources>
+      <component-definition/> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>
