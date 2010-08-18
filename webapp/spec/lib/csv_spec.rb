@@ -196,7 +196,7 @@ describe Export::Csv do
       
       
       it "should render blanks for non-hospital columns in the second row, except for id" do
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts hospitalization_facilities)))
         assert_values_in_result(output, 2, :patient_event_id => /#{@event.id}/)
         assert_values_in_result(output, 2, :patient_record_number => //)
         assert_values_in_result(output, 2, :patient_last_name => //)
@@ -204,7 +204,7 @@ describe Export::Csv do
 
       it "should not render hospitals if that option is not passed to the export" do
         output = to_arry(Export::Csv.export(@event))
-        output.size.should == 3
+        output.size.should == 2
         output[0].include?("patient_hospitalization_facility").should be_false
       end
       
@@ -293,7 +293,7 @@ describe Export::Csv do
         )
         
         output = to_arry(Export::Csv.export(@event))
-        output.size.should == 3
+        output.size.should == 2
         output[0].include?("lab_name").should be_false
       end
       
@@ -342,7 +342,7 @@ describe Export::Csv do
       it "should not render treatments if that option is not passed to the export" do
         @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
         output = to_arry(Export::Csv.export(@event))
-        output.size.should == 3
+        output.size.should == 2
         output[0].include?("treatment_name").should be_false
       end
 
@@ -391,7 +391,7 @@ describe Export::Csv do
       it "should not render contacts if that option is not passed to the export" do
         @contact_one = add_contact_to_event(@event, "contact_one")
         output = to_arry(Export::Csv.export(@event))
-        output.size.should == 3
+        output.size.should == 2
         output[0].include?("contact_last_name").should be_false
       end
       
@@ -440,7 +440,7 @@ describe Export::Csv do
       it "should not render places if that option is not passed to the export" do
         @place_one = add_place_to_event(@event, "place_one")
         output = to_arry(Export::Csv.export(@event))
-        output.size.should == 3
+        output.size.should == 2
         output[0].include?("place_name").should be_false
       end
       

@@ -152,7 +152,7 @@ module Export
         num_places      = event.is_a?(MorbidityEvent) && exporting?(:places) ? event.place_child_events.active(true).size : 0
         num_lab_results = exporting?(:labs) ? event.lab_results.size : 0
         num_treatments  = exporting?(:treatments) ? event.interested_party.treatments.size : 0
-        num_hospitals = event.hospitalization_facilities.nil? ? 0 : event.hospitalization_facilities.size
+        num_hospitals = (!exporting?(:hospitalization_facilities) || event.hospitalization_facilities.nil?) ? 0 : event.hospitalization_facilities.size
         loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, num_hospitals, 1].max
 
         # This silly ol' loop is 'cause the user wants the first line to consist of the first of everything: patient, labs, treatments, contacts, places.

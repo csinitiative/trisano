@@ -12,9 +12,12 @@
       %label.horiz
         = check_box_tag("export_options[]", "labs", false, :onclick => "$('lab_code_field_options').toggle();")
         %span=t 'lab_results'
-      %label.vert-break
+      %label.horiz
         = check_box_tag("export_options[]", "treatments", false, :onclick => "$('treatment_code_field_options').toggle();")
         %span= t 'treatments'
+      %label.vert-break
+        = check_box_tag("export_options[]", "hospitalization_facilities", false)
+        %span= t 'hospitalization_facilities'
       %b= ct 'additional_options'
       %br
       %label.vert-break

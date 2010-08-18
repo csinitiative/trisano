@@ -42,6 +42,7 @@ es:
   disable_tabs: 'Desactivar pestañas'
   enable_tabs: 'Activar pestañas'
   add_hospitalization_facility: 'Agregar una Institución de Hospitalización'
+  hospitalization_facilities: 'Hospitalization Facilities (EN)'
   enable_save_buttons: "Activar botones de guardar"
   previous: "Anterior"
   next: "Próximo"
