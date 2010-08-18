@@ -51,7 +51,7 @@ describe Export::Csv do
   
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-      to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
+      to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts hospitalization_facilities) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
   
     it "should output content for a simple event" do
@@ -83,7 +83,7 @@ describe Export::Csv do
   describe "when passed a complex (fully loaded) event" do
     it "should output the right information" do
       e = csv_mock_event(:morbidity)
-      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments"], :disease => csv_mock_disease } ) )
+      a = to_arry( Export::Csv.export( e, {:export_options => ["labs", "treatments", "hospitalization_facilities"], :disease => csv_mock_disease } ) )
       a[0].include?("disease_specific_morb_q").should be_true
       a[1].should == "#{event_output(:morbidity, e, {:disease => csv_mock_disease}) + "," + lab_output + "," + treatment_output}"
     end
@@ -174,7 +174,7 @@ describe Export::Csv do
       end
 
       it "should render multiple hospitalization facilities" do
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs treatments places contacts hospitalization_facilities)))
         output.size.should == 3
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
         assert_values_in_result(output, 1, :patient_hospital_admission_date => /#{@hospital_one.hospitals_participation.admission_date}/)
@@ -201,7 +201,12 @@ describe Export::Csv do
         assert_values_in_result(output, 2, :patient_record_number => //)
         assert_values_in_result(output, 2, :patient_last_name => //)
       end
-      
+
+      it "should not render hospitals if that option is not passed to the export" do
+        output = to_arry(Export::Csv.export(@event))
+        output.size.should == 3
+        output[0].include?("patient_hospitalization_facility").should be_false
+      end
       
       it "should render properly when there are more hospitals than labs" do
         @hospital_three = add_hospitalization_facility_to_event(@event,
@@ -223,7 +228,7 @@ describe Export::Csv do
           :units => "drops"
         )
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -261,7 +266,7 @@ describe Export::Csv do
           :units => "pods"
         )
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(labs hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -303,7 +308,7 @@ describe Export::Csv do
         @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
         @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -321,7 +326,7 @@ describe Export::Csv do
         @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
         @treatment_three = add_treatment_to_event(@event, :treatment_name => "Lots of love")
         
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -352,7 +357,7 @@ describe Export::Csv do
         @contact_one = add_contact_to_event(@event, "contact_one")
         @contact_two = add_contact_to_event(@event, "contact_two")
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(contacts)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(contacts hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -370,7 +375,7 @@ describe Export::Csv do
         @contact_two = add_contact_to_event(@event, "contact_two")
         @contact_three = add_contact_to_event(@event, "contact_three")
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(contacts)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(contacts hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -401,7 +406,7 @@ describe Export::Csv do
         @place_one = add_place_to_event(@event, "place_one")
         @place_two = add_place_to_event(@event, "place_two")
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(places)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(places hospitalization_facilities)))
         output.size.should == 4
         
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -419,7 +424,7 @@ describe Export::Csv do
         @place_two = add_place_to_event(@event, "place_two")
         @place_three = add_place_to_event(@event, "place_three")
 
-        output = to_arry(Export::Csv.export(@event, :export_options => %w(places)))
+        output = to_arry(Export::Csv.export(@event, :export_options => %w(places hospitalization_facilities)))
         output.size.should == 4
 
         assert_values_in_result(output, 1, :patient_hospitalization_facility => /Allen Hospital/)
@@ -457,7 +462,7 @@ describe Export::Csv do
             :medical_record_number => "12345-2"
           )
 
-          output = to_arry(Export::Csv.export([@event, @contact], :export_options => %w(contacts)))
+          output = to_arry(Export::Csv.export([@event, @contact], :export_options => %w(contacts hospitalization_facilities)))
           output[4].include?(@contact.id.to_s).should be_true
           output[4].include?("contact_one").should be_true
           output[5].include?(@contact.id.to_s).should be_true

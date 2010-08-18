@@ -114,10 +114,11 @@ csv_field_00020:
   sort_order: 340
   export_group: event
   long_name: paciente_hospital_fecha_de_ingreso
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  use_description: try(:hospitals_participation).try(:admission_date)
   short_name: 
   use_code: 
   event_type: morbidity_event
+  collection: hospitalization_facilities
 csv_field_00079: 
   sort_order: 600
   export_group: event
@@ -170,50 +171,56 @@ csv_field_00022:
   sort_order: 350
   export_group: event
   long_name: paciente_hospital_fecha_de_alta
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  use_description: try(:hospitals_participation).try(:discharge_date)
   short_name: 
   use_code: 
   event_type: morbidity_event
+  collection: hospitalization_facilities
 csv_field_oranism_name: 
   sort_order: 25
   export_group: lab
   long_name: laboratorio_organismo
-  use_description: organism.try(:organism_name)
+  use_description: try(:organism).try(:organism_name)
   short_name:
   use_code:
   event_type:
+  collection: lab_results
 csv_field_00136: 
   sort_order: 30
   export_group: lab
   long_name: laboratorio_resultado
-  use_description: test_result.try(:code_description)
+  use_description: try(:test_result).try(:code_description)
   short_name:
-  use_code: test_result.try(:the_code)
+  use_code: try(:test_result).try(:the_code)
   event_type:
+  collection: lab_results
 csv_field_lab_result_test_status: 
   sort_order: 60
   export_group: lab
   long_name: laboratorio_prueba_estado
-  use_description: test_status.try(:code_description)
+  use_description: try(:test_status).try(:code_description)
   short_name:
-  use_code: test_status.try(:the_code)
+  use_code: try(:test_status).try(:the_code)
   event_type:
+  collection: lab_results
 csv_field_lab_result_value: 
   sort_order: 40
   export_group: lab
   long_name: laboratorio_resultado_valor
-  use_description: result_value
+  use_description: try(:result_value)
   short_name:
   use_code:
   event_type:
+  collection: lab_results
 csv_field_lab_units: 
   sort_order: 45
   export_group: lab
   long_name: laboratorio_unidades
-  use_description: units
+  use_description: try(:units)
   short_name:
   use_code:
   event_type:
+  collection: lab_results
 csv_field_00108: 
   sort_order: 630
   export_group: event
@@ -242,18 +249,20 @@ csv_field_00023:
   sort_order: 360
   export_group: event
   long_name: paciente_hospital_registro_médico_no
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  use_description: try(:hospitals_participation).try(:medical_record_number)
   short_name: 
   use_code: 
   event_type: morbidity_event
+  collection: hospitalization_facilities
 csv_field_00137: 
   sort_order: 50
   export_group: lab
   long_name: laboratorio_referencia_rango
-  use_description: reference_range
+  use_description: try(:reference_range)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00109: 
   sort_order: 570
   export_group: event
@@ -426,18 +435,20 @@ csv_field_00084:
   sort_order: 30
   export_group: treatment
   long_name: fecha_de_tratamiento
-  use_description: treatment_date
+  use_description: try(:treatment_date)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: interested_party.try(:treatments)
 csv_field_00300:
   sort_order: 40
   export_group: treatment
   long_name: fecha_del_término_de_tratamiento
-  use_description: stop_treatment_date
+  use_description: try(:stop_treatment_date)
   short_name:
   use_code:
   event_type:
+  collection: interested_party.try(:treatments)
 csv_field_00056: 
   sort_order: 410
   export_group: event
@@ -474,10 +485,11 @@ csv_field_00085:
   sort_order: 20
   export_group: treatment
   long_name: tratamiento
-  use_description: treatment.treatment
+  use_description: try(:treatment_name)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: interested_party.try(:treatments)
 csv_field_00140: 
   sort_order: 260
   export_group: event
@@ -722,18 +734,20 @@ csv_field_00060:
   sort_order: 90
   export_group: lab
   long_name: laboratorio_fecha_de_prueba
-  use_description: lab_test_date
+  use_description: try(:lab_test_date)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00032: 
   sort_order: 380
   export_group: event
   long_name: contacto_hospital_registro_médico_no
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:medical_record_number)
+  use_description: try(:hospitals_participation).try(:medical_record_number)
   short_name: 
   use_code: 
   event_type: contact_event
+  collection: hospitalization_facilities
 csv_field_00146: 
   sort_order: 320
   export_group: event
@@ -770,10 +784,11 @@ csv_field_00033:
   sort_order: 10
   export_group: lab
   long_name: laboratorio_nombre
-  use_description: lab_name
+  use_description: try(:lab_name)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00147: 
   sort_order: 270
   export_group: event
@@ -842,10 +857,11 @@ csv_field_00035:
   sort_order: 360
   export_group: event
   long_name: contacto_hospital_fecha_de_ingreso
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:admission_date)
+  use_description: try(:hospitals_participation).try(:admission_date)
   short_name: 
   use_code: 
   event_type: contact_event
+  collection: hospitalization_facilities
 csv_field_00149: 
   sort_order: 760
   export_group: event
@@ -874,10 +890,11 @@ csv_field_00064:
   sort_order: 70
   export_group: lab
   long_name: laboratorio_muestra_fuente
-  use_description: specimen_source.try(:code_description)
+  use_description: try(:specimen_source).try(:code_description)
   short_name: 
-  use_code: specimen_source.try(:the_code)
-  event_type: 
+  use_code: try(:specimen_source).try(:the_code)
+  event_type:
+  collection: lab_results
 csv_field_00036: 
   sort_order: 130
   export_group: event
@@ -922,10 +939,11 @@ csv_field_00037:
   sort_order: 370
   export_group: event
   long_name: contacto_hospital_fecha_de_alta
-  use_description: hospitalization_facilities.first.try(:hospitals_participation).try(:discharge_date)
+  use_description: try(:hospitals_participation).try(:discharge_date)
   short_name: 
   use_code: 
   event_type: contact_event
+  collection: hospitalization_facilities
 csv_field_00009: 
   sort_order: 30
   export_group: event
@@ -954,10 +972,11 @@ csv_field_00066:
   sort_order: 80
   export_group: lab
   long_name: laboratorio_recolección_fecha
-  use_description: collection_date
+  use_description: try(:collection_date)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00121: 
   sort_order: 120
   export_group: event
@@ -986,10 +1005,11 @@ csv_field_00067:
   sort_order: 20
   export_group: lab
   long_name: laboratorio_tipo_de_prueba
-  use_description: test_type.try(:common_name)
+  use_description: try(:test_type).try(:common_name)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00122: 
   sort_order: 460
   export_group: event
@@ -1050,10 +1070,11 @@ csv_field_00069:
   sort_order: 100
   export_group: lab
   long_name: laboratorio_muestra_enviada_a_provincia
-  use_description: specimen_sent_to_state.try(:code_description)
+  use_description: try(:specimen_sent_to_state).try(:code_description)
   short_name: 
-  use_code: specimen_sent_to_state.try(:the_code)
-  event_type: 
+  use_code: try(:specimen_sent_to_state).try(:the_code)
+  event_type:
+  collection: lab_results
 csv_field_00010: 
   sort_order: 180
   export_group: event
@@ -1074,10 +1095,11 @@ csv_field_00152:
   sort_order: 350
   export_group: event
   long_name: contacto_institución_de_hospitalización
-  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  use_description: try(:secondary_entity).try(:place).try(:name)
   short_name: 
-  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  use_code: try(:secondary_entity).try(:place).try(:id)
   event_type: contact_event
+  collection: hospitalization_facilities
 csv_field_00124: 
   sort_order: 110
   export_group: event
@@ -1162,10 +1184,11 @@ csv_field_00013:
   sort_order: 10
   export_group: treatment
   long_name: tratamiento_administrado
-  use_description: treatment_given_yn.try(:code_description)
+  use_description: try(:treatment_given_yn).try(:code_description)
   short_name: 
-  use_code: treatment_given_yn.try(:the_code)
-  event_type: 
+  use_code: try(:treatment_given_yn).try(:the_code)
+  event_type:
+  collection: interested_party.try(:treatments)
 csv_field_00155: 
   sort_order: 100
   export_group: event
@@ -1178,10 +1201,11 @@ csv_field_00041:
   sort_order: 0
   export_group: lab
   long_name: laboratorio_registro_id
-  use_description: id
+  use_description: try(:id)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: lab_results
 csv_field_00127: 
   sort_order: 100
   export_group: event
@@ -1202,10 +1226,11 @@ csv_field_00070:
   sort_order: 0
   export_group: treatment
   long_name: tratamiento_registro_id
-  use_description: id
+  use_description: try(:id)
   short_name: 
   use_code: 
-  event_type: 
+  event_type:
+  collection: interested_party.try(:treatments)
 csv_field_00156: 
   sort_order: 40
   export_group: event
@@ -1402,10 +1427,11 @@ csv_field_00019:
   sort_order: 330
   export_group: event
   long_name: paciente_institución_de_hospitalización
-  use_description: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:name)
+  use_description: try(:secondary_entity).try(:place).try(:name)
   short_name: 
-  use_code: hospitalization_facilities.first.try(:secondary_entity).try(:place).try(:id)
+  use_code: try(:secondary_entity).try(:place).try(:id)
   event_type: morbidity_event
+  collection: hospitalization_facilities
 csv_field_00075: 
   sort_order: 370
   export_group: event

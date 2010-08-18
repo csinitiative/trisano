@@ -99,20 +99,8 @@ module Export
         output
       end
 
-      def exporting_labs?
-        export_options.include? "labs"
-      end
-
-      def exporting_treatments?
-        export_options.include? "treatments"
-      end
-
-      def exporting_places?
-        export_options.include? "places"
-      end
-
-      def exporting_contacts?
-        export_options.include? "contacts"
+      def exporting?(component)
+        export_options.include? component.to_s
       end
 
       def exporting_using_short_names?
@@ -135,11 +123,11 @@ module Export
 
       def output_header(event)
         csv_header  = event_headers(event)
-        csv_header += lab_headers if exporting_labs?
-        csv_header += treatment_headers if exporting_treatments?
+        csv_header += lab_headers if exporting?(:labs)
+        csv_header += treatment_headers if exporting?(:treatments)
         if event.is_a? MorbidityEvent
-          csv_header += event_headers(PlaceEvent) if exporting_places?
-          csv_header += event_headers(ContactEvent) if exporting_contacts?
+          csv_header += event_headers(PlaceEvent) if exporting?(:places)
+          csv_header += event_headers(ContactEvent) if exporting?(:contacts)
         end
         csv_out(csv_header)
       end
@@ -149,21 +137,21 @@ module Export
       end
 
       def lab_headers
-        lab_data.map { |lab_datum| lab_datum.first }
+        export_group_data(:lab_fields).map { |lab_datum| lab_datum.first }
       end
 
       def treatment_headers
-        treatment_data.map { |treatment_datum| treatment_datum.first }
+        export_group_data(:treatment_fields).map { |treatment_datum| treatment_datum.first }
       end
 
       # A root-level event is either a morbidity or a contact, not a place
       def output_body(event)
-        # A contact's only contact is the original patient
-        num_contacts    = exporting_contacts? ? event.child_events.morbs_or_contacts.active.size : 0
+        # A contact is only contact is the original patient
+        num_contacts    = exporting?(:contacts) ? event.child_events.morbs_or_contacts.active.size : 0
         #contacts don't have places
-        num_places      = event.is_a?(MorbidityEvent) && exporting_places? ? event.place_child_events.active(true).size : 0
-        num_lab_results = exporting_labs? ? event.lab_results.size : 0
-        num_treatments  = exporting_treatments? ? event.interested_party.treatments.size : 0
+        num_places      = event.is_a?(MorbidityEvent) && exporting?(:places) ? event.place_child_events.active(true).size : 0
+        num_lab_results = exporting?(:labs) ? event.lab_results.size : 0
+        num_treatments  = exporting?(:treatments) ? event.interested_party.treatments.size : 0
         num_hospitals = event.hospitalization_facilities.nil? ? 0 : event.hospitalization_facilities.size
         loop_ctr = [num_contacts, num_places, num_lab_results, num_treatments, num_hospitals, 1].max
 
@@ -175,26 +163,11 @@ module Export
 
           blank_out_remaining_rows_for(loop_event)
           
-          if exporting_labs?
-            if ctr < num_lab_results
-              lab_result = event.lab_results[ctr]
-            else
-              lab_result = LabResult.new
-            end
-            csv_row += lab_values(lab_result).map { |value| value.to_s.gsub(/,/,' ') }
-          end
-
-          if exporting_treatments?
-            if ctr < num_treatments
-              treatment = event.interested_party.treatments[ctr]
-            else
-              treatment = ParticipationsTreatment.new
-            end
-            csv_row += treatment_values(treatment).map { |value| value.to_s.gsub(/,/,' ') }
-          end
+          csv_row += export_group_values(loop_event, :lab_fields, ctr).map { |value| value.to_s.gsub(/,/,' ') } if exporting?(:labs)
+          csv_row += export_group_values(loop_event, :treatment_fields, ctr).map { |value| value.to_s.gsub(/,/,' ') } if exporting?(:treatments)
 
           if event.is_a? MorbidityEvent
-            if exporting_places?
+            if exporting?(:places)
               if ctr < num_places
                 place_event = event.place_child_events.active[ctr]
               else
@@ -203,7 +176,7 @@ module Export
               csv_row += event_values(place_event, ctr).map { |value| value.to_s.gsub(/,/,' ') }
             end
 
-            if exporting_contacts?
+            if exporting?(:contacts)
               if ctr < num_contacts
                 contact_event = event.child_events.morbs_or_contacts.active[ctr]
               else
@@ -248,22 +221,12 @@ module Export
         end
       end
 
-      def lab_values(lab_result)
-        lab_data.collect do |lab_datum|
+      def export_group_values(event, fields, count)
+        export_group_data(fields, count).collect do |lab_datum|
           begin
-            lab_result.instance_eval(lab_datum.last)
+            event.instance_eval(lab_datum.last)
           rescue Exception => ex
             raise "#{ex.message}: #{lab_datum.join('|')}"
-          end
-        end
-      end
-
-      def treatment_values(treatment)
-        treatment_data.collect do |treatment_datum|
-          begin
-            treatment.instance_eval(treatment_datum.last)
-          rescue Exception => ex
-            raise "#{ex.message}: #{treatment_datum.join('|')}"
           end
         end
       end
@@ -274,7 +237,7 @@ module Export
         clazz = event_or_class.is_a?(Class) ? event_or_class : event_or_class.class
         meth = csv_fields_meth || "#{clazz.to_s.underscore}_fields"
         event_data = CsvField.send(meth).map do |csv_field|
-          [csv_field.send(short_or_long_name), script_for(csv_field, count, blank_out)] if render_field?(event_or_class, csv_field)
+          [csv_field.send(short_or_long_name), script_for(csv_field, count, blank_out)] if render_event_field?(event_or_class, csv_field)
         end
         if showing_answers? and event_or_class.respond_to?(:answers)
           event_data += event_answers(event_or_class)
@@ -294,15 +257,9 @@ module Export
         answers
       end
 
-      def lab_data
-        CsvField.lab_fields.map do |csv_field|
-          [csv_field.send(short_or_long_name), script_for(csv_field)]
-        end
-      end
-
-      def treatment_data
-        CsvField.treatment_fields.map do |csv_field|
-          [csv_field.send(short_or_long_name), script_for(csv_field)]
+      def export_group_data(fields, count=nil)
+        CsvField.send(fields.to_sym).map do |csv_field|
+          [csv_field.send(short_or_long_name), script_for(csv_field, count)]
         end
       end
 
@@ -343,16 +300,25 @@ module Export
         (blank_out && csv_field.use_description != "id" && !counter.nil? && (counter > 0))
       end
 
-      def render_field?(event_or_class, csv_field)
+      def render_event_field?(event_or_class, csv_field)
         (
-          (csv_field.disease_specific == false) ||
+          (csv_field.disease_specific == false && non_collection_or_collection_in_options?(csv_field)) ||
             (csv_field.disease_specific == true &&
               showing_disease_specific_fields? &&
               !event_or_class.is_a?(Class) &&
               !csv_field.core_field.nil? &&
-              csv_field.core_field.rendered?(event_or_class)
+              csv_field.core_field.rendered?(event_or_class) &&
+              non_collection_or_collection_in_options?(csv_field)
           )
         )
+      end
+
+      def non_collection_or_collection_in_options?(csv_field)
+        if csv_field.collection.blank?
+          return true
+        else
+          @options[:export_options].include?(csv_field.collection)
+        end
       end
 
     end

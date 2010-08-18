@@ -40,6 +40,10 @@ class CsvField < ActiveRecord::Base
   named_scope :treatment_code_fields,
               :conditions => "export_group = 'treatment' and use_code is not null"
 
+  named_scope :hospitalization_facility_fields, :conditions => { :export_group => 'hospitalization_facility' }
+  named_scope :hospitalization_facility_code_fields,
+              :conditions => "export_group = 'hospitalization_facility' and use_code is not null"
+
   validates_length_of :short_name, :allow_nil => true, :maximum => 10
 
   def self.load_csv_fields(csv_fields)
