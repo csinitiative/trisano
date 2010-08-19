@@ -475,9 +475,9 @@ def create_models(dg, dg_id, meta, conn)
   root_bc = BusinessCategory.new
   root_bc.set_root_category true
   model.set_root_category root_bc
-  add_business_tables model, meta, dg, "DG#{dg_id}", conn
-  create_relationships model, "DG#{dg_id}", conn
-  setup_role_security model, "DG#{dg_id}", meta, jurisdiction_hash(conn)
+  add_business_tables model, meta, dg, "dg#{dg_id}", conn
+  create_relationships model, "dg#{dg_id}", conn
+  setup_role_security model, "dg#{dg_id}", meta, jurisdiction_hash(conn)
   meta.add_model(model)
 end
 
