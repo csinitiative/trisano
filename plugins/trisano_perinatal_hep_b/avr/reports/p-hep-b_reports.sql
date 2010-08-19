@@ -1,165 +1,31 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
-#
-# This file is part of TriSano.
-#
-# TriSano is free software: you can redistribute it and/or modify it under the
-# terms of the GNU Affero General Public License as published by the
-# Free Software Foundation, either version 3 of the License,
-# or (at your option) any later version.
-#
-# TriSano is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-- Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+--
+-- This file is part of TriSano.
+--
+-- TriSano is free software: you can redistribute it and/or modify it under the
+-- terms of the GNU Affero General Public License as published by the
+-- Free Software Foundation, either version 3 of the License,
+-- or (at your option) any later version.
+--
+-- TriSano is distributed in the hope that it will be useful, but
+-- WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU Affero General Public License for more details.
+--
+-- You should have received a copy of the GNU Affero General Public License
+-- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require 'java'
-require 'fileutils'
-require 'yaml'
+BEGIN;
 
-def server_dir
-  ENV['BI_SERVER_PATH'] || '/home/josh/apps/pentaho-ce-3.0/biserver-ce/'
-end
+DROP SCHEMA IF EXISTS phepb_reports CASCADE;
 
-def hsqldb_driver_class
-  'org.hsqldb.jdbcDriver'
-end
+CREATE SCHEMA phepb_reports;
 
-def hsqldb_user
-  ENV['TRISANO_HSQLDB_USER'] || 'trisano'
-end
+GRANT USAGE ON SCHEMA phepb_reports TO trisano_ro;
 
-def hsqldb_password
-  ENV['TRISANO_HSQLDB_PASSWORD'] || 'trisano'
-end
+SET SEARCH_PATH = phepb_reports;
 
-def hsqldb_url
-  ENV['TRISANO_HSQLDB_URL'] || 'jdbc:hsqldb:hsql://localhost:9001/trisano'
-end
-
-def postgresql_driver_class
-  ENV['TRISANO_DB_DRIVER'] || 'org.postgresql.Driver'
-end
-
-def postgresql_user
-  ENV['TRISANO_DB_USER'] || 'dw_priv_user'
-end
-
-def postgresql_password
-  ENV['TRISANO_DB_PASSWORD'] || 'dw_priv_user'
-end
-
-def postgresql_url
-  ENV['TRISANO_JDBC_URL'] || 'jdbc:postgresql://localhost:5432/trisano_warehouse'
-end
-
-def require_jars(jars)
-  jars.each {|jar| require jar}
-end
-
-require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'postgres*.jar'))
-require_jars Dir.glob(File.join(server_dir, 'tomcat/common/lib', 'hsql*.jar'))
-
-def perform_query(conn, query)
-  conn.create_statement.execute_update(query)
-end
-
-def db_connection(driver, user, password, url, init)
-    props = Java::JavaUtil::Properties.new
-    props.setProperty "user", user
-    props.setProperty "password", password
-    begin
-      conn = create_db_connection(driver).connect url, props
-      init.each do |a| perform_query(conn, a) end
-      yield conn
-#    rescue
-#      e = $!
-#      puts "Some exception occurred: #{e}"
-#      raise e
-    ensure
-      conn.close if conn
-    end
-end
-
-def create_db_connection(driver)
-    eval("#{driver}").new
-end
-
-# Create a Hypersonic SQL table definition based on a JDBC ResultSetMetaData object
-def get_table_def(metadata, name)
-    # Translation of PostgreSQL-specific type strings to Hypersonic SQL type strings
-    type_hash = { 'TEXT' => 'VARCHAR', 'INT8' => 'INTEGER', 'INT4' => 'INTEGER', 'TIMESTAMPTZ' => 'TIMESTAMP WITH TIME ZONE', 'BOOL' => 'BOOLEAN' }
-    types = []
-    insert1 = "INSERT INTO #{name.upcase} ("
-    insert2 = ") VALUES ("
-    result = "CREATE TABLE #{name.upcase} ("
-
-    for i in (1..metadata.get_column_count)
-        if i > 1 then
-            result << ', '
-            insert1 << ', '
-            insert2 << ', '
-        end
-        this_col = metadata.get_column_name(i).upcase
-        type = metadata.get_column_type_name(i).upcase
-        this_type = (type_hash.has_key?(type) ? type_hash[type] : type)
-
-        result << this_col << ' '
-        result << this_type
-        types << this_type
-        insert1 << this_col
-        insert2 << '?'
-    end
-
-    result << ')'
-    [result, types, insert1 + insert2 + ')']
-end
-
-def get_query_results(query_string, conn)
-    return nil if query_string.nil?
-    rs = conn.prepare_call(query_string).execute_query
-    res = []
-    len = rs.getMetaData().getColumnCount()
-    while rs.next
-      val = []
-      (1..len).each do |i|
-        val << rs.getString(i)
-      end
-      res << val
-    end
-    return [res, rs.getMetaData]
-end
-
-# Takes postgres connection, query string, and a prepared statement to copy to
-def copy_query(name, pgconn, source, hqconn)
-  puts "  ** Filling #{name} table"
-  (res, meta) = get_query_results(source, pgconn)
-  return if not res.length >= 1
-
-  hqconn.prepare_statement("DROP TABLE IF EXISTS #{name.upcase}").execute_update
-  (table_def, types, insert) = get_table_def meta, name
-  hqconn.prepare_statement(table_def).execute_update
-
-  sample = res.first
-  len = sample.length
-
-  dest_qry = hqconn.prepare_statement insert
-
-  res.each do |source_row|
-    for i in (1..len)
-#      puts "#{source_row[i-1]} #{i} #{source_row[i-1].class}"
-      dest_qry.set_string(i, source_row[i-1])
-    end
-    dest_qry.execute_update
-  end
-end
-
-Queries =
-{
-    'report1' => 
-            %{
+CREATE TABLE report1 AS
                 SELECT
                     id,
                     COALESCE(first_name || ' ', '') || COALESCE(last_name, '') AS name,
@@ -172,9 +38,9 @@ Queries =
                     trisano.dw_morbidity_events_view
                 WHERE
                     disease_name = 'Hepatitis B Pregnancy Event'
-            },
-    'report2' =>
-            %{
+                    ;
+
+CREATE TABLE report2 AS
                 SELECT
                     id, investigating_jurisdiction,
                     date_entered_into_system,
@@ -203,9 +69,9 @@ Queries =
                     disease_name = 'Hepatitis B Pregnancy Event' AND
                     pregnant = 'Yes' AND
                     actual_delivery_date IS NOT NULL
-            },
-    'report3' =>
-            %{
+;
+
+CREATE TABLE report3 AS
                 SELECT
                     name_addr.id,
                     name_addr.name,
@@ -244,7 +110,7 @@ Queries =
                         WHERE
                             dme.disease_name = 'Hepatitis B Pregnancy Event' AND
                             dme.pregnant = 'Yes' AND
-                            EXISTS (SELECT 1 FROM dw_contact_events_view WHERE parent_id = dme.id)
+                            EXISTS (SELECT 1 FROM trisano.dw_contact_events_view WHERE parent_id = dme.id)
                         GROUP BY
                             id, name, address, investigating_jurisdiction
                     ) name_addr
@@ -335,7 +201,7 @@ Queries =
                                                     (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
                                                     dce.age_in_years BETWEEN .6 AND 1.5
                                                 ) AND
-                                                (get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL
+                                                (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL
                                                     THEN 6 -- fdd = dob + 9 mo., act = 'Needs serology 3 months after 9-month dose'
                                             WHEN COALESCE((now() - dce.birth_date) >= INTERVAL '365 days' * 2, dce.age_in_years >= 2) THEN
                                                 7 -- fdd = dob + 24 mo., act = 'Close Newborn Contact'
@@ -385,13 +251,13 @@ Queries =
                                 LEFT JOIN (
                                     SELECT
                                         dw_contact_events_id AS contact_event_id,
-                                        earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig,
-                                        earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
-                                        earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
-                                        earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
-                                        earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
-                                        earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
-                                        earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+                                        trisano.earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig,
+                                        trisano.earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
                                     FROM (
                                         SELECT
                                             dw_contact_events_id,
@@ -414,9 +280,9 @@ Queries =
                         ) foo
                     ) contact_stuff
                         ON (name_addr.id = contact_stuff.parent_id)
-            },
-    'report4' =>
-            %{
+;
+
+CREATE TABLE report4 AS
                 SELECT
                     1 AS total,
                     dme.id,
@@ -459,11 +325,11 @@ Queries =
                     CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE NULL END AS four_dose,
                     CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE NULL END AS five_dose,
                     CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE NULL END AS six_dose,
-                    CASE WHEN contact_type = 'infant' AND (get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END AS serotest_12m,
-                    CASE WHEN contact_type = 'infant' AND (get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' THEN 1 ELSE NULL END AS serotest_15m,
-                    CASE WHEN contact_type = 'infant' AND ((get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE NULL END AS total_serotest,
-                    CASE WHEN contact_type = 'infant' AND (get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_antihb,
-                    CASE WHEN contact_type = 'infant' AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_hbsag,
+                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END AS serotest_12m,
+                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' THEN 1 ELSE NULL END AS serotest_15m,
+                    CASE WHEN contact_type = 'infant' AND ((trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE NULL END AS total_serotest,
+                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_antihb,
+                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_hbsag,
                     -- XXX Still have com vax vacc date here, to fix
                     CASE WHEN contact_type = 'infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE NULL END AS received_comvax,
                     CASE WHEN contact_type IN ('Sexual', 'Household') THEN 1 ELSE NULL END AS total_hs,
@@ -476,9 +342,9 @@ Queries =
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Died' THEN 1 ELSE NULL END AS died_hs,
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'False positive mother/case' THEN 1 ELSE NULL END AS false_positive_hs,
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Other' THEN 1 ELSE NULL END AS other_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND ((get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL OR (get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL) THEN 1 ELSE NULL END AS total_hs_tested,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS hbsag_pos_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS antihb_pos_hs,
+                    CASE WHEN contact_type IN ('Sexual', 'Household') AND ((trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL OR (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL) THEN 1 ELSE NULL END AS total_hs_tested,
+                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS hbsag_pos_hs,
+                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS antihb_pos_hs,
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL THEN 1 ELSE NULL END AS dose1_hs,
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE NULL END AS dose2_hs,
                     CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE NULL END AS dose3_hs,
@@ -496,13 +362,13 @@ Queries =
                     LEFT JOIN (
                         SELECT
                             dw_contact_events_id AS contact_event_id,
-                            earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig_vacc_date,
-                            earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
-                            earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
-                            earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
-                            earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
-                            earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
-                            earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+                            trisano.earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig_vacc_date,
+                            trisano.earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
                         FROM (
                             SELECT
                                 dw_contact_events_id,
@@ -524,17 +390,15 @@ Queries =
                         ON (treatments_agg.contact_event_id = dce.id)
                 WHERE
                     dce.disease_name = 'Hepatitis B Pregnancy Event'
-            }
-}
+;
 
-if __FILE__ == $0
-  pginit = ["SET search_path = 'trisano'"]
-  db_connection(postgresql_driver_class, postgresql_user, postgresql_password, postgresql_url, pginit) do |pgconn|
-    db_connection(postgresql_driver_class, postgresql_user, postgresql_password, postgresql_url, []) do |hqconn|
-      puts "Inserting new data"
-      Queries.keys.each do |key|
-        copy_query(key, pgconn, Queries[key], hqconn)
-      end
-    end
-  end
-end
+CREATE TABLE morb_sec_juris AS
+    SELECT dw_morbidity_events_id, name FROM trisano.dw_morbidity_secondary_jurisdictions_view;
+
+GRANT SELECT ON report1 TO trisano_ro;
+GRANT SELECT ON report2 TO trisano_ro;
+GRANT SELECT ON report3 TO trisano_ro;
+GRANT SELECT ON report4 TO trisano_ro;
+GRANT SELECT ON morb_sec_juris TO trisano_ro;
+
+COMMIT;
