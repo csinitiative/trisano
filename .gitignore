@@ -28,3 +28,4 @@ webrat-*
 /webapp/.bundle/config
 /webapp/unicron-conf.rb
 /webapp/unicorn-conf.rb
+/webapp/Gemfile.lock

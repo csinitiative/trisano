@@ -203,6 +203,13 @@ describe MorbidityEvent do
           @event.notes.first.note_type.should == "clinical"
         end
 
+        it "should accept a hash for setting other, less common note attributes" do
+          @event.add_note("New nore", "clinical", :user => author = Factory.create(:user))
+          @event.notes.first.note.should == 'New nore'
+          @event.notes.first.note_type.should == 'clinical'
+          @event.notes.first.user.should == author
+        end
+
       end
 
     end
@@ -1883,9 +1890,32 @@ describe Event, 'cloning an event' do
       new_notes = @new_event.notes.size.should == 1
       @new_event.notes.first.note.should == "note 1"
     end
-
   end
 end
+
+describe Event, "deep copied event" do
+  before do
+    @event = Factory.create(:morbidity_event)
+    @event.save!
+    @note_user = Factory.create(:user)
+    @event.add_note('Just a sample note', 'clinical', :user => @note_user)
+    login_as_super_user
+    @new_event = MorbidityEvent.new
+    @event.copy_event @new_event, ['notes']
+    @new_event.save!
+  end
+
+  it "should have copies of clinical notes, if notes component was specified" do
+    @new_event.notes.select { |note| note.note_type == 'clinical' }.size.should == 1
+  end
+
+  it "has copied notes from the original note user" do
+    @new_event.notes.select { |note| note.note_type == 'clinical' }.each do |note|
+      note.user.should == @note_user
+    end
+  end
+end
+
 
 describe Event, "when saving events with deleted entities" do
 
@@ -1899,4 +1929,18 @@ describe Event, "when saving events with deleted entities" do
     @morbidity_event.errors.empty?.should be_false
   end
 
+end
+
+describe Event, "mmwr date" do
+  before do
+    the_past = Date.today - 21
+    @expected_mmwr = Mmwr.new(the_past)
+    @event = Factory.create(:morbidity_event)
+    @event.update_attributes!(:created_at => the_past)
+  end
+
+  it "is based on the date the event was created, if other relevant dates are blank" do
+    assert_equal @expected_mmwr.mmwr_year, @event.MMWR_year, "Wrong MMWR year"
+    assert_equal @expected_mmwr.mmwr_week, @event.MMWR_week, "Wrong MMWR week"
+  end
 end

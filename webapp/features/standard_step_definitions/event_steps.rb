@@ -228,3 +228,8 @@ Given /^max_search_results \+ 1 basic (.*) events/i do |event_type|
     create_basic_event(event_type, get_random_word, "African Tick Bite Fever", "Unassigned")
   end
 end
+
+Given /^the event has a (.+) note authored by "([^\"]*)"$/ do |note_type, author_uid|
+  author = User.find_by_user_name(author_uid)
+  @event.add_note("My God, it's full of stars", note_type, :user => author)
+end

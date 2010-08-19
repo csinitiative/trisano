@@ -24,6 +24,6 @@ class Note < ActiveRecord::Base
   validates_presence_of :note
 
   before_create do |note|
-    note.user = User.current_user
+    note.user ||= User.current_user
   end
 end

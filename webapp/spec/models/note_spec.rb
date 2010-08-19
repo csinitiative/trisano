@@ -43,10 +43,16 @@ describe Note do
       @event.add_note("Third note, explicitly admin", "administrative")
     end
 
-    it "should have a user" do
+    it "should set the author to the current user by default" do
       @event.notes.each do |note|
         note.user_id.should == @user.id
       end
+    end
+
+    it "should not make the current user the author if another is explicitly assigned" do
+      author = Factory.create(:user)
+      note = @event.add_note "new note", "clinical", :user => author
+      note.user.should == author
     end
 
     it "should make the first note an admin note as it is the default when no note type is supplied" do
