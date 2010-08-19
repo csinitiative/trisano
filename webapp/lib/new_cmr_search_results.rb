@@ -102,7 +102,7 @@ class NewCmrSearchResults
       if event?
         returning [] do |result|
           result << view.link_to(I18n.t(:edit), edit_path) if can_update?
-          result << view.link_to(I18n.t(:show), view_path) if can_view?
+          result << view.link_to(I18n.t(:show), view_path)
         end.join("&nbsp;|&nbsp;")
       end
     end
