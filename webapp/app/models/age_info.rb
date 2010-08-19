@@ -25,13 +25,11 @@ class AgeInfo
     end
 
     def calculate_duration(earlier_date, later_date)
-      duration = later_date - earlier_date
+      result = DateDiff.new(later_date, earlier_date).calculate
       case
-      when duration < 28:    [duration.to_i,       age_type(:days)  ]
-      when duration < 7*8:   [(duration/7).round,  age_type(:weeks) ]
-      when duration < 12*30: [(duration/30).round, age_type(:months)]
-      when duration > 365:   [(duration/365).to_i, age_type(:years) ]
-      else                   [1,                   age_type(:years) ]
+      when result.years.abs > 0:  [result.years,  age_type(:years) ]
+      when result.months.abs > 0: [result.months, age_type(:months)]
+      else                        [result.days,   age_type(:days)  ]
       end
     end
 
