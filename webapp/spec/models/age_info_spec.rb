@@ -17,48 +17,54 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe AgeInfo do
+describe AgeInfo, 'age at onset' do
 
-  it 'should store ages < 29 days as days' do
-    age_info = AgeInfo.create_from_dates(Date.today - 1, Date.today)
-    age_info.age_at_onset.should == 1
-    age_info.age_type.code_description.should == "days"
-    age_info.age_type.id.should == 2300
-    age_info.age_type.code_name.should == 'age_type'
+  describe "is less then a month" do
+    it "returns age in days" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2010, 3, 2), Date.civil(2010, 3, 21))
+      age_info.age_at_onset.should == 19
+      age_info.age_type.code_description.should == 'days'
+    end
 
-    age_info = AgeInfo.create_from_dates(Date.today - 27, Date.today)
-    age_info.age_at_onset.should == 27
-    age_info.age_type.code_description.should == "days"
-  end
-    
-  it 'should store ages < 8 weeks as weeks' do
-    age_info = AgeInfo.create_from_dates(Date.today - 28, Date.today)
-    age_info.age_at_onset.should == 4
-    age_info.age_type.code_description.should == "weeks"
-    
-    age_info = AgeInfo.create_from_dates(Date.today - 7*7, Date.today)
-    age_info.age_at_onset.should == 7
-    age_info.age_type.code_description.should == "weeks"
+    it "returns age in day if dates span months" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2010, 7, 16), Date.civil(2010, 8, 14))
+      age_info.age_at_onset.should == 29
+      age_info.age_type.code_description.should == 'days'
+    end
   end
 
-  it 'should store ages between 8 weeks and < 12 months as months' do
-    age_info = AgeInfo.create_from_dates(Date.today - 7*8, Date.today)
-    age_info.age_at_onset.should == 2
-    age_info.age_type.code_description.should == 'months'
+  describe "is less then a year" do
+    it "returns months" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2010, 7, 13), Date.civil(2010, 8, 14))
+      age_info.age_at_onset.should == 1
+      age_info.age_type.code_description.should == 'months'
+    end
 
-    age_info = AgeInfo.create_from_dates(Date.today.months_ago(11), Date.today)
-    age_info.age_at_onset.should == 11
-    age_info.age_type.code_description.should == 'months'
+    it "returns months and never rounds up to a year" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2009, 8, 15), Date.civil(2010, 8, 14))
+      age_info.age_at_onset.should == 11
+      age_info.age_type.code_description.should == 'months'
+    end
+
+    it "returns months and never rounds up, even in a leap year" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2007, 3, 1), Date.civil(2008, 2, 29))
+      age_info.age_at_onset.should == 11
+      age_info.age_type.code_description.should == 'months'
+    end
   end
 
-  it 'should store ages > 11 months as years' do
-    age_info = AgeInfo.create_from_dates(Date.today.years_ago(1), Date.today)
-    age_info.age_at_onset.should == 1
-    age_info.age_type.code_description == 'years'
+  describe "is a year or greater" do
+    it "returns years" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2009, 3, 1), Date.civil(2010, 3, 1))
+      age_info.age_at_onset.should == 1
+      age_info.age_type.code_description.should == 'years'
+    end
 
-    age_info = AgeInfo.create_from_dates(Date.today.years_ago(14), Date.today)
-    age_info.age_at_onset.should == 14
-    age_info.age_type.code_description == 'years'
+    it "returns years and never rounds up" do
+      age_info = AgeInfo.create_from_dates(Date.civil(2008, 3, 1), Date.civil(2010, 2, 28))
+      age_info.age_at_onset.should == 1
+      age_info.age_type.code_description.should == 'years'
+    end
   end
 
 end
