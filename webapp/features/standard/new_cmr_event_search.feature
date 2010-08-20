@@ -127,6 +127,7 @@ Feature: Searching for existing people or events before adding a CMR
       And I am logged in as a user without view or update privileges in Davis County
      When I search for last_name = "Jones"
      Then the disease should show as 'private'
+     And I should the correct actions for an out-of-jurisdiction event
 
   Scenario: People with multiple events are grouped together
     Given there are 2 morbidity events for a single person with the last name Jones

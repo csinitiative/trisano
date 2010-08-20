@@ -202,6 +202,11 @@ Then /^the disease should show as 'private'$/ do
   response.should_not contain("Mumps")
 end
 
+Then /^I should the correct actions for an out\-of\-jurisdiction event$/ do
+  response.should have_xpath("//tr[@class='search-active tabular']//td//a[contains(text(), 'Show')]")
+  response.should_not have_xpath("//tr[@class='search-active tabular']//td//a[contains(text(), 'Edit')]")
+end
+
 Then /^I should see two morbidity events under one name$/ do
   response.should have_selector("table.list tr:nth-child(2)") do |tr|
     tr.should contain("Jones")
