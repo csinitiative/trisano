@@ -13,24 +13,25 @@
             <property name="name">Element@2275292</property>
             <property name="connectionType">MQL</property>
             <property name="xQueryDataFile"></property>
-            <property name="xmiDefinitionFile">/home/josh/apps/metadata-editor/phepb.xmi</property>
+            <property name="xmiDefinitionFile">metadata.xmi</property>
             <property name="useMondrianCubeDefinition">false</property>
             <property name="mondrianCubeDefinitionFile"></property>
             <property name="limitPreviewRows">true</property>
             <property name="maxPreviewRows">10000</property>
             <query queryName="default">
-                <property name="query">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;mql&gt;&lt;domain_type&gt;relational&lt;/domain_type&gt;&lt;domain_id&gt;resources&lt;/domain_id&gt;&lt;model_id&gt;BV_MODEL_1&lt;/model_id&gt;&lt;model_name&gt;Perinatal Hepatitis B&lt;/model_name&gt;&lt;options&gt;&lt;disable_distinct&gt;false&lt;/disable_distinct&gt;&lt;/options&gt;&lt;selections&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ID&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_NAME&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ADDRESS&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_PHONE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_TYPE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_NAME&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_BIRTH_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_AGE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_FIRST_DUE_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ACTION&lt;/column&gt;&lt;/selection&gt;&lt;/selections&gt;&lt;constraints/&gt;&lt;orders/&gt;&lt;/mql&gt;</property>
+                <property name="query">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;mql&gt;&lt;domain_type&gt;relational&lt;/domain_type&gt;&lt;domain_id&gt;resources&lt;/domain_id&gt;&lt;model_id&gt;TriSanoPHEPB&lt;/model_id&gt;&lt;model_name&gt;Perinatal Hepatitis B&lt;/model_name&gt;&lt;options&gt;&lt;disable_distinct&gt;true&lt;/disable_distinct&gt;&lt;/options&gt;&lt;selections&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ACTION&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_FIRST_DUE_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_AGE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_BIRTH_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_NAME&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_CONTACT_TYPE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_MORB_JURIS&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_PHONE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ADDRESS&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_NAME&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT3&lt;/view&gt;&lt;column&gt;BC_REPORT3_ID&lt;/column&gt;&lt;/selection&gt;&lt;/selections&gt;&lt;constraints/&gt;&lt;orders/&gt;&lt;/mql&gt;</property>
             </query>
-            <columnInfo columnName="BC_REPORT3_ID" friendlyColumnName="ID" columnClassName="java.lang.Integer" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_NAME" friendlyColumnName="NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_ADDRESS" friendlyColumnName="ADDRESS" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_PHONE" friendlyColumnName="PHONE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_CONTACT_TYPE" friendlyColumnName="CONTACT TYPE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_CONTACT_NAME" friendlyColumnName="CONTACT NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_CONTACT_BIRTH_DATE" friendlyColumnName="CONTACT BIRTH DATE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_CONTACT_AGE" friendlyColumnName="CONTACT AGE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_FIRST_DUE_DATE" friendlyColumnName="FIRST DUE DATE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT3_ACTION" friendlyColumnName="ACTION" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_action" friendlyColumnName="ACTION" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_first_due_date" friendlyColumnName="FIRST DUE DATE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_contact_age" friendlyColumnName="CONTACT AGE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_contact_birth_date" friendlyColumnName="CONTACT BIRTH DATE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_contact_name" friendlyColumnName="CONTACT NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_contact_type" friendlyColumnName="CONTACT TYPE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_morb_juris" friendlyColumnName="MORB JURIS" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_phone" friendlyColumnName="PHONE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_address" friendlyColumnName="ADDRESS" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_name" friendlyColumnName="NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report3_id" friendlyColumnName="ID" columnClassName="java.lang.Integer" tableName=""></columnInfo>
         </child>
     </child>
     <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
@@ -101,6 +102,12 @@
             <property name="name">BC_REPORT3_PHONEGroupFooterHideIfNullTrigger</property>
             <property name="dependencyLevel">0</property>
             <property name="element">BC_REPORT3_PHONEGroupFooter</property>
+            <property name="preserve">false</property>
+        </child>
+        <child type="org.jfree.report.function.IsNullExpression_DesignerWrapper">
+            <property name="name">FirstDueDateIsNULL</property>
+            <property name="dependencyLevel">0</property>
+            <property name="field">bc_report3_first_due_date</property>
             <property name="preserve">false</property>
         </child>
     </child>
@@ -212,7 +219,7 @@
         <property name="pageBreakBefore">false</property>
         <property name="pageBreakAfter">false</property>
         <property name="showInLayoutGUI">true</property>
-        <property name="visualHeight">100.0</property>
+        <property name="visualHeight">52.0</property>
         <verticalLinealModel></verticalLinealModel>
     </child>
     <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelItemReportElement" bandToplevelType="ITEM_BAND">
@@ -255,6 +262,7 @@
             <property name="name">BC_REPORT3_CONTACT_TYPEElement</property>
             <property name="minimumSize">98.66666290283203, 14.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
+            <property name="dynamicContent">true</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
                 <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
@@ -277,7 +285,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_CONTACT_TYPE</property>
+            <property name="fieldName">bc_report3_contact_type</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -310,7 +318,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_CONTACT_NAME</property>
+            <property name="fieldName">bc_report3_contact_name</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -318,8 +326,8 @@
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">BC_REPORT3_CONTACT_BIRTH_DATEElement</property>
-            <property name="position">197.33332580566406, 0.0</property>
-            <property name="minimumSize">77.66667419433597, 14.0</property>
+            <property name="position">200.0, 0.0</property>
+            <property name="minimumSize">60.00000000000003, 14.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -343,7 +351,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_CONTACT_BIRTH_DATE</property>
+            <property name="fieldName">bc_report3_contact_birth_date</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -376,40 +384,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_CONTACT_AGE</property>
-            <property name="nullString"></property>
-            <formula>
-                <property name="text"></property>
-            </formula>
-        </child>
-        <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
-            <property name="name">BC_REPORT3_FIRST_DUE_DATEElement</property>
-            <property name="position">325.0, 0.0</property>
-            <property name="minimumSize">104.99999999999997, 14.0</property>
-            <property name="maximumSize">32767.0, 32767.0</property>
-            <elementBorder sameBorderForAllSides="false">
-                <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
-                <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
-                <borderLeft width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderLeft>
-                <borderRight width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderRight>
-                <borderBreak width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBreak>
-                <topLeftEdge radii="0.0, 0.0"></topLeftEdge>
-                <topRightEdge radii="0.0, 0.0"></topRightEdge>
-                <bottomLeftEdge radii="0.0, 0.0"></bottomLeftEdge>
-                <bottomRightEdge radii="0.0, 0.0"></bottomRightEdge>
-            </elementBorder>
-            <property name="font">SansSerif,9,1</property>
-            <property name="foreground">0, 0, 0, 255</property>
-            <property name="underline">false</property>
-            <property name="strikethrough">false</property>
-            <property name="embedFont">false</property>
-            <property name="lineHeight">0.0</property>
-            <property name="verticalAlignment">MIDDLE</property>
-            <property name="horizontalAlignment">LEFT</property>
-            <property name="reservedLiteral">..</property>
-            <property name="trimTextContent">false</property>
-            <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_FIRST_DUE_DATE</property>
+            <property name="fieldName">bc_report3_contact_age</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -417,9 +392,10 @@
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.TextFieldReportElement">
             <property name="name">BC_REPORT3_ACTIONElement</property>
-            <property name="position">435.0, 0.0</property>
-            <property name="minimumSize">156.99999999999997, 14.0</property>
+            <property name="position">405.0, 0.0</property>
+            <property name="minimumSize">179.99999999999997, 14.0</property>
             <property name="maximumSize">32767.0, 32767.0</property>
+            <property name="dynamicContent">true</property>
             <elementBorder sameBorderForAllSides="false">
                 <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
                 <borderBottom width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderBottom>
@@ -442,16 +418,39 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT3_ACTION</property>
+            <property name="fieldName">bc_report3_action</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
             </formula>
         </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
+            <property name="name">DateField@22418485</property>
+            <property name="position">325.0, 3.0</property>
+            <property name="minimumSize">75.0, 14.0</property>
+            <property name="font">SansSerif,9,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="fieldName">field46</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text">=IF(ISBLANK([bc_report3_first_due_date];);TODAY();DATEVALUE([bc_report3_first_due_date]););</property>
+            </formula>
+            <property name="format">MMM d, yyyy</property>
+            <property name="excelDateFormat"></property>
+        </child>
         <property name="pageBreakBefore">false</property>
         <property name="pageBreakAfter">false</property>
         <property name="showInLayoutGUI">true</property>
-        <property name="visualHeight">22.0</property>
+        <property name="visualHeight">76.0</property>
         <verticalLinealModel></verticalLinealModel>
         <rowBandingDefinition enabled="false" color="192, 192, 192, 255" startState="true" switchItemCount="1"></rowBandingDefinition>
     </child>
@@ -628,7 +627,7 @@
                         <property name="reservedLiteral">..</property>
                         <property name="trimTextContent">false</property>
                         <property name="wrapTextInExcel">false</property>
-                        <property name="formatString">CMR/Event Number: $(BC_REPORT3_ID)</property>
+                        <property name="formatString">CMR/Event Number: $(bc_report3_id)</property>
                         <property name="nullString">-</property>
                         <formula>
                             <property name="text"></property>
@@ -705,7 +704,7 @@
                             <property name="reservedLiteral">..</property>
                             <property name="trimTextContent">false</property>
                             <property name="wrapTextInExcel">false</property>
-                            <property name="formatString">Name: $(BC_REPORT3_NAME)</property>
+                            <property name="formatString">Name: $(bc_report3_name)</property>
                             <property name="nullString">-</property>
                             <formula>
                                 <property name="text"></property>
@@ -782,7 +781,7 @@
                                 <property name="reservedLiteral">..</property>
                                 <property name="trimTextContent">false</property>
                                 <property name="wrapTextInExcel">false</property>
-                                <property name="formatString">Address: $(BC_REPORT3_ADDRESS)</property>
+                                <property name="formatString">Address: $(bc_report3_address)</property>
                                 <property name="nullString">-</property>
                                 <formula>
                                     <property name="text"></property>
@@ -860,7 +859,7 @@
                                     <property name="reservedLiteral">..</property>
                                     <property name="trimTextContent">false</property>
                                     <property name="wrapTextInExcel">false</property>
-                                    <property name="formatString">Phone: $(BC_REPORT3_PHONE)</property>
+                                    <property name="formatString">Phone: $(bc_report3_phone)</property>
                                     <property name="nullString">-</property>
                                     <formula>
                                         <property name="text"></property>
@@ -869,7 +868,7 @@
                                 <child type="org.pentaho.reportdesigner.crm.report.model.RectangleReportElement">
                                     <property name="name">anonymousElement@20378526</property>
                                     <property name="position">-0.0, 18.0</property>
-                                    <property name="minimumSize">592.0, 18.0</property>
+                                    <property name="minimumSize">592.0, 30.0</property>
                                     <property name="maximumSize">32767.0, 32767.0</property>
                                     <elementBorder sameBorderForAllSides="false">
                                         <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -972,8 +971,8 @@
                                 </child>
                                 <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                                     <property name="name">anonymousElement@2338822</property>
-                                    <property name="position">197.33332580566406, 18.0</property>
-                                    <property name="minimumSize">77.66667419433597, 18.0</property>
+                                    <property name="position">200.0, 18.0</property>
+                                    <property name="minimumSize">42.66667419433594, 32.0</property>
                                     <property name="maximumSize">32767.0, 32767.0</property>
                                     <elementBorder sameBorderForAllSides="false">
                                         <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -1001,7 +1000,7 @@
                                 </child>
                                 <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                                     <property name="name">anonymousElement@16344914</property>
-                                    <property name="position">275.0, 18.0</property>
+                                    <property name="position">260.0, 18.0</property>
                                     <property name="minimumSize">34.99999999999997, 18.0</property>
                                     <property name="maximumSize">32767.0, 32767.0</property>
                                     <elementBorder sameBorderForAllSides="false">
@@ -1031,7 +1030,7 @@
                                 <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                                     <property name="name">anonymousElement@32393050</property>
                                     <property name="position">320.0, 18.0</property>
-                                    <property name="minimumSize">104.99999999999997, 18.0</property>
+                                    <property name="minimumSize">69.99999999999997, 27.0</property>
                                     <property name="maximumSize">32767.0, 32767.0</property>
                                     <elementBorder sameBorderForAllSides="false">
                                         <borderTop width="0.0" borderType="NONE" color="0, 0, 0, 255"></borderTop>
@@ -1059,7 +1058,7 @@
                                 </child>
                                 <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
                                     <property name="name">anonymousElement@9339756</property>
-                                    <property name="position">435.0, 18.0</property>
+                                    <property name="position">405.0, 20.0</property>
                                     <property name="minimumSize">156.99999999999997, 18.0</property>
                                     <property name="maximumSize">32767.0, 32767.0</property>
                                     <elementBorder sameBorderForAllSides="false">
@@ -1089,7 +1088,7 @@
                                 <property name="pageBreakBefore">false</property>
                                 <property name="pageBreakAfter">false</property>
                                 <property name="showInLayoutGUI">true</property>
-                                <property name="visualHeight">44.0</property>
+                                <property name="visualHeight">51.0</property>
                                 <verticalLinealModel></verticalLinealModel>
                                 <property name="repeat">false</property>
                             </child>
@@ -1126,7 +1125,7 @@
                                 <property name="repeat">false</property>
                             </child>
                             <property name="groupFields" array="true">
-                                <property name="0">BC_REPORT3_PHONE</property>
+                                <property name="0">bc_report3_phone</property>
                             </property>
                         </child>
                         <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelGroupReportElement" bandToplevelType="GROUP_FOOTER">
@@ -1151,7 +1150,7 @@
                             <property name="repeat">false</property>
                         </child>
                         <property name="groupFields" array="true">
-                            <property name="0">BC_REPORT3_ADDRESS</property>
+                            <property name="0">bc_report3_address</property>
                         </property>
                     </child>
                     <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelGroupReportElement" bandToplevelType="GROUP_FOOTER">
@@ -1176,7 +1175,7 @@
                         <property name="repeat">false</property>
                     </child>
                     <property name="groupFields" array="true">
-                        <property name="0">BC_REPORT3_NAME</property>
+                        <property name="0">bc_report3_name</property>
                     </property>
                 </child>
                 <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelGroupReportElement" bandToplevelType="GROUP_FOOTER">
@@ -1201,7 +1200,7 @@
                     <property name="repeat">false</property>
                 </child>
                 <property name="groupFields" array="true">
-                    <property name="0">BC_REPORT3_ID</property>
+                    <property name="0">bc_report3_id</property>
                 </property>
             </child>
             <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelGroupReportElement" bandToplevelType="GROUP_FOOTER">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report>
-    <property name="name">JFreeReport-WizardReport</property>
+    <property name="name">Perinatal Hep B Expected Delivery Action Report</property>
     <child type="org.pentaho.reportdesigner.crm.report.model.dataset.DataSetsReportElement">
         <property name="name">Element@25121409</property>
         <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.properties.PropertiesDataSetReportElement">
@@ -13,19 +13,20 @@
             <property name="name">Element@16471069</property>
             <property name="connectionType">MQL</property>
             <property name="xQueryDataFile"></property>
-            <property name="xmiDefinitionFile">/home/josh/apps/metadata-editor/phepb.xmi</property>
+            <property name="xmiDefinitionFile">metadata.xmi</property>
             <property name="useMondrianCubeDefinition">false</property>
             <property name="mondrianCubeDefinitionFile"></property>
             <property name="limitPreviewRows">true</property>
             <property name="maxPreviewRows">10000</property>
             <query queryName="default">
-                <property name="query">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;mql&gt;&lt;domain_type&gt;relational&lt;/domain_type&gt;&lt;domain_id&gt;resources&lt;/domain_id&gt;&lt;model_id&gt;PHEPB&lt;/model_id&gt;&lt;model_name&gt;TriSano Perinatal Hepatitis B&lt;/model_name&gt;&lt;options&gt;&lt;disable_distinct&gt;true&lt;/disable_distinct&gt;&lt;/options&gt;&lt;selections&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_PREGNANCY_DUE_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_EXPECTED_DELIVERY_FACILITY&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_RECORD_NUMBER&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_NAME&lt;/column&gt;&lt;/selection&gt;&lt;/selections&gt;&lt;constraints/&gt;&lt;orders/&gt;&lt;/mql&gt;</property>
+                <property name="query">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;mql&gt;&lt;domain_type&gt;relational&lt;/domain_type&gt;&lt;domain_id&gt;resources&lt;/domain_id&gt;&lt;model_id&gt;TriSanoPHEPB&lt;/model_id&gt;&lt;model_name&gt;Perinatal Hepatitis B&lt;/model_name&gt;&lt;options&gt;&lt;disable_distinct&gt;true&lt;/disable_distinct&gt;&lt;/options&gt;&lt;selections&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_PREGNANCY_DUE_DATE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_EXPECTED_DELIVERY_FACILITY&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_RECORD_NUMBER&lt;/column&gt;&lt;/selection&gt;&lt;selection&gt;&lt;view&gt;BC_REPORT1&lt;/view&gt;&lt;column&gt;BC_REPORT1_NAME&lt;/column&gt;&lt;/selection&gt;&lt;/selections&gt;&lt;constraints/&gt;&lt;orders/&gt;&lt;/mql&gt;</property>
             </query>
-            <columnInfo columnName="BC_REPORT1_PREGNANCY_DUE_DATE" friendlyColumnName="PREGNANCY DUE DATE" columnClassName="java.sql.Date" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE" friendlyColumnName="EXPECTED DELIVERY FACILITY PHONE" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT1_EXPECTED_DELIVERY_FACILITY" friendlyColumnName="EXPECTED DELIVERY FACILITY" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT1_RECORD_NUMBER" friendlyColumnName="RECORD NUMBER" columnClassName="java.lang.String" tableName=""></columnInfo>
-            <columnInfo columnName="BC_REPORT1_NAME" friendlyColumnName="NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report1_pregnancy_due_date" friendlyColumnName="PREGNANCY DUE DATE" columnClassName="java.sql.Date" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report1_expected_delivery_facility_phone" friendlyColumnName="EXPECTED DELIVERY FACILITY PHONE" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report1_expected_delivery_facility" friendlyColumnName="EXPECTED DELIVERY FACILITY" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report1_record_number" friendlyColumnName="RECORD NUMBER" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <columnInfo columnName="bc_report1_name" friendlyColumnName="NAME" columnClassName="java.lang.String" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSanoHSQL" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost:5432/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
         </child>
     </child>
     <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
@@ -109,6 +110,7 @@
             <property name="name">Element@27833054</property>
             <property name="position">255.0, 50.0</property>
             <property name="minimumSize">100.0, 16.0</property>
+            <padding top="0.0" bottom="0.0" left="0.0" right="3.0"></padding>
             <property name="font">dialog,12,0</property>
             <property name="foreground">0, 0, 0, 255</property>
             <property name="underline">false</property>
@@ -124,7 +126,7 @@
         </child>
         <child type="org.pentaho.reportdesigner.crm.report.model.DateFieldReportElement">
             <property name="name">DateField@3252433</property>
-            <property name="position">361.0, 50.0</property>
+            <property name="position">375.0, 50.0</property>
             <property name="minimumSize">100.0, 16.0</property>
             <property name="font">dialog,12,0</property>
             <property name="foreground">0, 0, 0, 255</property>
@@ -137,7 +139,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">true</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">field6</property>
+            <property name="fieldName">date_field</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text">=TODAY();</property>
@@ -373,7 +375,7 @@
             <formula>
                 <property name="text"></property>
             </formula>
-            <property name="format">M/d/yy h:mm a</property>
+            <property name="format">M/d/yyyy</property>
             <property name="excelDateFormat"></property>
         </child>
         <property name="pageBreakBefore">false</property>

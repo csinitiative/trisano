@@ -139,11 +139,11 @@
   <constraints>
     <constraint>
       <operator/>
-      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &gt;="{start_date}"</condition>
+      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &gt;=DATEVALUE("${start_date}")</condition>
     </constraint>
     <constraint>
       <operator>AND</operator>
-      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &lt;="{end_date}"</condition>
+      <condition>[BC_REPORT2.BC_REPORT2_DATE_ENTERED_INTO_SYSTEM] &lt;=DATEVALUE("${end_date}")</condition>
     </constraint>
   </constraints>
   <orders/>
