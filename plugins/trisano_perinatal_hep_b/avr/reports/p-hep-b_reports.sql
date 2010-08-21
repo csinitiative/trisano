@@ -177,38 +177,22 @@ CREATE TABLE report3 AS
                             birth_date,
                             age,
                             CASE
-                                WHEN fdd_act_code = -1 THEN NULL
-                                WHEN fdd_act_code =  1 THEN birth_date
-                                WHEN fdd_act_code =  2 THEN birth_date
-                                WHEN fdd_act_code =  3 THEN birth_date
-                                WHEN fdd_act_code =  4 THEN birth_date + (INTERVAL '30 days' * 1)
-                                WHEN fdd_act_code =  5 THEN birth_date + (INTERVAL '30 days' * 6)
-                                WHEN fdd_act_code =  6 THEN birth_date + (INTERVAL '30 days' * 9)
-                                WHEN fdd_act_code =  7 THEN birth_date + (INTERVAL '30 days' * 24)
-                                WHEN fdd_act_code =  8 THEN NULL::DATE -- In the report designer, make these become today's date
-                                WHEN fdd_act_code =  9 THEN NULL::DATE
-                                WHEN fdd_act_code = 10 THEN hepb_dose1_date + (INTERVAL '30 days' * 1)
-                                WHEN fdd_act_code = 11 THEN hepb_dose1_date + (INTERVAL '30 days' * 6)
-                                WHEN fdd_act_code = 12 THEN hepb_dose3_date + (INTERVAL '30 days' * 1)
-                                WHEN fdd_act_code = 13 THEN NULL::DATE
-                                ELSE NULL -- If we get here, there's a problem
+                                WHEN fdd_act_code = 1 THEN birth_date
+                                WHEN fdd_act_code = 2 THEN birth_date
+                                WHEN fdd_act_code = 3 THEN birth_date
+                                WHEN fdd_act_code = 4 THEN COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months'
+                                WHEN fdd_act_code = 5 THEN COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months'
+                                WHEN fdd_act_code = 6 THEN birth_date + INTERVAL '9 months'
+                                WHEN fdd_act_code = 7 THEN NULL
                             END AS first_due_date,
                             CASE
-                                WHEN fdd_act_code = -1 THEN 'Something strange happened'
-                                WHEN fdd_act_code =  1 THEN 'Needs HBIG and Vaccine #1'
-                                WHEN fdd_act_code =  2 THEN 'Needs Vaccine #1'
-                                WHEN fdd_act_code =  3 THEN 'Needs HBIG'
-                                WHEN fdd_act_code =  4 THEN 'Needs Vaccine #2'
-                                WHEN fdd_act_code =  5 THEN 'Needs 6-month vaccine dose'
-                                WHEN fdd_act_code =  6 THEN 'Needs serology 3 months after 9-month dose'
-                                WHEN fdd_act_code =  7 THEN 'Close Newborn Contact'
-                                WHEN fdd_act_code =  8 THEN 'Needs Pre-Immunization Serology'
-                                WHEN fdd_act_code =  9 THEN 'Needs Vaccine #1'
-                                WHEN fdd_act_code = 10 THEN 'Needs Vaccine #2'
-                                WHEN fdd_act_code = 11 THEN 'Needs Vaccine #3'
-                                WHEN fdd_act_code = 12 THEN 'Needs Post Immunization Serology'
-                                WHEN fdd_act_code = 13 THEN 'Close Contact'
-                                ELSE 'Something went seriously wrong' -- If we get here, there's a problem
+                                WHEN fdd_act_code = 1 THEN 'Needs HBIG and Hepatitis B Dose 1'
+                                WHEN fdd_act_code = 2 THEN 'Needs HBIG'
+                                WHEN fdd_act_code = 3 THEN 'Needs Hepatitis B Dose 1'
+                                WHEN fdd_act_code = 4 THEN 'Needs Hepatitis B Dose 2'
+                                WHEN fdd_act_code = 5 THEN 'Needs Hepatitis B Dose 3'
+                                WHEN fdd_act_code = 6 THEN 'Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4'
+                                WHEN fdd_act_code = 7 THEN 'Check vaccination history; Test or Vaccinate'
                             END AS action
                         FROM (
                             SELECT
@@ -219,7 +203,9 @@ CREATE TABLE report3 AS
                                 CASE WHEN dce.last_name IS NULL OR dce.last_name = '' THEN '' ELSE dce.last_name || ' ' END AS name,
                                 dce.birth_date,
                                 hepb_dose1_date::TIMESTAMPTZ,
-                                hepb_dose3_date::TIMESTAMPTZ,
+                                hepb_dose2_date::TIMESTAMPTZ,
+                                hepb_comvax1_date::TIMESTAMPTZ,
+                                hepb_comvax2_date::TIMESTAMPTZ,
                                 CASE
                                     WHEN dce.birth_date IS NOT NULL THEN
                                         CASE
@@ -240,65 +226,39 @@ CREATE TABLE report3 AS
                                 END AS age,
                                 CASE
                                     WHEN dce.contact_type = 'Infant' THEN
+                                    -- XXX What if date of birth is null?
                                         CASE
-                                            WHEN hbig IS NULL AND hepb_dose1_date IS NULL THEN
-                                                1 -- fdd = dob, act = 'Needs HBIG and Vaccine #1'
-                                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NULL THEN
-                                                2 -- fdd = dob, act = 'Needs Vaccine #1'
-                                            WHEN hbig IS NULL AND hepb_dose1_date IS NOT NULL THEN
-                                                3 -- fdd = dob, act = 'Needs HBIG'
-                                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NULL THEN
-                                                4 -- fdd = dob + 1 mo., act = 'Needs Vaccine #2'
-                                            WHEN hbig IS NOT NULL AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NULL THEN
-                                                5 -- fdd = dob + 6 mo., act = 'Needs 6-month vaccine dose'
-                                            WHEN
-                                                COALESCE(
-                                                    (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
-                                                    dce.age_in_years BETWEEN .6 AND 1.5
-                                                ) AND
-                                                (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL
-                                                    THEN 6 -- fdd = dob + 9 mo., act = 'Needs serology 3 months after 9-month dose'
-                                            WHEN COALESCE((now() - dce.birth_date) >= INTERVAL '365 days' * 2, dce.age_in_years >= 2) THEN
-                                                7 -- fdd = dob + 24 mo., act = 'Close Newborn Contact'
-                                            ELSE
-                                                -1 -- This contact doesn't need to show up on the report
-                                        END
-                                    ELSE -- Not a newborn contact
+                                            WHEN hbig IS NULL THEN
+                                                CASE
+                                                    WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
+                                                        1 -- fdd = dob, act = "Needs HBIG and Hepatitis B Dose 1"
+                                                    ELSE
+                                                        2 -- fdd = dob, act = "Needs HBIG"
+                                                END
+                                            ELSE -- hbig is not null
+                                                CASE
+                                                    WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
+                                                        3 -- fdd = dob, act = "Needs Hepatitis B Dose 1"
+                                                    WHEN hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL THEN
+                                                        4 -- fdd = COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 2"
+                                                    WHEN hepb_dose3_date IS NULL AND hepb_comvax4_date IS NULL THEN
+                                                        5 -- fdd = COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 3"
+                                                    WHEN
+                                                        COALESCE(  -- between 9 and 18 months old
+                                                            (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
+                                                            dce.age_in_years BETWEEN .6 AND 1.5
+                                                        ) AND
+                                                        (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL AND
+                                                        (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result IS NULL THEN
+                                                        6 -- fdd = dob + INTERVAL '9 months', act = "Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4"
+                                                    ELSE -1 -- don't show this contact
+                                                END
+                                        END    
+                                    ELSE -- Not an 'Infant' type
                                         CASE
-                                            WHEN
-                                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR
-                                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).lab_test_date IS NULL
-                                                    THEN 8 -- fdd = report date, act = 'Needs Pre-Immunization Serology'
-                                            WHEN
-                                                hepb_dose1_date IS NULL AND
-                                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
-                                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
-                                                    THEN 9 -- fdd = report date, act = 'Needs Vaccine #1'
-                                            WHEN
-                                                hepb_dose1_date IS NOT NULL AND
-                                                hepb_dose2_date IS NULL AND
-                                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
-                                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
-                                                    THEN 10 -- fdd = 'hepb_dose1_date' + 1 mo., act = 'Needs Vaccine #2'
-                                            WHEN
-                                                hepb_dose1_date IS NOT NULL AND
-                                                hepb_dose2_date IS NOT NULL AND
-                                                hepb_dose3_date IS NULL AND
-                                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
-                                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
-                                                    THEN 11 -- fdd = 'hepb_dose1_date' + 6 mo., act = 'Needs Vaccine #3'
-                                            WHEN
-                                                hepb_dose1_date IS NOT NULL AND
-                                                hepb_dose2_date IS NOT NULL AND
-                                                hepb_dose3_date IS NOT NULL AND
-                                                (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive' AND
-                                                (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result !~ 'Positive'
-                                                    THEN 12 -- fdd = 'hepb_dose3_date' + 1 mo., act = 'Needs Post Immunization Serology'
-                                            WHEN disposition_date IS NOT NULL
-                                                -- XXX This should possibly be the *first* non-newborn check
-                                                THEN 13 -- fdd = report date, act = 'Close Contact'
-                                            ELSE
-                                                -1 -- XXX What do we do here?
+                                            WHEN hepb_dose1_date IS NULL AND hepb_dose2_date IS NULL AND hepb_dose3_date IS NULL THEN
+                                                7 -- fdd = report date, act = "Check vaccination history; Test or Vaccinate"
+                                            ELSE -1 -- Don't show this contact
                                         END
                                 END AS fdd_act_code
                             FROM
@@ -344,6 +304,7 @@ CREATE TABLE report3 AS
                                 ) treatments_agg
                                     ON (treatments_agg.contact_event_id = dce.id)
                         ) foo
+                        WHERE fdd_act_code != -1
                     ) contact_stuff
                         ON (name_addr.id = contact_stuff.parent_id)
 ;
