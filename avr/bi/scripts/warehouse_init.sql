@@ -298,57 +298,6 @@ STORAGE         text;
 COMMIT;
 
 BEGIN;
--- Functions used by perinatal hep b reports (eventually move this to plugin-specific stuff)
-CREATE OR REPLACE FUNCTION trisano.get_contact_lab_before(INTEGER, TEXT, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.dw_contact_lab_results_view
-    WHERE
-        dw_contact_events_id = $1 AND test_type = $2 AND
-        (lab_test_date < $3 OR $3 IS NULL)
-    ORDER BY lab_test_date DESC LIMIT 1;
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antigen (HBsAg)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_before(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antibody (HBsAb)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_lab_after(INTEGER, TEXT, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.dw_contact_lab_results_view
-    WHERE
-        dw_contact_events_id = $1 AND test_type = $2 AND
-        (lab_test_date > $3 OR $3 IS NULL)
-    ORDER BY lab_test_date ASC LIMIT 1;
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_after(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antigen (HBsAg)', $2);
-$$;
-
-CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_after(INTEGER, DATE)
-    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
-    CALLED ON NULL INPUT AS
-$$
-    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antibody (HBsAb)', $2);
-$$;
-
 CREATE OR REPLACE FUNCTION trisano.earliest_date(arr DATE[])
     RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
 $$
