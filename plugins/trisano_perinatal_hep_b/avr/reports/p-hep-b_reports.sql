@@ -16,6 +16,60 @@
 -- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 BEGIN;
+-- Functions used by perinatal hep b reports (eventually move this to plugin-specific stuff)
+CREATE OR REPLACE FUNCTION trisano.get_contact_lab_before(INTEGER, TEXT, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.dw_contact_lab_results_view
+    WHERE
+        dw_contact_events_id = $1 AND test_type = $2 AND
+        (lab_test_date < $3 OR $3 IS NULL)
+    ORDER BY lab_test_date DESC LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_before(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antigen (HBsAg)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_before(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_before($1, 'Surface Antibody (HBsAb)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_lab_after(INTEGER, TEXT, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.dw_contact_lab_results_view
+    WHERE
+        dw_contact_events_id = $1 AND test_type = $2 AND
+        (lab_test_date > $3 OR $3 IS NULL)
+    ORDER BY lab_test_date ASC LIMIT 1;
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_hbsag_after(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antigen (HBsAg)', $2);
+$$;
+
+CREATE OR REPLACE FUNCTION trisano.get_contact_antihb_after(INTEGER, DATE)
+    RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
+    CALLED ON NULL INPUT AS
+$$
+    SELECT * FROM trisano.get_contact_lab_after($1, 'Surface Antibody (HBsAb)', $2);
+$$;
+
+COMMIT;
+
+BEGIN;
 
 DROP SCHEMA IF EXISTS phepb_reports CASCADE;
 
@@ -37,7 +91,8 @@ CREATE TABLE report1 AS
                 FROM 
                     trisano.dw_morbidity_events_view
                 WHERE
-                    disease_name = 'Hepatitis B Pregnancy Event'
+                    disease_name = 'Hepatitis B Pregnancy Event' AND
+                    actual_delivery_date IS NULL
                     ;
 
 CREATE TABLE report2 AS
@@ -57,11 +112,11 @@ CREATE TABLE report2 AS
                         SELECT count(*) FROM trisano.dw_contact_events_view c
                         WHERE dmev.id = c.id AND contact_type = 'Infant'
                     ) AS contact_infants,
-                    CASE
-                        WHEN disposition_date IS NULL THEN 1
-                        -- This is also probably not what we want
-                        ELSE 0
-                    END AS currently_active
+                    (
+                        SELECT count(*) FROM trisano.dw_contact_events_view c
+                        WHERE dmev.id = c.id AND contact_type = 'Infant'
+                        AND c.disposition IS NULL
+                    ) AS currently_active
                 FROM
                     trisano.dw_morbidity_events_view dmev
                 WHERE
@@ -130,8 +185,8 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code =  5 THEN birth_date + (INTERVAL '30 days' * 6)
                                 WHEN fdd_act_code =  6 THEN birth_date + (INTERVAL '30 days' * 9)
                                 WHEN fdd_act_code =  7 THEN birth_date + (INTERVAL '30 days' * 24)
-                                WHEN fdd_act_code =  8 THEN now()::DATE
-                                WHEN fdd_act_code =  9 THEN now()::DATE
+                                WHEN fdd_act_code =  8 THEN NULL::DATE -- In the report designer, make these become today's date
+                                WHEN fdd_act_code =  9 THEN NULL::DATE
                                 WHEN fdd_act_code = 10 THEN hepb_dose1_date + (INTERVAL '30 days' * 1)
                                 WHEN fdd_act_code = 11 THEN hepb_dose1_date + (INTERVAL '30 days' * 6)
                                 WHEN fdd_act_code = 12 THEN hepb_dose3_date + (INTERVAL '30 days' * 1)
@@ -252,23 +307,34 @@ CREATE TABLE report3 AS
                                     SELECT
                                         dw_contact_events_id AS contact_event_id,
                                         trisano.earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig,
-                                        trisano.earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose1_date)) AS hepb_dose1_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
-                                        trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax1_date)) AS hepb_comvax1_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax2_date)) AS hepb_comvax2_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax3_date)) AS hepb_comvax3_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax4_date)) AS hepb_comvax4_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax5_date)) AS hepb_comvax5_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax6_date)) AS hepb_comvax6_date
                                     FROM (
                                         SELECT
                                             dw_contact_events_id,
                                             CASE WHEN treatment_name = 'HBIG' THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
-                                            CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
-                                            CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
-                                            -- The ~ instead of = is intentional
-                                            CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
-                                            CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
-                                            CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
-                                            CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 1' THEN date_of_treatment ELSE NULL END AS hepb_dose1_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 2' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 3' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 1' THEN date_of_treatment ELSE NULL END AS hepb_comvax1_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 2' THEN date_of_treatment ELSE NULL END AS hepb_comvax2_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 3' THEN date_of_treatment ELSE NULL END AS hepb_comvax3_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_comvax4_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_comvax5_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_comvax6_date
                                         FROM
                                             trisano.dw_contact_treatments_events_view dct
                                         WHERE
@@ -363,29 +429,40 @@ CREATE TABLE report4 AS
                         SELECT
                             dw_contact_events_id AS contact_event_id,
                             trisano.earliest_date(trisano.array_accum(hbig_vacc_date )) AS hbig_vacc_date,
-                            trisano.earliest_date(trisano.array_accum(hebp_dose1_date)) AS hepb_dose1_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_dose1_date)) AS hepb_dose1_date,
                             trisano.earliest_date(trisano.array_accum(hepb_dose2_date)) AS hepb_dose2_date,
                             trisano.earliest_date(trisano.array_accum(hepb_dose3_date)) AS hepb_dose3_date,
                             trisano.earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
                             trisano.earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
-                            trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date
+                            trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax1_date)) AS hepb_comvax1_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax2_date)) AS hepb_comvax2_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax3_date)) AS hepb_comvax3_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax4_date)) AS hepb_comvax4_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax5_date)) AS hepb_comvax5_date,
+                            trisano.earliest_date(trisano.array_accum(hepb_comvax6_date)) AS hepb_comvax6_date
                         FROM (
                             SELECT
                                 dw_contact_events_id,
                                 CASE WHEN treatment_name = 'HBIG' THEN date_of_treatment ELSE NULL END AS hbig_vacc_date,
-                                CASE WHEN treatment_name = 'Hep B Dose 1 Vaccination' THEN date_of_treatment ELSE NULL END AS hebp_dose1_date,
-                                CASE WHEN treatment_name = 'Hep B Dose 2 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
-                                -- The ~ is intentional
-                                CASE WHEN treatment_name ~ 'Hep B Dose 3 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
-                                CASE WHEN treatment_name = 'Hep B Dose 4 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
-                                CASE WHEN treatment_name = 'Hep B Dose 5 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
-                                CASE WHEN treatment_name = 'Hep B Dose 6 Vaccination' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 1' THEN date_of_treatment ELSE NULL END AS hepb_dose1_date,
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 2' THEN date_of_treatment ELSE NULL END AS hepb_dose2_date,
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 3' THEN date_of_treatment ELSE NULL END AS hepb_dose3_date,
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
+                                CASE WHEN treatment_name = 'Hepatitis B Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 1' THEN date_of_treatment ELSE NULL END AS hepb_comvax1_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 2' THEN date_of_treatment ELSE NULL END AS hepb_comvax2_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 3' THEN date_of_treatment ELSE NULL END AS hepb_comvax3_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_comvax4_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_comvax5_date,
+                                CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_comvax6_date
                             FROM
                                 trisano.dw_contact_treatments_events_view dct
                             WHERE
                                 treatment_given = 'Yes'
                         ) treatments_split
-                        GROUP BY dw_contact_events_id
+                            GROUP BY 1
                     ) treatments_agg
                         ON (treatments_agg.contact_event_id = dce.id)
                 WHERE
