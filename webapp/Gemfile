@@ -2,9 +2,9 @@ source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
 if RUBY_PLATFORM =~ /java/
-  gem "activerecord-jdbc-adapter", "0.9.1"
-  gem "activerecord-jdbcpostgresql-adapter", "0.9.1"
-  gem "jdbc-postgres", "8.2"
+  gem "activerecord-jdbc-adapter"
+  gem "activerecord-jdbcpostgresql-adapter"
+  gem "jdbc-postgres"
 else
   gem "pg"
 end
