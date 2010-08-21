@@ -86,7 +86,10 @@ UPDATE dw_morbidity_events dme SET
     WHERE
         par.event_id = dme.id AND
         par.type = 'ActualDeliveryFacility' AND
-        adf.entity_id = par.secondary_entity_id
+        (
+            adf.entity_id = par.secondary_entity_id OR
+            adf.entity_id IS NULL
+        )
 ;
 
 COMMIT;
