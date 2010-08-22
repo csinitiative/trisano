@@ -20,6 +20,7 @@ class DefaultLocalesController < AdminController
     @default_locale.user_id = User.current_user.id
     respond_to do |format|
       if @default_locale.save
+        I18n.default_locale_without_db = @default_locale.to_sym
         flash[:notice] = I18n.t('successful_update', :scope => trisano_locale_scope)
         format.html { redirect_to default_locale_path }
       else

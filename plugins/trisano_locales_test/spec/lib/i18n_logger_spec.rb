@@ -12,6 +12,9 @@ describe I18nLogger do
     DEFAULT_LOGGER.remove_appenders("test_log")
   end
 
+  before { I18n.default_locale = :en }
+  after  { I18n.default_locale = :en }
+
   it "should log debug level" do
     I18nLogger.debug("locale_name").should be_true
     @log.readline.should == "DEBUG  server : locale_name: English\n"
@@ -41,7 +44,6 @@ describe I18nLogger do
     I18n.default_locale = :test
     I18nLogger.debug("locale_name").should be_true
     @log.readline.should == "DEBUG  server : locale_name: Test\n"
-    I18n.default_locale = :en
   end
 
   it "should pass options along to the translate call" do

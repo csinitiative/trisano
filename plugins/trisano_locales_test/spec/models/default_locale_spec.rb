@@ -56,7 +56,7 @@ describe DefaultLocale do
 
     it "current should return stored default locale" do
       default_locale = DefaultLocale.current
-      default_locale.short_name.should == "test"
+      default_locale.short_name.should == :test
       default_locale.locale_name.should == "Test"
       default_locale.created_at.to_date.should == Date.yesterday
       default_locale.user.should_not == nil
@@ -72,11 +72,12 @@ describe DefaultLocale do
       DefaultLocale.current.to_sym.should == :en
     end
 
-    it "default_locale should be updated when database changes" do
-      DefaultLocale.new.update_locale(:test)
-      I18n.default_locale.should == :test
-      DefaultLocale.current.update_locale(:en)
-      I18n.default_locale.should == :en
+    it "dateabase should be updated when default_locale changes" do
+      I18n.default_locale = :test
+      DefaultLocale.current.short_name.should == :test
+
+      I18n.default_locale = :en
+      DefaultLocale.current.short_name.should == :en
     end
 
     it "default_locale= should not change value if unsupported locale" do

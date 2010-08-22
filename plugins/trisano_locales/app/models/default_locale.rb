@@ -1,12 +1,10 @@
 class DefaultLocale < ActiveRecord::Base
   reloadable!
 
-  after_save :update_default_locale
-
   belongs_to :user
 
   validates_presence_of  :short_name
-  validates_inclusion_of :short_name, :in => I18n.selectable_locales.map {|v| v.last.to_s}, :allow_blank => true
+  validates_inclusion_of :short_name, :in => I18n.selectable_locales.map {|v| v.last}, :allow_blank => true
   attr_protected :short_name
 
   named_scope :latest, :order => "created_at DESC"
@@ -20,10 +18,27 @@ class DefaultLocale < ActiveRecord::Base
       I18n.backend.try :lookup, short_name, :locale_name
     end
 
+    def update_locale(locale, user = nil)
+      if table_exists?
+        instance = current || new
+        instance.update_locale(locale, user)
+      else
+        logger.warn "DefaultLocale table does not exist. Rebuilding database?"
+      end
+    end
+
+    def update_from_db
+      if table_exists?
+        I18n.default_locale_without_db = current.to_sym if current
+      else
+        logger.warn "DefaultLocale table does not exist. Rebuilding database?"
+      end
+    end
   end
 
   def short_name
-    read_attribute(:short_name).to_s
+    short_name = read_attribute(:short_name)
+    short_name.to_sym if short_name
   end
 
   def short_name=(value)
@@ -35,15 +50,12 @@ class DefaultLocale < ActiveRecord::Base
   end
 
   def to_sym
-    self.short_name.to_sym
+    self.short_name
   end
   alias_method :intern, :to_sym
 
-  def update_default_locale
-    I18n.default_locale_without_db = self.to_sym
-  end
-
   def update_locale(locale, user = nil)
+    return if self.short_name == locale
     self.short_name = locale
     self.user = user
     save

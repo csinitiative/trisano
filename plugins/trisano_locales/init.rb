@@ -4,14 +4,6 @@ require 'trisano_locales'
 
 # now we make sure our database settings are honored
 config.to_prepare do
-  begin
-    if current = DefaultLocale.current
-      I18n.default_locale_without_db = current.to_sym
-    else
-      I18n.default_locale = I18n.default_locale
-    end
-  rescue
-    puts "Cannot load default locale. Rebuilding database?"
-  end
+  DefaultLocale.update_from_db
 end
 
