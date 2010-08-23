@@ -21,7 +21,7 @@ describe CodeName do
   include CodeSpecHelper
 
   before(:each) do
-    @code_name = CodeName.new()
+    @code_name = CodeName.new
   end
 
   it "blank code_name should not be valid" do
@@ -39,7 +39,7 @@ describe CodeName do
     @code_name.should be_valid
     @code_name.save.should be_true
 
-    @code_name2 = CodeName.new()
+    @code_name2 = CodeName.new
     @code_name2.code_name = 'test'
     @code_name2.should_not be_valid
     @code_name2.save.should_not be_true
@@ -79,6 +79,23 @@ describe CodeName do
     it "should return disease specific external codes for drop down selections" do
       results = CodeName.drop_down_selections('fakeext', @event)
       results.map(&:the_code).sort.should == %w(M N UNK Y)
+    end
+
+    it "selections are unaffected by settings for other diseases" do
+      other_disease = Factory.create :disease
+      given_external_codes('fakeext', %w(Y N UNK)).each do |code|
+        code.hide_for_disease other_disease
+      end
+      results = CodeName.drop_down_selections('fakeext', @event)
+      results.map(&:the_code).sort.should == %w(M N UNK Y)
+    end
+
+    it "should not return codes hidden on the currenct disease event" do
+      given_external_codes('fakeext', %w(Y UNK)).each do |code|
+        code.hide_for_disease @disease
+      end
+      results = CodeName.drop_down_selections('fakeext', @event)
+      results.map(&:the_code).sort.should == %w(M N)
     end
   end
 

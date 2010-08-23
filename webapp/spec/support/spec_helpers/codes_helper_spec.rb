@@ -2,9 +2,10 @@ module CodeSpecHelper
 
   def given_external_codes(code_name, the_codes, options={})
     given_code_name(code_name, true)
-    the_codes.each do |the_code|
+    the_codes.map do |the_code|
       code = external_code!(code_name, the_code, options)
       yield(code) if block_given?
+      code
     end
   end
 
@@ -26,8 +27,12 @@ module CodeSpecHelper
   end
 
   def given_code_name(code_name, external=true)
-    CodeName.delete_all(['code_name = ?', code_name])
-    Factory.create(:code_name, :code_name => code_name, :external => external)
+    instance = CodeName.find_by_code_name(code_name)
+    if instance
+      raise "Code name already specified as #{external ? 'internal' : 'external'}" if external != instance.external
+    else
+      instance = Factory.create(:code_name, :code_name => code_name, :external => external)
+    end
   end
 
   def given_task_category_codes_loaded

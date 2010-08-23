@@ -122,19 +122,10 @@ class ExternalCode < ActiveRecord::Base
     loinc_scale_by_the_code('Nom')
   end
 
-  def self.selections_for_disease(disease)
-    return [] unless disease
-    sql = <<-SQL
-      (disease_specific = true AND
-        disease_specific_selections.disease_id = ? AND
-        disease_specific_selections.rendered = true)
-      OR
-      ((disease_specific = false OR disease_specific IS NULL) AND
-        (disease_specific_selections.disease_id IS NULL OR
-          (disease_specific_selections.disease_id = ? AND disease_specific_selections.rendered = true)))
-    SQL
-    active.all(:conditions => [sql, disease.id, disease.id],
-               :include => :disease_specific_selections)
+  def self.selections_for_event(event)
+    active.all(:include => :disease_specific_selections).select do |code|
+      code.rendered?(event)
+    end
   end
 
   def self.load!(hashes)
@@ -146,13 +137,30 @@ class ExternalCode < ActiveRecord::Base
     end
   end
 
+  def rendered_on_event?(event)
+    disease = event.try(:disease_event).try(:disease)
+    if disease
+      rendered_on_disease?(disease)
+    else
+      rendered_by_default?
+    end
+  end
+  alias rendered? rendered_on_event?
+
   def deleted?
     not deleted_at.nil?
   end
 
-  def rendered?(event)
-    disease = event.try(:disease_event).try(:disease)
-    disease_selection_associated?(disease) ? render_on_disease?(disease) : render_default?
+  def rendered_on_disease?(disease)
+    if disease_selection_associated?(disease)
+      disease_specific_selection(disease).rendered
+    else
+      rendered_by_default?
+    end
+  end
+
+  def rendered_by_default?
+    not disease_specific
   end
 
   def soft_delete
@@ -169,22 +177,19 @@ class ExternalCode < ActiveRecord::Base
     end
   end
 
-  private
-
-  def render_on_disease?(disease)
-    disease_specific_selection(disease).rendered
+  def hide_for_disease(disease)
+    disease_specific_selections.create(:disease => disease, :rendered => false)
   end
+
+  private
 
   def disease_specific_selection(disease)
     return unless disease
-    disease_specific_selections.first(:conditions => ['disease_id = ?' , disease.id])
+    disease_specific_selections.select { |selection| selection.disease_id == disease.id }.first
   end
 
   def disease_selection_associated?(disease)
     not disease_specific_selection(disease).nil?
   end
 
-  def render_default?
-    not disease_specific
-  end
 end

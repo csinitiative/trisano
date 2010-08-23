@@ -31,17 +31,11 @@ class CodeName < ActiveRecord::Base
       code_group = drop_down_code_name(code_name)
       return [] unless code_group
       if code_group.external
-        if disease = event.try(:disease_event).try(:disease)
-          selections = ExternalCode.selections_for_disease(disease)
-        else
-          selections = ExternalCode.active.core
-        end
-        selections.select { |code| code.code_name == code_name }
+        selections = ExternalCode.selections_for_event(event)
       else
-        Code.active.exclude_jurisdiction.select do |code|
-          code.code_name == code_name
-        end
+        selections = Code.active.exclude_jurisdiction
       end
+      selections.select { |code| code.code_name == code_name }
     end
 
     # take advantage of the AR request cache and get all the code names in one go
