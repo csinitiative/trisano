@@ -87,7 +87,7 @@
   <version>1</version>
   <documentation>
     <author>joe</author>
-    <description>Perinatal Hep B Expected Delivery Action Report</description>
+    <description>Perinatal Hep B Pregnancy Event Action Report</description>
     <icon>PentahoReporting.png</icon>
     <help/>
     <result-type>report</result-type>

@@ -139,7 +139,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">true</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">date_field</property>
+            <property name="fieldName"></property>
             <property name="nullString"></property>
             <formula>
                 <property name="text">=TODAY();</property>
@@ -147,10 +147,27 @@
             <property name="format">MMM d, yyyy</property>
             <property name="excelDateFormat"></property>
         </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@22016244</property>
+            <property name="position">15.0, 65.0</property>
+            <property name="minimumSize">100.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text"></property>
+        </child>
         <property name="pageBreakBefore">false</property>
         <property name="pageBreakAfter">false</property>
         <property name="showInLayoutGUI">true</property>
-        <property name="visualHeight">78.0</property>
+        <property name="visualHeight">88.0</property>
         <verticalLinealModel></verticalLinealModel>
         <property name="displayOnFirstPage">true</property>
         <property name="displayOnLastPage">true</property>
@@ -238,7 +255,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT1_NAME</property>
+            <property name="fieldName">bc_report1_name</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -271,7 +288,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT1_RECORD_NUMBER</property>
+            <property name="fieldName">bc_report1_record_number</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -304,7 +321,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT1_EXPECTED_DELIVERY_FACILITY</property>
+            <property name="fieldName">bc_report1_expected_delivery_facility</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -337,7 +354,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE</property>
+            <property name="fieldName">bc_report1_expected_delivery_facility_phone</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
@@ -370,7 +387,7 @@
             <property name="reservedLiteral">..</property>
             <property name="trimTextContent">false</property>
             <property name="wrapTextInExcel">false</property>
-            <property name="fieldName">BC_REPORT1_PREGNANCY_DUE_DATE</property>
+            <property name="fieldName">bc_report1_pregnancy_due_date</property>
             <property name="nullString"></property>
             <formula>
                 <property name="text"></property>
