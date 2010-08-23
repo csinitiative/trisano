@@ -137,7 +137,7 @@ CREATE TABLE report3 AS
                     contact_stuff.name AS contact_name,
                     to_char(contact_stuff.birth_date, 'MM/DD/YYYY') AS contact_birth_date,
                     contact_stuff.age AS contact_age,
-                    to_char(contact_stuff.first_due_date, 'MM/DD/YYYY') AS first_due_date,
+                    contact_stuff.first_due_date::DATE,
                     contact_stuff.action
                 FROM
                     (
@@ -311,77 +311,322 @@ CREATE TABLE report3 AS
 
 CREATE TABLE report4 AS
                 SELECT
-                    1 AS total,
                     dme.id,
                     dme.investigating_jurisdiction,
-                    CASE WHEN contact_type = 'infant' AND disposition IS NULL THEN 1 ELSE NULL END AS active,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'completed' THEN 1 ELSE NULL END AS completed,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'provider refusal' THEN 1 ELSE NULL END AS provider_refusal,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Mother/family refusal' THEN 1 ELSE NULL END AS mother_fam_refusal,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' THEN 1 ELSE NULL END AS moved,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Unable to locate' THEN 1 ELSE NULL END AS unable_locate,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Died' THEN 1 ELSE NULL END AS infant_died,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Adopted' THEN 1 ELSE NULL END AS infant_adopted,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'False positive mother/case' THEN 1 ELSE NULL END AS false_pos,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Miscarriage or termination' THEN 1 ELSE NULL END AS miscarriage,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Other' THEN 1 ELSE NULL END AS other,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '1 day' AND hbig_vacc_date <= dce.birth_date + INTERVAL '1 day' THEN 1 ELSE NULL END AS both_24,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '1 day' THEN 1 ELSE NULL END AS dose1_24,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + INTERVAL '1 day' THEN 1 ELSE NULL END AS hbig_24,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '1 day' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_24,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '2 days' AND hbig_vacc_date <= dce.birth_date + INTERVAL '2 days' THEN 1 ELSE NULL END AS both_48,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '2 days' THEN 1 ELSE NULL END AS dose1_48,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + interval '2 days' THEN 1 ELSE NULL END AS hbig_48,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '2 days' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_48,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '7 days' AND hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE NULL END AS both_7d,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '7 days' THEN 1 ELSE NULL END AS dose1_7d,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + interval '7 days' THEN 1 ELSE NULL END AS hbig_7d,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '7 days' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_7d,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '2 months' AND hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE NULL END AS both_2m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '2 months' THEN 1 ELSE NULL END AS dose1_2m,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + interval '2 months' THEN 1 ELSE NULL END AS hbig_2m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '2 months' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_2m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '8 months' AND hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE NULL END AS both_8m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '8 months' THEN 1 ELSE NULL END AS dose1_8m,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + interval '8 months' THEN 1 ELSE NULL END AS hbig_8m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '8 months' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_8m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '12 months' AND hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE NULL END AS both_12m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date <= dce.birth_date + interval '12 months' THEN 1 ELSE NULL END AS dose1_12m,
-                    CASE WHEN contact_type = 'infant' AND hbig_vacc_date <= dce.birth_date + interval '12 months' THEN 1 ELSE NULL END AS hbig_12m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NULL AND (hbig_vacc_date > dce.birth_date + INTERVAL '12 months' OR hbig_vacc_date IS NULL) THEN 1 ELSE NULL END AS neither_12m,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE NULL END AS four_dose,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE NULL END AS five_dose,
-                    CASE WHEN contact_type = 'infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE NULL END AS six_dose,
-                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END AS serotest_12m,
-                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' THEN 1 ELSE NULL END AS serotest_15m,
-                    CASE WHEN contact_type = 'infant' AND ((trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE NULL END AS total_serotest,
-                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_antihb,
-                    CASE WHEN contact_type = 'infant' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS positive_hbsag,
-                    -- XXX Still have com vax vacc date here, to fix
-                    CASE WHEN contact_type = 'infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE NULL END AS received_comvax,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') THEN 1 ELSE NULL END AS total_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition IS NULL THEN 1 ELSE NULL END AS active_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Completed' THEN 1 ELSE NULL END AS completed_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Provider refusal' THEN 1 ELSE NULL END AS provider_refusal_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Refused preventative treatment' THEN 1 ELSE NULL END AS refused_treatment_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Moved' THEN 1 ELSE NULL END AS moved_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Unable to locate' THEN 1 ELSE NULL END AS unable_to_locate_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Died' THEN 1 ELSE NULL END AS died_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'False positive mother/case' THEN 1 ELSE NULL END AS false_positive_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND disposition = 'Other' THEN 1 ELSE NULL END AS other_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND ((trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL OR (trisano.get_contact_antihb_before(dce.id, hepb_dose1_date)).test_result IS NOT NULL) THEN 1 ELSE NULL END AS total_hs_tested,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS hbsag_pos_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE NULL END AS antihb_pos_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL THEN 1 ELSE NULL END AS dose1_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE NULL END AS dose2_hs,
-                    CASE WHEN contact_type IN ('Sexual', 'Household') AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE NULL END AS dose3_hs,
-                    -- This labels field 62 as '<6>', suggesting it's a copy of field 6.
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date IS NOT NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE NULL END AS dose1_hbig_trans,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE NULL END AS hbig_trans,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date IS NOT NULL AND hbig_vacc_date IS NULL THEN 1 ELSE NULL END AS dose1_trans,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE NULL END AS neither_trans,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date < dce.birth_date + INTERVAL '8 months' AND hepb_dose2_date < dce.birth_date + INTERVAL '8 months' AND hepb_dose3_date < dce.birth_date + INTERVAL '8 months' AND hbig_vacc_date < dce.birth_date + INTERVAL '8 months' THEN 1 ELSE NULL END AS all_8m_trans,
-                    CASE WHEN contact_type = 'infant' AND disposition = 'Moved' AND hepb_dose1_date < dce.birth_date + INTERVAL '8 months' AND hepb_dose2_date < dce.birth_date + INTERVAL '12 months' AND hepb_dose3_date < dce.birth_date + INTERVAL '12 months' AND hbig_vacc_date < dce.birth_date + INTERVAL '12 months' THEN 1 ELSE NULL END AS all_12m_trans
+                    dme.actual_delivery_date,
+                    1 AS total,
+                    -- XXX Check these for the actual disposition code
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_pos,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Infant Adopted' THEN 1 ELSE 0 END AS infant_adopted,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Infant Died' THEN 1 ELSE 0 END AS infant_died,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' THEN 1 ELSE 0 END AS out_of_jurisdiction,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Refused to Participate' THEN 1 ELSE 0 END AS refused_participate,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Unable to locate' THEN 1 ELSE 0 END AS unable_locate,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other,
+                    CASE WHEN contact_type = 'Infant' AND disposition IS NULL THEN 1 ELSE 0 END AS disposition_blank,
+                    CASE WHEN contact_type = 'Infant' THEN 1 ELSE 0 END AS infant_contacts,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '1 day' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '1 day'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '1 day' THEN 1 ELSE 0
+                    END AS both_24,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '1 day' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '1 day'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '1 day' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_24,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '1 day' OR
+                                hepb_comvax1_date > dce.birth_date + interval '1 day'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '1 day' THEN 1 ELSE 0
+                    END AS hbig_24,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '1 day' OR
+                                hepb_comvax1_date > dce.birth_date + interval '1 day'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '1 day' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_24,
+
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '2 days' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '2 days'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '2 days' THEN 1 ELSE 0
+                    END AS both_48,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '2 days' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '2 days'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '2 days' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_48,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '2 days' OR
+                                hepb_comvax1_date > dce.birth_date + interval '2 days'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '2 days' THEN 1 ELSE 0
+                    END AS hbig_48,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '2 days' OR
+                                hepb_comvax1_date > dce.birth_date + interval '2 days'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '2 days' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_48,
+
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '7 days' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '7 days'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE 0
+                    END AS both_7d,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '7 days' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '7 days'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '7 days' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_7d,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '7 days' OR
+                                hepb_comvax1_date > dce.birth_date + interval '7 days'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '7 days' THEN 1 ELSE 0
+                    END AS hbig_7d,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '7 days' OR
+                                hepb_comvax1_date > dce.birth_date + interval '7 days'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '7 days' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_7d,
+
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '2 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '2 months'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '2 months' THEN 1 ELSE 0
+                    END AS both_2m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '2 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '2 months'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '2 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_2m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '2 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '2 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '2 months' THEN 1 ELSE 0
+                    END AS hbig_2m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '2 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '2 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '2 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_2m,
+
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '8 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '8 months'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '8 months' THEN 1 ELSE 0
+                    END AS both_8m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '8 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '8 months'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '8 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_8m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '8 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '8 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '8 months' THEN 1 ELSE 0
+                    END AS hbig_8m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '8 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '8 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '8 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_8m,
+
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '12 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '12 months'
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE 0
+                    END AS both_12m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            hepb_dose1_date <= dce.birth_date + interval '12 months' OR
+                            hepb_comvax1_date <= dce.birth_date + interval '12 months'
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '12 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS dose1_12m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '12 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '12 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE 0
+                    END AS hbig_12m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (
+                            (
+                                hepb_dose1_date > dce.birth_date + interval '12 months' OR
+                                hepb_comvax1_date > dce.birth_date + interval '12 months'
+                            ) OR
+                            ( hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL )
+                        ) AND (
+                            hbig_vacc_date > dce.birth_date + INTERVAL '12 months' OR
+                            hbig_vacc_date IS NULL
+                        ) THEN 1 ELSE 0
+                    END AS neither_12m,
+
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE 0 END AS four_dose,
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE 0 END AS five_dose,
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE 0 END AS six_dose,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE 0 END AS serotest_12m,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date <= dce.birth_date + INTERVAL '15 months' THEN 1 ELSE 0 END AS serotest_15m,
+                    CASE WHEN contact_type = 'Infant' AND ((trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE 0 END AS total_serotest,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_antihb,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_hbsag,
+                    CASE WHEN contact_type = 'Infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE 0 END AS received_comvax,
+                    CASE WHEN contact_type != 'Infant' THEN 1 ELSE 0 END AS total_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_positive_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Out of Jurisdiction' THEN 1 ELSE 0 END AS out_of_jurisdiction_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Refused to Participate' THEN 1 ELSE 0 END AS refused_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Unable to Locate' THEN 1 ELSE 0 END AS unable_to_locate_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition IS NULL THEN 1 ELSE 0 END AS disposition_blank_hs,
+                    CASE WHEN contact_type != 'Infant' AND ((trisano.get_contact_hbsag_before(dce.id, current_date)).test_result IS NOT NULL AND (trisano.get_contact_antihb_before(dce.id, current_date)).test_result IS NOT NULL) THEN 1 ELSE 0 END AS total_hs_tested,
+                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, current_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS hbsag_pos_hs,
+                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_antihb_after(dce.id, current_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS antihb_pos_hs,
+                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hs,
+                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE 0 END AS dose2_hs,
+                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE 0 END AS dose3_hs,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS neither_trans,
+                    CASE WHEN contact_type = 'Infant' AND
+                        disposition = 'Out of Jurisdiction' AND
+                        (hepb_dose1_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '8 months') AND
+                        (hepb_dose2_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '8 months') AND
+                        (hepb_dose3_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '8 months') AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '8 months'
+                        THEN 1 ELSE 0
+                    END AS all_8m_trans,
+                    CASE WHEN contact_type = 'Infant' AND
+                        disposition = 'Out of Jurisdiction' AND
+                        (hepb_dose1_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '12 months') AND
+                        (hepb_dose2_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '12 months') AND
+                        (hepb_dose3_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '12 months') AND
+                        hbig_vacc_date <= dce.birth_date + INTERVAL '12 months'
+                        THEN 1 ELSE 0
+                    END AS all_12m_trans
                 FROM
                     trisano.dw_contact_events_view dce
                     JOIN trisano.dw_morbidity_events_view dme
@@ -427,7 +672,8 @@ CREATE TABLE report4 AS
                     ) treatments_agg
                         ON (treatments_agg.contact_event_id = dce.id)
                 WHERE
-                    dce.disease_name = 'Hepatitis B Pregnancy Event'
+                    dce.disease_name = 'Hepatitis B Pregnancy Event' AND
+                    dme.actual_delivery_date IS NOT NULL;
 ;
 
 CREATE TABLE morb_sec_juris AS
