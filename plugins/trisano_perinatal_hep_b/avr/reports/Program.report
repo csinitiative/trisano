@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <property name="name">Perinatal Hep B Program Report</property>
+    <child type="org.pentaho.reportdesigner.crm.report.model.dataset.DataSetsReportElement">
+        <property name="name">Element@26034122</property>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@7680572</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="disposition">
+                <property name="query">SELECT
+     SUM(total) AS total,
+     SUM(completed) AS completed,
+     SUM(false_pos) AS false_pos,
+     SUM(infant_adopted) AS infant_adopted,
+     SUM(infant_died) AS infant_died,
+     SUM(out_of_jurisdiction) AS out_of_jurisdiction,
+     SUM(refused_participate) AS refused_participate,
+     SUM(unable_locate) AS unable_locate,
+     SUM(other) AS other,
+     SUM(disposition_blank) AS disposition_blank
+FROM
+     phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="total" friendlyColumnName="total" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="completed" friendlyColumnName="completed" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="false_pos" friendlyColumnName="false_pos" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="infant_adopted" friendlyColumnName="infant_adopted" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="infant_died" friendlyColumnName="infant_died" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="out_of_jurisdiction" friendlyColumnName="out_of_jurisdiction" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="refused_participate" friendlyColumnName="refused_participate" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="unable_locate" friendlyColumnName="unable_locate" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="other" friendlyColumnName="other" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="disposition_blank" friendlyColumnName="disposition_blank" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@25701402</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="default">
+                <property name="query">select sum(total) as total_events from phepb_reports.report4 where investigating_jurisdiction = &apos;${jurisdiction}&apos; and actual_delivery_date between trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date)
+</property>
+            </query>
+            <columnInfo columnName="total_events" friendlyColumnName="total_events" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.properties.PropertiesDataSetReportElement">
+            <property name="name">Element@5885933</property>
+            <properties>
+                <property name="end_date" type="java.lang.String">2011-01-01</property>
+                <property name="jurisdiction" type="java.lang.String">&apos;Salt Lake Valley Health Department&apos;</property>
+                <property name="start_date" type="java.lang.String">2010-01-01</property>
+            </properties>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@19977009</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="treatment1">
+                <property name="query">SELECT
+    SUM(infant_contacts) AS infant_contacts,
+    SUM(both_24) AS both_24,
+    SUM(dose1_24) AS dose1_24,
+    SUM(hbig_24) AS hbig_24,
+    SUM(neither_24) AS neither_24,
+    SUM(both_48) AS both_48,
+    SUM(dose1_48) AS dose1_48,
+    SUM(hbig_48) AS hbig_48,
+    SUM(neither_48) AS neither_48,
+    SUM(both_7d) AS both_7d,
+    SUM(dose1_7d) AS dose1_7d,
+    SUM(hbig_7d) AS hbig_7d,
+    SUM(neither_7d) AS neither_7d
+FROM
+    phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="infant_contacts" friendlyColumnName="infant_contacts" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_24" friendlyColumnName="both_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_24" friendlyColumnName="dose1_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_24" friendlyColumnName="hbig_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_24" friendlyColumnName="neither_24" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_48" friendlyColumnName="both_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_48" friendlyColumnName="dose1_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_48" friendlyColumnName="hbig_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_48" friendlyColumnName="neither_48" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_7d" friendlyColumnName="both_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_7d" friendlyColumnName="dose1_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_7d" friendlyColumnName="hbig_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_7d" friendlyColumnName="neither_7d" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@16472497</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="non_infant">
+                <property name="query">SELECT
+    SUM(total_hs) AS total_hs,
+    SUM(completed_hs) AS completed_hs,
+    SUM(false_positive_hs) AS false_positive_hs,
+    SUM(out_of_jurisdiction_hs) AS out_of_jurisdiction_hs,
+    SUM(refused_hs) AS refused_hs,
+    SUM(unable_to_locate_hs) AS unable_to_locate_hs,
+    SUM(other_hs) AS other_hs,
+    SUM(disposition_blank_hs) AS disposition_blank_hs,
+    SUM(total_hs_tested) AS total_hs_tested,
+    SUM(hbsag_pos_hs) AS hbsag_pos_hs,
+    SUM(antihb_pos_hs) AS antihb_pos_hs,
+    SUM(dose1_hs) AS dose1_hs,
+    SUM(dose2_hs) AS dose2_hs,
+    SUM(dose3_hs) AS dose3_hs
+FROM
+    phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="total_hs" friendlyColumnName="total_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="completed_hs" friendlyColumnName="completed_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="false_positive_hs" friendlyColumnName="false_positive_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="out_of_jurisdiction_hs" friendlyColumnName="out_of_jurisdiction_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="refused_hs" friendlyColumnName="refused_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="unable_to_locate_hs" friendlyColumnName="unable_to_locate_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="other_hs" friendlyColumnName="other_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="disposition_blank_hs" friendlyColumnName="disposition_blank_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="total_hs_tested" friendlyColumnName="total_hs_tested" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbsag_pos_hs" friendlyColumnName="hbsag_pos_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="antihb_pos_hs" friendlyColumnName="antihb_pos_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_hs" friendlyColumnName="dose1_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose2_hs" friendlyColumnName="dose2_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose3_hs" friendlyColumnName="dose3_hs" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@30573750</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="moved">
+                <property name="query">SELECT
+    SUM(out_of_jurisdiction) AS out_of_jurisdiction_count,
+    SUM(dose1_hbig_trans) AS dose1_hbig_trans,
+    SUM(hbig_trans) AS hbig_trans,
+    SUM(dose1_trans) AS dose1_trans,
+    SUM(neither_trans) AS neither_trans,
+    SUM(all_8m_trans) AS all_8m_trans,
+    SUM(all_12m_trans) AS all_12m_trans
+FROM
+    phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="out_of_jurisdiction_count" friendlyColumnName="out_of_jurisdiction_count" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_hbig_trans" friendlyColumnName="dose1_hbig_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_trans" friendlyColumnName="hbig_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_trans" friendlyColumnName="dose1_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_trans" friendlyColumnName="neither_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="all_8m_trans" friendlyColumnName="all_8m_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="all_12m_trans" friendlyColumnName="all_12m_trans" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@2904407</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="treatment2">
+                <property name="query">SELECT
+    SUM(infant_contacts) AS infant_contacts1,
+    SUM(both_2m) AS both_2m,
+    SUM(dose1_2m) AS dose1_2m,
+    SUM(hbig_2m) AS hbig_2m,
+    SUM(neither_2m) AS neither_2m,
+    SUM(both_8m) AS both_8m,
+    SUM(dose1_8m) AS dose1_8m,
+    SUM(hbig_8m) AS hbig_8m,
+    SUM(neither_8m) AS neither_8m,
+    SUM(both_12m) AS both_12m,
+    SUM(dose1_12m) AS dose1_12m,
+    SUM(hbig_12m) AS hbig_12m,
+    SUM(neither_12m) AS neither_12m
+FROM
+    phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="infant_contacts1" friendlyColumnName="infant_contacts1" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_2m" friendlyColumnName="both_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_2m" friendlyColumnName="dose1_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_2m" friendlyColumnName="hbig_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_2m" friendlyColumnName="neither_2m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_8m" friendlyColumnName="both_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_8m" friendlyColumnName="dose1_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_8m" friendlyColumnName="hbig_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_8m" friendlyColumnName="neither_8m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="both_12m" friendlyColumnName="both_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="dose1_12m" friendlyColumnName="dose1_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="hbig_12m" friendlyColumnName="hbig_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="neither_12m" friendlyColumnName="neither_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.multidataset.MultiDataSetReportElement">
+            <property name="name">Element@11454306</property>
+            <property name="connectionType">JNDI</property>
+            <property name="xQueryDataFile"></property>
+            <property name="xmiDefinitionFile"></property>
+            <property name="useMondrianCubeDefinition">false</property>
+            <property name="mondrianCubeDefinitionFile"></property>
+            <property name="limitPreviewRows">true</property>
+            <property name="maxPreviewRows">10000</property>
+            <query queryName="treatment3">
+                <property name="query">SELECT
+    SUM(infant_contacts) AS infant_contacts3,
+    SUM(four_dose) AS four_dose,
+    SUM(five_dose) AS five_dose,
+    SUM(six_dose) AS six_dose,
+    SUM(serotest_12m) AS serotest_12m,
+    SUM(serotest_15m) AS serotest_15m,
+    SUM(total_serotest) AS total_serotest,
+    SUM(positive_antihb) AS positive_antihb,
+    SUM(positive_hbsag) AS positive_hbsag,
+    SUM(received_comvax) AS received_comvax
+FROM
+    phepb_reports.report4
+WHERE actual_delivery_date BETWEEN trisano.make_date(&apos;${start_date}&apos;, current_date) AND trisano.make_date(&apos;${end_date}&apos;, current_date) and investigating_jurisdiction = &apos;${jurisdiction}&apos;</property>
+            </query>
+            <columnInfo columnName="infant_contacts3" friendlyColumnName="infant_contacts3" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="four_dose" friendlyColumnName="four_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="five_dose" friendlyColumnName="five_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="six_dose" friendlyColumnName="six_dose" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="serotest_12m" friendlyColumnName="serotest_12m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="serotest_15m" friendlyColumnName="serotest_15m" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="total_serotest" friendlyColumnName="total_serotest" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="positive_antihb" friendlyColumnName="positive_antihb" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="positive_hbsag" friendlyColumnName="positive_hbsag" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <columnInfo columnName="received_comvax" friendlyColumnName="received_comvax" columnClassName="java.lang.Long" tableName=""></columnInfo>
+            <selectedJNDIDataSource jndiName="TriSano" driverClass="org.postgresql.Driver" connectionString="jdbc:postgresql://localhost/trisano_warehouse" userName="trisano_ro" password=""></selectedJNDIDataSource>
+        </child>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportFunctionsElement">
+        <property name="name">Element@7786198</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_HEADER">
+        <property name="name">Band27695772</property>
+        <child type="org.pentaho.reportdesigner.crm.report.model.LabelReportElement">
+            <property name="name">Element@30341052</property>
+            <property name="position">3.0, 3.0</property>
+            <property name="minimumSize">562.0, 22.0</property>
+            <property name="font">Dialog,14,1</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="text">Hepatitis B Pregnancy Event Program Report</property>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.MessageFieldReportElement">
+            <property name="name">Element@1089190</property>
+            <property name="position">5.0, 25.0</property>
+            <property name="minimumSize">560.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="formatString">Start date: $(start_date) End Date: $(end_date)</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.MessageFieldReportElement">
+            <property name="name">Element@1089190</property>
+            <property name="position">5.0, 45.0</property>
+            <property name="minimumSize">560.0, 16.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">CENTER</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="formatString">Jurisdiction: $(jurisdiction)</property>
+            <property name="nullString"></property>
+            <formula>
+                <property name="text"></property>
+            </formula>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">71.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_HEADER">
+        <property name="name">Band27748160</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelItemReportElement" bandToplevelType="ITEM_BAND">
+        <property name="name">Band32401617</property>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@2774700</property>
+            <property name="position">0.0, 1.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_sub1.report</property>
+            <property name="query">disposition</property>
+            <parameters>
+                <property name="globalImport">true</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@20997841</property>
+            <property name="position">0.0, 21.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_sub2.report</property>
+            <property name="query">treatment1</property>
+            <parameters>
+                <property name="globalImport">true</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@26686875</property>
+            <property name="position">0.0, 41.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_treatment2.report</property>
+            <property name="query">treatment2</property>
+            <parameters>
+                <property name="globalImport">true</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@16778192</property>
+            <property name="position">0.0, 61.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_treatment3.report</property>
+            <property name="query">treatment3</property>
+            <parameters>
+                <property name="globalImport">true</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@16649464</property>
+            <property name="position">0.0, 81.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_noninfant.report</property>
+            <property name="query">non_infant</property>
+            <parameters>
+                <property name="globalImport">false</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <child type="org.pentaho.reportdesigner.crm.report.model.SubReportElement">
+            <property name="name">Element@22225498</property>
+            <property name="position">0.0, 101.0</property>
+            <property name="minimumSize">572.0, 20.0</property>
+            <property name="font">dialog,12,0</property>
+            <property name="foreground">0, 0, 0, 255</property>
+            <property name="underline">false</property>
+            <property name="strikethrough">false</property>
+            <property name="embedFont">false</property>
+            <property name="lineHeight">0.0</property>
+            <property name="verticalAlignment">TOP</property>
+            <property name="horizontalAlignment">LEFT</property>
+            <property name="reservedLiteral">..</property>
+            <property name="trimTextContent">true</property>
+            <property name="wrapTextInExcel">false</property>
+            <property name="filePath">Program_moved.report</property>
+            <property name="query">moved</property>
+            <parameters>
+                <property name="globalImport">true</property>
+                <property name="globalExport">false</property>
+            </parameters>
+        </child>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">146.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <rowBandingDefinition enabled="false" color="192, 192, 192, 255" startState="true" switchItemCount="1"></rowBandingDefinition>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="REPORT_FOOTER">
+        <property name="name">Band23833340</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelPageReportElement" bandToplevelType="PAGE_FOOTER">
+        <property name="name">Band15761092</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">true</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+        <property name="displayOnFirstPage">true</property>
+        <property name="displayOnLastPage">true</property>
+        <property name="sticky">false</property>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="NO_DATA_BAND">
+        <property name="name">Band4314804</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.BandToplevelReportElement" bandToplevelType="WATERMARK">
+        <property name="name">Band19102345</property>
+        <property name="pageBreakBefore">false</property>
+        <property name="pageBreakAfter">false</property>
+        <property name="showInLayoutGUI">false</property>
+        <property name="visualHeight">100.0</property>
+        <verticalLinealModel></verticalLinealModel>
+    </child>
+    <child type="org.pentaho.reportdesigner.crm.report.model.ReportGroups">
+        <property name="name">Element@17993987</property>
+    </child>
+    <property name="defaultLocale">en_US_</property>
+    <horizontalLinealModel></horizontalLinealModel>
+    <pageDefinition pageSize="612.0, 792.0" topBorder="20.0" bottomBorder="20.0" leftBorder="20.0" rightBorder="20.0"></pageDefinition>
+    <reportConfiguration></reportConfiguration>
+    <property name="useMaxCharBounds">true</property>
+</report>
