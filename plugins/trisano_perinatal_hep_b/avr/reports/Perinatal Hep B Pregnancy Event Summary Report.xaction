@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-sequence> 
+  <title>Perinatal Hep B Pregnancy Event Summary Report</title>
+  <version>1</version>
+  <documentation> 
+    <author>joe</author>  
+    <description>Perinatal Hepatitis B Pregnancy Event Summary Report</description>  
+    <icon>PentahoReporting.png</icon>  
+    <help/>  
+    <result-type>report</result-type> 
+  </documentation>
+
+  <inputs> 
+    <outputType type="string"> 
+      <sources> 
+        <request>outputType</request>  
+        <request>type</request> 
+      </sources>  
+      <default-value><![CDATA[html]]></default-value> 
+    </outputType>  
+    <outputTypeList type="property-map-list"> 
+      <sources> 
+        <runtime>outputTypeList</runtime> 
+      </sources>  
+      <default-value type="property-map-list"> 
+        <property-map> 
+          <entry key="report-output-desc">PDF</entry>  
+          <entry key="report-output-type-id">pdf</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Excel</entry>  
+          <entry key="report-output-type-id">xls</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Word</entry>  
+          <entry key="report-output-type-id">rtf</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Web Page</entry>  
+          <entry key="report-output-type-id">html</entry> 
+        </property-map>  
+        <property-map> 
+          <entry key="report-output-desc">Comma Separated Value</entry>  
+          <entry key="report-output-type-id">csv</entry> 
+        </property-map> 
+      </default-value> 
+    </outputTypeList>  
+    <jurisdiction type="string">
+      <sources>
+        <request>jurisdiction</request>
+      </sources>
+      <default-value/>
+    </jurisdiction>
+    <start_date type="string">
+      <sources>
+        <request>start_date</request>
+      </sources>
+      <default-value/>
+    </start_date>
+    <end_date type="string">
+      <sources>
+        <request>end_date</request>
+      </sources>
+      <default-value/>
+    </end_date>
+  </inputs>
+
+  <outputs/>
+
+  <resources> 
+    <report-definition> 
+      <solution-file> 
+        <location>Perinatal Hep B Pregnancy Event Summary Report.xml</location>  
+        <mime-type>text/xml</mime-type> 
+      </solution-file> 
+    </report-definition> 
+  </resources>
+  
+  <actions> 
+    <action-definition>
+      <component-name>SQLLookupRule</component-name>
+      <action-type>Relational</action-type>
+      <action-outputs>
+        <query-result type="result-set" mapping="jurisdictions"/>
+        <name type="string"/>
+      </action-outputs>
+      <component-definition>
+        <jndi><![CDATA[TriSano]]></jndi>
+        <query><![CDATA[select
+    distinct p.name
+from
+    places_view p
+    join places_types_view pt
+        on (p.id = pt.place_id)
+    join codes_view c
+        on (c.id = pt.type_id)
+where
+    c.code_description = 'Jurisdiction' order by 1 asc]]></query>
+        <live><![CDATA[true]]></live>
+      </component-definition>
+    </action-definition>
+
+    <action-definition> 
+      <component-name>SecureFilterComponent</component-name>
+      <action-type>Secure Filter Description</action-type>
+      <action-inputs> 
+        <outputTypeList type="property-map-list"/>  
+        <outputType type="string"/>  
+        <jurisdiction type="string"/>
+        <start_date type="string"/>
+        <end_date type="string"/>
+        <jurisdictions type="result-set"/>
+      </action-inputs>
+      <component-definition> 
+        <selections> 
+          <outputType style="select"> 
+            <title>Choose Report Format</title>  
+            <filter value-col-name="report-output-type-id" display-col-name="report-output-desc">outputTypeList</filter> 
+          </outputType>  
+          <jurisdiction style="list">
+            <filter value-col-name="name" display-col-name="name">jurisdictions</filter>
+          </jurisdiction>
+          <start_date filter="none">
+            <title>Enter start date (YYYY-MM-VV)</title>
+          </start_date>
+          <end_date filter="none">
+            <title>Enter end date (YYYY-MM-VV)</title>
+          </end_date>
+        </selections> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>SQLLookupRule</component-name>
+      <action-inputs/>
+      <action-outputs> 
+        <query-result type="result-set" mapping="query_result"/> 
+      </action-outputs>
+      <component-definition> 
+        <jndi><![CDATA[TriSano]]></jndi>  
+        <query><![CDATA[SELECT
+    year,
+    COALESCE(SUM(prospective_infants), 0) AS prospective_infants,
+    COALESCE(SUM(retrospective_infants), 0) AS retrospective_infants,
+    COALESCE(SUM(prospective_infants + retrospective_infants), 0) AS total_infants,
+    COALESCE(SUM(contact_infants), 0) AS contact_infants,
+    COALESCE(SUM(currently_active), 0) AS currently_active
+FROM
+    phepb_reports.report2
+WHERE
+    actual_delivery_date BETWEEN trisano.make_date('{PREPARELATER:start_date}', current_date) AND trisano.make_date('{PREPARELATER:end_date}', current_date) AND investigating_jurisdiction = '{PREPARELATER:jurisdiction}'
+GROUP BY year]]></query>  
+        <live><![CDATA[true]]></live> 
+      </component-definition> 
+    </action-definition>
+  
+    <action-definition> 
+      <component-name>JFreeReportComponent</component-name>
+      <action-type>report</action-type>
+      <action-inputs> 
+        <output-type type="string" mapping="outputType"/>  
+        <data type="result-set" mapping="query_result"/>  
+        <jurisdiction type="string"/>
+        <start_date type="string"/>
+        <end_date type="string"/>
+      </action-inputs>
+      <action-resources> 
+        <report-definition type="resource"/> 
+      </action-resources>
+      <component-definition/> 
+    </action-definition>
+ 
+  </actions> 
+</action-sequence>

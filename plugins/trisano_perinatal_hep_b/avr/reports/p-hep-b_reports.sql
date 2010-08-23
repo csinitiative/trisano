@@ -98,8 +98,8 @@ CREATE TABLE report1 AS
 CREATE TABLE report2 AS
                 SELECT
                     id, investigating_jurisdiction,
-                    date_entered_into_system,
-                    extract(year from date_entered_into_system)::INTEGER AS year,
+                    actual_delivery_date,
+                    extract(year from actual_delivery_date)::INTEGER AS year,
                     CASE
                         WHEN pregnancy_due_date IS NOT NULL THEN 1
                         ELSE 0
