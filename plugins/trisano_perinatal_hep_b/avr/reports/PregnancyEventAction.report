@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report>
-    <property name="name">PregnancyActionReport</property>
+    <property name="name">Perinatal Hep B Pregnancy Event Action Report</property>
     <child type="org.pentaho.reportdesigner.crm.report.model.dataset.DataSetsReportElement">
         <property name="name">Element@13264564</property>
         <child type="org.pentaho.reportdesigner.crm.report.datasetplugin.properties.PropertiesDataSetReportElement">
@@ -1108,7 +1108,7 @@
                                 </elementBorder>
                                 <child type="org.pentaho.reportdesigner.crm.report.model.RectangleReportElement">
                                     <property name="name">Element@32112006</property>
-                                    <property name="position">4.0, 2.0</property>
+                                    <property name="position">5.0, 0.0</property>
                                     <property name="minimumSize">321.0, 13.0</property>
                                     <property name="color">220, 220, 220, 255</property>
                                     <property name="arcWidth">0.0</property>
