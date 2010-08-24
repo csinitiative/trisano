@@ -184,6 +184,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 5 THEN COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months'
                                 WHEN fdd_act_code = 6 THEN birth_date + INTERVAL '9 months'
                                 WHEN fdd_act_code = 7 THEN NULL
+                                WHEN fdd_act_code = 8 THEN NULL
                             END AS first_due_date,
                             CASE
                                 WHEN fdd_act_code = 1 THEN 'Needs HBIG and Hepatitis B Dose 1'
@@ -193,6 +194,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 5 THEN 'Needs Hepatitis B Dose 3'
                                 WHEN fdd_act_code = 6 THEN 'Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4'
                                 WHEN fdd_act_code = 7 THEN 'Check vaccination history; Test or Vaccinate'
+                                WHEN fdd_act_code = 8 THEN 'Enter Infant''s Date of Birth'
                             END AS action
                         FROM (
                             SELECT
@@ -224,10 +226,14 @@ CREATE TABLE report3 AS
                                         END
                                     ELSE ''
                                 END AS age,
+                                -- fdd_act_code values are described in
+                                -- comments inline. The current maximum value
+                                -- is 8
                                 CASE
                                     WHEN dce.contact_type = 'Infant' THEN
-                                    -- XXX What if date of birth is null?
                                         CASE
+                                            WHEN dce.birth_date IS NULL THEN 
+                                                8 -- fdd = report date, act = "Enter Infant's Date of Birth"
                                             WHEN hbig IS NULL THEN
                                                 CASE
                                                     WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
