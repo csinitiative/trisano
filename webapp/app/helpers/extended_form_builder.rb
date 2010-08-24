@@ -53,7 +53,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def codes(code_name)
-    CodeName.drop_down_selections(code_name, event)
+    @template.codes_for_select(code_name)
   end
 
   # TODO: refactor me!

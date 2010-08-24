@@ -26,25 +26,6 @@ class CodeName < ActiveRecord::Base
 
   class << self
 
-    # take advantage of the AR request cache and get all the codes in one go
-    def drop_down_selections(code_name, event=nil)
-      code_group = drop_down_code_name(code_name)
-      return [] unless code_group
-      if code_group.external
-        selections = ExternalCode.selections_for_event(event)
-      else
-        selections = Code.active.exclude_jurisdiction
-      end
-      selections.select { |code| code.code_name == code_name }
-    end
-
-    # take advantage of the AR request cache and get all the code names in one go
-    def drop_down_code_name(name)
-      find(:all, :select => 'code_name, external').select do |code_group|
-        code_group.code_name == name
-      end.first
-    end
-
     def loinc_scale
       self.find_by_code_name('loinc_scale')
     end

@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :load_user
   before_filter :prep_extensions
+  before_filter :initialize_code_select_cache
 
   helper_method :static_error_page_path
   helper_method :javascript_include_renderers, :dom_loaded_javascripts
@@ -31,6 +32,7 @@ class ApplicationController < ActionController::Base
   helper_method :cmr_contacts_extension_renderers, :cmr_place_exposure_extensions
   helper_method :search_extensions
   helper_method :before_core_partials, :after_core_partials, :core_replacement_partial
+  helper_method :codes_for_select
 
   class << self
     def ignore_plugin_renderers?
@@ -213,6 +215,10 @@ class ApplicationController < ActionController::Base
     @search_extensions ||= []
   end
 
+  def codes_for_select(code_name)
+    @code_select_cache.drop_down_selections(code_name, @event)
+  end
+
   private
 
   # Accepts an error code (403, 404, etc.) and returns a path to a static HTML
@@ -232,5 +238,7 @@ class ApplicationController < ActionController::Base
 
   end
 
-
+  def initialize_code_select_cache
+    @code_select_cache = CodeSelectCache.new
+  end
 end

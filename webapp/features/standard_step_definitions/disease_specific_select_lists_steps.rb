@@ -18,7 +18,8 @@ Given /^disease "([^\"]*)" hides these "([^\"]*)" options:$/ do |disease_name, c
 end
 
 Then /^I should see all of the default "([^\"]*)" options$/ do |code_name|
-  @selections = CodeName.drop_down_selections(code_name.gsub(' ', '').downcase)
+  @selections_cache = CodeSelectCache.new
+  @selections = @selections_cache.drop_down_selections(code_name.gsub(' ', '').downcase)
   @selections.each do |selection|
     assert_tag(:tag => 'option',
                :content => selection.code_description,
