@@ -44,15 +44,15 @@ module Trisano
             }
 
             base.accepts_nested_attributes_for :expected_delivery_facility, {
-              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :reject_if => proc { |attrs| attrs.nil? || attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
 
             base.accepts_nested_attributes_for :actual_delivery_facility, {
-              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :reject_if => proc { |attrs| attrs.nil? || attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
 
             base.accepts_nested_attributes_for :health_care_provider, {
-              :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } },
+              :reject_if => proc { |attrs| attrs.nil? || attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
 
             base.class_eval do
