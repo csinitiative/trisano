@@ -491,69 +491,70 @@ class HumanEvent < Event
     }
 
     # Create one lab result per OBX segment
-    obr = staged_message.observation_request
     i = 0
     diseases = Set.new
-    obr.tests.each do | obx |
-      loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
-      raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if loinc_code.nil?
+    staged_message.observation_requests.each do |obr|
+      obr.tests.each do | obx |
+        loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
+        raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if loinc_code.nil?
 
-      common_test_type = loinc_code.common_test_type
-      raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
+        common_test_type = loinc_code.common_test_type
+        raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
 
-      scale_type = loinc_code.scale.the_code
-      result_hash = {}
+        scale_type = loinc_code.scale.the_code
+        result_hash = {}
 
-      if scale_type != "Nom"
-        organism = loinc_code.organism
-        if organism
-          result_hash["organism_id"] = organism.id
-        else
-          result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
+        if scale_type != "Nom"
+          organism = loinc_code.organism
+          if organism
+            result_hash["organism_id"] = organism.id
+          else
+            result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
+          end
+
+          loinc_code.diseases.each { |disease| diseases << disease }
         end
 
-        loinc_code.diseases.each { |disease| diseases << disease }
-      end
-
-      case scale_type
-      when "Ord", "OrdQn"
-        obx_result = obx.result.gsub(/\s/, '').downcase
-        if map_id = result_map[obx_result]
-          result_hash["test_result_id"] = map_id
-        else
+        case scale_type
+        when "Ord", "OrdQn"
+          obx_result = obx.result.gsub(/\s/, '').downcase
+          if map_id = result_map[obx_result]
+            result_hash["test_result_id"] = map_id
+          else
+            result_hash["result_value"] = obx.result
+          end
+        when "Qn"
           result_hash["result_value"] = obx.result
+        when "Nom"
+          # Try and find OBX-5 in the organism list, otherwise map to result_value
+          # Eventually, we'll need to add more heuristics here for SNOMED etc.
+          organism = Organism.first(:conditions => [ "LOWER(organism_name) = ?", obx.result.downcase ])
+          if organism.blank?
+            result_hash["result_value"] = obx.result
+          else
+            result_hash["organism_id"] = organism.id
+          end
         end
-      when "Qn"
-        result_hash["result_value"] = obx.result
-      when "Nom"
-        # Try and find OBX-5 in the organism list, otherwise map to result_value
-        # Eventually, we'll need to add more heuristics here for SNOMED etc.
-        organism = Organism.first(:conditions => [ "LOWER(organism_name) = ?", obx.result.downcase ])
-        if organism.blank?
-          result_hash["result_value"] = obx.result
-        else
-          result_hash["organism_id"] = organism.id
-        end
-      end
 
-      begin
-        lab_hash = {
-          "test_type_id"       => common_test_type.id,
-          "collection_date"    => obr.collection_date,
-          "lab_test_date"      => obx.observation_date,
-          "reference_range"    => obx.reference_range,
-          "specimen_source_id" => obr.specimen_source.id,
-          "staged_message_id"  => staged_message.id,
-          "units"              => obx.units,
-          "test_status_id"     => obx.trisano_status_id,
-          "loinc_code"         => loinc_code
-        }.merge!(result_hash)
-        lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
-      rescue Exception => error
-        raise StagedMessage::BadMessageFormat, error.message
+        begin
+          lab_hash = {
+            "test_type_id"       => common_test_type.id,
+            "collection_date"    => obr.collection_date,
+            "lab_test_date"      => obx.observation_date,
+            "reference_range"    => obx.reference_range,
+            "specimen_source_id" => obr.specimen_source.id,
+            "staged_message_id"  => staged_message.id,
+            "units"              => obx.units,
+            "test_status_id"     => obx.trisano_status_id,
+            "loinc_code"         => loinc_code
+          }.merge!(result_hash)
+          lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
+        rescue Exception => error
+          raise StagedMessage::BadMessageFormat, error.message
+        end
+        i += 1
+        self.add_note(I18n.translate("system_notes.elr_with_test_type_assigned", :test_type => obx.test_type, :locale => I18n.default_locale))
       end
-      i += 1
-      self.add_note(I18n.translate("system_notes.elr_with_test_type_assigned", :test_type => obx.test_type, :locale => I18n.default_locale))
     end
     self.labs_attributes = [ lab_attributes ]
 
