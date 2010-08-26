@@ -1252,7 +1252,7 @@
           <basic-key name="trim-text-content">false</basic-key>
         </style>
         <template references="string-field">
-          <basic-object name="field">bc_report1_name</basic-object>
+          <basic-object name="field">BC_REPORT1_NAME</basic-object>
           <basic-object name="nullValue"></basic-object>
         </template>
       </element>
@@ -1308,7 +1308,7 @@
           <basic-key name="trim-text-content">false</basic-key>
         </style>
         <template references="string-field">
-          <basic-object name="field">bc_report1_record_number</basic-object>
+          <basic-object name="field">BC_REPORT1_RECORD_NUMBER</basic-object>
           <basic-object name="nullValue"></basic-object>
         </template>
       </element>
@@ -1364,7 +1364,7 @@
           <basic-key name="trim-text-content">false</basic-key>
         </style>
         <template references="string-field">
-          <basic-object name="field">bc_report1_expected_delivery_facility</basic-object>
+          <basic-object name="field">BC_REPORT1_EXPECTED_DELIVERY_FACILITY</basic-object>
           <basic-object name="nullValue"></basic-object>
         </template>
       </element>
@@ -1420,7 +1420,7 @@
           <basic-key name="trim-text-content">false</basic-key>
         </style>
         <template references="string-field">
-          <basic-object name="field">bc_report1_expected_delivery_facility_phone</basic-object>
+          <basic-object name="field">BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE</basic-object>
           <basic-object name="nullValue"></basic-object>
         </template>
       </element>
@@ -1518,7 +1518,7 @@
             </compound-object>
             <basic-object name="pattern">M/d/yyyy</basic-object>
           </compound-object>
-          <basic-object name="field">bc_report1_pregnancy_due_date</basic-object>
+          <basic-object name="field">BC_REPORT1_PREGNANCY_DUE_DATE</basic-object>
           <basic-object name="format">M/d/yyyy</basic-object>
           <basic-object name="nullValue"></basic-object>
         </template>
