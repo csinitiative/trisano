@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8' ?>
 <XMI xmi.version = '1.2' xmlns:CWM = 'org.omg.xmi.namespace.CWM' xmlns:CWMTFM = 'org.omg.xmi.namespace.CWMTFM'
   xmlns:CWMMDB = 'org.omg.xmi.namespace.CWMMDB' xmlns:CWMRDB = 'org.omg.xmi.namespace.CWMRDB'
-  xmlns:CWMOLAP = 'org.omg.xmi.namespace.CWMOLAP' timestamp = 'Fri Aug 20 11:50:55 MDT 2010'>
+  xmlns:CWMOLAP = 'org.omg.xmi.namespace.CWMOLAP' timestamp = 'Thu Aug 26 11:15:23 MDT 2010'>
   <XMI.header>
     <XMI.documentation>
       <XMI.exporter>Netbeans XMI Writer</XMI.exporter>
@@ -15,45 +15,45 @@
       <CWM:Namespace.ownedElement>
         <CWM:KeyRelationship xmi.id = 'a4'>
           <CWM:ModelElement.taggedValue>
-            <CWM:TaggedValue xmi.id = 'a5' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT1_REPORT1'/>
+            <CWM:TaggedValue xmi.id = 'a5' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT4_REPORT4'/>
             <CWM:TaggedValue xmi.id = 'a6' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
-            <CWM:TaggedValue xmi.id = 'a7' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT1_ID'/>
+            <CWM:TaggedValue xmi.id = 'a7' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT4_ID'/>
             <CWM:TaggedValue xmi.id = 'a8' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
             <CWM:TaggedValue xmi.id = 'a9' tag = 'RELATIONSHIP_TYPE' value = '0:N'/>
-            <CWM:TaggedValue xmi.id = 'a10' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'a'/>
+            <CWM:TaggedValue xmi.id = 'a10' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'd'/>
             <CWM:TaggedValue xmi.id = 'a11' tag = 'RELATIONSHIP_DESCRIPTION' value = ''/>
           </CWM:ModelElement.taggedValue>
         </CWM:KeyRelationship>
         <CWM:KeyRelationship xmi.id = 'a12'>
           <CWM:ModelElement.taggedValue>
-            <CWM:TaggedValue xmi.id = 'a13' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
-            <CWM:TaggedValue xmi.id = 'a14' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_REPORT2_REPORT2'/>
-            <CWM:TaggedValue xmi.id = 'a15' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
-            <CWM:TaggedValue xmi.id = 'a16' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_REPORT2_ID'/>
-            <CWM:TaggedValue xmi.id = 'a17' tag = 'RELATIONSHIP_TYPE' value = 'N:0'/>
-            <CWM:TaggedValue xmi.id = 'a18' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'b'/>
+            <CWM:TaggedValue xmi.id = 'a13' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT3_REPORT3'/>
+            <CWM:TaggedValue xmi.id = 'a14' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
+            <CWM:TaggedValue xmi.id = 'a15' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT3_ID'/>
+            <CWM:TaggedValue xmi.id = 'a16' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
+            <CWM:TaggedValue xmi.id = 'a17' tag = 'RELATIONSHIP_TYPE' value = '0:N'/>
+            <CWM:TaggedValue xmi.id = 'a18' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'c'/>
             <CWM:TaggedValue xmi.id = 'a19' tag = 'RELATIONSHIP_DESCRIPTION' value = ''/>
           </CWM:ModelElement.taggedValue>
         </CWM:KeyRelationship>
         <CWM:KeyRelationship xmi.id = 'a20'>
           <CWM:ModelElement.taggedValue>
-            <CWM:TaggedValue xmi.id = 'a21' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT3_REPORT3'/>
-            <CWM:TaggedValue xmi.id = 'a22' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
-            <CWM:TaggedValue xmi.id = 'a23' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT3_ID'/>
-            <CWM:TaggedValue xmi.id = 'a24' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
-            <CWM:TaggedValue xmi.id = 'a25' tag = 'RELATIONSHIP_TYPE' value = '0:N'/>
-            <CWM:TaggedValue xmi.id = 'a26' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'c'/>
+            <CWM:TaggedValue xmi.id = 'a21' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
+            <CWM:TaggedValue xmi.id = 'a22' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_REPORT2_REPORT2'/>
+            <CWM:TaggedValue xmi.id = 'a23' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
+            <CWM:TaggedValue xmi.id = 'a24' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_REPORT2_ID'/>
+            <CWM:TaggedValue xmi.id = 'a25' tag = 'RELATIONSHIP_TYPE' value = 'N:0'/>
+            <CWM:TaggedValue xmi.id = 'a26' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'b'/>
             <CWM:TaggedValue xmi.id = 'a27' tag = 'RELATIONSHIP_DESCRIPTION' value = ''/>
           </CWM:ModelElement.taggedValue>
         </CWM:KeyRelationship>
         <CWM:KeyRelationship xmi.id = 'a28'>
           <CWM:ModelElement.taggedValue>
-            <CWM:TaggedValue xmi.id = 'a29' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT4_REPORT4'/>
+            <CWM:TaggedValue xmi.id = 'a29' tag = 'RELATIONSHIP_TABLENAME_PARENT' value = 'BT_REPORT1_REPORT1'/>
             <CWM:TaggedValue xmi.id = 'a30' tag = 'RELATIONSHIP_TABLENAME_CHILD' value = 'BT_MORB_SEC_JURIS_MORB_SEC_JURIS'/>
-            <CWM:TaggedValue xmi.id = 'a31' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT4_ID'/>
+            <CWM:TaggedValue xmi.id = 'a31' tag = 'RELATIONSHIP_FIELDNAME_PARENT' value = 'BC_REPORT1_ID'/>
             <CWM:TaggedValue xmi.id = 'a32' tag = 'RELATIONSHIP_FIELDNAME_CHILD' value = 'BC_MORB_SEC_JURIS_DW_MORBIDITY_EVENTS_ID'/>
             <CWM:TaggedValue xmi.id = 'a33' tag = 'RELATIONSHIP_TYPE' value = '0:N'/>
-            <CWM:TaggedValue xmi.id = 'a34' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'd'/>
+            <CWM:TaggedValue xmi.id = 'a34' tag = 'RELATIONSHIP_JOIN_ORDER_KEY' value = 'a'/>
             <CWM:TaggedValue xmi.id = 'a35' tag = 'RELATIONSHIP_DESCRIPTION' value = ''/>
           </CWM:ModelElement.taggedValue>
         </CWM:KeyRelationship>
@@ -579,10 +579,10 @@
         </CWM:Extent>
       </CWM:Namespace.ownedElement>
       <CWMMDB:Schema.dimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a240' name = 'BC_REPORT1_PREGNANCY_DUE_DATE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a240' name = 'BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a241' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'PREGNANCY_DUE_DATE'/>
+              value = 'EXPECTED_DELIVERY_FACILITY_PHONE'/>
             <CWM:TaggedValue xmi.id = 'a242' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -590,10 +590,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a244' name = 'BC_REPORT1_ID'>
+        <CWMMDB:DimensionedObject xmi.id = 'a244' name = 'BC_REPORT1_INVESTIGATING_JURISDICTION'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a245' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ID'/>
+              value = 'INVESTIGATING_JURISDICTION'/>
             <CWM:TaggedValue xmi.id = 'a246' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -601,10 +601,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a247' name = 'BC_REPORT1_NAME'>
+        <CWMMDB:DimensionedObject xmi.id = 'a247' name = 'BC_REPORT1_EXPECTED_DELIVERY_FACILITY'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a248' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NAME'/>
+              value = 'EXPECTED_DELIVERY_FACILITY'/>
             <CWM:TaggedValue xmi.id = 'a249' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -623,10 +623,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a253' name = 'BC_REPORT1_EXPECTED_DELIVERY_FACILITY'>
+        <CWMMDB:DimensionedObject xmi.id = 'a253' name = 'BC_REPORT1_NAME'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a254' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'EXPECTED_DELIVERY_FACILITY'/>
+              value = 'NAME'/>
             <CWM:TaggedValue xmi.id = 'a255' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -634,10 +634,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a256' name = 'BC_REPORT1_EXPECTED_DELIVERY_FACILITY_PHONE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a256' name = 'BC_REPORT1_ID'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a257' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'EXPECTED_DELIVERY_FACILITY_PHONE'/>
+              value = 'ID'/>
             <CWM:TaggedValue xmi.id = 'a258' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -645,10 +645,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a259' name = 'BC_REPORT1_INVESTIGATING_JURISDICTION'>
+        <CWMMDB:DimensionedObject xmi.id = 'a259' name = 'BC_REPORT1_PREGNANCY_DUE_DATE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a260' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'INVESTIGATING_JURISDICTION'/>
+              value = 'PREGNANCY_DUE_DATE'/>
             <CWM:TaggedValue xmi.id = 'a261' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT1_REPORT1'/>
           </CWM:ModelElement.taggedValue>
@@ -656,10 +656,10 @@
             <CWMMDB:Dimension xmi.idref = 'a243'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a262' name = 'BC_REPORT3_FIRST_DUE_DATE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a262' name = 'BC_REPORT3_CONTACT_AGE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a263' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'FIRST_DUE_DATE'/>
+              value = 'CONTACT_AGE'/>
             <CWM:TaggedValue xmi.id = 'a264' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -667,10 +667,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a266' name = 'BC_REPORT3_ID'>
+        <CWMMDB:DimensionedObject xmi.id = 'a266' name = 'BC_REPORT3_ACTION'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a267' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ID'/>
+              value = 'ACTION'/>
             <CWM:TaggedValue xmi.id = 'a268' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -678,10 +678,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a269' name = 'BC_REPORT3_NAME'>
+        <CWMMDB:DimensionedObject xmi.id = 'a269' name = 'BC_REPORT3_CONTACT_BIRTH_DATE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a270' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NAME'/>
+              value = 'CONTACT_BIRTH_DATE'/>
             <CWM:TaggedValue xmi.id = 'a271' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -689,10 +689,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a272' name = 'BC_REPORT3_ADDRESS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a272' name = 'BC_REPORT3_CONTACT_NAME'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a273' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ADDRESS'/>
+              value = 'CONTACT_NAME'/>
             <CWM:TaggedValue xmi.id = 'a274' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -700,10 +700,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a275' name = 'BC_REPORT3_PHONE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a275' name = 'BC_REPORT3_CONTACT_TYPE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a276' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'PHONE'/>
+              value = 'CONTACT_TYPE'/>
             <CWM:TaggedValue xmi.id = 'a277' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -722,10 +722,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a281' name = 'BC_REPORT3_CONTACT_TYPE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a281' name = 'BC_REPORT3_PHONE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a282' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CONTACT_TYPE'/>
+              value = 'PHONE'/>
             <CWM:TaggedValue xmi.id = 'a283' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -733,10 +733,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a284' name = 'BC_REPORT3_CONTACT_NAME'>
+        <CWMMDB:DimensionedObject xmi.id = 'a284' name = 'BC_REPORT3_ADDRESS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a285' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CONTACT_NAME'/>
+              value = 'ADDRESS'/>
             <CWM:TaggedValue xmi.id = 'a286' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -744,10 +744,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a287' name = 'BC_REPORT3_CONTACT_BIRTH_DATE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a287' name = 'BC_REPORT3_NAME'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a288' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CONTACT_BIRTH_DATE'/>
+              value = 'NAME'/>
             <CWM:TaggedValue xmi.id = 'a289' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -755,10 +755,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a290' name = 'BC_REPORT3_CONTACT_AGE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a290' name = 'BC_REPORT3_ID'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a291' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CONTACT_AGE'/>
+              value = 'ID'/>
             <CWM:TaggedValue xmi.id = 'a292' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -766,10 +766,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a293' name = 'BC_REPORT3_ACTION'>
+        <CWMMDB:DimensionedObject xmi.id = 'a293' name = 'BC_REPORT3_FIRST_DUE_DATE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a294' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ACTION'/>
+              value = 'FIRST_DUE_DATE'/>
             <CWM:TaggedValue xmi.id = 'a295' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT3_REPORT3'/>
           </CWM:ModelElement.taggedValue>
@@ -777,10 +777,10 @@
             <CWMMDB:Dimension xmi.idref = 'a265'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a296' name = 'BC_REPORT4_DIED_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a296' name = 'BC_REPORT4_OTHER_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a297' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DIED_HS'/>
+              value = 'OTHER_HS'/>
             <CWM:TaggedValue xmi.id = 'a298' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -788,10 +788,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a300' name = 'BC_REPORT4_TOTAL'>
+        <CWMMDB:DimensionedObject xmi.id = 'a300' name = 'BC_REPORT4_FALSE_POSITIVE_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a301' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'TOTAL'/>
+              value = 'FALSE_POSITIVE_HS'/>
             <CWM:TaggedValue xmi.id = 'a302' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -799,10 +799,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a303' name = 'BC_REPORT4_ID'>
+        <CWMMDB:DimensionedObject xmi.id = 'a303' name = 'BC_REPORT4_TOTAL_HS_TESTED'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a304' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ID'/>
+              value = 'TOTAL_HS_TESTED'/>
             <CWM:TaggedValue xmi.id = 'a305' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -810,10 +810,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a306' name = 'BC_REPORT4_INVESTIGATING_JURISDICTION'>
+        <CWMMDB:DimensionedObject xmi.id = 'a306' name = 'BC_REPORT4_HBSAG_POS_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a307' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'INVESTIGATING_JURISDICTION'/>
+              value = 'HBSAG_POS_HS'/>
             <CWM:TaggedValue xmi.id = 'a308' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -821,10 +821,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a309' name = 'BC_REPORT4_ACTIVE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a309' name = 'BC_REPORT4_ANTIHB_POS_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a310' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ACTIVE'/>
+              value = 'ANTIHB_POS_HS'/>
             <CWM:TaggedValue xmi.id = 'a311' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -832,10 +832,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a312' name = 'BC_REPORT4_COMPLETED'>
+        <CWMMDB:DimensionedObject xmi.id = 'a312' name = 'BC_REPORT4_DOSE1_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a313' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'COMPLETED'/>
+              value = 'DOSE1_HS'/>
             <CWM:TaggedValue xmi.id = 'a314' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -843,10 +843,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a315' name = 'BC_REPORT4_PROVIDER_REFUSAL'>
+        <CWMMDB:DimensionedObject xmi.id = 'a315' name = 'BC_REPORT4_DOSE2_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a316' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'PROVIDER_REFUSAL'/>
+              value = 'DOSE2_HS'/>
             <CWM:TaggedValue xmi.id = 'a317' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -854,10 +854,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a318' name = 'BC_REPORT4_MOTHER_FAM_REFUSAL'>
+        <CWMMDB:DimensionedObject xmi.id = 'a318' name = 'BC_REPORT4_DOSE3_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a319' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'MOTHER_FAM_REFUSAL'/>
+              value = 'DOSE3_HS'/>
             <CWM:TaggedValue xmi.id = 'a320' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -865,10 +865,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a321' name = 'BC_REPORT4_MOVED'>
+        <CWMMDB:DimensionedObject xmi.id = 'a321' name = 'BC_REPORT4_DOSE1_HBIG_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a322' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'MOVED'/>
+              value = 'DOSE1_HBIG_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a323' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -876,10 +876,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a324' name = 'BC_REPORT4_UNABLE_LOCATE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a324' name = 'BC_REPORT4_HBIG_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a325' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'UNABLE_LOCATE'/>
+              value = 'HBIG_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a326' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -887,10 +887,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a327' name = 'BC_REPORT4_INFANT_DIED'>
+        <CWMMDB:DimensionedObject xmi.id = 'a327' name = 'BC_REPORT4_DOSE1_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a328' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'INFANT_DIED'/>
+              value = 'DOSE1_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a329' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -898,10 +898,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a330' name = 'BC_REPORT4_INFANT_ADOPTED'>
+        <CWMMDB:DimensionedObject xmi.id = 'a330' name = 'BC_REPORT4_NEITHER_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a331' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'INFANT_ADOPTED'/>
+              value = 'NEITHER_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a332' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -909,10 +909,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a333' name = 'BC_REPORT4_FALSE_POS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a333' name = 'BC_REPORT4_ALL_12M_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a334' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'FALSE_POS'/>
+              value = 'ALL_12M_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a335' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -920,10 +920,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a336' name = 'BC_REPORT4_MISCARRIAGE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a336' name = 'BC_REPORT4_ALL_8M_TRANS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a337' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'MISCARRIAGE'/>
+              value = 'ALL_8M_TRANS'/>
             <CWM:TaggedValue xmi.id = 'a338' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -931,10 +931,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a339' name = 'BC_REPORT4_OTHER'>
+        <CWMMDB:DimensionedObject xmi.id = 'a339' name = 'BC_REPORT4_UNABLE_TO_LOCATE_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a340' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'OTHER'/>
+              value = 'UNABLE_TO_LOCATE_HS'/>
             <CWM:TaggedValue xmi.id = 'a341' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -942,10 +942,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a342' name = 'BC_REPORT4_BOTH_24'>
+        <CWMMDB:DimensionedObject xmi.id = 'a342' name = 'BC_REPORT4_MOVED_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a343' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_24'/>
+              value = 'MOVED_HS'/>
             <CWM:TaggedValue xmi.id = 'a344' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -953,10 +953,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a345' name = 'BC_REPORT4_DOSE1_24'>
+        <CWMMDB:DimensionedObject xmi.id = 'a345' name = 'BC_REPORT4_REFUSED_TREATMENT_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a346' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_24'/>
+              value = 'REFUSED_TREATMENT_HS'/>
             <CWM:TaggedValue xmi.id = 'a347' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -964,10 +964,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a348' name = 'BC_REPORT4_HBIG_24'>
+        <CWMMDB:DimensionedObject xmi.id = 'a348' name = 'BC_REPORT4_PROVIDER_REFUSAL_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a349' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_24'/>
+              value = 'PROVIDER_REFUSAL_HS'/>
             <CWM:TaggedValue xmi.id = 'a350' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -975,10 +975,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a351' name = 'BC_REPORT4_NEITHER_24'>
+        <CWMMDB:DimensionedObject xmi.id = 'a351' name = 'BC_REPORT4_COMPLETED_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a352' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_24'/>
+              value = 'COMPLETED_HS'/>
             <CWM:TaggedValue xmi.id = 'a353' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -986,10 +986,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a354' name = 'BC_REPORT4_BOTH_48'>
+        <CWMMDB:DimensionedObject xmi.id = 'a354' name = 'BC_REPORT4_ACTIVE_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a355' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_48'/>
+              value = 'ACTIVE_HS'/>
             <CWM:TaggedValue xmi.id = 'a356' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -997,10 +997,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a357' name = 'BC_REPORT4_DOSE1_48'>
+        <CWMMDB:DimensionedObject xmi.id = 'a357' name = 'BC_REPORT4_TOTAL_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a358' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_48'/>
+              value = 'TOTAL_HS'/>
             <CWM:TaggedValue xmi.id = 'a359' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1008,10 +1008,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a360' name = 'BC_REPORT4_HBIG_48'>
+        <CWMMDB:DimensionedObject xmi.id = 'a360' name = 'BC_REPORT4_RECEIVED_COMVAX'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a361' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_48'/>
+              value = 'RECEIVED_COMVAX'/>
             <CWM:TaggedValue xmi.id = 'a362' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1019,10 +1019,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a363' name = 'BC_REPORT4_NEITHER_48'>
+        <CWMMDB:DimensionedObject xmi.id = 'a363' name = 'BC_REPORT4_POSITIVE_HBSAG'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a364' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_48'/>
+              value = 'POSITIVE_HBSAG'/>
             <CWM:TaggedValue xmi.id = 'a365' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1030,10 +1030,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a366' name = 'BC_REPORT4_BOTH_7D'>
+        <CWMMDB:DimensionedObject xmi.id = 'a366' name = 'BC_REPORT4_POSITIVE_ANTIHB'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a367' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_7D'/>
+              value = 'POSITIVE_ANTIHB'/>
             <CWM:TaggedValue xmi.id = 'a368' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1041,10 +1041,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a369' name = 'BC_REPORT4_DOSE1_7D'>
+        <CWMMDB:DimensionedObject xmi.id = 'a369' name = 'BC_REPORT4_TOTAL_SEROTEST'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a370' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_7D'/>
+              value = 'TOTAL_SEROTEST'/>
             <CWM:TaggedValue xmi.id = 'a371' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1052,10 +1052,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a372' name = 'BC_REPORT4_HBIG_7D'>
+        <CWMMDB:DimensionedObject xmi.id = 'a372' name = 'BC_REPORT4_SEROTEST_15M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a373' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_7D'/>
+              value = 'SEROTEST_15M'/>
             <CWM:TaggedValue xmi.id = 'a374' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1063,10 +1063,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a375' name = 'BC_REPORT4_NEITHER_7D'>
+        <CWMMDB:DimensionedObject xmi.id = 'a375' name = 'BC_REPORT4_SEROTEST_12M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a376' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_7D'/>
+              value = 'SEROTEST_12M'/>
             <CWM:TaggedValue xmi.id = 'a377' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1074,10 +1074,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a378' name = 'BC_REPORT4_BOTH_2M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a378' name = 'BC_REPORT4_SIX_DOSE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a379' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_2M'/>
+              value = 'SIX_DOSE'/>
             <CWM:TaggedValue xmi.id = 'a380' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1085,10 +1085,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a381' name = 'BC_REPORT4_DOSE1_2M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a381' name = 'BC_REPORT4_FIVE_DOSE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a382' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_2M'/>
+              value = 'FIVE_DOSE'/>
             <CWM:TaggedValue xmi.id = 'a383' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1096,10 +1096,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a384' name = 'BC_REPORT4_HBIG_2M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a384' name = 'BC_REPORT4_FOUR_DOSE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a385' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_2M'/>
+              value = 'FOUR_DOSE'/>
             <CWM:TaggedValue xmi.id = 'a386' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1107,10 +1107,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a387' name = 'BC_REPORT4_NEITHER_2M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a387' name = 'BC_REPORT4_NEITHER_12M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a388' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_2M'/>
+              value = 'NEITHER_12M'/>
             <CWM:TaggedValue xmi.id = 'a389' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1118,10 +1118,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a390' name = 'BC_REPORT4_BOTH_8M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a390' name = 'BC_REPORT4_HBIG_12M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a391' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_8M'/>
+              value = 'HBIG_12M'/>
             <CWM:TaggedValue xmi.id = 'a392' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1129,10 +1129,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a393' name = 'BC_REPORT4_DOSE1_8M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a393' name = 'BC_REPORT4_DOSE1_12M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a394' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_8M'/>
+              value = 'DOSE1_12M'/>
             <CWM:TaggedValue xmi.id = 'a395' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1140,10 +1140,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a396' name = 'BC_REPORT4_HBIG_8M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a396' name = 'BC_REPORT4_BOTH_12M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a397' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_8M'/>
+              value = 'BOTH_12M'/>
             <CWM:TaggedValue xmi.id = 'a398' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1162,10 +1162,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a402' name = 'BC_REPORT4_BOTH_12M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a402' name = 'BC_REPORT4_HBIG_8M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a403' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'BOTH_12M'/>
+              value = 'HBIG_8M'/>
             <CWM:TaggedValue xmi.id = 'a404' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1173,10 +1173,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a405' name = 'BC_REPORT4_DOSE1_12M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a405' name = 'BC_REPORT4_DOSE1_8M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a406' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_12M'/>
+              value = 'DOSE1_8M'/>
             <CWM:TaggedValue xmi.id = 'a407' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1184,10 +1184,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a408' name = 'BC_REPORT4_HBIG_12M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a408' name = 'BC_REPORT4_BOTH_8M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a409' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_12M'/>
+              value = 'BOTH_8M'/>
             <CWM:TaggedValue xmi.id = 'a410' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1195,10 +1195,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a411' name = 'BC_REPORT4_NEITHER_12M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a411' name = 'BC_REPORT4_NEITHER_2M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a412' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_12M'/>
+              value = 'NEITHER_2M'/>
             <CWM:TaggedValue xmi.id = 'a413' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1206,10 +1206,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a414' name = 'BC_REPORT4_FOUR_DOSE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a414' name = 'BC_REPORT4_HBIG_2M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a415' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'FOUR_DOSE'/>
+              value = 'HBIG_2M'/>
             <CWM:TaggedValue xmi.id = 'a416' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1217,10 +1217,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a417' name = 'BC_REPORT4_FIVE_DOSE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a417' name = 'BC_REPORT4_DOSE1_2M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a418' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'FIVE_DOSE'/>
+              value = 'DOSE1_2M'/>
             <CWM:TaggedValue xmi.id = 'a419' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1228,10 +1228,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a420' name = 'BC_REPORT4_SIX_DOSE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a420' name = 'BC_REPORT4_BOTH_2M'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a421' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'SIX_DOSE'/>
+              value = 'BOTH_2M'/>
             <CWM:TaggedValue xmi.id = 'a422' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1239,10 +1239,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a423' name = 'BC_REPORT4_SEROTEST_12M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a423' name = 'BC_REPORT4_NEITHER_7D'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a424' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'SEROTEST_12M'/>
+              value = 'NEITHER_7D'/>
             <CWM:TaggedValue xmi.id = 'a425' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1250,10 +1250,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a426' name = 'BC_REPORT4_SEROTEST_15M'>
+        <CWMMDB:DimensionedObject xmi.id = 'a426' name = 'BC_REPORT4_HBIG_7D'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a427' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'SEROTEST_15M'/>
+              value = 'HBIG_7D'/>
             <CWM:TaggedValue xmi.id = 'a428' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1261,10 +1261,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a429' name = 'BC_REPORT4_TOTAL_SEROTEST'>
+        <CWMMDB:DimensionedObject xmi.id = 'a429' name = 'BC_REPORT4_DOSE1_7D'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a430' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'TOTAL_SEROTEST'/>
+              value = 'DOSE1_7D'/>
             <CWM:TaggedValue xmi.id = 'a431' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1272,10 +1272,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a432' name = 'BC_REPORT4_POSITIVE_ANTIHB'>
+        <CWMMDB:DimensionedObject xmi.id = 'a432' name = 'BC_REPORT4_BOTH_7D'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a433' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'POSITIVE_ANTIHB'/>
+              value = 'BOTH_7D'/>
             <CWM:TaggedValue xmi.id = 'a434' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1283,10 +1283,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a435' name = 'BC_REPORT4_POSITIVE_HBSAG'>
+        <CWMMDB:DimensionedObject xmi.id = 'a435' name = 'BC_REPORT4_NEITHER_48'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a436' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'POSITIVE_HBSAG'/>
+              value = 'NEITHER_48'/>
             <CWM:TaggedValue xmi.id = 'a437' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1294,10 +1294,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a438' name = 'BC_REPORT4_RECEIVED_COMVAX'>
+        <CWMMDB:DimensionedObject xmi.id = 'a438' name = 'BC_REPORT4_HBIG_48'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a439' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'RECEIVED_COMVAX'/>
+              value = 'HBIG_48'/>
             <CWM:TaggedValue xmi.id = 'a440' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1305,10 +1305,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a441' name = 'BC_REPORT4_TOTAL_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a441' name = 'BC_REPORT4_DOSE1_48'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a442' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'TOTAL_HS'/>
+              value = 'DOSE1_48'/>
             <CWM:TaggedValue xmi.id = 'a443' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1316,10 +1316,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a444' name = 'BC_REPORT4_ACTIVE_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a444' name = 'BC_REPORT4_BOTH_48'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a445' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ACTIVE_HS'/>
+              value = 'BOTH_48'/>
             <CWM:TaggedValue xmi.id = 'a446' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1327,10 +1327,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a447' name = 'BC_REPORT4_COMPLETED_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a447' name = 'BC_REPORT4_NEITHER_24'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a448' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'COMPLETED_HS'/>
+              value = 'NEITHER_24'/>
             <CWM:TaggedValue xmi.id = 'a449' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1338,10 +1338,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a450' name = 'BC_REPORT4_PROVIDER_REFUSAL_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a450' name = 'BC_REPORT4_HBIG_24'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a451' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'PROVIDER_REFUSAL_HS'/>
+              value = 'HBIG_24'/>
             <CWM:TaggedValue xmi.id = 'a452' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1349,10 +1349,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a453' name = 'BC_REPORT4_REFUSED_TREATMENT_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a453' name = 'BC_REPORT4_DOSE1_24'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a454' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'REFUSED_TREATMENT_HS'/>
+              value = 'DOSE1_24'/>
             <CWM:TaggedValue xmi.id = 'a455' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1360,10 +1360,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a456' name = 'BC_REPORT4_MOVED_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a456' name = 'BC_REPORT4_BOTH_24'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a457' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'MOVED_HS'/>
+              value = 'BOTH_24'/>
             <CWM:TaggedValue xmi.id = 'a458' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1371,10 +1371,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a459' name = 'BC_REPORT4_UNABLE_TO_LOCATE_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a459' name = 'BC_REPORT4_OTHER'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a460' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'UNABLE_TO_LOCATE_HS'/>
+              value = 'OTHER'/>
             <CWM:TaggedValue xmi.id = 'a461' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1382,10 +1382,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a462' name = 'BC_REPORT4_ALL_8M_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a462' name = 'BC_REPORT4_MISCARRIAGE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a463' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ALL_8M_TRANS'/>
+              value = 'MISCARRIAGE'/>
             <CWM:TaggedValue xmi.id = 'a464' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1393,10 +1393,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a465' name = 'BC_REPORT4_ALL_12M_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a465' name = 'BC_REPORT4_FALSE_POS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a466' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ALL_12M_TRANS'/>
+              value = 'FALSE_POS'/>
             <CWM:TaggedValue xmi.id = 'a467' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1404,10 +1404,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a468' name = 'BC_REPORT4_NEITHER_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a468' name = 'BC_REPORT4_INFANT_ADOPTED'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a469' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'NEITHER_TRANS'/>
+              value = 'INFANT_ADOPTED'/>
             <CWM:TaggedValue xmi.id = 'a470' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1415,10 +1415,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a471' name = 'BC_REPORT4_DOSE1_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a471' name = 'BC_REPORT4_INFANT_DIED'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a472' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_TRANS'/>
+              value = 'INFANT_DIED'/>
             <CWM:TaggedValue xmi.id = 'a473' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1426,10 +1426,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a474' name = 'BC_REPORT4_HBIG_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a474' name = 'BC_REPORT4_UNABLE_LOCATE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a475' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBIG_TRANS'/>
+              value = 'UNABLE_LOCATE'/>
             <CWM:TaggedValue xmi.id = 'a476' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1437,10 +1437,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a477' name = 'BC_REPORT4_DOSE1_HBIG_TRANS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a477' name = 'BC_REPORT4_MOVED'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a478' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_HBIG_TRANS'/>
+              value = 'MOVED'/>
             <CWM:TaggedValue xmi.id = 'a479' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1448,10 +1448,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a480' name = 'BC_REPORT4_DOSE3_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a480' name = 'BC_REPORT4_MOTHER_FAM_REFUSAL'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a481' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE3_HS'/>
+              value = 'MOTHER_FAM_REFUSAL'/>
             <CWM:TaggedValue xmi.id = 'a482' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1459,10 +1459,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a483' name = 'BC_REPORT4_DOSE2_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a483' name = 'BC_REPORT4_PROVIDER_REFUSAL'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a484' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE2_HS'/>
+              value = 'PROVIDER_REFUSAL'/>
             <CWM:TaggedValue xmi.id = 'a485' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1470,10 +1470,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a486' name = 'BC_REPORT4_DOSE1_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a486' name = 'BC_REPORT4_COMPLETED'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a487' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DOSE1_HS'/>
+              value = 'COMPLETED'/>
             <CWM:TaggedValue xmi.id = 'a488' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1481,10 +1481,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a489' name = 'BC_REPORT4_ANTIHB_POS_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a489' name = 'BC_REPORT4_ACTIVE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a490' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ANTIHB_POS_HS'/>
+              value = 'ACTIVE'/>
             <CWM:TaggedValue xmi.id = 'a491' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1492,10 +1492,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a492' name = 'BC_REPORT4_HBSAG_POS_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a492' name = 'BC_REPORT4_INVESTIGATING_JURISDICTION'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a493' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'HBSAG_POS_HS'/>
+              value = 'INVESTIGATING_JURISDICTION'/>
             <CWM:TaggedValue xmi.id = 'a494' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1503,10 +1503,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a495' name = 'BC_REPORT4_TOTAL_HS_TESTED'>
+        <CWMMDB:DimensionedObject xmi.id = 'a495' name = 'BC_REPORT4_ID'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a496' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'TOTAL_HS_TESTED'/>
+              value = 'ID'/>
             <CWM:TaggedValue xmi.id = 'a497' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1514,10 +1514,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a498' name = 'BC_REPORT4_OTHER_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a498' name = 'BC_REPORT4_TOTAL'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a499' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'OTHER_HS'/>
+              value = 'TOTAL'/>
             <CWM:TaggedValue xmi.id = 'a500' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1525,10 +1525,10 @@
             <CWMMDB:Dimension xmi.idref = 'a299'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a501' name = 'BC_REPORT4_FALSE_POSITIVE_HS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a501' name = 'BC_REPORT4_DIED_HS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a502' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'FALSE_POSITIVE_HS'/>
+              value = 'DIED_HS'/>
             <CWM:TaggedValue xmi.id = 'a503' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT4_REPORT4'/>
           </CWM:ModelElement.taggedValue>
@@ -1558,10 +1558,10 @@
             <CWMMDB:Dimension xmi.idref = 'a507'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a511' name = 'BC_REPORT2_CONTACT_INFANTS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a511' name = 'BC_REPORT2_INVESTIGATING_JURISDICTION'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a512' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CONTACT_INFANTS'/>
+              value = 'INVESTIGATING_JURISDICTION'/>
             <CWM:TaggedValue xmi.id = 'a513' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1569,10 +1569,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a515' name = 'BC_REPORT2_CURRENTLY_ACTIVE'>
+        <CWMMDB:DimensionedObject xmi.id = 'a515' name = 'BC_REPORT2_ID'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a516' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'CURRENTLY_ACTIVE'/>
+              value = 'ID'/>
             <CWM:TaggedValue xmi.id = 'a517' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1580,10 +1580,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a518' name = 'BC_REPORT2_RETROSPECTIVE_INFANTS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a518' name = 'BC_REPORT2_DATE_ENTERED_INTO_SYSTEM'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a519' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'RETROSPECTIVE_INFANTS'/>
+              value = 'DATE_ENTERED_INTO_SYSTEM'/>
             <CWM:TaggedValue xmi.id = 'a520' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1591,10 +1591,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a521' name = 'BC_REPORT2_PROSPECTIVE_INFANTS'>
+        <CWMMDB:DimensionedObject xmi.id = 'a521' name = 'BC_REPORT2_YEAR'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a522' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'PROSPECTIVE_INFANTS'/>
+              value = 'YEAR'/>
             <CWM:TaggedValue xmi.id = 'a523' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1602,10 +1602,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a524' name = 'BC_REPORT2_YEAR'>
+        <CWMMDB:DimensionedObject xmi.id = 'a524' name = 'BC_REPORT2_PROSPECTIVE_INFANTS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a525' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'YEAR'/>
+              value = 'PROSPECTIVE_INFANTS'/>
             <CWM:TaggedValue xmi.id = 'a526' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1613,10 +1613,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a527' name = 'BC_REPORT2_DATE_ENTERED_INTO_SYSTEM'>
+        <CWMMDB:DimensionedObject xmi.id = 'a527' name = 'BC_REPORT2_RETROSPECTIVE_INFANTS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a528' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'DATE_ENTERED_INTO_SYSTEM'/>
+              value = 'RETROSPECTIVE_INFANTS'/>
             <CWM:TaggedValue xmi.id = 'a529' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1624,10 +1624,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a530' name = 'BC_REPORT2_INVESTIGATING_JURISDICTION'>
+        <CWMMDB:DimensionedObject xmi.id = 'a530' name = 'BC_REPORT2_CURRENTLY_ACTIVE'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a531' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'INVESTIGATING_JURISDICTION'/>
+              value = 'CURRENTLY_ACTIVE'/>
             <CWM:TaggedValue xmi.id = 'a532' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1635,10 +1635,10 @@
             <CWMMDB:Dimension xmi.idref = 'a514'/>
           </CWMMDB:DimensionedObject.dimension>
         </CWMMDB:DimensionedObject>
-        <CWMMDB:DimensionedObject xmi.id = 'a533' name = 'BC_REPORT2_ID'>
+        <CWMMDB:DimensionedObject xmi.id = 'a533' name = 'BC_REPORT2_CONTACT_INFANTS'>
           <CWM:ModelElement.taggedValue>
             <CWM:TaggedValue xmi.id = 'a534' tag = 'BUSINESS_COLUMN_PHYSICAL_COLUMN_NAME'
-              value = 'ID'/>
+              value = 'CONTACT_INFANTS'/>
             <CWM:TaggedValue xmi.id = 'a535' tag = 'BUSINESS_COLUMN_BUSINESS_TABLE'
               value = 'BT_REPORT2_REPORT2'/>
           </CWM:ModelElement.taggedValue>
@@ -1791,14 +1791,14 @@
             <CWM:TaggedValue xmi.id = 'a555' tag = 'TABLE_IS_DRAWN' value = 'Y'/>
           </CWM:ModelElement.taggedValue>
           <CWMMDB:Dimension.dimensionedObject>
+            <CWMMDB:DimensionedObject xmi.idref = 'a511'/>
+            <CWMMDB:DimensionedObject xmi.idref = 'a515'/>
+            <CWMMDB:DimensionedObject xmi.idref = 'a518'/>
+            <CWMMDB:DimensionedObject xmi.idref = 'a521'/>
+            <CWMMDB:DimensionedObject xmi.idref = 'a524'/>
+            <CWMMDB:DimensionedObject xmi.idref = 'a527'/>
             <CWMMDB:DimensionedObject xmi.idref = 'a530'/>
             <CWMMDB:DimensionedObject xmi.idref = 'a533'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a527'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a524'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a521'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a518'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a515'/>
-            <CWMMDB:DimensionedObject xmi.idref = 'a511'/>
           </CWMMDB:Dimension.dimensionedObject>
         </CWMMDB:Dimension>
       </CWMMDB:Schema.dimension>
@@ -6191,7 +6191,7 @@
         <CWMMDB:Schema xmi.idref = 'a3'/>
       </CWM:Description.modelElement>
     </CWM:Description>
-    <CWM:Description xmi.id = 'a1481' name = 'security' body = '&lt;security&gt;&#10;&lt;/security&gt;&#10;'
+    <CWM:Description xmi.id = 'a1481' name = 'security' body = '&lt;security&gt;&#10;  &lt;owner-rights&gt;&#10;  &lt;owner&gt;&lt;type&gt;role&lt;/type&gt;&lt;name&gt;Authenticated&lt;/name&gt;&lt;/owner&gt; &lt;rights&gt;-17&lt;/rights&gt;&#10;  &lt;/owner-rights&gt;&#10;&lt;/security&gt;&#10;'
       type = 'Security'>
       <CWM:Description.modelElement>
         <CWMMDB:Schema xmi.idref = 'a3'/>
