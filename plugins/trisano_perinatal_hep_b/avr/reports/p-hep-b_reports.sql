@@ -685,10 +685,21 @@ CREATE TABLE report4 AS
 CREATE TABLE morb_sec_juris AS
     SELECT dw_morbidity_events_id, name FROM trisano.dw_morbidity_secondary_jurisdictions_view;
 
+CREATE TABLE juris AS
+    SELECT name AS investigating_jurisdiction
+    FROM
+        trisano.places_view p
+        JOIN trisano.places_types_view pt
+            ON (pt.place_id = p.id)
+        JOIN trisano.codes_view c
+            ON (c.id = pt.type_id)
+    WHERE c.code_description = 'Jurisdiction';
+
 GRANT SELECT ON report1 TO trisano_ro;
 GRANT SELECT ON report2 TO trisano_ro;
 GRANT SELECT ON report3 TO trisano_ro;
 GRANT SELECT ON report4 TO trisano_ro;
 GRANT SELECT ON morb_sec_juris TO trisano_ro;
+GRANT SELECT ON juris TO trisano_ro;
 
 COMMIT;
