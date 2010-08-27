@@ -598,7 +598,15 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type = 'Infant' AND ((trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE 0 END AS total_serotest,
                     CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_antihb,
                     CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_hbsag,
-                    CASE WHEN contact_type = 'Infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE 0 END AS received_comvax,
+                    CASE
+                        WHEN contact_type = 'Infant' AND
+                            hepb_comvax1_date IS NOT NULL OR
+                            hepb_comvax2_date IS NOT NULL OR
+                            hepb_comvax3_date IS NOT NULL OR
+                            hepb_comvax4_date IS NOT NULL
+                        THEN 1
+                        ELSE 0
+                    END AS received_comvax,
                     CASE WHEN contact_type != 'Infant' THEN 1 ELSE 0 END AS total_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_positive_hs,
