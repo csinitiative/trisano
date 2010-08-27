@@ -298,7 +298,10 @@ STORAGE         text;
 COMMIT;
 
 BEGIN;
-CREATE OR REPLACE FUNCTION trisano.earliest_date(arr DATE[])
+
+SET search_path = trisano;
+
+CREATE OR REPLACE FUNCTION earliest_date(arr DATE[])
     RETURNS DATE STRICT IMMUTABLE LANGUAGE plpgsql AS
 $$
 DECLARE
