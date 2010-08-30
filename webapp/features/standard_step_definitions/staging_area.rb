@@ -111,11 +111,11 @@ end
 Then /^I should see the new lab result with '(.+)'$/ do |test_type|
   response.should contain(@staged_message.message_header.sending_facility)
   response.should contain(test_type)
-  response.should contain(@staged_message.observation_request.tests.first.result)
-  response.should contain(@staged_message.observation_request.collection_date)
-  response.should contain(/#{@staged_message.observation_request.specimen_source}/i)
-  response.should contain(@staged_message.observation_request.tests.first.reference_range)
-  response.should contain(@staged_message.observation_request.tests.first.observation_date)
+  response.should contain(@staged_message.observation_requests.first.tests.first.result)
+  response.should contain(@staged_message.observation_requests.first.collection_date)
+  response.should contain(/#{@staged_message.observation_requests.first.specimen_source}/i)
+  response.should contain(@staged_message.observation_requests.first.tests.first.reference_range)
+  response.should contain(@staged_message.observation_requests.first.tests.first.observation_date)
 end
 
 Then /^I should see a middle name of (.+)$/ do |m_name|
@@ -151,7 +151,7 @@ Then /^I should not see the discarded message$/ do
 end
 
 Then /^I should see a note for the assigned lab$/ do
-  response.should have_xpath("//div[@id='note-list']//p[text()='ELR with test type \"#{@staged_message.observation_request.tests[0].test_type}\" assigned to event.']")
+  response.should have_xpath("//div[@id='note-list']//p[text()='ELR with test type \"#{@staged_message.observation_requests.first.tests[0].test_type}\" assigned to event.']")
 end
 
 Then /^I should see a link back to the staged message$/ do
