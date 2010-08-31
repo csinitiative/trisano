@@ -50,10 +50,14 @@ class HL7::Message::Segment
     @child_types << child_type.to_sym
   end
 
+  def self.child_types
+    @child_types
+  end
+
   def collect_children(child_type)
     seg_name = child_type.to_s
     raise HL7::Exception, "invalid child type #{seg_name}" unless
-      @child_types.include?(child_type.to_sym)
+      self.class.child_types.include?(child_type.to_sym)
 
     hl7_klass = eval("HL7::Message::Segment::%s" % seg_name.upcase)
     sm_klass = eval("StagedMessages::%sWrapper" % seg_name.capitalize)
