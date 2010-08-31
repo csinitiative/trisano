@@ -38,15 +38,15 @@ describe Message do
   end
 
   it 'should return a message_header' do
-    @hl7.message_header.class == StagedMessages::MshWrapper
+    @hl7.message_header.class.should == StagedMessages::MshWrapper
   end
 
   it 'should return a patient ID' do
-    @hl7.patient_id.class == StagedMessages::PidWrapper
+    @hl7.patient_id.class.should == StagedMessages::PidWrapper
   end
 
   it 'should return an array of observation requests' do
-    @hl7.observation_requests.class == Array
+    @hl7.observation_requests.class.should == Array
   end
 
   describe 'message header' do
@@ -149,11 +149,11 @@ describe Message do
       @hl7.observation_requests.first.test_performed.should == 'Hepatitis Be Antigen'
     end
 
-    it 'should respond_to :colection_date' do
+    it 'should respond_to :collection_date' do
       @hl7.observation_requests.first.respond_to?(:collection_date).should be_true
     end
 
-    it 'should return the colection date' do
+    it 'should return the collection date' do
       @hl7.observation_requests.first.collection_date.should == '2009-03-19'
     end
 
@@ -163,6 +163,10 @@ describe Message do
 
     it 'should return the specimen source' do
       @hl7.observation_requests.first.specimen_source.should == 'BLOOD'
+    end
+
+    it 'should respond_to :specimens' do
+      @hl7.observation_requests.first.respond_to?(:specimens).should be_true
     end
 
     it 'should respond_to :tests' do

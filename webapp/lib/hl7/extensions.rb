@@ -50,8 +50,11 @@ class HL7::Message::Segment
     @child_types << child_type.to_sym
   end
 
-  def collect_children(cldtype)
-    seg_name = cldtype.to_s
+  def collect_children(child_type)
+    seg_name = child_type.to_s
+    raise HL7::Exception, "invalid child type #{seg_name}" unless
+      @child_types.include?(child_type.to_sym)
+
     hl7_klass = eval("HL7::Message::Segment::%s" % seg_name.upcase)
     sm_klass = eval("StagedMessages::%sWrapper" % seg_name.capitalize)
 
@@ -410,6 +413,13 @@ module StagedMessages
 
     def initialize(spm_segment)
       @spm_segment = spm_segment
+    end
+
+    # Returns an Array of StagedMessages::ObxWrapper objects
+    # corresponding to OBX segments associated with this SPM segment.
+    # Returns an empty array if none.
+    def tests
+      @tests ||= spm_segment.collect_children(:OBX)
     end
   end
 end
