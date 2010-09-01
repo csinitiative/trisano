@@ -36,6 +36,6 @@ class DefaultLocalesController < AdminController
   end
 
   def load_current
-    @default_locale = DefaultLocale.current
+    @default_locale = DefaultLocale.current || DefaultLocale.new(:short_name => I18n.default_locale)
   end
 end
