@@ -123,10 +123,17 @@ def create_super_role
 end
 
 def add_privilege_to_role_in_all_jurisdictions(privilege, role)
+  clean_up_jurisdictions
   create_jurisdiction_entity if Place.jurisdictions.empty?
   Place.jurisdictions.each do |j|
     attr = {:jurisdiction_id => j.entity_id, :privilege => privilege}
     role.privileges_roles.build(attr).save!
+  end
+end
+
+def clean_up_jurisdictions
+  Place.jurisdictions.each do |jurisdiction|
+    jurisdiction.delete if Entity.find_by_id(jurisdiction.entity_id).nil?
   end
 end
 

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
@@ -33,20 +33,20 @@ describe Message do
     @hl7.respond_to?(:patient_id).should be_true
   end
 
-  it 'should respond to :observation_request' do
-    @hl7.respond_to?(:observation_request).should be_true
+  it 'should respond to :observation_requests' do
+    @hl7.respond_to?(:observation_requests).should be_true
   end
 
   it 'should return a message_header' do
-    @hl7.message_header.class == StagedMessages::MshWrapper
+    @hl7.message_header.class.should == StagedMessages::MshWrapper
   end
 
   it 'should return a patient ID' do
-    @hl7.patient_id.class == StagedMessages::PidWrapper
+    @hl7.patient_id.class.should == StagedMessages::PidWrapper
   end
 
-  it 'should return an observation request' do
-    @hl7.observation_request.class == StagedMessages::ObrWrapper
+  it 'should return an array of observation requests' do
+    @hl7.observation_requests.class.should == Array
   end
 
   describe 'message header' do
@@ -142,40 +142,44 @@ describe Message do
 
   describe 'observation request' do
     it 'should respond_to :test_performed' do
-      @hl7.observation_request.respond_to?(:test_performed).should be_true
+      @hl7.observation_requests.first.respond_to?(:test_performed).should be_true
     end
 
     it 'should return the test performed (without noise)' do
-      @hl7.observation_request.test_performed.should == 'Hepatitis Be Antigen'
+      @hl7.observation_requests.first.test_performed.should == 'Hepatitis Be Antigen'
     end
 
-    it 'should respond_to :colection_date' do
-      @hl7.observation_request.respond_to?(:collection_date).should be_true
+    it 'should respond_to :collection_date' do
+      @hl7.observation_requests.first.respond_to?(:collection_date).should be_true
     end
 
-    it 'should return the colection date' do
-      @hl7.observation_request.collection_date.should == '2009-03-19'
+    it 'should return the collection date' do
+      @hl7.observation_requests.first.collection_date.should == '2009-03-19'
     end
 
     it 'should respond_to :specimen_source' do
-      @hl7.observation_request.respond_to?(:specimen_source).should be_true
+      @hl7.observation_requests.first.respond_to?(:specimen_source).should be_true
     end
 
     it 'should return the specimen source' do
-      @hl7.observation_request.specimen_source.should == 'BLOOD'
+      @hl7.observation_requests.first.specimen_source.should == 'BLOOD'
+    end
+
+    it 'should respond_to :specimens' do
+      @hl7.observation_requests.first.respond_to?(:specimens).should be_true
     end
 
     it 'should respond_to :tests' do
-      @hl7.observation_request.respond_to?(:tests).should be_true
+      @hl7.observation_requests.first.respond_to?(:tests).should be_true
     end
 
     it 'should return a list of test_results' do
-      @hl7.observation_request.tests.should_not be_nil
+      @hl7.observation_requests.first.tests.should_not be_nil
     end
 
     describe 'tests' do
       before :each do
-        @tests = @hl7.observation_request.tests
+        @tests = @hl7.observation_requests.first.tests
       end
 
       it 'should be a list' do

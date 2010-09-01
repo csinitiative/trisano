@@ -55,10 +55,15 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
+=begin
+  # This may be OK.  The OBX segments may appear as children of SPM
+  # segments rather than directly as children of the OBR segment.
+  # Need to look further into what sort of validation is appropriate.
   it "should not be valid if there's no OBX segment" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_obx])
     m.should_not be_valid
   end
+=end
 
   it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])

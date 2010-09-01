@@ -102,16 +102,29 @@ class StagedMessage < ActiveRecord::Base
 
     errors.add :hl7_message, :missing_header if self.message_header.nil?
 
-    # If any of these are missing, the parser sets them all to nil :(
-    if self.observation_request.nil? || self.observation_request.tests.empty? || self.patient.nil?
+    if observation_requests.empty? || patient.nil?
       errors.add :hl7_message, :missing_segment
       return
     end
 
+=begin
+    # This may be OK.  The OBX segments may appear as children of SPM
+    # segments rather than directly as children of the OBR segment.
+    # Need to look further into what sort of validation is appropriate.
+    observation_requests.each do |obr|
+      if obr.tests.empty?
+        errors.add :hl7_message, :missing_segment
+        return
+      end
+    end
+=end
+
     errors.add :hl7_message, :missing_last_name if self.patient.patient_last_name.blank?
 
-    self.observation_request.tests.each do |test|
-      errors.add :hl7_message, :missing_loinc, :segment => test.set_id if test.loinc_code.blank?
+    observation_requests.each do |observation_request|
+      observation_request.tests.each do |test|
+        errors.add :hl7_message, :missing_loinc, :segment => test.set_id if test.loinc_code.blank?
+      end
     end
   end
 
@@ -123,9 +136,8 @@ class StagedMessage < ActiveRecord::Base
     hl7.message_header
   end
 
-  # For now, we support only one OBR record per HL7 message
-  def observation_request
-    hl7.observation_request
+  def observation_requests
+    hl7.observation_requests
   end
 
   def patient
@@ -172,7 +184,7 @@ class StagedMessage < ActiveRecord::Base
                                                          :middle_name => self.patient.patient_middle_name,
                                                          :birth_date => self.patient.birth_date,
                                                          :birth_gender_id => self.patient.trisano_sex_id)
-      
+
       unless self.patient.address_empty?
         event.build_address(:street_number => self.patient.address_street_no,
                             :unit_number => self.patient.address_unit_no,
@@ -190,7 +202,7 @@ class StagedMessage < ActiveRecord::Base
                                                               :entity_location_type_id => ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id)
       end
     end
-    
+
     event.build_jurisdiction unless event.jurisdiction
     event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
     event
@@ -222,13 +234,18 @@ class StagedMessage < ActiveRecord::Base
     self.patient_first_name = self.patient.try :patient_first_name
 
     self.laboratory_name =    self.message_header.try :sending_facility
-    if self.observation_request
+    unless observation_requests.empty?
       begin
-        self.collection_date = Date.parse self.observation_request.collection_date
+        # TODO: Revise this.  Should #collection_date be replaced by a
+        # method that returns an array of Dates?
+        self.collection_date = Date.parse self.observation_requests.first.collection_date
       rescue
       end
-      self.observation_request.tests.each do |test|
-        self.staged_observations.build :test_type => test.test_type
+
+      observation_requests.each do |observation_request|
+        observation_request.tests.each do |test|
+          self.staged_observations.build :test_type => test.test_type
+        end
       end
     end
   end

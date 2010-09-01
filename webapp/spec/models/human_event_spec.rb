@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -254,13 +254,13 @@ describe HumanEvent, 'adding staged messages' do
         event.labs.first.place_entity.place.name.should == staged_message.message_header.sending_facility
         event.labs.first.lab_results.size.should == 1
         event.labs.first.lab_results.first.test_type.common_name.should == common_test_types(:hep_b_ag).common_name
-        event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_request.collection_date)).should be_true
-        event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_request.tests.first.observation_date)).should be_true
-        event.labs.first.lab_results.first.units.should == staged_message.observation_request.tests.first.units
-        event.labs.first.lab_results.first.reference_range.should == staged_message.observation_request.tests.first.reference_range
-        event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+        event.labs.first.lab_results.first.collection_date.eql?(Date.parse(staged_message.observation_requests.first.collection_date)).should be_true
+        event.labs.first.lab_results.first.lab_test_date.eql?(Date.parse(staged_message.observation_requests.first.tests.first.observation_date)).should be_true
+        event.labs.first.lab_results.first.units.should == staged_message.observation_requests.first.tests.first.units
+        event.labs.first.lab_results.first.reference_range.should == staged_message.observation_requests.first.tests.first.reference_range
+        event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_requests.first.tests.first.result.downcase).should be_true
         event.labs.first.lab_results.first.result_value.should be_blank
-        event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_request.specimen_source}/i
+        event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_requests.first.specimen_source}/i
         event.labs.first.lab_results.first.test_status.code_description.should == "Final"
       end
     end
@@ -364,7 +364,7 @@ describe HumanEvent, 'adding staged messages' do
           with_human_event do |event|
             staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
             event.add_labs_from_staged_message(staged_message)
-            event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+            event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_requests.first.tests.first.result.downcase).should be_true
           end
         end
 
@@ -373,7 +373,7 @@ describe HumanEvent, 'adding staged messages' do
             msg = set_obx_5(hl7_messages[:arup_1], "unmappable")
             staged_message = StagedMessage.new(:hl7_message => msg)
             event.add_labs_from_staged_message(staged_message)
-            event.labs.first.lab_results.first.result_value == "unmappable" 
+            event.labs.first.lab_results.first.result_value == "unmappable"
           end
         end
       end
@@ -383,7 +383,7 @@ describe HumanEvent, 'adding staged messages' do
           with_human_event do |event|
             staged_message = StagedMessage.new(:hl7_message => hl7_messages[:unknown_observation_value])
             event.add_labs_from_staged_message(staged_message)
-            event.labs.first.lab_results[0].result_value.should == staged_message.observation_request.tests[0].result
+            event.labs.first.lab_results[0].result_value.should == staged_message.observation_requests.first.tests[0].result
             event.labs.first.lab_results[0].test_result.should be_nil
           end
         end
@@ -419,7 +419,7 @@ describe HumanEvent, 'adding staged messages' do
     with_human_event do |event|
       staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
       event.add_labs_from_staged_message(staged_message)
-      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_request.tests.first.result.downcase).should be_true
+      event.labs.first.lab_results.first.test_result.code_description.downcase.include?(staged_message.observation_requests.first.tests.first.result.downcase).should be_true
     end
   end
 

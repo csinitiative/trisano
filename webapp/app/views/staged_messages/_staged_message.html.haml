@@ -18,8 +18,8 @@
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
         %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
-        %p= t "specimen_source_is", :source => h(staged_message.observation_request.specimen_source)
-        %p= t "collected_on_date", :date =>ld(staged_message.observation_request.collection_date)
+        %p= t "specimen_source_is", :source => h(staged_message.observation_requests.first.specimen_source)
+        %p= t "collected_on_date", :date =>ld(staged_message.observation_requests.first.collection_date)
         %p
           %small= h staged_message.message_header.sending_facility
         %div.tools
@@ -57,4 +57,4 @@
             %th=t 'units'
             %th=t 'status'
             %th=t 'reference_range'
-          =render staged_message.observation_request.tests
+          =render staged_message.observation_requests.first.tests

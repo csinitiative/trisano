@@ -132,7 +132,11 @@ where
   
     <action-definition> 
       <component-name>SQLLookupRule</component-name>
-      <action-inputs/>
+      <action-inputs>
+        <jurisdiction type="string"/>  
+        <start_date type="string"/>  
+        <end_date type="string"/> 
+      </action-inputs>
       <action-outputs> 
         <query-result type="result-set" mapping="query_result"/> 
       </action-outputs>
@@ -148,7 +152,7 @@ where
 FROM
     phepb_reports.report2
 WHERE
-    actual_delivery_date BETWEEN trisano.make_date('{PREPARELATER:start_date}', current_date) AND trisano.make_date('{PREPARELATER:end_date}', current_date) AND investigating_jurisdiction = '{PREPARELATER:jurisdiction}'
+    actual_delivery_date BETWEEN trisano.make_date('{PREPARE:start_date}', current_date) AND trisano.make_date('{PREPARE:end_date}', current_date) AND investigating_jurisdiction = '{PREPARE:jurisdiction}'
 GROUP BY year]]></query>  
         <live><![CDATA[true]]></live> 
       </component-definition> 

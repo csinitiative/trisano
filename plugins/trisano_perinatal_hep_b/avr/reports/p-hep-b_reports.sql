@@ -321,13 +321,12 @@ CREATE TABLE report4 AS
                     dme.investigating_jurisdiction,
                     dme.actual_delivery_date,
                     1 AS total,
-                    -- XXX Check these for the actual disposition code
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_pos,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Infant Adopted' THEN 1 ELSE 0 END AS infant_adopted,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Infant Died' THEN 1 ELSE 0 END AS infant_died,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' THEN 1 ELSE 0 END AS out_of_jurisdiction,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Refused to Participate' THEN 1 ELSE 0 END AS refused_participate,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Adopted' THEN 1 ELSE 0 END AS infant_adopted,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Died' THEN 1 ELSE 0 END AS infant_died,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' THEN 1 ELSE 0 END AS out_of_jurisdiction,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN ('Provider refusal', 'Mother/family refusal') THEN 1 ELSE 0 END AS refused_participate,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Unable to locate' THEN 1 ELSE 0 END AS unable_locate,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other,
                     CASE WHEN contact_type = 'Infant' AND disposition IS NULL THEN 1 ELSE 0 END AS disposition_blank,
@@ -598,13 +597,21 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type = 'Infant' AND ((trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL OR (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).lab_test_date IS NULL) THEN 1 ELSE 0 END AS total_serotest,
                     CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_antihb,
                     CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_antihb_after(dce.id, hepb_dose1_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_hbsag,
-                    CASE WHEN contact_type = 'Infant' AND 'com_vax_vacc_date' IS NOT NULL THEN 1 ELSE 0 END AS received_comvax,
+                    CASE
+                        WHEN contact_type = 'Infant' AND
+                            hepb_comvax1_date IS NOT NULL OR
+                            hepb_comvax2_date IS NOT NULL OR
+                            hepb_comvax3_date IS NOT NULL OR
+                            hepb_comvax4_date IS NOT NULL
+                        THEN 1
+                        ELSE 0
+                    END AS received_comvax,
                     CASE WHEN contact_type != 'Infant' THEN 1 ELSE 0 END AS total_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_positive_hs,
-                    CASE WHEN contact_type != 'Infant' AND disposition = 'Out of Jurisdiction' THEN 1 ELSE 0 END AS out_of_jurisdiction_hs,
-                    CASE WHEN contact_type != 'Infant' AND disposition = 'Refused to Participate' THEN 1 ELSE 0 END AS refused_hs,
-                    CASE WHEN contact_type != 'Infant' AND disposition = 'Unable to Locate' THEN 1 ELSE 0 END AS unable_to_locate_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Moved' THEN 1 ELSE 0 END AS out_of_jurisdiction_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition IN ('Provider refusal', 'Mother/family refusal') THEN 1 ELSE 0 END AS refused_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition = 'Unable to locate' THEN 1 ELSE 0 END AS unable_to_locate_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition IS NULL THEN 1 ELSE 0 END AS disposition_blank_hs,
                     CASE WHEN contact_type != 'Infant' AND ((trisano.get_contact_hbsag_before(dce.id, current_date)).test_result IS NOT NULL AND (trisano.get_contact_antihb_before(dce.id, current_date)).test_result IS NOT NULL) THEN 1 ELSE 0 END AS total_hs_tested,
@@ -613,12 +620,12 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hs,
                     CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE 0 END AS dose2_hs,
                     CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE 0 END AS dose3_hs,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Out of Jurisdiction' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS neither_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS neither_trans,
                     CASE WHEN contact_type = 'Infant' AND
-                        disposition = 'Out of Jurisdiction' AND
+                        disposition = 'Moved' AND
                         (hepb_dose1_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '8 months') AND
                         (hepb_dose2_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '8 months') AND
                         (hepb_dose3_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '8 months') AND
@@ -626,7 +633,7 @@ CREATE TABLE report4 AS
                         THEN 1 ELSE 0
                     END AS all_8m_trans,
                     CASE WHEN contact_type = 'Infant' AND
-                        disposition = 'Out of Jurisdiction' AND
+                        disposition = 'Moved' AND
                         (hepb_dose1_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '12 months') AND
                         (hepb_dose2_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '12 months') AND
                         (hepb_dose3_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '12 months') AND
@@ -685,10 +692,21 @@ CREATE TABLE report4 AS
 CREATE TABLE morb_sec_juris AS
     SELECT dw_morbidity_events_id, name FROM trisano.dw_morbidity_secondary_jurisdictions_view;
 
+CREATE TABLE juris AS
+    SELECT name AS investigating_jurisdiction
+    FROM
+        trisano.places_view p
+        JOIN trisano.places_types_view pt
+            ON (pt.place_id = p.id)
+        JOIN trisano.codes_view c
+            ON (c.id = pt.type_id)
+    WHERE c.code_description = 'Jurisdiction';
+
 GRANT SELECT ON report1 TO trisano_ro;
 GRANT SELECT ON report2 TO trisano_ro;
 GRANT SELECT ON report3 TO trisano_ro;
 GRANT SELECT ON report4 TO trisano_ro;
 GRANT SELECT ON morb_sec_juris TO trisano_ro;
+GRANT SELECT ON juris TO trisano_ro;
 
 COMMIT;

@@ -28,14 +28,87 @@ module HL7
       self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
-    def observation_request
-      self[:OBR] ? StagedMessages::ObrWrapper.new(self[:OBR].is_a?(Array) ? self[:OBR][0] : self[:OBR]) : nil
+    # Return an array of ObrWrapper objects corresponding to the OBR
+    # segments of the HL7 message.  If no OBR segment is present, an
+    # empty array is returned.
+    def observation_requests
+      @obr_segments ||= case (obr_segments=self[:OBR])
+      when Array
+        obr_segments.map { |s| StagedMessages::ObrWrapper.new s }
+      when nil
+        []
+      else
+        [ StagedMessages::ObrWrapper.new obr_segments ]
+      end
     end
 
   end
 end
 
+class HL7::Message::Segment
+  def self.add_child_type(child_type)
+    @child_types << child_type.to_sym
+  end
+
+  def self.child_types
+    @child_types
+  end
+
+  def collect_children(child_type)
+    seg_name = child_type.to_s
+    raise HL7::Exception, "invalid child type #{seg_name}" unless
+      self.class.child_types.include?(child_type.to_sym)
+
+    hl7_klass = eval("HL7::Message::Segment::%s" % seg_name.upcase)
+    sm_klass = eval("StagedMessages::%sWrapper" % seg_name.capitalize)
+
+    children.inject([]) do |t, s|
+      t << sm_klass.new(s) if s.is_a? hl7_klass
+      t
+    end
+  end
+end
+
+class HL7::Message::Segment::OBR
+  add_child_type :SPM
+end
+
+class HL7::Message::Segment::SPM < HL7::Message::Segment
+  weight 100 # fixme
+  has_children [:OBX]
+  add_field :set_id
+  add_field :specimen_id
+  add_field :specimen_parent_ids
+  add_field :specimen_type
+  add_field :specimen_type_modifier
+  add_field :specimen_additives
+  add_field :specimen_collection_method
+  add_field :specimen_source_site
+  add_field :specimen_source_site_modifier
+  add_field :specimen_collection_site
+  add_field :specimen_role
+  add_field :specimen_collection_amount
+  add_field :grouped_specimen_count
+  add_field :specimen_description
+  add_field :specimen_handling_code
+  add_field :specimen_risk_code
+  add_field :specimen_collection_date
+  add_field :specimen_received_date
+  add_field :specimen_expiration_date
+  add_field :specimen_availability
+  add_field :specimen_reject_reason
+  add_field :specimen_quality
+  add_field :specimen_appropriateness
+  add_field :specimen_condition
+  add_field :specimen_current_quantity
+  add_field :number_of_specimen_containers
+  add_field :container_type
+  add_field :container_condition
+  add_field :specimen_child_role
+end
+
 module StagedMessages
+
   class MshWrapper
     attr_reader :msh_segment
 
@@ -60,7 +133,7 @@ module StagedMessages
     attr_reader :pid_segment
 
     def name_components
-      @name_componets ||= pid_segment.patient_name.split(pid_segment.item_delim)
+      @name_components ||= pid_segment.patient_name.split(pid_segment.item_delim)
     end
 
     def addr_components
@@ -245,7 +318,11 @@ module StagedMessages
     end
 
     def tests
-      obr_segment.children.collect { |s| StagedMessages::ObxWrapper.new(s) }
+      @tests ||= obr_segment.collect_children(:OBX)
+    end
+
+    def specimens
+      @specimens ||= obr_segment.collect_children(:SPM)
     end
   end
 
@@ -325,7 +402,7 @@ module StagedMessages
     def trisano_status_id
       # I'm being ultra-lean (aka lazy) here and hard coding these until there's a story
       # that says that admins should be able to dynamically map them.
-      hl7_status_codes = { 'C' => 'F', 'F' => 'F', 'I' => 'I', 'P' => 'P', 'R' => 'P', 'S' => 'P' } 
+      hl7_status_codes = { 'C' => 'F', 'F' => 'F', 'I' => 'I', 'P' => 'P', 'R' => 'P', 'S' => 'P' }
 
       elr_result_status = self.status.upcase
       return nil unless hl7_status_codes.has_key?(elr_result_status)
@@ -333,5 +410,20 @@ module StagedMessages
       status ? status.id : status
     end
 
+  end
+
+  class SpmWrapper
+    attr_reader :spm_segment
+
+    def initialize(spm_segment)
+      @spm_segment = spm_segment
+    end
+
+    # Returns an Array of StagedMessages::ObxWrapper objects
+    # corresponding to OBX segments associated with this SPM segment.
+    # Returns an empty array if none.
+    def tests
+      @tests ||= spm_segment.collect_children(:OBX)
+    end
   end
 end
