@@ -14,6 +14,8 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+require 'java' if defined?(JRUBY_VERSION)
 gem 'cucumber', '>= 0.6.3'
 require 'cucumber/cli/profile_loader'
 require 'cucumber/cli/configuration'
