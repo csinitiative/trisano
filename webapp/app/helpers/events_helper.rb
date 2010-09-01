@@ -880,50 +880,47 @@ module EventsHelper
   end
 
   def render_investigator_question(form_elements_cache, element, f)
-    begin
-      question = element.question
-      question_style = question.style.blank? ? "vert" : question.style
-      result = "<div id='question_investigate_#{h(element.id)}' class='#{h(question_style)}'>"
+    question = element.question
+    question_style = question.style.blank? ? "vert" : question.style
+    result = "<div id='question_investigate_#{h(element.id)}' class='#{h(question_style)}'>"
 
-      @answer_object = @event.get_or_initialize_answer(question.id)
+    @answer_object = @event.get_or_initialize_answer(question.id)
 
-      result << error_messages_for(:answer_object)
-      if (f.nil?)
-        fields_for(@event) do |f|
-          f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{h(element.id)}"})
-            result << render_help_text(element) unless question.help_text.blank?
-          end
-        end
-      else
-        prefix = @answer_object.new_record? ? "new_answers" : "answers"
-        index = @answer_object.new_record? ? "" : @form_index += 1
-        f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+    result << error_messages_for(:answer_object)
+    if (f.nil?)
+      fields_for(@event) do |f|
+        f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{h(element.id)}"})
           result << render_help_text(element) unless question.help_text.blank?
         end
       end
-
-      follow_up_group = element.process_condition(
-        @answer_object,
-        @event.id,
-        :form_elements_cache => form_elements_cache)
-
-      unless follow_up_group.nil?
-        result << "<div id='follow_up_investigate_#{h(element.id)}'>"
-        result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
-        result << "</div>"
-      else
-        result << "<div id='follow_up_investigate_#{h(element.id)}'></div>"
+    else
+      prefix = @answer_object.new_record? ? "new_answers" : "answers"
+      index = @answer_object.new_record? ? "" : @form_index += 1
+      f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+        result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+        result << render_help_text(element) unless question.help_text.blank?
       end
-
-      result << "</div>"
-
-      return result
-      #rescue
-      #logger.warn("Formbuilder rendering: #{$!.message}")
-      #return "Could not render question element (#{element.id})"
     end
+
+    follow_up_group = element.process_condition(@answer_object,
+                                                @event.id,
+                                                :form_elements_cache => form_elements_cache)
+
+    unless follow_up_group.nil?
+      result << "<div id='follow_up_investigate_#{h(element.id)}'>"
+      result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
+      result << "</div>"
+    else
+      result << "<div id='follow_up_investigate_#{h(element.id)}'></div>"
+    end
+
+    result << "</div>"
+
+    return result
+    #rescue
+    #logger.warn("Formbuilder rendering: #{$!.message}")
+    #return "Could not render question element (#{element.id})"
   end
 
   def render_investigator_follow_up(form_elements_cache, element, f)

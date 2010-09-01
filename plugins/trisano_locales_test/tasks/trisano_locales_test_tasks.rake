@@ -48,7 +48,7 @@ namespace :trisano do
       Rake::Task['trisano:locales_test:load_role_translations'].invoke
     end
   end
-  
+
   namespace :locales_test do
     task :spec => [:spec_banner, 'db:test:prepare']
     desc "Runs specs fromt the locales test plugin"
@@ -59,7 +59,7 @@ namespace :trisano do
 
     task :spec_banner do
       puts
-      puts "*** Running locales specs ***"
+      puts "*** Running locale tests ***"
     end
 
     desc "Load test translations for roles"
@@ -70,7 +70,7 @@ namespace :trisano do
       sh("#{RAILS_ROOT}/script/load_role_translations.rb test #{file_list.join(' ')}")
     end
   end
-  
+
 end
 
 task :spec do |t|

@@ -90,7 +90,7 @@ module Trisano
                 self.errors.add_to_base(I18n.t('task_assignment_failed'))
                 return false
               end
-              
+
               base.alias_method_chain :before_save, :p_hep_b_before_save
             end
           end
