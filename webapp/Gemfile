@@ -2,7 +2,10 @@ source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
 if RUBY_PLATFORM =~ /java/
-  gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.pre"
+#  gem "jdbc-postgres", "= 8.4.701"
+#  gem "activerecord-jdbc-adapter", :path => '~/projects/activerecord-jdbc-adapter'
+  gem "activerecord-jdbcpostgresql-adapter", :path => '~/projects/activerecord-jdbc-adapter/adapters/postgresql'
+  gem "jruby-openssl"
 else
   gem "pg"
 end
@@ -13,20 +16,19 @@ gem "logging"
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
 gem "ruby-hl7"
-gem "rspec-rails"
-gem "mocha"
-gem "faker"
-gem "factory_girl"
-gem "cucumber", "0.6.3"
-gem "cucumber-rails", "0.3.0"
 gem "validates_timeliness", ">= 2.2.2"
 gem "mislav-will_paginate"
 gem "rubyzip"
-gem "webrat", :git => "git://github.com/kofno/webrat.git"
 gem "mongrel"
-unless RUBY_PLATFORM =~ /java/
-  gem "unicorn"
+
+group :test, :uattest do
+  gem "rspec-rails"
+  gem "mocha"
+  gem "faker"
+  gem "factory_girl"
+  gem "cucumber", "0.6.3"
+  gem "cucumber-rails", "0.3.0"
+  gem "webrat", :git => "git://github.com/kofno/webrat.git"
+  gem "database_cleaner"
+  gem "selenium-client"
 end
-gem "wirble"
-gem "database_cleaner"
-gem "selenium-client"

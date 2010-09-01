@@ -739,7 +739,7 @@ class Form < ActiveRecord::Base
     sql << "VALUES (#{ values[:form_id]}, #{values[:type]} , #{values[:name]}, #{values[:description]}, "
     sql << "#{values[:parent_id]}, #{values[:lft]}, #{values[:rgt]}, false, null, #{values[:is_active]}, "
     sql << "#{values[:tree_id]}, #{ values[:condition]}, #{values[:core_path]}, #{values[:is_condition_code]}, "
-    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, #{values[:code]}, now(), now());"
+    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, #{values[:code]}, now(), now())"
     ActiveRecord::Base.connection.insert(sql)
   end
 
