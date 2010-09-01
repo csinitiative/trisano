@@ -9,11 +9,7 @@
 #       Choose the win32 build.
 #       Install PostgreSQL and put its /bin directory on your path.
 development:
-  <% if RUBY_PLATFORM =~ /java/ %>
-  adapter: jdbcpostgresql
-  <% else %>
   adapter: postgresql
-  <% end %>
   encoding: unicode
   database: trisano_development
   username: trisano_user
@@ -46,11 +42,7 @@ development:
 # re-generated from your development database when you run 'rake'.
 # Do not set this db to the same as development or production.
 test:
-  <% if RUBY_PLATFORM =~ /java/ %>
-  adapter: jdbcpostgresql
-  <% else %>
   adapter: postgresql
-  <% end %>
   encoding: unicode
   database: trisano_test
   username: trisano_user
@@ -65,11 +57,7 @@ test:
   warehouse_driver: org.postgresql.Driver
 
 production:
-  <% if RUBY_PLATFORM =~ /java/ %>
-  adapter: jdbcpostgresql
-  <% else %>
   adapter: postgresql
-  <% end %>
   encoding: unicode
   database: trisano_production
   username: trisano_user
@@ -82,3 +70,4 @@ production:
   warehouse_password: password
   warehouse_database: trisano_warehouse
   warehouse_driver: org.postgresql.Driver
+  
