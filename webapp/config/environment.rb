@@ -77,18 +77,15 @@ Rails::Initializer.run do |config|
   require 'engines/hooks'
   require 'extensible_helpers/module'
 
-  # time to start managing dependencies here
-  config.gem 'rack', :version => '= 1.0.1'
+  # without this, can't include a gem plugin in explicit plugin load order
   config.gem 'rails_inheritable_attributes_manager'
-  config.gem 'validates_timeliness', :version =>'>= 2.2.2'
-  config.gem 'haml', :version => '= 2.0.7'
+
   # For datetime validation plugin to switch to U.S. format (month/day/year)
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README
   config.after_initialize do
     require 'rails_inheritable_attributes_manager'
     require 'validates_timeliness_formats'
     require "active_record/errors.rb"
-    require "active_record/postgres_adapter_insert_patch.rb" unless RUBY_PLATFORM =~ /java/
     require "active_record/scopes.rb"
     require "active_record/rollback_transactions.rb"
     require "attachment_fu/attachment_fu_validation_patch.rb"
