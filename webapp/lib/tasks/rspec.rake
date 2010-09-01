@@ -56,6 +56,7 @@ task :stats => "spec:statsetup"
 
 desc "Run all TriSano specs"
 Spec::Rake::SpecTask.new(:spec => spec_prereq) do |t|
+  t.libs << "#{RAILS_ROOT}/spec"
   t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
   t.spec_files = FileList["spec/**/*_spec.rb"]
 end

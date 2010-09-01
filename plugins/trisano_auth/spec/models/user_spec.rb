@@ -16,8 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
-require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_helper')
-#require File.expand_path(File.dirname(__FILE__) + '/../factories/user_factories')
+require 'spec_helper'
 
 describe User do
   

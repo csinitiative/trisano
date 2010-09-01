@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
@@ -15,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.expand_path(File.dirname(__FILE__) +  '/../../../../../spec/spec_helper')
+require 'spec_helper'
 
 describe ContactEvent, "in the Perinatal Hep B plugin" do
   include PerinatalHepBSpecHelper
@@ -30,30 +31,30 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
     given_p_hep_b_treatments_loaded
   end
 
-  
+
   describe "generating tasks for an investigator" do
     def change_treatment_to_trigger_callback(treatment, date=Date.today)
       @contact_event.interested_party.treatments[0].treatment = treatment
       @contact_event.interested_party.treatments[0].treatment_date = date
     end
-    
+
     before(:each) do
       given_task_category_codes_loaded
       @disease = Disease.find_by_disease_name('Hepatitis B Pregnancy Event')
       @morbidity_event = given_a_morb_with_disease(@disease)
 
-      @morbidity_event = Factory.create(:morbidity_event, 
+      @morbidity_event = Factory.create(:morbidity_event,
         :disease_event => Factory.create(:disease_event, :disease => @disease),
         :investigator => Factory.create(:user)
       )
-      
+
       @infant_contact_type_code = ExternalCode.infant_contact_type
 
       @participations_contact = Factory.create(
         :participations_contact,
         :contact_type => @infant_contact_type_code
       )
-      
+
       @contact_event = Factory.create(:contact_event,
         :participations_contact => @participations_contact,
         :parent_event => @morbidity_event,
@@ -131,9 +132,9 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         @contact_event.tasks.first.due_date.should == @due_date
         change_treatment_to_trigger_callback(@treatment, Date.yesterday)
         @contact_event.save!
-        @contact_event.tasks.first.due_date.should == @due_date - 1.day
+        @contact_event.tasks.first.due_date.should == Date.yesterday + 1.month
       end
-      
+
     end
 
     describe "for Hepatitis B Dose 3 treatments" do
@@ -165,7 +166,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       before(:each) do
         @treatment = @dose_one_treatment
       end
-      
+
       it "should not generate a task" do
         change_treatment_to_trigger_callback(@treatment)
         lambda { @contact_event.save! }.should change(Task, :count).by(0)

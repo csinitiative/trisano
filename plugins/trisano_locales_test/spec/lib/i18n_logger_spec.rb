@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_helper')
+require 'spec_helper'
 require 'stringio'
 
 describe I18nLogger do
@@ -31,7 +31,7 @@ describe I18nLogger do
   end
 
   it "should log error level" do
-    I18nLogger.error("locale_name").should be_true
+    I18nLogger.error("locale_name")
     @log.readline.should == "ERROR  server : locale_name: English\n"
   end
 

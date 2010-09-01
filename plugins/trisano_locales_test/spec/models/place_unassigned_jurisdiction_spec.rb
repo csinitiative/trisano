@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_helper')
+require 'spec_helper'
 
 describe Place, "when working with the unassigned jurisdiction" do
   include PlaceSpecHelper
