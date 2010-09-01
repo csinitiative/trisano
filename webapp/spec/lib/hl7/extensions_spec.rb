@@ -138,7 +138,7 @@ describe Message do
       n.should == "7317292"
       e.should be_blank
     end
- end
+  end
 
   describe 'observation request' do
     it 'should respond_to :test_performed' do
@@ -165,8 +165,8 @@ describe Message do
       @hl7.observation_requests.first.specimen_source.should == 'BLOOD'
     end
 
-    it 'should respond_to :specimens' do
-      @hl7.observation_requests.first.respond_to?(:specimens).should be_true
+    it 'should respond_to :specimen' do
+      @hl7.observation_requests.first.respond_to?(:specimen).should be_true
     end
 
     it 'should respond_to :tests' do
