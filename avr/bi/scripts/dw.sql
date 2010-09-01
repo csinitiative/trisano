@@ -26,6 +26,19 @@ BEGIN;
 COMMIT;
 
 BEGIN;
+-- The people table doesn't need its infrastructure for fuzzy name search
+-- anymore, and it sometimes causes bugs, so remove it
+
+SET search_path = staging, public;
+
+DROP INDEX first_name_trgm_ix;
+DROP INDEX full_name_fts_ix;
+DROP INDEX full_name_trgm_ix;
+DROP INDEX last_name_trgm_ix;
+    
+COMMIT;
+
+BEGIN;
 
 SET search_path = staging, public;
 
