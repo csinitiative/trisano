@@ -507,8 +507,12 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # can't use #detect here because of http://jira.codehaus.org/browse/JRUBY-5058
   def get_or_initialize_answer(question_id)
-    answers.detect(lambda { Answer.new(:question_id => question_id) } ) { |answer_object| answer_object.question_id == question_id }
+    answers.each do |answer_object|
+      return answer_object if answer_object.question_id == question_id
+    end
+    Answer.new(:question_id => question_id)
   end
 
 
