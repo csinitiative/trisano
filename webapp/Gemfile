@@ -21,6 +21,10 @@ gem "mislav-will_paginate"
 gem "rubyzip"
 gem "mongrel"
 
+group :development do
+  gem "wirble"
+end
+
 group :test, :uattest do
   gem "rspec-rails"
   gem "mocha"
