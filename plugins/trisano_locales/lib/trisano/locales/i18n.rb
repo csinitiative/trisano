@@ -1,20 +1,23 @@
-I18n.class_eval do
+unless I18n.respond_to? :selectable_locales
 
-  class << self
+  I18n.class_eval do
 
-    def selectable_locales
-      available_locales.collect do |locale|
-        name = backend.instance_eval { lookup(locale, :locale_name) }
-        [name, locale] if name
-      end.compact
-    end
+    class << self
 
-    def default_locale_with_db=(locale)
-      if DefaultLocale.update_locale(locale)
-        self.default_locale_without_db = locale
+      def selectable_locales
+        available_locales.collect do |locale|
+          name = backend.instance_eval { lookup(locale, :locale_name) }
+          [name, locale] if name
+        end.compact
       end
+
+      def default_locale_with_db=(locale)
+        if DefaultLocale.update_locale(locale)
+          self.default_locale_without_db = locale
+        end
+      end
+      alias_method_chain(:default_locale=, :db)
     end
-    alias_method_chain(:default_locale=, :db)
   end
 
 end

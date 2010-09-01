@@ -6,7 +6,9 @@ module Trisano
         class << self
           def included(base)
             base.class_eval do
-              alias_method_chain :button_to, :locale
+              unless defined?(:button_to_without_locale)
+                alias_method_chain :button_to, :locale
+              end
             end
           end
         end
