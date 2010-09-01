@@ -9,3 +9,4 @@ es:
     updated_at: "Última modificación"
     update_default_locale: "Cambiar Local Predeterminado"
     successful_update: "Se actualizó el local predeterminado con éxito"
+    never_modified: Never modified (EN)

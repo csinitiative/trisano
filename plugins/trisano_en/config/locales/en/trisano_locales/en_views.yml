@@ -9,3 +9,4 @@ en:
     updated_at: "Last Modified"
     update_default_locale: "Change Default Locale"
     successful_update: "Default locale was successfully updated"
+    never_modified: Never Modified
