@@ -310,7 +310,7 @@ class HumanEvent < Event
 
     org_entity = self.interested_party.person_entity
     new_event.build_interested_party(:primary_entity_id => org_entity.id)
-    entity_address = org_entity.addresses.find(:first, :conditions => 'event_id IS NOT NULL', :order => 'created_at DESC')
+    entity_address = org_entity.addresses.find(:first, :conditions => ['event_id = ?', self.id], :order => 'created_at DESC')
     new_event.address = entity_address ? entity_address.clone : nil
     new_event.imported_from_id = self.imported_from_id
     new_event.parent_guardian = self.parent_guardian
