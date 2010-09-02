@@ -121,9 +121,10 @@ class StagedMessage < ActiveRecord::Base
 
     errors.add :hl7_message, :missing_last_name if self.patient.patient_last_name.blank?
 
-    observation_requests.each do |observation_request|
-      observation_request.tests.each do |test|
-        errors.add :hl7_message, :missing_loinc, :segment => test.set_id if test.loinc_code.blank?
+    observation_requests.each do |obr|
+      obr.all_tests.each do |test|
+        errors.add :hl7_message, :missing_loinc,
+          :segment => test.set_id if test.loinc_code.blank?
       end
     end
   end
@@ -212,6 +213,27 @@ class StagedMessage < ActiveRecord::Base
     raise(I18n.translate('staged_message_is_already_assigned')) if self.state == self.class.states[:assigned]
     self.state = self.class.states[:discarded]
     self.save!
+  end
+
+  # Build an HL7 ACK^R01^ACK message in response to the received
+  # ORU^R01^ORU_R01 message, indicating success or one or more error
+  # conditions.
+  def ack
+    @ack ||= HL7::Message.new do |ack|
+      ack << HL7::Message::Segment::MSH.new do |msh|
+        # MSH block setup
+      end << HL7::Message::Segment::SFT.new do |sft|
+        # SFT block setup
+      end << HL7::Message::Segment::MSA.new do |msa|
+        # MSA block setup
+      end
+
+      errors.each do |attribute, message|
+        ack << HL7::Message::Segment::ERR.new do |err|
+          # ERR block setup (looped)
+        end
+      end
+    end
   end
 
   private
