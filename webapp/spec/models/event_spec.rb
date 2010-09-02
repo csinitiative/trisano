@@ -18,15 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
-  # fixtures :events, :participations, :entities, :places, :people, :lab_results, :hospitals_participations
-
-  #  event_hash = {
-  #    "active_patient" => {
-  #      "person" => {
-  #        "last_name"=>"Green"
-  #      }
-  #    }
-  #  }
 
   def with_event(event_hash=@event_hash)
     event = MorbidityEvent.new(event_hash)
@@ -1585,13 +1576,25 @@ describe Event, 'cloning an event' do
 
       # Only interested party and jurisdiction, nothing else
       lambda {@new_event.save!}.should change(Participation, :count).by(2)
-
     end
 
     it "should create a new address instance and link it up" do
       lambda {@new_event.save!}.should change(Address, :count)
       @new_event.address.id.should_not == @org_event.address.id
       @new_event.address.street_name.should == 'Example Lane'
+    end
+
+    it "should copy the address associated with the original event, not an address associated with another event cloned from the original" do
+      @another_event = @org_event.clone_event
+      @another_event.address.street_name = 'Doit St.'
+      @another_event.save!
+      
+      @yet_another_event = @org_event.clone_event
+      @yet_another_event.address.street_name = 'Lala Ln.'
+      @yet_another_event.save!
+
+      @one_more_time = @org_event.clone_event
+      @one_more_time.address.street_name.should == 'Example Lane'
     end
 
   end
