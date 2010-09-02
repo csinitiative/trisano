@@ -1,17 +1,12 @@
 source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
-if RUBY_PLATFORM =~ /java/
-#  gem "jdbc-postgres", "= 8.4.701"
-#  gem "activerecord-jdbc-adapter", :path => '~/projects/activerecord-jdbc-adapter'
+if defined? JRUBY_VERSION
   gem "activerecord-jdbcpostgresql-adapter", :path => '~/projects/activerecord-jdbc-adapter/adapters/postgresql'
   gem "jruby-openssl"
 else
   gem "pg"
 end
-gem "mechanize"
-gem "rest-open-uri"
-gem "ci_reporter"
 gem "logging"
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
@@ -19,10 +14,16 @@ gem "ruby-hl7"
 gem "validates_timeliness", ">= 2.2.2"
 gem "mislav-will_paginate"
 gem "rubyzip"
-gem "mongrel"
 
 group :development do
   gem "wirble"
+  gem "mechanize"
+  gem "rest-open-uri"
+  gem "ci_reporter"
+end
+
+group :test, :devlopment do
+  gem "mongrel"
 end
 
 group :test, :uattest do
