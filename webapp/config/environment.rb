@@ -104,7 +104,6 @@ Rails::Initializer.run do |config|
     require 'routing/workflow_helper'
     require 'hl7/extensions.rb'
     require 'postgres_fu'
-    require 'globalize/globalize2_patch.rb'
     require 'menu_array'
     require 'i18n_logger'
     require 'i18n_core_field'
