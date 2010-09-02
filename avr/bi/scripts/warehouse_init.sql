@@ -1879,26 +1879,22 @@ BEGIN
                 SELECT 1 FROM trisano.dw_morbidity_events_view
                 WHERE dw_patients_id = pr.person_id
             )';
---            JOIN (
---                SELECT DISTINCT dw_patients_id FROM ' || new_schema || '.dw_morbidity_events
---            ) p
---                ON (p.dw_patients_id = pr.person_id)';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN (
-                SELECT DISTINCT dw_patients_id FROM ' || new_schema || '.dw_contact_events
-            ) p 
-                ON (p.dw_patients_id = pr.person_id)';
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_contact_events_view
+                WHERE dw_patients_id = pr.person_id
+            )';
 
     EXECUTE
         'CREATE VIEW trisano.dw_encounter_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
-            JOIN (
-                SELECT DISTINCT dw_patients_id FROM ' || new_schema || '.dw_encounter_events
-            ) p
-                ON (p.dw_patients_id = pr.person_id)';
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_encounter_events_view
+                WHERE dw_patients_id = pr.person_id
+            )';
 
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_diagnostic_facilities_view AS
