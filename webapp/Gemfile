@@ -3,7 +3,7 @@ source "http://rubygems.org"
 gem "rails", "2.3.5"
 
 platforms :jruby do
-  gem "activerecord-jdbcpostgresql-adapter", :path => '~/projects/activerecord-jdbc-adapter/adapters/postgresql'
+  gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.kofnopre1"
   gem "jruby-openssl"
   group :cli do
     gem "warbler"
