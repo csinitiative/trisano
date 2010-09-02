@@ -141,6 +141,7 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 ('trisano.dw_contact_events_view',                    'pregnant',                           'pregnant',                           'CE Preg',                   true),
 ('trisano.dw_contact_events_view',                    'primary_language',                   'primary_language',                   'CP Prim Lng',               true),
 ('trisano.dw_contact_events_view',                    'public_health_status',               'public_health_status',               'CE PH Stat',                true),
+('trisano.dw_contact_events_view',                    'record_number',                      'record_number',                      'CE Rec Nbr',                true),
 ('trisano.dw_contact_events_view',                    'review_completed_by_state_date',     'review_completed_by_state_date',     'CE Rvw Cmpl by St',         true),
 ('trisano.dw_contact_events_view',                    'risk_factor_details',                'risk_factor_details',                'CE Risk Fctr Dtls',         true),
 ('trisano.dw_contact_events_view',                    'sent_to_ibis',                       'sent_to_ibis',                       'CE Snt to IBIS',            true),
