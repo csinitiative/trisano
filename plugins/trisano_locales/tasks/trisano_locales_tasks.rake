@@ -8,14 +8,14 @@ namespace :trisano do
 
     desc "Load locale privileges"
     task :load_defaults do
-      load_defaults = File.join(File.dirname(__FILE__), "..", "script", "load_defaults.rb")
-      ruby "#{RAILS_ROOT}/script/runner #{load_defaults}"
+      locale_defaults = File.join(File.dirname(__FILE__), "..", "script", "load_defaults.rb")
+      load locale_defaults
     end
 
     desc "Prep cucumber for default locale changes"
-    task :feature_prep do
-      load_defaults = File.join(File.dirname(__FILE__), "..", "script", "load_defaults.rb")
-      ruby "#{RAILS_ROOT}/script/runner -e test #{load_defaults}"
+    task :feature_prep => :environment do
+      locale_defaults = File.join(File.dirname(__FILE__), "..", "script", "load_defaults.rb")
+      load locale_defaults
     end
   end
 

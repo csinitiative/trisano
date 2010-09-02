@@ -27,20 +27,22 @@ namespace :trisano do
     desc "Perinatal Hep B defaults"
     task :load_defaults => :environment do |t|
       puts "Loading Perinatal Hep B codes"
-      sh("#{RAILS_ROOT}/script/runner #{File.join(File.dirname(__FILE__), '..', 'script', 'load_codes.rb')}")
+      $:.unshift File.join(File.dirname(__FILE__), '..', 'script')
+      load 'load_codes.rb'
       puts "Loading Perinatal Hep B default data"
-      sh("#{RAILS_ROOT}/script/runner #{File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')}")
-      sh("#{RAILS_ROOT}/script/runner 'CoreFieldsDisease.create_perinatal_hep_b_associations'")
-      sh("#{RAILS_ROOT}/script/runner 'CsvField.create_perinatal_hep_b_associations'")
-      sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificValidation.create_perinatal_hep_b_associations'")
-      sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificSelection.create_perinatal_hep_b_associations'")
-      sh("#{RAILS_ROOT}/script/runner 'DiseaseSpecificCallback.create_perinatal_hep_b_associations'")
+      load 'load_defaults.rb'
+      CoreFieldsDisease.create_perinatal_hep_b_associations
+      CsvField.create_perinatal_hep_b_associations
+      DiseaseSpecificValidation.create_perinatal_hep_b_associations
+      DiseaseSpecificSelection.create_perinatal_hep_b_associations
+      DiseaseSpecificCallback.create_perinatal_hep_b_associations
     end
 
     task :feature_prep do |t|
+      $:.unshift File.join(File.dirname(__FILE__), '..', 'script')
       puts "Prepping perinatal hep b default data"
-      sh("#{RAILS_ROOT}/script/runner -e test #{File.join(File.dirname(__FILE__), '..', 'script', 'load_codes.rb')}")
-      sh("#{RAILS_ROOT}/script/runner -e test #{File.join(File.dirname(__FILE__), '..', 'script', 'load_defaults.rb')}")
+      load 'load_codes.rb'
+      load 'load_defaults.rb'
     end
 
   end

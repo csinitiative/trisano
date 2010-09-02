@@ -102,42 +102,43 @@ namespace :trisano do
     end
 
     desc "Load codes into database"
-    task :load_codes do
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_codes.rb"
+    task :load_codes => :environment do
+      load "#{RAILS_ROOT}/script/load_codes.rb"
     end
 
     desc "Load defaults into database"
-    task :load_defaults do
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_defaults.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/set_default_admin_uid.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_common_test_types.rb"
+    task :load_defaults => :environment do
+      load "#{RAILS_ROOT}/script/load_defaults.rb"
+      load "#{RAILS_ROOT}/script/set_default_admin_uid.rb"
+      load "#{RAILS_ROOT}/script/load_common_test_types.rb"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_loinc_codes.rb #{RAILS_ROOT}/db/defaults/loinc_codes_to_common_test_types.csv"
       ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_diseases.rb #{RAILS_ROOT}/db/defaults/diseases.yml"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_disease_export_statuses.rb"
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_csv_defaults.rb"
+      load "#{RAILS_ROOT}/script/load_cdc_export_data.rb"
+      load "#{RAILS_ROOT}/script/load_cdc_export_data_for_disease_core.rb"
+      load "#{RAILS_ROOT}/script/load_disease_export_statuses.rb"
+      load "#{RAILS_ROOT}/script/load_csv_defaults.rb"
     end
 
     desc "Load test/demo data"
     task :load_test_and_demo_data do
-      ruby "#{RAILS_ROOT}/script/runner #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
+      load "#{RAILS_ROOT}/script/load_test_and_demo_data.rb"
     end
 
     desc "Resets the database for cuke runs"
     task :db_reset do
-      ruby "-S rake db:test:prepare"
+      Rake::Task["db:test:prepare"].invoke
     end
 
     # Debt: dry this up
     desc "Prep work for feature (cucumber) runs"
     task :feature_prep => ["trisano:dev:db_reset"] do
       RAILS_ENV = "test"
-      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_codes.rb"
-      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_defaults.rb"
-      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/set_default_admin_uid.rb"
-      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_common_test_types.rb"
-      ruby "#{RAILS_ROOT}/script/runner -e test #{RAILS_ROOT}/script/load_test_and_demo_data.rb"
+      Rake::Task[:environment].invoke
+      load "#{RAILS_ROOT}/script/load_codes.rb"
+      load "#{RAILS_ROOT}/script/load_defaults.rb"
+      load "#{RAILS_ROOT}/script/set_default_admin_uid.rb"
+      load "#{RAILS_ROOT}/script/load_common_test_types.rb"
+      load "#{RAILS_ROOT}/script/load_test_and_demo_data.rb"
     end
 
     desc "Run standard features"
@@ -147,7 +148,7 @@ namespace :trisano do
 
     desc "Run enhanced features"
     task :enhanced_features do
-      sh "cucumber -p enhanced #{ENV['FEATURE'] || 'features/enhanced'}"
+      sh "cucumber -p enhanced #{ENV['FEATURE']}"
     end
 
   end

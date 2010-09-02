@@ -62,7 +62,7 @@ namespace :trisano do
       puts "Load code translations"
       file_names = code_translation_files.join(',')
       file_list = FileList[File.join(db_translations_dir, "{#{file_names}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_code_translations.rb es #{file_list.join(' ')}")
+      sh("#{RAILS_ROOT}/script/load_code_translations.rb en #{file_list.join(' ')}")
     end
 
     desc "Load English translations for csv fields"
@@ -70,7 +70,7 @@ namespace :trisano do
       puts "Load csv translations"
       file_name = csv_translation_files.join(',')
       file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_csv_translations.rb es #{file_list.join(' ')}")
+      sh("#{RAILS_ROOT}/script/load_csv_translations.rb en #{file_list.join(' ')}")
     end
 
     desc "Load English translations for roles"
@@ -78,7 +78,7 @@ namespace :trisano do
       puts "Load role translations"
       file_name = role_translation_files.join(',')
       file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_role_translations.rb es #{file_list.join(' ')}")
+      sh("#{RAILS_ROOT}/script/load_role_translations.rb en #{file_list.join(' ')}")
     end
 
   end
