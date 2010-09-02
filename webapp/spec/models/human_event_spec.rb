@@ -56,35 +56,35 @@ describe HumanEvent, 'associations'  do
       it "Should not allow interested parties to be deleted via a nested attribute" do
         @event.build_interested_party.build_person_entity.build_person(:last_name => "whatever")
         @event.save
-        @event.interested_party_attributes = { "_delete"=>"1" }
+        @event.interested_party_attributes = { "_destroy"=>"1" }
         @event.interested_party.should_not be_marked_for_destruction
       end
 
       it "Should allow labs to be deleted via a nested attribute" do
         @event.labs.build
         @event.save
-        @event.labs_attributes = [ { "id" => "#{@event.labs[0].id}", "_delete"=>"1"} ]
+        @event.labs_attributes = [ { "id" => "#{@event.labs[0].id}", "_destroy"=>"1"} ]
         @event.labs[0].should be_marked_for_destruction
       end
 
       it "Should allow hospitalization facilities to be deleted via a nested attribute" do
         @event.hospitalization_facilities.build
         @event.save
-        @event.hospitalization_facilities_attributes = [ { "id" => "#{@event.hospitalization_facilities[0].id}", "_delete"=>"1"} ]
+        @event.hospitalization_facilities_attributes = [ { "id" => "#{@event.hospitalization_facilities[0].id}", "_destroy"=>"1"} ]
         @event.hospitalization_facilities[0].should be_marked_for_destruction
       end
 
       it "Should allow diagnostic_facilities to be deleted via a nested attribute" do
         @event.diagnostic_facilities.build
         @event.save
-        @event.diagnostic_facilities_attributes = [ { "id" => "#{@event.diagnostic_facilities[0].id}", "_delete"=>"1"} ]
+        @event.diagnostic_facilities_attributes = [ { "id" => "#{@event.diagnostic_facilities[0].id}", "_destroy"=>"1"} ]
         @event.diagnostic_facilities[0].should be_marked_for_destruction
       end
 
       it "Should allow clinicians to be deleted via a nested attribute" do
         @event.clinicians.build
         @event.save
-        @event.clinicians_attributes = [ { "id" => "#{@event.clinicians[0].id}", "_delete"=>"1"} ]
+        @event.clinicians_attributes = [ { "id" => "#{@event.clinicians[0].id}", "_destroy"=>"1"} ]
         @event.clinicians[0].should be_marked_for_destruction
       end
     end

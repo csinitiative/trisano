@@ -43,7 +43,7 @@
         - unless f.object.new_record?
           %span.horiz
             = f.label :_delete
-            = f.check_box :_delete
+            = f.check_box :_destroy
 
       - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |tel_form|
         %span.vert
