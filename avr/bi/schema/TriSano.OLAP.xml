@@ -32,7 +32,11 @@
 				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
                     <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
                 </Level>
-				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day">
+          <OrdinalExpression><SQL dialect="postgres">
+                        LPAD(date_disease_diagnosed_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+        </Level>
 			</Hierarchy>
 		</Dimension>
 		<Dimension type="TimeDimension" name="Disease onset date">
@@ -45,7 +49,11 @@
 				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
                     <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
                 </Level>
-				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day">
+          <OrdinalExpression><SQL dialect="postgres">
+                        LPAD(date_disease_onset_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+        </Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Jurisdiction">
@@ -348,7 +356,11 @@
 				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week">
                     <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
                 </Level>
-				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day"></Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day">
+          <OrdinalExpression><SQL dialect="postgres">
+                        LPAD(date_disease_diagnosed_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+        </Level>
 			</Hierarchy>
 		</Dimension>
 		<Dimension type="TimeDimension" name="Disease onset date">
@@ -361,7 +373,11 @@
 				<Level name="Week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week">
                     <OrdinalExpression><SQL dialect="postgres"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
                 </Level>
-				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day"></Level>
+				<Level name="Day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day">
+          <OrdinalExpression><SQL dialect="postgres">
+                        LPAD(date_disease_onset_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+        </Level>
 			</Hierarchy>
 		</Dimension>
         <Dimension type="StandardDimension" name="Jurisdiction">
