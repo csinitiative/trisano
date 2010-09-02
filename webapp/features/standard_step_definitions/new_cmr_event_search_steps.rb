@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given /^a simple (.+) event for last name (.+)$/ do |event_type, last_name|
-  @event = create_basic_event(event_type, last_name)
-end
 
 Given /^I am logged in as a user without view or update privileges in Davis County$/ do
   log_in_as("investigator")
