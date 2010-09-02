@@ -161,6 +161,9 @@ test:
   hide: 'xHide'
   search_button: 'xSearch'
   save_and_exit: 'xSave & Exit'
+  save_and_continue: xSave & Continue
+  enable_save_buttons: xEnable save buttons
+  save_button_help: x
   other_data_1: 'xOther data 1'
   other_data_2: 'xOther data 2'
   disease_not_specified: 'xDisease not specified'
@@ -173,6 +176,17 @@ test:
   parent_cmr: 'xParent CMR'
   parent_patient: xParent Patient
   not_elevated: "xNot yet elevated to morbidity events"
+  save_button_help: "xClick here to enable the save buttons if they are grayed out when they shouldn't be."
+  disable_tabs: xDisable tabs
+  enable_tabs: xEnable tabs
+  add_hospitalization_facility: xAdd hospitalization facility
+  mortality_status: xMortaility status
+  pregnancy_status: xPregnancy status
+  hospitalization_facilities: xHospitalization facilities
+  contact_field: xContact field
+  place_field: xPlace field
+  lab_field: xLab field
+  treatment_field: xTreatment
 
 #core_field_elements
   add_core_field: 'xAdd Core Field'
