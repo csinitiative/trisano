@@ -22,7 +22,7 @@ class CommonTestTypesDiseases < ActiveRecord::Migration
       t.integer :common_test_type_id, :null => false
       t.timestamps
     end
-    add_index :common_test_types_diseases, [:disease_id, :common_test_type_id], :unique => true, :name => :by_common_test_type_and_disease
+    add_index :common_test_types_diseases, [:disease_id, :common_test_type_id], :unique => true, :name => 'by_common_test_type_and_disease'
   end
 
   def self.down
