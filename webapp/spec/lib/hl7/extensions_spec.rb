@@ -177,6 +177,30 @@ describe Message do
       @hl7.observation_requests.first.tests.should_not be_nil
     end
 
+    describe 'specimen segment' do
+      before :all do
+        # This is an OBR segment that should have an SPM segment.
+        @arup_3 = HL7::Message.parse(hl7_messages[:arup_3]).observation_requests.first
+      end
+
+      it 'should be an SpmWrapper object' do
+        @arup_3.specimen.is_a?(StagedMessages::SpmWrapper).should be_true
+      end
+
+      it 'should have an :spm_segment method returning an SPM object' do
+        @arup_3.specimen.respond_to?(:spm_segment).should be_true
+        @arup_3.specimen.spm_segment.is_a?(HL7::Message::Segment::SPM).should be_true
+      end
+
+      it 'should return \'Whole Blood\' as the specimen source' do
+        @arup_3.specimen_source.should == 'Whole Blood'
+      end
+
+      it 'should respond_to :tests' do
+        @arup_3.specimen.respond_to?(:tests).should be_true
+      end
+    end
+
     describe 'tests' do
       before :each do
         @tests = @hl7.observation_requests.first.tests
