@@ -1,12 +1,19 @@
 source "http://gems.github.com"
 source "http://rubygems.org"
 gem "rails", "2.3.5"
-if defined? JRUBY_VERSION
+
+platforms :jruby do
   gem "activerecord-jdbcpostgresql-adapter", :path => '~/projects/activerecord-jdbc-adapter/adapters/postgresql'
   gem "jruby-openssl"
-else
+  group :cli do
+    gem "warbler"
+  end
+end
+
+platforms :ruby_18, :ruby_19 do
   gem "pg"
 end
+
 gem "logging"
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
@@ -16,7 +23,6 @@ gem "mislav-will_paginate"
 gem "rubyzip"
 
 group :development do
-  gem "wirble"
   gem "mechanize"
   gem "rest-open-uri"
   gem "ci_reporter"
@@ -37,3 +43,5 @@ group :test, :uattest do
   gem "database_cleaner"
   gem "selenium-client"
 end
+
+gem "wirble", :group => :cli
