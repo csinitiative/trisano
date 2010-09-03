@@ -20,7 +20,7 @@
 # set the environment 
 
 JRUBY_DIR=../lib/jruby
-JRUBY_BIN=$JRUBY_DIR/jruby-1.3.1/bin
+JRUBY_BIN=$JRUBY_DIR/jruby-1.5.2/bin
 
 PATH=$JRUBY_BIN:$PATH
 export PATH
