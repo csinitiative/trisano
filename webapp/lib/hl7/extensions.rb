@@ -21,11 +21,11 @@ module HL7
   class Message
 
     def message_header
-      self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
+      @message_header ||= self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
     end
 
     def patient_id
-      self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
+      @patient_id ||= self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
     # Return an array of ObrWrapper objects corresponding to the OBR
@@ -50,14 +50,10 @@ class HL7::Message::Segment
     @child_types << child_type.to_sym
   end
 
-  def self.child_types
-    @child_types
-  end
-
   def collect_children(child_type)
     seg_name = child_type.to_s
     raise HL7::Exception, "invalid child type #{seg_name}" unless
-      self.class.child_types.include?(child_type.to_sym)
+      accepts? child_type.to_sym
 
     hl7_klass = eval("HL7::Message::Segment::%s" % seg_name.upcase)
     sm_klass = eval("StagedMessages::%sWrapper" % seg_name.capitalize)
@@ -295,15 +291,13 @@ module StagedMessages
     end
 
     def specimen_source
-      returning obr_segment.specimen_source.split('^').join(', ') do |source|
-        source.instance_eval do
-          def id
-            ExternalCode.find(
-              :first,
-              :select => 'id',
-              :conditions => ['code_name = ? AND code_description ILIKE ?', 'specimen', self]
-            ).try(:id)
-          end
+      returning specimen_source_2_5_1 || specimen_source_2_3_1 do |source|
+        def source.id
+          ExternalCode.find(
+            :first,
+            :select => 'id',
+            :conditions => ['code_name = ? AND code_description ILIKE ?', 'specimen', self]
+          ).try(:id)
         end
       end
     end
@@ -321,8 +315,33 @@ module StagedMessages
       @tests ||= obr_segment.collect_children(:OBX)
     end
 
-    def specimens
-      @specimens ||= obr_segment.collect_children(:SPM)
+    # Though the HL7 2.5.1 spec provides for multiple SPM segments per
+    # OBR segment, TriSano currently only handles one.
+    #
+    # This method returns the first SPM segment associated with this
+    # OBR segment (+nil+ if none).
+    def specimen
+      @specimen ||= obr_segment.collect_children(:SPM).first
+    end
+
+    def spm_segment
+      specimen.spm_segment if specimen
+    end
+
+    private
+
+    # Take the specimen source from SPM-4
+    # Returns +nil+ if no SPM segment.
+    def specimen_source_2_5_1
+      return nil unless spm_segment
+
+      # The second delimited field is the name of the specimen
+      spm_segment.specimen_type.split(spm_segment.item_delim)[1]
+    end
+
+    # Take the specimen source from OBR-15
+    def specimen_source_2_3_1
+      obr_segment.specimen_source.split(obr_segment.item_delim).join(', ')
     end
   end
 

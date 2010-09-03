@@ -32,6 +32,9 @@ Given /^morbidity events with the following diseases:$/ do |table|
   end
 end
 
+Given /^a simple (.+) event for last name (.+)$/ do |event_type, last_name|
+  @event = create_basic_event(event_type, last_name)
+end
 
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
   test_type_id = CommonTestType.find_by_common_name(test_type).id
