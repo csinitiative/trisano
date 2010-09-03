@@ -17,6 +17,8 @@
 
 require 'ruby-hl7'
 
+######## Extensions to the ruby-hl7 gem
+
 module HL7
   class Message
 
@@ -47,7 +49,11 @@ end
 
 class HL7::Message::Segment
   def self.add_child_type(child_type)
-    @child_types << child_type.to_sym
+    if @child_types
+      @child_types << child_type.to_sym
+    else
+      has_children [ child_type.to_sym ]
+    end
   end
 
   def collect_children(child_type)
@@ -65,11 +71,56 @@ class HL7::Message::Segment
   end
 end
 
+######## Extensions to existing HL7::Message::Segment:XXX classes
+
+class HL7::Message::Segment::MSA
+  weight 1
+end
+
+class HL7::Message::Segment::PID
+  has_children [:NTE, :PV1, :PV2]
+end
+
 class HL7::Message::Segment::OBR
+  # Already declared in the gem
+  # has_children [:OBX]
+
+  # Can't call has_children repeatedly, since it defines methods.
+  # The :add_child_type method, defined above, allows us to add new
+  # types to a class after has_children has already been called.
+
+  add_child_type :NTE
   add_child_type :SPM
 end
 
+######## New HL7::Message::Segment::XXX classes
+
+class HL7::Message::Segment::SFT < HL7::Message::Segment
+  weight 0
+  add_field :software_vendor_organization
+  add_field :software_certified_version_or_release_number # NEW longest method name ever.
+  add_field :software_product_name
+  add_field :software_binary_id
+  add_field :software_product_information
+  add_field :software_install_date
+end
+
+class HL7::Message::Segment::ERR < HL7::Message::Segment
+  weight 2
+  add_field :error_code_and_location
+  add_field :error_location
+  add_field :hl7_error_code
+  add_field :severity
+  add_field :application_error_code
+  add_field :application_error_parameter
+  add_field :diagnostic_information
+  add_field :user_message
+  add_field :help_desk_contact_point, :idx => 12
+end
+
 class HL7::Message::Segment::SPM < HL7::Message::Segment
+  # Weight doesn't really matter, since this always occurs as a child
+  # of an OBR segment.
   weight 100 # fixme
   has_children [:OBX]
   add_field :set_id
@@ -118,6 +169,10 @@ module StagedMessages
       rescue
         "Could not be determined"
       end
+    end
+
+    def software_segments
+      @software_segments ||= msh_segment.collect_children(:SFT)
     end
   end
 
@@ -270,6 +325,18 @@ module StagedMessages
       return area_code, number, extension
     end
 
+    def notes
+      @notes ||= pid_segment.collect_children(:NTE)
+    end
+
+    def visit1
+      pid_segment.collect_children(:PV1).first
+    end
+
+    def visit2
+      pid_segment.collect_children(:PV2).first
+    end
+
     private
 
     def components_empty?(components)
@@ -311,8 +378,18 @@ module StagedMessages
       end
     end
 
+    def all_tests
+      return tests unless specimen and specimen.tests
+      return specimen.tests unless tests
+      tests + specimen.tests
+    end
+
     def tests
       @tests ||= obr_segment.collect_children(:OBX)
+    end
+
+    def notes
+      @notes ||= obr_segment.collect_children(:NTE)
     end
 
     # Though the HL7 2.5.1 spec provides for multiple SPM segments per
@@ -350,6 +427,10 @@ module StagedMessages
 
     def initialize(obx_segment)
       @obx_segment = obx_segment
+    end
+
+    def notes
+      @notes ||= obx_segment.collect_children(:NTE)
     end
 
     def set_id
@@ -443,6 +524,30 @@ module StagedMessages
     # Returns an empty array if none.
     def tests
       @tests ||= spm_segment.collect_children(:OBX)
+    end
+  end
+
+  class NteWrapper
+    attr_reader :nte_segment
+
+    def initialize(nte_segment)
+      @nte_segment = nte_segment
+    end
+  end
+
+  class Pv1Wrapper
+    attr_reader :pv1_segment
+
+    def initialize(pv1_segment)
+      @pv1_segment = pv1_segment
+    end
+  end
+
+  class Pv2Wrapper
+    attr_reader :pv2_segment
+
+    def initialize(pv2_segment)
+      @pv2_segment = pv2_segment
     end
   end
 end
