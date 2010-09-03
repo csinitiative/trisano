@@ -235,10 +235,13 @@ class StagedMessage < ActiveRecord::Base
           msh.recv_facility = orig_msh.sending_facility
         end
 
-        msh.time = DateTime.now.to_s
+        # YYYYMMDDHHMMSS+/-ZZZZ
+        msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
         msh.message_type = 'ACK^R01^ACK'
 
-        # msh.message_control_id = some_unique_id
+        # Simple sequence number for now
+        msh.message_control_id = self.class.next_sequence_number
+
         # msh.processing_id = ???
 
         msh.version_id = '2.5.1'
@@ -318,5 +321,10 @@ class StagedMessage < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def self.next_sequence_number
+    return @next_sequence_number = 1 unless @next_sequence_number
+    @next_sequence_number += 1
   end
 end

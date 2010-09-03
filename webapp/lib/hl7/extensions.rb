@@ -23,11 +23,11 @@ module HL7
   class Message
 
     def message_header
-      self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
+      @message_header = self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
     end
 
     def patient_id
-      self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
+      @patient_id = self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
     # Return an array of ObrWrapper objects corresponding to the OBR
