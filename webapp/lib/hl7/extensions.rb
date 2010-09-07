@@ -482,7 +482,7 @@ module StagedMessages
 
     def units
       begin
-        obx_segment.units
+        obx_segment.units.split(obx_segment.item_delim)[0]
       rescue
         "Could not be determined"
       end

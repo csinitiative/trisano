@@ -6,13 +6,13 @@ base:
   # Displays user switch below footer on mouseover
   auth_allow_user_switch_hidden: false
   # Uncommenting google_api_key will turn on google maps and geocode features, if not using the premier acct.
-  #google_api_key: ABQIAAAAo4YnME-vPXWNSkpYMt_0oxSVimV7G6dhrQkR9OVUux8Cu6qgXBQnOd8sgchiXpy5cIzq5sf8Ufz4LQ
+  google_api_key: ABQIAAAAo4YnME-vPXWNSkpYMt_0oxSVimV7G6dhrQkR9OVUux8Cu6qgXBQnOd8sgchiXpy5cIzq5sf8Ufz4LQ
   # Uncommenting google_client_id will turn on google maps and geocode features, preferred method
   #google_client_id: gme-collabsw
   # Channel indicates the customer or deployment for tracking purposes
-  #google_channel: developer
+  google_channel: developer
   # API 2 & 3 are supported, anything other than 3 defaults to 2
-  #google_api_version: 3
+  google_api_version: 3
 
   # Customize the way telephone numbers are displayed and validated
   telephone:

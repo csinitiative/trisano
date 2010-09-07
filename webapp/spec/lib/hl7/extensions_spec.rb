@@ -49,6 +49,11 @@ describe Message do
     @hl7.observation_requests.class.should == Array
   end
 
+  it 'should parse the Realm minimal sample message' do
+    # Basic sanity check: Pass in an actual 2.5.1 message.
+    HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
+  end
+
   describe 'message header' do
     it 'should respond_to :sending_facility' do
       @hl7.message_header.respond_to?(:sending_facility).should be_true

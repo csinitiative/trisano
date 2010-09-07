@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class StagedMessagesController < ApplicationController
@@ -45,10 +45,12 @@ class StagedMessagesController < ApplicationController
       if @staged_message.save
         flash[:notice] = t("staged_message_successfully_created")
         format.html { redirect_to(@staged_message) }
-        format.hl7  { head :created, :location => @staged_message }
+        format.hl7  { render :inline => '<%= @staged_message.ack.to_hl7 %>',
+          :status => :created, :location => @staged_message }
       else
         format.html { render :action => "new", :status => :bad_request }
-        format.hl7  { head :unprocessable_entity }
+        format.hl7  { render :inline => '<%= @staged_message.ack.to_hl7 %>',
+          :status => :unprocessable_entity }
       end
     end
   end
@@ -141,5 +143,5 @@ class StagedMessagesController < ApplicationController
       render :partial => 'permission_denied', :layout => true, :locals => { :reason =>  t("no_create_or_modify_staged_message_privs")}, :status => :forbidden and return
     end
   end
- 
+
 end
