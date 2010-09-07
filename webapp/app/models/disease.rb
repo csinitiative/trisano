@@ -24,8 +24,8 @@ class Disease < ActiveRecord::Base
   validates_presence_of :disease_name
 
   has_and_belongs_to_many(:cdc_disease_export_statuses,
-                          :join_table => 'cdc_disease_export_statuses',
-                          :class_name => 'ExternalCode')
+    :join_table => 'cdc_disease_export_statuses',
+    :class_name => 'ExternalCode')
   has_and_belongs_to_many :export_columns
   has_and_belongs_to_many :avr_groups
 
@@ -91,6 +91,17 @@ class Disease < ActiveRecord::Base
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
 
+    def diseases_for_event(event)
+      diseases = find_active(:all, :order => 'disease_name ASC')
+
+      if (event.disease_event.try(:disease).try(:active) == false)
+        diseases << event.disease_event.disease
+        diseases = diseases.sort_by {|disease| disease.disease_name }
+      end
+      
+      diseases
+    end
+
     def load_from_yaml(str_or_readable)
       transaction do
         YAML.load(str_or_readable).each do |disease_group, data|
@@ -128,16 +139,16 @@ class Disease < ActiveRecord::Base
   def case_status_where_clause
     unless self.cdc_disease_export_status_ids.empty?
       self.class.send(:sanitize_sql, ["(disease_id=? AND state_case_status_id IN (?))",
-                                      self.id,
-                                      self.cdc_disease_export_status_ids])
+          self.id,
+          self.cdc_disease_export_status_ids])
     end
   end
 
   def invalid_case_status_where_clause
     unless self.cdc_disease_export_status_ids.empty?
       self.class.send(:sanitize_sql, ["(disease_id = ? and state_case_status_id NOT IN (?))",
-                                      self.id,
-                                      self.cdc_disease_export_status_ids])
+          self.id,
+          self.cdc_disease_export_status_ids])
     end
   end
 

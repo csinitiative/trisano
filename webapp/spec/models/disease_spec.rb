@@ -60,6 +60,27 @@ describe Disease do
     Disease.find_active(:all).size.should == 1
   end
 
+  it "#diseases_for_event should return a collection of active diseases for a select list" do
+    Factory.create(:disease, :active => true)
+    Factory.create(:disease, :active => true)
+    Factory.create(:disease, :active => false)
+    event = Factory.create(:event_with_disease_event)
+    diseases = Disease.diseases_for_event(event)
+    diseases.size.should == 2
+  end
+
+  it "#diseases_for_event should also return an inactive disease if it is associated with the event" do
+    Factory.create(:disease, :active => true)
+    Factory.create(:disease, :active => true)
+    deactivated_disease = Factory.create(:disease, :active => false)
+    event = Factory.create(:event_with_disease_event)
+    event.disease_event.disease = deactivated_disease
+    event.save!
+    diseases = Disease.diseases_for_event(event)
+    diseases.size.should == 3
+    diseases.detect {|disease| disease.disease_name == deactivated_disease.disease_name }.should_not be_nil
+  end
+
   it "should return its live forms" do
     @disease.save.should be_true
 
