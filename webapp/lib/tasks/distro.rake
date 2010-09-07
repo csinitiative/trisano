@@ -270,7 +270,7 @@ namespace :trisano do
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S rake trisano:deploy:buildwar RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+      ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
       FileUtils.mv('trisano.war', '../distro')
       puts "Success packaging trisano.war"
     end
