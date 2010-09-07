@@ -790,8 +790,8 @@ describe QuestionElement do
           fq.save_and_add_to_form
           questions = lib.first.compare_short_names(fq)
           questions.size.should == 2
-          questions[0].collides.should be_nil
-          questions[1].collides.should be_true
+          questions[0].collision.should be_nil
+          questions[1].collision.should be_true
         end
       end
 
@@ -810,8 +810,8 @@ describe QuestionElement do
               'short_name' => a_safe_short_name } }
           questions = lib.first.compare_short_names(fq, user_updates_hash)
           questions.size.should == 2
-          questions[0].collides.should be_nil
-          questions[1].collides.should be_nil
+          questions[0].collision.should be_nil
+          questions[1].collision.should be_nil
           lib.last.question(true).short_name != a_safe_short_name
         end
       end
@@ -832,8 +832,8 @@ describe QuestionElement do
             lib.first.question.id.to_s => { 'short_name' => a_safe_short_name } }
           questions = lib.first.compare_short_names(fq, user_updates_hash)
           questions.size.should == 2
-          questions[0].collides.should be_nil
-          questions[1].collides.should be_true
+          questions[0].collision.should be_nil
+          questions[1].collision.should be_true
         end
       end
 

@@ -22,7 +22,7 @@ describe "/forms/fix_library_copy.rjs" do
   before do
     @form_element = Factory.build(:form_element)
     @lib_element  = Factory.build(:question_element)
-    @lib_element.question.stubs(:collides).returns(nil)
+    @lib_element.question.stubs(:collision).returns(nil)
     assigns[:form_element] = @form_element
     assigns[:lib_element]  = @lib_element
     assigns[:compare_results] = [@lib_element.question]

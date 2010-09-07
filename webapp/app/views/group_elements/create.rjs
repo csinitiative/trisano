@@ -15,6 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-page.replace_html "library-element-list-#{@reference_element.id}", :partial => 'forms/library_elements', :locals => {:direction => :to_library}
+page.replace_html "library-element-list-#{@reference_element.id}", :partial => 'forms/library_elements', :locals => {:direction => :to_library, :type => nil}
 page.visual_effect(:highlight, "library-element-list-#{@reference_element.id}")
 flash[:notice] = ""
