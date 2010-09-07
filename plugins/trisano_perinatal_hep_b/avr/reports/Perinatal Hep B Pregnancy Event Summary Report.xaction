@@ -121,10 +121,10 @@ where
             <filter value-col-name="name" display-col-name="name">jurisdictions</filter>
           </jurisdiction>
           <start_date filter="none">
-            <title>Enter start date (YYYY-MM-VV)</title>
+            <title>Enter start date (YYYY-MM-DD)</title>
           </start_date>
           <end_date filter="none">
-            <title>Enter end date (YYYY-MM-VV)</title>
+            <title>Enter end date (YYYY-MM-DD)</title>
           </end_date>
         </selections> 
       </component-definition> 
