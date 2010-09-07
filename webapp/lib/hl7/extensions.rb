@@ -23,11 +23,11 @@ module HL7
   class Message
 
     def message_header
-      @message_header ||= self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
+      @message_header = self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
     end
 
     def patient_id
-      @patient_id ||= self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
+      @patient_id = self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
     # Return an array of ObrWrapper objects corresponding to the OBR
@@ -42,6 +42,10 @@ module HL7
       else
         [ StagedMessages::ObrWrapper.new obr_segments ]
       end
+    end
+
+    def version_id
+      message_header.version_id if message_header
     end
 
   end
@@ -73,6 +77,12 @@ end
 
 ######## Extensions to existing HL7::Message::Segment:XXX classes
 
+class HL7::Message::Segment::MSH
+  add_field :principal_language_of_message
+  add_field :alternate_character_set_handling_scheme
+  add_field :message_profile_identifier
+end
+
 class HL7::Message::Segment::MSA
   weight 1
 end
@@ -97,6 +107,12 @@ end
 
 class HL7::Message::Segment::SFT < HL7::Message::Segment
   weight 0
+  # The sample SFT segments seem to have Set ID before SFT-1, software
+  # vendor organization.  This is sensible, since each software
+  # component that retransmits a message is supposed to add its own SFT
+  # segment.  A Set ID is required to distinguish among multiple SFT
+  # segments.
+  add_field :set_id
   add_field :software_vendor_organization
   add_field :software_certified_version_or_release_number # NEW longest method name ever.
   add_field :software_product_name
@@ -169,6 +185,11 @@ module StagedMessages
       rescue
         "Could not be determined"
       end
+    end
+
+    # Should be '2.5.1' or something similar for other versions.
+    def version_id
+      msh_segment.version_id
     end
 
     def software_segments

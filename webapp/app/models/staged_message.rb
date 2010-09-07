@@ -220,17 +220,68 @@ class StagedMessage < ActiveRecord::Base
   # conditions.
   def ack
     @ack ||= HL7::Message.new do |ack|
+      orig_msh = message_header.msh_segment if message_header
       ack << HL7::Message::Segment::MSH.new do |msh|
         # MSH block setup
+
+        msh.enc_chars = '^~&#'
+
+        # msh.sending_app = ???
+        # msh.sending_facility = ???
+
+        # Are these correct?
+        if orig_msh
+          msh.recv_app      = orig_msh.sending_app
+          msh.recv_facility = orig_msh.sending_facility
+        end
+
+        # YYYYMMDDHHMMSS+/-ZZZZ
+        msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
+        msh.message_type = 'ACK^R01^ACK'
+
+        # Simple sequence number for now
+        msh.message_control_id = self.class.next_sequence_number
+
+        # msh.processing_id = ???
+
+        msh.version_id = '2.5.1'
+
+        # msh.accept_ack_type = ???
+        # msh.app_ack_type = ???
+        # msh.country_code = country_code_from_locale
+        # msh.message_profile_identifier = ???
       end << HL7::Message::Segment::SFT.new do |sft|
         # SFT block setup
+
+        sft.set_id = '1'
+
+        # sft.software_vendor_organization = ???
+        # sft.software_certified_version_or_release_number = ???
+
+        sft.software_product_name = 'TriSano'
+
+        # sft.software_binary_id = ???
+        # sft.software_install_date = ???
       end << HL7::Message::Segment::MSA.new do |msa|
         # MSA block setup
+
+        # consider also 'CR'?
+        msa.ack_code = errors.size > 0 ? 'CE' : 'CA'
+        msa.control_id = orig_msh.message_control_id if orig_msh
       end
 
       errors.each do |attribute, message|
         ack << HL7::Message::Segment::ERR.new do |err|
           # ERR block setup (looped)
+
+          # err.error_location = where_this_error_occurred_in_the_message
+          # err.hl7_error_code = ???
+          # err.severity = ???
+
+          err.diagnostic_information = message.to_s
+          err.user_message = 'error processing message'
+
+          # err.help_desk_contact_point = bug_report_address
         end
       end
     end
@@ -270,5 +321,10 @@ class StagedMessage < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def self.next_sequence_number
+    return @next_sequence_number = 1 unless @next_sequence_number
+    @next_sequence_number += 1
   end
 end
