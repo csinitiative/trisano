@@ -18,6 +18,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe GroupElement do
+  include QuestionElementSpecHelper
+  include LibrarySpecHelper
+
   before(:each) do
     @group_element = GroupElement.new
     @group_element.name = "ImAGroup"
@@ -43,4 +46,19 @@ describe GroupElement do
     end
   end
 
+  describe "copy a group element from the library to a form" do
+    it "finds collisions in deep nested questions" do
+      with_question_element do |form_question|
+        library_group = library_group do
+          library_question do
+            form_question.question.short_name = last.question.short_name
+          end
+        end
+        form_question.save_and_add_to_form
+        questions = library_group.first.compare_short_names(form_question)
+        questions.size.should == 1
+        questions[0].collision.should be_true
+      end
+    end
+  end
 end

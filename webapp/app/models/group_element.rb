@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class GroupElement < FormElement
+  include Trisano::FormElement::ShortName
 
   validates_presence_of :name
 

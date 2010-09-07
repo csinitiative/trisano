@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class QuestionElement < FormElement
+  include Trisano::FormElement::ShortName
+
   has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
   has_one :value_set_element, :class_name => "ValueSetElement", :foreign_key => 'parent_id', :include => [:value_elements], :dependent => :destroy
   belongs_to :export_column
@@ -155,40 +157,6 @@ class QuestionElement < FormElement
       errors.add(:base, :parent_exception)
       nil
     end
-  end
-
-  # return all the questions for self, w/ collisions marked
-  def compare_short_names(other_tree, replacements=nil)
-    replacements ||= {}
-    returning [] do |results|
-      in_rolled_back_transaction do
-        unless replacements.empty?
-          Question.update(replacements.keys, replacements.values)
-        end
-        results << Question.find_by_sql([<<-SQL, other_tree.tree_id, tree_id, tree_id, tree_id])
-          SELECT a.id, a.short_name, a.question_text, fi.collision, b.lft
-            FROM questions a
-            JOIN form_elements b ON a.form_element_id = b.id
-            LEFT JOIN (SELECT true as collision, i.short_name, i.id
-                         FROM questions i
-                         JOIN form_elements f ON i.form_element_id = f.id
-                        WHERE f.tree_id = ?) as fi
-                   ON fi.short_name = a.short_name
-           WHERE b.tree_id = ?
-          UNION
-          SELECT c.id, c.short_name, c.question_text, jg.collision, d.lft
-            FROM questions c
-            JOIN form_elements d ON c.form_element_id = d.id
-            LEFT JOIN (SELECT true as collision, j.short_name, j.id
-                         FROM questions j
-                         JOIN form_elements g ON j.form_element_id = g.id
-                        WHERE g.tree_id = ?) as jg
-                   ON c.short_name = jg.short_name AND c.id > jg.id
-           WHERE d.tree_id = ?
-          ORDER BY lft, collision
-        SQL
-      end
-    end.flatten.uniq
   end
 
   private
