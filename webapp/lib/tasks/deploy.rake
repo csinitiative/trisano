@@ -101,10 +101,8 @@ namespace :trisano do
 
     desc "build war file"
     task :buildwar do
-      puts "running warble clean"
-      ruby "-S warble war:clean"
       puts "running warble war"
-      ruby "-S warble war"
+      ruby "-S bundle exec warble war"
     end
 
     desc "copy trisano war file to Tomcat"
