@@ -1,6 +1,19 @@
 module LibrarySpecHelper
 
   class LibraryTree
+    class << self
+      def create_question(options={}, &block)
+        lib_tree = new
+        lib_tree.library_question(options, &block)
+        lib_tree
+      end
+
+      def create_group(options={}, &block)
+        lib_tree = new
+        lib_tree.library_group(options, &block)
+        lib_tree
+      end
+    end
 
     def initialize
       @tree_id = FormElement.next_tree_id
@@ -41,12 +54,24 @@ module LibrarySpecHelper
       instance_eval(&block) if block_given?
     end
 
+    def library_group(options={}, &block)
+      options.symbolize_keys!
+      options[:tree_id] ||= @tree_id
+      options[:is_template] ||= true
+      group = Factory.build(:group_element, options)
+      group.save!
+      @nodes.push(group)
+      instance_eval(&block) if block_given?
+    end
+
   end
 
   def library_question(options = {}, &block)
-    lib_tree = LibraryTree.new
-    lib_tree.library_question(options, &block)
-    lib_tree
+    LibraryTree.create_question options, &block
+  end
+
+  def library_group(options = {}, &block)
+    LibraryTree.create_group options, &block
   end
 
 end
