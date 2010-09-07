@@ -566,7 +566,7 @@ describe FormsController do
 
     it "should render fix library copy template on short name collision" do
       question = Factory.build(:question)
-      question.stubs(:collides).returns("t")
+      question.stubs(:collision).returns("t")
       @lib_element.stubs(:compare_short_names).returns([question])
       do_post
       response.should render_template('forms/fix_library_copy')

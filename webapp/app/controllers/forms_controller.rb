@@ -263,7 +263,7 @@ class FormsController < AdminController
 
     begin
       @compare_results = @lib_element.compare_short_names(@form_element, params[:replacements])
-      if @compare_results.any?(&:collides)
+      if @compare_results.any?(&:collision)
         render(:template => 'forms/fix_library_copy')
       else
         @form_element.copy_from_library(@lib_element, params)

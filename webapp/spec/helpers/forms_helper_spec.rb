@@ -97,7 +97,7 @@ describe FormsHelper do
   describe "replacement short name fields" do
     before do
       @question = Factory.create(:question, :data_type => 'single_line_text')
-      @question.stubs(:collides).returns(nil)
+      @question.stubs(:collision).returns(nil)
     end
 
     it "renders a label and a text field" do
@@ -111,7 +111,7 @@ describe FormsHelper do
     end
 
     it "renders collisions w/ label and text field wrapped in error div" do
-      @question.stubs(:collides).returns("t")
+      @question.stubs(:collision).returns("t")
       result = helper.replacement_short_name_fields(@question)
       element = parse_html(result)
       error_fields = element.css("div[class='fieldWithErrors']")

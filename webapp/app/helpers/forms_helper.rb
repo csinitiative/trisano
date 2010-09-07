@@ -765,13 +765,13 @@ module FormsHelper
 
   def replacement_short_name_fields(question)
     returning [] do |result|
-      result << (question.collides ? "<div class='fieldWithErrors'>" : "<span>")
+      result << (question.collision ? "<div class='fieldWithErrors'>" : "<span>")
       result << label_tag(replacement_field_id(question),
                           question.question_text)
       result << text_field_tag(replacement_field_name(question),
                                question.short_name,
                                :id => replacement_field_id(question))
-      result << (question.collides ? "</div>" : "</span>")
+      result << (question.collision ? "</div>" : "</span>")
     end.join("\n")
   end
 
@@ -788,7 +788,7 @@ module FormsHelper
     contents << content_tag(:h2, t(:fix_short_names))
     contents << content_tag(:p,  t(:question_short_names_in_use))
     short_name_fails = compare_results.inject(0) do |sum, q|
-      sum += 1 if q.collides
+      sum += 1 if q.collision
       sum
     end
     contents << content_tag(:ul, "<li>#{t(:x_short_names_need_fixed, :count => short_name_fails)}</li>")

@@ -22,7 +22,7 @@ describe "/forms/_fix_copy_short_name.html.haml" do
   before do
     @form_element = Factory.build(:form_element)
     @lib_element  = Factory.build(:question_element)
-    @lib_element.question.stubs(:collides).returns(nil)
+    @lib_element.question.stubs(:collision).returns(nil)
     assigns[:form_element] = @form_element
     assigns[:lib_element]  = @lib_element
     assigns[:compare_results] = [@lib_element.question]
@@ -36,7 +36,7 @@ describe "/forms/_fix_copy_short_name.html.haml" do
   end
 
   it "renders field as an error if question has a collision" do
-    @lib_element.question.stubs(:collides).returns("t")
+    @lib_element.question.stubs(:collision).returns("t")
     render "forms/_fix_copy_short_name.html.haml"
     response.should have_tag("div[class=?]", "fieldWithErrors") do
       with_tag("input[id=?][name=?]",
