@@ -36,13 +36,13 @@ class PeriHepB_metadata
 },
 %{
   INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES
-    ('expected_delivery_facility',       'trisano.dw_morbidity_events_view', 'expected_delivery_facility',       'ME Exp Del Fac',     true),
-    ('expected_delivery_facility_type',  'trisano.dw_morbidity_events_view', 'expected_delivery_facility_type',  'ME Exp Del Fac Typ', true),
-    ('expected_delivery_facility_phone', 'trisano.dw_morbidity_events_view', 'expected_delivery_facility_phone', 'ME Exp Del Fac Phn', true),
-    ('actual_delivery_facility',         'trisano.dw_morbidity_events_view', 'actual_delivery_facility',         'ME Act Del Fac',     true),
-    ('actual_delivery_facility_type',    'trisano.dw_morbidity_events_view', 'actual_delivery_facility_type',    'ME Act Del Fac Typ', true),
-    ('actual_delivery_facility_phone',   'trisano.dw_morbidity_events_view', 'actual_delivery_facility_phone',   'ME Act Del Fac Phn', true),
-    ('actual_delivery_date',             'trisano.dw_morbidity_events_view', 'actual_delivery_date',             'ME Act Del Dt',      true);
+    ('expected_delivery_facility',       'trisano.dw_morbidity_events_view', 'expected_delivery_facility',       'ME Exp Del Fac',      true),
+    ('expected_delivery_facility_type',  'trisano.dw_morbidity_events_view', 'expected_delivery_facility_type',  'ME Exp Del Fac Typ',  true),
+    ('expected_delivery_facility_phone', 'trisano.dw_morbidity_events_view', 'expected_delivery_facility_phone', 'ME Exp Del Fac Phn',  true),
+    ('actual_delivery_facility',         'trisano.dw_morbidity_events_view', 'actual_delivery_facility',         'ME Actl Del Fac',     true),
+    ('actual_delivery_facility_type',    'trisano.dw_morbidity_events_view', 'actual_delivery_facility_type',    'ME Actl Del Fac Typ', true),
+    ('actual_delivery_facility_phone',   'trisano.dw_morbidity_events_view', 'actual_delivery_facility_phone',   'ME Actl Del Fac Phn', true),
+    ('actual_delivery_date',             'trisano.dw_morbidity_events_view', 'actual_delivery_date',             'ME Actl Del Dt',      true);
 }]
     queries.each do |q| conn.prepare_call(q).execute_update end
   end
