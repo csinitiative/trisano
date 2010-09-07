@@ -119,12 +119,13 @@ where
           </outputType>  
           <jurisdiction style="list">
             <filter value-col-name="name" display-col-name="name">jurisdictions</filter>
+            <title>Choose jurisdiction</title>
           </jurisdiction>
           <start_date filter="none">
-            <title>Enter start date (YYYY-MM-DD)</title>
+            <title>Choose start date (YYYY-MM-DD)</title>
           </start_date>
           <end_date filter="none">
-            <title>Enter end date (YYYY-MM-DD)</title>
+            <title>Choose end date (YYYY-MM-DD)</title>
           </end_date>
         </selections> 
       </component-definition> 
