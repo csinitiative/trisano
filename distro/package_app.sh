@@ -21,4 +21,5 @@
 
 . setenv.sh
 
-jruby -S bundle exec rake -f ../webapp/Rakefile trisano:distro:package_app
+cd ../webapp
+jruby -S bundle exec rake trisano:distro:package_app
