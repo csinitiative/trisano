@@ -39,7 +39,7 @@ group :test, :uattest do
   gem "factory_girl"
   gem "cucumber", "0.6.3"
   gem "cucumber-rails", "0.3.0"
-  gem "webrat", :git => "git://github.com/kofno/webrat.git"
+  gem "webrat", "= 0.7.2.pre"
   gem "database_cleaner"
   gem "selenium-client"
 end
