@@ -28,4 +28,4 @@ gem upate --system
 gem install --no-ri --no-rdoc $GEM_DIR/bundler-1.0.0.gem
 
 cd $WEBAPP_DIR
-bundle install --local
+bundle install --local --binstubs

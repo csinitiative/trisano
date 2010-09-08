@@ -51,6 +51,10 @@ namespace :trisano do
       ENV["PGPASSWORD"] = @priv_password 
     end
 
+    def binstubs?
+      File.directory?('bin')
+    end
+
     def validate_config_attribute(config, attribute)
       if config[attribute].nil?
         raise "attribute #{attribute} is not specified in config.yml - please add it and try again."
@@ -270,7 +274,11 @@ namespace :trisano do
       replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
       puts "creating .war deployment archive"
       cd '../webapp/'
-      ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+      if binstubs?
+        ruby "bin/warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+      else
+        ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+      end
       FileUtils.mv('trisano.war', '../distro')
       puts "Success packaging trisano.war"
     end
