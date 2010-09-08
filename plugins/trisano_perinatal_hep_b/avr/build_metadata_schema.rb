@@ -36,13 +36,17 @@ class PeriHepB_metadata
 },
 %{
   INSERT INTO trisano.core_columns (target_column, target_table, column_name, column_description, make_category_column) VALUES
-    ('expected_delivery_facility',       'trisano.dw_morbidity_events_view', 'expected_delivery_facility',       'ME Exp Del Fac',      true),
-    ('expected_delivery_facility_type',  'trisano.dw_morbidity_events_view', 'expected_delivery_facility_type',  'ME Exp Del Fac Typ',  true),
-    ('expected_delivery_facility_phone', 'trisano.dw_morbidity_events_view', 'expected_delivery_facility_phone', 'ME Exp Del Fac Phn',  true),
-    ('actual_delivery_facility',         'trisano.dw_morbidity_events_view', 'actual_delivery_facility',         'ME Actl Del Fac',     true),
-    ('actual_delivery_facility_type',    'trisano.dw_morbidity_events_view', 'actual_delivery_facility_type',    'ME Actl Del Fac Typ', true),
-    ('actual_delivery_facility_phone',   'trisano.dw_morbidity_events_view', 'actual_delivery_facility_phone',   'ME Actl Del Fac Phn', true),
-    ('actual_delivery_date',             'trisano.dw_morbidity_events_view', 'actual_delivery_date',             'ME Actl Del Dt',      true);
+    ('expected_delivery_facility',       'trisano.dw_morbidity_events_view', 'expected_delivery_facility',       'ME Exp Del Fac',         true),
+    ('expected_delivery_facility_type',  'trisano.dw_morbidity_events_view', 'expected_delivery_facility_type',  'ME Exp Del Fac Typ',     true),
+    ('expected_delivery_facility_phone', 'trisano.dw_morbidity_events_view', 'expected_delivery_facility_phone', 'ME Exp Del Fac Phn',     true),
+    ('actual_delivery_facility',         'trisano.dw_morbidity_events_view', 'actual_delivery_facility',         'ME Actl Del Fac',        true),
+    ('actual_delivery_facility_type',    'trisano.dw_morbidity_events_view', 'actual_delivery_facility_type',    'ME Actl Del Fac Typ',    true),
+    ('actual_delivery_facility_phone',   'trisano.dw_morbidity_events_view', 'actual_delivery_facility_phone',   'ME Actl Del Fac Phn',    true),
+    ('actual_delivery_date',             'trisano.dw_morbidity_events_view', 'actual_delivery_date',             'ME Actl Del Dt',         true),
+    ('hcp_first_name',                   'trisano.dw_morbidity_events_view', 'hcp_first_name',                   'Hlth Care Prov Frst Nm', true),
+    ('hcp_last_name',                    'trisano.dw_morbidity_events_view', 'hcp_last_name',                    'Hlth Care Prov Lst Nm',  true),
+    ('hcp_middle_name',                  'trisano.dw_morbidity_events_view', 'hcp_middle_name',                  'Hlth Care Prov Mid Nm',  true),
+    ('hcp_phones',                       'trisano.dw_morbidity_events_view', 'hcp_phones',                       'Hlth Care Prov Phone',   true);
 }]
     queries.each do |q| conn.prepare_call(q).execute_update end
   end

@@ -26,7 +26,12 @@ ALTER TABLE dw_morbidity_events
     ADD actual_delivery_facility TEXT,
     ADD actual_delivery_facility_type TEXT, 
     ADD actual_delivery_facility_phone TEXT,
-    ADD actual_delivery_date DATE;
+    ADD actual_delivery_date DATE,
+    ADD hcp_first_name TEXT,
+    ADD hcp_last_name TEXT,
+    ADD hcp_middle_name TEXT,
+    ADD hcp_entity_id INTEGER,
+    ADD hcp_phones TEXT;
 
 UPDATE dw_morbidity_events dme SET
     expected_delivery_facility = edf.name,
@@ -90,6 +95,20 @@ UPDATE dw_morbidity_events dme SET
             adf.entity_id = par.secondary_entity_id OR
             adf.entity_id IS NULL
         )
+;
+
+UPDATE dw_morbidity_events SET
+    hcp_first_name = p.first_name,
+    hcp_last_name = p.last_name,
+    hcp_middle_name = p.middle_name,
+    hcp_entity_id = p.entity_id,
+    hcp_phones = t.phones
+    FROM
+        participations pr
+        JOIN people p
+            ON (p.entity_id = pr.secondary_entity_id AND pr.type = 'HealthCareProvider')
+        JOIN dw_entity_telephones t
+            ON (t.entity_id = pr.secondary_entity_id)
 ;
 
 COMMIT;
