@@ -37,6 +37,7 @@ Feature: Deleting common test types
     And I have a common test type named Culture
     And I have a lab result
     And the lab result references the common test type
+	And no other common test types exist
 
     When I navigate to show common test type
     Then I should not see a link to "Delete"
