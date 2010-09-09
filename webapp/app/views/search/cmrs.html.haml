@@ -98,7 +98,9 @@
           %td
             = "#{h(search_result_full_name(cmr))}"
           %td
-            - if  !cmr['birth_date'].blank?
+            - if  cmr['birth_date'].blank?
+              = h(cmr['approximate_age_no_birthday'])
+            - else
               = h("#{calculate_age cmr['birth_date'].to_date} / #{ld(cmr['birth_date'])}")
           %td
             = h(cmr['birth_gender'])
