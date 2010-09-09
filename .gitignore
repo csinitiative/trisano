@@ -3,6 +3,8 @@ TAGS
 *#
 .#*
 .emacs.desktop
+*.tmproj
+.rvmrc
 *.war
 tmp
 log

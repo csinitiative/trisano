@@ -6,6 +6,10 @@ Given /^the lab result references the common test type$/ do
   @lab_result.update_attribute(:test_type_id, @common_test_type.id)
 end
 
+Given /^no other common test types exist$/ do
+  CommonTestType.all.each { |tt| tt.destroy unless tt == @lab_result.test_type }
+end
+
 When /^I navigate to show common test type$/ do
   @browser.click("link=ADMIN")
   @browser.wait_for_page_to_load
