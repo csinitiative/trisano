@@ -52,8 +52,8 @@ module Trisano
               def assign_investigator_treatment_date_task
                 self.interested_party.treatments.each do |pt|
                   if pt.treatment_date_changed? || pt.treatment_id_changed?
-                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+1.month, 'hep_b_dose_three') if pt.treatment.try(:treatment_name) == "Hepatitis B Dose 3"
-                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+1.month, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
+                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+30.days, 'hep_b_dose_three') if pt.treatment.try(:treatment_name) == "Hepatitis B Dose 3"
+                    assign_task(I18n.translate('perinatal_hep_b_management.post_serological_investigator_task_name'), pt.treatment_date+30.days, 'hep_b_comvax_dose_four') if pt.treatment.try(:treatment_name) == "Hepatitis B - Comvax Dose 4"
                   end
                 end
                 return true

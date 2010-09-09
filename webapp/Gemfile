@@ -26,6 +26,7 @@ group :development do
   gem "mechanize"
   gem "rest-open-uri"
   gem "ci_reporter"
+  gem "hirb"
 end
 
 group :test, :devlopment do

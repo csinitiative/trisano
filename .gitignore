@@ -21,6 +21,7 @@ webapp/config/site_config.yml
 avr/mdr.*
 *nbproject*
 /webapp/vendor/trisano/*
+/webapp/vendor/cache
 /webapp/db/development_structure.sql
 /webapp/db/names.sql
 /install
@@ -29,3 +30,4 @@ avr/mdr.*
 /webapp/.bundle/config
 /webapp/unicron-conf.rb
 /webapp/unicorn-conf.rb
+
