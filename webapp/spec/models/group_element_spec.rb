@@ -47,18 +47,21 @@ describe GroupElement do
   end
 
   describe "copy a group element from the library to a form" do
+    before do
+      # build form
+      @form = Factory.build(:form)
+      @form.save_and_initialize_form_elements
+      @form_question = Factory.build(:question_element)
+      @form_question.parent_element_id = @form.investigator_view_elements_container.children[0]
+      @form_question.save_and_add_to_form
+    end
+
     it "finds collisions in deep nested questions" do
-      with_question_element do |form_question|
-        library_group = library_group do
-          library_question do
-            form_question.question.short_name = last.question.short_name
-          end
-        end
-        form_question.save_and_add_to_form
-        questions = library_group.first.compare_short_names(form_question)
-        questions.size.should == 1
-        questions[0].collision.should be_true
-      end
+      @group_element = library_group
+      @copied_question = @form_question.add_to_library(@group_element)
+      questions = @group_element.compare_short_names(@form_question)
+      questions.size.should == 1
+      questions[0].collision.should be_true
     end
   end
 end
