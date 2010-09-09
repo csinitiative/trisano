@@ -96,35 +96,28 @@ class StagedMessage < ActiveRecord::Base
     begin
       hl7
     rescue
-      errors.add :hl7_message, :parse_error
+      add_hl7_error :parse_error
       return
     end
 
-    errors.add :hl7_message, :missing_header if self.message_header.nil?
+    add_hl7_error(:missing_header, :msh, 1) if message_header.nil?
 
-    if observation_requests.empty? || patient.nil?
-      errors.add :hl7_message, :missing_segment
+    if patient.nil?
+      add_hl7_error :missing_segment, :pid, 1
       return
     end
 
-=begin
-    # This may be OK.  The OBX segments may appear as children of SPM
-    # segments rather than directly as children of the OBR segment.
-    # Need to look further into what sort of validation is appropriate.
-    observation_requests.each do |obr|
-      if obr.tests.empty?
-        errors.add :hl7_message, :missing_segment
-        return
-      end
+    if observation_requests.empty?
+      add_hl7_error :missing_segment, :obr, 1
     end
-=end
 
-    errors.add :hl7_message, :missing_last_name if self.patient.patient_last_name.blank?
+    # error in PID segment, set ID 1 (only one PID), field 5, component 1
+    add_hl7_error(:missing_last_name, :pid, 1, 5, 1) if self.patient.patient_last_name.blank?
 
     observation_requests.each do |obr|
       obr.all_tests.each do |test|
-        errors.add :hl7_message, :missing_loinc,
-          :segment => test.set_id if test.loinc_code.blank?
+        # error in OBX segment with set_id, field 3, component 1
+        add_hl7_error(:missing_loinc, :obx, test.set_id, 3, 1) if test.loinc_code.blank?
       end
     end
   end
@@ -219,71 +212,10 @@ class StagedMessage < ActiveRecord::Base
   # ORU^R01^ORU_R01 message, indicating success or one or more error
   # conditions.
   def ack
-    @ack ||= HL7::Message.new do |ack|
-      orig_msh = message_header.msh_segment if message_header
-      ack << HL7::Message::Segment::MSH.new do |msh|
-        # MSH block setup
+    @ack ||= HL7::Message.new do |a|
+      a << ack_msh << ack_sft << ack_msa
 
-        msh.enc_chars = '^~&#'
-
-        # msh.sending_app = ???
-        # msh.sending_facility = ???
-
-        # Are these correct?
-        if orig_msh
-          msh.recv_app      = orig_msh.sending_app
-          msh.recv_facility = orig_msh.sending_facility
-        end
-
-        # YYYYMMDDHHMMSS+/-ZZZZ
-        msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
-        msh.message_type = 'ACK^R01^ACK'
-
-        # Simple sequence number for now
-        msh.message_control_id = self.class.next_sequence_number
-
-        # msh.processing_id = ???
-
-        msh.version_id = '2.5.1'
-
-        # msh.accept_ack_type = ???
-        # msh.app_ack_type = ???
-        # msh.country_code = country_code_from_locale
-        # msh.message_profile_identifier = ???
-      end << HL7::Message::Segment::SFT.new do |sft|
-        # SFT block setup
-
-        sft.set_id = '1'
-
-        # sft.software_vendor_organization = ???
-        # sft.software_certified_version_or_release_number = ???
-
-        sft.software_product_name = 'TriSano'
-
-        # sft.software_binary_id = ???
-        # sft.software_install_date = ???
-      end << HL7::Message::Segment::MSA.new do |msa|
-        # MSA block setup
-
-        # consider also 'CR'?
-        msa.ack_code = errors.size > 0 ? 'CE' : 'CA'
-        msa.control_id = orig_msh.message_control_id if orig_msh
-      end
-
-      errors.each do |attribute, message|
-        ack << HL7::Message::Segment::ERR.new do |err|
-          # ERR block setup (looped)
-
-          # err.error_location = where_this_error_occurred_in_the_message
-          # err.hl7_error_code = ???
-          # err.severity = ???
-
-          err.diagnostic_information = message.to_s
-          err.user_message = 'error processing message'
-
-          # err.help_desk_contact_point = bug_report_address
-        end
-      end
+      @hl7_errs.each { |e| a << self.class.ack_err(*e) } if @hl7_errs
     end
   end
 
@@ -326,5 +258,163 @@ class StagedMessage < ActiveRecord::Base
   def self.next_sequence_number
     return @next_sequence_number = 1 unless @next_sequence_number
     @next_sequence_number += 1
+  end
+
+  def orig_msh
+    @orig_msh ||= message_header.msh_segment if message_header
+  end
+
+  def ack_msh
+    @ack_msh ||= HL7::Message::Segment::MSH.new do |msh|
+      msh.enc_chars = '^~&#'
+
+      # These fields are required
+      # msh.recv_app = ???
+      # msh.recv_facility = ???
+
+      if orig_msh
+        msh.sending_app      = orig_msh.sending_app
+        msh.sending_facility = orig_msh.sending_facility
+        msh.accept_ack_type  = orig_msh.accept_ack_type
+        msh.app_ack_type     = orig_msh.app_ack_type
+      end
+
+      # YYYYMMDDHHMMSS+/-ZZZZ
+      msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
+      msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
+
+      # Simple sequence number for now
+      msh.message_control_id = self.class.next_sequence_number
+      msh.processing_id = [ 'P', '' ].join(msh.item_delim)
+
+      # P^ => production, current processing (needs to be configurable)
+      msh.version_id = '2.5.1'
+
+      # country code is optional in an ACK^R01^ACK message
+      # msh.country_code = country_code_from_locale
+
+      msh.message_profile_identifier = [ 'PHLabReport-Ack', '',
+        '2.16.840.1.114222.4.10.3', 'ISO' ].join(msh.item_delim)
+    end
+  end
+
+  def ack_sft
+    @ack_sft ||= HL7::Message::Segment::SFT.new do |sft|
+      sft.set_id = '1'
+
+      # results in 'CSI^D' : CSI is the organization name; it is a display
+      # name (as oppposed to a legal name, alias, etc.)
+      sft.software_vendor_organization = %w{CSI D}.join(sft.item_delim)
+
+      # sft.software_certified_version_or_release_number = ???
+
+      sft.software_product_name = 'TriSano'
+
+      # sft.software_binary_id = ???
+      # sft.software_install_date = ???
+    end
+  end
+
+  def ack_msa
+    @ack_msa ||= HL7::Message::Segment::MSA.new do |msa|
+      # consider also 'CE'?
+      msa.ack_code = errors.size > 0 ? 'CR' : 'CA'
+      msa.control_id = orig_msh.message_control_id if orig_msh
+    end
+  end
+
+  def add_hl7_error(*args)
+    trisano_code, segment_name, set_id, field_number, component_number,
+      subcomponent_number = *args
+    trisano_code = trisano_code.to_sym
+
+    # Error text from Rails
+    error_text = case trisano_code
+    when :missing_loinc
+      errors.add :hl7_message, :missing_loinc, :segment => set_id.to_i
+    else
+      errors.add :hl7_message, trisano_code
+    end.last
+
+    # Map to a known HL7 code
+    hl7_code = case trisano_code
+    when :missing_loinc, :missing_last_name
+      :required_field_missing
+    when :missing_segment, :missing_header
+      :segment_sequence_error
+    else
+      :application_internal_error
+    end
+
+    # Save all this info
+    @hl7_errs ||= []
+    @hl7_errs << [ trisano_code, hl7_code, error_text, segment_name,
+      set_id, field_number, component_number, subcomponent_number ]
+  end
+
+  class << self
+    def ack_err(*args)
+      trisano_code, hl7_code, error_text, rest = *args
+      HL7::Message::Segment::ERR.new do |err|
+        err.error_location = hl7_error_location(*args).join(err.item_delim)
+        err.hl7_error_code = hl7_error_code(hl7_code).join(err.item_delim)
+        err.severity = 'E'
+        err.diagnostic_information = error_text.to_s
+        err.user_message = 'error processing message'
+
+        # "NET^Internet^#{bug_report_address}"
+        # err.help_desk_contact_point = [ 'NET', 'Internet', bug_report_address ].join(err.item_delim)
+      end
+    end
+
+    # Returns an array [ error_number, error_string, 'HL70357' ]
+    # DEBT: Move this to lib/hl7/extensions.rb
+    def hl7_error_code(hl7_code)
+      @hl7_error_codes ||=
+        {
+          # From table HL70357
+          :segment_sequence_error     => 100,
+          :required_field_missing     => 101,
+          :data_type_error            => 102,
+          :table_value_not_found      => 103,
+          :unsupported_message_type   => 200,
+          :unsupported_event_code     => 201,
+          :unsupported_processing_id  => 202,
+          :unsupported_version_id     => 203,
+          :unknown_key_identifier     => 204,
+          :duplicate_key_identifier   => 205,
+          :application_record_locked  => 206,
+          :application_internal_error => 207
+        }
+
+      [ @hl7_error_codes[hl7_code], hl7_code.to_s.gsub('_', ' '),
+        'HL70357' ]
+    end
+
+    # Returns an array
+    # [ 'SEG', set_id, field_number, component_number, subcomponent_number ]
+    # All entries are strings.  The array terminates as soon as a
+    # component is missing.  (For example, if there's no field number,
+    # there won't be a subcomponent number either.)
+    # DEBT: Move this to lib/hl7/extensions.rb
+    def hl7_error_location(*args)
+      trisano_code, hl7_code, error_text, segment_name, set_id,
+        field_number, component_number, subcomponent_number = *args
+
+      return [ '' ] unless segment_name
+      erl = [ segment_name.to_s.upcase ]
+
+      return erl unless set_id
+      erl << [ set_id.to_s ]
+
+      return erl unless field_number
+      erl << [ field_number.to_s ]
+
+      return erl unless component_number
+      erl << [ component_number.to_s ]
+
+      return erl unless subcomponent_number
+      erl << [ subcomponent_number.to_s ]
+    end
   end
 end
