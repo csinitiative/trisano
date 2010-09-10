@@ -84,6 +84,17 @@ class Disease < ActiveRecord::Base
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
     end
 
+    def diseases_for_event(event)
+      diseases = find_active(:all, :order => 'disease_name ASC')
+
+      if (event.disease_event.try(:disease).try(:active) == false)
+        diseases << event.disease_event.disease
+        diseases = diseases.sort_by {|disease| disease.disease_name }
+      end
+
+      diseases
+    end
+
     def load_from_yaml(str_or_readable)
       transaction do
         YAML.load(str_or_readable).each do |disease_group, data|
