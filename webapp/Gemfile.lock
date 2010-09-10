@@ -38,6 +38,7 @@ GEM
     fastthread (1.0.7)
     gem_plugin (0.2.3)
     haml (2.0.7)
+    hirb (0.3.3)
     jdbc-postgres (8.4.701-java)
     jruby-jars (1.5.2)
     jruby-openssl (0.7.1)
@@ -117,6 +118,7 @@ DEPENDENCIES
   factory_girl
   faker
   haml (= 2.0.7)
+  hirb
   jruby-openssl
   logging
   mechanize
