@@ -75,7 +75,7 @@ class HL7::Message::Segment
   end
 end
 
-######## Extensions to existing HL7::Message::Segment:XXX classes
+######## Extensions to existing HL7::Message::Segment::XXX classes
 
 class HL7::Message::Segment::MSH
   add_field :principal_language_of_message

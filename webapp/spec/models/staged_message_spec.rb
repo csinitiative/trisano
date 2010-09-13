@@ -55,16 +55,6 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
-=begin
-  # This may be OK.  The OBX segments may appear as children of SPM
-  # segments rather than directly as children of the OBR segment.
-  # Need to look further into what sort of validation is appropriate.
-  it "should not be valid if there's no OBX segment" do
-    m = StagedMessage.new(:hl7_message => hl7_messages[:no_obx])
-    m.should_not be_valid
-  end
-=end
-
   it "should not be valid if there's no last name" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_last_name])
     m.should_not be_valid
@@ -79,6 +69,10 @@ describe StagedMessage do
 
   it 'should respond to hl7' do
     StagedMessage.new(@valid_attributes).respond_to?(:hl7).should be_true
+  end
+
+  it 'should respond to :ack' do
+    StagedMessage.new(@valid_attributes).respond_to?(:ack).should be_true
   end
 
   it 'should set message state to PENDING for new messages' do
@@ -99,6 +93,39 @@ describe StagedMessage do
 
   describe 'HL7 2.5 not already handled by HL7 2.3' do
     # nothing here at the moment
+  end
+
+  describe 'the ACK^R01^ACK message' do
+    before :all do
+      @good_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_minimal_message])
+      @bad_message  = StagedMessage.new(:hl7_message => HL7MESSAGES[:no_loinc_code])
+
+      # Make sure to validate these messages before calling #ack.
+      @good_message.should be_valid
+      @bad_message.should_not be_valid
+
+      # Work around a quirk in the ruby-hl7 gem:  The message built by
+      # #ack will return nil for [:MSA] below.  But first converting
+      # to HL7 and parsing back into an object removes this problem.
+      @good_message_ack = HL7::Message.parse @good_message.ack.to_hl7
+      @bad_message_ack  = HL7::Message.parse @bad_message.ack.to_hl7
+    end
+
+    it 'should have an MSA segment' do
+      @good_message_ack.should_not be_nil
+      @bad_message_ack.should_not be_nil
+
+      @good_message_ack[:MSA].should_not be_nil
+      @bad_message_ack[:MSA].should_not be_nil
+    end
+
+    it 'should return code CA on success' do
+      @good_message_ack[:MSA].ack_code.should == 'CA'
+    end
+
+    it 'should return code CR on failure' do
+      @bad_message_ack[:MSA].ack_code.should == 'CR'
+    end
   end
 
   describe 'with invalid HL7' do
