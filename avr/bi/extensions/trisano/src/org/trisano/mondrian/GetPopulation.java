@@ -64,6 +64,7 @@ public class GetPopulation implements UserDefinedFunction {
             for (Dimension d : evaluator.getCube().getDimensions()) {
                 Integer depth;
 
+                // XXX: This only supports dimensions with one hierarchy
                 if (d.getHierarchies() == null || d.getHierarchies().length == 0)
                     continue;
 
