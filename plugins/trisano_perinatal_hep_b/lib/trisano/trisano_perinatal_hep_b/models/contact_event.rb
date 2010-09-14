@@ -46,12 +46,13 @@ module Trisano
               end
 
               def birth_date
-                interested_party.person_entity.person.birth_date
+                interested_party.try(:person_entity).try(:person).try(:birth_date)
               end
 
               private
 
               def set_date_of_birth
+                return if birth_date
                 if parent_event && parent_event.valid_actual_delivery_date?
                   self.birth_date = parent_event.actual_delivery_date
                 end

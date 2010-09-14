@@ -222,14 +222,20 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
     end
 
     it "is required for infant contacts" do
-      @contact_event.birth_date = nil
       @contact_event.should_not be_valid
     end
 
-    it "is filled in from the parent events actual delivery date, if available" do
+    it "is filled in from the parent event's actual delivery date, if available" do
       @morbidity_event.actual_delivery_date = Date.yesterday
       @contact_event.should be_valid
       @contact_event.birth_date.should == @morbidity_event.actual_delivery_date
+    end
+
+    it "is not filled in w/ the parent event's actual delivery date if already filled in" do
+      @morbidity_event.actual_delivery_date = Date.today
+      @contact_event.birth_date = Date.yesterday
+      @contact_event.should be_valid
+      @contact_event.birth_date.should == Date.yesterday
     end
   end
 end
