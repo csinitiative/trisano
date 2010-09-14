@@ -266,12 +266,20 @@ class StagedMessage < ActiveRecord::Base
 
   def ack_msh
     @ack_msh ||= HL7::Message::Segment::MSH.new do |msh|
+      # literal constants
       msh.enc_chars = '^~&#'
+      msh.version_id = '2.5.1'
+      msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
+      msh.message_profile_identifier = [ 'PHLabReport-Ack', '',
+        '2.16.840.1.114222.4.10.3', 'ISO' ].join(msh.item_delim)
 
-      # These fields are required
-      # msh.recv_app = ???
-      # msh.recv_facility = ???
+      # current time: YYYYMMDDHHMMSS+/-ZZZZ
+      msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
 
+      # P^ => production, current processing (needs to be configurable)
+      msh.processing_id = [ 'P', '' ].join(msh.item_delim)
+
+      # Are all these correct?
       if orig_msh
         msh.sending_app      = orig_msh.sending_app
         msh.sending_facility = orig_msh.sending_facility
@@ -279,22 +287,21 @@ class StagedMessage < ActiveRecord::Base
         msh.app_ack_type     = orig_msh.app_ack_type
       end
 
-      # YYYYMMDDHHMMSS+/-ZZZZ
-      msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
-      msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
-
-      # Simple sequence number for now
+      # Simple sequence number for now, might need to be a UUID
       msh.message_control_id = self.class.next_sequence_number
-      msh.processing_id = [ 'P', '' ].join(msh.item_delim)
 
-      # P^ => production, current processing (needs to be configurable)
-      msh.version_id = '2.5.1'
+      # The next two fields are required
+      # ================================
+
+      # Probably a registered OID for TriSano
+      # msh.recv_app = ???
+
+      # Refers to the facility running TriSano; needs to be
+      # configurable.
+      # msh.recv_facility = ???
 
       # country code is optional in an ACK^R01^ACK message
       # msh.country_code = country_code_from_locale
-
-      msh.message_profile_identifier = [ 'PHLabReport-Ack', '',
-        '2.16.840.1.114222.4.10.3', 'ISO' ].join(msh.item_delim)
     end
   end
 

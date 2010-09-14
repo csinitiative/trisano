@@ -29,4 +29,4 @@ avr/mdr.*
 /webapp/.bundle/config
 /webapp/unicron-conf.rb
 /webapp/unicorn-conf.rb
-
+/webapp/bin/*

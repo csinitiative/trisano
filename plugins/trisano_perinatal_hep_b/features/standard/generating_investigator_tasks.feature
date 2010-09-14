@@ -4,6 +4,7 @@ Feature: Generating tasks for investigators
   Scenario: Entering a Hepatitis B Dose 3 treatment on a Hep B case
     Given I am logged in as a super user
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And I have an actual delivery date of 3 days ago
       And "Hepatitis B Pregnancy Event" has disease specific core fields
       And the hep b disease specific selections are loaded
       And an investigator is assigned to the event
@@ -30,6 +31,7 @@ Feature: Generating tasks for investigators
   Scenario: Entering a Hepatitis B - Comvax Dose 4 treatment on a Hep B case
     Given I am logged in as a super user
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
+      And I have an actual delivery date of 3 days ago
       And "Hepatitis B Pregnancy Event" has disease specific core fields
       And the hep b disease specific selections are loaded
       And an investigator is assigned to the event
