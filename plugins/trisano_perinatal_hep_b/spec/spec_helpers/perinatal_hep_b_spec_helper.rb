@@ -109,4 +109,8 @@ module PerinatalHepBSpecHelper
     YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
   end
 
+  def given_infant_contact_type
+    ExternalCode.infant_contact_type || Factory.create(:infant_contact_type)
+  end
+
 end

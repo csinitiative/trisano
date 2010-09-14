@@ -55,27 +55,6 @@ module Trisano
               :reject_if => proc { |attrs| attrs.nil? || attrs.all? { |k, v| v.blank? } },
               :allow_destroy => true }
 
-            base.class_eval do
-              def validate_with_p_hep_b_validate
-                validate_without_p_hep_b_validate
-
-                disease = try(:disease).try(:disease)
-                if self.is_a?(::ContactEvent) &&
-                    !disease.nil? &&
-                    ::DiseaseSpecificValidation.diseases_ids_for_key(:treatment_date_required).include?(disease.id)
-
-                  self.interested_party.treatments.each do |pt|
-                    unless pt.treatment.try(:id).blank?
-                      pt.errors.add_on_blank(:treatment_date)
-                      self.errors.add_to_base("#{I18n.t(:treatment_date)} #{I18n.t(:blank, :scope => 'activerecord.errors.messages')}") if pt.treatment_date.blank?
-                    end
-                  end
-
-                end
-              end
-            end
-
-            base.alias_method_chain :validate, :p_hep_b_validate
           end
         end
 
@@ -101,11 +80,17 @@ module Trisano
         end
 
         def prepare_actual_delivery_facility
-          adf = self.actual_delivery_facility || self.build_actual_delivery_facility
-          adf.actual_delivery_facilities_participation || adf.build_actual_delivery_facilities_participation
+          prepare_actual_delivery_facilities_participation
+          adf = self.actual_delivery_facility
           pe = adf.place_entity || adf.build_place_entity
           pe.place || pe.build_place
           pe.telephones.build if pe.telephones.empty?
+        end
+
+        def prepare_actual_delivery_facilities_participation
+          adf = self.actual_delivery_facility || self.build_actual_delivery_facility
+          adf.actual_delivery_facilities_participation || adf.build_actual_delivery_facilities_participation
+          adf.actual_delivery_facilities_participation
         end
 
         def remove_expected_delivery_data
@@ -116,6 +101,24 @@ module Trisano
         def remove_actual_delivery_data
           actual_delivery_facility.place_entity = nil
           save!
+        end
+
+        def valid_actual_delivery_date?
+          not actual_delivery_date.nil?
+        end
+
+        def actual_delivery_date
+          return @actual_delivery_date if @actual_delivery_date
+          raw_date = safe_call_chain(:actual_delivery_facility, :actual_delivery_facilities_participation, :actual_delivery_date)
+          @actual_delivery_date = parse_date_for_validity(raw_date)
+        end
+
+        def actual_delivery_date=(date)
+          prepare_actual_delivery_facilities_participation.actual_delivery_date = date
+        end
+
+        def parse_date_for_validity(date)
+          ValidatesTimeliness::Parser.parse(date, :date)
         end
 
       end
