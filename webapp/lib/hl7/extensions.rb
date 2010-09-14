@@ -180,11 +180,9 @@ module StagedMessages
     end
 
     def sending_facility
-      begin
-        msh_segment.sending_facility.split(msh_segment.item_delim).first
-      rescue
-        "Could not be determined"
-      end
+      msh_segment.sending_facility.split(msh_segment.item_delim).first
+    rescue
+      "Could not be determined"
     end
 
     # Should be '2.5.1' or something similar for other versions.
@@ -214,15 +212,13 @@ module StagedMessages
 
     # Ultimately we should make a patient class that has all the components as attributes
     def patient_name
-      begin
-        name = patient_last_name || "No Last Name"
-        name += ", #{patient_first_name}" unless patient_first_name.blank?
-        name += " #{patient_middle_name}" unless patient_middle_name.blank?
-        name += ", #{patient_suffix}" unless patient_suffix.blank?
-        name
-      rescue
-        "Could not be determined"
-      end
+      name = patient_last_name || "No Last Name"
+      name += ", #{patient_first_name}" unless patient_first_name.blank?
+      name += " #{patient_middle_name}" unless patient_middle_name.blank?
+      name += ", #{patient_suffix}" unless patient_suffix.blank?
+      name
+    rescue
+      "Could not be determined"
     end
 
     def patient_last_name
@@ -242,12 +238,10 @@ module StagedMessages
     end
 
     def birth_date
-      begin
-        return nil if pid_segment.patient_dob.blank?
-        Date.parse(pid_segment.patient_dob)
-      rescue
-        "Could not be determined"
-      end
+      return nil if pid_segment.patient_dob.blank?
+      Date.parse(pid_segment.patient_dob)
+    rescue
+      "Could not be determined"
     end
 
     def trisano_sex_id
@@ -391,12 +385,10 @@ module StagedMessages
     end
 
     def collection_date
-      begin
-        return nil if obr_segment.observation_date.blank?
-        Date.parse(obr_segment.observation_date).to_s
-      rescue
-        "Could not be determined"
-      end
+      return nil if obr_segment.observation_date.blank?
+      Date.parse(obr_segment.observation_date).to_s
+    rescue
+      "Could not be determined"
     end
 
     def all_tests
@@ -455,69 +447,53 @@ module StagedMessages
     end
 
     def set_id
-      begin
-        return nil if obx_segment.observation_date.blank?
-        obx_segment.set_id
-      rescue
-        "Could not be determined"
-      end
+      return nil if obx_segment.observation_date.blank?
+      obx_segment.set_id
+    rescue
+      "Could not be determined"
     end
 
     def observation_date
-      begin
-        return nil if obx_segment.observation_date.blank?
-        Date.parse(obx_segment.observation_date).to_s
-      rescue
-        "Could not be determined"
-      end
+      return nil if obx_segment.observation_date.blank?
+      Date.parse(obx_segment.observation_date).to_s
+    rescue
+      "Could not be determined"
     end
 
     def result
-      begin
-        obx_segment.observation_value.split(obx_segment.item_delim).join(' ')
-      rescue
-        "Could not be determined"
-      end
+      obx_segment.observation_value.split(obx_segment.item_delim).join(' ')
+    rescue
+      "Could not be determined"
     end
 
     def units
-      begin
-        obx_segment.units.split(obx_segment.item_delim)[0]
-      rescue
-        "Could not be determined"
-      end
+      obx_segment.units.split(obx_segment.item_delim)[0]
+    rescue
+      "Could not be determined"
     end
 
     def reference_range
-      begin
-        obx_segment.references_range
-      rescue
-        "Could not be determined"
-      end
+      obx_segment.references_range
+    rescue
+      "Could not be determined"
     end
 
     def loinc_code
-      begin
-        obx_segment.observation_id.split(obx_segment.item_delim)[0]
-      rescue
-        "Could not be determined"
-      end
-   end
+      obx_segment.observation_id.split(obx_segment.item_delim)[0]
+    rescue
+      "Could not be determined"
+    end
 
     def test_type
-      begin
-        obx_segment.observation_id.split(obx_segment.item_delim)[1]
-      rescue
-        "Could not be determined"
-      end
+      obx_segment.observation_id.split(obx_segment.item_delim)[1]
+    rescue
+      "Could not be determined"
     end
 
     def status
-      begin
-        obx_segment.observation_result_status
-      rescue
-        "Could not be determined"
-      end
+      obx_segment.observation_result_status
+    rescue
+      "Could not be determined"
     end
 
     def trisano_status_id

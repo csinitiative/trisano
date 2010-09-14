@@ -293,8 +293,10 @@ class StagedMessage < ActiveRecord::Base
       # The next two fields are required
       # ================================
 
-      # Probably a registered OID for TriSano
-      # msh.recv_app = ???
+      # TODO: Determine CE/EE programmatically
+      trisano_oid = %w{csi-trisano-ce 2.16.840.1.113883.4.434 ISO}
+      # trisano_oid = %w{csi-trisano-ee 2.16.840.1.113883.4.435 ISO}
+      msh.recv_app = trisano_oid.join(msh.item_delim)
 
       # Refers to the facility running TriSano; needs to be
       # configurable.
