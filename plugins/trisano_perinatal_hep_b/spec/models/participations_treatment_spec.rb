@@ -42,7 +42,7 @@ describe ParticipationsTreatment, "in the Perinatal Hep B plugin" do
         @event.save
         @event.interested_party.treatments[0].errors.on(:treatment_date).should be_nil
       end
-      
+
       it "should not allow for a blank treatment date" do
         @event.interested_party.treatments[0].treatment_date = nil
         @event.save

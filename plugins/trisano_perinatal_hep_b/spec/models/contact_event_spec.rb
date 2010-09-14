@@ -55,11 +55,13 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         :contact_type => @infant_contact_type_code
       )
 
-      @contact_event = Factory.create(:contact_event,
+      @contact_event = Factory.build(:contact_event,
         :participations_contact => @participations_contact,
         :parent_event => @morbidity_event,
         :disease_event => Factory.create(:disease_event, :disease => @disease)
       )
+      @contact_event.interested_party.person_entity.person.birth_date = Date.parse("1/1/2010")
+      @contact_event.save!
 
       @dsc = Factory.create(:disease_specific_callback,
         :callback_key => "treatment_date_required",
@@ -204,5 +206,30 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       end
     end
 
+  end
+
+  describe "date of birth" do
+
+    before do
+      given_infant_contact_type
+      @contact_event = Factory.create(:contact_event)
+      @contact_event.participations_contact.contact_type = ExternalCode.infant_contact_type
+      @contact_event.participations_contact.contact_event.should_not be_nil
+
+      @morbidity_event = Factory.create(:morbidity_event)
+      add_actual_delivery_facility_to_event(@morbidity_event, 'Arkham')
+      @contact_event.parent_event = @morbidity_event
+    end
+
+    it "is required for infant contacts" do
+      @contact_event.birth_date = nil
+      @contact_event.should_not be_valid
+    end
+
+    it "is filled in from the parent events actual delivery date, if available" do
+      @morbidity_event.actual_delivery_date = Date.yesterday
+      @contact_event.should be_valid
+      @contact_event.birth_date.should == @morbidity_event.actual_delivery_date
+    end
   end
 end
