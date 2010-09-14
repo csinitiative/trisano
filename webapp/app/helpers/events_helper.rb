@@ -434,7 +434,7 @@ module EventsHelper
         no_more = true
       else
         # Ajax, disease selected
-        opts = disease.common_test_types
+        opts = disease.common_test_types.sort_by {|a| a.common_name }
         if opts.empty?
           opts = CommonTestType.all(:order => "common_name ASC")
           no_more = true
@@ -453,7 +453,7 @@ module EventsHelper
             no_more = true
           else
             # Page load, edit form, new lab, disease
-            opts = disease.common_test_types
+            opts = disease.common_test_types.sort_by {|a| a.common_name }
             if opts.empty?
               opts = CommonTestType.all(:order => "common_name ASC")
               no_more = true
@@ -497,7 +497,7 @@ module EventsHelper
         no_more = true
       else
         # Ajax, disease selected
-        opts = disease.organisms
+        opts = disease.organisms.sort_by {|a| a.organism_name }
         if opts.empty?
           opts = Organism.all(:order => "organism_name ASC")
           no_more = true
@@ -516,7 +516,8 @@ module EventsHelper
             no_more = true
           else
             # Page load, edit form, new lab, disease
-            opts = disease.organisms
+            opts = disease.organisms.sort_by {|a| a.organism_name }
+
             if opts.empty?
               opts = Organism.all(:order => "organism_name ASC")
               no_more = true
