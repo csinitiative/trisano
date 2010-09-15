@@ -267,8 +267,14 @@ class StagedMessage < ActiveRecord::Base
   def ack_msh
     @ack_msh ||= HL7::Message::Segment::MSH.new do |msh|
       # literal constants
-      msh.enc_chars = '^~&#'
-      msh.version_id = '2.5.1'
+      msh.enc_chars       = '^~&#'
+      msh.version_id      = '2.5.1'
+      msh.accept_ack_type = 'AL'
+      msh.app_ack_type    = 'AL'
+
+      # In the event we ever use a different component delimiter,
+      # these literals will come out correctly by using the join
+      # method (instead, e.g., of using 'ACK^R01^ACK').
       msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
       msh.message_profile_identifier = [ 'PHLabReport-Ack', '',
         '2.16.840.1.114222.4.10.3', 'ISO' ].join(msh.item_delim)
@@ -279,12 +285,9 @@ class StagedMessage < ActiveRecord::Base
       # P^ => production, current processing (needs to be configurable)
       msh.processing_id = [ 'P', '' ].join(msh.item_delim)
 
-      # Are all these correct?
       if orig_msh
         msh.sending_app      = orig_msh.sending_app
         msh.sending_facility = orig_msh.sending_facility
-        msh.accept_ack_type  = orig_msh.accept_ack_type
-        msh.app_ack_type     = orig_msh.app_ack_type
       end
 
       # Simple sequence number for now, might need to be a UUID
