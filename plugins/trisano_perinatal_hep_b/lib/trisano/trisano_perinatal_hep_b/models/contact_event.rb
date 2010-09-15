@@ -26,67 +26,13 @@ module Trisano
           def included(base)
 
             base.class_eval do
-              before_validation :set_date_of_birth
 
               def before_save_with_p_hep_b_before_save
                 before_save_without_p_hep_b_before_save
                 assign_p_hep_b_tasks
               end
 
-              def infant?
-                if participations_contact.try(:contact_type)
-                  participations_contact.try(:contact_type) == ::ExternalCode.infant_contact_type
-                else
-                  false
-                end
-              end
-
-              def birth_date=(dob)
-                interested_party.person_entity.person.birth_date = dob
-              end
-
-              def birth_date
-                interested_party.try(:person_entity).try(:person).try(:birth_date)
-              end
-
               private
-
-              def set_date_of_birth
-                return if birth_date
-                if parent_event && parent_event.valid_actual_delivery_date?
-                  self.birth_date = parent_event.actual_delivery_date
-                end
-              end
-
-              def validate_with_p_hep_b
-                validate_without_p_hep_b
-                run_disease_specific_validations
-                validate_dob_on_infants
-              end
-
-              def run_disease_specific_validations
-                disease = try(:disease).try(:disease)
-                if disease && ::DiseaseSpecificValidation.diseases_ids_for_key(:treatment_date_required).include?(disease.id)
-                  self.interested_party.treatments.each do |pt|
-                    unless pt.treatment.try(:id).blank?
-                      pt.errors.add_on_blank(:treatment_date)
-                      self.errors.add_to_base("#{I18n.t(:treatment_date)} #{I18n.t(:blank, :scope => 'activerecord.errors.messages')}") if pt.treatment_date.blank?
-                    end
-                  end
-                end
-              end
-
-              def validate_dob_on_infants
-                if infant?
-                  unless dob_valid?
-                    errors.add :base, 'pffffft'
-                  end
-                end
-              end
-
-              def dob_valid?
-                ValidatesTimeliness::Parser.parse(birth_date, :date) || false
-              end
 
               def assign_p_hep_b_tasks
                 begin
@@ -146,7 +92,6 @@ module Trisano
               end
 
               base.alias_method_chain :before_save, :p_hep_b_before_save
-              alias_method_chain :validate, :p_hep_b
             end
           end
 

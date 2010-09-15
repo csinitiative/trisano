@@ -27,13 +27,9 @@ Factory.define :actual_delivery_facility do |adf|
 end
 
 Factory.define :actual_delivery_facilities_participation do |adfp|
+  adfp.actual_delivery_date Date.today + 15.days
 end
 
 Factory.define :health_care_provider do |hcp|
   hcp.person_entity :person_entity
-end
-
-Factory.define :infant_contact_type, :parent => :external_code do |code|
-  code.code_name 'contact_type'
-  code.the_code  'INFANT'
 end
