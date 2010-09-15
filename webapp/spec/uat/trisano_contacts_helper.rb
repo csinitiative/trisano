@@ -60,7 +60,7 @@ module TrisanoContactsHelper
   end
 
   def remove_contact(browser, index=1)
-    browser.click("//div[@id='contact_child_events']//div[@class='contact'][#{index}]//input[contains(@id, '_delete')]")
+    browser.click("//div[@id='contact_child_events']//div[@class='contact'][#{index}]//input[contains(@id, '_destroy')]")
   end
   
 end

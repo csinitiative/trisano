@@ -684,7 +684,7 @@ module TrisanoHelper
   end
 
   def remove_diagnostic_facility(browser, index=1)
-    browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_delete')]")
+    browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_destroy')]")
   end
 
   def add_hospital(browser, attributes, index = 1)
@@ -698,7 +698,7 @@ module TrisanoHelper
   end
 
   def remove_hospital(browser, index = 1)
-    browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_delete')]")
+    browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_destroy')]")
   end
 
   def add_treatment(browser, attributes, index = 1)
