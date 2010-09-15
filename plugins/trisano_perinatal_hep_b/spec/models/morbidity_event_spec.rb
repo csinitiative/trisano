@@ -26,7 +26,8 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
     given_p_hep_b_disease_specific_callbacks_loaded
     @event = human_event_with_demographic_info!(:morbidity_event)
     @event.build_disease_event(:disease => @disease)
-    @event.update_attributes!(:state_manager => create_user_in_role!('State Manager', 'Joey Bagadonuts'))
+    @state_manager = create_user_in_role!('State Manager', 'Joey Bagadonuts')
+    @event.update_attributes! :state_manager => @state_manager
   end
 
   describe "generating a task for expected delivery date" do
@@ -56,6 +57,13 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
     it "does not generate a task if there is no state manager" do
       @event.update_attributes!(:state_manager => nil)
       lambda { @event.save! }.should_not change(Task, :count)
+    end
+
+    it "generates a task if the state manager is entered later" do
+      @event.update_attributes! :state_manager => nil
+      @event.save!
+      @event.state_manager = @state_manager
+      lambda { @event.save! }.should change(Task, :count).by(1)
     end
 
     it "should generate the task with the due date set to today" do
@@ -98,6 +106,13 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
     end
 
     it "if the due date *and* the expected delivery facility are entered, generate an additional task for the delivery facility" do
+      lambda { @event.save! }.should change(Task, :count).by(2)
+    end
+
+    it "generates tasks if the state manager is entered later" do
+      @event.update_attributes! :state_manager => nil
+      @event.save!
+      @event.state_manager = @state_manager
       lambda { @event.save! }.should change(Task, :count).by(2)
     end
 

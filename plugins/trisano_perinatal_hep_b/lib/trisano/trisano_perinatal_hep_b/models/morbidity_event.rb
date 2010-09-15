@@ -32,7 +32,7 @@ module Trisano
           return unless ::DiseaseSpecificCallback.callbacks(self.disease_event.try(:disease)).include?('state_manager_expected_delivery_date_task')
           return unless state_manager
 
-          if expected_due_date_updated?
+          if expected_due_date_updated? or state_manager_id_changed?
             remove_expected_due_date_tasks
             generate_expected_due_date_task unless expected_due_date_blank?
           end
@@ -53,6 +53,7 @@ module Trisano
 
         def expected_delivery_facility_data_updated?
           expected_due_date_updated? or
+            state_manager_id_changed? or
             self.expected_delivery_facility.try(:secondary_entity_id_changed?) or
             self.expected_delivery_facility.try(:place_entity).try(:new_record?)
         end
