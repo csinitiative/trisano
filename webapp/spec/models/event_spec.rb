@@ -91,7 +91,7 @@ describe MorbidityEvent do
 
         it "Should allow contact child events to be deleted via a nested attribute" do
           @event.contact_child_events.build
-          @event.save!
+          @event.save
           @event.contact_child_events_attributes = [ { "id" => "#{@event.contact_child_events[0].id}", "_delete"=>"1"} ]
           @event.contact_child_events[0].should be_marked_for_destruction
         end

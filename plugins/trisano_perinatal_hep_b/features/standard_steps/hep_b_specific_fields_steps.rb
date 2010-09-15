@@ -14,11 +14,6 @@ Then /^I should not see (.+) delivery data$/ do |type|
   assert_no_delivery_fields(type)
 end
 
-Given /^I have an actual delivery date of (\d+) days ago$/ do |days|
-  date = days.to_i.days.ago
-  @event.update_attributes! :actual_delivery_date => date
-end
-
 When /^I enter the (.+) delivery facility phone number as:/ do |type, phone_number_table|
   name_prefix =  "morbidity_event[#{type}_delivery_facility_attributes][place_entity_attributes][telephones_attributes][0]"
   phone_number_table.hashes.each do |hash|
