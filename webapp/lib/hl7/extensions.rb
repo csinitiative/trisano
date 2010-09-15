@@ -170,6 +170,8 @@ class HL7::Message::Segment::SPM < HL7::Message::Segment
   add_field :specimen_child_role
 end
 
+####### Classes for parsing certain data types
+
 module StagedMessages
 
   class MshWrapper
@@ -461,7 +463,16 @@ module StagedMessages
     end
 
     def result
-      obx_segment.observation_value.split(obx_segment.item_delim).join(' ')
+      value_type = obx_segment.value_type
+
+      klass = case value_type
+      when 'CWE'
+        eval value_type
+      else
+        Default
+      end
+
+      klass.new(obx_segment.observation_value, obx_segment.item_delim).to_s
     rescue
       "Could not be determined"
     end
@@ -485,9 +496,29 @@ module StagedMessages
     end
 
     def test_type
-      obx_segment.observation_id.split(obx_segment.item_delim)[1]
+      loinc_text_segments[0]
     rescue
       "Could not be determined"
+    end
+
+    # To determine the scale (Nom, Ord, OrdQn, Qn) associated with the
+    # loinc_code, we consult these sources, in order:
+    # 1. LoincCode.find_by_loinc_code (consult TriSano table)
+    # 2. StagedMessage::ObxWrapper#loinc_scale
+    #    a. loinc_text_segments[4] (the fifth subcomponent of the CWE.2
+    #       component of the OBX-3 field, if present)
+    #    b. Consult OBX-2 (value type):
+    #       'NM' => 'Qn' # numeric
+    #    c. nil (punt, can't process this OBX segment)
+    def loinc_scale
+      scale = loinc_text_segments[4]
+      raise "LOINC scale not in CWE.2" if scale.nil? or scale.empty?
+      scale
+    rescue
+      case obx_segment.value_type
+      when 'NM'
+        'Qn'
+      end
     end
 
     def status
@@ -507,6 +538,56 @@ module StagedMessages
       status ? status.id : status
     end
 
+    private
+
+    def loinc_text_segments
+      # The layout of an OBX-3 field with a LOINC code is
+      #
+      # <code>^<text>^LN^^^^<loinc_version>
+      #
+      # LN indicates that it is a LOINC code.
+
+      # For example, (from the Realm Campylobacter jejuni message,
+      # section 7.2, p. 186):
+      #
+      # 625-4^Bacteria identified:Prid:Pt:Stool:Nom:Culture^LN^^^^2.26
+
+      # In this example, the text component also has a colon-delimited
+      # substructure.  The OBX-3 field is of type CWE.  The CWE.2
+      # component (text) is of type ST, a simple string.  The HL7 spec
+      # does not provide for this field to have a substructure and does
+      # not recognize the colon (:) as a subcomponent delimiter
+      # character.  But empirically, we find that in some cases, the
+      # LOINC description includes, among other things, the associated
+      # scale (Nom in this example).  We make use of this information
+      # in cases in which the LOINC code in the first component cannot
+      # be mapped.  This method returns the text subcomponents as an
+      # array of strings.
+
+      loinc_components = obx_segment.observation_id.split(obx_segment.item_delim)
+      loinc_components[1].split(':') if loinc_components[2] == 'LN'
+    end
+
+    class Default
+      attr_reader :field
+      attr_reader :delim
+
+      def initialize(field, delim)
+        @field = field
+        @delim = delim
+      end
+
+      def to_s
+        field
+      end
+    end
+
+    # code^text^...
+    class CWE < Default
+      def to_s
+        field.split(delim)[1]
+      end
+    end
   end
 
   class SpmWrapper

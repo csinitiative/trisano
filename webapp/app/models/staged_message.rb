@@ -255,11 +255,6 @@ class StagedMessage < ActiveRecord::Base
     end
   end
 
-  def self.next_sequence_number
-    return @next_sequence_number = 1 unless @next_sequence_number
-    @next_sequence_number += 1
-  end
-
   def orig_msh
     @orig_msh ||= message_header.msh_segment if message_header
   end
@@ -365,6 +360,10 @@ class StagedMessage < ActiveRecord::Base
   end
 
   class << self
+    def next_sequence_number
+      @last_sequence_number += 1
+    end
+
     def ack_err(*args)
       trisano_code, hl7_code, error_text, rest = *args
       HL7::Message::Segment::ERR.new do |err|
@@ -429,4 +428,6 @@ class StagedMessage < ActiveRecord::Base
       erl << [ subcomponent_number.to_s ]
     end
   end
+
+  @last_sequence_number = 0
 end

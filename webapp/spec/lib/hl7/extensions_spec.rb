@@ -256,5 +256,41 @@ describe Message do
         @tests[0].test_type.should == 'Hepatitis Be Antigen'
       end
     end
+
+    describe 'the ObxWrapper' do
+      before :all do
+        @realm_min_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_minimal_message]).observation_requests.first.all_tests.first
+        @realm_cj_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.all_tests.first
+        @realm_ar_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_animal_rabies]).observation_requests.first.all_tests.first
+      end
+
+      it 'should respond_to :loinc_scale' do
+        @realm_min_test.respond_to?(:loinc_scale).should be_true
+      end
+
+      it 'should take :loinc_scale from CWE.2 if present' do
+        @realm_cj_test.loinc_scale.should == 'Nom'
+      end
+
+      it 'should take :loinc_scale from OBX-2 if not present in CWE.2' do
+        @realm_min_test.loinc_scale.should == 'Qn'
+      end
+
+      it 'should return a nil :loinc_scale if not present in CWE.2 or OBX-2' do
+        @realm_ar_test.loinc_scale.should be_nil
+      end
+
+      it 'should parse a CWE result properly' do
+        @realm_cj_test.result.should == 'Campylobacter jejuni'
+        @realm_ar_test.result.should == 'Detected'
+      end
+
+      it 'should parse a Default result properly' do
+        @realm_min_test.result.should == '50'
+      end
+    end
   end
 end
