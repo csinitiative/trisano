@@ -171,8 +171,16 @@ class StagedMessage < ActiveRecord::Base
       person = PersonEntity.find(entity_id.to_i)
       event.copy_from_person(person)
     else
+      trisano_race_ids =
+        case patient.trisano_race_id
+        when Array
+          patient.trisano_race_id
+        else
+          [ patient.trisano_race_id ]
+        end
+
       event.build_interested_party
-      event.interested_party.build_person_entity(:race_ids => [self.patient.trisano_race_id])
+      event.interested_party.build_person_entity :race_ids => trisano_race_ids
       event.interested_party.person_entity.build_person( :last_name => self.patient.patient_last_name,
                                                          :first_name => self.patient.patient_first_name,
                                                          :middle_name => self.patient.patient_middle_name,

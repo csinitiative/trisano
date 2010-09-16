@@ -143,6 +143,11 @@ describe Message do
       n.should == "7317292"
       e.should be_blank
     end
+
+    it 'should properly parse a PHIN race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_white).id
+    end
   end
 
   describe 'observation request' do

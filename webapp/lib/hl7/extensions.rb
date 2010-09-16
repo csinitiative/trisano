@@ -265,8 +265,9 @@ module StagedMessages
     end
 
     def trisano_race_id
-      race_id = nil
-      if race_md = /^[WBAIHKU]$/.match(pid_segment.race.split(pid_segment.item_delim)[0])
+      race, race_id = nil, nil
+      elr_race_code = pid_segment.race.split(pid_segment.item_delim)[0]
+      if race_md = /^[WBAIHKU]$/.match(elr_race_code)
         race = race_md[0]
         race = case race
                when 'I'
@@ -278,9 +279,27 @@ module StagedMessages
                else
                  race
                end
-        race_object = ExternalCode.find_by_code_name_and_the_code('race', race)
-        race_id = race_object.id if race_object
+      elsif race_md = /^(\d+-\d)$/.match(elr_race_code)
+        race = race_md[0]
+        race = case race
+               when '1002-5' # American Indian or Alaska Native
+                 return aa_and_ak_race_ids
+               when '2028-9' # Asian
+                 'A'
+               when '2054-5' # Black or African American
+                 'B'
+               when '2076-8' # Native Hawaiian or Other Pacific Islander
+                 'H'
+               when '2106-3' # White
+                 'W'
+               when '2131-1' # Other Race
+                 'OTHER'
+               else
+                 'UNK'
+               end
       end
+      race_object = ExternalCode.find_by_code_name_and_the_code('race', race)
+      race_id = race_object.id if race_object
       race_id
     end
 
@@ -358,6 +377,18 @@ module StagedMessages
 
     def components_empty?(components)
       components.all? { |comp| comp.empty? }
+    end
+
+    def aa_and_ak_race_ids
+      # In the unlikely event of a badly misconfigured system, it's
+      # possible for one of these lookups to fail.  We use inject to
+      # allow for the possibility of having 0 or 1 successful matches.
+      # Ordinarily this array will return an array of two Fixnums.
+      [ 'AA', 'AK' ].inject([]) do |ids, race_code|
+        xcode = ExternalCode.find_by_code_name_and_the_code('race', race_code)
+        ids << xcode.id if xcode
+        ids
+      end
     end
   end
 
