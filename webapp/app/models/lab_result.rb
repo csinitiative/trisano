@@ -54,7 +54,8 @@ class LabResult < ActiveRecord::Base
       Task.create!(:name     => "New lab result added: #{test_type.common_name}",
                    :due_date => Date.today,
                    :user     => investigator,
-                   :event    => event)
+                   :event    => event,
+                   :system_generated => true)
     end
   end
 end

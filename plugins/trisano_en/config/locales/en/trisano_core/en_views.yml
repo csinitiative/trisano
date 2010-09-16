@@ -90,7 +90,7 @@ en:
   manage_jurisdictions: "Manage Jurisdictions"
   manage_diseases: "Manage Disease Information"
   manage_queues: 'Manage Event Routing Queues'
-  manage_help_text: 'Add Help Text to Core Fields'
+  manage_help_text: 'Manage Event Fields'
   manage_system_codes: 'Manage System Codes'
   configure_cdc_export: 'Configure System for CDC Export'
   configure_csv_export: 'Configure System for CSV Export'

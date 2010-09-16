@@ -16,3 +16,4 @@ Feature: The administration dashboard
     And I should see a link to "Manage Common Test Types"
     And I should see a link to "Manage LOINC Codes"
     And I should see a link to "Manage Organisms"
+    And I should see a link to "Manage Event Fields"
