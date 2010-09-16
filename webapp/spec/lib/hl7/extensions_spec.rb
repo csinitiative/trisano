@@ -283,6 +283,18 @@ describe Message do
         @realm_ar_test.loinc_scale.should be_nil
       end
 
+      it 'should respond_to :loinc_common_test_type' do
+        @realm_cj_test.respond_to?(:loinc_common_test_type).should be_true
+      end
+
+      it 'should take :loinc_common_test_type from CWE.2 if present' do
+        @realm_cj_test.loinc_common_test_type.should == 'Culture'
+      end
+
+      it 'should return a nil :loinc_common_test_type if not present in CWE.2' do
+        @realm_ar_test.loinc_common_test_type.should be_nil
+      end
+
       it 'should parse a CWE result properly' do
         @realm_cj_test.result.should == 'Campylobacter jejuni'
         @realm_ar_test.result.should == 'Detected'

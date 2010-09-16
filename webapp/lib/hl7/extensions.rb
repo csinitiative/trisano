@@ -521,6 +521,11 @@ module StagedMessages
       end
     end
 
+    def loinc_common_test_type
+      loinc_text_segments[5]
+    rescue
+    end
+
     def status
       obx_segment.observation_result_status
     rescue

@@ -494,14 +494,28 @@ class HumanEvent < Event
     i = 0
     diseases = Set.new
     staged_message.observation_requests.each do |obr|
-      obr.tests.each do | obx |
+      obr.tests.each do |obx|
         loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
-        raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if loinc_code.nil?
+        scale_type = nil
+        common_test_type = nil
 
-        common_test_type = loinc_code.common_test_type
+        if loinc_code
+          scale_type = loinc_code.scale.the_code
+          common_test_type = loinc_code.common_test_type ||
+            CommonTestType.find_by_common_name(obx.loinc_common_test_type)
+        else
+          # No :loinc_code entry.
+          # Look at other OBX fields for hints to the scale and common
+          # test type.
+          scale_type = obx.loinc_scale
+          raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if scale_type.nil?
+
+          common_test_type_name = obx.loinc_common_test_type
+          common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
+        end
+
         raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
 
-        scale_type = loinc_code.scale.the_code
         result_hash = {}
 
         if scale_type != "Nom"
