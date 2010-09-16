@@ -63,6 +63,7 @@ class Task < ActiveRecord::Base
 
   attr_protected :user_id, :repeating_task_id
   attr_accessor :child_task
+  attr_accessor :system_generated
 
   def category_name
     self.category.code_description unless self.category.nil?
@@ -153,10 +154,9 @@ class Task < ActiveRecord::Base
   end
 
   def validate_task_assignment
-    unless self.user_id.blank?
-      task_assignee_ids = User.default_task_assignees.collect(&:id)
-      self.errors.add_to_base(:insufficient_privileges) unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
-    end
+    return if self.user_id.blank? or system_generated
+    task_assignee_ids = User.default_task_assignees.collect(&:id)
+    self.errors.add_to_base(:insufficient_privileges) unless ( (task_assignee_ids.include?(self.user_id)) || (self.user_id == User.current_user.id) )
   end
 
   def validate_repeating_task_attributes
