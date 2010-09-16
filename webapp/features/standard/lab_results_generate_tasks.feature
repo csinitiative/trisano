@@ -5,12 +5,12 @@ Feature: Adding Lab Results to an Event Generates a Task
   assigned investigator entered the lab results
 
   Scenario: Lab result entered by investigator who is not responsible for the event
-    Given I am logged in as a super user
-      And a morbidity event exists with the disease Mumps
+    Given I am logged in as an investigator
+      And a morbidity event exists in Bear River with the disease Mumps
       And the following disease to common test types mapping exists
         | disease_name | common_name |
         | Mumps        | Lumpy       |
-      And the event is assigned to user "investigator"
+      And the event is assigned to user "utah"
     When I go to edit the CMR
      And I click on the lab tab
      And I enter a lab name of 'Elephant Lab'
@@ -19,7 +19,7 @@ Feature: Adding Lab Results to an Event Generates a Task
     Then I should be on the show CMR page
      And I should see the following tasks:
        | Due date | Name                        | Description | Category | Priority | Assigned to  | Status  |
-       | Today    | New lab result added: Lumpy |             |          |          | investigator | Pending |
+       | Today    | New lab result added: Lumpy |             |          |          | default_user | Pending |
 
   Scenario: Lab result entered by investigator who is responsible for the event
     Given I am logged in as a super user

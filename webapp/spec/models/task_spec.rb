@@ -83,7 +83,7 @@ describe Task, 'when working with task assignment' do
     add_privileges_for(@user,"assign_task_to_user")
     @task = Factory(:task, :user => @user)
   end
-  
+
   it 'should allow assignment to self' do
     @task.save.should be_true
   end
@@ -91,20 +91,20 @@ describe Task, 'when working with task assignment' do
   it 'should allow assignment to a user with the update_event privilege' do
     @assignee = Factory(:privileged_user)
     add_privileges_for(@assignee, "update_event")
-    
+
     User.current_user = @user
 
     @task.update_attributes(:user => @assignee)
     @task.should be_valid
     @task.user.should == @assignee
   end
-  
+
   it 'should not allow assignment to a user with the view_event privilege' do
     @assignee = Factory(:privileged_user)
     add_privileges_for(@assignee, "view_event")
-    
+
     User.current_user = @user
-    
+
     @task.user = @assignee
     @task.save.should be_false
     @task.errors.on(:base).should == "Insufficient privileges for task assignment."
@@ -114,11 +114,11 @@ describe Task, 'when working with task assignment' do
   it 'should not allow assignment to a user with the update_event privilege in another jurisdiction' do
     @assignee = Factory(:privileged_user)
     add_privileges_for(@assignee, "update_event")
-    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:place_entity)) 
+    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:place_entity))
     User.current_user = @user
-    
+
     @task.user = @assignee
-    
+
     @task.save.should be_false
     @task.errors.on(:base).should == "Insufficient privileges for task assignment."
     @task.errors.size.should == 1
@@ -129,17 +129,28 @@ describe Task, 'when working with task assignment' do
     @assignee = Factory(:privileged_user)
     User.current_user = @user
     @task.user = @assignee
-    
+
     @task.save.should be_false
     @task.errors.on(:base).should == "Insufficient privileges for task assignment."
   end
 
+  it 'should allow assignment to others if the assigner does not have assign_task_to_user privs, if the task is system generated' do
+    remove_privileges_for(@user, "assign_task_to_user")
+    @assignee = Factory(:privileged_user)
+    User.current_user = @user
+    @task.user = @assignee
+    @task.system_generated = true
+
+    @task.save.should be_true
+    @task.errors.on(:base).should be_nil
+  end
+
   it 'should allow assignment to self if the assigner does not have assign_task_to_user privs' do
     remove_privileges_for(@user, "assign_task_to_user")
-    @task.user = @user 
+    @task.user = @user
     @task.save.should be_true
   end
-  
+
   it "should return the user's best name" do
     @user = Factory(:user)
     @task.update_attributes(:user => @user)
@@ -190,7 +201,7 @@ describe Task, 'with repeating tasks' do
   before(:each) do
     @task = Factory.build(:task)
   end
-  
+
   it 'should not accept an interval without an until' do
     @task.repeating_interval = :year
     @task.save.should be_false
@@ -309,7 +320,7 @@ describe Task, "with an associated Morbidity event" do
     @event = Factory(:event_with_task)
     @disease_event = Factory(:disease_event, :event => @event)
   end
-  
+
   it "should not allow a task due date prior to disease onset date" do
     pending
     @disease_event.update_attributes(:disease_onset_date => 1.month.ago.to_date)
