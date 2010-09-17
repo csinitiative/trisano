@@ -10,3 +10,7 @@ Then /^I should see all the core fields$/ do
     response.should have_tag('a', cf.name)
   end
 end
+
+Given /^a disease specific core field$/i do
+  @core_field = Factory.create(:cmr_core_field, :disease_specific => true)
+end

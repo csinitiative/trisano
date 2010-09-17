@@ -111,7 +111,7 @@ Then /^I should see "(.*)"$/ do |text|
   response.body.should =~ /#{text}/m
 end
 
-Then /^I should not see "(.*)"$/ do |text|
+Then /^I should not see "([^\"]*)"$/ do |text|
   response.body.should_not =~ /#{text}/m
 end
 

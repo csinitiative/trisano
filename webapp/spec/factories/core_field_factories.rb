@@ -3,6 +3,7 @@ end
 
 Factory.define :cmr_core_field, :parent => :core_field do |cf|
   cf.event_type :morbidity_event
+  cf.key 'morbidity_event[parent_guardian]'
 end
 
 Factory.define :core_fields_disease do |o|

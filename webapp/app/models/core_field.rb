@@ -99,7 +99,24 @@ class CoreField < ActiveRecord::Base
     end.first
   end
 
+  def render_default?
+    not disease_specific
+  end
+
+  def render_default=(value)
+    self.disease_specific = !bool_cast(value)
+  end
+
+  def render_mode
+    I18n.t render_default? ? :render_default? : :disease_specific
+  end
+
   private
+
+  def bool_cast(value)
+    disease_specific_column = column_for_attribute(:disease_specific)
+    disease_specific_column.type_cast(value)
+  end
 
   def normalize_attributes
     self.event_type = self.event_type.to_s if self.event_type
@@ -113,7 +130,4 @@ class CoreField < ActiveRecord::Base
     not disease_association(disease).nil?
   end
 
-  def render_default?
-    not disease_specific
-  end
 end

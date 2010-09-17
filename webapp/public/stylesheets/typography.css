@@ -68,6 +68,12 @@ body, p, ol, ul {
       color: #000;
       text-decoration: underline; }
 
+.formnamesubtext {
+  text-transform: uppercase;
+  font-family: helvetica, sans-serif;
+  font-size: 10px;
+  font-weight: light; }
+
 .description {
   font-family: helvetica, sans-serif;
   font-size: 12px;

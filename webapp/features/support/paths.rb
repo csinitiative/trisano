@@ -39,6 +39,9 @@ def path_to(page_name)
   when /the new CMR page/i
     new_cmr_path
 
+  when /a new CMR/i
+    new_cmr_path
+
   when /the show CMR page/i
     cmr_path @event
 
@@ -233,8 +236,16 @@ def path_to(page_name)
   when /the places search page/i
     places_path
 
+  when /edit the core field/i
+    edit_core_field_path @core_field
+
   when /view all core fields/i
     core_fields_path
+
+  when /the "([^\"]*)" core field$/i
+    core_field_name = $1
+    core_field = CoreField.all.detect { |core_field| core_field.name == core_field_name }
+    edit_core_field_path(core_field)
 
   else
     ifnone = lambda { raise "Can't find mapping from \"#{page_name}\" to a path." }
