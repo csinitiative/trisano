@@ -19,7 +19,7 @@
       .header
         %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
         -staged_message.observation_requests.each_with_index do |obr, index|
-          %p= h "Specimen #{index+1}"
+          %p= t('specimen') + " #{index+1}"
           %p= t "specimen_source_is", :source => h(obr.specimen_source)
           %p= t "collected_on_date", :date =>ld(obr.collection_date)
         %p

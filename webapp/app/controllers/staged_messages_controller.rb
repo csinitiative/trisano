@@ -45,11 +45,11 @@ class StagedMessagesController < ApplicationController
       if @staged_message.save
         flash[:notice] = t("staged_message_successfully_created")
         format.html { redirect_to(@staged_message) }
-        format.hl7  { render :inline => '<%= @staged_message.ack.to_hl7 %>',
+        format.hl7  { render :text => @staged_message.ack.to_hl7,
           :status => :created, :location => @staged_message }
       else
         format.html { render :action => "new", :status => :bad_request }
-        format.hl7  { render :inline => '<%= @staged_message.ack.to_hl7 %>',
+        format.hl7  { render :text => @staged_message.ack.to_hl7,
           :status => :unprocessable_entity }
       end
     end
