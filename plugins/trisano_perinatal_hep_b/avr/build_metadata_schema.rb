@@ -31,7 +31,11 @@ class PeriHepB_metadata
         'actual_delivery_date',
         'actual_delivery_facility_type',
         'actual_delivery_facility_phone',
-        'actual_delivery_facility'
+        'actual_delivery_facility',
+        'hcp_first_name',
+        'hcp_last_name',
+        'hcp_middle_name',
+        'hcp_phones'
     );
 },
 %{
