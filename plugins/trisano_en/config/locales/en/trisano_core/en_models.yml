@@ -184,6 +184,7 @@ en:
 
       core_field:
         help_text: Help text
+        render_default?: Display when no disease selected
 
       attachment:
         file: File

@@ -199,6 +199,8 @@ en:
   add_core_tab: 'Add Core Tab'
   add_tab_text: 'Add Tab Text'
   encounter_event_fields: 'Encounter Event Fields'
+  render_default?: Core
+  disease_specific: Disease specific core
 #csv_fields
   csv_export_columns: 'CSV Export Columns'
   long_name: 'Long Name'

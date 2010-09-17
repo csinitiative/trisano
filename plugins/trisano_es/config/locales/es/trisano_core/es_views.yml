@@ -204,6 +204,8 @@ es:
   create: 'Crear'
   add_core_tab: 'Agregar Pestaña Principal'
   add_tab_text: 'Agregar Texto de Pestaña'
+  render_default?: Core (EN)
+  disease_specific: Disease specific core (EN)
 #csv_fields
   csv_export_columns: 'Columnas de Exportación CSV'
   long_name: 'Nombre Largo'

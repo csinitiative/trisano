@@ -185,6 +185,7 @@ es:
 
       core_field:
         help_text: Texto de ayuda
+        render_default?: Display when no disease is selected (EN)
 
       attachment:
         file: Archivo
