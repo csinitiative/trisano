@@ -236,6 +236,9 @@ def path_to(page_name)
   when /the places search page/i
     places_path
 
+  when /edit the core field/i
+    edit_core_field_path @core_field
+
   when /view all core fields/i
     core_fields_path
 
