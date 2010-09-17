@@ -18,8 +18,10 @@
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
         %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
-        %p= t "specimen_source_is", :source => h(staged_message.observation_requests.first.specimen_source)
-        %p= t "collected_on_date", :date =>ld(staged_message.observation_requests.first.collection_date)
+        -staged_message.observation_requests.each_with_index do |obr, index|
+          %p= h "Specimen #{index+1}"
+          %p= t "specimen_source_is", :source => h(obr.specimen_source)
+          %p= t "collected_on_date", :date =>ld(obr.collection_date)
         %p
           %small= h staged_message.message_header.sending_facility
         %div.tools
@@ -50,6 +52,7 @@
       .results
         %table
           %tr
+            %th=t 'specimen'
             %th=t 'test_date'
             %th=t 'loinc_code'
             %th=t 'test_type'
@@ -57,4 +60,5 @@
             %th=t 'units'
             %th=t 'status'
             %th=t 'reference_range'
-          =render staged_message.observation_requests.first.tests
+          -staged_message.observation_requests.each do |obr|
+            =render obr.tests
