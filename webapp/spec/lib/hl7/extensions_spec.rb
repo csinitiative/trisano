@@ -144,9 +144,36 @@ describe Message do
       e.should be_blank
     end
 
-    it 'should properly parse a PHIN race code in an HL7 2.5.1 message' do
+    it 'should properly parse a PHIN White race code in an HL7 2.5.1 message' do
       hl7 = HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
       hl7.patient_id.trisano_race_id.should == external_codes(:race_white).id
+    end
+
+    it 'should properly parse a PHIN Asian race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_asian]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_asian).id
+    end
+
+    it 'should properly parse a PHIN American Indian or Alaskan Native race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_ai_or_an]
+      hl7.patient_id.trisano_race_id.should include(external_codes(:race_indian).id)
+      hl7.patient_id.trisano_race_id.should include(external_codes(:race_alaskan).id)
+      hl7.patient_id.trisano_race_id.size.should == 2
+    end
+
+    it 'should properly parse a PHIN Black or African American race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_black]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_black).id
+    end
+
+    it 'should properly parse a PHIN Native Hawaiian or Other Pacific Islander race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_hawaiian]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_hawaiian).id
+    end
+
+    it 'should properly parse a PHIN Unknown race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_unknown]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_unknown).id
     end
   end
 
