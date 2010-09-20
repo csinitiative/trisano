@@ -31,6 +31,9 @@ end
 
 group :test, :devlopment do
   gem "mongrel"
+  platforms :ruby_18, :ruby_19 do
+    gem "unicorn"
+  end
 end
 
 group :test, :uattest do
