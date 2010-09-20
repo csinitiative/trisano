@@ -60,7 +60,6 @@ module LayoutHelper
           script.src  = src
           document.body.appendChild(script);
         }
-        var $j = jQuery.noConflict();
       </script>
     JS
   end
