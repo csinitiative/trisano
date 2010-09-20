@@ -618,24 +618,25 @@ form.inplaceeditor-form a {
   margin: 1em;
   padding: 1em; }
 
-.staged-message .header {
-  float: left;
+.staged-message {
   margin-right: 1em;
   padding-left: 2px;
-  padding-right: 2px;
-  background: #EEEEEE;
-  width: 17%; }
-  .staged-message .header p {
+  padding-right: 2px; }
+  .staged-message .request .specimen {
+    background: #EEEEEE;
+    float: left;
+    width: 17%; }
+  .staged-message .request .specimen p {
     margin-top: 1px;
     margin-bottom: 1px; }
-  .staged-message .header p + * {
+  .staged-message .request .specimen p + * {
     text-indent: 1em; }
-.staged-message .results {
-  width: 81%; }
-  .staged-message .results table {
-    table-layout: fixed; }
-    .staged-message .results table th {
-      text-align: left; }
+  .staged-message .request .results {
+    width: 81%; }
+    .staged-message .request .results table {
+      table-layout: fixed; }
+      .staged-message .request .results table th {
+        text-align: left; }
 .staged-message .raw-message {
   clear: both;
   position: relative;

@@ -18,10 +18,26 @@
     %div{:id => "message_#{staged_message.id}", :class => "staged-message"}
       .header
         %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
-        -staged_message.observation_requests.each_with_index do |obr, index|
-          %p= t('specimen') + " #{index+1}"
-          %p= t "specimen_source_is", :source => h(obr.specimen_source)
-          %p= t "collected_on_date", :date =>ld(obr.collection_date)
+      -staged_message.observation_requests.each_with_index do |obr, index|
+        .request
+          .specimen
+            %p= "OBR #{index+1}"
+            %p= t "specimen_source_is", :source => h(obr.specimen_source)
+            %p= t "collected_on_date", :date =>ld(obr.collection_date)
+          .results
+            %table
+              %tr
+                %th=t 'test_date'
+                %th=t 'loinc_code'
+                %th=t 'test_type'
+                %th=t 'result'
+                %th=t 'units'
+                %th=t 'status'
+                %th=t 'reference_range'
+              =render obr.tests
+          %br
+
+      .footer
         %p
           %small= h staged_message.message_header.sending_facility
         %div.tools
@@ -48,17 +64,3 @@
               %b
                 =t 'raw'
                 %span= h(staged_message.hl7_message)
-
-      .results
-        %table
-          %tr
-            %th=t 'specimen'
-            %th=t 'test_date'
-            %th=t 'loinc_code'
-            %th=t 'test_type'
-            %th=t 'result'
-            %th=t 'units'
-            %th=t 'status'
-            %th=t 'reference_range'
-          -staged_message.observation_requests.each do |obr|
-            =render obr.tests

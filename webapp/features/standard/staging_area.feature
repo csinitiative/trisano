@@ -28,9 +28,9 @@ Feature: Staging Electronic Messages
     When I visit the staged message show page
 
     Then I should see value "Lin, Genyao" in the message header
-    And  I should see value "Specimen: BLOOD" in the message header
-    And  I should see value "Collected: 2009-03-19" in the message header
-    And  I should see value "ARUP LABORATORIES" in the message header
+    And  I should see value "Specimen: BLOOD" in a message specimen
+    And  I should see value "Collected: 2009-03-19" in a message specimen
+    And  I should see value "ARUP LABORATORIES" in the message footer
 
     And  I should see value "Hepatitis Be Antigen" under label "Test type"
     And  I should see value "Positive" under label "Result"
