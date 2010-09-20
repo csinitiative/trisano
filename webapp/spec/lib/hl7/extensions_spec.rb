@@ -175,6 +175,11 @@ describe Message do
       hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_unknown]
       hl7.patient_id.trisano_race_id.should == external_codes(:race_unknown).id
     end
+
+    it 'should handle parsing a bad race code in an HL7 2.5.1 message' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_bad_race_condition]
+      hl7.patient_id.trisano_race_id.should == external_codes(:race_unknown).id
+    end
   end
 
   describe 'observation request' do
