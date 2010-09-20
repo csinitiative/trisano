@@ -31,34 +31,7 @@
       %th.forminformation
         =t('disease')
       %th
-      %tr
-        %td.forminformation
-          .formname
-            = h(@disease.disease_name)
-
-          %span{ :class => "horiz" }
-            %b
-              = t('status')
-            %br
-            = @disease.active? ? t('active') :  t('inactive')
-
-          %span{ :class => "horiz" }
-            %b
-              =t('cdc_netss_code')
-            %br
-            = h(@disease.cdc_code)
-
-          %span{ :class => "horiz" }
-            %b
-              = t('cdc_send_status')
-            %br
-            = h(@disease.cdc_disease_export_statuses.map(&:code_description).join(', '))
-
-        %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            = link_to t('edit'), edit_disease_path(@disease)
-            |
-            = t('show')
+      = render :partial => 'disease', :locals => {:disease => @disease}
   %table.list
     %tr
       %th.forminformation{:style => "width: 5%"}

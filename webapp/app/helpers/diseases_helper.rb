@@ -44,4 +44,16 @@ module DiseasesHelper
       options[:class] = :inactive unless disease.active
     end
   end
+
+  def disease_tool_links(disease)
+    links = []
+    links << link_to_unless_current(t(:edit), edit_disease_path(disease))
+    links << link_to_unless_current(t(:show), disease)
+    links << link_to_unless_current(t(:core_fields), disease_core_fields_path(disease))
+    links
+  end
+
+  def render_disease_tool_links(disease)
+    disease_tool_links(disease).join('&nbsp;|&nbsp;')
+  end
 end

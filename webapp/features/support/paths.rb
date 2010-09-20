@@ -149,6 +149,10 @@ def path_to(page_name)
   when /the place edit page/
     edit_place_path(@place_entity)
 
+  when /the "([^\"]*)" core fields page/i
+    disease = Disease.find_by_disease_name($1)
+    disease_core_fields_path disease
+
   when /edit the disease named "([^\"]*)"/
     edit_disease_path Disease.find_by_disease_name($1)
 
