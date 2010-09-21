@@ -82,6 +82,8 @@ class StagedMessage < ActiveRecord::Base
   has_many :lab_results
   has_many :staged_observations
 
+  belongs_to :message_batch
+
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
   after_validation_on_create  :set_searchable_attributes
