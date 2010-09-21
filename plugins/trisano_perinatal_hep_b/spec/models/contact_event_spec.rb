@@ -95,8 +95,28 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         @contact_event.tasks.first.name.should == @task_name
       end
 
-      it "should generate a task with the correct due date" do
-        treatment_date = Date.parse("2/1/2010")
+      it "should generate a task with the correct due date for a contact without a birth date" do
+        @contact_event.interested_party.person_entity.person.birth_date = nil
+        @contact_event.save!
+        treatment_date = Date.today
+        change_treatment_to_trigger_callback(@treatment, treatment_date)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == treatment_date + 30.days
+      end
+
+      it "should generate a task with a due date at least 9 months after the birth date" do
+        @contact_event.interested_party.person_entity.person.birth_date = Date.yesterday
+        @contact_event.save!
+        treatment_date = Date.today
+        change_treatment_to_trigger_callback(@treatment, treatment_date)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == Date.yesterday + 9.months
+      end
+
+      it "should generate a task with the correct due date 30 days after the treatment, as long as it is still 9 months after the birthdate" do
+        @contact_event.interested_party.person_entity.person.birth_date = Date.today - 9.months
+        @contact_event.save!
+        treatment_date = Date.today
         change_treatment_to_trigger_callback(@treatment, treatment_date)
         @contact_event.save!
         @contact_event.tasks.first.due_date.should == treatment_date + 30.days
@@ -128,12 +148,39 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       end
 
       it "should update the existing task's due date if the treatment date has changed and the task already exists" do
-        change_treatment_to_trigger_callback(@treatment)
+        change_treatment_to_trigger_callback(@treatment, Date.today)
         @contact_event.save!
-        @contact_event.tasks.first.due_date.should == @due_date
+        @contact_event.tasks.first.due_date.should == Date.today + 30.days
         change_treatment_to_trigger_callback(@treatment, Date.yesterday)
         @contact_event.save!
-        @contact_event.tasks.first.due_date.should == Date.yesterday + 1.month
+        @contact_event.tasks.first.due_date.should == Date.yesterday + 30.days
+      end
+
+      it "should not change the existing task's due date if the treatment date has changed and the task already exists, but the contact's birth date was less than 9 months ago" do
+        birth_date = 2.days.ago.to_date
+        @contact_event.interested_party.person_entity.person.birth_date = birth_date
+        @contact_event.save!
+        change_treatment_to_trigger_callback(@treatment, Date.today)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == birth_date + 9.months
+        change_treatment_to_trigger_callback(@treatment, Date.yesterday)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == birth_date + 9.months
+      end
+
+      it "should change the existing task's due date if the treatment date has changed and the task already exists, and the treatment date was changed so that the due date is outside of the birth date window" do
+        birth_date = 10.months.ago.to_date
+        @contact_event.interested_party.person_entity.person.birth_date = birth_date
+        @contact_event.save!
+        treatment_date_inside_birth_date_window = 7.months.ago.to_date
+        change_treatment_to_trigger_callback(@treatment, treatment_date_inside_birth_date_window)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == birth_date + 9.months
+        
+        treatment_date_outside_birth_date_window = 1.month.ago.to_date - 15.days
+        change_treatment_to_trigger_callback(@treatment, treatment_date_outside_birth_date_window)
+        @contact_event.save!
+        @contact_event.tasks.first.due_date.should == treatment_date_outside_birth_date_window + 30.days
       end
 
     end
@@ -143,7 +190,6 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       before(:each) do
         @treatment = @dose_three_treatment
         @task_name = "Post serological testing due."
-        @due_date = Date.today + 30.days
         @task_tracking_key = 'hep_b_dose_three'
       end
 
@@ -156,7 +202,6 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       before(:each) do
         @treatment = @comvax_dose_four_treatment
         @task_name = "Post serological testing due."
-        @due_date = Date.today + 30.days
         @task_tracking_key = 'hep_b_comvax_dose_four'
       end
 
