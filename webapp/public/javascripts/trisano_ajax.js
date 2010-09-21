@@ -20,7 +20,9 @@ Trisano.Ajax = {
 
   liveSearch: function(field) {
     if (!Object.isElement(field.associatedSearchResults())) {
-      Element.extend(document.body).insert( { bottom: new Element('div', { id: field.associatedSearchResults(), 'class': 'autocomplete' }) } );
+      var searchResults = new Element('div', { id: field.associatedSearchResults() });
+      Element.extend(document.body).insert( { bottom: searchResults } );
+      searchResults.addClassName('autocomplete');
     }
     if (!Object.isElement(field.associatedSpinner())) {
       field.insert({ after: Trisano.Ajax.spinnerImg(field) });
