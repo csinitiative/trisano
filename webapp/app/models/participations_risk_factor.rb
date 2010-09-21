@@ -26,9 +26,6 @@ class ParticipationsRiskFactor < ActiveRecord::Base
   validates_length_of :risk_factors, :maximum => 255, :allow_blank => true
   validates_length_of :occupation, :maximum => 255, :allow_blank => true
   validates_date :pregnancy_due_date, {
-    :allow_blank => true,
-    :on_or_after =>  lambda { |record|
-      record.participation.try(:event).try(:created_at)
-    }
+    :allow_blank => true
   }
 end

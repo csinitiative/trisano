@@ -36,7 +36,8 @@
                 =h attachment.filename
             %td
               %span.category
-                =h t("attachment_types.#{attachment.category}")
+                - unless attachment.category.blank?
+                  =h t("attachment_types.#{attachment.category}")
             %td
               %span.content_type
                 =h attachment.content_type

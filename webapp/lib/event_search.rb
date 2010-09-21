@@ -73,6 +73,7 @@ module EventSearch
         fields << "people.last_name AS last_name"
         fields << "people.first_name AS first_name"
         fields << "people.middle_name AS middle_name"
+        fields << "people.approximate_age_no_birthday AS approximate_age_no_birthday"
         fields << "people.birth_date AS birth_date"
         fields << "people_gender.code_description AS birth_gender"
         fields << "diseases.disease_name AS disease_name"

@@ -525,6 +525,7 @@ CREATE TABLE dw_contact_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
+    events.record_number,
     ppl.id AS dw_patients_id,
     ppl.entity_id,            -- Keeping this just in case
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
