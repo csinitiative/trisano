@@ -195,6 +195,7 @@ es:
 #core_fields
   edit_core_field: 'Editar Campo Principal'
   back_to_core_fields: '< Regresar a Campos esenciales'
+  back_to_disease_core_fields: '< Back to Core Fields for {{name}} (EN)'
   core_field: 'Campo Principal'
   core_fields: 'Campo Principales'
   morbidity_event_fields: 'Campos de Eventos de Morbilidad'
@@ -204,8 +205,10 @@ es:
   create: 'Crear'
   add_core_tab: 'Agregar Pestaña Principal'
   add_tab_text: 'Agregar Texto de Pestaña'
-  render_default?: Core (EN)
-  disease_specific: Disease specific core (EN)
+  display_by_default: Display by default (EN)
+  display_on: 'Display on {{disease}} (EN)'
+  displayed: 'Displayed (EN)'
+
 #csv_fields
   csv_export_columns: 'Columnas de Exportación CSV'
   long_name: 'Nombre Largo'

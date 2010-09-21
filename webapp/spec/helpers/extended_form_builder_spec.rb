@@ -215,9 +215,9 @@ describe ExtendedFormBuilder, "returning a core field" do
     @form_builder.core_field(:test_attribute).should_not be_nil
   end
 
-  it "sentinal will always return true from #rendered?" do
+  it "sentinal will always return true from #rendered_on_event?" do
     sentinal = @form_builder.core_field(:bogus_attribute)
-    sentinal.rendered?.should be_true
+    sentinal.rendered_on_event?.should be_true
   end
 
   it "sentinal will return the key that was used in the look up" do

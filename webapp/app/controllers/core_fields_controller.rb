@@ -17,6 +17,8 @@
 
 class CoreFieldsController < ApplicationController
 
+  before_filter :look_up_disease
+
   def index
     @core_fields = CoreField.find(:all, :order => 'event_type')
     @core_fields = @core_fields.sort_by(&:name)
@@ -50,7 +52,7 @@ class CoreFieldsController < ApplicationController
     respond_to do |format|
       if @core_field.update_attributes(params[:core_field])
         flash[:notice] = t("core_field_successfully_updated")
-        format.html { redirect_to(@core_field) }
+        format.html { redirect_to [@disease, @core_field] }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -58,4 +60,13 @@ class CoreFieldsController < ApplicationController
       end
     end
   end
+
+  private
+
+  def look_up_disease
+    unless params[:disease_id].blank?
+      @disease = Disease.find(params[:disease_id])
+    end
+  end
+
 end

@@ -317,7 +317,7 @@ describe EventsHelper, "rendering replacement partials" do
   shared_examples_for "disease-specific core element replacer" do
     it "renders the replacement content if core field is replaced for the event" do
       Factory.create(:core_fields_disease, :core_field => @core_field, :disease => @event.disease.disease, :rendered => true, :replaced => true)
-      
+
       helper.send(@method_to_test, :test_attribute, @fb, :horiz) do
         helper.concat('<p>original content</p>')
       end

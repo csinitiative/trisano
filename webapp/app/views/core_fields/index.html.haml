@@ -16,4 +16,9 @@
 -content_for :title do
   =t('core_fields')
 
+- if @disease
+  - content_for :tools do
+    = link_to t(:back_to, :name => @disease.disease_name), @disease
+    %p
+
 =render_core_fields_list(@core_fields)

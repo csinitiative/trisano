@@ -92,7 +92,7 @@ describe CoreField do
 
     it "should be rendered if disease association is for showing the field" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should be_rendered(@event)
+      @cf.should be_rendered_on_event(@event)
     end
 
     it "should not be rendered if association is for hiding field" do
@@ -100,7 +100,7 @@ describe CoreField do
         :disease => @disease,
         :core_field => @cf,
         :rendered => false)
-      @cf.should_not be_rendered(@event)
+      @cf.should_not be_rendered_on_event(@event)
     end
 
   end
@@ -118,18 +118,18 @@ describe CoreField do
     end
 
     it "should not render if no disease is associated" do
-      @cf.should_not be_rendered(@event)
+      @cf.should_not be_rendered_on_event(@event)
     end
 
     it "should not be rendered if event is nil" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should_not be_rendered(nil)
+      @cf.should_not be_rendered_on_event(nil)
     end
 
     it "should not render if event's disease is not associated" do
       @event.disease_event.update_attributes!(:disease => Factory.create(:disease))
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should_not be_rendered(@event)
+      @cf.should_not be_rendered_on_event(@event)
     end
 
     it_should_behave_like "disease is associated"
@@ -149,19 +149,19 @@ describe CoreField do
     end
 
     it "should be rendered if event's disease is associated" do
-      @cf.should be_rendered(@event)
+      @cf.should be_rendered_on_event(@event)
     end
 
     it "should be rendered if event is nil" do
       Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
-      @cf.should be_rendered(nil)
+      @cf.should be_rendered_on_event(nil)
     end
 
     it "should be rendered if event's disease is not associated" do
       Factory.create(:core_fields_disease,
         :disease => Factory.create(:disease),
         :core_field => @cf)
-      @cf.should be_rendered(@event)
+      @cf.should be_rendered_on_event(@event)
     end
 
     it_should_behave_like "disease is associated"

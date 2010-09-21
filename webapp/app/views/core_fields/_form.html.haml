@@ -21,10 +21,13 @@
   %tr
     %td{:colspan => 2}
       %span.vert
-        = f.check_box :render_default?, :style => "display: inline"
-        = f.label :render_default?, nil, :style => "display: inline"
-  %tr
-    %td{:colspan => 2}
-      %span{ :class => "vert" }
-        = f.label(:help_text)
-        ~ f.text_area(:help_text)
+        = hidden_field_tag "core_field[disease_specific_attributes][disease_id]", @disease.try(:id)
+        = hidden_field_tag "core_field[disease_specific_attributes][rendered]", 0, :id => nil
+        = check_box_tag "core_field[disease_specific_attributes][rendered]", 1, f.object.rendered?(@disease)
+        = label_tag "core_field[disease_specific_attributes][rendered]", @disease ? t(:display_on, :disease => @disease.disease_name) : t(:display_by_default), :style => "display: inline"
+  - unless @disease
+    %tr
+      %td{:colspan => 2}
+        %span{ :class => "vert" }
+          = f.label(:help_text)
+          ~ f.text_area(:help_text)

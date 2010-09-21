@@ -153,6 +153,24 @@ def path_to(page_name)
     disease = Disease.find_by_disease_name($1)
     disease_core_fields_path disease
 
+  when /edit the "([^\"]*)" core field for the disease "([^\"]*)"/i
+    core_field = CoreField.all.detect { |core_field| core_field.name == $1 }
+    disease = Disease.find_by_disease_name($2)
+    edit_disease_core_field_path(disease, core_field)
+
+  when /edit the disease specific core field for the disease "([^\"]*)"/i
+    disease = Disease.find_by_disease_name($1)
+    edit_disease_core_field_path(disease, @core_field)
+
+  when /the "([^\"]*)" core field for the disease "([^\"]*)"/i
+    core_field = CoreField.all.detect { |core_field| core_field.name == $1 }
+    disease = Disease.find_by_disease_name($2)
+    disease_core_field_path(disease, core_field)
+
+  when /the disease specific core field for the disease "([^\"]*)"/i
+    disease = Disease.find_by_disease_name($1)
+    disease_core_field_path(disease, @core_field)
+
   when /edit the disease named "([^\"]*)"/
     edit_disease_path Disease.find_by_disease_name($1)
 

@@ -73,9 +73,13 @@ class CoreField < ActiveRecord::Base
     self.key
   end
 
-  def rendered?(event)
-    disease = event.try(:disease_event).try(:disease)
+  def rendered?(disease)
     disease_associated?(disease) ? render_on_disease?(disease) : render_default?
+  end
+
+  def rendered_on_event?(event)
+    disease = event.try(:disease_event).try(:disease)
+    rendered? disease
   end
 
   def replaced?(event)
@@ -111,7 +115,24 @@ class CoreField < ActiveRecord::Base
     I18n.t render_default? ? :render_default? : :disease_specific
   end
 
+  def disease_specific_attributes=(attributes)
+    if attributes[:disease_id].blank?
+      self.render_default = attributes[:rendered]
+    else
+      association = find_or_build_disease_association(:disease_id => attributes[:disease_id])
+      association.rendered = attributes[:rendered]
+      association.save!
+    end
+  end
+
   private
+
+  def find_or_build_disease_association(options)
+    unless disease = self.core_fields_diseases.first(:conditions => options)
+      disease = self.core_fields_diseases.build(options)
+    end
+    disease
+  end
 
   def bool_cast(value)
     disease_specific_column = column_for_attribute(:disease_specific)
