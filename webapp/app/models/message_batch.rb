@@ -12,7 +12,7 @@ class MessageBatch < ActiveRecord::Base
       end
     rescue
       errors.add :hl7_message, 'parse error'
-    end if new?
+    end if new_record?
 
     # If we receive an empty batch or a batch with all invalid
     # messages, we don't save it.  Instead we send an HTTP 422
@@ -30,6 +30,6 @@ class MessageBatch < ActiveRecord::Base
   end
 
   def message_removed(staged_message)
-    destroy if staged_messages.empty? and not new?
+    destroy if staged_messages.empty? and not new_record?
   end
 end
