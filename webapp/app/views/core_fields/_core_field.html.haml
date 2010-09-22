@@ -16,14 +16,15 @@
 %tr.roll
   %td.forminformation
     .formname
-      = link_to h(core_field.name), core_field
-    .formnamesubtext
-      = core_field.render_mode
+      = link_to h(core_field.name), [@disease, core_field]
+    - if core_field.rendered?(@disease)
+      .formnamesubtext
+        = t(:displayed)
     .tools
       = h(core_field.help_text)
   %td
     .tools{:style => "position: absolute; right: 15px;"}
-      = link_to(t('edit'), edit_core_field_path(core_field))
+      = link_to_edit_core_field core_field, @disease
       |
-      = link_to(t('show'), core_field_path(core_field))
+      = link_to t('show'), [@disease, core_field]
 

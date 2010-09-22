@@ -35,7 +35,7 @@ module EventsHelper
 
   def rendering_core_field(attribute, form_builder)
     cf = form_builder.core_field(attribute)
-    if cf.rendered?(@event)
+    if cf.rendered_on_event?(@event)
       concat_before_core_partials(cf.key, form_builder)
       yield(cf)
       concat_after_core_partials(cf.key, form_builder)

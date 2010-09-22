@@ -307,7 +307,7 @@ module Export
               showing_disease_specific_fields? &&
               !event_or_class.is_a?(Class) &&
               !csv_field.core_field.nil? &&
-              csv_field.core_field.rendered?(event_or_class) &&
+              csv_field.core_field.rendered_on_event?(event_or_class) &&
               non_collection_or_collection_in_options?(csv_field)
           )
         )

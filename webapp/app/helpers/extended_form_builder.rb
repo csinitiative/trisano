@@ -247,7 +247,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if core_field
       core_field
     else
-      OpenStruct.new(:key => cp.to_s, :rendered? => true)
+      OpenStruct.new(:key => cp.to_s, :rendered_on_event? => true)
     end
   end
 
