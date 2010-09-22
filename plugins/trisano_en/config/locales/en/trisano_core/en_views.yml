@@ -189,6 +189,7 @@ en:
 #core_fields
   edit_core_field: 'Edit Core Field'
   back_to_core_fields: '< Back to Core Fields'
+  back_to_disease_core_fields: '< Back to Core Fields for {{name}}'
   core_field: 'Core Field'
   core_fields: 'Core Fields'
   morbidity_event_fields: 'Morbidity Event Fields'
@@ -199,8 +200,9 @@ en:
   add_core_tab: 'Add Core Tab'
   add_tab_text: 'Add Tab Text'
   encounter_event_fields: 'Encounter Event Fields'
-  render_default?: Core
-  disease_specific: Disease specific core
+  display_by_default: Display by default
+  display_on: 'Display on {{disease}}'
+  displayed: 'Displayed'
 #csv_fields
   csv_export_columns: 'CSV Export Columns'
   long_name: 'Long Name'

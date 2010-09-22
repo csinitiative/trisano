@@ -364,6 +364,7 @@ class Event < ActiveRecord::Base
     all_jurisdictions(:include => {:place_entity => :place})
   end
 
+  # wow. wish this didn't return the disease_event.
   def disease
     self.disease_event
   end

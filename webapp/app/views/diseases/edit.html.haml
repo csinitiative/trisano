@@ -39,9 +39,8 @@
             = @disease.active? ? t('active') :  t('inactive')
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            =t 'edit'
-            |
-            = link_to t('show'), @disease
+            = render_disease_tool_links @disease
+
 #rot
   = error_messages_for :disease
 

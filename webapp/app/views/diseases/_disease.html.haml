@@ -37,7 +37,5 @@
       = h(disease.cdc_disease_export_statuses.map(&:code_description).join(', '))
 
   %td
-    .tools
-      =link_to_unless_current t('edit'), edit_disease_path(disease)
-      |
-      =link_to_unless_current t('show'), disease
+    .tools{:style => "position: absolute; right: 15px;"}
+      = render_disease_tool_links disease
