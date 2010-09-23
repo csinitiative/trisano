@@ -1,3 +1,2 @@
-contact_treatments:
-  key: contact_event[treatments]
+- key: contact_event[treatments]
   replaced: true
