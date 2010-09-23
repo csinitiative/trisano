@@ -135,7 +135,7 @@ describe CoreField do
     it_should_behave_like "disease is associated"
 
   end
-  
+
   describe "regular ol' core fields" do
     before do
       @event = Factory.create(:morbidity_event)
@@ -174,7 +174,7 @@ describe CoreField do
       @event.build_disease_event(:disease => @disease).save!
       @cf = Factory.create(:core_field, :disease_specific => true)
     end
-    
+
     it "should not replace if no disease is associated" do
       @cf.should_not be_replaced(@event)
     end
@@ -218,4 +218,18 @@ describe CoreField do
     end
   end
 
+  describe "sections" do
+
+    before do
+      @section = Factory.create(:cmr_section_core_field)
+      @core_field = Factory.create(:cmr_core_field, :tree_id => @section.tree_id)
+    end
+
+    it "should act as a nested set" do
+      lambda do
+        @section.add_child @core_field
+      end.should change(@section, :children_count).by(1)
+    end
+
+  end
 end
