@@ -29,9 +29,6 @@ describe ParticipationsRiskFactor do
 
   it "should validate expected delivery date" do
     @risk_factor.should validate_date(:pregnancy_due_date)
-    @risk_factor.pregnancy_due_date = @event.created_at - 1.day
-    @risk_factor.save
-    @risk_factor.errors.on(:pregnancy_due_date).should =~ /must be on or after/
   end
 
 end
