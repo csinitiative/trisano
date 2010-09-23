@@ -18,6 +18,8 @@
 class CoreField < ActiveRecord::Base
   include I18nCoreField
 
+  acts_as_nested_set :scope => :tree_id if table_exists?
+
   belongs_to :code_name
   has_many :core_fields_diseases, :dependent => :destroy
   has_many :diseases, :through => :core_fields_diseases
@@ -49,6 +51,10 @@ class CoreField < ActiveRecord::Base
       @event_fields_hash = nil
     end
 
+    def next_tree_id
+      self.find_by_sql("SELECT nextval('core_field_tree_id_generator')").first.nextval.to_i
+    end
+
     def load!(hashes)
       transaction do
         hashes.each do |attrs|
@@ -56,7 +62,17 @@ class CoreField < ActiveRecord::Base
             if (code_name = attrs.delete('code_name'))
               attrs['code_name'] = CodeName.find_by_code_name(code_name)
             end
-            CoreField.create!(attrs)
+            if section_key = attrs.delete('section_key')
+              section = CoreField.find_by_key(section_key)
+              attrs['tree_id'] = section.tree_id
+            end
+            if attrs['event_type'] == 'section'
+              attrs['tree_id'] ||= CoreField.next_tree_id
+            end
+            core_field = CoreField.create!(attrs)
+            if section
+              section.add_child core_field
+            end
           end
         end
       end
