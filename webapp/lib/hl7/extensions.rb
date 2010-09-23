@@ -50,16 +50,22 @@ module HL7
 
     class << self
       def parse_batch(batch) # :yields: message
-        raise HL7::ParseError, "invalid batch message" unless
-          /\rMSH/ =~ batch
+        raise HL7::ParseError, 'badly formed batch message' unless
+          /^FHS/ =~ batch
 
-        batch.sub(/^.*\rMSH/, '')
+        # Rails seems to change our literal \r characters in sample
+        # messages into newlines.  We make a copy here, reverting to
+        # carriage returns.  The input is unchanged.
+        batch = batch.gsub("\n", "\r") if batch.include?("\n")
 
-        batch.split("\rMSH").each_with_index do |_msg, index|
-          if md = /^(.*)\rBTS(.*)$/.match(_msg)
+        raise HL7::ParseError, 'empty batch message' unless
+          match = /\rMSH/.match(batch)
+
+        match.post_match.split(/\rMSH/).each_with_index do |_msg, index|
+          if md = /\rBTS/.match(_msg)
             # TODO: Validate the message count in the BTS segment
             # should == index + 1
-            _msg = md[1]
+            _msg = md.pre_match
           end
 
           yield 'MSH' + _msg
