@@ -27,7 +27,7 @@ Factory.define :actual_delivery_facility do |adf|
 end
 
 Factory.define :actual_delivery_facilities_participation do |adfp|
-  adfp.actual_delivery_date Date.today + 15.days
+  adfp.actual_delivery_date Date.yesterday
 end
 
 Factory.define :health_care_provider do |hcp|

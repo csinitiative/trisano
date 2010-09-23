@@ -87,6 +87,7 @@ class StagedMessage < ActiveRecord::Base
   before_validation :strip_line_feeds
   before_validation_on_create :set_state
   after_validation_on_create  :set_searchable_attributes
+  before_destroy :remove_from_batch
 
   validates_presence_of :hl7_message
   validates_length_of :hl7_message, :maximum => 10485760
@@ -122,6 +123,10 @@ class StagedMessage < ActiveRecord::Base
         add_hl7_error(:missing_loinc, :obx, test.set_id, 3, 1) if test.loinc_code.blank?
       end
     end
+  end
+
+  def remove_from_batch
+    message_batch.staged_messages.delete(self) if message_batch
   end
 
   def hl7
