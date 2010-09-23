@@ -23,7 +23,7 @@ describe CsvField, "in the Perinatal Hep B plugin" do
 
     before(:all) do
       @core_fields = YAML.load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml'))
-      CoreField.load!(@core_fields)
+      CoreField.load!(@core_fields.values)
       @csv_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
       CsvField.load_csv_fields(@csv_fields)
     end

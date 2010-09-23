@@ -48,8 +48,6 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         :investigator => Factory.create(:user)
       )
 
-      @actual_delivery_facility = add_actual_delivery_facility_to_event(@morbidity_event, "Allen Hospital")
-
       @infant_contact_type_code = ExternalCode.infant_contact_type
 
       @participations_contact = Factory.create(
@@ -97,35 +95,13 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         @contact_event.tasks.first.name.should == @task_name
       end
 
-      it "when there is no contact dob, should generate a task with the correct due date 30 days after the treatment, as long as it is still 9 months after the parent's actual delivery date" do
-        @actual_delivery_facility.actual_delivery_facilities_participation.actual_delivery_date = 9.months.ago.to_date
+      it "should generate a task with the correct due date for a contact without a birth date" do
         @contact_event.interested_party.person_entity.person.birth_date = nil
         @contact_event.save!
         treatment_date = Date.today
         change_treatment_to_trigger_callback(@treatment, treatment_date)
         @contact_event.save!
         @contact_event.tasks.first.due_date.should == treatment_date + 30.days
-      end
-
-      it "when there is no contact dob, should generate a task with a due date at least 9 months after the parent's actual delivery date" do
-        @actual_delivery_facility.actual_delivery_facilities_participation.actual_delivery_date = Date.yesterday
-        @contact_event.interested_party.person_entity.person.birth_date = nil
-        @contact_event.save!
-        treatment_date = Date.today
-        change_treatment_to_trigger_callback(@treatment, treatment_date)
-        @contact_event.save!
-        @contact_event.tasks.first.due_date.should == Date.yesterday + 9.months
-      end
-
-      it "when there is no contact dob and no actual delivery date for the parent, should generate a task with a due date 90 days after the treatment date" do
-        @morbidity_event.actual_delivery_facility = nil
-        @morbidity_event.save!
-        @contact_event.interested_party.person_entity.person.birth_date = nil
-        @contact_event.save!
-        treatment_date = Date.today
-        change_treatment_to_trigger_callback(@treatment, treatment_date)
-        @contact_event.save!
-        @contact_event.tasks.first.due_date.should == treatment_date + 90.days
       end
 
       it "should generate a task with a due date at least 9 months after the birth date" do
@@ -137,8 +113,8 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         @contact_event.tasks.first.due_date.should == Date.yesterday + 9.months
       end
 
-      it "should generate a task with the correct due date 30 days after the treatment, as long as it is still 9 months after the birth date" do
-        @contact_event.interested_party.person_entity.person.birth_date = 9.months.ago.to_date
+      it "should generate a task with the correct due date 30 days after the treatment, as long as it is still 9 months after the birthdate" do
+        @contact_event.interested_party.person_entity.person.birth_date = Date.today - 9.months
         @contact_event.save!
         treatment_date = Date.today
         change_treatment_to_trigger_callback(@treatment, treatment_date)
@@ -172,7 +148,6 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       end
 
       it "should update the existing task's due date if the treatment date has changed and the task already exists" do
-        @contact_event.interested_party.person_entity.person.birth_date = 9.months.ago.to_date
         change_treatment_to_trigger_callback(@treatment, Date.today)
         @contact_event.save!
         @contact_event.tasks.first.due_date.should == Date.today + 30.days

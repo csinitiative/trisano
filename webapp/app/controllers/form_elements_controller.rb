@@ -69,7 +69,7 @@ class FormElementsController <  AdminController
       @library_elements = FormElement.filter_library(:direction => direction, :filter_by => params[:filter_by], :type => params[:type].to_sym)
       render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym, :type => params[:type].to_sym}
     rescue Exception => ex
-     logger.debug ex
+      logger.debug ex
       flash[:error] = t("error_during_filtering")
       render :template => 'rjs-error'
     end

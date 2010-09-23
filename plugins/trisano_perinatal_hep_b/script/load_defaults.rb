@@ -8,7 +8,7 @@ Disease.load_from_yaml(disease_data)
 puts "Loading Perinatal Hep B core fields"
 
 fields = YAML.load_file(File.join(File.dirname(__FILE__), '..', 'db', 'defaults', 'core_fields.yml'))
-CoreField.load!(fields)
+CoreField.load!(fields.values)
 
 puts "Loading Perinatal Hep B CSV fields"
 

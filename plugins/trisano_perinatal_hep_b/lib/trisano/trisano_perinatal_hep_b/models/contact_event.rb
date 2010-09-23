@@ -65,14 +65,10 @@ module Trisano
               end
 
               def task_due_date(pt)
-                contact_birth_date = self.try(:interested_party).try(:person_entity).try(:person).try(:birth_date)
-                parent_event_actual_delivery_date = self.try(:parent_event).try(:actual_delivery_facility).try(:actual_delivery_facilities_participation).try(:actual_delivery_date)
-                standard_task_due_date = pt.treatment_date + 30.days
-                fallback_task_due_date = pt.treatment_date + 90.days
-                
-                return fallback_task_due_date if contact_birth_date.nil? && parent_event_actual_delivery_date.nil?
-                return (standard_task_due_date > (contact_birth_date + 9.months)) ? standard_task_due_date : (contact_birth_date + 9.months) unless contact_birth_date.nil?
-                return (standard_task_due_date > (parent_event_actual_delivery_date + 9.months)) ? standard_task_due_date : (parent_event_actual_delivery_date + 9.months) unless parent_event_actual_delivery_date.nil?
+                contact_birth_date = self.try(:interested_party).try(:person_entity).try(:person).birth_date
+                task_due_date = pt.treatment_date + 30.days
+                return task_due_date if contact_birth_date.nil?
+                return (task_due_date > (contact_birth_date + 9.months)) ? task_due_date : (contact_birth_date + 9.months)
               end
 
               def existing_task_for_event?(task_tracking_key)

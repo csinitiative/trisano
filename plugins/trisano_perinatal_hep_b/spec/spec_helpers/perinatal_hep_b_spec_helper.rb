@@ -57,13 +57,13 @@ module PerinatalHepBSpecHelper
   end
 
   def given_p_hep_b_core_fields_loaded
-    @core_fields = p_hep_b_core_fields
+    @core_fields = p_hep_b_core_fields.values
     CoreField.load!(@core_fields)
   end
 
   def given_ce_core_fields_to_replace_loaded
     @ce_core_fields = YAML::load_file(File.join(RAILS_ROOT, 'db/defaults/core_fields.yml'))
-    @replacement_core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_field_replacements.yml'))
+    @replacement_core_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_field_replacements.yml')).values
     @replacement_core_fields_keys = @replacement_core_fields.collect {|cf| cf['key']}
     @ce_core_fields_to_load = []
 

@@ -11,8 +11,3 @@ Factory.define :core_fields_disease do |o|
   o.core_field { Factory.create(:core_field) }
 end
 
-Factory.define :cmr_section_core_field, :parent => :cmr_core_field do |cf|
-  cf.key 'morbidity_event[patient_name][section]'
-  cf.tree_id { CoreField.next_tree_id }
-end
-

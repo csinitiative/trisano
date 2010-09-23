@@ -48,24 +48,6 @@ module HL7
       message_header.version_id if message_header
     end
 
-    class << self
-      def parse_batch(batch) # :yields: message
-        raise HL7::ParseError, "invalid batch message" unless
-          /\rMSH/ =~ batch
-
-        batch.sub(/^.*\rMSH/, '')
-
-        batch.split("\rMSH").each_with_index do |_msg, index|
-          if md = /^(.*)\rBTS(.*)$/.match(_msg)
-            # TODO: Validate the message count in the BTS segment
-            # should == index + 1
-            _msg = md[1]
-          end
-
-          yield 'MSH' + _msg
-        end
-      end
-    end
   end
 end
 
