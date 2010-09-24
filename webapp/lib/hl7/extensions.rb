@@ -18,6 +18,11 @@
 require 'ruby-hl7'
 
 ######## Extensions to the ruby-hl7 gem
+class String
+  def hl7_batch?
+    match(/^FHS/)
+  end
+end
 
 module HL7
   class Message
@@ -51,7 +56,7 @@ module HL7
     class << self
       def parse_batch(batch) # :yields: message
         raise HL7::ParseError, 'badly formed batch message' unless
-          /^FHS/ =~ batch
+          batch.hl7_batch?
 
         # Rails seems to change our literal \r characters in sample
         # messages into newlines.  We make a copy here, reverting to

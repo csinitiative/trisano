@@ -309,3 +309,23 @@ describe Message do
     end
   end
 end
+
+describe 'String extension' do
+  before :all do
+    @batch_message = HL7MESSAGES[:realm_batch]
+    @plain_message = HL7MESSAGES[:realm_minimal_message]
+  end
+
+  it 'should respond_to :hl7_batch?' do
+    @batch_message.should respond_to(:hl7_batch?)
+    @plain_message.should respond_to(:hl7_batch?)
+  end
+
+  it 'should return true when passed a batch message' do
+    @batch_message.should be_an_hl7_batch
+  end
+
+  it 'should return false when passed a plain message' do
+    @plain_message.should_not be_an_hl7_batch
+  end
+end

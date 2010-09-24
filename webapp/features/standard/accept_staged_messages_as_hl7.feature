@@ -21,14 +21,14 @@ Feature: Accept Staged Messages as HL7
     Then I should see value "Covell, Daren L" in the message header
     And  I should see value "IHC-LD" in the message footer
 
- Scenario: Viewing HL7 w/ multiple tests
-   Given I am logged in as a super user
-   And I have the staged message "ARUP_2"
+  Scenario: Viewing HL7 w/ multiple tests
+    Given I am logged in as a super user
+    And I have the staged message "ARUP_2"
 
-   When I visit the staged message show page
+    When I visit the staged message show page
 
-   Then I should see value "HIV-1 Antibody Confirm, Western Blot" under label "Test type"
-   And I should see value "Negative" under label "Reference range"
+    Then I should see value "HIV-1 Antibody Confirm, Western Blot" under label "Test type"
+    And I should see value "Negative" under label "Reference range"
 
   Scenario: Posting a valid HL7 staged message
     Given I am logged in as a super user
