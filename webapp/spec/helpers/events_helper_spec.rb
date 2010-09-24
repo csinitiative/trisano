@@ -127,9 +127,9 @@ describe EventsHelper do
 
   describe 'rendering' do
     it "should render core field help text" do
-      @core_field = CoreField.create!({ :event_type => :morbidity_event,
-          :key => "morbidity_event[test_attribute]",
-          :help_text => "Here is some help text"})
+      @core_field = Factory.create(:cmr_core_field,
+                                   :key => "morbidity_event[test_attribute]",
+                                   :help_text => "Here is some help text")
       @event = Factory.create(:morbidity_event)
       @fb = mock
       @fb.expects(:core_field).with(:test_attribute).returns(@core_field)

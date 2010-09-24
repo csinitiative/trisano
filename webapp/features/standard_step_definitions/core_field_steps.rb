@@ -1,7 +1,7 @@
 Then /^I should see help text for all (.*) event core fields$/ do |type|
-  core_fields = CoreField.event_fields("#{type}_event").values.reject(&:disease_specific)
-  core_fields.each do |cf|
-    response.should have_tag("span#core_help_text_#{cf.id}")
+  core_fields = CoreField.event_fields("#{type}_event").values.each do |core_field|
+    next if core_field.disease_specific or core_field.section?
+    response.should have_tag("span#core_help_text_#{core_field.id}")
   end
 end
 

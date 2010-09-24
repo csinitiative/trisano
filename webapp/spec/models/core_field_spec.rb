@@ -27,13 +27,15 @@ describe CoreField do
   end
 
   before :each do
-    @core_field = CoreField.create(:key => 'morbidity_event[test_field]', :event_type => 'morbidity_event')
+    @core_field = Factory.create(:cmr_core_field)
   end
 
   after { I18n.locale = :en }
 
   it { should have_many(:core_fields_diseases) }
   it { should have_many(:diseases) }
+  it { should validate_presence_of(:field_type) }
+  it { should validate_presence_of(:event_type) }
 
   it "should update help text" do
     @core_field.help_text = 'Here is some help text'
@@ -53,38 +55,38 @@ describe CoreField do
 
   it 'should return fields based on key' do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[test_field]'].should_not be_nil
+    hash['morbidity_event[parent_guardian]'].should_not be_nil
   end
 
   it "should memoize fields for rendering" do
     hash = CoreField.event_fields('morbidity_event')
-    old_field = hash['morbidity_event[test_field]']
-    CoreField.all(:conditions => ["key=?", 'morbidity_event[test_field]']).each do |cf|
+    old_field = hash['morbidity_event[parent_guardian]']
+    CoreField.all(:conditions => ["key=?", 'morbidity_event[parent_guardian]']).each do |cf|
       cf.help_text = 'some help text'
       cf.save
     end
     hash = CoreField.event_fields('morbidity_event')
-    old_field.object_id.should_not == hash['morbidity_event[test_field]'].object_id
+    old_field.object_id.should_not == hash['morbidity_event[parent_guardian]'].object_id
   end
 
   it "event_fields should return hash of core fields" do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[test_field]'].class.should == CoreField
+    hash['morbidity_event[parent_guardian]'].class.should == CoreField
   end
 
   it "should pull english translations for name" do
     I18n.locale = :en
-    cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
+    cf = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
     cf.name.should == 'Places'
   end
 
   it "should return scope for I18n retrieval" do
-    cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
+    cf = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
     cf.i18n_scope.should == ['event_fields', 'morbidity_event']
   end
 
   it "should return the name key for i18n retrieval" do
-    cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
+    cf = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
     cf.name_key.should == 'places'
   end
 
@@ -110,7 +112,7 @@ describe CoreField do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
       @event.build_disease_event(:disease => @disease).save!
-      @cf = Factory.create(:core_field, :disease_specific => true)
+      @cf = Factory.create(:cmr_core_field, :disease_specific => true)
     end
 
     it "should be disease specific" do
@@ -141,7 +143,7 @@ describe CoreField do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
       @event.build_disease_event(:disease => @disease).save!
-      @cf = Factory.create(:core_field)
+      @cf = Factory.create(:cmr_core_field)
     end
 
     it "should not be disease specific" do
@@ -172,7 +174,7 @@ describe CoreField do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
       @event.build_disease_event(:disease => @disease).save!
-      @cf = Factory.create(:core_field, :disease_specific => true)
+      @cf = Factory.create(:cmr_core_field, :disease_specific => true)
     end
 
     it "should not replace if no disease is associated" do
@@ -206,7 +208,7 @@ describe CoreField do
       @event = Factory.create(:morbidity_event)
       @disease = Factory.create(:disease)
       @event.build_disease_event(:disease => @disease).save!
-      @cf = Factory.create(:core_field, :disease_specific => false)
+      @cf = Factory.create(:cmr_core_field, :disease_specific => false)
     end
 
     it "should replace if no disease is associated" do
@@ -224,6 +226,8 @@ describe CoreField do
       @section = Factory.create(:cmr_section_core_field)
       @core_field = Factory.create(:cmr_core_field, :tree_id => @section.tree_id)
     end
+
+    it { @section.should be_a_section }
 
     it "should act as a nested set" do
       lambda do

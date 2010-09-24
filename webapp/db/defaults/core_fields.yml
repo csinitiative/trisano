@@ -1,6 +1,216 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][name_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[address_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][age_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][demographics_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[disease_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[clinicians_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[mortality_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[pregnancy_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_specific_treatments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[diagnostic_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_specific_labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[contacts_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounters_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[other_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[contact_oriented_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[place_exposures_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reporter_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reported_dates_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_attachments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_tasks_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_auditing_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[case_outbreak_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_information_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_sent_to_state]

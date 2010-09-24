@@ -24,7 +24,7 @@ describe "/core_field_elements/_new.html.haml" do
   end
 
   it "renders with available core fields" do
-    assigns[:available_core_fields] = [Factory.create(:core_field)]
+    assigns[:available_core_fields] = [Factory.create(:cmr_core_field)]
 
     render "core_field_elements/_new.html.haml", {
       :locals => {

@@ -15,9 +15,7 @@
 -# You should have received a copy of the GNU Affero General Public License along 
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend=t 'age'
-
+-core_section :age_section, f do
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
     %div.data_age_info
       -core_element :birth_date, p, :horiz do

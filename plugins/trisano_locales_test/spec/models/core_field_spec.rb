@@ -10,14 +10,14 @@ describe CoreField, 'in test locale' do
   end
 
   before :each do
-    @core_field = CoreField.create(:key => 'morbidity_event[test_field]', :event_type => 'morbidity_event')
+    @core_field = Factory.create(:cmr_core_field, :key => 'morbidity_event[test_field]')
   end
 
   after { I18n.locale = :en }
 
   it "should pull test translations for name" do
     I18n.locale = :test
-    cf = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
+    cf = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
     cf.name.should == 'xPlaces'
   end
 

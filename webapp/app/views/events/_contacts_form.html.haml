@@ -20,42 +20,43 @@
     %span{:id => 'contacts_info_hide', :onClick => "Element.hide('contacts'); Element.hide('contacts_info_hide'); Element.show('contacts_info_show'); return false;"}= hide
     %span{:id => 'contacts_info_show', :onClick => "Element.show('contacts'); Element.hide('contacts_info_show'); Element.show('contacts_info_hide'); return false;", :style => "display: none;"}= show
 
-  - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
-    = h @event.disease.disease.contact_lead_in
-    %br
-    %br
-
   #contacts
-    -# Handles pre- and post-questions and help for contacts as a whole
-    - core_element :contacts, f, 'vert-break' do
+    -core_section :contacts_section, f do
+      - unless @event.disease.nil? || @event.disease.disease.nil? || @event.disease.disease.contact_lead_in.blank?
+        = h @event.disease.disease.contact_lead_in
+        %br
+        %br
 
-      = text_field_tag('contact_search_name')
-      = button_to_remote(t('search_button'), :method => :get, :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();")
-      = image_tag('redbox_spinner.gif', :id => 'contact-search-spinner', :style => "height: 16px; width: 16px; display: none;")
-      %div#new_contacts
-      %div#contact_search_results
+      -# Handles pre- and post-questions and help for contacts as a whole
+      - core_element :contacts, f, 'vert-break' do
 
-      #contact_child_events
-        - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
-          - next if c.object.deleted_at
-          - if c.object.new_record? && c.object.interested_party.primary_entity_id.nil?
-            = render :partial => "events/contact", :locals => { :f => c }
-          - else
-            = render :partial => "events/contact_show", :locals => { :f => c }
+        = text_field_tag('contact_search_name')
+        = button_to_remote(t('search_button'), :method => :get, :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();")
+        = image_tag('redbox_spinner.gif', :id => 'contact-search-spinner', :style => "height: 16px; width: 16px; display: none;")
+        %div#new_contacts
+        %div#contact_search_results
 
-        %p{:style => 'clear: both;'}= add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => "events/contact"
-        =render_extensions :cmr_contacts_extension_renderers
+        #contact_child_events
+          - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
+            - next if c.object.deleted_at
+            - if c.object.new_record? && c.object.interested_party.primary_entity_id.nil?
+              = render :partial => "events/contact", :locals => { :f => c }
+            - else
+              = render :partial => "events/contact_show", :locals => { :f => c }
 
-      - unless @event.morbidity_child_events.empty?
-        #morbidity_child_events
-          %fieldset
-            %legend=t 'cmr_contacts'
-            %i=t 'elevated_to_morbidity_events'
-            = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
+          %p{:style => 'clear: both;'}= add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => "events/contact"
+          =render_extensions :cmr_contacts_extension_renderers
 
-      - if @event.parent_event
-        #morbidity_parent_event
-          %fieldset
-            %legend=t 'parent_cmr'
-            %i=t('this_patient_is_a_contact_of')
-            = render :partial => 'events/contacts_show', :locals => { :contacts => [@event.parent_event] }
+        - unless @event.morbidity_child_events.empty?
+          #morbidity_child_events
+            %fieldset
+              %legend=t 'cmr_contacts'
+              %i=t 'elevated_to_morbidity_events'
+              = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
+
+        - if @event.parent_event
+          #morbidity_parent_event
+            %fieldset
+              %legend=t 'parent_cmr'
+              %i=t('this_patient_is_a_contact_of')
+              = render :partial => 'events/contacts_show', :locals => { :contacts => [@event.parent_event] }

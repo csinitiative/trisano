@@ -20,7 +20,7 @@ require 'spec_helper'
 describe CoreFieldTranslation do
 
   before do
-    @cf = Factory.create(:core_field)
+    @cf = Factory.create(:cmr_core_field)
   end
 
   it "belongs to a core field" do

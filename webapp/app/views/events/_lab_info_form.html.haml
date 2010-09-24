@@ -15,20 +15,23 @@
 
 %fieldset
   %legend
-    =t 'laboratory_information'
+    =t :laboratory_information
     %span{:id => 'lab_info_hide', :onClick => "Element.hide('labs'); Element.hide('lab_info_hide'); Element.show('lab_info_show'); return false;"}= hide
     %span{:id => 'lab_info_show', :onClick => "Element.show('labs'); Element.hide('lab_info_show'); Element.show('lab_info_hide'); return false;", :style => "display: none;"}= show
 
-  -core_element(:labs, f, :horiz) do
-    %div{:id => "labs"}
-      - f.fields_for(:labs, :builder => ExtendedFormBuilder) do |lab_fields|
-        = render :partial => "events/lab", :locals => { :f => lab_fields }
+  #labs
+    -core_section :labs_section, f do
 
-    #new_lab_holder
+      -core_element(:labs, f, :horiz) do
+        %div{:id => "labs"}
+          - f.fields_for(:labs, :builder => ExtendedFormBuilder) do |lab_fields|
+            = render :partial => "events/lab", :locals => { :f => lab_fields }
 
-    %p
-      = add_lab_link t('add_new_lab'), f.object_name
+      #new_lab_holder
 
-- if @event.is_a?(MorbidityEvent)
-  = render :partial => "events/encounter_specific_labs", :locals => { :event => @event}
+      %p
+        = add_lab_link t('add_new_lab'), f.object_name
+
+    - if @event.is_a?(MorbidityEvent)
+      = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }
 

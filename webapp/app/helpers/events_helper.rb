@@ -71,6 +71,7 @@ module EventsHelper
 
   def core_section(attribute, form_builder, css_class='form', &block)
     rendering_core_field(attribute, form_builder) do |cf|
+      p cf if cf.class != CoreField
       concat("<fieldset class='#{css_class}'>")
       concat("<legend>#{form_builder.core_field(attribute).name}</legend>")
       concat_block_or_replacement(cf, form_builder, &block)

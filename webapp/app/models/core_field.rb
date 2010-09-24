@@ -24,6 +24,9 @@ class CoreField < ActiveRecord::Base
   has_many :core_fields_diseases, :dependent => :destroy
   has_many :diseases, :through => :core_fields_diseases
 
+  validates_presence_of :field_type
+  validates_presence_of :event_type
+
   before_validation :normalize_attributes
 
   class << self
@@ -66,7 +69,7 @@ class CoreField < ActiveRecord::Base
               section = CoreField.find_by_key(section_key)
               attrs['tree_id'] = section.tree_id
             end
-            if attrs['event_type'] == 'section'
+            if attrs['field_type'] == 'section'
               attrs['tree_id'] ||= CoreField.next_tree_id
             end
             core_field = CoreField.create!(attrs)
@@ -87,6 +90,10 @@ class CoreField < ActiveRecord::Base
 
   def core_path
     self.key
+  end
+
+  def section?
+    self.field_type == 'section'
   end
 
   def rendered?(disease)

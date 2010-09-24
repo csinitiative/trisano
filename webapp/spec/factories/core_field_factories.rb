@@ -1,4 +1,5 @@
-Factory.define :core_field do
+Factory.define :core_field do |cf|
+  cf.field_type 'single_line_text'
 end
 
 Factory.define :cmr_core_field, :parent => :core_field do |cf|
@@ -14,5 +15,6 @@ end
 Factory.define :cmr_section_core_field, :parent => :cmr_core_field do |cf|
   cf.key 'morbidity_event[patient_name][section]'
   cf.tree_id { CoreField.next_tree_id }
+  cf.field_type 'section'
 end
 

@@ -23,20 +23,20 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <span id='cmr_info_show' onClick="Element.show('cmr_info_form'); Element.hide('cmr_info_show'); Element.show('cmr_info_hide'); return false;" style="display: none;"><%= show %></span>
   </legend>
   <div id='cmr_info_form'>
-    <% if not @event.record_number.blank? %>
-      <span class="label"><%= ct "record_number" %></span> <%= h(@event.record_number) %>
-    <% end %>
+    <% core_section :event_information_section, f do -%>
+      <% if not @event.record_number.blank? %>
+        <span class="label"><%= ct "record_number" %></span> <%= h(@event.record_number) %>
+      <% end %>
 
-    <% if not @event.MMWR_year.blank? %>
-      <span class="label"><%= ct 'mmwr_year' %></span> <%= h(@event.MMWR_year) %>
-      <span class="label"><%= ct 'mmwr_week' %></span><%= h(@event.MMWR_week) %>
-    <% end %>
-    <br />
-    <span class="label"><%= ct 'date_record_created' %></span>
-    <%= ld(@event.created_at.try(:to_date)) %>
-    <p/>
-    <fieldset class="form">
-      <legend><%= t 'case_outbreak' %></legend>
+      <% if not @event.MMWR_year.blank? %>
+        <span class="label"><%= ct 'mmwr_year' %></span> <%= h(@event.MMWR_year) %>
+        <span class="label"><%= ct 'mmwr_week' %></span><%= h(@event.MMWR_week) %>
+      <% end %>
+      <br />
+      <span class="label"><%= ct 'date_record_created' %></span>
+      <%= ld(@event.created_at.try(:to_date)) %>
+    <% end -%>
+    <% core_section :case_outbreak_section, f do -%>
       <% core_element :lhd_case_status_id, f, :horiz do -%>
         <%= f.label :lhd_case_status_id %>
         <%= f.dropdown_code_field(:lhd_case_status_id, 'case', {}) %>
@@ -53,9 +53,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= f.label(:outbreak_name) %>
         <%= f.core_text_field(:outbreak_name, {:size => 25, :maxlength => 255}, @event) %>
       <% end -%>
-    </fieldset>
-    <fieldset class="form">
-      <legend><%= "#{t('auditing')} / #{t('investigation')}" %></legend>
+    <% end -%>
+    <% core_section :event_auditing_section, f do -%>
       <span class="horiz">
         <label><%= t 'jurisdiction_of_residence' %></label>
         <%  if @event.address %>
@@ -98,6 +97,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
           <% end -%>
         </fieldset>
       <% end -%>
-    </fieldset>
+    <% end -%>
   </div>
 </fieldset>

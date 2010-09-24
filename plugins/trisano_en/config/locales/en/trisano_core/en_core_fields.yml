@@ -82,11 +82,37 @@ en:
             name: Lab results | Lab name
       imported_from_id: Imported from
     morbidity_event:
+      disease_section: Disease
+      hospitalized_health_facilities_section: Hospitalized Health Facilities
+      mortality_status_section: Mortality Status
+      pregnancy_status_section: Pregnancy Status
+      clinicians_section: Clinicians
+      diagnostic_facilities_section: Diagnostic Facilities
+      treatments_section: Treatments
+      encounter_specific_treatments_section: Encounter-specific Treatments
+      labs_section: Labs
+      encounter_specific_labs_section: Encounter-specific Labs
+      contacts_section: Contacts
+      encounters_section: Encounters
+      encounter_notes_section: Encounter Notes
+      contact_oriented_section: Contact Oriented
+      other_section: Other
+      place_exposures_section: Place Exposures
+      reporting_agency_section: Reporting Agency
+      reporter_section: Reporter
+      reported_dates_section: Reported Dates
+      event_attachments_section: Event Attachments
+      event_tasks_section: Event Tasks
+      event_notes_section: Event Notes
+      case_outbreak_section: Case / Outbreak
+      event_information_section: Event Information
+      event_auditing_section: Auditing / Investigation
       parent_guardian: Parent / Guardian
       clinicians: Clinicians
       diagnostic_facilities: Diagnostic facilities
       encounters: Encounters
       results_reported_to_clinician_date: Results reported to clinician date
+      address_section: Address
       address:
         city: Patient city
         postal_code: Patient zip code
@@ -149,7 +175,11 @@ en:
           pregnant_id: Pregnant
           healthcare_worker_id: Healthcare worker
         person_entity:
+          name_section: Name
+          age_section: Age
+          phone_section: Telephones/Email
           telephones: Patient telephones
+          demographics_section: Demographics
           email_addresses: Patient email addresses
           person:
             date_of_death: Patient date of death
