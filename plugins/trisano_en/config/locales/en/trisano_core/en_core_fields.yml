@@ -1,6 +1,8 @@
 en:
   event_fields:
     place_event:
+      address_section: Address
+      event_notes_section: Event Notes
       address:
         city: City
         postal_code: Zip code
@@ -11,15 +13,31 @@ en:
         state_id: State
       interested_place:
         place_entity:
+          place_name_section: Place Name
+          phone_section: Telephones/Email
           place:
             name: Name
             place_type_id: Type
     contact_event:
+      disease_section: Disease
+      hospitalized_health_facilities_section: Hospitalized Health Facilities
+      mortality_status_section: Mortality Status
+      pregnancy_status_section: Pregnancy Status
+      clinicians_section: Clinicians
+      diagnostic_facilities_section: Diagnostic Facilities
+      treatments_section: Treatments
+      labs_section: Labs
+      contact_oriented_section: Contact Oriented
+      other_section: Other
+      event_attachments_section: Event Attachments
+      event_tasks_section: Event Tasks
+      event_notes_section: Event Notes
       clinicians: Clinicians
       parent_guardian: Parent / Guardian
       diagnostic_facilities: Diagnostic Facilities
       other_data_1: Other Data (First Field)
       other_data_2: Other Data (Second Field)
+      address_section: Address
       address:
         city: Contact city
         postal_code: Contact zip code
@@ -48,6 +66,10 @@ en:
           pregnant_id: Pregnant
           healthcare_worker_id: Healthcare worker
         person_entity:
+          name_section: Name
+          age_section: Age
+          demographics_section: Demographics
+          phone_section: Telephones/Email
           telephones: Contact telephones
           email_addresses: Contact email addresses
           race_ids: Contact races
@@ -214,10 +236,19 @@ en:
             name: Lab results | Lab name
       imported_from_id: Imported from
     encounter_event:
+      labs_section: Labs
       labs: Encounter labs
+      treatments_section: Treatments
       treatments: Encounter treatments
+      event_notes_section: Event Notes
       participations_encounter:
         user_id: Investigator
         encounter_date: Encounter date
         encounter_location_type: Encounter location type
         description: Encounter description
+    person_entity:
+      name_section: Name
+      age_section: Age
+      phone_section: Telephones/Email
+      address_section: Address
+      demographics_section: Demographics

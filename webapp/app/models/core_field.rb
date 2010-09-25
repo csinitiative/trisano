@@ -174,4 +174,11 @@ class CoreField < ActiveRecord::Base
     not disease_association(disease).nil?
   end
 
+  class MissingCoreField < Struct.new(:key, :rendered_on_event, :help_text)
+    include I18nCoreField
+    alias core_path key
+    def rendered_on_event?(event)
+      self[:rendered_on_event]
+    end
+  end
 end

@@ -25,6 +25,7 @@ en:
       health_care_provider:
         section: Health Care Provider
         person_entity:
+          name_section: Name
           person:
             first_name: First name (Perinatal Hep B, Health care provider)
             last_name: Last name (Perinatal Hep B, Health care provider)

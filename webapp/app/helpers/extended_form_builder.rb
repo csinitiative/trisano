@@ -247,7 +247,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if core_field
       core_field
     else
-      OpenStruct.new(:key => cp.to_s, :rendered_on_event? => true)
+      CoreField::MissingCoreField.new(cp.to_s, true)
     end
   end
 
