@@ -149,6 +149,7 @@ class StagedMessagesController < ApplicationController
     @raw_hl7_message = request.body.read if request.format == :hl7
     if @raw_hl7_message and @raw_hl7_message.hl7_batch?
       redirect_to message_batches_path
+      response.body = "<html><body>Posted message is an HL7 batch message (beginning with an FHS segment).  Redirecting to <a href=\"#{CGI.escapeHTML message_batches_url}\">#{CGI.escapeHTML message_batches_path}</a></body></html>"
       logger.info 'HL7 batch message (beginning with FHS) ' +
         "redirected to #{message_batches_path}"
 
