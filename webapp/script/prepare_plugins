@@ -6,5 +6,8 @@ def default_deployment
   File.join(File.dirname(__FILE__), '..', '..', 'deployments', 'development')
 end
 
-Trisano::Deployment.use_deployment(ARGV.shift || default_deployment)
+# if a user accidentally includes the descriptor.yml file in the descriptor path strip it off
+deployment = (ARGV.shift || default_deployment).gsub(/descriptor\.yml$/, '')
+
+Trisano::Deployment.use_deployment(deployment)
 
