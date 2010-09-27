@@ -61,12 +61,14 @@ class CoreField < ActiveRecord::Base
     def load!(hashes)
       transaction do
         hashes.each do |attrs|
+          attrs.stringify_keys!
           unless self.find_by_key(attrs['key'])
             if (code_name = attrs.delete('code_name'))
               attrs['code_name'] = CodeName.find_by_code_name(code_name)
             end
             if section_key = attrs.delete('section_key')
               section = CoreField.find_by_key(section_key)
+              p section_key unless section
               attrs['tree_id'] = section.tree_id
             end
             if attrs['field_type'] == 'section'
