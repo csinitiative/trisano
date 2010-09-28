@@ -33,6 +33,7 @@
     = javascript_include_tag 'jquery-1.4.2.min', 'jquery-ui-1.8.4.custom.min'
     %script
       var $j = jQuery.noConflict();
+      
     = javascript_include_tag 'trisano_i18n'
     = translations_js
     = javascript_include_tag 'application'
@@ -44,8 +45,7 @@
     = javascript_include_tag 'element-beta-min'
     = javascript_include_tag 'tabview-min'
     = javascript_include_tag 'patch_inplaceeditor_1-8-1'
-    = javascript_include_tag 'trisano_ajax'
-    = javascript_include_tag 'trisano_lazy_load'
+    = javascript_include_tag 'trisano_ajax', 'trisano_lazy_load'
     - javascript_include_renderers.each do |js|
       = javascript_include_tag js[:path]
     = embedded_javascripts

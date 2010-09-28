@@ -7,10 +7,11 @@ lazyLoader = {
     });
   },
 
-  afterLoad: function(id, url) {
-    if ( $j("#"+id).html() == '' ) {
-      $j("#"+id).html('<image src="/images/redbox_spinner.gif" />');
+  afterLoad: function(id) {
+    var element = $j("#" + id);
+    if (element.html().match(/^\s+$/)) {
+      element.html('<image src="/images/redbox_spinner.gif" />');
     }
-    this.lazyQueue[id] = url;
+    this.lazyQueue[id] = element.attr('data-url');
   }
 }
