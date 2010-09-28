@@ -15,9 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-# TrisanoAuth
-require 'trisano_auth/models/user'
-require 'trisano_auth/controllers/application_controller'
-require 'trisano_auth/helpers/layout_helper'
-require 'trisano_auth/helpers/users_helper'
+module TrisanoAuth
+  module Helpers
+    module UsersHelper
+      reloadable!
+      extend_helper :users_helper do
+        alias_method_chain :user_menu_items, :auth
+      end
 
+      def user_menu_items_with_auth(user)
+        returning user_menu_items_without_auth(user) do |items|
+          items << " | "
+          items << (link_to t('trisano_auth.reset_password'), new_password_reset_path(:user_id => user.id))
+        end
+      end
+
+    end
+  end
+end

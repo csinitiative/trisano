@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module UsersHelper
+  extensible_helper
 
   def add_role_link(name)
     link_to_function name do |page|
@@ -60,6 +61,13 @@ module UsersHelper
   def user_sort_by_select_tag
     options = [[t("uid"), "uid"], [t("status"), "status"], [t('user_name'), 'user_name']]
     select_tag :sort_by, options_for_select(options, params[:sort_by] || 'uid')
+  end
+
+  def user_menu_items(user)
+    items = link_to(t('edit'), edit_user_path(user))
+    items << " | "
+    items << (link_to t('show'), user)
+    return items
   end
 
 end

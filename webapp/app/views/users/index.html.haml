@@ -64,6 +64,4 @@
             =h(t("user_statuses.#{user.status.downcase}"))
         %td
           .tools{:style => "position: absolute; right: 15px;"}
-            = link_to t('edit'), edit_user_path(user)
-            |
-            = link_to t('show'), user
+            = user_menu_items(user)
