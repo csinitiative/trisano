@@ -61,7 +61,8 @@ module TrisanoAuth
         unless config_option(:auth_src_env) || config_option(:auth_src_header)
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'
-            c.logged_in_timeout = 10.minutes
+            c.logged_in_timeout = config_options[:trisano_auth][:login_timeout].minutes
+            password_reset_token_valid_for = config_options[:trisano_auth][:password_reset_timeout].days
             c.perishable_token_valid_for 1.day
           end
           base.class_eval do

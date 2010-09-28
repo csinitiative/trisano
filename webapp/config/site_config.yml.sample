@@ -14,6 +14,12 @@ base:
   # API 2 & 3 are supported, anything other than 3 defaults to 2
   google_api_version: 3
 
+  #timeouts are specified in minutes. Only applicable if you are using the trisano_auth plugin
+  trisano_auth:
+    login_timeout: 30
+    #Default is 3 Days
+    password_reset_timeout: 4320
+
   # Customize the way telephone numbers are displayed and validated
   telephone:
     phone_number: "^(\d{3})-?(\d{4})$"
