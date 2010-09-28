@@ -271,4 +271,3 @@ Then /^I should see the mortality data in the right place$/ do
     end
   end
 end
-

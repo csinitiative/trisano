@@ -19,6 +19,7 @@ class StagedMessagesController < ApplicationController
 
   before_filter :can_manage, :only => [:index, :show, :discard, :event_search, :event]
   before_filter :can_write, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :check_contents, :only => :create
 
   def index
     @selected = StagedMessage.states.has_value?(params[:message_state]) ? @selected = params[:message_state] : @selected = StagedMessage.states[:pending]
@@ -39,7 +40,7 @@ class StagedMessagesController < ApplicationController
 
   def create
     @staged_message = StagedMessage.new(params[:staged_message])
-    @staged_message.hl7_message ||= request.body.read if request.format == :hl7
+    @staged_message.hl7_message ||= @raw_hl7_message
 
     respond_to do |format|
       if @staged_message.save
@@ -141,6 +142,20 @@ class StagedMessagesController < ApplicationController
   def can_write
     unless User.current_user.is_entitled_to?(:write_staged_message)
       render :partial => 'permission_denied', :layout => true, :locals => { :reason =>  t("no_create_or_modify_staged_message_privs")}, :status => :forbidden and return
+    end
+  end
+
+  def check_contents
+    @raw_hl7_message = request.body.read if request.format == :hl7
+    if @raw_hl7_message and @raw_hl7_message.hl7_batch?
+      redirect_to message_batches_path
+      response.body = "<html><body>Posted message is an HL7 batch message (beginning with an FHS segment).  Redirecting to <a href=\"#{CGI.escapeHTML message_batches_url}\">#{CGI.escapeHTML message_batches_path}</a></body></html>"
+      logger.info 'HL7 batch message (beginning with FHS) ' +
+        "redirected to #{message_batches_path}"
+
+      # Terminate the remainder of the callback chain, including the
+      # StagedMessagesController#create method itself.
+      return false
     end
   end
 

@@ -52,10 +52,13 @@ include TrisanoPlacesHelper
 include TrisanoContactsHelper
 include Trisano::HTML::Matchers
 
+require 'factory_girl'
+
 # Load up factories
 Dir[File.join(File.dirname(__FILE__), '..', '..', '{spec,vendor/trisano/*/spec}', 'factories', '*.rb')].each do |f|
   require File.expand_path(f)
 end
+
 require 'factory_girl/step_definitions'
 
 # explicitly load support files
@@ -68,7 +71,7 @@ Cucumber::Rails::World.class_eval do
   @@extension_path_names = []
 end
 
-# If you set this to false, any error raised from within your app will bubble 
+# If you set this to false, any error raised from within your app will bubble
 # up to your step definition and out to cucumber unless you catch it somewhere
 # on the way. You can make Rails rescue errors and render error pages on a
 # per-scenario basis by tagging a scenario or feature with the @allow-rescue tag.
@@ -80,15 +83,15 @@ end
 ActionController::Base.allow_rescue = true
 
 # If you set this to true, each scenario will run in a database transaction.
-# You can still turn off transactions on a per-scenario basis, simply tagging 
+# You can still turn off transactions on a per-scenario basis, simply tagging
 # a feature or scenario with the @no-txn tag. If you are using Capybara,
 # tagging with @culerity or @javascript will also turn transactions off.
 #
 # If you set this to false, transactions will be off for all scenarios,
 # regardless of whether you use @no-txn or not.
 #
-# Beware that turning transactions off will leave data in your database 
-# after each scenario, which can lead to hard-to-debug failures in 
+# Beware that turning transactions off will leave data in your database
+# after each scenario, which can lead to hard-to-debug failures in
 # subsequent scenarios. If you do this, we recommend you create a Before
 # block that will explicitly put your database in a known state.
 #Cucumber::Rails::World.use_transactional_fixtures = true
@@ -97,4 +100,3 @@ ActionController::Base.allow_rescue = true
 # http://github.com/bmabey/database_cleaner for more info.
 #require 'database_cleaner'
 #DatabaseCleaner.strategy = :truncation
-

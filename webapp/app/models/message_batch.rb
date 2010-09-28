@@ -7,11 +7,11 @@ class MessageBatch < ActiveRecord::Base
     # retrieve each nested, raw HL7 message
     begin
       HL7::Message.parse_batch(hl7_message) do |message|
-        staged_message = staged_messages.build :hl7_message => message
-        staged_messages.delete(staged_message) unless staged_message.valid?
+        staged_message = StagedMessage.new :hl7_message => message
+        staged_messages << staged_message if staged_message.valid?
       end
-    rescue
-      errors.add :hl7_message, 'parse error'
+    rescue => errmsg
+      record_error errmsg
     end if new_record?
 
     # If we receive an empty batch or a batch with all invalid
@@ -26,10 +26,21 @@ class MessageBatch < ActiveRecord::Base
     # children when it validates this batch.  Here we reject any batch
     # with no remaining valid messages, i.e. any batch with all invalid
     # messages.
-    errors.add(:hl7_message, 'bad data') if staged_messages.empty?
+    record_error('invalid batch message') if staged_messages.empty?
   end
 
   def message_removed(staged_message)
-    destroy if staged_messages.empty? and not new_record?
+    destroy if staged_messages.empty?
+  end
+
+  # There is no batch UI at the moment, and no provision for returning
+  # a descriptive error to the user when batch posts fail.  We at least
+  # log errors here.
+  def record_error(*args)
+    errmsg = args && args.first
+    attribute = (args && args.second) || :hl7_message
+
+    logger.error errmsg
+    errors.add attribute, errmsg
   end
 end

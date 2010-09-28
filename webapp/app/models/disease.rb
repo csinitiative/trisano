@@ -98,7 +98,6 @@ class Disease < ActiveRecord::Base
         diseases << event.disease_event.disease
         diseases = diseases.sort_by {|disease| disease.disease_name }
       end
-      
       diseases
     end
 

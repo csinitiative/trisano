@@ -26,15 +26,15 @@ describe Message do
   end
 
   it 'should respond to :message_header' do
-    @hl7.respond_to?(:message_header).should be_true
+    @hl7.should respond_to(:message_header)
   end
 
   it 'should respond to :patient_id' do
-    @hl7.respond_to?(:patient_id).should be_true
+    @hl7.should respond_to(:patient_id)
   end
 
   it 'should respond to :observation_requests' do
-    @hl7.respond_to?(:observation_requests).should be_true
+    @hl7.should respond_to(:observation_requests)
   end
 
   it 'should return a message_header' do
@@ -55,10 +55,6 @@ describe Message do
   end
 
   describe 'message header' do
-    it 'should respond_to :sending_facility' do
-      @hl7.message_header.respond_to?(:sending_facility).should be_true
-    end
-
     it 'should return the sending facility (without noise)' do
       @hl7.message_header.sending_facility.should == 'ARUP LABORATORIES'
     end
@@ -66,10 +62,6 @@ describe Message do
 
   describe 'patient identifier' do
     # PID|1||17744418^^^^MR||LIN^GENYAO^^^^^L||19840810|M||U^Unknown^HL70005|215 UNIVERSITY VLG^^SALT LAKE CITY^UT^84108^^M||^^PH^^^801^5854967|||||||||U^Unknown^HL70189\rORC||||||||||||^ROSENKOETTER^YUKI^K|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B
-
-    it 'should respond_to :patient_name' do
-      @hl7.patient_id.respond_to?(:patient_name).should be_true
-    end
 
     it 'should return the patient name (formatted)' do
       @hl7.patient_id.patient_name.should == 'Lin, Genyao'
@@ -183,36 +175,16 @@ describe Message do
   end
 
   describe 'observation request' do
-    it 'should respond_to :test_performed' do
-      @hl7.observation_requests.first.respond_to?(:test_performed).should be_true
-    end
-
     it 'should return the test performed (without noise)' do
       @hl7.observation_requests.first.test_performed.should == 'Hepatitis Be Antigen'
-    end
-
-    it 'should respond_to :collection_date' do
-      @hl7.observation_requests.first.respond_to?(:collection_date).should be_true
     end
 
     it 'should return the collection date' do
       @hl7.observation_requests.first.collection_date.should == '2009-03-19'
     end
 
-    it 'should respond_to :specimen_source' do
-      @hl7.observation_requests.first.respond_to?(:specimen_source).should be_true
-    end
-
     it 'should return the specimen source' do
       @hl7.observation_requests.first.specimen_source.should == 'BLOOD'
-    end
-
-    it 'should respond_to :specimen' do
-      @hl7.observation_requests.first.respond_to?(:specimen).should be_true
-    end
-
-    it 'should respond_to :tests' do
-      @hl7.observation_requests.first.respond_to?(:tests).should be_true
     end
 
     it 'should return a list of test_results' do
@@ -226,20 +198,15 @@ describe Message do
       end
 
       it 'should be an SpmWrapper object' do
-        @arup_3.specimen.is_a?(StagedMessages::SpmWrapper).should be_true
+        @arup_3.specimen.should be_a(StagedMessages::SpmWrapper)
       end
 
       it 'should have an :spm_segment method returning an SPM object' do
-        @arup_3.specimen.respond_to?(:spm_segment).should be_true
-        @arup_3.specimen.spm_segment.is_a?(HL7::Message::Segment::SPM).should be_true
+        @arup_3.specimen.spm_segment.should be_an(HL7::Message::Segment::SPM)
       end
 
       it 'should return \'Whole Blood\' as the specimen source' do
         @arup_3.specimen_source.should == 'Whole Blood'
-      end
-
-      it 'should respond_to :tests' do
-        @arup_3.specimen.respond_to?(:tests).should be_true
       end
     end
 
@@ -249,44 +216,23 @@ describe Message do
       end
 
       it 'should be a list' do
-        @tests.respond_to?(:each).should be_true
+        @tests.should respond_to(:each)
       end
 
       it 'should not be an empty list' do
         @tests.should_not be_empty
       end
 
-      it 'should respond to :observation_date' do
-        @tests[0].respond_to?(:observation_date).should be_true
-      end
-
       it 'should return observation_date' do
         @tests[0].observation_date.should == '2009-03-21'
-      end
-
-
-      it 'should respond to :result' do
-        @tests[0].respond_to?(:result).should be_true
       end
 
       it 'should return result' do
         @tests[0].result.should == 'Positive'
       end
 
-      it 'should respond to :reference_range' do
-        @tests[0].respond_to?(:reference_range).should be_true
-      end
-
       it 'should return a reference range' do
         @tests[0].reference_range.should == 'Negative'
-      end
-
-      it 'should respond to :loinc_code' do
-        @tests[0].respond_to?(:loinc_code).should be_true
-      end
-
-      it 'should respond to :test_type' do
-        @tests[0].respond_to?(:test_type).should be_true
       end
 
       it 'should return the test type (without the noise)' do
@@ -304,10 +250,6 @@ describe Message do
           HL7::Message.parse(HL7MESSAGES[:realm_animal_rabies]).observation_requests.first.all_tests.first
       end
 
-      it 'should respond_to :loinc_scale' do
-        @realm_min_test.respond_to?(:loinc_scale).should be_true
-      end
-
       it 'should take :loinc_scale from CWE.2 if present' do
         @realm_cj_test.loinc_scale.should == 'Nom'
       end
@@ -318,10 +260,6 @@ describe Message do
 
       it 'should return a nil :loinc_scale if not present in CWE.2 or OBX-2' do
         @realm_ar_test.loinc_scale.should be_nil
-      end
-
-      it 'should respond_to :loinc_common_test_type' do
-        @realm_cj_test.respond_to?(:loinc_common_test_type).should be_true
       end
 
       it 'should take :loinc_common_test_type from CWE.2 if present' do
@@ -341,5 +279,53 @@ describe Message do
         @realm_min_test.result.should == '50'
       end
     end
+  end
+
+  describe 'batch processing' do
+    it 'should have a class method HL7::Message.parse_batch' do
+      HL7::Message.should respond_to(:parse_batch)
+    end
+
+    it 'should raise an exception when parsing an empty batch' do
+      # :empty_batch message contains a valid batch envelope with no
+      # contents
+      lambda do
+        HL7::Message.parse_batch HL7MESSAGES[:empty_batch]
+      end.should raise_exception(HL7::ParseError, 'empty batch message')
+    end
+
+    it 'should raise an exception when parsing a single message as a batch' do
+      lambda do
+        HL7::Message.parse_batch HL7MESSAGES[:realm_minimal_message]
+      end.should raise_exception(HL7::ParseError, 'badly formed batch message')
+    end
+
+    it 'should yield multiple messages from a valid batch' do
+      count = 0
+      HL7::Message.parse_batch(HL7MESSAGES[:realm_batch]) do |m|
+        count += 1
+      end
+      count.should == 2
+    end
+  end
+end
+
+describe 'String extension' do
+  before :all do
+    @batch_message = HL7MESSAGES[:realm_batch]
+    @plain_message = HL7MESSAGES[:realm_minimal_message]
+  end
+
+  it 'should respond_to :hl7_batch?' do
+    @batch_message.should respond_to(:hl7_batch?)
+    @plain_message.should respond_to(:hl7_batch?)
+  end
+
+  it 'should return true when passed a batch message' do
+    @batch_message.should be_an_hl7_batch
+  end
+
+  it 'should return false when passed a plain message' do
+    @plain_message.should_not be_an_hl7_batch
   end
 end

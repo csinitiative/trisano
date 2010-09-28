@@ -8,6 +8,7 @@ require 'spec/rails'
 require 'spec/custom_matchers'
 require 'nokogiri'
 require 'validates_timeliness/matcher'
+require 'factory_girl'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.

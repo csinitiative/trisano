@@ -45,6 +45,9 @@ def path_to(page_name)
   when /the show CMR page/i
     cmr_path @event
 
+  when /view the CMR/i
+    cmr_path @event
+
   when /the CMR show page/i
     cmr_path @event
 
