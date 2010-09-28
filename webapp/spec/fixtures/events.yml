@@ -4,7 +4,7 @@ marks_cmr:
   outbreak_associated_id: !str 1403
   record_number: !str 2008500001
   outbreak_name: ""
-  first_reported_PH_date: 
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
   event_onset_date: !str 2008-03-11
   review_completed_by_state_date: 
   imported_from_id: !str 2102
@@ -25,21 +25,25 @@ under_investigation_cmr:
   id: 2
   workflow_state: under_investigation
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
 
 no_disease_cmr:
   id: 3
   workflow_state: new
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
 
 cdc_answers_cmr:
   id: 4
   workflow_state: under_investigation
   record_number: "456789"
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
 
 has_anthrax_cmr:
   id: 5
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
 
 has_event_queue:
   id: 6
@@ -47,8 +51,10 @@ has_event_queue:
   event_queue_id: 1
   event_onset_date: 2008-03-11
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
 
 task_event:
   id: 1001
   type: MorbidityEvent
+  first_reported_PH_date: <%= Date.yesterday.to_s :db %>
   

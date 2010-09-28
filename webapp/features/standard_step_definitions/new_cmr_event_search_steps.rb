@@ -28,6 +28,7 @@ end
 Given /^the following morbidity events:$/ do |morbs|
   morbs.hashes.each do |morb|
     hash = {
+      "first_reported_PH_date" => Date.yesterday.to_s(:db),
       "interested_party_attributes" => {
         "person_entity_attributes" => {
           "person_attributes" => morb

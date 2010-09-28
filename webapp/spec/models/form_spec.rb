@@ -1141,6 +1141,7 @@ describe Form do
       User.stubs(:current_user).returns(@user)
 
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {

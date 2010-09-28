@@ -21,6 +21,7 @@ require 'faker'
 Factory.define :morbidity_event do |e|
   e.association :interested_party
   e.jurisdiction { Factory.build(:jurisdiction) }
+  e.first_reported_PH_date Date.today - 1.day
 end
 
 Factory.define :contact_event do |e|

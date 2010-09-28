@@ -72,7 +72,7 @@ describe MorbidityEvent do
 
         before(:each) do
           mock_user
-          @event = MorbidityEvent.new
+          @event = MorbidityEvent.new( :first_reported_PH_date => Date.yesterday.to_s(:db) )
         end
 
         it "Should not allow the primary jurisdiction to be deleted via a nested attribute" do
@@ -212,7 +212,7 @@ describe MorbidityEvent do
     before(:each) do
       @user = users(:default_user)
       User.stubs(:current_user).returns(@user)
-      @event = MorbidityEvent.new
+      @event = MorbidityEvent.new(:first_reported_PH_date => Date.yesterday.to_s(:db))
       @event.save!
     end
 
@@ -355,12 +355,12 @@ describe MorbidityEvent do
   describe "Under investigation" do
 
     it "should not be under investigation if it is new" do
-      event = MorbidityEvent.create
+      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       event.should_not be_open_for_investigation
     end
 
     it "should be under investigation if set to under investigation" do
-      event = MorbidityEvent.create
+      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       event.workflow_state = 'under_investigation'
       event.save!
       event = Event.find(event.id)
@@ -368,7 +368,7 @@ describe MorbidityEvent do
     end
 
     it "should be under investigation if reopened by manager" do
-      event = MorbidityEvent.create
+      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       event.workflow_state = 'reopened_by_manager'
       event.save!
       event = Event.find(event.id)
@@ -376,7 +376,7 @@ describe MorbidityEvent do
     end
 
     it "should be under investigation if investigation is complete" do
-      event = MorbidityEvent.create
+      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       event.workflow_state = 'investigation_complete'
       event.save!
       event = Event.find(event.id)
@@ -399,7 +399,7 @@ describe MorbidityEvent do
 
   describe "Saving an event" do
     it "should generate an event onset date set to today" do
-      event = MorbidityEvent.new
+      event = MorbidityEvent.new(:first_reported_PH_date => Date.today.to_s(:db))
       event.save.should be_true
       event.event_onset_date.should == Date.today
     end
@@ -407,7 +407,7 @@ describe MorbidityEvent do
 
   describe "event transitions (events)" do
     it "should show the proper states that can be transitioned to when the current state is re-opened by manager" do
-      @event = MorbidityEvent.create
+      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       @event.workflow_state = 'reopened_by_manager'
       @event.save!
       @event = Event.find @event.id
@@ -417,7 +417,7 @@ describe MorbidityEvent do
 
   describe "state description" do
     before(:each) do
-      @event = MorbidityEvent.create
+      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       @event.workflow_state = 'accepted_by_lhd'
       @event.save!
       @event = Event.find(@event.id)
@@ -439,7 +439,7 @@ describe MorbidityEvent do
     end
 
     before(:each) do
-      @event = MorbidityEvent.create
+      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
       @permissive_jurisdiction = Factory.build(:jurisdiction)
       @permissive_jurisdiction.stubs(:allows_current_user_to?).returns(true)
       User.stubs(:current_user).returns(nil) #just in case some old stubbin' is around
@@ -546,13 +546,14 @@ describe MorbidityEvent do
   describe 'with age info is already set' do
     before :each do
       @event_hash = {
+        "first_reported_PH_date" => Date.today,
         "age_at_onset" => 14,
         "age_type_id" => 2300,
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
               "last_name"=>"Biel",
-              "birth_date" => Date.today.years_ago(14)
+              "birth_date" => Date.today.years_ago(14)-5.days
             }
           }
         }
@@ -572,11 +573,12 @@ describe MorbidityEvent do
   describe 'just created' do
     before :each do
       @event_hash = {
+        "first_reported_PH_date" => Date.today,
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
               "last_name"=>"Biel",
-              "birth_date" => Date.today.years_ago(14)
+              "birth_date" => Date.today.years_ago(14)-5.days
             }
           }
         }
@@ -670,6 +672,7 @@ describe MorbidityEvent do
     before :each do
       mock_user
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -734,23 +737,23 @@ describe MorbidityEvent do
         anthrax = diseases(:anthrax)
 
         # NON_IBIS: Not sent to IBIS, no disease
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
+        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
             "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "event_name" => "Ibis1" } )
         # NEW: Not sent to IBIS, has disease
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
+        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
             "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "event_name" => "Ibis2" } )
         # UPDATED: Sent to IBIS, has disease
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
+        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
             "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "sent_to_ibis" => true,
             "ibis_updated_at" => Date.today,
             "event_name" => "Ibis3" } )
         # DELETED: Sent to IBIS, has disease, deleted
-        MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
+        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
             "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
             "disease_event_attributes" => { "disease_id" => anthrax.id },
             "deleted_at" => Date.today,
@@ -802,6 +805,7 @@ describe MorbidityEvent do
       MorbidityEvent.stubs(:get_allowed_queues).returns([[1], ["Speedy-BearRiver"]])
 
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1006,7 +1010,7 @@ describe MorbidityEvent do
     before(:each) do
       @question = Question.create(:data_type => 'radio_button', :question_text => 'Contact?', :short_name => "contact" )
       @question_element = QuestionElement.create(:question => @question)
-      @event = MorbidityEvent.create( { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } },
+      @event = MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } },
           "disease_event_attributes"        => { "disease_id" => diseases(:hep_a).id },
           "event_name"     => "CdcExportHepA",
           "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
@@ -1041,6 +1045,7 @@ describe MorbidityEvent do
   describe 'updating longitudinal data' do
     before :each do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "address_attributes" => { "street_name" => "Example Lane" },
         "interested_party_attributes" => {
           "person_entity_attributes" => {
@@ -1075,6 +1080,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1158,6 +1164,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1167,10 +1174,7 @@ describe MorbidityEvent do
         },
         "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
       }
-
-
-
-
+      
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
@@ -1219,6 +1223,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1347,6 +1352,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1416,6 +1422,7 @@ describe MorbidityEvent do
       @user = users(:default_user)
       User.stubs(:current_user).returns(@user)
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1461,6 +1468,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @event_hash = {
+        "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -1552,6 +1560,7 @@ describe Event, 'cloning an event' do
     User.stubs(:current_user).returns(users(:default_user))
 
     @event_hash = {
+      "first_reported_PH_date" => Date.yesterday.to_s(:db),
       "interested_party_attributes" => {
         "person_entity_attributes" => {
           "person_attributes" => {
@@ -1569,6 +1578,12 @@ describe Event, 'cloning an event' do
       @new_event = @org_event.clone_event
     end
 
+    it "the new event should be persistable without a first reported date" do
+      @new_event.first_reported_PH_date.should be_nil
+      @new_event.save.should be_true
+      @new_event.errors.empty?.should be_true
+    end
+    
     it "should copy over demographic information only" do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
       @new_event.primary_jurisdiction.name.should == "Unassigned"
@@ -1609,6 +1624,15 @@ describe Event, 'cloning an event' do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
       @new_event.primary_jurisdiction.name.should == "Unassigned"
       @new_event.should be_new
+    end
+
+    it "the new event should be persistable without a first reported date" do
+      @org_event = MorbidityEvent.create(@event_hash)
+      @new_event = @org_event.clone_event
+
+      @new_event.first_reported_PH_date.should be_nil
+      @new_event.save.should be_true
+      @new_event.errors.empty?.should be_true
     end
 
     it "should copy over disease information, but not the actual disease" do
@@ -1939,7 +1963,7 @@ describe Event, "mmwr date" do
     the_past = Date.today - 21
     @expected_mmwr = Mmwr.new(the_past)
     @event = Factory.create(:morbidity_event)
-    @event.update_attributes!(:created_at => the_past)
+    @event.update_attributes!(:created_at => the_past, :first_reported_PH_date => the_past - 1.day)
   end
 
   it "is based on the date the event was created, if other relevant dates are blank" do

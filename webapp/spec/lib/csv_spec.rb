@@ -29,6 +29,7 @@ describe Export::Csv do
 
   before(:each) do
     @event_hash = {
+      :first_reported_PH_date => Date.yesterday.to_s(:db),
       :interested_party_attributes => {
         :person_entity_attributes => {
           :person_attributes => {
@@ -65,8 +66,8 @@ describe Export::Csv do
     it "should iterate over each event" do
       second_person = "White"
       deleted_person = 'Gone'
-      eh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
-      dh = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
+      eh = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
+      dh = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
   
       e1 = MorbidityEvent.create(@event_hash)
       e2 = MorbidityEvent.create( eh )

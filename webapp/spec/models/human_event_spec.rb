@@ -492,7 +492,7 @@ describe "When added to an event using an existing person entity" do
     @user = Factory.create(:user)
     User.stubs(:current_user).returns(@user)
     @person_entity = Factory.create(:person_entity)
-    @person_event_hash = { :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
+    @person_event_hash = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
   end
 
   it "should receive the person entity's canonical address if one exists" do

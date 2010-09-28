@@ -25,6 +25,7 @@ describe PlaceEvent do
   describe "Initializing a new place event from an existing morbidity event" do
 
     patient_attrs = {
+      "first_reported_PH_date" => Date.yesterday.to_s(:db),
       "interested_party_attributes" => {
         "person_entity_attributes" => {
           "person_attributes" => {

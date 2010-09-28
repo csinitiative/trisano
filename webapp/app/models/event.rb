@@ -177,6 +177,18 @@ class Event < ActiveRecord::Base
   # controller, if it is being used
   attr_accessor :validate_against_bday
 
+  def suppress_validation(validation)
+    suppressed_validations << validation
+  end
+
+  def suppress_validation?(validation)
+    suppressed_validations.include?(validation)
+  end
+
+  def suppressed_validations
+    @suppressed_validations ||= []
+  end
+  
   class << self
 
     def active_ibis_records(start_date, end_date)
@@ -545,6 +557,7 @@ class Event < ActiveRecord::Base
   end
 
   def copy_event(new_event, event_components)
+    new_event.suppress_validation(:first_reported_PH_date)
     new_event.event_name = "#{I18n.translate('copy_of', :locale => I18n.default_locale)} #{self.event_name}" unless self.event_name.blank?
     new_event.build_jurisdiction
     new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity

@@ -26,6 +26,7 @@ def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
   # notes need a user, so set to default if current user is nil
   User.current_user ||= User.find_by_uid('utah')
   returning Kernel.const_get(event_type.capitalize + "Event").new do |event|
+    event.first_reported_PH_date = Date.yesterday.to_s(:db) if event.respond_to?(:first_reported_PH_date)
     event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
     event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease)) if disease
     event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types(jurisdiction || "Unassigned", 'J', true).first.entity_id)

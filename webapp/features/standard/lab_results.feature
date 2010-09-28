@@ -99,6 +99,7 @@ Feature: Managing Lab Results
     And I navigate to the new event page
     And I click on the lab tab
     And I enter a last name of Jones
+    And I fill in "Date first reported to public health" with "September 14, 2010"
     And I enter a lab name of 'Costello Labs'
     And I select a test type of 'Blood Test'
     And I select an organism of 'Cooties'

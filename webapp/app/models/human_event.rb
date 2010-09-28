@@ -293,6 +293,7 @@ class HumanEvent < Event
   end
 
   def copy_from_person(person)
+    self.suppress_validation(:first_reported_PH_date)
     self.build_jurisdiction
     self.build_interested_party
     self.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity

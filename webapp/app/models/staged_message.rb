@@ -172,7 +172,7 @@ class StagedMessage < ActiveRecord::Base
   def new_event_from(entity_id=nil)
     return nil if self.patient.patient_last_name.blank?
 
-    event = MorbidityEvent.new(:workflow_state => 'new')
+    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at)
 
     if entity_id
       person = PersonEntity.find(entity_id.to_i)

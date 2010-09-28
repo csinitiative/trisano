@@ -176,7 +176,7 @@ describe StagedMessage do
     end
 
     it 'should create a lab result and link to it' do
-      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
       m.labs[0].lab_results.size.should == 1
       @staged_message.lab_results.size.should == 1
@@ -184,13 +184,13 @@ describe StagedMessage do
     end
 
     it "should mark the staged message 'ASSIGNED'" do
-      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
       @staged_message.state.should == StagedMessage.states[:assigned]
     end
 
     it "should return the assigned event." do
-      m = MorbidityEvent.new( "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
+      m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
       m.labs.size.should == 1
       @staged_message.assigned_event.should eql(m)
@@ -202,7 +202,7 @@ describe StagedMessage do
 
     describe "with a valid, complete record" do
       before :each do
-        @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+        @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
         @event = @staged_message.new_event_from
       end
 
@@ -213,6 +213,8 @@ describe StagedMessage do
       end
 
       it "should populate the event" do
+        @event.first_reported_PH_date.should == @staged_message.created_at
+
         p = @event.interested_party.person_entity.person
         p.last_name.should == @staged_message.patient.patient_last_name
         p.first_name.should == @staged_message.patient.patient_first_name

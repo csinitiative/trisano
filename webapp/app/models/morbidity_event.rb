@@ -26,6 +26,12 @@ class MorbidityEvent < HumanEvent
   before_save :initialize_children
   before_save :check_export_updates
 
+  validates_date :first_reported_PH_date, {
+    :allow_blank => false,
+    :on_or_before =>  lambda { |record| record.created_at },
+    :unless => lambda { |record| record.suppress_validation?(:first_reported_PH_date) }
+  }
+
   workflow do
     # on_entry evaluated at wrong time, so note is attached to meta for :new
     state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
@@ -198,12 +204,12 @@ class MorbidityEvent < HumanEvent
 
   def generate_mmwr
     mmwr = Mmwr.new({
-      :onsetdate => disease.try(:disease_onset_date),
-      :diagnosisdate => disease.try(:date_diagnosed),
-      :labresultdate => definitive_lab_collection_date,
-      :firstreportdate => self.first_reported_PH_date,
-      :event_created_date => new_record? ? Date.today : self.created_at.to_date
-    })
+        :onsetdate => disease.try(:disease_onset_date),
+        :diagnosisdate => disease.try(:date_diagnosed),
+        :labresultdate => definitive_lab_collection_date,
+        :firstreportdate => self.first_reported_PH_date,
+        :event_created_date => new_record? ? Date.today : self.created_at.to_date
+      })
 
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
