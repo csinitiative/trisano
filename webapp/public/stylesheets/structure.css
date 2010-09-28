@@ -153,3 +153,13 @@ legend {
 .foottext {
   width: 460px;
   float: left; }
+
+.core_fields li.cf-section {
+  border-color: #063; }
+.core_fields li.not-rendered {
+  background-color: #D4CBB4; }
+.core_fields li {
+  border: solid;
+  border-color: #9c9;
+  border-width: 1px 0px 0px 4px;
+  padding-left: 4px; }

@@ -68,7 +68,7 @@ class CoreField < ActiveRecord::Base
             end
             if section_key = attrs.delete('section_key')
               section = CoreField.find_by_key(section_key)
-              p section_key unless section
+              logger.fatal "Couldn't find section: '#{section_key}'"
               attrs['tree_id'] = section.tree_id
             end
             if attrs['field_type'] == 'section'

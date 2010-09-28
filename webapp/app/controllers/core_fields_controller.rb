@@ -20,8 +20,7 @@ class CoreFieldsController < ApplicationController
   before_filter :look_up_disease
 
   def index
-    @core_fields = CoreField.find(:all, :order => 'event_type')
-    @core_fields = @core_fields.sort_by(&:name)
+    @core_fields = CoreField.roots
 
     respond_to do |format|
       format.html

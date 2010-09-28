@@ -43,4 +43,11 @@ module CoreFieldsHelper
     end
     link_to t(:edit), url
   end
+
+  def core_field_list_item(core_field, disease=nil, &block)
+    cf_class = "cf-#{core_field.field_type}"
+    rendered_class = core_field.rendered?(disease) ? "" : "not-rendered"
+    options = { :class => "roll #{cf_class} #{rendered_class}".strip }
+    content_tag :li, options, &block
+  end
 end
