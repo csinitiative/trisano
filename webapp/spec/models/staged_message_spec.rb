@@ -109,12 +109,17 @@ describe StagedMessage do
       # to HL7 and parsing back into an object removes this problem.
       @good_message_ack = HL7::Message.parse @good_message.ack.to_hl7
       @bad_message_ack  = HL7::Message.parse @bad_message.ack.to_hl7
+
+      @good_message_ack.should_not be_nil
+      @bad_message_ack.should_not be_nil
+    end
+
+    it 'should have an MSH segment' do
+      @good_message_ack[:MSH].should_not be_nil
+      @bad_message_ack[:MSH].should_not be_nil
     end
 
     it 'should have an MSA segment' do
-      @good_message_ack.should_not be_nil
-      @bad_message_ack.should_not be_nil
-
       @good_message_ack[:MSA].should_not be_nil
       @bad_message_ack[:MSA].should_not be_nil
     end
@@ -125,6 +130,16 @@ describe StagedMessage do
 
     it 'should return code CR on failure' do
       @bad_message_ack[:MSA].ack_code.should == 'CR'
+    end
+
+    it 'should return the configured recv_facility' do
+      @good_message_ack[:MSH].recv_facility.should ==
+        StagedMessage.recv_facility
+    end
+
+    it 'should return the configured processing_id' do
+      @good_message_ack[:MSH].processing_id.should ==
+        StagedMessage.processing_id
     end
   end
 

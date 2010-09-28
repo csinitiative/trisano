@@ -234,6 +234,17 @@ class StagedMessage < ActiveRecord::Base
     end
   end
 
+  class << self
+    def recv_facility
+      @recv_facility ||= hl7_config[:recv_facility] ||
+        "CSI Dept. of TriSano, Bureau of Informatics^2.16.840.9.886571.2.99.8^ISO"
+    end
+
+    def processing_id
+      @processing_id ||= hl7_config[:processing_id] || "P^"
+    end
+  end
+
   private
 
   def set_state
@@ -292,9 +303,6 @@ class StagedMessage < ActiveRecord::Base
       # current time: YYYYMMDDHHMMSS+/-ZZZZ
       msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
 
-      # P^ => production, current processing (needs to be configurable)
-      msh.processing_id = [ 'P', '' ].join(msh.item_delim)
-
       if orig_msh
         msh.sending_app      = orig_msh.sending_app
         msh.sending_facility = orig_msh.sending_facility
@@ -302,6 +310,8 @@ class StagedMessage < ActiveRecord::Base
 
       # Simple sequence number for now, might need to be a UUID
       msh.message_control_id = self.class.next_sequence_number
+      msh.processing_id = self.class.processing_id
+      msh.recv_facility = self.class.recv_facility
 
       # The next two fields are required
       # ================================
@@ -310,10 +320,6 @@ class StagedMessage < ActiveRecord::Base
       trisano_oid = %w{csi-trisano-ce 2.16.840.1.113883.4.434 ISO}
       # trisano_oid = %w{csi-trisano-ee 2.16.840.1.113883.4.435 ISO}
       msh.recv_app = trisano_oid.join(msh.item_delim)
-
-      # Refers to the facility running TriSano; needs to be
-      # configurable.
-      # msh.recv_facility = ???
 
       # country code is optional in an ACK^R01^ACK message
       # msh.country_code = country_code_from_locale
@@ -441,6 +447,10 @@ class StagedMessage < ActiveRecord::Base
 
       return erl unless subcomponent_number
       erl << [ subcomponent_number.to_s ]
+    end
+
+    def hl7_config
+      @hl7_config ||= config_option(:hl7) || {}
     end
   end
 

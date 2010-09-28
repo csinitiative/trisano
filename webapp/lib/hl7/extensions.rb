@@ -58,9 +58,14 @@ module HL7
         raise HL7::ParseError, 'badly formed batch message' unless
           batch.hl7_batch?
 
-        # Rails seems to change our literal \r characters in sample
-        # messages into newlines.  We make a copy here, reverting to
-        # carriage returns.  The input is unchanged.
+        # JRuby seems to change our literal \r characters in sample
+        # messages (from here documents) into newlines.  We make a copy
+        # here, reverting to carriage returns.  The input is unchanged.
+        #
+        # This does not occur when posts are received with CR
+        # characters, only in sample messages from here documents.  The
+        # expensive copy is only incurred when the batch message has a
+        # newline character in it.
         batch = batch.gsub("\n", "\r") if batch.include?("\n")
 
         raise HL7::ParseError, 'empty batch message' unless
@@ -413,7 +418,7 @@ module StagedMessages
       # possible for one of these lookups to fail.  We use inject to
       # allow for the possibility of having 0 or 1 successful matches.
       # Ordinarily this array will return an array of two Fixnums.
-      [ 'AA', 'AK' ].inject([]) do |ids, race_code|
+      %w{AA AK}.inject([]) do |ids, race_code|
         xcode = ExternalCode.find_by_code_name_and_the_code('race', race_code)
         ids << xcode.id if xcode
         ids

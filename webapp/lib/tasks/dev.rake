@@ -151,6 +151,21 @@ namespace :trisano do
       sh "cucumber -p enhanced #{ENV['FEATURE']}"
     end
 
+    desc "Update site_config.yml from sample in github"
+    task :update_site_config => "#{RAILS_ROOT}/config/site_config.yml" do
+    end
+
+    # DEBT: Clean this up, maybe generalize with a regexp
+    file "#{RAILS_ROOT}/config/site_config.yml" =>
+      "#{RAILS_ROOT}/config/site_config.yml.sample" do
+      # For the convenience of developers, who usually just copy the
+      # sample over unchanged.  Any time it updates in git, the
+      # trisano:dev:update_site_config task will update the actual
+      # local site_config.yml.
+      File.copy "#{RAILS_ROOT}/config/site_config.yml.sample",
+        "#{RAILS_ROOT}/config/site_config.yml"
+    end
+
   end
 
 end

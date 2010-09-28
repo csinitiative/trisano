@@ -14,6 +14,13 @@ base:
   # API 2 & 3 are supported, anything other than 3 defaults to 2
   google_api_version: 3
 
+  # Configuration options for HL7 ACK^R01^ACK messages
+  hl7:
+    # Replace with a valid MSH-6 field
+    recv_facility: "CSI Dept. of TriSano, Bureau of Informatics^2.16.840.9.886571.2.99.8^ISO"
+    # Processing ID: By default, production and current processing
+    processing_id: "P^"
+
   #timeouts are specified in minutes. Only applicable if you are using the trisano_auth plugin
   trisano_auth:
     login_timeout: 30
