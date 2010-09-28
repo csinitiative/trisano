@@ -25,7 +25,7 @@
         = hidden_field_tag "core_field[disease_specific_attributes][rendered]", 0, :id => nil
         = check_box_tag "core_field[disease_specific_attributes][rendered]", 1, f.object.rendered?(@disease)
         = label_tag "core_field[disease_specific_attributes][rendered]", @disease ? t(:display_on, :disease => @disease.disease_name) : t(:display_by_default), :style => "display: inline"
-  - unless @disease
+  - unless @disease || f.object.section?
     %tr
       %td{:colspan => 2}
         %span{ :class => "vert" }

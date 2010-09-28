@@ -24,6 +24,9 @@ class CoreField < ActiveRecord::Base
   has_many :core_fields_diseases, :dependent => :destroy
   has_many :diseases, :through => :core_fields_diseases
 
+  validates_presence_of :field_type
+  validates_presence_of :event_type
+
   before_validation :normalize_attributes
 
   class << self
@@ -58,15 +61,17 @@ class CoreField < ActiveRecord::Base
     def load!(hashes)
       transaction do
         hashes.each do |attrs|
+          attrs.stringify_keys!
           unless self.find_by_key(attrs['key'])
             if (code_name = attrs.delete('code_name'))
               attrs['code_name'] = CodeName.find_by_code_name(code_name)
             end
             if section_key = attrs.delete('section_key')
               section = CoreField.find_by_key(section_key)
+              logger.fatal "Couldn't find section: '#{section_key}'"
               attrs['tree_id'] = section.tree_id
             end
-            if attrs['event_type'] == 'section'
+            if attrs['field_type'] == 'section'
               attrs['tree_id'] ||= CoreField.next_tree_id
             end
             core_field = CoreField.create!(attrs)
@@ -87,6 +92,10 @@ class CoreField < ActiveRecord::Base
 
   def core_path
     self.key
+  end
+
+  def section?
+    self.field_type == 'section'
   end
 
   def rendered?(disease)
@@ -167,4 +176,11 @@ class CoreField < ActiveRecord::Base
     not disease_association(disease).nil?
   end
 
+  class MissingCoreField < Struct.new(:key, :rendered_on_event, :help_text)
+    include I18nCoreField
+    alias core_path key
+    def rendered_on_event?(event)
+      self[:rendered_on_event]
+    end
+  end
 end

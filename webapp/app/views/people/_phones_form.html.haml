@@ -15,9 +15,7 @@
 -# You should have received a copy of the GNU Affero General Public License along
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend
-    ="#{t 'telephone'}/#{t 'Email'}"
+-core_section :phone_section, f do
   %div{:id => 'telephones'}
     -core_element(:telephones, f, :horiz) do
       -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|

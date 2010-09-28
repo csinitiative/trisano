@@ -20,10 +20,10 @@ require 'spec_helper'
 describe CsvField, "in the Perinatal Hep B plugin" do
 
   describe "creating CSV-field-to-core-field associations" do
+    include PerinatalHepBSpecHelper
 
     before(:all) do
-      @core_fields = YAML.load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml'))
-      CoreField.load!(@core_fields)
+      given_p_hep_b_core_fields_loaded
       @csv_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
       CsvField.load_csv_fields(@csv_fields)
     end

@@ -1,10 +1,412 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][name_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[address_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][age_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][demographics_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[disease_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[clinicians_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[mortality_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[pregnancy_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_specific_treatments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[diagnostic_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_specific_labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[contacts_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounters_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[encounter_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[other_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[contact_oriented_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[place_exposures_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reporting_agency_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reporter_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[reported_dates_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_attachments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_tasks_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_auditing_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[case_outbreak_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: morbidity_event
+  key: morbidity_event[event_information_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][name_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[address_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][age_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][demographics_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[disease_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[mortality_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[pregnancy_status_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[clinicians_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[diagnostic_facilities_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[contact_oriented_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[other_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[event_attachments_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[event_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[event_tasks_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: place_event
+  key: place_event[address_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: place_event
+  key: place_event[interested_place][place_entity][phone_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: place_event
+  key: place_event[interested_place][place_entity][place_name_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: place_event
+  key: place_event[event_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: encounter_event
+  key: encounter_event[event_notes_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: encounter_event
+  key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: encounter_event
+  key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_event
+  field_type: single_line_text
+  key: morbidity_event[interested_party][person_entity][person][first_name]
+  section_key: morbidity_event[interested_party][person_entity][name_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_event
+  field_type: single_line_text
+  key: morbidity_event[reporter][person_entity][person][first_name]
+  section_key: morbidity_event[reporter_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_sent_to_state]
   code_name: yesno
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -13,6 +415,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][birth_gender_id]
   code_name: gender
+  section_key: morbidity_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -21,6 +424,7 @@
   field_type: drop_down
   key: contact_event[address][state_id]
   code_name: state
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: false
@@ -28,6 +432,7 @@
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][collection_date]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -36,6 +441,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][ethnicity_id]
   code_name: ethnicity
+  section_key: morbidity_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -44,6 +450,7 @@
   field_type: drop_down
   key: contact_event[address][county_id]
   code_name: county
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -51,6 +458,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][area_code]
+  section_key: morbidity_event[reporter_section]
 
 - help_text:
   fb_accessible: true
@@ -59,6 +467,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][primary_language_id]
   code_name: language
+  section_key: morbidity_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -66,6 +475,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][postal_code]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -73,6 +483,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][phone_number]
+  section_key: morbidity_event[reporter_section]
 
 - help_text:
   fb_accessible: true
@@ -81,6 +492,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][pregnant_id]
   code_name: yesno
+  section_key: morbidity_event[pregnancy_status_section]
 
 - help_text:
   fb_accessible: true
@@ -88,6 +500,7 @@
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][person_entity][person][birth_date]
+  section_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: true
@@ -95,6 +508,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[reporter][person_entity][telephones][extension]
+  section_key: morbidity_event[reporter_section]
 
 - help_text:
   fb_accessible: true
@@ -102,6 +516,7 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][risk_factor][pregnancy_due_date]
+  section_key: morbidity_event[pregnancy_status_section]
 
 - help_text:
   fb_accessible: true
@@ -109,6 +524,7 @@
   event_type: contact_event
   field_type: numeric
   key: contact_event[interested_party][person_entity][person][approximate_age_no_birthday]
+  section_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: true
@@ -116,6 +532,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][disease_id]
+  section_key: morbidity_event[disease_section]
 
 - help_text:
   fb_accessible: true
@@ -123,6 +540,7 @@
   event_type: contact_event
   field_type: numeric
   key: contact_event[interested_party][person_entity][person][age_at_onset]
+  section_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: false
@@ -130,6 +548,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][reference_range]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -137,6 +556,7 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[disease_event][disease_onset_date]
+  section_key: morbidity_event[disease_section]
 
 - help_text:
   fb_accessible: false
@@ -144,6 +564,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][reference_range]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -151,6 +572,7 @@
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][person_entity][person][date_of_death]
+  section_key: contact_event[mortality_status_section]
 
 - help_text:
   fb_accessible: true
@@ -158,6 +580,7 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[disease_event][date_diagnosed]
+  section_key: morbidity_event[disease_section]
 
 - help_text:
   fb_accessible: true
@@ -166,6 +589,7 @@
   field_type: drop_down
   key: contact_event[interested_party][person_entity][person][birth_gender_id]
   code_name: gender
+  section_key: contact_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -174,6 +598,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][food_handler_id]
   code_name: yesno
+  section_key: morbidity_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -182,6 +607,7 @@
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][ethnicity_id]
   code_name: ethnicity
+  section_key: contact_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -190,6 +616,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][healthcare_worker_id]
   code_name: yesno
+  section_key: morbidity_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: false
@@ -197,6 +624,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][place_entity][place][name]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -204,6 +632,7 @@
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][collection_date]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -212,6 +641,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][group_living_id]
   code_name: yesno
+  section_key: morbidity_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -220,6 +650,7 @@
   field_type: drop_down
   key: morbidity_event[disease_event][hospitalized_id]
   code_name: yesno
+  section_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
   fb_accessible: true
@@ -228,6 +659,7 @@
   field_type: drop_down
   key: morbidity_event[disease_event][died_id]
   code_name: yesno
+  section_key: morbidity_event[mortality_status_section]
 
 - help_text:
   fb_accessible: true
@@ -236,6 +668,7 @@
   field_type: drop_down
   key: morbidity_event[interested_party][risk_factor][day_care_association_id]
   code_name: yesno
+  section_key: morbidity_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -244,6 +677,7 @@
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][primary_language_id]
   code_name: language
+  section_key: contact_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -251,6 +685,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[contacts]
+  section_key: morbidity_event[contacts_section]
 
 - help_text:
   fb_accessible: true
@@ -258,6 +693,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][risk_factor][occupation]
+  section_key: morbidity_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -266,6 +702,7 @@
   field_type: drop_down
   key: contact_event[imported_from_id]
   code_name: imported
+  section_key: contact_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -273,6 +710,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[places]
+  section_key: morbidity_event[place_exposures_section]
 
 - help_text:
   fb_accessible: true
@@ -280,6 +718,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][risk_factor][risk_factors]
+  section_key: morbidity_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -288,6 +727,7 @@
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][pregnant_id]
   code_name: yesno
+  section_key: contact_event[pregnancy_status_section]
 
 - help_text:
   fb_accessible: true
@@ -295,6 +735,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[treatments]
+  section_key: morbidity_event[treatments_section]
 
 - help_text:
   fb_accessible: true
@@ -302,6 +743,7 @@
   event_type: morbidity_event
   field_type: multi_line_text
   key: morbidity_event[interested_party][risk_factor][risk_factors_notes]
+  section_key: morbidity_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -309,6 +751,7 @@
   event_type: contact_event
   field_type: date
   key: contact_event[interested_party][risk_factor][pregnancy_due_date]
+  section_key: contact_event[pregnancy_status_section]
 
 - help_text:
   fb_accessible: true
@@ -316,6 +759,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[interested_place][place_entity][place][name]
+  section_key: place_event[interested_place][place_entity][place_name_section]
 
 - help_text:
   fb_accessible: true
@@ -323,6 +767,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[results_reported_to_clinician_date]
+  section_key: morbidity_event[reported_dates_section]
 
 - help_text:
   fb_accessible: true
@@ -331,6 +776,7 @@
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][food_handler_id]
   code_name: yesno
+  section_key: contact_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -338,6 +784,7 @@
   event_type: place_event
   field_type: drop_down
   key: place_event[interested_place][place_entity][place][place_type_id]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -345,6 +792,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[first_reported_PH_date]
+  section_key: morbidity_event[reported_dates_section]
 
 - help_text:
   fb_accessible: false
@@ -353,6 +801,7 @@
   event_type: contact_event
   key: contact_event[labs][lab_results][test_result]
   code_name: test_result
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -360,6 +809,7 @@
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][organism]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -368,6 +818,7 @@
   event_type: contact_event
   key: contact_event[labs][lab_results][test_status]
   code_name: test_status
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -375,6 +826,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][result_value]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -382,6 +834,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][units]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -389,6 +842,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][comment]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -397,6 +851,7 @@
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][healthcare_worker_id]
   code_name: yesno
+  section_key: contact_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -404,6 +859,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][street_number]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -411,6 +867,7 @@
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[acuity]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -419,6 +876,7 @@
   field_type: drop_down
   key: morbidity_event[lhd_case_status_id]
   code_name: investigation
+  section_key: morbidity_event[case_outbreak_section]
 
 - help_text:
   fb_accessible: true
@@ -426,6 +884,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][street_name]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -434,6 +893,7 @@
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][group_living_id]
   code_name: yesno
+  section_key: contact_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -441,6 +901,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][unit_number]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -448,6 +909,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[other_data_1]
+  section_key: morbidity_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -456,6 +918,7 @@
   field_type: drop_down
   key: contact_event[interested_party][risk_factor][day_care_association_id]
   code_name: yesno
+  section_key: contact_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -463,6 +926,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][last_name]
+  section_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -470,6 +934,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[other_data_2]
+  section_key: morbidity_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -477,6 +942,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][risk_factor][occupation]
+  section_key: contact_event[contact_oriented_section]
 
 - help_text:
   fb_accessible: true
@@ -485,6 +951,7 @@
   field_type: drop_down
   key: morbidity_event[state_case_status_id]
   code_name: investigation
+  section_key: morbidity_event[case_outbreak_section]
 
 - help_text:
   fb_accessible: true
@@ -492,13 +959,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][risk_factor][risk_factors]
-
-- help_text:
-  fb_accessible: true
-  can_follow_up: true
-  event_type: morbidity_event
-  field_type: single_line_text
-  key: morbidity_event[interested_party][person_entity][person][first_name]
+  section_key: contact_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -507,6 +968,7 @@
   field_type: drop_down
   key: morbidity_event[outbreak_associated_id]
   code_name: yesno
+  section_key: morbidity_event[case_outbreak_section]
 
 - help_text:
   fb_accessible: true
@@ -514,6 +976,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][middle_name]
+  section_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: false
@@ -521,6 +984,7 @@
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][lab_test_date]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -528,6 +992,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][city]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -535,6 +1000,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[outbreak_name]
+  section_key: morbidity_event[case_outbreak_section]
 
 - help_text:
   fb_accessible: true
@@ -542,6 +1008,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][street_number]
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -550,6 +1017,7 @@
   field_type: drop_down
   key: place_event[address][state_id]
   code_name: state
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -557,6 +1025,7 @@
   event_type: morbidity_event
   field_type: multi_select
   key: morbidity_event[jurisdiction][secondary_entity_id]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -564,6 +1033,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][street_name]
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -572,6 +1042,7 @@
   field_type: drop_down
   key: place_event[address][county_id]
   code_name: county
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -579,6 +1050,7 @@
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[workflow_state]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -586,6 +1058,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][unit_number]
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -593,6 +1066,7 @@
   event_type: contact_event
   field_type: multi_line_text
   key: contact_event[interested_party][risk_factor][risk_factors_notes]
+  section_key: contact_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -600,6 +1074,7 @@
   event_type: place_event
   field_type: single_line_text
   key: place_event[address][postal_code]
+  section_key: place_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -607,6 +1082,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[investigation_started_date]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -614,6 +1090,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][city]
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -621,6 +1098,7 @@
   event_type: contact_event
   field_type: drop_down
   key: contact_event[disease_event][disease_id]
+  section_key: contact_event[disease_section]
 
 - help_text:
   fb_accessible: true
@@ -628,6 +1106,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][last_name]
+  section_key: contact_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -635,6 +1114,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[investigation_completed_LHD_date]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -643,6 +1123,7 @@
   field_type: drop_down
   key: morbidity_event[address][state_id]
   code_name: state
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -650,6 +1131,7 @@
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][disease_onset_date]
+  section_key: contact_event[disease_section]
 
 - help_text:
   fb_accessible: false
@@ -658,6 +1140,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_sent_to_state]
   code_name: yesno
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -665,6 +1148,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[event_name]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -673,6 +1157,7 @@
   field_type: drop_down
   key: morbidity_event[address][county_id]
   code_name: county
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -680,6 +1165,7 @@
   event_type: contact_event
   field_type: date
   key: contact_event[disease_event][date_diagnosed]
+  section_key: contact_event[disease_section]
 
 - help_text:
   fb_accessible: false
@@ -687,6 +1173,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][place_entity][place][name]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -694,6 +1181,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][first_name]
+  section_key: contact_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -701,6 +1189,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[review_completed_by_state_date]
+  section_key: morbidity_event[event_auditing_section]
 
 - help_text:
   fb_accessible: true
@@ -709,6 +1198,7 @@
   field_type: drop_down
   key: contact_event[disease_event][hospitalized_id]
   code_name: yesno
+  section_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
   fb_accessible: true
@@ -716,6 +1206,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][middle_name]
+  section_key: contact_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -724,6 +1215,7 @@
   field_type: drop_down
   key: morbidity_event[imported_from_id]
   code_name: imported
+  section_key: morbidity_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -732,6 +1224,7 @@
   field_type: drop_down
   key: contact_event[disease_event][died_id]
   code_name: yesno
+  section_key: contact_event[mortality_status_section]
 
 - help_text:
   fb_accessible: true
@@ -739,6 +1232,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][street_number]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: false
@@ -747,6 +1241,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_type]
   code_name: lab_test_type
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -754,6 +1249,7 @@
   event_type: contact_event
   field_type: drop_down
   key: contact_event[treatments]
+  section_key: contact_event[treatments_section]
 
 - help_text:
   fb_accessible: false
@@ -761,6 +1257,7 @@
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][lab_test_date]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -768,6 +1265,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][street_name]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: false
@@ -776,6 +1274,7 @@
   event_type: contact_event
   key: contact_event[labs][lab_results][test_type]
   code_name: lab_test_type
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -783,6 +1282,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[address][postal_code]
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -790,6 +1290,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][unit_number]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -797,6 +1298,7 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][person_entity][person][birth_date]
+  section_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: false
@@ -805,6 +1307,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_source]
   code_name: specimen
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -813,6 +1316,7 @@
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_source]
   code_name: specimen
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -820,6 +1324,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporting_agency][place_entity][place][name]
+  section_key: morbidity_event[reporting_agency_section]
 
 - help_text:
   fb_accessible: true
@@ -827,13 +1332,7 @@
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][approximate_age_no_birthday]
-
-- help_text:
-  fb_accessible: true
-  can_follow_up: true
-  event_type: morbidity_event
-  field_type: single_line_text
-  key: morbidity_event[reporter][person_entity][person][first_name]
+  section_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: true
@@ -841,6 +1340,7 @@
   event_type: morbidity_event
   field_type: numeric
   key: morbidity_event[interested_party][person_entity][person][age_at_onset]
+  section_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
   fb_accessible: true
@@ -848,6 +1348,7 @@
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][last_name]
+  section_key: morbidity_event[reporter_section]
 
 - help_text:
   fb_accessible: false
@@ -856,6 +1357,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_result]
   code_name: test_result
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -863,6 +1365,7 @@
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][organism]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -871,6 +1374,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_status]
   code_name: test_status
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -878,6 +1382,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][result_value]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -885,6 +1390,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][units]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: false
@@ -892,6 +1398,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][comment]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -899,6 +1406,7 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[interested_party][person_entity][person][date_of_death]
+  section_key: morbidity_event[mortality_status_section]
 
 - help_text:
   fb_accessible: true
@@ -906,6 +1414,7 @@
   event_type: contact_event
   field_type: single_line_text
   key: contact_event[address][city]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -913,6 +1422,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[parent_guardian]
+  section_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -921,6 +1431,7 @@
   event_type: morbidity_event
   key: morbidity_event[address][district]
   code_name: district
+  section_key: morbidity_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -928,6 +1439,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][area_code]
+  section_key: morbidity_event[reporting_agency_section]
 
 - help_text:
   fb_accessible: true
@@ -935,6 +1447,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][phone_number]
+  section_key: morbidity_event[reporting_agency_section]
 
 - help_text:
   fb_accessible: true
@@ -942,6 +1455,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][telephones][extension]
+  section_key: morbidity_event[reporting_agency_section]
 
 - help_text:
   fb_accessible: true
@@ -950,6 +1464,7 @@
   event_type: morbidity_event
   key: morbidity_event[reporting_agency][place_entity][place][place_type]
   code_name: placetype
+  section_key: morbidity_event[reporting_agency_section]
 
 - help_text:
   fb_accessible: true
@@ -957,6 +1472,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][telephones]
+  section_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
   fb_accessible: true
@@ -964,6 +1480,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][email_addresses]
+  section_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
   fb_accessible: true
@@ -971,6 +1488,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[clinicians]
+  section_key: morbidity_event[clinicians_section]
 
 - help_text:
   fb_accessible: true
@@ -978,6 +1496,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[diagnostic_facilities]
+  section_key: morbidity_event[diagnostic_facilities_section]
 
 - help_text:
   fb_accessible: true
@@ -985,6 +1504,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs]
+  section_key: morbidity_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -992,6 +1512,7 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[encounters]
+  section_key: morbidity_event[encounters_section]
 
 - help_text:
   fb_accessible: true
@@ -999,6 +1520,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[parent_guardian]
+  section_key: contact_event[interested_party][person_entity][name_section]
 
 - help_text:
   fb_accessible: true
@@ -1006,6 +1528,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[address][district]
+  section_key: contact_event[address_section]
 
 - help_text:
   fb_accessible: true
@@ -1013,6 +1536,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][telephones]
+  section_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
   fb_accessible: true
@@ -1020,6 +1544,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][email_addresses]
+  section_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
   fb_accessible: true
@@ -1027,6 +1552,7 @@
   field_type: multi_select
   event_type: contact_event
   key: contact_event[interested_party][person_entity][race_ids]
+  section_key: contact_event[interested_party][person_entity][demographics_section]
 
 - help_text:
   fb_accessible: true
@@ -1034,6 +1560,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[clinicians]
+  section_key: contact_event[clinicians_section]
 
 - help_text:
   fb_accessible: true
@@ -1041,6 +1568,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[diagnostic_facilities]
+  section_key: contact_event[diagnostic_facilities_section]
 
 - help_text:
   fb_accessible: true
@@ -1048,6 +1576,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs]
+  section_key: contact_event[labs_section]
 
 - help_text:
   fb_accessible: true
@@ -1055,6 +1584,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[other_data_1]
+  section_key: contact_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -1062,6 +1592,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[other_data_2]
+  section_key: contact_event[other_section]
 
 - help_text:
   fb_accessible: true
@@ -1097,6 +1628,7 @@
   event_type: encounter_event
   field_type: drop_down
   key: encounter_event[treatments]
+  section_key: encounter_event[treatments_section]
 
 - help_text:
   fb_accessible: true
@@ -1104,4 +1636,4 @@
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs]
-
+  section_key: encounter_event[labs_section]

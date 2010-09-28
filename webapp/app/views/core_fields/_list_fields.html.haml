@@ -18,5 +18,8 @@
     %tr
       %th.forminformation
         = h(event_type)
-      %th
-    = render :partial => 'core_field', :collection => core_fields
+    %tr
+      %td
+        .core_fields
+          %ul
+            = render :partial => 'core_field', :collection => core_fields

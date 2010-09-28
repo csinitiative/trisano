@@ -13,50 +13,47 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend
-    =t('event_attachments')
-
-  - unless attachments.empty?
-    #task-message{ :align => 'center' }
-    %table.list
-      %thead
-        %tr
-          %th=t('file_name')
-          %th=t('category')
-          %th=t('content_type')
-          %th=t('size')
-          %th=t('uploaded')
-          %th &nbsp;
-      %tbody
-        - for attachment in attachments
-          %tr.attachment{:id => "attachment_#{attachment.id}"}
-            %td
-              %span.filename
-                =h attachment.filename
-            %td
-              %span.category
-                - unless attachment.category.blank?
-                  =h t("attachment_types.#{attachment.category}")
-            %td
-              %span.content_type
-                =h attachment.content_type
-            %td
-              %span.size
-                =h attachment.size
-            %td
-              %span.updated_at
-                =ld(attachment.updated_at)
-            %td
-              - jurisdiction_ids = attachment.event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
-              - if User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids )
-                = link_to(t('open'), event_attachment_path(attachment.event, attachment))
-              - if User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids )
-                |
-                = delete_attachment(attachment)
-                = attachment_spinner(attachment)
-
-  - else
-    %span=t('no_attachments')
+-fields_for(@event, :builder => ExtendedFormBuilder) do |f|
+  -core_section :event_attachments_section, f do
+    - unless attachments.empty?
+      #task-message{ :align => 'center' }
+      %table.list
+        %thead
+          %tr
+            %th=t('file_name')
+            %th=t('category')
+            %th=t('content_type')
+            %th=t('size')
+            %th=t('uploaded')
+            %th &nbsp;
+        %tbody
+          - for attachment in attachments
+            %tr.attachment{:id => "attachment_#{attachment.id}"}
+              %td
+                %span.filename
+                  =h attachment.filename
+              %td
+                %span.category
+                  - unless attachment.category.blank?
+                    =h t("attachment_types.#{attachment.category}")
+              %td
+                %span.content_type
+                  =h attachment.content_type
+              %td
+                %span.size
+                  =h attachment.size
+              %td
+                %span.updated_at
+                  =ld(attachment.updated_at)
+              %td
+                - jurisdiction_ids = attachment.event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }
+                - if User.current_user.is_entitled_to_in?(:view_event, jurisdiction_ids )
+                  = link_to(t('open'), event_attachment_path(attachment.event, attachment))
+                - if User.current_user.is_entitled_to_in?(:update_event, jurisdiction_ids )
+                  |
+                  = delete_attachment(attachment)
+                  = attachment_spinner(attachment)
+    - else
+      %span=t('no_attachments')
 
 %br

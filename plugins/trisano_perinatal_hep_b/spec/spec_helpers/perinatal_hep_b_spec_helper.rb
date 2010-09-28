@@ -57,6 +57,10 @@ module PerinatalHepBSpecHelper
   end
 
   def given_p_hep_b_core_fields_loaded
+    Factory.create :cmr_section_core_field, :key => 'morbidity_event[pregnancy_status_section]'
+    Factory.create :cmr_section_core_field, :key => 'morbidity_event[health_care_provider][section]'
+    Factory.create :cmr_section_core_field, :key => 'morbidity_event[event_auditing_section]'
+    Factory.create :cmr_section_core_field, :key => 'contact_event[treatments_section]'
     @core_fields = p_hep_b_core_fields
     CoreField.load!(@core_fields)
   end

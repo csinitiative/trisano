@@ -13,9 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend
-    =t('treatments')
+-core_section :treatments_section, f do
 
   -unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
     =h @event.disease_event.disease.treatment_lead_in
@@ -35,4 +33,4 @@
         =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment')
 
 -if @event.is_a?(MorbidityEvent)
-  =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event }
+  =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }

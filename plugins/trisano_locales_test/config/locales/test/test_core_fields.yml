@@ -72,7 +72,33 @@ test:
             name: xLab results | Lab name
       imported_from_id: xImported from
     morbidity_event:
+      disease_section: xDisease
+      hospitalized_health_facilities_section: xHospitalized Health Facilities
+      mortality_status_section: xMortaility Status
+      pregnancy_status_section: xPregnancy Status
+      clinicians_section: xClinicians
+      diagnostic_facilities_section: xDiagnostic Facilities
+      treatments_section: xTreatments
+      encounter_specific_treatments_section: xEncounter-specific Treatments
+      labs_section: xLabs
+      encounter_specific_labs_section: xEncounter-specific Labs
+      contacts_section: xContacts
+      encounters_section: xEncounters
+      encounter_notes_section: xEncounter Notes
+      contact_oriented_section: xContact Oriented
+      other_section: xOther
+      place_exposures_section: xPlace Exposures
+      reporting_agency_section: xReporting Agency
+      reporter_section: xReporter
+      reported_dates_section: xReported Dates
+      event_attachments_section: xEvent Attachments
+      event_tasks_section: xEvent Tasks
+      event_notes_section: xEvent Notes
+      case_outbreak_section: xCase / Outbreak
+      event_information_section: xEvent Information
+      event_auditing_section: xAuditing / Investigation
       results_reported_to_clinician_date: xResults reported to clinician date
+      address_section: xAddress
       address:
         city: xPatient city
         postal_code: xPatient zip code
@@ -128,6 +154,10 @@ test:
           pregnant_id: xPregnant
           healthcare_worker_id: xHealthcare worker
         person_entity:
+          name_section: xName
+          age_section: xAge
+          phone_section: xTelephones/Email
+          demographics_section: Demographics
           person:
             date_of_death: xPatient date of death
             age_at_onset: xAge at onset

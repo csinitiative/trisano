@@ -20,4 +20,4 @@
     = render(:partial => 'events/labs', :locals => { :labs => @event.labs })
 
 - if @event.is_a?(MorbidityEvent)
-  = render :partial => "events/encounter_specific_labs", :locals => { :event => @event}
+  = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }

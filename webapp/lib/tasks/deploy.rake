@@ -128,7 +128,7 @@ namespace :trisano do
     task :stoptomcat do
       puts "attempting to stop Tomcat"
       sh TOMCAT_BIN + "/shutdown.sh"
-      sleep 10
+      sleep 30
     end
 
     desc "start Tomcat"

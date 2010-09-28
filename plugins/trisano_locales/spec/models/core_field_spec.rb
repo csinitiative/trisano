@@ -20,7 +20,7 @@ require 'spec_helper'
 describe CoreField, "after modifications for translated help text"  do
 
   before do
-    @cf = CoreField.new
+    @cf = Factory.build :cmr_core_field
     I18n.locale = :en
     @cf.help_text = 'En help text'
     I18n.locale = :test

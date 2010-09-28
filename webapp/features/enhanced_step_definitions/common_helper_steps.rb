@@ -118,6 +118,7 @@ def cleanable_classes
    ParticipationsRiskFactor,
    Participation,
    DiseaseEvent,
+   Task,
    Event,
    Form,
    FormElement,

@@ -23,7 +23,7 @@ describe FormsHelper do
 
   # Debt: setting up these tests needs to be easier
   before do
-    @core_field = CoreField.create!(:key => 'morbidity_event[places]', :event_type => 'morbidity_event')
+    @core_field = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
     @form = Factory.build(:form, :event_type => 'morbidity_event')
     @form.save_and_initialize_form_elements
     @core_field_element = Factory.build(:core_field_element, :core_path => 'morbidity_event[places]')
@@ -53,10 +53,9 @@ describe FormsHelper do
 
   describe "follow up (core path) select" do
     before do
-      fu_field = CoreField.create!({
-        :key => 'morbidity_event[other_data_1]',
-        :event_type => 'morbidity_event',
-        :can_follow_up => true})
+      fu_field = Factory.create(:cmr_core_field,
+                                :key => 'morbidity_event[other_data_1]',
+                                :can_follow_up => true)
       fu_field.clone.update_attributes!(:key => 'morbidity_event[acuity]')
     end
 

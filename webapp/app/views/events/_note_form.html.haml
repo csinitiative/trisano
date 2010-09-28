@@ -24,33 +24,34 @@
 
 %fieldset
   %legend
-    Notes
+    =t :notes
     %span{:id => 'notes_hide', :onClick => "Element.hide('notes'); Element.hide('notes_hide'); Element.show('notes_show'); return false;"}= "[#{t('hide')}]"
     %span{:id => 'notes_show', :onClick => "Element.show('notes'); Element.hide('notes_show'); Element.show('notes_hide'); return false;", :style => "display: none;"}= "[#{t('show')}]"
 
   #notes
-    #note-list
-      = render :partial => 'event_notes/edit', :locals => { :notes => @event.notes, :f => f }
+    -core_section :event_notes_section, f do
+      #note-list
+        = render :partial => 'event_notes/edit', :locals => { :notes => @event.notes, :f => f }
 
-    #new-note
-      -# notes = (@event.notes.size > 0 ? @event.notes : [Note.new])
-      =# error_messages_for :object => note
+      #new-note
+        -# notes = (@event.notes.size > 0 ? @event.notes : [Note.new])
+        =# error_messages_for :object => note
 
-      -# We only want to display one note at a time. So loop over all those that have already been saved.
-      -# A new note will be in the list if are no prior notes (setup by the form in the setup_xxx_event_tree 
-      -# helper) or if validation failed.  Make one otherwise.
-      - new_note = nil
-      - @event.notes.each do |note|
-        - new_note = note if note.new_record?
+        -# We only want to display one note at a time. So loop over all those that have already been saved.
+        -# A new note will be in the list if are no prior notes (setup by the form in the setup_xxx_event_tree 
+        -# helper) or if validation failed.  Make one otherwise.
+        - new_note = nil
+        - @event.notes.each do |note|
+          - new_note = note if note.new_record?
 
-      - new_note = new_note || Note.new
-      - f.fields_for(:notes, new_note, :child_index => uniq_id, :builder => ExtendedFormBuilder) do |note_fields|
-        %span{:class => "vert"}
-          = note_fields.label(:note)
-          ~ note_fields.text_area(:note, :size => "50x5")
-        %span{:class => "vert"}
-          = note_fields.label(:note_type)
-          = note_fields.check_box(:note_type, {}, "administrative", "clinical")
+        - new_note = new_note || Note.new
+        - f.fields_for(:notes, new_note, :child_index => uniq_id, :builder => ExtendedFormBuilder) do |note_fields|
+          %span{:class => "vert"}
+            = note_fields.label(:note)
+            ~ note_fields.text_area(:note, :size => "50x5")
+          %span{:class => "vert"}
+            = note_fields.label(:note_type)
+            = note_fields.check_box(:note_type, {}, "administrative", "clinical")
 
 - if @event.supports_tasks?
   %fieldset
