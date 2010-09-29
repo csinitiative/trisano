@@ -210,16 +210,19 @@ module EventsHelper
     content_tag(:p, t(:out_of_jurisdiction_access, :link => link_to(t(:please_exit), home_path, :style => 'color: white; text-decoration: underline;')), :class => 'banner-warning')
   end
 
-  def basic_contact_event_controls(event, from_index=false)
+  def basic_contact_event_controls(event, view_mode)
+    view_mode = :edit if ![:index, :edit, :show].include?(view_mode)
     can_update =  User.current_user.can_update?(event)
     can_view =  User.current_user.can_view?(event)
 
     controls = ""
-    controls << link_to(t(:show), contact_event_path(event)) if from_index && can_view
+    controls << link_to(t(:show), contact_event_path(event)) if (((view_mode == :index)) && can_view)
     if can_update
       controls << " | " unless controls.blank?
-      if from_index
+      if (view_mode == :index)
         controls <<  link_to(t(:edit), edit_contact_event_path(event))
+      elsif (view_mode == :edit)
+         controls <<  link_to_function(t(:show), "send_url_with_tab_index('#{contact_event_path(event)}')")
       else
         controls <<  link_to_function(t(:edit), "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
       end
@@ -234,7 +237,7 @@ module EventsHelper
       controls << " | " unless controls.blank?
       controls << link_to(t(:delete), soft_delete_contact_event_path(event), :method => :post, :confirm => t(:are_you_sure), :id => 'soft-delete')
     end
-    if !from_index && can_update
+    if ((view_mode != :index) && can_update)
       controls << " | " unless controls.blank?
       controls << link_to(t(:add_task), new_event_task_path(event))
       controls << " | " << link_to(t(:add_attachment), new_event_attachment_path(event))
@@ -905,8 +908,8 @@ module EventsHelper
     end
 
     follow_up_group = element.process_condition(@answer_object,
-                                                @event.id,
-                                                :form_elements_cache => form_elements_cache)
+      @event.id,
+      :form_elements_cache => form_elements_cache)
 
     unless follow_up_group.nil?
       result << "<div id='follow_up_investigate_#{h(element.id)}'>"

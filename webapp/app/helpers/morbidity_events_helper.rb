@@ -32,17 +32,21 @@ module MorbidityEventsHelper
     tabs
   end
 
-  def basic_morbidity_event_controls(event, from_index=false)
+  def basic_morbidity_event_controls(event, view_mode)
+    view_mode = :edit if ![:index, :edit, :show].include?(view_mode)
+        
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     can_view =  User.current_user.is_entitled_to_in?(:view_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     can_create =  User.current_user.is_entitled_to_in?(:create_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
 
     controls = ""
-    controls << link_to(t('show'), cmr_path(event)) if from_index && can_view
+    controls << link_to(t('show'), cmr_path(event)) if ((view_mode == :index) && can_view)
     if can_update
       controls << " | " unless controls.blank?
-      if from_index
+      if (view_mode == :index)
         controls << link_to(t('edit'), edit_cmr_path(event))
+      elsif (view_mode == :edit)
+        controls << link_to_function(t('show'), "send_url_with_tab_index('#{cmr_path(event)}')")
       else
         controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_cmr_path(event)}')")
       end
@@ -57,7 +61,7 @@ module MorbidityEventsHelper
       controls << " | " unless controls.blank?
       controls << link_to(t('delete'), soft_delete_cmr_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
     end
-    if !from_index
+    if (view_mode != :index)
       if can_update
         controls << " | " unless controls.blank?
         controls << link_to(t('add_task'), new_event_task_path(event))

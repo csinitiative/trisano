@@ -23,12 +23,10 @@
 -# So, rather than duplicate the visual aspects, we are making all the data conditional on who is
 -# rendering this file.
 
-- from_index = false if !defined?(from_index)
-
 %tr.roll
   %td.forminformation
     - event_div_class(contact_event) do
-      - if from_index
+      - if (view_mode == :index)
         = h(contact_event['last_name'] << (contact_event['first_name'].blank? ? "" : ", #{contact_event['first_name']}"))
       - else
         = h(contact_event.interested_party.person_entity.person.last_comma_first)
@@ -36,35 +34,35 @@
       %span{ :style => 'font-style: italic; font-size: small;'}
         = t("contact_event") |
         = ld(contact_event.event_onset_date)
-        - if !from_index
+        - if (view_mode != :index)
           = original_patient_controls(@event)  
     .tools
-      = basic_contact_event_controls(contact_event, from_index) 
+      = basic_contact_event_controls(contact_event, view_mode)
       = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }
   %td
-    %b= h(from_index ? contact_event['disease_name'] : contact_event.try(:disease).try(:disease).try(:disease_name))
+    %b= h((view_mode == :index) ? contact_event['disease_name'] : contact_event.try(:disease).try(:disease).try(:disease_name))
   %td
-    %b= h(from_index ? contact_event['jurisdiction_short_name'] : contact_event.primary_jurisdiction.short_name)
+    %b= h((view_mode == :index) ? contact_event['jurisdiction_short_name'] : contact_event.primary_jurisdiction.short_name)
     %br
     .tools
       = jurisdiction_routing_control(contact_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
-        - if from_index
+        - if (view_mode == :index)
           = pg_array(contact_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', ')
         - else
           = h(contact_event.secondary_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
     %b= h(contact_event.state_description)
 
-    - queue_name = from_index ? contact_event['queue_name'] : contact_event.try(:event_queue).try(:queue_name)
+    - queue_name = (view_mode == :index) ? contact_event['queue_name'] : contact_event.try(:event_queue).try(:queue_name)
     - unless queue_name.blank?
       %div{:id => 'queue_info'}
         %small
           Queue:&nbsp;
           %b= h(queue_name)
 
-    - inv_name = from_index ? contact_event['investigator_name'] : contact_event.try(:investigator).try(:best_name)
+    - inv_name = (view_mode == :index) ? contact_event['investigator_name'] : contact_event.try(:investigator).try(:best_name)
     - unless inv_name.blank?
       %div{:id => 'investigator_info'}
         %small

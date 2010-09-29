@@ -82,8 +82,8 @@
 
       - @events.each do |event|
         - if event.is_a? ContactEvent
-          = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :from_index => true }
+          = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :view_mode => :index }
         - else
-          = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :from_index => true }
+          = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :view_mode => :index }
   %br
   = will_paginate @events
