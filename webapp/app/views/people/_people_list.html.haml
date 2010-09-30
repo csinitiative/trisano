@@ -27,10 +27,7 @@
           %tr.data_person.search-active.tabular
             %td
               %span.data_person_id{:style => 'display: none'}=h(person.entity_id)
-              %span.data_name
-                %span.data_first_name=h(person.first_name)
-                %span.data_middle_name=h(person.middle_name)
-                %span.data_last_name=h(person.last_name)
+              %span.data_name=render_person_name(person)
             %td
               - if search_result_has_address?(person)
                 %span.data_address

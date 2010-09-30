@@ -15,19 +15,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-module PeopleHelper
-  extensible_helper
+require File.dirname(__FILE__) + '/../spec_helper'
 
-  def render_person_name(person)
-    <<-END
-      <span class="data_first_name">#{h(person.first_name)}</span>
-      <span class="data_middle_name">#{h(person.middle_name)}</span>
-      <span class="data_last_name">#{h(person.last_name)}</span>
-    END
-  end
+describe PeopleHelper do
+  include Trisano::HTML::Matchers
 
-  def render_address_show(form, person_entity)
-    address = person_entity.canonical_address || person_entity.build_canonical_address
-    render(:partial => 'people/address_show', :locals => {:f => form, :address => address})
+  describe 'render_person_name' do
+    before do
+      @event = searchable_event!(:morbidity_event, 'Jones')
+      @person = @event.interested_party.person_entity.person
+    end
+
+    it "renders data tags" do
+      result = helper.render_person_name(@person)
+      result.should have_tag('span.data_first_name')
+      result.should have_tag('span.data_middle_name')
+      result.should have_tag('span.data_last_name', :text => 'Jones')
+    end
   end
 end

@@ -20,7 +20,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe SearchHelper do
   include Trisano::HTML::Matchers
 
-
   describe 'workflow_state_select_tag' do
     before do
       @workflow_state = mock('assigned', {
