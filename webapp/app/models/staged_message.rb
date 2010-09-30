@@ -290,39 +290,29 @@ class StagedMessage < ActiveRecord::Base
       # literal constants
       msh.enc_chars       = '^~&#'
       msh.version_id      = '2.5.1'
-      msh.accept_ack_type = 'AL'
-      msh.app_ack_type    = 'AL'
 
       # In the event we ever use a different component delimiter,
       # these literals will come out correctly by using the join
       # method (instead, e.g., of using 'ACK^R01^ACK').
       msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
-      msh.message_profile_identifier = [ 'PHLabReport-Ack', '',
-        '2.16.840.1.114222.4.10.3', 'ISO' ].join(msh.item_delim)
 
       # current time: YYYYMMDDHHMMSS+/-ZZZZ
       msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
 
       if orig_msh
-        msh.sending_app      = orig_msh.sending_app
-        msh.sending_facility = orig_msh.sending_facility
+        msh.recv_app      = orig_msh.sending_app
+        msh.recv_facility = orig_msh.sending_facility
+        msh.processing_id = orig_msh.processing_id
       end
 
       # Simple sequence number for now, might need to be a UUID
       msh.message_control_id = self.class.next_sequence_number
-      msh.processing_id = self.class.processing_id
-      msh.recv_facility = self.class.recv_facility
-
-      # The next two fields are required
-      # ================================
+      msh.sending_facility = self.class.recv_facility
 
       # TODO: Determine CE/EE programmatically
       trisano_oid = %w{csi-trisano-ce 2.16.840.1.113883.4.434 ISO}
       # trisano_oid = %w{csi-trisano-ee 2.16.840.1.113883.4.435 ISO}
-      msh.recv_app = trisano_oid.join(msh.item_delim)
-
-      # country code is optional in an ACK^R01^ACK message
-      # msh.country_code = country_code_from_locale
+      msh.sending_app = trisano_oid.join(msh.item_delim)
     end
   end
 

@@ -110,13 +110,13 @@ describe StagedMessage do
       @good_message_ack = HL7::Message.parse @good_message.ack.to_hl7
       @bad_message_ack  = HL7::Message.parse @bad_message.ack.to_hl7
 
-      @good_message_ack.should_not be_nil
-      @bad_message_ack.should_not be_nil
+      @good_message_ack_header = @good_message_ack.message_header.msh_segment
+      @bad_message_ack_header = @bad_message_ack.message_header.msh_segment
     end
 
     it 'should have an MSH segment' do
-      @good_message_ack[:MSH].should_not be_nil
-      @bad_message_ack[:MSH].should_not be_nil
+      @good_message_ack_header.should_not be_nil
+      @bad_message_ack_header.should_not be_nil
     end
 
     it 'should have an MSA segment' do
@@ -133,13 +133,40 @@ describe StagedMessage do
     end
 
     it 'should return the configured recv_facility' do
-      @good_message_ack[:MSH].recv_facility.should ==
+      @good_message_ack_header.sending_facility.should ==
+        StagedMessage.recv_facility
+      @bad_message_ack_header.sending_facility.should ==
         StagedMessage.recv_facility
     end
 
-    it 'should return the configured processing_id' do
-      @good_message_ack[:MSH].processing_id.should ==
-        StagedMessage.processing_id
+    it 'should return the inbound processing_id' do
+      @good_message_ack_header.processing_id.should ==
+        @good_message.message_header.msh_segment.processing_id
+      @bad_message_ack_header.processing_id.should ==
+        @bad_message.message_header.msh_segment.processing_id
+    end
+
+    it 'should not have MSH-15 or MSH-16 fields' do
+      @good_message_ack_header.accept_ack_type.should be_nil
+      @good_message_ack_header.app_ack_type.should be_nil
+      @bad_message_ack_header.accept_ack_type.should be_nil
+      @bad_message_ack_header.app_ack_type.should be_nil
+    end
+
+    it 'should not have an MSH-21 field' do
+      @good_message_ack_header.message_profile_identifier.should be_nil
+      @bad_message_ack_header.message_profile_identifier.should be_nil
+    end
+
+    it 'should return the inbound sending app and facility' do
+      @good_message_ack_header.recv_app.should ==
+        @good_message.message_header.msh_segment.sending_app
+      @bad_message_ack_header.recv_app.should ==
+        @bad_message.message_header.msh_segment.sending_app
+      @good_message_ack_header.recv_facility.should ==
+        @good_message.message_header.msh_segment.sending_facility
+      @bad_message_ack_header.recv_facility.should ==
+        @bad_message.message_header.msh_segment.sending_facility
     end
   end
 
