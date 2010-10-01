@@ -26,8 +26,8 @@ class HospitalizationFacility < Participation
   def validate
     super
     if !hospitals_participation.nil? and place_entity.nil?
-      errors.add_to_base(:blank_hospitalization_facility)
+      errors.add_to_base(:blank_hospitalization_facility) if (!hospitals_participation.admission_date.blank? || !hospitals_participation.discharge_date.blank?)
     end
   end
-
+  
 end

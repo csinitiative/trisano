@@ -136,7 +136,7 @@ en:
         hospitalization_facility:
           attributes:
             base:
-              blank_hospitalization_facility: "Hospitalization Facility can not be blank if hospitalization dates or medical record number are given."
+              blank_hospitalization_facility: "Hospitalization Facility can not be blank if hospitalization dates are given."
 
         hospitals_participation:
           attributes:
