@@ -56,8 +56,10 @@ class EventTasksController < ApplicationController
       if @task.save
         flash[:notice] = t("event_task_created")
         format.html { redirect_to event_tasks_path(@event) }
+        format.js {}
       else
         format.html { render :action => "new" }
+        format.js { render :action => "new" }
       end
     end
   end

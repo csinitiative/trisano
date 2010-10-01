@@ -48,6 +48,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 <%= render :partial => 'morbidity_events/copy_cmr_options' %>
 
+<div id="event-task-form"></div>
 <div id="follow-up-error"></div>
 
 <% form_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>

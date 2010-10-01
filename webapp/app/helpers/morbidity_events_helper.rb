@@ -34,7 +34,7 @@ module MorbidityEventsHelper
 
   def basic_morbidity_event_controls(event, view_mode)
     view_mode = :edit if ![:index, :edit, :show].include?(view_mode)
-        
+
     can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     can_view =  User.current_user.is_entitled_to_in?(:view_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     can_create =  User.current_user.is_entitled_to_in?(:create_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
@@ -64,7 +64,11 @@ module MorbidityEventsHelper
     if (view_mode != :index)
       if can_update
         controls << " | " unless controls.blank?
-        controls << link_to(t('add_task'), new_event_task_path(event))
+        if (view_mode == :edit)
+          controls << link_to_remote(t('add_task'), :url => { :controller => 'event_tasks', :action => 'new', :event_id => event.id }, :method => :get )
+        else
+          controls << link_to(t('add_task'), new_event_task_path(event))
+        end
         controls << " | " << link_to(t('add_attachment'), new_event_attachment_path(event))
       end
       if can_view

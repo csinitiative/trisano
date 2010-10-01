@@ -88,6 +88,8 @@
         - elsif flash[:error]
           #flash-message.error-message
             = flash[:error]
+        - else
+          #flash-message
         .name
           = yield :name
         .tools

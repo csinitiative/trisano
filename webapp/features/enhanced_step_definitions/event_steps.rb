@@ -37,6 +37,11 @@ When(/^I am on the event edit page$/) do
   @browser.wait_for_page_to_load
 end
 
+When(/^I am on the event show page$/) do
+  @browser.open "/trisano/cmrs/#{(@event).id}"
+  @browser.wait_for_page_to_load
+end
+
 # Consider refactoring the name of this one -- it really isn't navigating, it's
 # more like a "when I am on"
 When(/^I navigate to the event show page$/) do

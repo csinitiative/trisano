@@ -58,6 +58,11 @@ joinAndPreserveLocale = function(base, ext) {
   return p + ext + l;
 };
 
+scrollToTop = function() {
+  $j(window).scrollTop(0);
+  return null
+};
+
 function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
     if (typeof spinner_id == "undefined")
         spinner_id = 'investigator_answer_' +  question_element_id + '_spinner';
