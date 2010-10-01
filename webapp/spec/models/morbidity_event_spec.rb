@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe MorbidityEvent do
 
   before(:each) do
-    @event = Factory(:morbidity_event)
+    @event = Factory.build(:morbidity_event)
   end
 
   it "should be valid" do
@@ -44,7 +44,7 @@ describe MorbidityEvent do
     @event.first_reported_PH_date = Date.tomorrow
     @event.save.should be_false
     @event.should have(1).error_on("first_reported_PH_date")
-    @event.error_on("first_reported_PH_date").include?("must be on or before #{@event.created_at.to_date.to_s}").should be_true
+    @event.error_on("first_reported_PH_date").include?("must be on or before #{Date.today}").should be_true
   end
 
   it "should be valid with a first reported to public health date before the created_at date" do
