@@ -17,8 +17,6 @@
 
 require 'ftools'
 require 'fileutils'
-gem 'mechanize'
-require 'mechanize'
 require 'rexml/document'
 require 'rest-open-uri'
 require 'logger'
@@ -141,6 +139,8 @@ namespace :trisano do
 
     desc "smoke test that ensures trisano was deployed"
     task :smoke do
+      gem 'mechanize'
+      require 'mechanize'
       retries = 5
       begin
         sleep 10
