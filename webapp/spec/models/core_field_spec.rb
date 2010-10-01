@@ -221,7 +221,6 @@ describe CoreField do
   end
 
   describe "sections" do
-
     before do
       @section = Factory.create(:cmr_section_core_field)
       @core_field = Factory.create(:cmr_core_field, :tree_id => @section.tree_id)
@@ -234,6 +233,38 @@ describe CoreField do
         @section.add_child @core_field
       end.should change(@section, :children_count).by(1)
     end
+  end
 
+  describe "required for an event" do
+    before do
+      @core_field = Factory.build :cmr_core_field, {
+        :required_for_event => true,
+        :rendered_attributes => { :rendered => false }
+      }
+      @core_field.save
+    end
+
+    it "is invalid if hidden" do
+      @core_field.should_not be_valid
+      @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for Morbidity Events"]
+    end
+
+  end
+
+  describe "section with at least one descendant that is required for an event" do
+    before do
+      @section = Factory.create :cmr_section_core_field
+      @core_field = Factory.create :cmr_core_field, {
+        :tree_id => @section.tree_id,
+        :required_for_event => true
+      }
+      @section.add_child @core_field
+    end
+
+    it "is invalid if hidden" do
+      @section.update_attributes :rendered_attributes => { :rendered => false }
+      @section.should_not be_valid 
+      @section.errors.full_messages.map(&:strip).should == ["The #{@section.name} section contains required fields"]
+    end
   end
 end

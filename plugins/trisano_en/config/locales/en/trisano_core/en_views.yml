@@ -203,6 +203,9 @@ en:
   display_by_default: Display by default
   display_on: 'Display on {{disease}}'
   displayed: 'Displayed'
+  required_for: "{{thing1}} is required for {{thing2}}"
+  contains_required_fields: 'The {{thing1}} contains required fields'
+  section_name: '{{name}} section'
 #csv_fields
   csv_export_columns: 'CSV Export Columns'
   long_name: 'Long Name'
@@ -708,6 +711,10 @@ en:
   events_normal_case: "Events"
   edit_morbidity_event_of: "Edit morbidity event: {{name}}"
   morbidity_event: "Morbidity Event"
+  morbidity_events: "Morbidity Events"
+  contact_events: "Contact Events"
+  place_events: "Place Events"
+  encounter_events: "Encounter Events"
   same_as_above: "Same as above"
   new_cmr_normal_case: "New CMR"
   new_morbidity_event: "New Morbidity Event"

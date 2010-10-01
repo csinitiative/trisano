@@ -50,4 +50,10 @@ module CoreFieldsHelper
     options = { :class => "roll #{cf_class} #{rendered_class}".strip }
     content_tag :li, options, &block
   end
+
+  def core_field_rendered_label(disease=nil)
+    label_text = disease ? t(:display_on, :disease => disease.disease_name) : t(:display_by_default)
+    label_tag "core_field[rendered_attributes][rendered]", label_text, :style => "display: inline"
+  end
+
 end

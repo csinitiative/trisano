@@ -363,4 +363,13 @@ module ApplicationHelper
   def render_actions(actions)
     actions.join("&nbsp;|&nbsp;")
   end
+
+  def error_tag_if(object, options, &block)
+    error_attributes = [options[:errors_on]].flatten.compact
+    errors = error_attributes.map { |attribute| object.errors[attribute] }.compact
+
+    concat tag(:div, {:class => :fieldWithErrors}, true) unless errors.empty?
+    block.call if block_given?
+    concat "</div>" unless errors.empty?
+  end
 end

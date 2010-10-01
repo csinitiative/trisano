@@ -208,6 +208,9 @@ es:
   display_by_default: Display by default (EN)
   display_on: 'Display on {{disease}} (EN)'
   displayed: 'Displayed (EN)'
+  required_for: "{{thing1}} is required for {{thing2}} (EN)"
+  contains_required_fields: 'The {{thing1}} contains required fields (EN)'
+  section_name: '{{name}} section (EN)'
 
 #csv_fields
   csv_export_columns: 'Columnas de Exportación CSV'
@@ -711,6 +714,10 @@ es:
   events_normal_case: "Eventos"
   edit_morbidity_event_of: "Editar evento de morbilidad: {{name}}"
   morbidity_event: "Evento de Morbilidad"
+  morbidity_events: "Morbidity Events (EN)"
+  contact_events: "Contact Events (EN)"
+  place_events: "Place Events (EN)"
+  encounter_events: "Encounter Events (EN)"
   same_as_above: "Ídem"
   new_cmr_normal_case: "CMR nuevo"
   new_morbidity_event: "Evento de Morbilidad Nuevo"

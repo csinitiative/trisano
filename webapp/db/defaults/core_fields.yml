@@ -793,6 +793,7 @@
   field_type: single_line_text
   key: morbidity_event[first_reported_PH_date]
   section_key: morbidity_event[reported_dates_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: false
@@ -927,6 +928,7 @@
   field_type: single_line_text
   key: morbidity_event[interested_party][person_entity][person][last_name]
   section_key: morbidity_event[interested_party][person_entity][name_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true

@@ -83,10 +83,35 @@ class CoreField < ActiveRecord::Base
       end
     end
 
+    # keep virtual attribute :rendered_attributes from being part of
+    # error messages
+    def human_attribute_name(attribute)
+      return "" if attribute.to_sym == :rendered_attributes
+      super
+    end
+
+
     private
 
     def event_fields_hash
       @event_fields_hash ||= {}
+    end
+  end
+
+  def validate
+    super
+    if required_for_event? and not render_default?
+      errors.add :rendered_attributes, required_for_event_error_message
+    end
+  end
+
+  def required_for_event?
+    if section?
+      full_set.any? do |field_or_section|
+        field_or_section.read_attribute :required_for_event
+      end
+    else
+      read_attribute :required_for_event
     end
   end
 
@@ -140,7 +165,7 @@ class CoreField < ActiveRecord::Base
     I18n.t render_default? ? :render_default? : :disease_specific
   end
 
-  def disease_specific_attributes=(attributes)
+  def rendered_attributes=(attributes)
     if attributes[:disease_id].blank?
       self.render_default = attributes[:rendered]
     else
@@ -174,6 +199,14 @@ class CoreField < ActiveRecord::Base
 
   def disease_associated?(disease)
     not disease_association(disease).nil?
+  end
+
+  def required_for_event_error_message
+    if section?
+      I18n.t :contains_required_fields, :thing1 => I18n.t(:section_name, :name => name)
+    else
+      I18n.t :required_for, :thing1 => name, :thing2 => I18n.t(event_type.to_s.pluralize)
+    end
   end
 
   class MissingCoreField < Struct.new(:key, :rendered_on_event, :help_text)
