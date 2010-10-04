@@ -83,6 +83,14 @@ class Person < ActiveRecord::Base
     end
   end
 
+  def dead?
+    !person_entity.human_events.detect do |evt|
+      unless evt.disease_event.nil? || evt.disease_event.died.nil?
+        evt.disease_event.died.the_code.match(/Y|Yes/i)
+      end
+    end.nil?
+  end
+
   class << self
     # Defaults to not showing deleted people. Override by providing the option:
     #   :show_deleted => true

@@ -15,19 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class PersonEntity < Entity
-  include FulltextSearch
+module Boolean
+  def to_yn
+    self ? 'Yes' : 'No'
+  end
+end
 
-  has_one :person, :foreign_key => "entity_id", :class_name => "Person"
-  accepts_nested_attributes_for :person, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
+class FalseClass
+  include Boolean
+end
 
-  has_and_belongs_to_many :races,
-    :foreign_key => 'entity_id',
-    :class_name => 'ExternalCode',
-    :join_table => 'people_races',
-    :association_foreign_key => 'race_id',
-    :order => 'code_description'
-
-  has_many :interested_parties, :foreign_key => :primary_entity_id
-  has_many :human_events, :through => :interested_parties
+class TrueClass
+  include Boolean
 end

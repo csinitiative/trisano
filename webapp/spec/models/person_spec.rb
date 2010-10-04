@@ -228,3 +228,48 @@ describe Person, 'named scopes for clinicians' do
   end
 
 end
+
+describe Person, 'with an associated disease event' do
+  before do
+    @entity = Factory.create(:person_entity, :person => Factory.create(:person))
+
+    @event = Factory.create(:morbidity_event)
+    @event.interested_party.person_entity = @entity
+    @event.interested_party.save
+
+    @disease_event = Factory.create(:disease_event)
+    @event.disease_event = @disease_event
+    @event.save
+  end
+
+  it 'should not be dead if disease event does not indicate whether or not there was death' do
+    @entity.person.dead?.should be_false
+  end
+
+  it 'should not be dead if disease event does not indicate death' do
+    @disease_event.died = external_code!('yesno', 'N')
+    @disease_event.save
+    @entity.person.dead?.should be_false
+  end
+
+  it 'should be dead if disease event indicates death' do
+    @disease_event.died = external_code!('yesno', 'Y')
+    @disease_event.save
+    @entity.person.dead?.should be_true
+  end
+
+  it 'should be dead if only one disease event indicates death' do
+    new_event = Factory.create(:morbidity_event)
+    new_event.interested_party.person_entity = @entity
+    new_event.interested_party.save
+
+    new_disease_event = Factory.create(:disease_event)
+    new_event.disease_event = new_disease_event
+    new_event.save
+
+    new_disease_event.died = external_code!('yesno', 'Y')
+    new_disease_event.save
+
+    @entity.person.dead?.should be_true
+  end
+end
