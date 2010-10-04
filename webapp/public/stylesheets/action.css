@@ -618,6 +618,9 @@ form.inplaceeditor-form a {
   margin: 1em;
   padding: 1em; }
 
+.staged-message-form .templates {
+  display: none; }
+
 .staged-message {
   margin-right: 1em;
   padding-left: 2px;
