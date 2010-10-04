@@ -129,7 +129,7 @@ es:
         hospitalization_facility:
           attributes:
             base:
-              blank_hospitalization_facility: "No puede quedarse en blanco la institución de hospitalización si se dan las fechas de hospitalización o el número del registro médico."
+              blank_hospitalization_facility: "No puede quedarse en blanco la institución de hospitalización si se dan las fechas de hospitalización."
 
         hospitals_participation:
           attributes:

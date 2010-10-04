@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'trisano'
+
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
 
@@ -128,8 +130,8 @@ describe StagedMessage do
       @good_message_ack[:MSA].ack_code.should == 'CA'
     end
 
-    it 'should return code CR on failure' do
-      @bad_message_ack[:MSA].ack_code.should == 'CR'
+    it 'should return code CE on failure' do
+      @bad_message_ack[:MSA].ack_code.should == 'CE'
     end
 
     it 'should return the configured recv_facility' do
@@ -167,6 +169,36 @@ describe StagedMessage do
         @good_message.message_header.msh_segment.sending_facility
       @bad_message_ack_header.recv_facility.should ==
         @bad_message.message_header.msh_segment.sending_facility
+    end
+
+    it 'should contain the TriSano OID in the MSH segment' do
+      @good_message_ack_header.sending_app.should ==
+        Trisano.application.oid.join(@good_message.message_header.msh_segment.item_delim)
+      @bad_message_ack_header.sending_app.should ==
+        Trisano.application.oid.join(@bad_message.message_header.msh_segment.item_delim)
+    end
+
+    it 'should contain an SFT segment' do
+      @good_message_ack[:SFT].should_not be_nil
+      @bad_message_ack[:SFT].should_not be_nil
+    end
+
+    it 'should contain the TriSano version number in the SFT segment' do
+      # ahem
+      @good_message_ack[:SFT].software_certified_version_or_release_number.should ==
+        Trisano.application.version_number
+      @bad_message_ack[:SFT].software_certified_version_or_release_number.should ==
+        Trisano.application.version_number
+    end
+
+    it 'should not have an ERR segment in case of success' do
+      @good_message_ack[:ERR].should be_nil
+    end
+
+    it 'should contain the TriSano bug-report address in the ERR segment' do
+      @bad_message_ack[:ERR].should_not be_nil
+      @bad_message_ack[:ERR].help_desk_contact_point.split(@bad_message_ack[:ERR].item_delim).third.should ==
+          Trisano.application.bug_report_address
     end
   end
 

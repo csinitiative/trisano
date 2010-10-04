@@ -28,7 +28,7 @@ class MorbidityEvent < HumanEvent
 
   validates_date :first_reported_PH_date, {
     :allow_blank => false,
-    :on_or_before =>  lambda { |record| record.created_at },
+    :on_or_before =>  lambda { |record| record.new_record? ? Date.today : record.created_at },
     :unless => lambda { |record| record.suppress_validation?(:first_reported_PH_date) }
   }
 

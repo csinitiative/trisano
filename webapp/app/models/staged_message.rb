@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'trisano'
+
 class StagedMessage < ActiveRecord::Base
   class StagedMessageError < StandardError
   end
@@ -295,6 +297,7 @@ class StagedMessage < ActiveRecord::Base
       # these literals will come out correctly by using the join
       # method (instead, e.g., of using 'ACK^R01^ACK').
       msh.message_type = %w{ACK R01 ACK}.join(msh.item_delim)
+      msh.sending_app = Trisano.application.oid.join(msh.item_delim)
 
       # current time: YYYYMMDDHHMMSS+/-ZZZZ
       msh.time = DateTime.now.strftime("%Y%m%d%H%M%S%Z").sub(':', '')
@@ -308,11 +311,6 @@ class StagedMessage < ActiveRecord::Base
       # Simple sequence number for now, might need to be a UUID
       msh.message_control_id = self.class.next_sequence_number
       msh.sending_facility = self.class.recv_facility
-
-      # TODO: Determine CE/EE programmatically
-      trisano_oid = %w{csi-trisano-ce 2.16.840.1.113883.4.434 ISO}
-      # trisano_oid = %w{csi-trisano-ee 2.16.840.1.113883.4.435 ISO}
-      msh.sending_app = trisano_oid.join(msh.item_delim)
     end
   end
 
@@ -320,11 +318,12 @@ class StagedMessage < ActiveRecord::Base
     @ack_sft ||= HL7::Message::Segment::SFT.new do |sft|
       sft.set_id = '1'
 
-      # results in 'CSI^D' : CSI is the organization name; it is a display
-      # name (as oppposed to a legal name, alias, etc.)
+      # results in 'CSI^D' : CSI is the organization name; it is a
+      # display name (as opposed to a legal name, alias, etc.)
       sft.software_vendor_organization = %w{CSI D}.join(sft.item_delim)
 
-      # sft.software_certified_version_or_release_number = ???
+      sft.software_certified_version_or_release_number =
+        Trisano.application.version_number
 
       sft.software_product_name = 'TriSano'
 
@@ -335,8 +334,14 @@ class StagedMessage < ActiveRecord::Base
 
   def ack_msa
     @ack_msa ||= HL7::Message::Segment::MSA.new do |msa|
-      # consider also 'CE'?
-      msa.ack_code = errors.size > 0 ? 'CR' : 'CA'
+      # According to the spec the only time you ever use CR is if the
+      # inbound message validation fails based on one of the following
+      # MSH fields:
+      # - message type  (MSH-9 )
+      # - processing ID (MSH-11)
+      # - version ID    (MSH-12)
+      # We'll introduce the CR code once we support those validations.
+      msa.ack_code = errors.size > 0 ? 'CE' : 'CA'
       msa.control_id = orig_msh.message_control_id if orig_msh
     end
   end
@@ -384,8 +389,8 @@ class StagedMessage < ActiveRecord::Base
         err.diagnostic_information = error_text.to_s
         err.user_message = 'error processing message'
 
-        # "NET^Internet^#{bug_report_address}"
-        # err.help_desk_contact_point = [ 'NET', 'Internet', bug_report_address ].join(err.item_delim)
+        err.help_desk_contact_point =
+          [ 'NET', 'Internet', Trisano.application.bug_report_address ].join(err.item_delim)
       end
     end
 

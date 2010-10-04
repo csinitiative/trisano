@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'trisano'
+
 module LayoutHelper
   extensible_helper
 
@@ -34,7 +36,7 @@ module LayoutHelper
     result << "<div class='bottom'>"
     result << "<a href='http://www.trisano.org/collaborate/'>#{t('collaborate')}</a>"
     result << "&nbsp;|&nbsp;"
-    result << "#{t('user_feedback')} (<a href='http://groups.google.com/group/trisano-user'>#{t('web')}</a>, <a href='mailto:trisano-user@googlegroups.com'>#{t 'email'}</a>)"
+    result << "#{t('user_feedback')} (<a href='http://groups.google.com/group/trisano-user'>#{t('web')}</a>, <a href='mailto:#{Trisano.application.bug_report_address}'>#{t 'email'}</a>)"
     result << "&nbsp;|&nbsp;"
     result << "<a href='http://www.trisano.org'>#{t('about')}</a>"
     result << "&nbsp;|&nbsp;"
