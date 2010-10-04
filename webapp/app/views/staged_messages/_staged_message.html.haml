@@ -44,7 +44,7 @@
           -if (staged_message.state == StagedMessage.states[:pending]) || (staged_message.state == StagedMessage.states[:unprocessable])
             = link_to t('similar_events'), event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date)
             = " | "
-            - form_tag(discard_staged_message_path(staged_message), :style => "display: inline", :id => "discard_#{staged_message.id}") do
+            - form_tag(discard_staged_message_path(staged_message), :style => "display: inline", :onclick => '$j(this).closest(".staged-message").fadeTo("fast", 0.4);', :id => "discard_#{staged_message.id}") do
               = hidden_field_tag('staged_message_id', staged_message.id)
               = link_to_function(t("discard"), "this.parentNode.submit()")
           %p
