@@ -12,7 +12,7 @@ class TriSanoWebApi
   attr_accessor :agent
 
   def initialize
-    @agent = WWW::Mechanize.new { |a|
+    @agent = Mechanize.new { |a|
       a.user_agent = 'TriSano Web API/1.0'
     }
 
@@ -67,7 +67,7 @@ class TriSanoWebApi
   def http_action
     begin
       yield
-    rescue WWW::Mechanize::ResponseCodeError => response_error
+    rescue Mechanize::ResponseCodeError => response_error
       local_errors = []
       errors = response_error.page.search(".//div[@class = 'errorExplanation']")
       errors.each { |e|
