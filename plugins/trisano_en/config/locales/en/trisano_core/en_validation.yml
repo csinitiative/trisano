@@ -158,6 +158,11 @@ en:
             encounter_date:
               before_bday: "cannot be earlier than birth date"
 
+        core_field:
+          attributes:
+            parent_id:
+              blank: "can't be blank if the field is required for a section"
+
         core_field_element:
           attributes:
             base:

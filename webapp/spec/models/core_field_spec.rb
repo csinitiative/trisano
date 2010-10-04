@@ -282,4 +282,28 @@ describe CoreField do
       @section.errors.full_messages.map(&:strip).should == ["The #{@section.name} section contains required fields"]
     end
   end
+
+  describe "required for a section" do
+    before do
+      @section = Factory.create :cmr_section_core_field
+      @core_field = Factory.create :cmr_core_field, {
+        :required_for_section => true,
+        :tree_id => @section.tree_id,
+      }
+      @section.add_child @core_field
+    end
+
+    it "is invalid if hidden" do
+      @core_field.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should_not be_valid
+      @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for #{@core_field.parent.try(:name)} section"]
+    end
+
+    it "can be hidden with its section" do
+      @section.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_valid
+      @section.should be_valid
+    end
+  end
+
 end

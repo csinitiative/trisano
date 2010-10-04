@@ -104,6 +104,12 @@ class CoreField < ActiveRecord::Base
         errors.add :rendered_attributes, required_for_event_error_message
       end
     end
+
+    if required_for_section?
+      unless render_default?
+        errors.add :rendered_attributes, required_for_section_error_message
+      end
+    end
   end
 
   def required_for_event?
@@ -179,6 +185,8 @@ class CoreField < ActiveRecord::Base
     end
   end
 
+  private
+
   def required_for_event_error_message
     if section?
       I18n.t :contains_required_fields, :thing1 => I18n.t(:section_name, :name => name)
@@ -187,7 +195,9 @@ class CoreField < ActiveRecord::Base
     end
   end
 
-  private
+  def required_for_section_error_message
+    I18n.t :required_for, :thing1 => name, :thing2 => I18n.t(:section_name, :name => parent.try(:name))
+  end
 
   def find_or_build_disease_association(options)
     unless disease = self.core_fields_diseases.first(:conditions => options)

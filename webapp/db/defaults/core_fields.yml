@@ -1176,6 +1176,7 @@
   event_type: morbidity_event
   key: morbidity_event[labs][place_entity][place][name]
   section_key: morbidity_event[labs_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: true
@@ -1244,6 +1245,7 @@
   key: morbidity_event[labs][lab_results][test_type]
   code_name: lab_test_type
   section_key: morbidity_event[labs_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: true
@@ -1327,6 +1329,7 @@
   field_type: single_line_text
   key: morbidity_event[reporting_agency][place_entity][place][name]
   section_key: morbidity_event[reporting_agency_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: true
@@ -1351,6 +1354,7 @@
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][last_name]
   section_key: morbidity_event[reporter_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: false
