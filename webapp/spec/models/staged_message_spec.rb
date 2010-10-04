@@ -18,7 +18,7 @@
 require 'trisano'
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/hl7/hl7_messages.rb')
 
 describe StagedMessage do
   fixtures :users, :places, :places_types, :entities, :codes

@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
-require File.expand_path(File.dirname(__FILE__) + '/../../features/support/hl7_messages.rb')
+require File.expand_path(File.dirname(__FILE__) + '/../../lib/hl7/hl7_messages.rb')
 
 def with_human_event(event_hash=@event_hash, &block)
   event = HumanEvent.new(event_hash)

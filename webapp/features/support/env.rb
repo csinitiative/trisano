@@ -64,7 +64,7 @@ require 'factory_girl/step_definitions'
 # explicitly load support files
 require File.expand_path(File.join(File.dirname(__FILE__), 'trisano'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'trisano_form_builder'))
-require File.expand_path(File.join(File.dirname(__FILE__), 'hl7_messages'))
+require File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'hl7', 'hl7_messages'))
 
 # make path_tos more extensible
 Cucumber::Rails::World.class_eval do

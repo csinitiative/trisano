@@ -1,4 +1,4 @@
-require 'features/support/hl7_messages'
+require 'hl7/hl7_messages'
 
 module StagedMessagesHelper
 end

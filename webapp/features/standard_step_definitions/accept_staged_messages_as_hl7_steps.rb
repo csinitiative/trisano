@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.join(File.dirname(__FILE__), '..', 'support', 'hl7_messages')
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'hl7', 'hl7_messages')
 
 
 Given /^I have the staged message "([^\"]*)"$/ do |msg_key|
