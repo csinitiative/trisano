@@ -26,7 +26,6 @@ class CoreField < ActiveRecord::Base
 
   validates_presence_of :field_type
   validates_presence_of :event_type
-
   before_validation :normalize_attributes
 
   class << self
@@ -100,8 +99,10 @@ class CoreField < ActiveRecord::Base
 
   def validate
     super
-    if required_for_event? and not render_default?
-      errors.add :rendered_attributes, required_for_event_error_message
+    if required_for_event?
+      unless render_default? and disease_associations_render?
+        errors.add :rendered_attributes, required_for_event_error_message
+      end
     end
   end
 
@@ -113,6 +114,10 @@ class CoreField < ActiveRecord::Base
     else
       read_attribute :required_for_event
     end
+  end
+
+  def disease_associations_render?
+    core_fields_diseases.select(&:changed?).all?(&:rendered)
   end
 
   def core_path
@@ -171,7 +176,14 @@ class CoreField < ActiveRecord::Base
     else
       association = find_or_build_disease_association(:disease_id => attributes[:disease_id])
       association.rendered = attributes[:rendered]
-      association.save!
+    end
+  end
+
+  def required_for_event_error_message
+    if section?
+      I18n.t :contains_required_fields, :thing1 => I18n.t(:section_name, :name => name)
+    else
+      I18n.t :required_for, :thing1 => name, :thing2 => I18n.t(event_type.to_s.pluralize)
     end
   end
 
@@ -199,14 +211,6 @@ class CoreField < ActiveRecord::Base
 
   def disease_associated?(disease)
     not disease_association(disease).nil?
-  end
-
-  def required_for_event_error_message
-    if section?
-      I18n.t :contains_required_fields, :thing1 => I18n.t(:section_name, :name => name)
-    else
-      I18n.t :required_for, :thing1 => name, :thing2 => I18n.t(event_type.to_s.pluralize)
-    end
   end
 
   class MissingCoreField < Struct.new(:key, :rendered_on_event, :help_text)

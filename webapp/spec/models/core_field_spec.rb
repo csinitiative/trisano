@@ -248,7 +248,22 @@ describe CoreField do
       @core_field.should_not be_valid
       @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for Morbidity Events"]
     end
+  end
 
+  describe "with a hidden disease association" do
+    before do
+      @disease = Factory.create :disease
+      @core_field = Factory.create :cmr_core_field, :required_for_event => true
+      @core_field.update_attributes  :rendered_attributes => {
+        :rendered => false,
+        :disease_id => @disease.id
+      }
+    end
+
+    it "is invalid, if requird for event" do
+      @core_field.should_not be_valid
+      @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for Morbidity Events"]
+    end
   end
 
   describe "section with at least one descendant that is required for an event" do
@@ -263,7 +278,7 @@ describe CoreField do
 
     it "is invalid if hidden" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
-      @section.should_not be_valid 
+      @section.should_not be_valid
       @section.errors.full_messages.map(&:strip).should == ["The #{@section.name} section contains required fields"]
     end
   end
