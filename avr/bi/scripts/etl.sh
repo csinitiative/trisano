@@ -33,7 +33,7 @@ DEST_DB_PORT=5432
 DEST_DB_NAME=trisano_warehouse
 DEST_DB_USER=trisano_su
 
-PSQL_FLAGS="-X -q -t"
+PSQL_FLAGS="-X -q -t -v ON_ERROR_STOP=on"
 PGDUMP_FLAGS="-i -O -x"
 
 # NOTE: The PSQLPATH and PGDUMPPATH environment variables can be used to set
@@ -96,6 +96,11 @@ find_file () {
     fi
 }
 
+DIE () {
+    echo $1
+    exit 1
+}
+
 find_file psql $PSQLPATH
 PSQL=$FILE
 find_file pg_dump $PGDUMPPATH
@@ -105,24 +110,27 @@ ETL_SCRIPT=dw.sql
 
 CMM=$($PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
                     -d $DEST_DB_NAME -c "show client_min_messages")
+
+if [[ "X${CMM}X" == "XX" ]]; then
+    DIE "There's probably a problem with the settings in your etl.sh file. Check that you can actually connect to PostgreSQL with those settings"
+fi
+
 echo "Temporarily quieting PostgreSQL"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = WARNING;"
+    -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = WARNING;" || \
+    DIE "Couldn't quiet PostgreSQL"
 
 echo "Preparing for ETL process"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "SELECT trisano.prepare_etl()"
-
-if [ $? != 0 ] ; then
-    echo "Problem preparing for ETL"
-    exit 1
-fi
+    -d $DEST_DB_NAME -c "SELECT trisano.prepare_etl()" || \
+    DIE "Couldn't prepare for ETL process"
 
 echo "Dumping database:"
 echo "   $SOURCE_DB_HOST:$SOURCE_DB_PORT/$SOURCE_DB_NAME -> $DEST_DB_HOST:$DEST_DB_PORT/$DEST_DB_NAME"
 echo "   Dropping bucardo schema in warehouse, if exists"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;"
+    -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;" || \
+    DIE "Couldn't clean Bucardo out warehouse"
 
 # TODO: Only do this if bucardo schema exists in source databse
 echo "   Checking for bucardo schema in source"
@@ -132,72 +140,48 @@ if [ "x$BUC" = "xbucardo" ]; then
     echo "   Copying bucardo schema"
     $PGDUMP $PGDUMP_FLAGS -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \
             -n bucardo $SOURCE_DB_NAME | \
-        $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME
+        $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME || \
+        DIE "Problem copying Bucardo"
 fi
 
 echo "   Dumping main schema"
 $PGDUMP $PGDUMP_FLAGS -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \
     -n public $SOURCE_DB_NAME | \
-    $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME
+    $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME || \
+    DIE "Problem dumping database schema"
 # Drop bucardo again
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;"
-#echo "   Dropping constraints on dumped tables"
-#CONSTRAINTS=$($PSQL $PSQL_FLAGS -A -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-#    -d $DEST_DB_NAME <<DROPCONSTRAINT
-#SELECT
-#    'ALTER TABLE public.' || pc.relname || ' DROP CONSTRAINT ' || pcon.conname || ' CASCADE;
-#    '
-#FROM
-#    pg_catalog.pg_constraint pcon
-#    JOIN pg_catalog.pg_class pc
-#        ON (pcon.conrelid = pc.oid)
-#    JOIN pg_catalog.pg_namespace pn
-#        ON (pc.relnamespace = pn.oid)
-#WHERE
-#    pn.nspname = 'public' AND
-#    confrelid = 0;
-#DROPCONSTRAINT
-#)
-#
-#( for CONSTRAINT in $CONSTRAINTS ; do echo $CONSTRAINT ; done ) | \
-#    $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-#     -d $DEST_DB_NAME
+    -d $DEST_DB_NAME -c "DROP SCHEMA IF EXISTS bucardo CASCADE;" || \
+    DIE "Problem cleaning Bucardo"
 
 echo "   Doing main dump"
 $PGDUMP $PGDUMP_FLAGS --disable-triggers -a -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT \
     -U $SOURCE_DB_USER -n public $SOURCE_DB_NAME | \
-    $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME
-
-if [ $? != 0 ] ; then
-    echo "Problem dumping database into warehouse staging area"
-    exit 1
-fi
+    $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME || \
+    DIE "Problem with main database dump into staging area"
 
 echo "Performing ETL data manipulation"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -f $ETL_SCRIPT $DEST_DB_NAME
+    -f $ETL_SCRIPT $DEST_DB_NAME || DIE "Failed to create new data warehouse structures"
 
 echo "Processing plugin ETL"
 echo "Checking for directories in $TRISANO_PLUGIN_DIRECTORY"
 for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
     if [ -r $plugin/avr/etl.sql ] ; then
         echo "Found ETL file for $plugin"
-        $PGSQL_PATH/psql -t -q -X -h $DEST_DB_HOST \
+        $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
             -p $DEST_DB_PORT -U $DEST_DB_USER \
-            -f $plugin/avr/etl.sql $DEST_DB_NAME
+            -f $plugin/avr/etl.sql $DEST_DB_NAME || \
+            DIE "Error running ETL for plugin $plugin"
     fi
 done
 
-if [ $? != 0 ] ; then
-    echo "Problem performing post-dump ETL"
-    exit 1
-fi
-
 echo "Swapping schemas"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()"
+    -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()" || \
+    DIE "Problem swapping staging schema into production use"
 
 echo "Fixing PostgreSQL verbosity"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
-    -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = $CMM;"
+    -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = $CMM;" || \
+    DIE "Problem resetting PostgreSQL verbosity"

@@ -843,6 +843,25 @@ CREATE AGGREGATE trisano.array_accum (anyelement)
     initcond = '{}'
 );
 
+DROP AGGREGATE IF EXISTS trisano.array_accum_strict(anyelement) CASCADE;
+
+CREATE OR REPLACE FUNCTION trisano.array_append_strict(anyarray, anyelement) 
+    RETURNS anyarray
+    CALLED ON NULL INPUT
+    IMMUTABLE
+    LANGUAGE sql
+    AS
+$$
+    SELECT CASE WHEN $2 IS NULL THEN $1 ELSE array_append($1, $2) END;
+$$;
+
+CREATE AGGREGATE trisano.array_accum_strict(anyelement)
+(
+    sfunc = array_append_strict,
+    stype = anyarray,
+    initcond = '{}'
+);
+
 CREATE OR REPLACE FUNCTION trisano.build_form_tables() RETURNS void
     LANGUAGE plpgsql
     AS $$

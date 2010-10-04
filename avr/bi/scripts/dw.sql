@@ -142,6 +142,7 @@ WHERE
         'dw_place_questions',
         'dw_encounter_questions',
         'dw_telephones',
+        'dw_prf',
         'dw_email_addresses'
     );
 COMMIT;
@@ -181,6 +182,37 @@ CREATE TABLE dw_entity_telephones AS
     GROUP BY entity_id;
 
 CREATE UNIQUE INDEX phns_entity_ix ON dw_entity_telephones (entity_id);
+
+CREATE TABLE dw_prf2 AS
+    SELECT
+        participation_id,
+        food_handler_id_arr[1] AS food_handler_id,
+        healthcare_worker_id_arr[1] AS healthcare_worker_id,
+        group_living_id_arr[1] AS group_living_id,
+        day_care_association_id_arr[1] AS day_care_association_id,
+        pregnant_id_arr[1] AS pregnant_id,
+        pregnancy_due_date_arr[1] AS pregnancy_due_date,
+        risk_factors_arr[1] AS risk_factors,
+        occupation_arr[1] AS occupation,
+        risk_factors_notes_arr[1] AS risk_factors_notes
+    FROM (
+        SELECT
+            participation_id,
+            array_append(trisano.array_accum_strict(participation_id), NULL::integer) AS participation_id_arr,
+            array_append(trisano.array_accum_strict(food_handler_id), NULL::integer) AS food_handler_id_arr,
+            array_append(trisano.array_accum_strict(healthcare_worker_id), NULL::integer) AS healthcare_worker_id_arr,
+            array_append(trisano.array_accum_strict(group_living_id), NULL::integer) AS group_living_id_arr,
+            array_append(trisano.array_accum_strict(day_care_association_id), NULL::integer) AS day_care_association_id_arr,
+            array_append(trisano.array_accum_strict(pregnant_id), NULL::integer) AS pregnant_id_arr,
+            array_append(trisano.array_accum_strict(pregnancy_due_date), NULL::date) AS pregnancy_due_date_arr,
+            array_append(trisano.array_accum_strict(risk_factors), NULL::varchar(255)) AS risk_factors_arr,
+            array_append(trisano.array_accum_strict(risk_factors_notes), NULL::text) AS risk_factors_notes_arr,
+            array_append(trisano.array_accum_strict(occupation), NULL::varchar(255)) AS occupation_arr
+        FROM participations_risk_factors
+        GROUP BY participation_id
+    ) foo
+;
+CREATE UNIQUE INDEX prf_participation_id_ix ON dw_prf2 (participation_id);
 
 CREATE TABLE dw_morbidity_events AS
 SELECT
@@ -375,7 +407,7 @@ SELECT
 FROM events
     LEFT JOIN participations pplpart
         ON (events.id = pplpart.event_id AND pplpart.secondary_entity_id IS NULL AND pplpart.type = 'InterestedParty')
-    LEFT JOIN participations_risk_factors prf
+    LEFT JOIN dw_prf2 prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
         ON (pplpart.primary_entity_id = pplent.id)
@@ -673,7 +705,7 @@ SELECT
 FROM events
     LEFT JOIN participations pplpart
         ON (events.id = pplpart.event_id AND pplpart.secondary_entity_id IS NULL AND pplpart.type = 'InterestedParty')
-    LEFT JOIN participations_risk_factors prf
+    LEFT JOIN dw_prf2 prf
         ON (prf.participation_id = pplpart.id)
     LEFT JOIN entities pplent
         ON (pplpart.primary_entity_id = pplent.id)
