@@ -62,14 +62,20 @@ class Telephone < ActiveRecord::Base
 
   before_save :strip_dash_from_phone
 
-  # A basic (###) ###-#### Ext. # format for phone numbers
-  def simple_format
+  def simple_phone_number
     returning [] do |number|
-      number << description_format
       number << configurable_format(:country_code) if use?(:country_code)
       number << configurable_format(:area_code) if use?(:area_code)
       number << configurable_format(:phone_number)
       number << extension_format
+    end.compact.join(' ')
+  end
+
+  # A basic (###) ###-#### Ext. # format for phone numbers
+  def simple_format
+    returning [] do |number|
+      number << description_format
+      number << simple_phone_number
     end.compact.join(' ')
   end
 

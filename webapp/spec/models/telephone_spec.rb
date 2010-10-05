@@ -28,19 +28,27 @@ describe Telephone do
     phone = Telephone.new(:area_code => '123',
                           :phone_number => '765-4321',
                           :extension => '9')
-    phone.simple_format.should == '(123) 765-4321 Ext. 9'
+    phone.simple_phone_number.should == '(123) 765-4321 Ext. 9'
   end
 
   it "should produce a phone format w/out an area code" do
     phone = Telephone.new(:phone_number => '765-4321',
                           :extension   => '9')
-    phone.simple_format.should == '765-4321 Ext. 9'
+    phone.simple_phone_number.should == '765-4321 Ext. 9'
   end
 
   it "should produce a phone format w/out an extension" do
     phone = Telephone.new(:area_code => '123',
                           :phone_number => '765-4321')
-    phone.simple_format.should == '(123) 765-4321'
+    phone.simple_phone_number.should == '(123) 765-4321'
+  end
+
+  it "should produce a phone format w/ a label" do
+    loc_code = external_code!('phone_label', 'Foo', :code_description => 'Foo')
+    phone = Telephone.new(:area_code => '123',
+                          :phone_number => '765-4321',
+                          :entity_location_type => loc_code)
+    phone.simple_format.should == 'Foo: (123) 765-4321'
   end
 
   # TODO: test validations here

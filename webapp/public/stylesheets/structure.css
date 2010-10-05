@@ -123,6 +123,9 @@ legend {
   background-color: #fff;
   color: #0900; }
 
+.nobg {
+  background-color: transparent; }
+
 .horiz {
   display: block;
   float: left;
