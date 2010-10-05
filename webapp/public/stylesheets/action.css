@@ -618,6 +618,12 @@ form.inplaceeditor-form a {
   margin: 1em;
   padding: 1em; }
 
+.staged-message-form .hl7-input {
+  height: 13em;
+  width: 52em; }
+  .staged-message-form .hl7-input #hl7-text-input {
+    height: 10em;
+    width: 50em; }
 .staged-message-form .templates {
   display: none; }
 

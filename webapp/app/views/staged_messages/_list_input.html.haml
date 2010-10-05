@@ -1,8 +1,7 @@
 .templates{:class => 'listInput'}
   - form_for(@staged_message, :html => { :name => 'new_staged_message' }) do |f|
-    %p
+    .hl7-input
       = f.error_messages
       = f.label :hl7_message, 'Sample HL7 message'
       = f.select :hl7_message, hl7_messages.map { |m| [ m[0].to_s.humanize, m[1] ] }
-    %p
-      = f.submit t('create'), :disabled => true
+    = f.submit t('create'), :disabled => true
