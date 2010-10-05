@@ -191,7 +191,7 @@ en:
   back_to_core_fields: '< Back to Core Fields'
   back_to_disease_core_fields: '< Back to Core Fields for {{name}}'
   core_field: 'Core Field'
-  core_fields: 'Core Fields'
+  core_fields: 'Core&nbsp;Fields'
   morbidity_event_fields: 'Morbidity Event Fields'
   contact_event_fields: 'Contact Event Fields'
   place_event_fields: 'Place Event Fields'

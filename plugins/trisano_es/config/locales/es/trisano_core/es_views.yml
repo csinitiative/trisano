@@ -197,7 +197,7 @@ es:
   back_to_core_fields: '< Regresar a Campos esenciales'
   back_to_disease_core_fields: '< Back to Core Fields for {{name}} (EN)'
   core_field: 'Campo Principal'
-  core_fields: 'Campo Principales'
+  core_fields: 'Campo&nbsp;Principales'
   morbidity_event_fields: 'Campos de Eventos de Morbilidad'
   contact_event_fields: 'Campos de Eventos de Contacto'
   place_event_fields: 'Colocar Campos de Evento'
