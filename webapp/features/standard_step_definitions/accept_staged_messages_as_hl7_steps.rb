@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'hl7', 'hl7_messages')
-
 
 Given /^I have the staged message "([^\"]*)"$/ do |msg_key|
   @staged_message = StagedMessage.create(:hl7_message => hl7_messages[msg_key.downcase.to_sym])
