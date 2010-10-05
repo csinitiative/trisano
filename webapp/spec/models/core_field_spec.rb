@@ -285,6 +285,7 @@ describe CoreField do
 
   describe "required for a section" do
     before do
+      @disease = Factory.create :disease
       @section = Factory.create :cmr_section_core_field
       @core_field = Factory.create :cmr_core_field, {
         :required_for_section => true,
@@ -301,6 +302,24 @@ describe CoreField do
 
     it "can be hidden with its section" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_valid
+      @section.should be_valid
+    end
+
+    it "is invalid if hidden by a disease association" do
+      @core_field.update_attributes :rendered_attributes => {
+        :rendered => false,
+        :disease_id => @disease.id
+      }
+      @core_field.should_not be_valid
+      @core_field.should have(1).error_on(:rendered_attributes)
+    end
+
+    it "can be hidden with its section by a disease association" do
+      @section.update_attributes :rendered_attributes => {
+        :rendered => false,
+        :disease_id => @disease.id
+      }
       @core_field.should be_valid
       @section.should be_valid
     end

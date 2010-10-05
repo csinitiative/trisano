@@ -99,16 +99,9 @@ class CoreField < ActiveRecord::Base
 
   def validate
     super
-    if required_for_event?
-      unless render_default? and disease_associations_render?
-        errors.add :rendered_attributes, required_for_event_error_message
-      end
-    end
-
-    if required_for_section?
-      unless render_default?
-        errors.add :rendered_attributes, required_for_section_error_message
-      end
+    unless render_default? and disease_associations_render?
+      errors.add :rendered_attributes, required_for_event_error_message if required_for_event?
+      errors.add :rendered_attributes, required_for_section_error_message if required_for_section?
     end
   end
 
