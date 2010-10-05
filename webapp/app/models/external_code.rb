@@ -181,6 +181,10 @@ class ExternalCode < ActiveRecord::Base
     disease_specific_selections.create(:disease => disease, :rendered => false)
   end
 
+  def yes?
+    the_code.match(/Y|Yes/i)
+  end
+
   private
 
   def disease_specific_selection(disease)
@@ -191,5 +195,4 @@ class ExternalCode < ActiveRecord::Base
   def disease_selection_associated?(disease)
     not disease_specific_selection(disease).nil?
   end
-
 end

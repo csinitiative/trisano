@@ -86,7 +86,7 @@ class Person < ActiveRecord::Base
   def dead?
     !person_entity.human_events.detect do |evt|
       unless evt.disease_event.nil? || evt.disease_event.died.nil?
-        evt.disease_event.died.the_code.match(/Y|Yes/i)
+        evt.disease_event.died.yes?
       end
     end.nil?
   end
