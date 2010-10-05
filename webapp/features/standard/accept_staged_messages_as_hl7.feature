@@ -40,4 +40,5 @@ Feature: Accept Staged Messages as HL7
     Given I am logged in as a super user
     When I post the "ARUP_1" message directly to "staged_messages"
     Then I should receive a 200 response
+    And the "Content-Type" HTTP header should have a value of "application/edi-hl7v2; charset=utf-8"
 
