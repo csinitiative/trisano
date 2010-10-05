@@ -14,12 +14,6 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %p
-  // -input_choice = { :type => nil }
   -input_choices = [ ['--select input type--', nil], %w{text text}, %w{file file}, ['built-in samples', 'list'] ]
-  =f.label 'Input type'
-
-  // This selector is used with a JS onchange callback, not an actual
-  // model (which is used by the selected form input from the
-  // templates).
+  =label :input_choice, :type, 'Input type'
   =select :input_choice, :type, input_choices, :allow_blank => true
-  #inputPane

@@ -7,7 +7,7 @@ $j(function() {
     $j('.inputMessage', inputPane).remove();
     $j('.templates.'+inputType+'Input').children().clone()
       .addClass('inputMessage').appendTo(inputPane);
-
+    $j('option[value=""]',this).remove();
     $j('input[type="submit"]').attr('disabled', false);
   });
 });

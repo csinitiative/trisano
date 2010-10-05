@@ -42,6 +42,8 @@ class StagedMessagesController < ApplicationController
     @staged_message = StagedMessage.new(params[:staged_message])
     @staged_message.hl7_message ||= @raw_hl7_message
 
+    @staged_message.hl7_message = @staged_message.hl7_message.read.chomp if @staged_message.hl7_message.instance_of?(Tempfile)
+
     respond_to do |format|
       if @staged_message.save
         flash[:notice] = t("staged_message_successfully_created")

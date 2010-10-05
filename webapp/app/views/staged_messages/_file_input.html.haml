@@ -1,0 +1,8 @@
+.templates{:class => 'fileInput'}
+  - form_for(@staged_message, :html => { :name => 'new_staged_message', :enctype => 'multipart/form-data' }) do |f|
+    %p
+      = f.error_messages
+      = f.label :hl7_message, 'HL7 message file'
+      = f.file_field :hl7_message
+    %p
+      = f.submit t('create'), :disabled => true
