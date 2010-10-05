@@ -93,18 +93,21 @@ describe CoreField do
   shared_examples_for "disease is associated" do
 
     it "should be rendered if disease association is for showing the field" do
-      Factory.create(:core_fields_disease, :disease => @disease, :core_field => @cf)
+      @cf.update_attributes :rendered_attributes => { :rendered => true, :disease_id => @disease.id }
       @cf.should be_rendered_on_event(@event)
     end
 
     it "should not be rendered if association is for hiding field" do
-      Factory.create(:core_fields_disease,
-        :disease => @disease,
-        :core_field => @cf,
-        :rendered => false)
+      @cf.update_attributes :rendered_attributes => { :rendered => false, :disease_id => @disease.id }
       @cf.should_not be_rendered_on_event(@event)
     end
 
+    it "should persist updates to the disease association" do
+      @cf.update_attributes :rendered_attributes => { :rendered => true, :disease_id => @disease.id }
+      @cf.should be_rendered_on_event(@event)
+      @cf.update_attributes :rendered_attributes => { :rendered => false, :disease_id => @disease.id }
+      @cf.should_not be_rendered_on_event(@event)
+    end
   end
 
   describe "rendering disease specific core fields" do

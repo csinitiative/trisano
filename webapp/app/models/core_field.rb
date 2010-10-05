@@ -21,7 +21,7 @@ class CoreField < ActiveRecord::Base
   acts_as_nested_set :scope => :tree_id if table_exists?
 
   belongs_to :code_name
-  has_many :core_fields_diseases, :dependent => :destroy
+  has_many :core_fields_diseases, :dependent => :destroy, :autosave => true
   has_many :diseases, :through => :core_fields_diseases
 
   validates_presence_of :field_type
@@ -170,6 +170,7 @@ class CoreField < ActiveRecord::Base
   end
 
   def rendered_attributes=(attributes)
+    attributes.symbolize_keys!
     if attributes[:disease_id].blank?
       self.render_default = attributes[:rendered]
     else
@@ -193,10 +194,10 @@ class CoreField < ActiveRecord::Base
   end
 
   def find_or_build_disease_association(options)
-    unless disease = self.core_fields_diseases.first(:conditions => options)
-      disease = self.core_fields_diseases.build(options)
+    disease_association = core_fields_diseases.detect do |core_field_disease|
+      !options[:disease_id].blank? and core_field_disease.disease_id == options[:disease_id].to_i
     end
-    disease
+    disease_association || core_fields_diseases.build(options)
   end
 
   def bool_cast(value)
