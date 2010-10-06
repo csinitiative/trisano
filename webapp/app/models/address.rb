@@ -34,6 +34,17 @@ class Address < ActiveRecord::Base
     "#{self.street_number} #{street_name}".strip
   end
 
+  def city_state_zip
+    return '' if self.city.blank? && self.state.blank? && self.postal_code.blank?
+
+    csz  = self.city.to_s
+    csz += ', ' unless csz.blank? || self.state.blank?
+    csz += self.state.the_code unless self.state.blank?
+    csz += "  #{self.postal_code}" unless self.postal_code.blank?
+
+    csz
+  end
+
   def state_name
     self.state.code_description if self.state
   end
@@ -57,7 +68,19 @@ class Address < ActiveRecord::Base
     fa
   end
 
+  def compact_format
+    result = number_and_street
+    result = "Unit #{self.unit_number}\n" + result unless self.unit_number.blank?
+    result << "\n#{city_state_zip}" unless city_state_zip.blank?
+    result << "\n" unless county_name.blank? && district_name.blank?
+    result << "\n#{county_name}" unless county_name.blank?
+    result << " County" unless county_name.blank? || county_name.match(/county$/i)
+
+    result
+  end
+
   protected
+
   def validate
     if attributes.all? {|k, v| v.blank?}
       errors.add_to_base(:all_blank)

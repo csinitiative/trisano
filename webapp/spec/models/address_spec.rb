@@ -49,3 +49,66 @@ describe Address do
     address.state_name.should == 'Utah'
   end
 end
+
+describe Address, '#compact_format' do
+  before(:each) do
+    @address = Address.create(:street_number => '123', :street_name => 'Sesame Street')
+    @state = ExternalCode.new(:the_code => 'NY', :code_description => 'New York')
+    @county = ExternalCode.new(:code_description => 'Some County')
+  end
+
+  it "should leave off unprovided information" do
+    @address.compact_format.should == '123 Sesame Street'
+  end
+
+  it "should include unit number if provided" do
+    @address.update_attributes(:unit_number => '1A')
+    @address.compact_format.should match(/^Unit 1A/)
+  end
+
+  it "should include city if provided" do
+    @address.update_attributes(:city => 'Anytown')
+    @address.compact_format.should match(/Anytown$/)
+  end
+
+  it "should include state if provided" do
+    @address.update_attributes(:state => @state)
+    @address.compact_format.should match(/NY$/)
+  end
+
+  it "should include postal code if provided" do
+    @address.update_attributes(:postal_code => '00000')
+    @address.compact_format.should match(/00000$/)
+  end
+
+  it "should format correctly with state and postal code" do
+    @address.update_attributes(:state => @state, :postal_code => '00000')
+    @address.compact_format.should match(/NY  00000$/)
+  end
+
+  it "should format correctly with city and postal code" do
+    @address.update_attributes(:city => 'Anytown', :postal_code => '00000')
+    @address.compact_format.should match(/Anytown  00000$/)
+  end
+
+  it "should format correctly with city, state, and postal code" do
+    @address.update_attributes(:state => @state, :city => 'Anytown', :postal_code => '00000')
+    @address.compact_format.should match(/Anytown, NY  00000$/)
+  end
+
+  it "should format correctly with city and state" do
+    @address.update_attributes(:state => @state, :city => 'Anytown')
+    @address.compact_format.should match(/Anytown, NY$/)
+  end
+
+  it "should include the county when provided" do
+    @address.update_attributes(:county => @county)
+    @address.compact_format.should match(/Some County$/)
+  end
+
+  it "should append 'county' to the county name when it is not part of the name" do
+    @county.code_description = 'Some'
+    @address.update_attributes(:county => @county)
+    @address.compact_format.should match(/Some County$/)
+  end
+end

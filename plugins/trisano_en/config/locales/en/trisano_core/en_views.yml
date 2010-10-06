@@ -15,6 +15,7 @@ en:
   add_thing: 'Add {{name}}'
   new_thing: 'New {{name}}'
   back_to: '< Back to {{name}}'
+  create_another: 'Create another {{name}}'
   create_new: 'Create new {{name}}'
   events: "EVENTS"
   search: "SEARCH"
@@ -391,7 +392,7 @@ en:
   phone_number: "Phone number"
   extension: 'Extension'
   agency_phone: 'Agency phone'
-  
+
 #telephones
   extension_abbrev: "Ext."
 #clinicians
@@ -414,7 +415,7 @@ en:
   treatment_date: 'Treatment Date'
   stop_treatment_date: 'Stop Treatment Date'
   add_treatment: "Add a Treatment"
-  
+
 #encounters
   no_encounters: "No encounters have been recorded for this {{thing}}"
   encounter_on: "Encounter on {{date}}"
@@ -427,7 +428,7 @@ en:
   no_encounter_notes: 'No encounter notes have been recorded for this event'
   add_encounter: "Add a new encounter"
   encounter_notes: "Encounter Notes"
-  
+
 #exposures
   food_handler: "Food handler"
   healthcare_worker: "Healthcare worker"
@@ -676,6 +677,7 @@ en:
   export_all_to_csv: "Export all to CSV"
   change_view: "Change View"
   status: 'Status'
+  event_date: 'Event Date'
   mortality_status: 'Mortality Status'
   pregnancy_status: 'Pregnancy Status'
   event_investigation_status: "Event Investigation Status"
@@ -748,7 +750,7 @@ en:
   organism_name: "Organism Name"
   create_new_organism: "Create New Organism"
   list_organisms: "List Organisms"
-  
+
   #People
   create_new_person: "Create new person"
   clear_search_criteria: "Clear Search Criteria"
@@ -760,7 +762,7 @@ en:
   add_an_email_address: "Add an Email Address"
   edit_person: "Edit Person"
   person_detail: "Person Detail"
-  
+
   #Place events
   view_place_event: "View Place Event"
   assigned_jurisdiction: "Assigned Jurisdiction"
@@ -810,6 +812,12 @@ en:
     contact_event: Contact
 
   #staging_area
+  input_type: "Input Type"
+  text: "text"
+  file: "file"
+  built_in_samples: "built-in samples"
+  hl7_message_file: "HL7 Message File"
+  sample_hl7_message: "Sample HL7 Message"
   no_staged_messages: "There are no messages in the {{state}} state"
   staged_messages: "Staged Messages"
   create_staged_message: "Create a staged message"
@@ -957,7 +965,7 @@ en:
   core_data: "Core Data"
   formbuilder_data: "Formbuilder Data"
   system_generated: "System Generated"
-  
+
   #participations
   hospitalization: "Hospitalization"
   treatment: "Treatment"

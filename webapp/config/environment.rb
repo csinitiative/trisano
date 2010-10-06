@@ -109,6 +109,7 @@ Rails::Initializer.run do |config|
     require 'will_paginate'
     require 'core_ext/array'
     require 'core_ext/boolean'
+    require 'core_ext/string'
     require 'task_filter'
     require 'event_search'
     require 'fulltext_search'
@@ -142,4 +143,14 @@ Mime::Type.register("application/vnd.oasis.opendocument.text", :odt)
 Mime::Type.register("application/vnd.ms-excel",  :xls, ['application/x-msexcel', 'application/ms-excel'])
 Mime::Type.register("application/vnd.oasis.opendocument.spreadsheet",  :ods)
 Mime::Type.register("image/bmp",  :bmp)
-Mime::Type.register("application/edi-hl7", :hl7)
+
+# http://wiki.hl7.org/index.php?title=Media-types_for_various_message_formats
+# lists some other types for consideration:
+#
+# application/edi-hl7v2+xml - HL7v2 with XML encoding
+# application/edi-hl7v3+xml - HL7v3 with XML encoding
+#
+# We don't currently handle XML posts, so we ignore these types.  The
+# application/edi-hl7 type was rejected, but we'll continue to accept
+# it for the moment.
+Mime::Type.register("application/edi-hl7v2", :hl7, ["application/edi-hl7"])

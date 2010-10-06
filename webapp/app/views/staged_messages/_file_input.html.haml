@@ -1,8 +1,7 @@
 .templates{:class => 'fileInput'}
   - form_for(@staged_message, :html => { :name => 'new_staged_message', :enctype => 'multipart/form-data' }) do |f|
-    %p
+    .hl7-input
       = f.error_messages
-      = f.label :hl7_message, 'HL7 message file'
+      = f.label :hl7_message, t('hl7_message_file')
       = f.file_field :hl7_message
-    %p
-      = f.submit t('create'), :disabled => true
+    = f.submit t('create')

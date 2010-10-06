@@ -15,6 +15,7 @@ es:
   add_thing: 'Agregar {{name}}'
   new_thing: 'Nuevo/a {{name}}'
   back_to: '< Regresar a {{name}}'
+  create_another: 'Create a new {{name}}'
   create_new: 'Crear {{name}} nuevo/a'
   case_management: 'Casos'
   entity_management: 'Entidades'
@@ -46,7 +47,7 @@ es:
   enable_save_buttons: "Activar botones de guardar"
   previous: "Anterior"
   next: "Próximo"
-  
+
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
   jurisdictions_with_access: 'Jurisdicciones con acceso'
@@ -154,6 +155,7 @@ es:
   edit_contact_event: 'Editar el Evento de Contacto: {{name}}'
   jurisdiction: 'Jurisdicción'
   status: 'Estado'
+  event_date: 'Event Date (EN)'
   demographic: 'Demográfico/a(s)'
   clinical: 'Clínico/a(s)'
   laboratory: 'Laboratorio'
@@ -396,7 +398,7 @@ es:
   phone_number: "Número telefónico"
   extension: 'Extensión'
   agency_phone: 'Teléfono de agencia'
-  
+
 #telephones
   extension_abbrev: "Ext."
 #clinicians
@@ -419,7 +421,7 @@ es:
   treatment_date: 'Fecha de Tratamiento'
   stop_treatment_date: 'Fecha del Fin de Tratamiento'
   add_treatment: "Agregar Tratamiento"
-  
+
 #encounters
   no_encounters: "No se han registrado los encuentros para este/a {{thing}}"
   encounter_on: "Encuentro en {{date}}"
@@ -432,7 +434,7 @@ es:
   no_encounter_notes: 'No se han escrito apuntes de encuentro para este evento'
   add_encounter: "Agregar encuentro nuevo"
   encounter_notes: "Apuntes del Encuentro"
-  
+
 #exposures
   food_handler: "Manejador(a) de alimentos"
   healthcare_worker: "Obrador/a de atención médica"
@@ -621,7 +623,7 @@ es:
   phone: "Número telefónico"
   confirm_code_delete: "¿Borrar el código por completo?"
   confirm_code_restore: "¿Restaurar el código por completo?"
-  
+
   #export_conversion_values
   create_export_conversion_value: "Crear Valor de Conversión de Exportación"
   export_conversion_value: "Valor de Conversión de Exportación"
@@ -738,7 +740,7 @@ es:
   reject: Rechazar
   approve: Aprobar
   reopen: Reabrir
-  also_grant_access: También permitir que acceda 
+  also_grant_access: También permitir que acceda
   route_event: Enrutar evento
   routing_disabled: Enrutamiento desactivado
   more_choices: Más opciones...
@@ -751,7 +753,7 @@ es:
   organism_name: "Nombre de Organismo"
   create_new_organism: "Crear Organismo Nuevo"
   list_organisms: "Listar Organismos"
-  
+
   #People
   create_new_person: "Crear persona nueva"
   clear_search_criteria: "Borrar Criteria de Búsqueda"
@@ -763,7 +765,7 @@ es:
   add_an_email_address: "Agregar Dirección de Correo Electrónico"
   edit_person: "Editar Persona"
   person_detail: "Detalle de Persona"
-  
+
   #Place events
   view_place_event: "Ver Evento de Lugar"
   assigned_jurisdiction: "Jurisdicción asignada"
@@ -813,6 +815,12 @@ es:
     contact_event: Contacto
 
   #staging_area
+  input_type: "Input Type"
+  text: "text"
+  file: "file"
+  built_in_samples: "built-in samples"
+  hl7_message_file: "HL7 Message File"
+  sample_hl7_message: "Sample HL7 Message"
   no_staged_messages: "No hay ningunos mensajes en el estado {{state}}"
   staged_messages: "Mensajes de Fases"
   create_staged_message: "Crear mensaje de fases"
@@ -894,7 +902,7 @@ es:
     cdc_export_question:
       one: '1 pregunta de exportación CDC'
       other: '{{count}} preguntas de exportación CDC'
-    event: 
+    event:
       one: '1 evento'
       other: '{{count}} eventos'
   fix_short_names: "Corregir nombres abreviados"

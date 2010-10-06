@@ -222,7 +222,7 @@ module EventsHelper
       if (view_mode == :index)
         controls <<  link_to(t(:edit), edit_contact_event_path(event))
       elsif (view_mode == :edit)
-         controls <<  link_to_function(t(:show), "send_url_with_tab_index('#{contact_event_path(event)}')")
+        controls <<  link_to_function(t(:show), "send_url_with_tab_index('#{contact_event_path(event)}')")
       else
         controls <<  link_to_function(t(:edit), "send_url_with_tab_index('#{edit_contact_event_path(event)}')")
       end
@@ -1372,6 +1372,20 @@ module EventsHelper
     javascript_tag do
       "var formWatcher = new FormWatch('#{get_form_id(form)}');"
     end
+  end
+
+  def merge_sort_params(query_params, sort_on, sort_type=:string)
+    case sort_type
+    when :date
+      default = "DESC"
+      reverse = "ASC"
+    else
+      default = "ASC"
+      reverse = "DESC"
+    end
+    
+    sort_direction = (query_params.has_value?(sort_on) && query_params.has_value?(default)) ? reverse : default
+    query_params.merge(:sort_direction => sort_direction, :sort_order => sort_on)
   end
 
 end

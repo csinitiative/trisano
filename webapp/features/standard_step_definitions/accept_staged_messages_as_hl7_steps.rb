@@ -82,3 +82,7 @@ end
 Then /^I should receive a 200 response$/ do
   response.should be_success
 end
+
+Then /^the "([^\"]*)" HTTP header should have a value of "([^\"]*)"$/ do |header, value|
+  response[header].should == value
+end
