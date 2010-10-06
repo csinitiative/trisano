@@ -2,6 +2,6 @@
   - form_for(@staged_message, :html => { :name => 'new_staged_message', :enctype => 'multipart/form-data' }) do |f|
     .hl7-input
       = f.error_messages
-      = f.label :hl7_message, 'HL7 message file'
+      = f.label :hl7_message, t('hl7_message_file')
       = f.file_field :hl7_message
     = f.submit t('create')
