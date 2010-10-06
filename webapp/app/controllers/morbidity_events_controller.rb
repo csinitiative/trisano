@@ -209,6 +209,7 @@ class MorbidityEventsController < EventsController
         :investigators => params[:investigators],
         :diseases => params[:diseases],
         :order_by => params[:sort_order],
+        :order_direction => params[:sort_direction],
         :do_not_show_deleted => params[:do_not_show_deleted],
         :set_as_default_view => params[:set_as_default_view],
         :page => params[:page],

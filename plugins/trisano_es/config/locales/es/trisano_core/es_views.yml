@@ -154,6 +154,7 @@ es:
   edit_contact_event: 'Editar el Evento de Contacto: {{name}}'
   jurisdiction: 'Jurisdicción'
   status: 'Estado'
+  event_date: 'Event Date (EN)'
   demographic: 'Demográfico/a(s)'
   clinical: 'Clínico/a(s)'
   laboratory: 'Laboratorio'

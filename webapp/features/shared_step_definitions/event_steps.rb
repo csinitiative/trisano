@@ -58,6 +58,22 @@ Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_
   @event = create_basic_event(event_type, last_name, nil, jurisdiction)
 end
 
+Given /^a simple (.+) event in jurisdiction (.+), last name (.+), and disease (.+)$/ do |event_type, jurisdiction, last_name, disease|
+  @event = create_basic_event(event_type, last_name, disease, jurisdiction)
+end
+
+Given /^that event was created (.+)$/ do |date|
+  new_date = eval(date.split(" ").join(".")).to_date
+  @event.first_reported_PH_date = new_date - 1.day
+  @event.created_at = new_date
+  @event.save!
+end
+
+Given /^the morbidity event state workflow state is "([^\"]*)"$/ do |workflow_state|
+  @event.workflow_state = workflow_state
+  @event.save!
+end
+
 Given /^a simple (.+) event in jurisdiction (.+) for the full name of (.+)$/ do |event_type, jurisdiction, name|
   # Currently assumes a first, middle and last name is supplied
   name_array = name.split

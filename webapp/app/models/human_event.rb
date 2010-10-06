@@ -139,16 +139,20 @@ class HumanEvent < Event
         where_clause << " AND events.deleted_at IS NULL"
       end
 
+      order_direction = options[:order_direction].blank? ? 'ASC' : options[:order_direction]
+
       order_by_clause = case options[:order_by]
       when 'patient'
-        "last_name, first_name, disease_name, jurisdiction_short_name, workflow_state"
+        "last_name #{order_direction}, first_name, disease_name, jurisdiction_short_name, workflow_state"
       when 'disease'
-        "disease_name, last_name, first_name, jurisdiction_short_name, workflow_state"
+        "disease_name #{order_direction}, last_name, first_name, jurisdiction_short_name, workflow_state"
       when 'jurisdiction'
-        "jurisdiction_short_name, last_name, first_name, disease_name, workflow_state"
+        "jurisdiction_short_name #{order_direction}, last_name, first_name, disease_name, workflow_state"
       when 'status'
         # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
-        "workflow_state, last_name, first_name, disease_name, jurisdiction_short_name"
+        "workflow_state #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name"
+      when 'event_date'
+        "events.created_at #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name, workflow_state"
       else
         "events.updated_at DESC"
       end

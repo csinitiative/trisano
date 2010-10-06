@@ -72,13 +72,15 @@
       - query_params = request.query_parameters
       - query_params.delete('commit')
       %th.forminformation
-        = link_to(t("patient_name"), cmrs_path(query_params.merge(:sort_order => 'patient')))
+        = link_to(t("patient_name"), cmrs_path(merge_sort_params(query_params, 'patient')))
       %th
-        = link_to(t("disease"), cmrs_path(query_params.merge(:sort_order => 'disease')))
+        = link_to(t("disease"), cmrs_path(merge_sort_params(query_params, 'disease')))
       %th
-        = link_to(t("jurisdiction"), cmrs_path(query_params.merge(:sort_order => 'jurisdiction')))
+        = link_to(t("jurisdiction"), cmrs_path(merge_sort_params(query_params, 'jurisdiction')))
       %th
-        = link_to(t("status"), cmrs_path(query_params.merge(:sort_order => 'status')))
+        = link_to(t("status"), cmrs_path(merge_sort_params(query_params, 'status')))
+      %th
+        = link_to(t("event_date"), cmrs_path(merge_sort_params(query_params, 'event_date', :date)))
 
       - @events.each do |event|
         - if event.is_a? ContactEvent
