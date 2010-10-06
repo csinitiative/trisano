@@ -109,6 +109,7 @@ Rails::Initializer.run do |config|
     require 'will_paginate'
     require 'core_ext/array'
     require 'core_ext/boolean'
+    require 'core_ext/string'
     require 'task_filter'
     require 'event_search'
     require 'fulltext_search'
