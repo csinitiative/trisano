@@ -125,12 +125,12 @@ describe StagedMessage do
       @bad_message_ack[:MSA].should_not be_nil
     end
 
-    it 'should return code CA on success' do
+    it 'should return a success code on success' do
       @good_message_ack[:MSA].ack_code.should == 'CA'
     end
 
-    it 'should return code CE on failure' do
-      @bad_message_ack[:MSA].ack_code.should == 'CE'
+    it 'should return an error code on failure' do
+      @bad_message_ack[:MSA].ack_code.should == 'AE'
     end
 
     it 'should return the configured recv_facility' do
@@ -199,6 +199,48 @@ describe StagedMessage do
       @bad_message_ack[:ERR].help_desk_contact_point.split(@bad_message_ack[:ERR].item_delim).third.should ==
           Trisano.application.bug_report_address
     end
+
+    it 'should reject a message with an invalid processing ID' do
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_bad_processing_id]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AR'
+
+      err = sample_ack[:ERR]
+      err.error_location.should == 'MSH^1^11'
+      err.hl7_error_code.split(err.item_delim).first.should == '202'
+      err.severity.should == 'E'
+    end
+
+    it 'should reject a message with an invalid version ID' do
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_bad_version_id]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AR'
+
+      err = sample_ack[:ERR]
+      err.error_location.should == 'MSH^1^12'
+      err.hl7_error_code.split(err.item_delim).first.should == '203'
+      err.severity.should == 'E'
+    end
+
+    it 'should reject a message with an invalid message type' do
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_bad_message_type]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AR'
+
+      err = sample_ack[:ERR]
+      err.error_location.should == 'MSH^1^9'
+      err.hl7_error_code.split(err.item_delim).first.should == '200'
+      err.severity.should == 'E'
+    end
   end
 
   describe 'with NIST samples' do
@@ -226,7 +268,7 @@ describe StagedMessage do
     it 'should contain a message header' do
       @staged_message = StagedMessage.new(:hl7_message => 'junk')
       @staged_message.should_not be_valid
-      @staged_message.errors.on(:hl7_message).should == ['is missing the header', 'is missing one or more of the following segments: PID, OBR, or OBX']
+      @staged_message.errors.on(:hl7_message).should == 'is missing the header'
     end
 
   end

@@ -36,6 +36,10 @@ describe Message do
     @hl7.should respond_to(:observation_requests)
   end
 
+  it 'should respond to :enhanced_ack_mode?' do
+    @hl7.should respond_to(:enhanced_ack_mode?)
+  end
+
   it 'should return a message_header' do
     @hl7.message_header.class.should == StagedMessages::MshWrapper
   end
@@ -51,6 +55,16 @@ describe Message do
   it 'should parse the Realm minimal sample message' do
     # Basic sanity check: Pass in an actual 2.5.1 message.
     HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
+  end
+
+  describe 'original and enhanced ack modes' do
+    it 'should recognize the Realm minimal message as enhanced mode' do
+      HL7::Message.parse(HL7MESSAGES[:realm_minimal_message]).should be_enhanced_ack_mode
+    end
+
+    it 'should recognize the NIST-1 sample message as original mode' do
+      HL7::Message.parse(HL7MESSAGES[:nist_sample_1]).should_not be_enhanced_ack_mode
+    end
   end
 
   describe 'message header' do

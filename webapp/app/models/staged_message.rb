@@ -105,7 +105,20 @@ class StagedMessage < ActiveRecord::Base
       return
     end
 
-    add_hl7_error(:missing_header, :msh, 1) if message_header.nil?
+    if message_header.nil?
+      add_hl7_error(:missing_header, :msh, 1) and return
+      return
+    end
+
+    # validate the following according to the HL7 spec:
+    # These must all be checked.  A message with a bad message type,
+    # bad version ID and a bad processing ID should receive an ACK
+    # message with three ERR segments.
+    bad_message_type  = reject_message_type
+    bad_processing_id = reject_processing_id
+    bad_version_id    = reject_version_id
+    @rejected = bad_message_type || bad_processing_id || bad_version_id
+    return if @rejected
 
     if patient.nil?
       add_hl7_error :missing_segment, :pid, 1
@@ -122,7 +135,7 @@ class StagedMessage < ActiveRecord::Base
     observation_requests.each do |obr|
       obr.all_tests.each do |test|
         # error in OBX segment with set_id, field 3, component 1
-        add_hl7_error(:missing_loinc, :obx, test.set_id, 3, 1) if test.loinc_code.blank?
+        add_hl7_error(:missing_loinc, :obx, test.set_id.to_i, 3, 1) if test.loinc_code.blank?
       end
     end
   end
@@ -334,14 +347,19 @@ class StagedMessage < ActiveRecord::Base
 
   def ack_msa
     @ack_msa ||= HL7::Message::Segment::MSA.new do |msa|
-      # According to the spec the only time you ever use CR is if the
-      # inbound message validation fails based on one of the following
-      # MSH fields:
-      # - message type  (MSH-9 )
-      # - processing ID (MSH-11)
-      # - version ID    (MSH-12)
-      # We'll introduce the CR code once we support those validations.
-      msa.ack_code = errors.size > 0 ? 'CE' : 'CA'
+      orig_codes = { :success => 'AA', :error => 'AE', :reject => 'AR' }
+      enh_codes  = { :success => 'CA', :error => 'CE', :reject => 'CR' }
+      codes = hl7.enhanced_ack_mode? ? enh_codes : orig_codes
+
+      msa.ack_code = case
+      when @rejected
+        codes[:reject]
+      when errors.size > 0
+        codes[:error]
+      else
+        codes[:success]
+      end
+
       msa.control_id = orig_msh.message_control_id if orig_msh
     end
   end
@@ -354,13 +372,15 @@ class StagedMessage < ActiveRecord::Base
     # Error text from Rails
     error_text = case trisano_code
     when :missing_loinc
-      errors.add :hl7_message, :missing_loinc, :segment => set_id.to_i
+      errors.add :hl7_message, :missing_loinc, :segment => set_id
     else
       errors.add :hl7_message, trisano_code
-    end.last
+    end.last.to_s
 
     # Map to a known HL7 code
     hl7_code = case trisano_code
+    when :unsupported_version_id, :unsupported_message_type, :unsupported_processing_id
+      trisano_code
     when :missing_loinc, :missing_last_name
       :required_field_missing
     when :missing_segment, :missing_header
@@ -373,6 +393,32 @@ class StagedMessage < ActiveRecord::Base
     @hl7_errs ||= []
     @hl7_errs << [ trisano_code, hl7_code, error_text, segment_name,
       set_id, field_number, component_number, subcomponent_number ]
+  end
+
+  def reject_message_type
+    case message_header.msh_segment.message_type
+    when 'ORU^R01^ORU_R01', 'ORU^R01'
+    else
+      add_hl7_error :unsupported_message_type, :msh, 1, 9
+      true
+    end
+  end
+
+  def reject_processing_id
+    delim = message_header.msh_segment.item_delim
+    if message_header.msh_segment.processing_id.split(delim).first != self.class.processing_id.split(delim).first
+      add_hl7_error :unsupported_processing_id, :msh, 1, 11
+      true
+    end
+  end
+
+  def reject_version_id
+    case message_header.msh_segment.version_id
+    when '2.3', '2.3.1', '2.5', '2.5.1'
+    else
+      add_hl7_error :unsupported_version_id, :msh, 1, 12
+      true
+    end
   end
 
   class << self
@@ -414,8 +460,7 @@ class StagedMessage < ActiveRecord::Base
           :application_internal_error => 207
         }
 
-      [ @hl7_error_codes[hl7_code], hl7_code.to_s.gsub('_', ' '),
-        'HL70357' ]
+      [ @hl7_error_codes[hl7_code], hl7_code.to_s, 'HL70357' ]
     end
 
     # Returns an array

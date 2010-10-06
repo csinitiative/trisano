@@ -53,6 +53,10 @@ module HL7
       message_header.version_id if message_header
     end
 
+    def enhanced_ack_mode?
+      message_header.enhanced_ack_mode?
+    end
+
     class << self
       def parse_batch(batch) # :yields: message
         raise HL7::ParseError, 'badly formed batch message' unless
@@ -224,6 +228,10 @@ module StagedMessages
     # Should be '2.5.1' or something similar for other versions.
     def version_id
       msh_segment.version_id
+    end
+
+    def enhanced_ack_mode?
+      not msh_segment.accept_ack_type.blank? and not msh_segment.app_ack_type.blank?
     end
 
     def software_segments

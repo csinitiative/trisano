@@ -57,7 +57,7 @@ es:
           attributes:
             base:
               too_many_value_sets: "Sólo puede haber un conjunto de valores por pregunta"
-              bad_parent: "Se produjo un error al verificar el conjunto primario para existentes subconjuntos de valores" 
+              bad_parent: "Se produjo un error al verificar el conjunto primario para existentes subconjuntos de valores"
 
         lab_result:
           attributes:
@@ -85,6 +85,9 @@ es:
               missing_segment: "le falta uno o más de los segmentos siguientes: PID, OBR o OBX"
               missing_last_name: "No se ha dado apellido para el paciente."
               missing_loinc: "El segmento OBX {{segment}} no contiente un código LOINC."
+              unsupported_message_type:    Unsupported message type
+              unsupported_processing_id:   Unsupported processing id
+              unsupported_version_id:      Unsupported version id
 
         loinc_code:
           attributes:
