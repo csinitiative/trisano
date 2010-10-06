@@ -201,6 +201,26 @@ describe StagedMessage do
     end
   end
 
+  describe 'with NIST samples' do
+    before :all do
+      @nist_sample_1 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_1]
+      @nist_sample_2 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_2]
+      @nist_sample_3 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_3]
+      @nist_sample_4 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_4]
+      @nist_sample_5 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_5]
+      @nist_sample_6 = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_6]
+    end
+
+    it 'should validate all NIST samples' do
+      @nist_sample_1.should be_valid
+      @nist_sample_2.should be_valid
+      @nist_sample_3.should be_valid
+      @nist_sample_4.should be_valid
+      @nist_sample_5.should be_valid
+      @nist_sample_6.should be_valid
+    end
+  end
+
   describe 'with invalid HL7' do
 
     it 'should contain a message header' do

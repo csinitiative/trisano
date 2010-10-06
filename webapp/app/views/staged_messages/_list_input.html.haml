@@ -3,5 +3,5 @@
     .hl7-input
       = f.error_messages
       = f.label :hl7_message, 'Sample HL7 message'
-      = f.select :hl7_message, hl7_messages.map { |m| [ m[0].to_s.humanize, m[1] ] }
-    = f.submit t('create'), :disabled => true
+      = f.select :hl7_message, hl7_messages.sort{ |m, n| m[0].to_s <=> n[0].to_s }.map { |m| [ m[0].to_s.humanize, m[1] ] }
+    = f.submit t('create')
