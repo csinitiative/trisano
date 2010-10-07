@@ -58,13 +58,13 @@ class StagedMessagesController < ApplicationController
       else
         format.html do
           # to return the input chooser to the state the user set it:
-          # @input = @staged_message.input_type
+          # @input = Input.new @staged_message.input_type
 
           # other values:
           # @input = Input.new 'file' # show the file upload control
           # @input = Input.new 'list' # show the pulldown list
 
-          # instead, show the text box populate with the offending
+          # instead, show the text box populated with the offending
           # message
           @input = Input.new 'text'
           @staged_message.hl7_message.gsub!("\r", "\n")
