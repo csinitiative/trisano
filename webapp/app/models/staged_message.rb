@@ -129,7 +129,7 @@ class StagedMessage < ActiveRecord::Base
       return
     end
 
-    if observation_requests.empty?
+    if observation_requests.blank?
       add_hl7_error :missing_segment, :obr, 1
     end
 
@@ -154,14 +154,17 @@ class StagedMessage < ActiveRecord::Base
 
   def message_header
     hl7.message_header
+  rescue
   end
 
   def observation_requests
     hl7.observation_requests
+  rescue
   end
 
   def patient
     hl7.patient_id
+  rescue
   end
 
   def assigned_event=(event)
@@ -251,6 +254,7 @@ class StagedMessage < ActiveRecord::Base
 
       @hl7_errs.each { |e| a << self.class.ack_err(*e) } if @hl7_errs
     end
+  rescue
   end
 
   class << self
@@ -280,6 +284,10 @@ class StagedMessage < ActiveRecord::Base
   end
 
   def set_searchable_attributes
+    # this is an after_validation_on_create filter, so this should not
+    # be necessary...
+    return false unless self.message_header and self.patient
+
     self.patient_last_name =  self.patient.try :patient_last_name
     self.patient_first_name = self.patient.try :patient_first_name
 

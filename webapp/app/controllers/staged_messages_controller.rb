@@ -34,9 +34,6 @@ class StagedMessagesController < ApplicationController
 
   def new
     @staged_message = StagedMessage.new
-
-    # for the input-type chooser
-    @input = Input.new @staged_message.input_type
   end
 
   def edit
