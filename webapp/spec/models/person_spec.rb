@@ -273,3 +273,18 @@ describe Person, 'with an associated disease event' do
     @entity.person.dead?.should be_true
   end
 end
+
+describe Person, '#last_comma_first_middle' do
+  before do
+    @person = Person.create(:first_name => 'John', :last_name => 'Public')
+  end
+
+  it 'should render correctly without a middle name' do
+    @person.last_comma_first_middle.should == "Public, John"
+  end
+
+  it 'should render correctly with a middle name' do
+    @person.update_attributes(:middle_name => 'Q')
+    @person.last_comma_first_middle.should == "Public, John Q"
+  end
+end

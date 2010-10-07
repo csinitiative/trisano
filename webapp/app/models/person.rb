@@ -53,6 +53,13 @@ class Person < ActiveRecord::Base
     ("#{self.last_name}"  << (self.first_name.blank? ? "" : ", #{self.first_name}")).strip
   end
 
+  def last_comma_first_middle
+    result = "#{self.first_name} #{self.middle_name}".strip
+    result = ", " + result unless result.blank?
+
+    self.last_name + result
+  end
+
   def primary_phone
     self.person_entity.primary_phone
   end
