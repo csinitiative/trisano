@@ -57,8 +57,17 @@ class StagedMessagesController < ApplicationController
           :status => :created, :location => @staged_message }
       else
         format.html do
-          # for the input-type chooser
-          @input = Input.new @staged_message.input_type
+          # to return the input chooser to the state the user set it:
+          # @input = @staged_message.input_type
+
+          # other values:
+          # @input = Input.new 'file' # show the file upload control
+          # @input = Input.new 'list' # show the pulldown list
+
+          # instead, show the text box populate with the offending
+          # message
+          @input = Input.new 'text'
+          @staged_message.hl7_message.gsub!("\r", "\n")
           render :action => "new", :status => :bad_request
         end
         format.hl7  { render :text => @staged_message.ack.to_hl7,
