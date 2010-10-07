@@ -4,4 +4,6 @@
       = f.error_messages
       = f.label :hl7_message, t('sample_hl7_message')
       = f.select :hl7_message, hl7_messages.sort{ |m, n| m[0].to_s <=> n[0].to_s }.map { |m| [ m[0].to_s.humanize, m[1] ] }
+      - f.object.input_type = 'list'
+      = f.hidden_field :input_type
     = f.submit t('create')

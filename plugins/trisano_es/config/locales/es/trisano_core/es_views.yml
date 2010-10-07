@@ -819,6 +819,7 @@ es:
   text: "text"
   file: "file"
   built_in_samples: "built-in samples"
+  hl7_message: "Mensaje HL7"
   hl7_message_file: "HL7 Message File"
   sample_hl7_message: "Sample HL7 Message"
   no_staged_messages: "No hay ningunos mensajes en el estado {{state}}"

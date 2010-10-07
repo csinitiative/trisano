@@ -4,4 +4,6 @@
       = f.error_messages
       = f.label :hl7_message, t('hl7_message_file')
       = f.file_field :hl7_message
+      - f.object.input_type = 'file'
+      = f.hidden_field :input_type
     = f.submit t('create')

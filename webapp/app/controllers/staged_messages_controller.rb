@@ -21,6 +21,8 @@ class StagedMessagesController < ApplicationController
   before_filter :can_write, :only => [:new, :create, :edit, :update, :destroy]
   before_filter :check_contents, :only => :create
 
+  Input = Struct.new :type
+
   def index
     @selected = StagedMessage.states.has_value?(params[:message_state]) ? @selected = params[:message_state] : @selected = StagedMessage.states[:pending]
     @staged_messages = StagedMessage.paginate_by_state(@selected, :order => "created_at DESC", :page => params[:page], :per_page => 10)
@@ -32,6 +34,9 @@ class StagedMessagesController < ApplicationController
 
   def new
     @staged_message = StagedMessage.new
+
+    # for the input-type chooser
+    @input = Input.new @staged_message.input_type
   end
 
   def edit
@@ -51,7 +56,11 @@ class StagedMessagesController < ApplicationController
         format.hl7  { render :text => @staged_message.ack.to_hl7,
           :status => :created, :location => @staged_message }
       else
-        format.html { render :action => "new", :status => :bad_request }
+        format.html do
+          # for the input-type chooser
+          @input = Input.new @staged_message.input_type
+          render :action => "new", :status => :bad_request
+        end
         format.hl7  { render :text => @staged_message.ack.to_hl7,
           :status => :unprocessable_entity }
       end

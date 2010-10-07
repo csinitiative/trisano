@@ -621,8 +621,7 @@ form.inplaceeditor-form a {
 .staged-message-form {
   height: 22em; }
   .staged-message-form .hl7-input {
-    height: 13em;
-    width: 52em; }
+    margin: 2px 0px; }
     .staged-message-form .hl7-input #hl7-text-input {
       height: 10em;
       width: 50em; }

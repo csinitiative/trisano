@@ -97,6 +97,10 @@ class StagedMessage < ActiveRecord::Base
 
   attr_protected :state
 
+  # hidden form field to allow redirection on create failure to work
+  # properly
+  attr_accessor :input_type
+
   def validate
     begin
       hl7
@@ -460,7 +464,7 @@ class StagedMessage < ActiveRecord::Base
           :application_internal_error => 207
         }
 
-      [ @hl7_error_codes[hl7_code], hl7_code.to_s, 'HL70357' ]
+      [ @hl7_error_codes[hl7_code], hl7_code.to_s.humanize, 'HL70357' ]
     end
 
     # Returns an array
