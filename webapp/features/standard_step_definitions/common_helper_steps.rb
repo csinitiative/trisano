@@ -27,6 +27,10 @@ Given(/^I am logged in as a manager$/) do
   log_in_as("lhd_manager")
 end
 
+Given(/^I am logged in as a state manager$/) do
+  log_in_as("state_manager")
+end
+
 Given(/^I am logged in as a lhd manager$/) do
   log_in_as("lhd_manager")
 end

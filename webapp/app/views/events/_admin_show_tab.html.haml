@@ -40,9 +40,7 @@
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label :lhd_case_status_id
       = h(l(@event.lhd_case_status)) || '&nbsp;'
-    - core_element_show :state_case_status_id, event_form, :horiz do
-      = event_form.label :state_case_status_id
-      = h(l(@event.state_case_status))
+    = render(:partial => 'events/state_status_show.html.haml', :locals => { :f => event_form})
     - core_element_show :outbreak_associated_id, event_form, :horiz do
       = event_form.label :outbreak_associated_id
       = h(l(@event.outbreak_associated)) || '&nbsp;'
