@@ -21,19 +21,19 @@
       =ct 'trisano_title'
       = yield :title
 
+    = stylesheet_link_tag 'trisano-theme/jquery-ui-1.8.4.custom'
     = stylesheet_link_tag 'grid'
     = stylesheet_link_tag 'structure'
     = stylesheet_link_tag 'typography'
     = stylesheet_link_tag 'action'
     = stylesheet_link_tag 'tabview'
     = stylesheet_link_tag 'calendar/trisano/style'
-    = stylesheet_link_tag 'trisano-theme/jquery-ui-1.8.4.custom'
 
     = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls'
     = javascript_include_tag 'jquery-1.4.2.min', 'jquery-ui-1.8.4.custom.min'
     %script
       var $j = jQuery.noConflict();
-      
+
     = javascript_include_tag 'trisano_i18n'
     = translations_js
     = javascript_include_tag 'application'
