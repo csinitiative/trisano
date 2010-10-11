@@ -20,10 +20,9 @@ module CoreFieldsHelper
 
   def render_core_fields_list(core_fields)
     result = ""
-    result << render(:partial => 'list_fields', :locals => {:event_type => t('morbidity_event_fields'), :core_fields => core_fields.select {|cf| cf.event_type == 'morbidity_event'}})
-    result << render(:partial => 'list_fields', :locals => {:event_type => t('contact_event_fields'), :core_fields => core_fields.select {|cf| cf.event_type == 'contact_event'}})
-    result << render(:partial => 'list_fields', :locals => {:event_type => t('place_event_fields'), :core_fields => core_fields.select {|cf| cf.event_type == 'place_event'}})
-    result << render(:partial => 'list_fields', :locals => {:event_type => t('encounter_event_fields'), :core_fields => core_fields.select { |cf| cf.event_type == 'encounter_event' } })
+    core_fields.each do |root|
+      result << render(:partial => 'list_fields', :locals => {:event_type => t("#{root.event_type}_fields"), :core_fields => root.children })
+    end
     result
   end
 
@@ -46,8 +45,9 @@ module CoreFieldsHelper
 
   def core_field_list_item(core_field, disease=nil, &block)
     cf_class = "cf-#{core_field.field_type}"
-    rendered_class = core_field.rendered?(disease) ? "" : "not-rendered"
-    options = { :class => "roll #{cf_class} #{rendered_class}".strip }
+    cf_class << " roll" unless core_field.tab?
+    cf_class << " not-rendered" if core_field.hidden_by_ancestry?(disease)
+    options = { :class => cf_class }
     content_tag :li, options, &block
   end
 

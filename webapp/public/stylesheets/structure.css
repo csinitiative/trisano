@@ -164,12 +164,23 @@ legend {
   margin: 3px;
   border-color: #000; }
 
-.core_fields li.cf-section {
-  border-color: #063; }
 .core_fields li.not-rendered {
-  background-color: #D4CBB4; }
+  background-color: #D4CBB4;
+  color: #333; }
+.core_fields li.cf-tab {
+  border-color: #063;
+  background-color: #063; }
+  .core_fields li.cf-tab > .formname a {
+    color: #fff; }
+  .core_fields li.cf-tab > .tools a {
+    color: #9c3; }
+  .core_fields li.cf-tab > .formnamesubtext {
+    color: #fff; }
+.core_fields li.cf-section {
+  border-color: #9c3; }
 .core_fields li {
   border: solid;
-  border-color: #9c9;
+  border-color: #090;
   border-width: 1px 0px 0px 4px;
-  padding-left: 4px; }
+  padding-left: 4px;
+  background-color: #fff; }

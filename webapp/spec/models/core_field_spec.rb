@@ -328,4 +328,24 @@ describe CoreField do
     end
   end
 
+  describe "#hidden_by_ancestry?" do
+    before do
+      @section = Factory.create :cmr_section_core_field
+      @core_field = Factory.create :cmr_core_field, {
+        :tree_id => @section.tree_id,
+      }
+      @section.add_child @core_field
+    end
+
+    it "is true when field is hidden" do
+      @core_field.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden_by_ancestry
+    end
+
+    it "is true when parent is hidden" do
+      @section.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden_by_ancestry
+    end
+  end
+
 end

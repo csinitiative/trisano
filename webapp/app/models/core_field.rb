@@ -141,10 +141,6 @@ class CoreField < ActiveRecord::Base
     self.key
   end
 
-  def section?
-    self.field_type == 'section'
-  end
-
   def rendered?(disease)
     disease_associated?(disease) ? render_on_disease?(disease) : render_default?
   end
@@ -195,6 +191,22 @@ class CoreField < ActiveRecord::Base
       association = find_or_build_disease_association(:disease_id => attributes[:disease_id])
       association.rendered = attributes[:rendered]
     end
+  end
+
+  def hidden_by_ancestry?(disease=nil)
+    !rendered?(disease) || !ancestors.all? { |ancestor| ancestor.rendered?(disease) }
+  end
+
+  def morbidity_event?
+    event_type == 'morbidity_event'
+  end
+
+  def section?
+    field_type == 'section'
+  end
+
+  def tab?
+    field_type == 'tab'
   end
 
   private
