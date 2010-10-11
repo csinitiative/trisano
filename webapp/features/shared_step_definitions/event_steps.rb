@@ -36,6 +36,12 @@ Given /^a simple (.+) event for last name (.+)$/ do |event_type, last_name|
   @event = create_basic_event(event_type, last_name)
 end
 
+Given /^a simple (.+) event for full name (.+)$/ do |event_type, name|
+  first_name, last_name = name.split(" ")
+  attrs = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :first_name => first_name, :last_name => last_name }}}}
+  @event = create_event_with_attributes(event_type, last_name, attrs)
+end
+
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
   test_type_id = CommonTestType.find_by_common_name(test_type).id
   attrs = { "labs_attributes" =>

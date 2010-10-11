@@ -18,3 +18,17 @@ Feature: Printer friendly contact events
     And I should see epi data
     And I should see admin data
     And I should see answer data
+
+
+  Scenario: Printing should display full names in section headers
+    Given I am logged in as a super user
+    And a simple morbidity event for full name Robert Johnson
+    And the morbidity event has the following contacts:
+      |last_name|first_name|
+      |Davis    |Miles     |
+
+    When I go to the first CMR contact's show page
+    And I choose to print "All" data
+    And I press "Print"
+
+    Then section headers should contain "Miles Davis"

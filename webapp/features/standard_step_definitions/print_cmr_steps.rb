@@ -46,3 +46,11 @@ Then /^I should not see the following sections$/ do |sections|
     response.should_not have_selector("##{section.first.downcase}")
   end
 end
+
+Then /^section headers should contain "([^\"]*)"$/ do |value|
+  assert_tag(:tag => 'span',
+    :attributes => { :class => "section-header" },
+    :child => /#{value}/
+  )
+end
+

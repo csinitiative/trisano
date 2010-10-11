@@ -117,6 +117,16 @@ Feature: Printer friendly morbidity events
       |Administrative |
       |Notes          |
 
+  Scenario: Printing should display full names in section headers
+    Given I am logged in as a super user
+    And a simple morbidity event for full name Robert Johnson
+
+    When I navigate to the event show page
+    And I choose to print "All" data
+    And I press "Print"
+
+    Then section headers should contain "Robert Johnson"
+
   Scenario: Printing a morbidity event should print any associated Contact events
     Given I am logged in as a super user
     And a morbidity event exists with the disease Mumps
