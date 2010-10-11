@@ -4,7 +4,7 @@
   field_type: single_line_text
   key: morbidity_event[actual_delivery_facility][place_entity][place][name]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -12,7 +12,7 @@
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][place][places_types]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -20,7 +20,7 @@
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][area_code]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -28,7 +28,7 @@
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][phone_number]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -36,7 +36,7 @@
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][place_entity][telephones][extension]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: true
@@ -44,7 +44,7 @@
   event_type: morbidity_event
   key: morbidity_event[actual_delivery_facility][actual_delivery_facilities_participation][actual_delivery_date]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: false
   can_follow_up: false
@@ -52,7 +52,7 @@
   field_type: single_line_text
   key: morbidity_event[expected_delivery_facility][place_entity][place][name]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -60,7 +60,7 @@
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][area_code]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -68,7 +68,7 @@
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][place][places_types]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -76,7 +76,7 @@
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][phone_number]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -84,7 +84,7 @@
   event_type: morbidity_event
   key: morbidity_event[expected_delivery_facility][place_entity][telephones][extension]
   disease_specific: true
-  section_key: morbidity_event[pregnancy_status_section]
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: false
   can_follow_up: false
@@ -92,6 +92,7 @@
   field_type: section
   key: morbidity_event[health_care_provider][section]
   disease_specific: true
+  parent_key: morbidity_event[pregnancy_status_section]
 
 - fb_accessible: true
   can_follow_up: true
@@ -99,7 +100,7 @@
   field_type: single_line_text
   key: morbidity_event[health_care_provider][person_entity][person][first_name]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: true
@@ -107,7 +108,7 @@
   field_type: single_line_text
   key: morbidity_event[health_care_provider][person_entity][person][last_name]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: true
@@ -115,7 +116,7 @@
   field_type: single_line_text
   key: morbidity_event[health_care_provider][person_entity][person][middle_name]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -123,7 +124,7 @@
   field_type: drop_down
   key: morbidity_event[health_care_provider][person_entity][telephones][area_code]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -131,7 +132,7 @@
   event_type: morbidity_event
   key: morbidity_event[health_care_provider][person_entity][telephones][phone_number]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: false
@@ -139,7 +140,7 @@
   event_type: morbidity_event
   key: morbidity_event[health_care_provider][person_entity][telephones][extension]
   disease_specific: true
-  section_key: morbidity_event[health_care_provider][section]
+  parent_key: morbidity_event[health_care_provider][section]
 
 - fb_accessible: true
   can_follow_up: true
@@ -147,4 +148,4 @@
   event_type: morbidity_event
   key: morbidity_event[state_manager_id]
   disease_specific: true
-  section_key: morbidity_event[event_auditing_section]
+  parent_key: morbidity_event[event_auditing_section]

@@ -51,6 +51,7 @@ class CoreField < ActiveRecord::Base
 
     def flush_memoization_cache
       @event_fields_hash = nil
+      @tabs_cache = nil
     end
 
     def next_tree_id
@@ -65,21 +66,34 @@ class CoreField < ActiveRecord::Base
             if (code_name = attrs.delete('code_name'))
               attrs['code_name'] = CodeName.find_by_code_name(code_name)
             end
-            if section_key = attrs.delete('section_key')
-              section = CoreField.find_by_key(section_key)
-              logger.fatal "Couldn't find section: '#{section_key}'"
-              attrs['tree_id'] = section.tree_id
-            end
-            if attrs['field_type'] == 'section'
+            if parent_key = attrs.delete('parent_key')
+              parent = CoreField.find_by_key(parent_key)
+              logger.fatal "Couldn't find parent key '#{parent_key}' for #{attrs.inspect}" unless parent
+              attrs['tree_id'] = parent.tree_id
+            else
               attrs['tree_id'] ||= CoreField.next_tree_id
             end
             core_field = CoreField.create!(attrs)
-            if section
-              section.add_child core_field
+            if parent
+              parent.add_child core_field
             end
           end
         end
       end
+    end
+
+    def tabs_for(event_type)
+      event_type = event_type.to_s
+      tabs_cache[event_type] ||= CoreField.all(:conditions => {
+                                                 :event_type => event_type,
+                                                 :field_type => 'tab' },
+                                               :order => 'lft ASC',
+                                               :include => :core_fields_diseases)
+      tabs_cache[event_type]
+    end
+
+    def tab(event_type, tab_name)
+      event_fields(event_type)["#{event_type}[#{tab_name}]"]
     end
 
     # keep virtual attribute :rendered_attributes from being part of
@@ -94,6 +108,10 @@ class CoreField < ActiveRecord::Base
 
     def event_fields_hash
       @event_fields_hash ||= {}
+    end
+
+    def tabs_cache
+      @tabs_cache ||= {}
     end
   end
 
