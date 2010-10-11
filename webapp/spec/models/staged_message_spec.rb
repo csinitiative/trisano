@@ -16,10 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'trisano'
-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe StagedMessage do
+  include StagedMessageSpecHelper
   fixtures :users, :places, :places_types, :entities, :codes
 
   before(:each) do
@@ -198,6 +198,14 @@ describe StagedMessage do
       @bad_message_ack[:ERR].should_not be_nil
       @bad_message_ack[:ERR].help_desk_contact_point.split(@bad_message_ack[:ERR].item_delim).third.should ==
           Trisano.application.bug_report_address
+    end
+
+    it 'should have the expected OID' do
+      Trisano.application.oid.should == expected_oid
+    end
+
+    it 'should have the expected bug report address' do
+      Trisano.application.bug_report_address.should == expected_bug_report_address
     end
 
     it 'should reject a message with an invalid processing ID' do
