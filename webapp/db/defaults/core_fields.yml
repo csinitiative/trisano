@@ -761,6 +761,7 @@
   field_type: single_line_text
   key: place_event[interested_place][place_entity][place][name]
   section_key: place_event[interested_place][place_entity][place_name_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -786,6 +787,7 @@
   field_type: drop_down
   key: place_event[interested_place][place_entity][place][place_type_id]
   section_key: place_event[address_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
