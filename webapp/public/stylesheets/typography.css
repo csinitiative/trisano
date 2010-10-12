@@ -152,6 +152,22 @@ label {
   font-style: italic;
   padding: 0px 0px 2px 0px; }
 
+.cellheading {
+  font-weight: bold; }
+
+.celldetail {
+  font-style: italic;
+  font-size: 0.9em; }
+
+.indented {
+  margin-left: 15px; }
+
+.multiline {
+  margin-bottom: 15px; }
+
+.multiline:last-child {
+  margin-bottom: 0; }
+
 .patientname-inactive {
   font-family: helvetica, sans-serif;
   font-size: 18px;
