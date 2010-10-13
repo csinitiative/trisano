@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module MorbidityEventsHelper
+  extensible_helper
 
   def morbidity_event_tabs
     CoreField.tabs_for(:morbidity_event).map do |tab_field|
@@ -133,7 +134,7 @@ module MorbidityEventsHelper
 
   def new_cmr_search_result(result)
     tr_tag(:class => result.css_class, :id => result.css_id) do |tr|
-      tr << td_tag(result.name)
+      tr << td_tag(new_cmr_search_result_name(result))
       tr << td_tag(result.bdate)
       tr << td_tag(h(result.gender))
       tr << td_tag(result.event_type)
@@ -143,6 +144,10 @@ module MorbidityEventsHelper
       tr << td_tag(result.links)
       tr << td_tag(result.link_to_create_cmr)
     end
+  end
+
+  def new_cmr_search_result_name(result)
+    result.name
   end
 
   def show_telephones(fields_or_form)

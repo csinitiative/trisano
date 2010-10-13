@@ -45,6 +45,10 @@ class NewCmrSearchResults
       "entity_#{@result['entity_id']}"
     end
 
+    def person_entity_id
+      @result['entity_id'].to_i
+    end
+
     def name
       unless same_as_previous_entity?
         returning "" do |str|
