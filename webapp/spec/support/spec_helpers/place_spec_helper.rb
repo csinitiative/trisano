@@ -6,4 +6,11 @@ module PlaceSpecHelper
     jurisdictions
   end
 
+  def given_an_unassigned_jurisdiction
+    unassigned = Place.unassigned_jurisdiction
+    if unassigned.nil?
+      unassigned = create_jurisdiction_entity(:place_attributes => {:name => 'Unassigned'})
+    end
+    unassigned
+  end
 end

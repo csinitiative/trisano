@@ -181,6 +181,10 @@ class Place < ActiveRecord::Base
         })
     end
 
+    def unassigned_jurisdiction_entity_id
+      unassigned_jurisdiction.try(:entity_id)
+    end
+
     def pull_unassigned_and_put_it_on_top(jurisdictions)
       unassigned = jurisdictions.find { |jurisdiction| jurisdiction.read_attribute(:name) == "Unassigned" }
       jurisdictions.unshift( jurisdictions.delete( unassigned ) ) unless unassigned.nil?
@@ -218,6 +222,7 @@ class Place < ActiveRecord::Base
   def is_unassigned_jurisdiction?
     is_a_jurisdiction? && self.read_attribute(:name) == "Unassigned"
   end
+  alias unassigned_jurisdiction? is_unassigned_jurisdiction?
 
   private
 

@@ -369,7 +369,11 @@ class Event < ActiveRecord::Base
   end
 
   def jurisdiction_entity_ids
-    Set.new(eager_jurisdictions.map(&:secondary_entity_id))
+    if new_record?
+      [jurisdiction.secondary_entity_id, associated_jurisdictions.map(&:secondary_entity_id)].flatten.compact.uniq
+    else
+      Set.new(eager_jurisdictions.map(&:secondary_entity_id))
+    end
   end
 
   def eager_jurisdictions

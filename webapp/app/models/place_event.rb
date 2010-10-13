@@ -56,7 +56,7 @@ class PlaceEvent < Event
     reload
     self.participations.each do |participation|
       if participation.primary_entity_id.nil?
-        participation.update_attribute('primary_entity_id', self.interested_place.place_entity.id)
+        participation.update_attribute 'primary_entity_id', self.interested_place.try(:place_entity).try(:id)
       end
     end
   end

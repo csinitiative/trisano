@@ -845,7 +845,7 @@ describe MorbidityEvent do
 
       MorbidityEvent.find_all_for_filtered_view.size.should == 6
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['new']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['accepted_by_lhd']}).size.should == 1
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed']}).size.should == 2
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed']}).size.should == 2
       MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed'], :investigators => [1]}).size.should == 1
@@ -1129,6 +1129,7 @@ describe MorbidityEvent do
       with_published_form(@form_hash) do |form|
         @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
         @event = MorbidityEvent.new(@event_hash)
+        @event.jurisdiction = nil
         @event.form_references.size.should == 0
         @event.save!
         @event.reload
@@ -1969,5 +1970,21 @@ describe Event, "mmwr date" do
   it "is based on the date the event was created, if other relevant dates are blank" do
     assert_equal @expected_mmwr.mmwr_year, @event.MMWR_year, "Wrong MMWR year"
     assert_equal @expected_mmwr.mmwr_week, @event.MMWR_week, "Wrong MMWR week"
+  end
+end
+
+describe Event, "jurisdiction entity ids" do
+  before do
+    @event = Factory.build(:morbidity_event)
+  end
+
+  it "are pulled from the database on record that already exists" do
+    @event.save!
+    @event.jurisdiction_entity_ids.to_a.should == [@event.jurisdiction.secondary_entity_id]
+  end
+
+  it "are collected from jurisdiction and associated jursidictions on new records" do
+    @event.associated_jurisdictions.build :place_entity => create_jurisdiction_entity
+    @event.jurisdiction_entity_ids.to_a.should == [@event.jurisdiction.secondary_entity_id, @event.associated_jurisdictions.map(&:secondary_entity_id)].flatten
   end
 end

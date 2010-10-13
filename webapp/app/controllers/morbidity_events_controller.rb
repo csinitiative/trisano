@@ -76,9 +76,7 @@ class MorbidityEventsController < EventsController
       @event.attributes = params[:morbidity_event]
     end
 
-    @event.primary_jurisdiction.is_unassigned_jurisdiction? ? @event.workflow_state = "new" : @event.workflow_state = "accepted_by_lhd"
-
-    unless User.current_user.is_entitled_to_in?(:create_event, @event.jurisdiction.place_entity.id)
+    unless User.current_user.can?(:create_event, @event)
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
 

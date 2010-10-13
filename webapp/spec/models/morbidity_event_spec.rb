@@ -18,6 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
+  include PlaceSpecHelper
 
   before(:each) do
     @event = Factory.build(:morbidity_event)
@@ -51,6 +52,40 @@ describe MorbidityEvent do
     @event.first_reported_PH_date = Date.yesterday
     @event.save.should be_true
     @event.should have(0).errors_on("first_reported_PH_date")
+  end
+
+  describe "#before_create" do
+    before do
+      given_an_unassigned_jurisdiction
+    end
+
+    it "sets the workflow state to 'new' if the event is Unassigned" do
+      @event.jurisdiction.place_entity = nil
+      @event.save.should be_true
+      @event.workflow_state.should == 'new'
+    end
+
+    it "sets the workflow state to 'accepted_by_lhd' if the event is assigned to a jurisdiction" do
+      @event.save.should be_true
+      @event.workflow_state.should == 'accepted_by_lhd'
+    end
+
+  end
+
+  describe "#initialization" do
+    it "assigns event to unassigned jurisdiction, if available" do
+      given_an_unassigned_jurisdiction
+      event = MorbidityEvent.new
+      event.jurisdiction.place_entity.place.should == Place.unassigned_jurisdiction
+    end
+
+    it "does not assign a jurisdiction if unassigned jurisdiction can't be found" do
+      # Fixtures
+      Place.unassigned_jurisdiction.try(:delete)
+
+      event = MorbidityEvent.new
+      event.jurisdiction.should be_nil
+    end
   end
 
 end

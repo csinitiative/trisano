@@ -17,6 +17,11 @@
 require 'ostruct'
 
 class MorbidityEvent < HumanEvent
+  def initialize(attributes=nil)
+    super
+    set_default_jurisdiction
+  end
+
   include Workflow
 
   supports :tasks
@@ -25,6 +30,7 @@ class MorbidityEvent < HumanEvent
   before_save :generate_mmwr
   before_save :initialize_children
   before_save :check_export_updates
+  before_create :set_initial_workflow_state
 
   validates_date :first_reported_PH_date, {
     :allow_blank => false,
@@ -270,4 +276,18 @@ class MorbidityEvent < HumanEvent
       end
     end
   end
+
+  def set_default_jurisdiction
+    if jurisdiction.try(:secondary_entity_id).nil? && !Place.unassigned_jurisdiction.nil?
+      self.jurisdiction_attributes = {:secondary_entity_id => Place.unassigned_jurisdiction.entity_id}
+    end
+  end
+
+  def set_initial_workflow_state
+    jurisdiction_id = jurisdiction.try(:secondary_entity_id)
+    if jurisdiction_id && jurisdiction_id != Place.unassigned_jurisdiction_entity_id
+      self.workflow_state = 'accepted_by_lhd'
+    end
+  end
+
 end
