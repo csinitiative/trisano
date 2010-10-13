@@ -1,3 +1,4 @@
+# Events
 - help_text:
   fb_accessible: false
   can_follow_up: false
@@ -26,6 +27,7 @@
   event_type: encounter_event
   key: encounter_event
 
+# Tabs
 - help_text:
   fb_accessible: false
   can_follow_up: false
@@ -105,6 +107,70 @@
   event_type: morbidity_event
   key: morbidity_event[administrative_tab]
   parent_key: morbidity_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: place_event
+  key: place_event[place_tab]
+  parent_key: place_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: place_event
+  key: place_event[investigation_tab]
+  parent_key: place_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: place_event
+  key: place_event[notes_tab]
+  parent_key: place_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: encounter_event
+  key: encounter_event[encounter_tab]
+  parent_key: encounter_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: encounter_event
+  key: encounter_event[clinical_tab]
+  parent_key: encounter_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: encounter_event
+  key: encounter_event[lab_info_tab]
+  parent_key: encounter_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: encounter_event
+  key: encounter_event[investigation_tab]
+  parent_key: encounter_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: encounter_event
+  key: encounter_event[notes_tab]
+  parent_key: encounter_event
 
 - help_text:
   fb_accessible: false
@@ -477,7 +543,16 @@
   can_follow_up: false
   field_type: section
   event_type: place_event
+  key: place_event[interested_place][place_entity][place_name_section]
+  parent_key: place_event[place_tab]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: place_event
   key: place_event[address_section]
+  parent_key: place_event[place_tab]
 
 - help_text:
   fb_accessible: false
@@ -485,13 +560,7 @@
   field_type: section
   event_type: place_event
   key: place_event[interested_place][place_entity][phone_section]
-
-- help_text:
-  fb_accessible: false
-  can_follow_up: false
-  field_type: section
-  event_type: place_event
-  key: place_event[interested_place][place_entity][place_name_section]
+  parent_key: place_event[place_tab]
 
 - help_text:
   fb_accessible: false
@@ -499,6 +568,7 @@
   field_type: section
   event_type: place_event
   key: place_event[event_notes_section]
+  parent_key: place_event[notes_tab]
 
 - help_text:
   fb_accessible: false
@@ -506,6 +576,7 @@
   field_type: section
   event_type: encounter_event
   key: encounter_event[event_notes_section]
+  parent_key: encounter_event[notes_tab]
 
 - help_text:
   fb_accessible: false
@@ -513,6 +584,7 @@
   field_type: section
   event_type: encounter_event
   key: encounter_event[labs_section]
+  parent_key: encounter_event[lab_info_tab]
 
 - help_text:
   fb_accessible: false
@@ -520,6 +592,7 @@
   field_type: section
   event_type: encounter_event
   key: encounter_event[treatments_section]
+  parent_key: encounter_event[clinical_tab]
 
 - help_text:
   fb_accessible: true
@@ -1739,11 +1812,20 @@
   parent_key: contact_event[other_section]
 
 - help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: encounter_event
+  key: encounter_event[encounter_section]
+  parent_key: encounter_event[encounter_tab]
+
+- help_text:
   fb_accessible: true
   can_follow_up: true
   field_type: multi_select
   event_type: encounter_event
   key: encounter_event[participations_encounter][user_id]
+  parent_key: encounter_event[encounter_section]
 
 - help_text:
   fb_accessible: true
@@ -1751,6 +1833,7 @@
   field_type: date
   event_type: encounter_event
   key: encounter_event[participations_encounter][encounter_date]
+  parent_key: encounter_event[encounter_section]
 
 - help_text:
   fb_accessible: true
@@ -1758,6 +1841,7 @@
   field_type: multi_select
   event_type: encounter_event
   key: encounter_event[participations_encounter][encounter_location_type]
+  parent_key: encounter_event[encounter_section]
 
 - help_text:
   fb_accessible: true
@@ -1765,6 +1849,7 @@
   field_type: multi_line_text
   event_type: encounter_event
   key: encounter_event[participations_encounter][description]
+  parent_key: encounter_event[encounter_section]
 
 - help_text:
   fb_accessible: true

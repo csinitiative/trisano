@@ -2,34 +2,25 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module MorbidityEventsHelper
 
   def morbidity_event_tabs
-    tabs = []
-    tabs << ['demographic_tab', t('demographic')]
-    tabs << ['clinical_tab', t('clinical')]
-    tabs << ['lab_info_tab', t('laboratory')]
-    tabs << ['contacts_tab', t('contacts')]
-    tabs << ['encounters_tab', t('encounters')]
-    tabs << ['epi_tab', t('epi')]
-    tabs << ['reporting_tab', t('reporting')]
-    tabs << ['investigation_tab', t('investigation')]
-    tabs << ['notes_tab', t('event_notes')]
-    tabs << ['administrative_tab', t('administrative')]
-    tabs
+    CoreField.tabs_for(:morbidity_event).map do |tab_field|
+      [tab_field.name_key, tab_field.name] if tab_field.rendered_on_event?(@event)
+    end.compact
   end
 
   def basic_morbidity_event_controls(event, view_mode)

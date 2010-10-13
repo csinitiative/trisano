@@ -78,6 +78,15 @@ module EventsHelper
     end
   end
 
+  def core_tab(attribute, form_builder, &block)
+    rendering_core_field(attribute, form_builder) do |cf|
+      concat "<div id=\"#{attribute.to_s}\">"
+      concat_block_or_replacement cf, form_builder, &block
+      concat "<br clear=\"all\"/>"
+      concat "</div>"
+    end
+  end
+
   def core_element(attribute, form_builder, css_class, mode=:edit, &block)
     rendering_core_field(attribute, form_builder) do |cf|
       concat_core_field(mode, :before, attribute, form_builder)

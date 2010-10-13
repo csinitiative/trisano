@@ -407,5 +407,5 @@ describe EventsHelper, "rendering replacement partials" do
       it_should_behave_like "non-disease-specific core element replacer"
     end
   end
-  
+
 end

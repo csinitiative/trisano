@@ -209,6 +209,14 @@ class CoreField < ActiveRecord::Base
     field_type == 'tab'
   end
 
+  def event?
+    field_type == 'event'
+  end
+
+  def container?
+    section? or tab? or event?
+  end
+
   private
 
   def required_for_event_error_message
