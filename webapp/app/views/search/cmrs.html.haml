@@ -96,7 +96,7 @@
             =link_to_search_result_event("#{h(cmr.record_number)}", cmr)
             %small=t(cmr.type.underscore, :scope => :event_search_results)
           %td
-            = "#{h(search_result_full_name(cmr))}"
+            = search_result_full_name(cmr)
           %td
             - if  cmr['birth_date'].blank?
               = h(cmr['approximate_age_no_birthday'])

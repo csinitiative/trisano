@@ -248,35 +248,6 @@ class MorbidityEvent < HumanEvent
     end
   end
 
-  # DEBT: This is broken, don't use it.
-  def validate_tasks
-    return if self.disease_event.nil? || self.tasks.empty?
-    self.tasks.each do |task|
-      message = I18n.t(:on_or_after, :restriction => self.disease_event.disease_onset_date.to_s, :scope => [:activerecord, :errors, :messages])
-      if task.due_date && !self.disease_event.nil? && !self.disease_event.disease_onset_date.nil?
-        task.errors.add(:due_date, message) unless self.disease_event.disease_onset_date <= task.due_date
-      end
-    end
-  end
-
-  # DEBT: This is broken, don't use it.
-  def validate_participations_treatment
-    return if self.interested_party.nil? || self.disease_event.nil?
-    return if self.interested_party.treatments.nil? || self.disease_event.disease_onset_date.nil?
-
-    self.interested_party.treatments.each do |treatment|
-      message = I18n.t(:on_or_after,:restriction => self.disease_event.disease_onset_date.to_s, :scope => [:activerecord, :errors, :messages])
-
-      if treatment.treatment_date
-        treatment.errors.add(:treatment_date,message ) unless self.disease_event.disease_onset_date <= treatment.treatment_date
-      end
-
-      if treatment.stop_treatment_date
-        treatment.errors.add(:stop_treatment_date,message ) unless self.disease_event.disease_onset_date <= treatment.stop_treatment_date
-      end
-    end
-  end
-
   def set_default_jurisdiction
     if jurisdiction.try(:secondary_entity_id).nil? && !Place.unassigned_jurisdiction.nil?
       self.jurisdiction_attributes = {:secondary_entity_id => Place.unassigned_jurisdiction.entity_id}

@@ -70,6 +70,7 @@ module EventSearch
         fields << "events.deleted_at AS deleted_at"
         fields << "events.record_number AS record_number"
         fields << "events.workflow_state AS workflow_state"
+        fields << "entities.id AS patient_entity_id"
         fields << "people.last_name AS last_name"
         fields << "people.first_name AS first_name"
         fields << "people.middle_name AS middle_name"
