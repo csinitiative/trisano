@@ -260,7 +260,24 @@ en:
       notes_tab: Notes
       encounter_section: Encounter
       labs_section: Labs
-      labs: Encounter labs
+      labs:
+        name: Labs
+        lab_results:
+          organism: Lab results | Organism
+          comment: Lab results | Comment
+          test_type: Lab results | Test type
+          test_status: Lab results | Test status
+          test_result: Lab results | Test result
+          units: Lab results | Units
+          collection_date: Lab results | Collection date
+          result_value: Lab results | Result value
+          reference_range: Lab results | Reference range
+          specimen_sent_to_state: Lab results | Specimen sent to state lab
+          lab_test_date: Lab results | Lab Test date
+          specimen_source: Lab results | Specimen source
+        place_entity:
+          place:
+            name: Lab results | Lab name
       treatments_section: Treatments
       treatments: Encounter treatments
       event_notes_section: Event Notes

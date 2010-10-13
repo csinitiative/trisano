@@ -836,6 +836,7 @@
   event_type: contact_event
   key: contact_event[labs][place_entity][place][name]
   parent_key: contact_event[labs_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: false
@@ -971,6 +972,7 @@
   field_type: single_line_text
   key: place_event[interested_place][place_entity][place][name]
   parent_key: place_event[interested_place][place_entity][place_name_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -996,6 +998,7 @@
   field_type: drop_down
   key: place_event[interested_place][place_entity][place][place_type_id]
   parent_key: place_event[address_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -1320,6 +1323,7 @@
   field_type: single_line_text
   key: contact_event[interested_party][person_entity][person][last_name]
   parent_key: contact_event[interested_party][person_entity][name_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -1490,6 +1494,7 @@
   key: contact_event[labs][lab_results][test_type]
   code_name: lab_test_type
   parent_key: contact_event[labs_section]
+  required_for_section: true
 
 - help_text:
   fb_accessible: true
@@ -1826,6 +1831,7 @@
   event_type: encounter_event
   key: encounter_event[participations_encounter][user_id]
   parent_key: encounter_event[encounter_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -1834,6 +1840,7 @@
   event_type: encounter_event
   key: encounter_event[participations_encounter][encounter_date]
   parent_key: encounter_event[encounter_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -1842,6 +1849,7 @@
   event_type: encounter_event
   key: encounter_event[participations_encounter][encounter_location_type]
   parent_key: encounter_event[encounter_section]
+  required_for_event: true
 
 - help_text:
   fb_accessible: true
@@ -1866,3 +1874,22 @@
   event_type: encounter_event
   key: encounter_event[labs]
   parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][test_type]
+  code_name: lab_test_type
+  parent_key: encounter_event[labs_section]
+  required_for_section: true
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][place_entity][place][name]
+  parent_key: encounter_event[labs_section]
+  required_for_section: true

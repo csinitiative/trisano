@@ -90,6 +90,9 @@ def path_to(page_name)
   when /the first CMR contact\'s edit page/i
     edit_contact_event_path(@event.contact_child_events.first)
 
+  when /the first CMR contact\'s show page/i
+    contact_event_path(@event.contact_child_events.first)
+
   when /the first CMR place\'s edit page/i
     edit_place_event_path(@event.place_child_events.first)
 
