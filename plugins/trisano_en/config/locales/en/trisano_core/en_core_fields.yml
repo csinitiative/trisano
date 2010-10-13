@@ -1,6 +1,10 @@
 en:
   event_fields:
     place_event:
+      name: Place Event
+      place_tab: Place
+      investigation_tab: Investigation
+      notes_tab: Notes
       address_section: Address
       event_notes_section: Event Notes
       address:
@@ -19,6 +23,7 @@ en:
             name: Name
             place_type_id: Type
     contact_event:
+      name: Contact Event
       disease_section: Disease
       hospitalized_health_facilities_section: Hospitalized Health Facilities
       mortality_status_section: Mortality Status
@@ -104,6 +109,7 @@ en:
             name: Lab results | Lab name
       imported_from_id: Imported from
     morbidity_event:
+      name: Morbidity Event
       demographic_tab: Demographic
       clinical_tab: Clinical
       lab_info_tab: Laboratory
@@ -246,6 +252,13 @@ en:
             name: Lab results | Lab name
       imported_from_id: Imported from
     encounter_event:
+      name: Encounter Event
+      encounter_tab: Encounter
+      clinical_tab: Clinical
+      lab_info_tab: Lab
+      investigation_tab: Investigation
+      notes_tab: Notes
+      encounter_section: Encounter
       labs_section: Labs
       labs: Encounter labs
       treatments_section: Treatments

@@ -9,6 +9,10 @@ es:
       outbreak_date: Fecha de brote
       outbreak_description: Descripción
     place_event:
+      name: Evento de Lugar
+      place_tab: Lugar
+      investigation_tab: Investigación
+      notes_tab: Apuntes
       address:
         city: Ciudad
         postal_code: Código postal
@@ -23,6 +27,7 @@ es:
             name: Nombre
             place_type_id: Tipo
     contact_event:
+      name: Contacto
       address:
         city: Ciudad de contacto
         postal_code: Código postal de contacto
@@ -82,6 +87,7 @@ es:
             name: Resultados de laboratorio | Nombre de laboratorio
       imported_from_id: Se importó de
     morbidity_event:
+      name: Evento de Morbilidad
       parent_guardian: Padre / Tutor legal
       clinicians: Clínicos
       diagnostic_facilities: Instituciones diagnósticas
@@ -184,3 +190,27 @@ es:
           place:
             name: Resultados de laboratorio | Nombre de laboratorio
       imported_from_id: Se importó de
+    encounter_event:
+      name: Encounter Event (EN)
+      encounter_tab: Encounter (EN)
+      clinical_tab: Clinical (EN)
+      lab_info_tab: Lab (EN)
+      investigation_tab: Investigation (EN)
+      notes_tab: Notes (EN)
+      encounter_section: Encounter (EN)
+      labs_section: Labs (EN)
+      labs: Encounter labs (EN)
+      treatments_section: Treatments (EN)
+      treatments: Encounter treatments (EN)
+      event_notes_section: Event Notes (EN)
+      participations_encounter:
+        user_id: Investigator (EN)
+        encounter_date: Encounter date (EN)
+        encounter_location_type: Encounter location type (EN)
+        description: Encounter description (EN)
+    person_entity:
+      name_section: Name (EN)
+      age_section: Age (EN)
+      phone_section: Telephones/Email (EN)
+      address_section: Address (EN)
+      demographics_section: Demographics (EN)
