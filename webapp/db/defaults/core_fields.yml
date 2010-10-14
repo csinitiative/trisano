@@ -112,6 +112,54 @@
   fb_accessible: false
   can_follow_up: false
   field_type: tab
+  event_type: contact_event
+  key: contact_event[demographic_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: contact_event
+  key: contact_event[clinical_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: contact_event
+  key: contact_event[lab_info_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: contact_event
+  key: contact_event[epi_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: contact_event
+  key: contact_event[investigation_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: contact_event
+  key: contact_event[notes_tab]
+  parent_key: contact_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
   event_type: place_event
   key: place_event[place_tab]
   parent_key: place_event
@@ -418,6 +466,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[interested_party][person_entity][name_section]
+  parent_key: contact_event[demographic_tab]
 
 - help_text:
   fb_accessible: false
@@ -425,6 +474,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[address_section]
+  parent_key: contact_event[demographic_tab]
 
 - help_text:
   fb_accessible: false
@@ -432,6 +482,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[interested_party][person_entity][age_section]
+  parent_key: contact_event[demographic_tab]
 
 - help_text:
   fb_accessible: false
@@ -439,6 +490,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[interested_party][person_entity][phone_section]
+  parent_key: contact_event[demographic_tab]
 
 - help_text:
   fb_accessible: false
@@ -446,6 +498,15 @@
   field_type: section
   event_type: contact_event
   key: contact_event[interested_party][person_entity][demographics_section]
+  parent_key: contact_event[demographic_tab]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: contact_event
+  key: contact_event[event_info]
+  parent_key: contact_event[demographic_tab]
 
 - help_text:
   fb_accessible: false
@@ -453,6 +514,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[disease_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -460,6 +522,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[hospitalized_health_facilities_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -467,6 +530,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[mortality_status_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -474,6 +538,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[pregnancy_status_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -481,6 +546,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[treatments_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -488,6 +554,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[clinicians_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -495,6 +562,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[diagnostic_facilities_section]
+  parent_key: contact_event[clinical_tab]
 
 - help_text:
   fb_accessible: false
@@ -502,6 +570,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[labs_section]
+  parent_key: contact_event[lab_info_tab]
 
 - help_text:
   fb_accessible: false
@@ -509,6 +578,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[contact_oriented_section]
+  parent_key: contact_event[epi_tab]
 
 - help_text:
   fb_accessible: false
@@ -516,6 +586,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[other_section]
+  parent_key: contact_event[epi_tab]
 
 - help_text:
   fb_accessible: false
@@ -523,6 +594,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[event_attachments_section]
+  parent_key: contact_event[notes_tab]
 
 - help_text:
   fb_accessible: false
@@ -530,6 +602,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[event_notes_section]
+  parent_key: contact_event[notes_tab]
 
 - help_text:
   fb_accessible: false
@@ -537,6 +610,7 @@
   field_type: section
   event_type: contact_event
   key: contact_event[event_tasks_section]
+  parent_key: contact_event[notes_tab]
 
 - help_text:
   fb_accessible: false
