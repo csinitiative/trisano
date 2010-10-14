@@ -28,6 +28,13 @@ es:
             place_type_id: Tipo
     contact_event:
       name: Contacto
+      demographic_tab: 'Demográfico/a(s)'
+      clinical_tab: 'Clínico/a(s)'
+      lab_info_tab: Laboratorio
+      epi_tab: Epidemiológico/a(s)
+      reporting_tab: "Reporte"
+      investigation_tab: Investigación
+      notes_tab: 'Apuntes'
       address:
         city: Ciudad de contacto
         postal_code: Código postal de contacto
@@ -88,6 +95,16 @@ es:
       imported_from_id: Se importó de
     morbidity_event:
       name: Evento de Morbilidad
+      demographic_tab: 'Demográfico/a(s)'
+      clinical_tab: 'Clínico/a(s)'
+      lab_info_tab: Laboratorio
+      contacts_tab: Contactos
+      encounters_tab: "Encuentros"
+      epi_tab: Epidemiológico/a(s)
+      reporting_tab: "Reporte"
+      investigation_tab: Investigación
+      notes_tab: 'Apuntes'
+      administrative_tab: 'Administrativo/a(s)'
       parent_guardian: Padre / Tutor legal
       clinicians: Clínicos
       diagnostic_facilities: Instituciones diagnósticas
