@@ -40,7 +40,7 @@ form_action = new_message_page.at("form#new_staged_message")['action']
 
 # find the field with the ID 'staged_message_hl7_message' in the form
 # This field ID will never change and is formally part of the API.
-field_name = new_message_page.at("form#new_staged_message textarea#staged_message_hl7_message")['name']
+field_name = new_message_page.at("form#new_staged_message textarea#hl7-text-input")['name']
 
 # Get HL7 messaged from STDIN or named files
 ARGF.readlines.each_with_index do |msg, i|
