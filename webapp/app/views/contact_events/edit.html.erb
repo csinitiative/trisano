@@ -29,54 +29,30 @@
 
 <% form_for(setup_human_event_tree(@event), :url => contact_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
-  <% tabs = []
-  tabs << ['demographic_tab', t('demographic')]
-  tabs << ['clinical_tab', t('clinical')]
-  tabs << ['lab_info_tab', t('lab')]
-  tabs << ['epi_tab', t('epi')]
-  tabs << ['investigation_tab', t('investigation')]
-  tabs << ['notes_tab', t('event_notes')]
-%>
 
-  <% tabbed_content(tabs, @tab_index) do %>
-    <div id="demographic_tab">
+  <% tabbed_content(contact_event_tabs, @tab_index) do %>
+    <% core_tab :demographic_tab, event_form do -%>
       <%= render :partial => "events/people/contact_form", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
-      <br clear="all"/>
-    </div>
-    <div id="clinical_tab">
-      <p>
-        <%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %>
-        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
-        <br clear="all"/>
-      </p>
-    </div>
-    <div id="lab_info_tab">
-      <p>
-        <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %>
-        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
-        <br clear="all"/>
-      </p>
-    </div>
-    <div id="epi_tab">
-      <p>
-        <%= render :partial => 'contact_events/epidemiological_form', :locals => {:f => event_form} %>
-        <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
-        <br clear="all"/>
-      </p>
-    </div>
-    <div id="investigation_tab">
-      <p>
-        <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
-        <br clear="all"/>
-      </p>
-    </div>
-    <div id="notes_tab">
-      <p>
-        <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
-        <br clear="all"/>
-      </p>
-    </div>
+    <% end -%>
+    <% core_tab :clinical_tab, event_form do -%>
+      <%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %>
+      <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
+    <% end -%>
+    <% core_tab :lab_info_tab, event_form do -%>
+      <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %>
+      <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
+    <% end -%>
+    <% core_tab :epi_tab, event_form do -%>
+      <%= render :partial => 'contact_events/epidemiological_form', :locals => {:f => event_form} %>
+      <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
+    <% end -%>
+    <% core_tab :investigation_tab, event_form do -%>
+      <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
+    <% end -%>
+    <% core_tab :notes_tab, event_form do -%>
+      <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+    <% end -%>
   <% end %>
   <%= event_form.submit t('save_and_exit'), :style => "display: none", :onclick => "this.disabled=true;" %>
 <% end %>

@@ -17,26 +17,26 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe MorbidityEventsHelper do
+describe ContactEventsHelper do
   include EventsSpecHelper
   include DiseaseSpecHelper
   include CoreFieldSpecHelper
 
   describe "tabs helper" do
     before do
-      given_cmr_core_tabs_loaded
+      given_contact_core_tabs_loaded
       helper.class_eval { include EventsHelper }
     end
 
-    it 'should include all morbidity event core tabs' do
-      helper.morbidity_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab lab_info_tab contacts_tab encounters_tab epi_tab reporting_tab investigation_tab notes_tab administrative_tab)
+    it 'should include all contact event core tabs' do
+      helper.contact_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab lab_info_tab epi_tab investigation_tab notes_tab)
     end
 
     it "only shows tabs enabled on the current event" do
       disease = given_a_disease_named('The Trots')
-      assigns[:event] = given_a_morb_with_disease disease
-      hide_morbidity_event_tabs(:lab_info_tab, :contacts_tab, :encounters_tab, :investigation_tab, :on_disease => disease)
-      helper.morbidity_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab epi_tab reporting_tab notes_tab administrative_tab)
+      assigns[:event] = given_a_contact_with_disease disease
+      hide_contact_event_tabs(:lab_info_tab, :investigation_tab, :on_disease => disease)
+      helper.contact_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab epi_tab notes_tab)
     end
   end
 

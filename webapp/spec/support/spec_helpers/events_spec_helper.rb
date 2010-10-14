@@ -10,4 +10,10 @@ module EventsSpecHelper
     end
   end
 
+  def given_a_contact_with_disease(disease)
+    morb = given_a_morb_with_disease disease
+    contact = given_a_contact_for_morb morb
+    contact.disease_event.update_attributes! :disease => disease
+    contact
+  end
 end

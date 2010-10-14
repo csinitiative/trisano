@@ -1392,9 +1392,15 @@ module EventsHelper
       default = "ASC"
       reverse = "DESC"
     end
-    
+
     sort_direction = (query_params.has_value?(sort_on) && query_params.has_value?(default)) ? reverse : default
     query_params.merge(:sort_direction => sort_direction, :sort_order => sort_on)
+  end
+
+  def event_tabs_for(event_type)
+    CoreField.tabs_for(event_type).map do |tab_field|
+      [tab_field.name_key, tab_field.name] if tab_field.rendered_on_event?(@event)
+    end.compact
   end
 
 end

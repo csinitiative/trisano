@@ -19,9 +19,7 @@ module MorbidityEventsHelper
   extensible_helper
 
   def morbidity_event_tabs
-    CoreField.tabs_for(:morbidity_event).map do |tab_field|
-      [tab_field.name_key, tab_field.name] if tab_field.rendered_on_event?(@event)
-    end.compact
+    event_tabs_for :morbidity_event
   end
 
   def basic_morbidity_event_controls(event, view_mode)
