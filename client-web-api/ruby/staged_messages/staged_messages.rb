@@ -42,14 +42,20 @@ form_action = new_message_page.at("form#new_staged_message")['action']
 # This field ID will never change and is formally part of the API.
 field_name = new_message_page.at("form#new_staged_message textarea#hl7-text-input")['name']
 
+content_type = ENV['TRISANO_API_CONTENT_TYPE']
+headers = (content_type.nil?) ? {} : { 'Content-Type' => content_type }
+
+puts "Using the following custom headers:"
+p headers
+
 # Get HL7 messaged from STDIN or named files
 ARGF.readlines.each_with_index do |msg, i|
   j = i + 1
   puts "Processing message #{j}"
   begin
-    trisano_agent.post(form_action, {field_name => msg}, false)
+    trisano_agent.post(form_action, {field_name => msg}, false, headers)
   rescue TrisanoWebError => e
-    puts "Message number #{j} could not be processed due to the following errors:"
+    puts "Message number #{j} could not be processed due to the following errors (#{e}):"
     e.errors.each {|e| puts "\t* #{e}"}
   end
 end
