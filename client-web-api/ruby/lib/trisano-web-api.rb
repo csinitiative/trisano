@@ -46,8 +46,8 @@ class TriSanoWebApi
     @agent.get(base_uri(leading_path) + uri)
   end
 
-  def post(uri, query, leading_path=true)
-    http_action { @agent.post(base_uri(leading_path) + uri, query) }
+  def post(uri, query, leading_path=true, headers={})
+    http_action { @agent.post(base_uri(leading_path) + uri, query, headers) }
   end
 
   def delete(uri, leading_path=true)
