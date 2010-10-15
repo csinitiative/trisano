@@ -54,6 +54,9 @@
     = calendar_date_select_includes
     = localized_calendar_date_select_variables
 
+    / Other javascripts, maybe
+    = yield :javascript_includes
+
   %body.yui-skin-sam
     - dom_loaded do
       = "shortcuts_init('#{home_path}', '#{shortcuts_path}');"

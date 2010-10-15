@@ -18,10 +18,10 @@
 module CoreFieldsHelper
   extensible_helper
 
-  def render_core_fields_list(core_fields)
+  def render_core_fields_list(roots)
     result = ""
-    core_fields.each do |root|
-      result << render(:partial => 'list_fields', :locals => {:event_type => t("#{root.event_type}_fields"), :core_fields => root.children })
+    roots.each_as_cursor do |cursor|
+      result << render(:partial => 'list_fields', :locals => { :root_cursor => cursor })
     end
     result
   end

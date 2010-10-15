@@ -27,4 +27,43 @@ class Array
     map(&:to_i)
   end
 
+  def each_as_cursor(&block)
+    each_index do |i|
+      block[Cursor.new(self, i)]
+    end
+  end
+
+  class Cursor
+    attr_reader :array
+    attr_reader :index
+
+    def initialize(array, index)
+      @array = array
+      @index = index
+    end
+
+    def current
+      array[index]
+    end
+
+    def previous
+      previous_position.current
+    end
+
+    def next
+      next_position.current
+    end
+
+    def previous_position
+      prev_pos = index - 1
+      prev_pos = array.length - 1 if prev_pos < 0
+      Cursor.new array, prev_pos
+    end
+
+    def next_position
+      next_pos = index + 1
+      next_pos = 0 if next_pos >= array.size
+      Cursor.new array, next_pos
+    end
+  end
 end

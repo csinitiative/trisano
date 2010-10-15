@@ -17,9 +17,14 @@
   %table.list
     %tr
       %th.forminformation
-        = h(event_type)
+        %a{ :name => h(root_cursor.current.name_key) }<
+          = t "#{root_cursor.current.event_type}_fields"
+        %a.scroll-to-link.ui-icon.ui-icon-arrowthick-1-n{ :href => "##{root_cursor.previous.name_key}" }
+          =t :previous
+        %a.scroll-to-link.ui-icon.ui-icon-arrowthick-1-s{ :href => "##{root_cursor.next.name_key}" }
+          =t :next
     %tr
       %td
         .core_fields
           %ul
-            = render :partial => 'core_field', :collection => core_fields
+            = render(:partial => 'core_field', :collection => root_cursor.current.children)
