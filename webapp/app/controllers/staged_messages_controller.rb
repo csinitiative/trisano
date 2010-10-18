@@ -41,17 +41,16 @@ class StagedMessagesController < ApplicationController
   end
 
   def create
-    @staged_message = StagedMessage.new(params[:staged_message])
-    @staged_message.hl7_message ||= @raw_hl7_message
-
-    @staged_message.hl7_message = @staged_message.hl7_message.read.chomp if @staged_message.hl7_message.instance_of?(Tempfile)
+    # @staged_message is instantiated in :check_contents (a before_filter)
 
     respond_to do |format|
       if @staged_message.save
         flash[:notice] = t("staged_message_successfully_created")
         format.html { redirect_to(@staged_message) }
-        format.hl7  { render :text => @staged_message.ack.to_hl7,
-          :status => :created, :location => @staged_message }
+        format.hl7 do
+          render :text => @staged_message.ack.to_hl7,
+          :status => :created, :location => @staged_message
+        end
       else
         format.html do
           # to return the input chooser to the state the user set it:
@@ -67,8 +66,9 @@ class StagedMessagesController < ApplicationController
           @staged_message.hl7_message.gsub!("\r", "\n")
           render :action => "new", :status => :bad_request
         end
-        format.hl7  { render :text => @staged_message.ack.to_hl7,
-          :status => :unprocessable_entity }
+        format.hl7  {
+          render :text => @staged_message.ack.to_hl7,
+            :status => :unprocessable_entity }
       end
     end
   end
@@ -163,8 +163,10 @@ class StagedMessagesController < ApplicationController
   end
 
   def check_contents
-    @raw_hl7_message = request.body.read if request.format == :hl7
-    if @raw_hl7_message and @raw_hl7_message.hl7_batch?
+    @staged_message = StagedMessage.new params[:staged_message]
+    @staged_message.hl7_message ||= request.body.read.chomp
+
+    if @staged_message.hl7_message and @staged_message.hl7_message.hl7_batch?
       redirect_to message_batches_path
       response.body = "<html><body>Posted message is an HL7 batch message (beginning with an FHS segment).  Redirecting to <a href=\"#{CGI.escapeHTML message_batches_url}\">#{CGI.escapeHTML message_batches_path}</a></body></html>"
       logger.info 'HL7 batch message (beginning with FHS) ' +
