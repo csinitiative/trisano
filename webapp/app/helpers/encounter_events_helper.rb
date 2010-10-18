@@ -16,6 +16,11 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module EncounterEventsHelper
+  extensible_helper
+
+  def encounter_event_tabs
+    event_tabs_for :encounter_event
+  end
 
   # Builds a list of users for use in the investigator drop down for encounter events. It
   # adds the current user to the front of the list if the current user isn't included in the
