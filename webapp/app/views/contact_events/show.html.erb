@@ -3,17 +3,17 @@ Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 
 This file is part of TriSano.
 
-TriSano is free software: you can redistribute it and/or modify it under the 
-terms of the GNU Affero General Public License as published by the 
-Free Software Foundation, either version 3 of the License, or 
+TriSano is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-TriSano is distributed in the hope that it will be useful, but 
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+TriSano is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
 for more details.
 
-You should have received a copy of the GNU Affero General Public License along 
+You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
@@ -41,49 +41,34 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% fields_for(setup_human_event_tree(@event), :url => contact_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
-  <% tabs = []
-  tabs << ['demographic_tab', t('demographic')]
-  tabs << ['clinical_tab', t('clinical')]
-  tabs << ['lab_info_tab', t('lab')]
-  tabs << ['epi_tab', t('epi')]
-  tabs << ['investigation_tab', t('investigation')]
-  tabs << ['notes_tab', t('event_notes')]
-%>
-
-  <% tabbed_content(tabs, @tab_index) do %>
-    <div id="demographic_tab">
+  <% tabbed_content(contact_event_tabs, @tab_index) do %>
+    <% core_tab :demographic_tab, event_form do -%>
       <%= render :partial => "events/people/contact_show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="clinical_tab">
+    <% core_tab :clinical_tab, event_form do -%>
       <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="lab_info_tab">
+    <% core_tab :lab_info_tab, event_form do -%>
       <%= render :partial => "events/lab_info_show_tab", :locals => { :f => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="epi_tab">
+    <% core_tab :epi_tab, event_form do -%>
       <%= render :partial => "contact_events/epidemiological_show_tab", :locals => { :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="investigation_tab">
+    <% core_tab :investigation_tab, event_form do -%>
       <%= render :partial => "events/investigation_show_tab" %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="notes_tab">
+    <% core_tab :notes_tab, event_form do -%>
       <%= render :partial => "events/notes_show_tab" %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
   <% end %>
 
 <% end %>
