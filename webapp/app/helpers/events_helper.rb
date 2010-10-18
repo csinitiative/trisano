@@ -83,6 +83,7 @@ module EventsHelper
       concat "<div id=\"#{attribute.to_s}\">"
       concat_block_or_replacement cf, form_builder, &block
       concat "<br clear=\"all\"/>"
+      concat link_to_top
       concat "</div>"
     end
   end
@@ -1403,5 +1404,8 @@ module EventsHelper
     end.compact
   end
 
-end
+  def link_to_top
+    "<a href='' onclick='scrollToTop(); return false;'>&uarr; Return to top</a>"
+  end
 
+end
