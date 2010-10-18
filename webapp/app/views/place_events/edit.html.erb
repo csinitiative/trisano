@@ -48,30 +48,17 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% form_for(setup_place_event_tree(@event), :url => place_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
 
-  <% tabs = []
-     tabs << ["place_tab", t('place')]
-     tabs << ["investigation_tab", t('investigation')]
-     tabs << ["notes_tab", t('notes')]
-  %>
-
-  <% tabbed_content(tabs, @tab_index) do %>
-    <div id="place_tab">
+  <% tabbed_content(place_event_tabs, @tab_index) do %>
+    <% core_tab(:place_tab, event_form) do -%>
       <%= render :partial => "events/places/form", :locals => { :f => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Place" } %>
-      <br clear="all"/>
-    </div>
-    <div id="investigation_tab">
-      <p>
-        <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
-        <br clear="all"/>
-      </p>
-    </div>
-    <div id="notes_tab">
-      <p>
-        <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
-        <br clear="all"/>
-      </p>
-    </div>
+    <% end -%>
+    <% core_tab(:investigation_tab, event_form) do -%>
+      <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
+    <% end -%>
+    <% core_tab(:notes_tab, event_form) do -%>
+      <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
+    <% end -%>
   <% end %>
   <%= event_form.submit t("save_and_exit"), :style => "display: none", :onclick => "this.disabled=true;" %>
 <% end %>
