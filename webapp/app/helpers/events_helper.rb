@@ -1403,5 +1403,8 @@ module EventsHelper
     end.compact
   end
 
+  def patient_entity
+    @event.interested_party.person_entity if @event
+  end
 end
 
