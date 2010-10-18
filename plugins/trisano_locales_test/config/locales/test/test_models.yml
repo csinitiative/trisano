@@ -98,7 +98,7 @@ test:
 
       participations_risk_factor:
         pregnant_id: xPregnant
-        pregnancy_due_date: xPregnancy due date
+        pregnancy_due_date: xExpected delivery date
         food_handler_id: xFood handler
         healthcare_worker_id: xHealth care worker
         group_living_id: xGroup living

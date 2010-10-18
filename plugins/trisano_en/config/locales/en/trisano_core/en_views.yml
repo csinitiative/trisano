@@ -498,7 +498,7 @@ en:
   died: "Died"
   date_of_death: "Date of death"
   pregnant: "Pregnant"
-  pregnancy_due_date: "Pregnancy due date"
+  pregnancy_due_date: "Expected delivery date"
   diagnosing_health_facilities: "Diagnosing health facilities"
   hospitalized_health_facility: "Hospitalized health facility"
   admission_date: "Admission date"

@@ -268,7 +268,7 @@ test:
   uploaded: 'xUploaded'
   open: 'xOpen'
   no_attachments: 'xNo attachments'
-  
+
 #event_forms
   event_forms: 'xEvent Forms'
   forms_in_use: 'xForms in Use'
@@ -386,7 +386,7 @@ test:
   phone_number: "xPhone number"
   extension: 'xExtension'
   agency_phone: 'xAgency phone'
-  
+
 #telephones
   extension_abbrev: "xExt."
 #clinicians
@@ -409,7 +409,7 @@ test:
   treatment_date: 'xTreatment Date'
   stop_treatment_date: 'xStop Treatment Date'
   add_treatment: "xAdd a Treatment"
-  
+
 #encounters
   no_encounters: "xNo encounters have been recorded for this {{thing}}"
   encounter_on: "xEncounter on {{date}}"
@@ -422,7 +422,7 @@ test:
   no_encounter_notes: 'xNo encounter notes have been recorded for this event'
   add_encounter: "xAdd a new encounter"
   encounter_notes: "xEncounter Notes"
-  
+
 #exposures
   food_handler: "xFood handler"
   healthcare_worker: "xHealthcare worker"
@@ -492,7 +492,7 @@ test:
   died: "xDied"
   date_of_death: "xDate of death"
   pregnant: "xPregnant"
-  pregnancy_due_date: "xPregnancy due date"
+  pregnancy_due_date: "xExpected delivery date"
   diagnosing_health_facilities: "xDiagnosing health facilities"
   hospitalized_health_facility: "xHospitalized health facility"
   admission_date: "xAdmission date"

@@ -71,7 +71,7 @@ en:
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
-          pregnancy_due_date: Pregnancy due date
+          pregnancy_due_date: Expected delivery date
           risk_factors_notes: Risk factors notes
           day_care_association_id: Day care association
           food_handler_id: Food handler
@@ -213,7 +213,7 @@ en:
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
-          pregnancy_due_date: Pregnancy due date
+          pregnancy_due_date: Expected delivery date
           risk_factors_notes: Risk factors notes
           day_care_association_id: Day care association
           food_handler_id: Food handler
