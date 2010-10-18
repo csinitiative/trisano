@@ -125,7 +125,7 @@ Feature: Printer friendly morbidity events
     And I choose to print "All" data
     And I press "Print"
 
-    Then section headers should contain "Robert Johnson"
+    Then section headers should contain "Johnson, Robert"
 
   Scenario: Printing a morbidity event should print any associated Contact events
     Given I am logged in as a super user
