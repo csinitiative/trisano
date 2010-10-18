@@ -640,6 +640,7 @@ form.inplaceeditor-form a {
     .staged-message .request .specimen p + * {
       text-indent: 1em; }
   .staged-message .request .results {
+    display: inline-block;
     width: 81%; }
     .staged-message .request .results table {
       table-layout: fixed; }
