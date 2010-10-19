@@ -191,7 +191,7 @@ ActionController::Routing::Routes.draw do |map|
       :search => :get
   }
 
-  map.resources :message_batches, :only => :create
+  map.resources :message_batches, :only => [:create, :show]
 
   map.resources :places
 

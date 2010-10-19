@@ -821,6 +821,7 @@ en:
   sample_hl7_message: "Sample HL7 Message"
   no_staged_messages: "There are no messages in the {{state}} state"
   staged_messages: "Staged Messages"
+  staged_message_batch: "Staged Message Batch {{id}}"
   create_staged_message: "Create a staged message"
   staged_message: "Staged Message"
   message_details: "Message Details"

@@ -244,6 +244,7 @@ es:
 
   # Staged messages
   staged_message_successfully_created: "Se creó el mensaje de fases con éxito."
+  message_batch_successfully_created: "Message batch was successfully created."
   staged_message_successfully_updated: "Se actualizó el mensaje de fases con éxito."
   could_not_discard_message_event: "No se pudo descartar el evento de mensaje. {{message}}"
   staged_message_discarded: "Se descartó el mensaje de fases."
