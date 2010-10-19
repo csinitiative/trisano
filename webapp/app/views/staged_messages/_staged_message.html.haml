@@ -38,6 +38,9 @@
         %br
 
       .footer
+        - if staged_message.message_batch
+          - label = t :staged_message_batch, :id => staged_message.message_batch.id
+          =link_to label, staged_message.message_batch, :title => label, :class => 'batch-link'
         %p
           %small= h staged_message.message_header.sending_facility
         %div.tools

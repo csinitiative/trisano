@@ -626,14 +626,13 @@ form.inplaceeditor-form a {
 .staged-message-form .templates {
   display: none; }
 
-#return-link {
-  display: block;
-}
-
 .staged-message {
   margin-right: 1em;
   padding-left: 2px;
   padding-right: 2px; }
+  .staged-message .batch-link {
+    display: block;
+    font-size: 0.8em; }
   .staged-message .request .specimen {
     float: left;
     background: #EEEEEE;
