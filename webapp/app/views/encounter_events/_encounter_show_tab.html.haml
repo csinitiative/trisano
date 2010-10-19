@@ -17,8 +17,8 @@
   %legend
     =t('encounter_info')
 
-  %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
 
+  -core_section :encounter_section, f do
     -f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
 
       -core_element_show(:user_id, pe_fields, :horiz) do
