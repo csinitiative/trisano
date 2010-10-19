@@ -31,4 +31,4 @@ Feature: Printer friendly contact events
     And I choose to print "All" data
     And I press "Print"
 
-    Then section headers should contain "Miles Davis"
+    Then section headers should contain "Davis, Miles"

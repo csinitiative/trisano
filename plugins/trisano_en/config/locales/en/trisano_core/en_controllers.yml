@@ -62,7 +62,7 @@ en:
   # Diseases
   disease_successfully_created: "Disease was successfully created."
   disease_successfully_updated: "Disease was successfully updated."
-  
+
   # Encounter events
   encounter_event_created: "Encounter event was successfully created."
   encounter_event_updated: "Encounter event was successfully updated."
@@ -89,7 +89,7 @@ en:
   # Event queue
   event_queue_created: "Event queue was successfully created."
   event_queue_updated: "Event queue was successfully updated."
-  
+
   # Event tasks
   event_task_created: "Task was successfully created."
   event_task_updated: "Task was successfully updated."
@@ -184,7 +184,7 @@ en:
   loinc_code_created: "LOINC code was successfully created."
   loinc_code_updated: "LOINC code was successfully updated."
   loinc_code_deleted: "LOINC code was successfully deleted."
-  
+
 
   # Morbidity events
   cmr_created: "CMR was successfully created."
@@ -197,7 +197,7 @@ en:
   # Organisms
   organism_created: "Organism was successfully created."
   organism_updated: "Organism was successfully updated."
-  
+
   # People
   person_created: "Person was successfully created."
   person_updated: "Person was successfully updated."
@@ -244,6 +244,7 @@ en:
 
   # Staged messages
   staged_message_successfully_created: "Staged message was successfully created."
+  message_batch_successfully_created: "Message batch was successfully created."
   staged_message_successfully_updated: "Staged message was successfully updated."
   could_not_discard_message_event: "Could not discard message event. {{message}}"
   staged_message_discarded: "Staged message was discarded."
@@ -291,11 +292,11 @@ en:
     user_loaded: "User loaded: {{uid}}"
 
     cdc_export_error: "CDC Export Failed"
-    
-    
 
-    
-    
-    
 
-    
+
+
+
+
+
+
