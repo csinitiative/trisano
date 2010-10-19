@@ -549,6 +549,15 @@ module EventsHelper
     opts
   end
 
+  def person_name_for_event(event, view_mode)
+    if (view_mode == :index) then
+      first = (event['first_name'].blank?) ? "" : ", #{event['first_name']}"
+      text =  event['last_name'] << first
+    else
+      text = event.interested_party.person_entity.person.last_comma_first
+    end
+    h text
+  end
 
   # Debt: Name methods could be dried up. Waiting for feedback on soft-delete UI changes.
   def event_div_class(event, &block)

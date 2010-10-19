@@ -21,10 +21,7 @@
 %tr.roll
   %td.forminformation
     - event_div_class(morbidity_event) do
-      - if (view_mode == :index)
-        = h(morbidity_event['last_name'] << (morbidity_event['first_name'].blank? ? "" : ", #{morbidity_event['first_name']}"))
-      - else
-        =h(morbidity_event.interested_party.person_entity.person.last_comma_first)
+      = person_name_for_event(morbidity_event, view_mode)
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         ="#{t 'morbidity_event'}"
