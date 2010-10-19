@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
@@ -21,7 +21,7 @@
     %legend
       =t 'forms_in_use'
     - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
-      %p 
+      %p
         %em None
     - else
       %ul{:id => "investigation_form_list", :style => 'margin-bottom: 10px'}
@@ -79,11 +79,11 @@
                         %div{:id => "ut_#{h(view.id)}"}
                           %fieldset
                             = show_investigator_view(view, form)
-                          
-                              
+
+
                 - else
                   = show_investigator_view(form.investigator_view_elements_container.children[0], form)
-                
+
                 %br{:clear => "all"}
                 %div{:align => "right"}
                   %small

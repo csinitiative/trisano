@@ -13,8 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend= "#{t 'telephone'}/#{t 'email'}"
+-core_section :phone_section, f do
   -core_element_show(:telephones, f, :horiz) do
     %div.data_telephones
       =render :partial => 'people/show_telephone', :collection => f.object.telephones

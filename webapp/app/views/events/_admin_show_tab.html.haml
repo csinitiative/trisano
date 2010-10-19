@@ -15,8 +15,7 @@
 
 %fieldset
   %legend=t 'admin_info'
-  %fieldset{:class => "form"}
-    %legend=t 'tracking_info'
+  -core_section :event_information_section, event_form do
     %span{:class => "horiz"}
       %label=t 'record_number'
       = h(@event.record_number)
@@ -35,8 +34,7 @@
 
   %span.vert-break
 
-  %fieldset{:class => "form"}
-    %legend=t 'case_outbreak'
+  -core_section :case_outbreak_section, event_form do
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label :lhd_case_status_id
       = h(l(@event.lhd_case_status)) || '&nbsp;'
@@ -48,8 +46,7 @@
       = event_form.label :outbreak_name
       = h(@event.outbreak_name) || '&nbsp;'
 
-  %fieldset{:class => "form"}
-    %legend=t('investigation')
+  -core_section :event_auditing_section, event_form do
     %span{:class => "horiz"}
       %label=t 'jurisdiction_of_residence'
       - if @event.address
@@ -72,9 +69,7 @@
         = event_form.label :investigation_completed_LHD_date
         = ld(@event.investigation_completed_LHD_date)
 
-  %fieldset{:class => "form"}
-    %legend=t 'auditing'
-    - core_element_show :event_name, event_form, :horiz do
+    - core_element_show :event_name, event_form, :vert do
       = event_form.label :event_name
       = h(@event.event_name)
     - core_element_show :review_completed_by_state_date, event_form, :horiz do

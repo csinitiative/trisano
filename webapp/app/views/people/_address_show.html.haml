@@ -14,9 +14,8 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -# Huge Debt: We need to unify this with 'events/people/_address_show.html.haml'.
-%fieldset.form
-  %legend=t 'address'
-  -f.fields_for(:address, :builder => ExtendedFormBuilder) do |address_form|
+-f.fields_for(:address, :builder => ExtendedFormBuilder) do |address_form|
+  -core_section :address_section, f do
     %div.data_address
       -core_element_show :street_number, address_form, :horiz do
         =address_form.label(:street_number)
