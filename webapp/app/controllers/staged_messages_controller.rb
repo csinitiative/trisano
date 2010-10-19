@@ -51,12 +51,12 @@ class StagedMessagesController < ApplicationController
           format.hl7 { head :created, :location => @message_batch }
         else
           format.html do
-            set_input_type(:text)
-            flash[:error] = ''
+            flash[:error] = '<ul>'
             @message_batch.errors.each do |attr, errmsg|
-              flash[:error] += errmsg.to_s + "\n"
+              flash[:error] += "<li>#{errmsg.to_s}</li>"
             end
-            flash[:error].chomp!
+            flash[:error] += '</ul>'
+            set_input_type(:text)
             @staged_message.hl7_message.gsub!("\r", "\n")
             render :action => "new", :status => :bad_request
           end

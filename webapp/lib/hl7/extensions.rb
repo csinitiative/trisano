@@ -59,7 +59,7 @@ module HL7
 
     class << self
       def parse_batch(batch) # :yields: message
-        raise HL7::ParseError, 'badly formed batch message' unless
+        raise HL7::ParseError, 'badly_formed_batch_message' unless
           batch.hl7_batch?
 
         # JRuby seems to change our literal \r characters in sample
@@ -72,7 +72,7 @@ module HL7
         # newline character in it.
         batch = batch.gsub("\n", "\r") if batch.include?("\n")
 
-        raise HL7::ParseError, 'empty batch message' unless
+        raise HL7::ParseError, 'empty_batch_message' unless
           match = /\rMSH/.match(batch)
 
         match.post_match.split(/\rMSH/).each_with_index do |_msg, index|
