@@ -288,6 +288,9 @@ en:
       privileges_role:
         privilege_id: Privilege
 
+      message_batch:
+        hl7_message: HL7 Message
+
       staged_message:
         hl7_message: HL7 Message
 

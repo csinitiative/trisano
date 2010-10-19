@@ -41,34 +41,47 @@ class StagedMessagesController < ApplicationController
   end
 
   def create
-    # @staged_message is instantiated in :check_contents (a before_filter)
-
     respond_to do |format|
-      if @staged_message.save
-        flash[:notice] = t("staged_message_successfully_created")
-        format.html { redirect_to(@staged_message) }
-        format.hl7 do
-          render :text => @staged_message.ack.to_hl7,
-          :status => :created, :location => @staged_message
+      # @staged_message and @message_batch are instantiated in
+      # :check_contents (a before_filter)
+      if @message_batch
+        if @message_batch.save
+          flash[:notice] = t :message_batch_successfully_created
+          format.html { redirect_to @message_batch }
+          format.hl7 { head :created, :location => @message_batch }
+        else
+          format.html do
+            flash[:error] = '<ul>'
+            @message_batch.errors.each do |attr, errmsg|
+              flash[:error] += "<li>#{errmsg.to_s}</li>"
+            end
+            flash[:error] += '</ul>'
+            set_input_type(:text)
+            @staged_message.hl7_message.gsub!("\r", "\n")
+            render :action => "new", :status => :bad_request
+          end
+          format.hl7  {
+            render :text => @staged_message.ack.to_hl7,
+              :status => :unprocessable_entity }
         end
-      else
-        format.html do
-          # to return the input chooser to the state the user set it:
-          # @input = Input.new @staged_message.input_type
-
-          # other values:
-          # @input = Input.new 'file' # show the file upload control
-          # @input = Input.new 'list' # show the pulldown list
-
-          # instead, show the text box populated with the offending
-          # message
-          @input = Input.new 'text'
-          @staged_message.hl7_message.gsub!("\r", "\n")
-          render :action => "new", :status => :bad_request
+      elsif @staged_message
+        if @staged_message.save
+          flash[:notice] = t("staged_message_successfully_created")
+          format.html { redirect_to(@staged_message) }
+          format.hl7 do
+            render :text => @staged_message.ack.to_hl7,
+              :status => :created, :location => @staged_message
+          end
+        else
+          format.html do
+            set_input_type(:text)
+            @staged_message.hl7_message.gsub!("\r", "\n")
+            render :action => "new", :status => :bad_request
+          end
+          format.hl7  {
+            render :text => @staged_message.ack.to_hl7,
+              :status => :unprocessable_entity }
         end
-        format.hl7  {
-          render :text => @staged_message.ack.to_hl7,
-            :status => :unprocessable_entity }
       end
     end
   end
@@ -166,16 +179,15 @@ class StagedMessagesController < ApplicationController
     @staged_message = StagedMessage.new params[:staged_message]
     @staged_message.hl7_message ||= request.body.read.chomp
 
-    if @staged_message.hl7_message and @staged_message.hl7_message.hl7_batch?
-      redirect_to message_batches_path
-      response.body = "<html><body>Posted message is an HL7 batch message (beginning with an FHS segment).  Redirecting to <a href=\"#{CGI.escapeHTML message_batches_url}\">#{CGI.escapeHTML message_batches_path}</a></body></html>"
-      logger.info 'HL7 batch message (beginning with FHS) ' +
-        "redirected to #{message_batches_path}"
+    @staged_message.hl7_message = @staged_message.hl7_message.read.chomp if @staged_message.hl7_message.is_a?(Tempfile)
 
-      # Terminate the remainder of the callback chain, including the
-      # StagedMessagesController#create method itself.
-      return false
+    if @staged_message.hl7_message and @staged_message.hl7_message.hl7_batch?
+      @message_batch = MessageBatch.new :hl7_message => @staged_message.hl7_message
     end
+  end
+
+  def set_input_type(type)
+    @input = Input.new type.to_s
   end
 
 end

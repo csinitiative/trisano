@@ -34,7 +34,7 @@ test:
         risk_factor:
           occupation: xOccupation
           risk_factors: xRisk factors
-          pregnancy_due_date: xPregnancy due date
+          pregnancy_due_date: xExpected delivery date
           risk_factors_notes: xRisk factors notes
           day_care_association_id: xDay care association
           food_handler_id: xFood handler
@@ -146,7 +146,7 @@ test:
         risk_factor:
           occupation: xOccupation
           risk_factors: xRisk factors
-          pregnancy_due_date: xPregnancy due date
+          pregnancy_due_date: xExpected delivery date
           risk_factors_notes: xRisk factors notes
           day_care_association_id: xDay care association
           food_handler_id: xFood handler

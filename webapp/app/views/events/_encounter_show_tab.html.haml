@@ -17,21 +17,15 @@
   %legend
     =t 'encounter_info'
 
-  %fieldset.form
-    %legend
-      =t 'encounters'
+  -core_section :encounters_section, f do
     -core_element_show(:encounters, f, :horiz) do
       - if @event.encounter_child_events.first.new_record?
         %h3= t 'no_encounters', :thing => 'event'
       - else
         = render :partial => 'events/encounter_show', :locals => { :encounters => @event.encounter_child_events }
 
-  %fieldset.form
-    %legend
-      =t 'encounter_notes'
-
+  -core_section :encounter_notes_section, f do
     - unless @event.encounter_child_events.first.new_record?
-
       - for encounter in @event.encounter_child_events
         - pe = encounter.participations_encounter
         %h4=t "encounter_on", :date => ld(pe.encounter_date)

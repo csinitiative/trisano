@@ -12,24 +12,27 @@
 -#
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-%tr
-  %th Lab
-  %th Collection date
-  %th Lab test date
-  %th Specimen source
-%tr
-  %td
-    .value=h obr_wrapper.lab
-  %td
-    .value=h obr_wrapper.collection_date
-  %td
-    .value=h obr_wrapper.lab_test_date
-  %td
-    .value=h obr_wrapper.specimen_source
 
-%tr
-  %th{:colspan => 2} Test type
-  %th Test result
-  %th Reference range
+= javascript_include_tag 'staged_messages/_staged_message.js'
 
-=render obr_wrapper.tests
+-content_for :tools do
+  =link_to t('search'), search_staged_messages_path
+  %p
+
+= link_to(t('create_staged_message'), new_staged_message_path, :rel => "http://trisano.org/relation/staged_messages_new") if User.current_user.is_entitled_to?(:write_staged_message)
+
+- form_tag(staged_messages_path, :style => "display: inline", :method => :get) do
+  =yield :utility
+
+%p &nbsp;
+
+- unless @staged_messages.empty?
+  #rot
+    %table.list
+      = render @staged_messages
+
+  %p{:style => 'clear: both'}
+  %br
+  = will_paginate @staged_messages
+- else
+  = t('no_staged_messages', :state => t("staging_area_states.#{@selected.downcase}").downcase)

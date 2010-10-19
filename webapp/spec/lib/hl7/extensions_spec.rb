@@ -304,13 +304,13 @@ describe Message do
       # contents
       lambda do
         HL7::Message.parse_batch HL7MESSAGES[:empty_batch]
-      end.should raise_exception(HL7::ParseError, 'empty batch message')
+      end.should raise_exception(HL7::ParseError, 'empty_batch_message')
     end
 
     it 'should raise an exception when parsing a single message as a batch' do
       lambda do
         HL7::Message.parse_batch HL7MESSAGES[:realm_minimal_message]
-      end.should raise_exception(HL7::ParseError, 'badly formed batch message')
+      end.should raise_exception(HL7::ParseError, 'badly_formed_batch_message')
     end
 
     it 'should yield multiple messages from a valid batch' do

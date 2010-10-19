@@ -54,62 +54,51 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
   <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
-    <div id="demographic_tab">
-      <% patient_entity = @event.interested_party.person_entity %>
+    <% core_tab :demographic_tab, event_form do -%>
       <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="clinical_tab">
+    <% core_tab :clinical_tab, event_form do -%>
       <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="lab_info_tab">
+    <% core_tab :lab_info_tab, event_form do -%>
       <%= render :partial => "events/lab_info_show_tab", :locals => { :f => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="contacts_tab">
+    <% core_tab :contacts_tab, event_form do -%>
       <%= render :partial => "events/contact_show_tab",  :locals => { :f => event_form } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Contacts" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="encounters_tab">
+    <% core_tab :encounters_tab, event_form do -%>
       <%= render :partial => "events/encounter_show_tab",  :locals => { :f => event_form } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="epi_tab">
+    <% core_tab :epi_tab, event_form do -%>
       <%= render :partial => "events/epidemiological_show_tab", :locals => { :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="reporting_tab">
+    <% core_tab :reporting_tab, event_form do -%>
       <%= render :partial => "events/reporting_show_tab", :locals => { :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Reporting" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="investigation_tab">
+    <% core_tab :investigation_tab, event_form do -%>
       <%= render :partial => "events/investigation_show_tab" %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
 
-    <div id="notes_tab">
-      <%= render :partial => "events/notes_show_tab" %>
-      <br clear="all"/>
-    </div>
+    <% core_tab :notes_tab, event_form do -%>
+      <%= render :partial => "events/notes_show_tab", :locals => { :f => event_form } %>
+    <% end -%>
 
-    <div id="administrative_tab">
+    <% core_tab :administrative_tab, event_form do -%>
       <%= render :partial => "events/admin_show_tab", :locals => { :event_form => event_form }%>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
-      <br clear="all"/>
-    </div>
+    <% end -%>
   <% end %>
 <% end %>

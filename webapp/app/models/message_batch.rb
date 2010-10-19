@@ -26,7 +26,7 @@ class MessageBatch < ActiveRecord::Base
     # children when it validates this batch.  Here we reject any batch
     # with no remaining valid messages, i.e. any batch with all invalid
     # messages.
-    record_error('invalid batch message') if staged_messages.empty?
+    record_error(:invalid_message_batch) if staged_messages.empty?
   end
 
   def message_removed(staged_message)
@@ -40,7 +40,6 @@ class MessageBatch < ActiveRecord::Base
     errmsg = args && args.first
     attribute = (args && args.second) || :hl7_message
 
-    logger.error errmsg
-    errors.add attribute, errmsg
+    logger.error(errors.add(attribute, errmsg).last)
   end
 end

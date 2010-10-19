@@ -59,7 +59,7 @@ Cucumber::Rails::World.class_eval do
     { :attributes => { :class => class_name.to_s },
       :after => {
         :tag => 'legend',
-        :content => 'Auditing'
+        :content => 'Auditing / Investigation'
       },
       :ancestor => {
         :tag => 'div',

@@ -77,6 +77,13 @@ es:
             country_code:
               format: "debe tener entre 1 y 3 dígitos"
 
+        message_batch:
+          attributes:
+            hl7_message:
+              invalid_message_batch: "invalid message batch"
+              badly_formed_message_batch: "badly formed message batch"
+              empty_message_batch: "empty message batch"
+
         staged_message:
           attributes:
             hl7_message:

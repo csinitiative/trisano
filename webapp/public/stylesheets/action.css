@@ -630,6 +630,9 @@ form.inplaceeditor-form a {
   margin-right: 1em;
   padding-left: 2px;
   padding-right: 2px; }
+  .staged-message .batch-link {
+    display: block;
+    font-size: 0.8em; }
   .staged-message .request .specimen {
     float: left;
     background: #EEEEEE;
@@ -640,6 +643,7 @@ form.inplaceeditor-form a {
     .staged-message .request .specimen p + * {
       text-indent: 1em; }
   .staged-message .request .results {
+    display: inline-block;
     width: 81%; }
     .staged-message .request .results table {
       table-layout: fixed; }

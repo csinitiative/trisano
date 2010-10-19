@@ -1,8 +1,7 @@
 %fieldset
   %legend=t 'reporting_information'
 
-  %fieldset.form
-    %legend=t 'reporting_agency'
+  -core_section :reporting_agency_section, event_form do
     - event_form.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |agency_form|
       - agency_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |entity_form|
         - entity_form.fields_for(:place, :builder => ExtendedFormBuilder) do |place_form|
@@ -15,8 +14,7 @@
         - entity_form.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_form|
           - show_telephones(phone_form)
 
-  %fieldset.form
-    %legend=t 'reporter'
+  -core_section :reporter_section, event_form do
     - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
       - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
         - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
@@ -33,8 +31,7 @@
         - pe.fields_for(:telephones, phone, :builder => ExtendedFormBuilder) do |phone_fields|
           - show_telephones(phone_fields)
 
-  %fieldset.form
-    %legend=t 'reported_dates'
+  -core_section :reported_dates_section, event_form do
     - core_element_show :results_reported_to_clinician_date, event_form, :horiz do
       = event_form.label(:results_reported_to_clinician_date)
       = ld(@event.results_reported_to_clinician_date)

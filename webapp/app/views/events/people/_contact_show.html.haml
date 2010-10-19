@@ -20,11 +20,11 @@
 
     %fieldset
       %legend=t('person_info')
-      = render :partial => 'people/name_show', :locals => {:person => entity_data.person, :f => primary_form, :event => @event, :event_form => event_form} 
+      = render :partial => 'people/name_show', :locals => {:person => entity_data.person, :f => primary_form, :event => @event, :event_form => event_form}
       = render :partial => 'people/address_show', :locals => {:address => @event.address, :f => event_form}
       = render :partial => 'people/age_show', :locals => { :f => primary_form, :event_form => event_form }
       = render :partial => 'people/phones_show', :locals => {:f => primary_form }
       = render :partial => 'people/demographics_show', :locals => {:person => entity_data.person, :f => primary_form}
 
-- event_form.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |contact_form|
-  = render :partial => 'events/people/disposition_show', :locals => {:event => @event, :contact_form => contact_form}
+      - event_form.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |contact_form|
+        = render :partial => 'events/people/disposition_show', :locals => {:event => @event, :contact_form => contact_form, :event_form => event_form }

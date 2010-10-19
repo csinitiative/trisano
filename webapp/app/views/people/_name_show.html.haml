@@ -3,18 +3,17 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, eitherq
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%fieldset.form
-  %legend= t 'name'
+-core_section :name_section, f do
   -f.fields_for(:person, :builder => ExtendedFormBuilder) do |person_form|
     %div.data_name
       -core_element_show :last_name, person_form, :horiz do
@@ -24,7 +23,7 @@
         =person_form.label(:first_name)
         %span.data_first_name=h(person_form.object.first_name)
       -core_element_show :middle_name, person_form, :horiz do
-        =person_form.label(:middle_name) 
+        =person_form.label(:middle_name)
         %span.data_middle_name=h(person_form.object.middle_name)
 
       -if !event_form.nil?

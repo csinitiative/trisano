@@ -73,7 +73,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     </div>
 
     <div id="notes_tab">
-      <%= render :partial => "events/notes_show_tab" %>
+      <%= render :partial => "events/notes_show_tab", :locals => { :f => event_form } %>
       <br clear="all"/>
     </div>
   <% end %>

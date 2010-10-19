@@ -92,3 +92,13 @@ After('@clean_events') do
   Address.all.each(&:delete)
   Event.all.each(&:delete)
 end
+
+When /^I scroll down a bit$/ do
+  script = "selenium.browserbot.getCurrentWindow().$j(window).scrollTop(300);"
+  @browser.get_eval(script).should == "[object Window]" # Just making sure the script ran
+end
+
+Then /^I should have been scrolled back to the top of the page$/ do
+  script = "selenium.browserbot.getCurrentWindow().$j(window).scrollTop();"
+  @browser.get_eval(script).should == "0"
+end
