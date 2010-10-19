@@ -28,4 +28,4 @@
         =render :partial => 'people/demographics_form', :locals => {:f => pe, :event => event}
 
     -f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |event_info|
-      =render :partial => "events/people/disposition_form", :locals => { :f => event_info }
+      =render :partial => "events/people/disposition_form", :locals => { :f => event_info, :event_form => f }
