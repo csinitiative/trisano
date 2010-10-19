@@ -20,8 +20,7 @@
     %span{:id => 'encounters_info_hide', :onClick => "Element.hide('encounter'); Element.hide('encounters_info_hide'); Element.show('encounters_info_show'); return false;"}=t('hide')
     %span{:id => 'encounters_info_show', :onClick => "Element.show('encounter'); Element.hide('encounters_info_show'); Element.show('encounters_info_hide'); return false;", :style => "display: none;"}=t('show')
 
-  %div{ :id => 'encounter', :class => 'encounter', :style => "clear: both;"}
-
+  -core_section :encounter_section, f do
     - f.fields_for(:participations_encounter, :builder => ExtendedFormBuilder) do |pe_fields|
       = error_messages_for :object => pe_fields.object
 

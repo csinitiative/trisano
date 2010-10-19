@@ -51,40 +51,26 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% fields_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
   <%  @event_form = event_form %>
-  <% tabs = []
-  tabs << ['encounter_tab', t('encounter')]
-  tabs << ['clinical_tab', t('clinical')]
-  tabs << ['lab_info_tab', t('lab')]
-  tabs << ['investigation_tab', t('investigation')]
-  tabs << ['notes_tab', t('event_notes')]
-%>
 
-  <% tabbed_content(tabs, @tab_index) do %>
-    <div id="encounter_tab">
+  <% tabbed_content(encounter_event_tabs, @tab_index) do %>
+    <% core_tab :encounter_tab, event_form do -%>
       <%= render :partial => "encounter_show_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Encounter" } %>
-      <br clear="all"/>
-    </div>
-    <div id="clinical_tab">
+    <% end -%>
+    <% core_tab :clinical_tab, event_form do -%>
       <%= render :partial => "clinical_show_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
-      <br clear="all"/>
-    </div>
-    <div id="lab_info_tab">
+    <% end -%>
+    <% core_tab :lab_info_tab, event_form do -%>
       <%= render :partial => "events/lab_info_show_tab", :locals => { :f => event_form, :event => @event } %>
       <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
-      <br clear="all"/>
-    </div>
-    <div id="investigation_tab">
+    <% end -%>
+    <% core_tab :investigation_tab, event_form do -%>
       <%= render :partial => "events/investigation_show_tab" %>
-      <br clear="all"/>
-    </div>
-    <div id="notes_tab">
-      <p>
-        <%= render :partial => "events/notes_show_tab", :locals => { :f => event_form } %>
-        <br clear="all"/>
-      </p>
-    </div>
+    <% end -%>
+    <% core_tab :notes_tab, event_form do -%>
+      <%= render :partial => "events/notes_show_tab", :locals => { :f => event_form } %>
+    <% end -%>
   <% end %>
   <%= event_form.submit t('save_and_exit'), :style => "display: none", :onclick => "this.disabled=true;" %>
 
