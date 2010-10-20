@@ -44,10 +44,12 @@ PGSQL_PATH=/usr/bin
 # This allows the plugin directory to be set as an environment variable
 # outside etl.sh
 echo "Testing plugin directory: $TRISANO_PLUGIN_DIRECTORY"
-if [[ -z $TRISANO_PLUGIN_DIRECTORY ||  ! -d $TRISANO_PLUGIN_DIRECTORY ]]; then
-    TRISANO_PLUGIN_DIRECTORY=../../../plugins
+if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISANO_PLUGIN_DIRECTORY ]]; then
+    echo "Plugin directory: $TRISANO_PLUGIN_DIRECTORY"
+else
+    echo "Plugin directory $TRISANO_PLUGIN_DIRECTORY not found"
+    TRISANO_PLUGIN_DIRECTORY=''
 fi
-echo "Plugin directory: $TRISANO_PLUGIN_DIRECTORY"
 ## END OF CONFIG
 
 ## README
@@ -166,15 +168,17 @@ $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
 
 echo "Processing plugin ETL"
 echo "Checking for directories in $TRISANO_PLUGIN_DIRECTORY"
-for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
-    if [ -r $plugin/avr/etl.sql ] ; then
-        echo "Found ETL file for $plugin"
-        $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
-            -p $DEST_DB_PORT -U $DEST_DB_USER \
-            -f $plugin/avr/etl.sql $DEST_DB_NAME || \
-            DIE "Error running ETL for plugin $plugin"
-    fi
-done
+if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISANO_PLUGIN_DIRECTORY ]]; then
+    for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
+        if [ -r $plugin/avr/etl.sql ] ; then
+            echo "Found ETL file for $plugin"
+            $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
+                -p $DEST_DB_PORT -U $DEST_DB_USER \
+                -f $plugin/avr/etl.sql $DEST_DB_NAME || \
+                DIE "Error running ETL for plugin $plugin"
+        fi
+    done
+fi
 
 echo "Swapping schemas"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \

@@ -242,8 +242,8 @@ SELECT
     jorpl.id AS jurisdiction_of_residence_id,
     COALESCE(scsi.code_description, 'Unknown') AS state_case_status_code,
     COALESCE(lcsi.code_description, 'Unknown') AS lhd_case_status_code,
-    events."MMWR_week" AS mmwr_week,
-    events."MMWR_year" AS mmwr_year,
+    events."MMWR_week"::text AS mmwr_week,
+    events."MMWR_year"::text AS mmwr_year,
 
     events.event_name,
     events.record_number,
@@ -285,6 +285,7 @@ SELECT
     events.event_queue_id,
     events.acuity,
 
+    pataddr.id AS pataddr_id,
     pataddr.street_number,
     pataddr.street_name,
     pataddr.unit_number,
@@ -375,7 +376,6 @@ SELECT
     partcon_disp_ec.code_description AS disposition_if_once_a_contact,        -- the_code?
     partcon_cont_ec.code_description AS contact_type_if_once_a_contact,        -- the_code?
 
--- Stuff that didn't show up in Pete's model
     ifi.code_description AS imported_from_code,         -- code_description?
 --      events."investigation_LHD_status_id",  Can be ignored, as it's never used
     events.sent_to_ibis,
@@ -605,6 +605,7 @@ SELECT
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,                    -- do something w/ event queues?
 
+    pataddr.id AS pataddr_id,
     pataddr.street_number,
     pataddr.street_name,
     pataddr.unit_number,
@@ -675,7 +676,6 @@ SELECT
     partcon_disp_ec.code_description AS disposition,        -- the_code?
     partcon_cont_ec.code_description AS contact_type,        -- the_code?
 
--- Stuff that didn't show up in Pete's model
     ifi.code_description AS imported_from_code,         -- code_description?
 --      events."investigation_LHD_status_id",  Can be ignored, as it's never used
     events.sent_to_ibis,
@@ -1163,6 +1163,7 @@ SELECT
     p.name,
     pt.place_types AS place_type,
     prtpl.date_of_exposure,
+    ad.id AS address_id,
     ad.street_number,
     ad.street_name,
     ad.unit_number,
