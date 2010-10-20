@@ -269,20 +269,30 @@ describe CoreField do
     end
   end
 
-  describe "section with at least one descendant that is required for an event" do
+  describe "with at least one descendant that is required for an event" do
     before do
-      @section = Factory.create :cmr_section_core_field
+      @tab = Factory.create :cmr_tab_core_field
+      @section = Factory.create :cmr_section_core_field, {
+        :tree_id => @tab.tree_id
+      }
       @core_field = Factory.create :cmr_core_field, {
         :tree_id => @section.tree_id,
         :required_for_event => true
       }
+      @tab.add_child @section
       @section.add_child @core_field
     end
 
-    it "is invalid if hidden" do
+    it "is invalid if hidden (section)" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
       @section.should_not be_valid
       @section.errors.full_messages.map(&:strip).should == ["The #{@section.name} section contains required fields"]
+    end
+
+    it "is invalid if hidden (tab)" do
+      @tab.update_attributes :rendered_attributes => { :rendered => false }
+      @tab.should_not be_valid
+      @tab.errors.full_messages.map(&:strip).should == ["The #{@tab.name} tab contains required fields"]
     end
   end
 
@@ -330,10 +340,14 @@ describe CoreField do
 
   describe "#hidden_by_ancestry?" do
     before do
-      @section = Factory.create :cmr_section_core_field
+      @tab = Factory.create :cmr_tab_core_field
+      @section = Factory.create :cmr_section_core_field, {
+        :tree_id => @tab.tree_id
+      }
       @core_field = Factory.create :cmr_core_field, {
         :tree_id => @section.tree_id,
       }
+      @tab.add_child @section
       @section.add_child @core_field
     end
 
@@ -342,8 +356,13 @@ describe CoreField do
       @core_field.should be_hidden_by_ancestry
     end
 
-    it "is true when parent is hidden" do
+    it "is true when an immediate parent is hidden" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden_by_ancestry
+    end
+
+    it "is hidden when any ancestor is hidden" do
+      @tab.update_attributes :rendered_attributes => { :rendered => false }
       @core_field.should be_hidden_by_ancestry
     end
   end

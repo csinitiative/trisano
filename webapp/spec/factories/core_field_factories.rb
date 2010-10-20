@@ -22,6 +22,12 @@ Factory.define :cmr_section_core_field, :parent => :cmr_core_field do |cf|
   cf.field_type 'section'
 end
 
+Factory.define :cmr_tab_core_field, :parent => :cmr_core_field do |cf|
+  cf.key 'morbidity_event[demographic_tab]'
+  cf.tree_id { CoreField.next_tree_id }
+  cf.field_type 'tab'
+end
+
 Factory.define :cmr_section_core_fields_disease, :parent => :cmr_core_fields_disease do |cfd|
   cfd.core_field { Factory.create(:cmr_section_core_field) }
 end

@@ -207,6 +207,7 @@ en:
   required_for: "{{thing1}} is required for {{thing2}}"
   contains_required_fields: 'The {{thing1}} contains required fields'
   section_name: '{{name}} section'
+  tab_name: '{{name}} tab'
 #csv_fields
   csv_export_columns: 'CSV Export Columns'
   long_name: 'Long Name'

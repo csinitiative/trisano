@@ -124,7 +124,7 @@ class CoreField < ActiveRecord::Base
   end
 
   def required_for_event?
-    if section?
+    if container?
       full_set.any? do |field_or_section|
         field_or_section.read_attribute :required_for_event
       end
@@ -220,8 +220,11 @@ class CoreField < ActiveRecord::Base
   private
 
   def required_for_event_error_message
-    if section?
+    case
+    when section?
       I18n.t :contains_required_fields, :thing1 => I18n.t(:section_name, :name => name)
+    when tab?
+      I18n.t :contains_required_fields, :thing1 => I18n.t(:tab_name, :name => name)
     else
       I18n.t :required_for, :thing1 => name, :thing2 => I18n.t(event_type.to_s.pluralize)
     end
