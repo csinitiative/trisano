@@ -213,6 +213,7 @@ es:
   required_for: "{{thing1}} is required for {{thing2}} (EN)"
   contains_required_fields: 'The {{thing1}} contains required fields (EN)'
   section_name: '{{name}} section (EN)'
+  tab_name: '{{name}} tab (EN)'
 
 #csv_fields
   csv_export_columns: 'Columnas de Exportación CSV'
