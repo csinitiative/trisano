@@ -188,7 +188,7 @@ es:
             base:
               invalid_case_status: "Debe quedarse '{{status}}' o en blanco el estado de caso estatal o local para un evento con un(a) {{attr}} de '{{value}}'"
             age_at_onset:
-              lesst_than: "es negativa. Esto suele provenir de una fecha equivocada de inicio de actividad o una fecha de nacimiento equivocada."
+              bad_range: "must be between 0 and 120. This is usually caused by an incorrect onset date or birth date. (EN)"
 
         address:
           attributes:

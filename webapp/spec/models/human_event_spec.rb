@@ -163,7 +163,17 @@ describe HumanEvent, 'age at onset'  do
       event.send(:set_age_at_onset)
       event.save
       event.should_not be_valid
-      event.errors.on(:age_at_onset).should == "is negative. This is usually caused by an incorrect onset date or birth date."
+      event.errors.on(:age_at_onset).should == "must be between 0 and 120. This is usually caused by an incorrect onset date or birth date."
+    end
+  end
+
+  it 'should not be valid if > 120' do
+    with_human_event do |event|
+      event.safe_call_chain(:interested_party, :person_entity, :person).birth_date = Date.today - 121.years
+      event.send(:set_age_at_onset)
+      event.save
+      event.should_not be_valid
+      event.errors.on(:age_at_onset).should == "must be between 0 and 120. This is usually caused by an incorrect onset date or birth date."
     end
   end
 end

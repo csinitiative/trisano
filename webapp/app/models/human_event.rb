@@ -24,8 +24,9 @@ class HumanEvent < Event
   validates_numericality_of :age_at_onset,
     :allow_nil => true,
     :greater_than_or_equal_to => 0,
+    :less_than_or_equal_to => 120,
     :only_integer => true,
-    :message => :less_than
+    :message => :bad_range
 
   validates_date :event_onset_date
 
