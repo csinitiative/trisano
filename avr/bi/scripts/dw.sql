@@ -400,7 +400,6 @@ SELECT
         ELSE ''
     END AS public_health_status,
     newhstore AS morbidity_formbuilder,
-    ',,'::TEXT secondary_jurisdictions,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
@@ -865,18 +864,6 @@ CREATE INDEX dw_secondary_jurisdictions_contact_id_ix
     ON dw_secondary_jurisdictions (dw_contact_events_id);
 CREATE INDEX dw_secondary_jurisdictions_jurisdiction_id_ix
     ON dw_secondary_jurisdictions (jurisdiction_id);
-
-UPDATE dw_morbidity_events dme
-    SET secondary_jurisdictions = foo.juris
-    FROM (
-        SELECT
-            ',' || trisano.text_join_agg(name, ',') || ',' AS juris,
-            dw_morbidity_events_id AS event_id
-        FROM
-            dw_secondary_jurisdictions
-        GROUP BY dw_morbidity_events_id
-    ) foo
-    WHERE foo.event_id = dme.id;
 
 CREATE TABLE dw_events_hospitals AS
 SELECT
