@@ -54,6 +54,23 @@ describe MorbidityEvent do
     @event.should have(0).errors_on("first_reported_PH_date")
   end
 
+  it "is invalid if disease onset date is after first reported to public health date" do
+    @event.disease_event = Factory.build(:disease_event, :disease_onset_date => Date.today)
+    @event.save.should be_false
+    @event.should have(1).error_on('disease_event.disease_onset_date')
+    @event.disease_event.errors[:disease_onset_date]
+  end
+
+  it "is valid if disease onset date is on first reported to public health date" do
+    @event.disease_event = Factory.build(:disease_event, :disease_onset_date => Date.yesterday)
+    @event.save.should be_true
+  end
+
+  it "is valid if disease onset date is before first reported to public health date" do
+    @event.disease_event = Factory.build(:disease_event, :disease_onset_date => Date.today - 2.days)
+    @event.save.should be_true
+  end
+
   describe "#before_create" do
     before do
       given_an_unassigned_jurisdiction

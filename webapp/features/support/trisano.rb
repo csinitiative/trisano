@@ -120,8 +120,13 @@ def add_path_to(page_name, path_str=nil, &path_proc)
   end
 end
 
+def invalidate_date_diagnosed(event)
+  DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}', date_diagnosed = '#{Date.today}'", ['event_id = ?', event.id])
+end
+
 def invalidate_disease_onset_date(event)
-  DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}'", ['event_id = ?', event.id])
+  invalid_date = event.first_reported_PH_date + 1.month
+  DiseaseEvent.update_all("disease_onset_date = '#{invalid_date}'", ['event_id = ?', event.id])
 end
 
 # A dirty, filthy hack because succ! seems to be broken in JRuby on 64

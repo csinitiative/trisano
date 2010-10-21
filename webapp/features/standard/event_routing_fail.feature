@@ -40,11 +40,11 @@ Feature: Event Routing Fail
     Given I am logged in as a super user
       And a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
       And there is a contact on the event named Jones
-      And the contact disease onset date is invalid
+      And the contact disease diagnosed date is invalid
      When I am on the contact show page
       And I route it to Bear River
      Then I should see "Unable to route CMR"
-      And I should see "Onset date must be on or before"
+      And I should see "Date diagnosed must be on or after"
       And I should see "There were problems with the following fields"
       And I should get a 400 response
 
@@ -76,10 +76,10 @@ Feature: Event Routing Fail
       And a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
       And there is a contact on the event named Jones
       And the contact is routed to "Bear River"
-      And the contact disease onset date is invalid
+      And the contact disease diagnosed date is invalid
      When I am on the contact show page
       And I "Accept" the routed event
      Then I should see "Unable to change state of CMR"
-      And I should see "Onset date must be on or before"
+      And I should see "Date diagnosed must be on or after"
       And I should see "There were problems with the following fields"
       And I should get a 400 response

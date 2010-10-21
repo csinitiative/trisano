@@ -222,9 +222,14 @@ class MorbidityEvent < HumanEvent
   end
 
   def validate
-
     # Put other validations above this comment
     super
+
+    unless disease_onset_date_valid?
+      restriction = I18n.t('first_reported_PH_date', :scope => [:activerecord, :attributes, :event])
+      errors.add('disease_event.disease_onset_date', :on_or_before, :restriction => restriction)
+      disease_event.errors.add(:disease_onset_date, :on_or_before, :restriction => restriction)
+    end
 
     return if self.interested_party.nil?
     return unless bdate = self.interested_party.person_entity.try(:person).try(:birth_date)
@@ -261,4 +266,9 @@ class MorbidityEvent < HumanEvent
     end
   end
 
+  def disease_onset_date_valid?
+    return true if first_reported_PH_date.blank?
+    return true if disease_event.try(:disease_onset_date).blank?
+    return disease_event.disease_onset_date <= first_reported_PH_date
+  end
 end
