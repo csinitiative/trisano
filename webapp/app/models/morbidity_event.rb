@@ -222,7 +222,6 @@ class MorbidityEvent < HumanEvent
   end
 
   def validate
-    # Put other validations above this comment
     super
 
     unless disease_onset_date_valid?

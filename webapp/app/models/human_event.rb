@@ -616,6 +616,8 @@ class HumanEvent < Event
   end
 
   def validate
+    super
+    
     county_code = self.address.try(:county).try(:the_code)
     if county_code == "OS" &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) ||

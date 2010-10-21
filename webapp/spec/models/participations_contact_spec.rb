@@ -46,7 +46,7 @@ describe ParticipationsContact do
       @pc.update_attributes(:disposition_date => 1.day.from_now)
       @pc.errors.on(:disposition_date).should == "must be on or before " + (Time.now).strftime("%Y-%m-%d")
     end
-
+    
     it 'should force the requirement of a disposition' do
       @pc.update_attributes(:disposition_date => 7.days.from_now)
       @pc.errors.on(:disposition).should == "is required when a disposition date is present"

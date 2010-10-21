@@ -25,7 +25,7 @@ class ParticipationsContact < ActiveRecord::Base
   
   validates_date :disposition_date, :allow_blank => true,
                                     :on_or_before => lambda { Date.today }
-
+                                   
   def disposition_description
     disposition.code_description unless disposition.nil?
   end

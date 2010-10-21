@@ -186,4 +186,29 @@ class ContactEvent < HumanEvent
     # That is, disposition etc.
   end
 
+  def validate
+    super
+    base_errors = {}
+    validate_disposition_date_against_birth_date(base_errors)
+
+    unless base_errors.empty? && self.errors.empty?
+      base_errors.values.each { |msg| self.errors.add(:base, *msg) }
+    end
+  end
+  
+  private
+
+  def validate_disposition_date_against_birth_date(base_errors)
+    contact_bdate = self.try(:interested_party).try(:person_entity).try(:person).try(:birth_date)
+    return if contact_bdate.nil?
+
+    disposition_date = self.try(:participations_contact).disposition_date
+    return if disposition_date.nil?
+
+    if (disposition_date < contact_bdate)
+      self.participations_contact.errors.add(:disposition_date, :cannot_precede_birth_date)
+      base_errors['contacts'] = [:precede_birth_date, { :thing => I18n.t(:disposition) }]
+    end
+  end
+
 end

@@ -21,6 +21,31 @@ describe ContactEvent do
 
   fixtures :diseases
 
+  describe "validating" do
+    
+    it 'should not be valid for disposition dates before contact patient birthday' do
+      contact = Factory.create(:contact_event)
+      contact.interested_party.person_entity.person.birth_date = 1.day.ago
+      contact.participations_contact.disposition_date = 2.days.ago
+      contact.save
+      contact.participations_contact.errors.on(:disposition_date).should == "cannot be earlier than birth date"
+
+      contact.participations_contact.disposition_date = 1.days.ago
+      contact.save
+      contact.participations_contact.errors.on(:disposition_date).should be_nil
+    end
+
+    it 'should be valid for disposition dates when there is no contact patient birthday' do
+      contact = Factory.create(:contact_event)
+      contact.interested_party.person_entity.person.birth_date = nil
+      contact.participations_contact.disposition_date = 2.days.ago
+      contact.save
+      contact.participations_contact.errors.on(:disposition_date).should be_nil
+    end
+
+  end
+
+
   # TGRII: Move these tests to Event
   describe "Initializing a new contact event from an existing morbidity event" do
 
@@ -83,9 +108,9 @@ describe ContactEvent do
       @disease = Factory.build(:disease)
 
       @c = ContactEvent.new("interested_party_attributes" => {
-                              "person_entity_attributes" => {
-                                "person_attributes" => {
-                                  "last_name" => "White" } } } )
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name" => "White" } } } )
       @c.build_disease_event(:disease => @disease)
       @c.build_jurisdiction(:secondary_entity_id => entities(:Davis_County).id)
       @c.save!
