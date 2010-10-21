@@ -232,7 +232,7 @@ CREATE TABLE report3 AS
                                 CASE
                                     WHEN dce.contact_type = 'Infant' THEN
                                         CASE
-                                            WHEN dce.birth_date IS NULL THEN 
+                                            WHEN dce.birth_date IS NULL AND dme_2.actual_delivery_date IS NULL THEN 
                                                 8 -- fdd = report date, act = "Enter Infant's Date of Birth"
                                             WHEN hbig IS NULL THEN
                                                 CASE
@@ -251,7 +251,7 @@ CREATE TABLE report3 AS
                                                         5 -- fdd = COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 3"
                                                     WHEN
                                                         COALESCE(  -- between 9 and 18 months old
-                                                            (now() - dce.birth_date) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
+                                                            (now() - COALESCE(dce.birth_date, dme_2.actual_delivery_date)) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
                                                             dce.age_in_years BETWEEN .6 AND 1.5
                                                         ) AND
                                                         (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL AND
@@ -269,6 +269,8 @@ CREATE TABLE report3 AS
                                 END AS fdd_act_code
                             FROM
                                 trisano.dw_contact_events_view dce
+                                LEFT JOIN trisano.dw_morbidity_events_view dme_2
+                                    ON (dme_2.id = dce.parent_id)
                                 LEFT JOIN (
                                     SELECT
                                         dw_contact_events_id AS contact_event_id,
