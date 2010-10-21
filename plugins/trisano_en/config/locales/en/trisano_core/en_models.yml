@@ -23,6 +23,10 @@ en:
         _delete: Remove
         _destroy: Remove
 
+      morbidity_event:
+        disease_event:
+          disease_onset_date: Onset date
+
       person:
         last_name: Last name
         first_name: First name

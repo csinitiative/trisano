@@ -117,6 +117,14 @@ Given /^the disease onset date is "([^\"]*)"/i do |date|
   @event.save!
 end
 
+Given /^the contact disease diagnosed date is invalid$/ do
+  invalidate_date_diagnosed(@contact_event)
+end
+
+Given /^the event disease diagnosed date is invalid$/ do
+  invalidate_date_diagnosed(@event)
+end
+
 Given /^the contact disease onset date is invalid$/ do
   invalidate_disease_onset_date(@contact_event)
 end

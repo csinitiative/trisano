@@ -21,7 +21,7 @@ end
 
 Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event = create_basic_event("morbidity", get_unique_name(1), disease.strip, get_random_jurisdiction_by_short_name)
-  @event.disease_event.disease_onset_date = Date.today
+  @event.disease_event.disease_onset_date = Date.yesterday
   @event.build_address(:county => ExternalCode.counties.first)
   @event.save!
 end

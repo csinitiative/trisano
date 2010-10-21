@@ -131,5 +131,10 @@ describe ContactEvent do
     it "should be in a accepted_by_lhd state" do
       @c.workflow_state == 'accepted_by_lhd'
     end
+
+    it "leaves first reported to Public Health blank for a user to enter" do
+      @m.first_reported_PH_date.should be_nil
+      @m.should_not be_valid
+    end
   end
 end

@@ -66,7 +66,7 @@ describe CdcExport do
       "state_case_status_id" => external_codes(:case_status_probable).id,
       "disease_event_attributes" => {
         "disease_id" => diseases(:aids).id,
-        "disease_onset_date" => Date.today
+        "disease_onset_date" => Date.yesterday
       },
       "interested_party_attributes" => {
         "person_entity_attributes" => {
@@ -241,7 +241,7 @@ describe CdcExport do
 
     it "should display event date a YYMMDD" do
       with_cdc_records do |records|
-        records[0].first.to_cdc[45..50].should == Date.today.strftime("%y%m%d")
+        records[0].first.to_cdc[45..50].should == Date.yesterday.strftime("%y%m%d")
       end
     end
 

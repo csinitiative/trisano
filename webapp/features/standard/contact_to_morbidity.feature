@@ -42,8 +42,8 @@ Feature: Promoting Contact Events to Morbidity Events
   Scenario: Promoting a contact that has becom invalid
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
       And there is a contact on the event named Jones
-      And the contact disease onset date is invalid
+      And the contact disease diagnosed date is invalid
       And I am logged in as a super user
      When I promote Jones to a morbidity event
      Then I should see "Could not promote to morbidity event"
-      And I should see "Onset date must be on or before"
+      And I should see "Date diagnosed must be on or after"
