@@ -42,7 +42,7 @@
           - label = t :staged_message_batch, :id => staged_message.message_batch.id
           =link_to label, staged_message.message_batch, :title => label, :class => 'batch-link'
         %p
-          %small= h staged_message.message_header.sending_facility
+          %small= h staged_message.lab_name
         %div.tools
           -if (staged_message.state == StagedMessage.states[:pending]) || (staged_message.state == StagedMessage.states[:unprocessable])
             = link_to t('similar_events'), event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date), :class => 'staged-message-link'

@@ -492,7 +492,7 @@ class HumanEvent < Event
     end
 
     # Set the lab name
-    lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.message_header.sending_facility } },
+    lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.lab_name } },
       "lab_results_attributes" => {}
     }
 
@@ -617,7 +617,7 @@ class HumanEvent < Event
 
   def validate
     super
-    
+
     county_code = self.address.try(:county).try(:the_code)
     if county_code == "OS" &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) ||

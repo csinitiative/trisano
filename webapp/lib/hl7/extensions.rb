@@ -141,6 +141,10 @@ class HL7::Message::Segment::OBR
   add_child_type :SPM
 end
 
+class HL7::Message::Segment::OBX
+  add_field :performing_organization_name, :idx => 23
+end
+
 ######## New HL7::Message::Segment::XXX classes
 
 class HL7::Message::Segment::SFT < HL7::Message::Segment

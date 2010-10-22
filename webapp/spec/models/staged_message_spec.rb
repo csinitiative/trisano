@@ -80,6 +80,17 @@ describe StagedMessage do
     StagedMessage.create!(@valid_attributes).state.should == 'PENDING'
   end
 
+  it 'should use OBX-23 for lab name if present' do
+    staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+    first_obx = staged_message.observation_requests.first.all_tests.first.obx_segment
+    staged_message.lab_name.should == first_obx.performing_organization_name.split(first_obx.item_delim).first
+  end
+
+  it 'should use MSH-4 for lab name if OBX-23 is not present' do
+    staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:arup_1]
+    staged_message.lab_name.should == staged_message.message_header.sending_facility
+  end
+
   describe 'received HL7 2.3 +' do
 
     before :each do

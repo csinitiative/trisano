@@ -167,6 +167,13 @@ class StagedMessage < ActiveRecord::Base
   rescue
   end
 
+  def lab_name
+    first_obx = observation_requests.first.all_tests.first.obx_segment
+    name = first_obx.performing_organization_name
+    name = name.split(first_obx.item_delim).first if name
+    name || message_header.sending_facility
+  end
+
   def assigned_event=(event)
     raise(ArgumentError, I18n.translate('cannot_associate_labs_with', :event_class => event.class)) unless event.respond_to?('labs')
     raise(I18n.translate('staged_message_is_already_assigned')) if self.state == self.class.states[:assigned]
