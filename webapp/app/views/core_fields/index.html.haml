@@ -15,14 +15,21 @@
 
 -content_for :javascript_includes do
   =javascript_include_tag 'smooth_scroll'
+  =javascript_include_tag 'core_fields'
 
 
 -content_for :title do
   =t('core_fields')
 
-- if @disease
-  - content_for :tools do
-    = link_to t(:back_to, :name => @disease.disease_name), @disease
+-if @disease
+  -content_for :tools do
+    =link_to t(:back_to, :name => @disease.disease_name), @disease
     %p
 
+  -content_for :tools_two do
+    %button.copy_from_disease=t(:copy_from_disease)
+
 =render_core_fields_list(@core_fields)
+-if @disease
+  =copy_from_disease_dialog(@disease)
+  =disease_list_template(@disease)
