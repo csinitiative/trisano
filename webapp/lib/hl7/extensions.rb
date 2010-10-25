@@ -394,6 +394,20 @@ module StagedMessages
       components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
     end
 
+    def telephone_type_home
+      ExternalCode.find_by_code_name_and_the_code 'telephonelocationtype',
+        case pid_segment.phone_home.split(pid_segment.item_delim).third
+        when 'PH'
+          'HT'
+        when 'CP'
+          'MT'
+        when 'BP'
+          'PAGE'
+        else
+          'UNK'
+        end
+    end
+
     def telephone_home
       phone_components = self.pid_segment.phone_home.split(pid_segment.item_delim)
       area_code = number = extension = nil

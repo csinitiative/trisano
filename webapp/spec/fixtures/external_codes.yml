@@ -308,6 +308,13 @@ telephonelocationtype_mobile:
   code_description: "Mobile"
   sort_order: 20
 
+telephonelocationtype_pager:
+  id: 2109
+  code_name: "telephonelocationtype"
+  the_code: "PAGE"
+  code_description: "Pager"
+  sort_order: 25
+
 ## Contact dispositions codes
 
 contactdispositiontype_ooj:
@@ -371,7 +378,7 @@ age_type_unknown:
   code_name: "age_type"
   the_code: 9
   code_description: "unknown"
-  
+
 test_type_neg:
   id: 2400
   code_name: "test_result"

@@ -237,7 +237,7 @@ class StagedMessage < ActiveRecord::Base
         event.interested_party.person_entity.telephones.build(:area_code => area_code,
                                                               :phone_number => number,
                                                               :extension => extension,
-                                                              :entity_location_type_id => ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id)
+                                                              :entity_location_type_id => patient.telephone_type_home.id)
       end
     end
 

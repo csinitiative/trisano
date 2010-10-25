@@ -149,6 +149,26 @@ describe Message do
       e.should be_blank
     end
 
+    it 'should return a home telephone type of Home when the HL7 type is PH' do
+      hl7 = HL7::Message.parse(hl7_messages[:realm_campylobacter_jejuni])
+      hl7.patient_id.telephone_type_home.should == external_codes(:telephonelocationtype_home)
+    end
+
+    it 'should return a home telephone type of Mobile when the HL7 type is CP' do
+      hl7 = HL7::Message.parse(hl7_messages[:realm_cj_cell_phone])
+      hl7.patient_id.telephone_type_home.should == external_codes(:telephonelocationtype_mobile)
+    end
+
+    it 'should return a home telephone type of Pager when the HL7 type is BP' do
+      hl7 = HL7::Message.parse(hl7_messages[:realm_cj_pager])
+      hl7.patient_id.telephone_type_home.should == external_codes(:telephonelocationtype_pager)
+    end
+
+    it 'should return a home telephone type of Unknown when the HL7 type is anything else' do
+      hl7 = HL7::Message.parse(hl7_messages[:realm_cj_unk_phone])
+      hl7.patient_id.telephone_type_home.should == external_codes(:telephonelocationtype_unknown)
+    end
+
     it 'should properly parse a PHIN White race code in an HL7 2.5.1 message' do
       hl7 = HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
       hl7.patient_id.trisano_race_id.should == external_codes(:race_white).id
