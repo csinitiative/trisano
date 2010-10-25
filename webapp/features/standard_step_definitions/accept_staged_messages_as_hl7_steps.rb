@@ -59,7 +59,7 @@ end
 
 When /^I post the "([^\"]*)" message directly to "([^\"]*)"$/ do |msg, path|
   msg = hl7_messages[msg.downcase.to_sym] || msg
-  http_accept("application/edi-hl7")
+  http_accept("application/edi-hl7v2")
   visit path, :post, msg
 end
 
