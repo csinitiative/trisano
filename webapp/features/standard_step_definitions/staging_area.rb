@@ -161,3 +161,7 @@ end
 When /^I visit the editable event$/ do
   click_link 'Edit'
 end
+
+Then %r{^I should see "([^\"]*)" under Telephones/Email on the Demographic tab} do |phone_type|
+  response.should have_xpath("//div[@id='demographic_tab']/div[@class='data_telephone']//*[contains(text(), '#{phone_type}'")
+end

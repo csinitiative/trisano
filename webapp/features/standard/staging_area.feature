@@ -196,3 +196,42 @@ Feature: Staging Electronic Messages
     Then I should see the staging area page
     And I should see a 'Staged message was discarded' message
     And I should not see the discarded message
+
+  Scenario: Viewing a staged message with an OBX-23 field
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    When I visit the staged message show page
+    Then I should see value "GHH Lab" in the message footer
+
+  Scenario: Viewing a staged message without an OBX-23 field
+    Given I am logged in as a super user
+    And I have the staged message "arup_1"
+    When I visit the staged message show page
+    Then I should see value "ARUP LABORATORIES" in the message footer
+
+  @pending
+  Scenario: Assigning a staged message with a home phone number
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I follow "Create a CMR from this message"
+    Then I should receive a 200 response
+    And I should remain on the staged message show page
+    And I should see value "Assigned" in the message footer
+
+  @pending
+  Scenario: Viewing a staged message with a home phone number
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I follow "Create a CMR from this message"
+    And I visit the assigned-to event
+    Then I should see "Home" under Telephones/Email on the Demographic tab

@@ -41,15 +41,3 @@ Feature: Accept Staged Messages as HL7
     When I post the "ARUP_1" message directly to "staged_messages"
     Then I should receive a 200 response
     And the "Content-Type" HTTP header should have a value of "application/edi-hl7v2; charset=utf-8"
-
-  Scenario: Viewing a staged message with an OBX-23 field
-    Given I am logged in as a super user
-    And I have the staged message "realm_campylobacter_jejuni"
-    When I visit the staged message show page
-    Then I should see value "GHH Lab" in the message footer
-
-  Scenario: Viewing a staged message without an OBX-23 field
-    Given I am logged in as a super user
-    And I have the staged message "arup_1"
-    When I visit the staged message show page
-    Then I should see value "ARUP LABORATORIES" in the message footer
