@@ -151,25 +151,19 @@ class Disease < ActiveRecord::Base
     end
   end
 
-  def copy_core_fields_from(another_disease)
+  def apply_core_fields_to(other_disease_ids)
+    if other_disease_ids.blank?
+      errors.add(:base, :no_diseases_to_copy_to)
+      return false
+    end
     transaction do
-      CoreFieldsDisease.delete_all(['disease_id = ?', self.id])
-      connection.execute(<<-SQL)
-        INSERT INTO core_fields_diseases
-          SELECT nextval('core_fields_diseases_id_seq'),
-                 core_field_id,
-                 #{self.id} as disease_id,
-                 rendered,
-                 NOW() as created_at,
-                 NOW() as updated_at,
-                 replaced
-            FROM core_fields_diseases
-           WHERE disease_id = #{another_disease.id}
-       SQL
+      CoreFieldsDisease.delete_all_by_disease_ids other_disease_ids
+      CoreFieldsDisease.copy_by_disease_ids(self.id, other_disease_ids)
     end
     true
   rescue
     logger.error($!)
+    errors.add(:base, :core_field_copy_failed)
     false
   end
 

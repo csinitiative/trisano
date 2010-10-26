@@ -208,9 +208,8 @@ en:
   contains_required_fields: 'The {{thing1}} contains required fields'
   section_name: '{{name}} section'
   tab_name: '{{name}} tab'
-  core_field_copy_failed: Copying core fields failed.
-  core_field_successfully_copied: 'Core fields successfully copied'
-  copy_from_disease: Copy from another disease
+  core_fields_successfully_copied: 'Core fields successfully copied'
+  apply_to_diseases: 'Apply to other diseases'
 #csv_fields
   csv_export_columns: 'CSV Export Columns'
   long_name: 'Long Name'

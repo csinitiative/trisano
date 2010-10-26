@@ -57,10 +57,10 @@ module CoreFieldsHelper
   end
 
   def copy_from_disease_dialog(disease)
-    result =  "<div class='copy_from_disease_dialog' style='display: none'>"
+    result =  "<div class='apply_to_disease_dialog' style='display: none'>"
     result << image_tag('redbox_spinner.gif', :id => "diseaseListSpinner", :alt => 'Working...')
     result << "<label>#{link_to(t(:diseases), diseases_path)}</label>"
-    result << form_tag("/diseases/#{disease.id}/core_fields/copy", :id => 'disease_core_fields_copy_form')
+    result << form_tag(apply_to_disease_core_fields_path(disease), :id => 'apply_core_fields_to_disease_form')
     result << "<table class='list' id='dialog_disease_list'></table>"
     result << '</form>'
     result << "</div>"
@@ -71,7 +71,7 @@ module CoreFieldsHelper
       <script id="diseaseListTemplate" type="text/x-jquery-tmpl">
         {{if id != #{disease.id}}}
           <tr class="roll">
-            <td><input type="radio" id="other_disease_${id}" name="other_disease_id" value="${id}"/></td>
+            <td><input type="checkbox" id="other_disease_${id}" name="other_disease_ids[]" value="${id}"/></td>
             <td>
               {{if active}}
                 <span class="active">

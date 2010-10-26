@@ -14,5 +14,11 @@ var i18n = new I18n('es', {
   unsupported_browser: 'Está usando un navegador no soportado: ',
   please_switch_to: 'Favor de cambiar a ',
   or_higher: 'o uno más actualizado',
-  or: 'o'
+  or: 'o',
+  operation_failed: 'Operation failed. Please try again. (EN)',
+  apply_to_diseases: "Apply Core Fields to Other Diseases (EN)",
+  copy: 'Copy (EN)',
+  cancel: 'Cancel (EN)',
+  update: "Update (EN)",
+  select_all: "Select All (EN)"
 });

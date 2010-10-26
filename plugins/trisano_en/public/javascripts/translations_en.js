@@ -16,7 +16,9 @@ var i18n = new I18n('en', {
   or_higher: 'or higher',
   or: 'or',
   operation_failed: 'Operation failed. Please try again.',
-  copy_from_disease: 'Copy From Disease',
+  apply_to_diseases: "Apply Core Fields to Other Diseases",
   copy: 'Copy',
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  update: "Update",
+  select_all: "Select All"
 });

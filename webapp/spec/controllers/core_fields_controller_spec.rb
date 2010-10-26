@@ -56,25 +56,23 @@ describe CoreFieldsController do
     end
 
     it "returns a 404 if the disease is missing" do
-      post :copy
+      post :apply_to
       response.code.should == "405"
     end
 
     it "redirects to disease core fields index" do
-      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
-      response.should be_redirect
+      post :apply_to, :disease_id => @lycanthropy.id, :other_disease_ids => [@vampirism.id]
+      response.should redirect_to(diseases_url)
     end
 
     it "displays a 'success' message if operation succeeds" do
-      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
+      post :apply_to, :disease_id => @lycanthropy.id, :other_disease_ids => [@vampirism.id]
       flash[:notice].should == 'Core fields successfully copied'
     end
 
     it "displays an 'error' message if operation fails" do
-      Disease.stubs(:find).returns(@lycanthropy)
-      @lycanthropy.stubs(:copy_core_fields_from).returns(false)
-      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
-      flash[:error].should == 'Copying core fields failed.'
+      post :apply_to, :disease_id => @lycanthropy.id, :other_disease_ids => nil
+      flash[:error].should == 'No diseases were selected for update'
     end
   end
 

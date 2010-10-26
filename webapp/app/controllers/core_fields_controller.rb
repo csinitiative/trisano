@@ -60,22 +60,21 @@ class CoreFieldsController < AdminController
     end
   end
 
-  def copy
+  def apply_to
     unless @disease
       head :method_not_allowed
       return
     end
-    @other_disease = Disease.find(params[:other_disease_id])
 
     respond_to do |format|
-      if @disease.copy_core_fields_from(@other_disease)
-        flash[:notice] = t(:core_field_successfully_copied)
-        format.html { redirect_to disease_core_fields_path(@disease) }
+      if @disease.apply_core_fields_to params[:other_disease_ids]
+        flash[:notice] = t(:core_fields_successfully_copied)
+        format.html { redirect_to diseases_path }
         format.xml  { head :ok }
         format.json { head :ok }
       else
         logger.error(@disease.errors.full_messages.join("\n"))
-        flash[:error] = t(:core_field_copy_failed)
+        flash[:error] = @disease.errors.full_messages.join("\n")
         format.html { redirect_to disease_core_fields_path(@disease) }
         format.xml  { render :xml => @disease.errors, :status => :unprocessable_entity }
         format.json { render :json => @disease.errors, :status => :unprocessable_entity }

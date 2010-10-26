@@ -183,6 +183,13 @@ en:
             date_diagnosed:
               precedes_onset: "cannot precede onset date"
 
+
+        disease:
+          attributes:
+            base:
+              core_field_copy_failed: "Core field copy failed"
+              no_diseases_to_copy_to: "No diseases were selected for update"
+
         questions:
           attributes:
             base:

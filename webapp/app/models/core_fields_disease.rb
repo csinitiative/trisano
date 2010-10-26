@@ -24,5 +24,28 @@ class CoreFieldsDisease < ActiveRecord::Base
         end
       end
     end
+
+    def delete_all_by_disease_ids(disease_ids)
+      delete_all(['disease_id in (?)', disease_ids])
+    end
+
+    def copy_by_disease_ids(disease_id, target_disease_ids)
+      sql = sanitize_sql_for_conditions([<<-SQL, target_disease_ids, disease_id])
+        INSERT INTO core_fields_diseases
+          SELECT nextval('core_fields_diseases_id_seq'),
+                 a.core_field_id,
+                 b.id as disease_id,
+                 a.rendered,
+                 NOW() as created_at,
+                 NOW() as updated_at,
+                 a.replaced
+            FROM core_fields_diseases a
+            JOIN (
+              SELECT id from diseases WHERE id IN (?)
+            ) b ON ? = a.disease_id
+       SQL
+      connection.execute sql
+    end
+
   end
 end
