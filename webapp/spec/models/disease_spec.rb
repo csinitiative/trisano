@@ -233,7 +233,7 @@ describe Disease do
     end
   end
 
-  describe "copying core fields between diseases" do
+  describe "applying core fields to another disease" do
     include CoreFieldSpecHelper
 
     before do
@@ -248,21 +248,26 @@ describe Disease do
       @vampirism = given_a_disease_named('Vampirism')
       @vampirism.core_fields_diseases.create( {
         :core_field => CoreField.first,
-        :rendered => true
+        :rendered => false
       } )
     end
 
     it "returns true if operation is successful" do
-      @lycanthropy.copy_core_fields_from(@vampirism).should be_true
+      @lycanthropy.apply_core_fields_to([@vampirism.id]).should be_true
     end
 
     it "returns false if operation fails" do
-      @lycanthropy.copy_core_fields_from(nil).should be_false
+      @lycanthropy.apply_core_fields_to(nil).should be_false
     end
 
     it "copies core fields from the other disease" do
-      @lycanthropy.copy_core_fields_from(@vampirism).should be_true
+      @lycanthropy.apply_core_fields_to([@vampirism.id]).should be_true
       @lycanthropy.core_fields.should == @vampirism.core_fields
+    end
+
+    it "copies rendered status of the field" do
+      @lycanthropy.apply_core_fields_to([@vampirism.id]).should be_true
+      @vampirism.core_fields_diseases.map(&:rendered).should == [true]
     end
   end
 

@@ -176,6 +176,12 @@ es:
             date_diagnosed:
               precedes_onset: "no se puede preceder la fecha del inicio de actividad"
 
+        disease:
+          attributes:
+            base:
+              core_field_copy_failed: "Core field copy failed (EN)"
+              no_diseases_to_copy_to: "No diseases were selected for update (EN)"
+
         questions:
           attributes:
             base:

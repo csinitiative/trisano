@@ -22,7 +22,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :diseases do |diseases|
     diseases.resources :core_fields, :collection => {
-      :copy => :post
+      :apply_to => :post
     }
   end
 
