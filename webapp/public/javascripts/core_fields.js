@@ -2,6 +2,7 @@ $j(function() {
   $j('.copy_from_disease').click(function() {
     var buttons = {};
     buttons[i18n.t('copy')] = function() {
+      $j('#diseaseListSpinner').show();
       $j('#disease_core_fields_copy_form').submit();
     };
     buttons[i18n.t('cancel')] = function() {

@@ -214,6 +214,9 @@ es:
   contains_required_fields: 'The {{thing1}} contains required fields (EN)'
   section_name: '{{name}} section (EN)'
   tab_name: '{{name}} tab (EN)'
+  core_field_copy_failed: Copying core fields failed. (EN)
+  core_field_successfully_copied: 'Core fields successfully copied (EN)'
+  copy_from_disease: Copy from another disease (EN)
 
 #csv_fields
   csv_export_columns: 'Columnas de Exportación CSV'

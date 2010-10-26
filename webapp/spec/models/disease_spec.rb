@@ -18,6 +18,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Disease do
+  include DiseaseSpecHelper
+
   before(:each) do
     @disease = Disease.new(:disease_name => "The Pops")
   end
@@ -229,7 +231,39 @@ describe Disease do
       @disease.export_conversion_value_ids.length.should == 1
       @disease.export_conversion_value_ids[0].should == 11
     end
+  end
 
+  describe "copying core fields between diseases" do
+    include CoreFieldSpecHelper
+
+    before do
+      given_core_fields_loaded
+
+      @lycanthropy = given_a_disease_named('Lycanthropy')
+      @lycanthropy.core_fields_diseases.create( {
+        :core_field => CoreField.last,
+        :rendered => true
+      } )
+
+      @vampirism = given_a_disease_named('Vampirism')
+      @vampirism.core_fields_diseases.create( {
+        :core_field => CoreField.first,
+        :rendered => true
+      } )
+    end
+
+    it "returns true if operation is successful" do
+      @lycanthropy.copy_core_fields_from(@vampirism).should be_true
+    end
+
+    it "returns false if operation fails" do
+      @lycanthropy.copy_core_fields_from(nil).should be_false
+    end
+
+    it "copies core fields from the other disease" do
+      @lycanthropy.copy_core_fields_from(@vampirism).should be_true
+      @lycanthropy.core_fields.should == @vampirism.core_fields
+    end
   end
 
 end

@@ -21,7 +21,9 @@ ActionController::Routing::Routes.draw do |map|
   map.process_core_condition 'follow_up_elements/process_core_condition', :controller => 'follow_up_elements', :action => 'process_core_condition'
 
   map.resources :diseases do |diseases|
-    diseases.resources :core_fields
+    diseases.resources :core_fields, :collection => {
+      :copy => :post
+    }
   end
 
   map.resources :event_queues
@@ -32,7 +34,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :organisms
 
   # When we get to Rails 2.1 restrict here for GET only
-  map.resources :cdc_events, :collection => { :current_week => :get, :current_ytd => :get, :by_range => :get }
+  map.resources :cdc_events, :collection => {
+    :current_week => :get,
+    :current_ytd => :get,
+    :by_range => :get
+  }
 
   map.resources :ibis_events, :collection => { :by_range => :get }
 

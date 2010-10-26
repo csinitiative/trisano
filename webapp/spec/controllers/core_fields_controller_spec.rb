@@ -46,5 +46,37 @@ describe CoreFieldsController do
     end
   end
 
+  describe "copying core field associations from one disease to another" do
+    include DiseaseSpecHelper
+
+    before do
+      @lycanthropy = given_a_disease_named('Lycanthropy')
+      @vampirism = given_a_disease_named('Vampirism')
+      mock_user
+    end
+
+    it "returns a 404 if the disease is missing" do
+      post :copy
+      response.code.should == "405"
+    end
+
+    it "redirects to disease core fields index" do
+      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
+      response.should be_redirect
+    end
+
+    it "displays a 'success' message if operation succeeds" do
+      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
+      flash[:notice].should == 'Core fields successfully copied'
+    end
+
+    it "displays an 'error' message if operation fails" do
+      Disease.stubs(:find).returns(@lycanthropy)
+      @lycanthropy.stubs(:copy_core_fields_from).returns(false)
+      post :copy, :disease_id => @lycanthropy.id, :other_disease_id => @vampirism.id
+      flash[:error].should == 'Copying core fields failed.'
+    end
+  end
+
 end
 

@@ -151,6 +151,28 @@ class Disease < ActiveRecord::Base
     end
   end
 
+  def copy_core_fields_from(another_disease)
+    transaction do
+      CoreFieldsDisease.delete_all(['disease_id = ?', self.id])
+      connection.execute(<<-SQL)
+        INSERT INTO core_fields_diseases
+          SELECT nextval('core_fields_diseases_id_seq'),
+                 core_field_id,
+                 #{self.id} as disease_id,
+                 rendered,
+                 NOW() as created_at,
+                 NOW() as updated_at,
+                 replaced
+            FROM core_fields_diseases
+           WHERE disease_id = #{another_disease.id}
+       SQL
+    end
+    true
+  rescue
+    logger.error($!)
+    false
+  end
+
   private
 
   # Debt: The CDC code lives in two places right now: On disease, and as a conversion value. This
