@@ -56,4 +56,34 @@ module CoreFieldsHelper
     label_tag "core_field[rendered_attributes][rendered]", label_text, :style => "display: inline"
   end
 
+  def copy_from_disease_dialog(disease)
+    result =  "<div class='copy_from_disease_dialog' style='display: none'>"
+    result << image_tag('redbox_spinner.gif', :id => "diseaseListSpinner", :alt => 'Working...')
+    result << "<label>#{link_to(t(:diseases), diseases_path)}</label>"
+    result << form_tag("/diseases/#{disease.id}/core_fields/copy", :id => 'disease_core_fields_copy_form')
+    result << "<table class='list' id='dialog_disease_list'></table>"
+    result << '</form>'
+    result << "</div>"
+  end
+
+  def disease_list_template(disease)
+    <<-SCRIPT
+      <script id="diseaseListTemplate" type="text/x-jquery-tmpl">
+        {{if id != #{disease.id}}}
+          <tr class="roll">
+            <td><input type="radio" id="other_disease_${id}" name="other_disease_id" value="${id}"/></td>
+            <td>
+              {{if active}}
+                <span class="active">
+              {{else}}
+                <span class="inactive">
+              {{/if}}
+                <label for="other_disease_${id}">${disease_name}</label>
+              </span>
+            </td>
+          </tr>
+        {{/if}}
+      </script>
+    SCRIPT
+  end
 end

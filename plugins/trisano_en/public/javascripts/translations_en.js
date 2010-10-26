@@ -15,5 +15,8 @@ var i18n = new I18n('en', {
   please_switch_to: 'Please switch to',
   or_higher: 'or higher',
   or: 'or',
-  operation_failed: 'Operation failed. Please try again.'
+  operation_failed: 'Operation failed. Please try again.',
+  copy_from_disease: 'Copy From Disease',
+  copy: 'Copy',
+  cancel: 'Cancel'
 });
