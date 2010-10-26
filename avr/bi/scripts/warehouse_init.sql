@@ -448,6 +448,11 @@ CREATE UNIQUE INDEX formbuilder_columns_ix
 CREATE INDEX formbuilder_column_orig_name
     ON trisano.formbuilder_columns (orig_column_name);
 
+CREATE TABLE trisano.view_mods (
+    tablename TEXT PRIMARY KEY,
+    addition TEXT
+);
+
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
     SELECT
         CASE
@@ -1786,6 +1791,7 @@ INSERT INTO trisano.schema_comments (object_type, object_name, object_comment) V
     ('VIEW', 'trisano.encounters_view', 'data dictionary ignore'),
     ('VIEW', 'trisano.entities_view', 'data dictionary ignore'),
     ('TABLE', 'trisano.etl_success', 'Internal - records results of ETL processes'),
+    ('TABLE', 'trisano.view_mods', 'Internal - describes calculated fields for use in AVR views'),
     ('VIEW', 'trisano.event_queues_view', 'data dictionary ignore'),
     ('VIEW', 'trisano.events_view', 'data dictionary ignore'),
     ('VIEW', 'trisano.export_columns_view', 'data dictionary ignore'),
@@ -1880,12 +1886,18 @@ BEGIN
     END LOOP;
 
     -- Create a new view for each table in the current schema
-    FOR viewname IN
-      SELECT pg_class.relname
-      FROM pg_class JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
+    FOR tmprec IN
+      SELECT
+        pg_class.relname AS view_name,
+        COALESCE(', ' || vm.addition, '') AS addition
+      FROM
+        pg_class
+        JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
+        LEFT JOIN trisano.view_mods vm ON (pg_class.relname = vm.tablename)
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'fb_%'
       LOOP
-        tmp := 'CREATE VIEW trisano.' || viewname || '_view AS SELECT * FROM ' || new_schema || '.' || viewname;
+        tmp := 'CREATE VIEW trisano.' || tmprec.view_name || '_view AS SELECT *' || tmprec.addition ||
+                ' FROM ' || new_schema || '.' || tmprec.view_name;
         EXECUTE tmp;
     END LOOP;
 
