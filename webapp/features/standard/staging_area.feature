@@ -235,3 +235,16 @@ Feature: Staging Electronic Messages
     And I follow "Create a CMR from this message"
     And I visit the assigned-to event
     Then I should see "Home" under Telephones/Email on the Demographic tab
+
+  @pending
+  Scenario: Viewing a staged message with a cell phone number
+    Given I am logged in as a super user
+    And I have the staged message "realm_cj_cell_phone"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I follow "Create a CMR from this message"
+    And I visit the assigned-to event
+    Then I should see "Mobile" under Telephones/Email on the Demographic tab
