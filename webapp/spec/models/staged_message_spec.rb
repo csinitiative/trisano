@@ -260,6 +260,53 @@ describe StagedMessage do
       err.hl7_error_code.split(err.item_delim).first.should == '200'
       err.severity.should == 'E'
     end
+
+    it 'should use the original processing rules when no MSH-15 or 16 field is present' do
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_sample_5]
+      sample.should be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AA'
+
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:no_last_name]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AE'
+
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:nist_bad_message_type]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'AR'
+    end
+
+    it 'should use the enhanced processing rules when MSH-15 or 16 so indicates' do
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+      sample.should be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'CA'
+
+      # message with no last name
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_animal_rabies]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'CE'
+
+      sample = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_bad_version_id]
+      sample.should_not be_valid
+      sample_ack = HL7::Message.parse sample.ack.to_hl7
+
+      msa = sample_ack[:MSA]
+      msa.ack_code.should == 'CR'
+    end
   end
 
   describe 'with NIST samples' do
