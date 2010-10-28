@@ -77,11 +77,11 @@ describe Message do
     # PID|1||17744418^^^^MR||LIN^GENYAO^^^^^L||19840810|M||U^Unknown^HL70005|215 UNIVERSITY VLG^^SALT LAKE CITY^UT^84108^^M||^^PH^^^801^5854967|||||||||U^Unknown^HL70189\rORC||||||||||||^ROSENKOETTER^YUKI^K|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B
 
     it 'should return the patient name (formatted)' do
-      @hl7.patient_id.patient_name.should == 'Lin, Genyao'
+      @hl7.patient_id.patient_name.should == 'Zhang, George'
     end
 
     it 'should return the patient birth date' do
-      @hl7.patient_id.birth_date.should == Date.parse("19840810")
+      @hl7.patient_id.birth_date.should == Date.parse("19830922")
     end
 
     it 'should return the patient sex ID' do
@@ -102,7 +102,7 @@ describe Message do
     end
 
     it 'should return the street number' do
-      @hl7.patient_id.address_street_no.should == '215'
+      @hl7.patient_id.address_street_no.should == '42'
     end
 
     it 'should return the unit no' do
@@ -110,7 +110,7 @@ describe Message do
     end
 
     it 'should return the street name' do
-      @hl7.patient_id.address_street.should == "University Vlg"
+      @hl7.patient_id.address_street.should == "Happy Ln"
     end
 
     it 'should return the city' do
@@ -122,7 +122,7 @@ describe Message do
     end
 
     it 'should return the zip code' do
-      @hl7.patient_id.address_zip.should == "84108"
+      @hl7.patient_id.address_zip.should == "84444"
     end
 
     it "should have a non-empty telephone" do
@@ -137,7 +137,7 @@ describe Message do
     it "should return the phone number components" do
       a, n, e = @hl7.patient_id.telephone_home
       a.should == "801"
-      n.should == "5854967"
+      n.should == "5552346"
       e.should be_blank
     end
 
@@ -145,7 +145,7 @@ describe Message do
       hl7 = HL7::Message.parse(hl7_messages[:ihc_1])
       a, n, e = hl7.patient_id.telephone_home
       a.should == "801"
-      n.should == "7317292"
+      n.should == "5554412"
       e.should be_blank
     end
 
