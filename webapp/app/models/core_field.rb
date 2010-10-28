@@ -197,11 +197,11 @@ class CoreField < ActiveRecord::Base
     end
   end
 
-  def hidden?(disease=nil)
+  def hidden?(disease)
     !rendered?(disease) || hidden_by_ancestry?(disease)
   end
 
-  def hidden_by_ancestry?(disease=nil)
+  def hidden_by_ancestry?(disease)
     ancestors.any? { |ancestor| !ancestor.rendered?(disease) }
   end
 

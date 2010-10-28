@@ -18,6 +18,7 @@
 class CoreFieldsController < AdminController
 
   before_filter :look_up_disease
+  before_filter :inject_disease_into_core_field_hash, :only => [:update]
 
   def index
     @core_fields = CoreField.roots
@@ -50,10 +51,16 @@ class CoreFieldsController < AdminController
 
     respond_to do |format|
       if @core_field.update_attributes(params[:core_field])
-        flash[:notice] = t("core_field_successfully_updated")
-        format.html { redirect_to [@disease, @core_field] }
+        format.html do
+          flash[:notice] = t("core_field_successfully_updated")
+          redirect_to [@disease, @core_field]
+        end
         format.xml  { head :ok }
-        format.js   { render :partial => 'core_field', :layout => false }
+        format.js   do
+          render(:partial => 'core_field',
+                 :locals => { :core_field => @core_field },
+                 :layout => false)
+        end
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml  => @core_field.errors, :status => :unprocessable_entity }
@@ -92,4 +99,11 @@ class CoreFieldsController < AdminController
     end
   end
 
+  def inject_disease_into_core_field_hash
+    if @disease
+      if params[:core_field] && params[:core_field][:rendered_attributes]
+        params[:core_field][:rendered_attributes][:disease_id] = @disease.id
+      end
+    end
+  end
 end

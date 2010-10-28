@@ -76,5 +76,38 @@ describe CoreFieldsController do
     end
   end
 
+  describe "update /core_fields/:id" do
+    include DiseaseSpecHelper
+    include CoreFieldSpecHelper
+
+    before :all do
+      given_core_fields_loaded_for :morbidity_event
+    end
+
+    before do
+      @lycanthropy = given_a_disease_named('Lycanthropy')
+      @core_field = CoreField.find_by_key('morbidity_event[parent_guardian]')
+      mock_user
+    end
+
+    it "updates default core field settings" do
+      put :update, :id => @core_field.id, :core_field => {:rendered_attributes => { :rendered => false } }
+      assigns[:core_field].should == @core_field
+      flash[:notice].should == 'Core field was successfully updated.'
+      response.should redirect_to(core_field_path(@core_field))
+    end
+
+    it "renders a partial back for ajax requests" do
+      xhr :put, :update, :id => @core_field.id, :core_field => { :rendered_attributes => { :rendered => false } }
+      response.should render_template('core_fields/_core_field')
+    end
+
+    it "render updates the disease specific setting, if disease available" do
+      CoreField.stubs(:find).returns(@core_field)
+      @core_field.expects(:update_attributes).with('rendered_attributes' => { 'rendered' => 0, 'disease_id' => @lycanthropy.id }).returns(true)
+      put :update, :id => @core_field.id, :disease_id => @lycanthropy.id, 'core_field' => { 'rendered_attributes' => { 'rendered' => 0 } }
+      response.should redirect_to(disease_core_field_path(@lycanthropy, @core_field))
+    end
+  end
 end
 

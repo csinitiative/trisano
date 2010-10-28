@@ -20,7 +20,7 @@
   - if core_field.required_for_section?
     .required_if_others.tag=t(:required_for_section)
   - unless core_field.required?
-    - unless core_field.hidden_by_ancestry?
+    - unless core_field.hidden_by_ancestry?(@disease)
       .button{ :style => 'display: inline-block' }
         - if core_field.rendered?(@disease)
           =link_to t(:hide), [@disease, core_field], :class => :hide

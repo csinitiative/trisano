@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CoreField, 'in test locale' do
   before :all do
+    CoreFieldTranslation.delete_all
     CoreField.delete_all  # There's been fixutures spotted around these parts.
   end
 

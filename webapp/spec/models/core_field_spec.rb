@@ -374,17 +374,17 @@ describe CoreField do
 
     it "is not true if this field is hidden" do
       @core_field.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should_not be_hidden_by_ancestry
+      @core_field.should_not be_hidden_by_ancestry(nil)
     end
 
     it "is true when an immediate parent is hidden" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden_by_ancestry
+      @core_field.should be_hidden_by_ancestry(nil)
     end
 
     it "is hidden when any ancestor is hidden" do
       @tab.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden_by_ancestry
+      @core_field.should be_hidden_by_ancestry(nil)
     end
   end
 
@@ -403,17 +403,17 @@ describe CoreField do
 
     it "is true if this field is hidden" do
       @core_field.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden
+      @core_field.should be_hidden(nil)
     end
 
     it "is true when an immediate parent is hidden" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden
+      @core_field.should be_hidden(nil)
     end
 
     it "is hidden when any ancestor is hidden" do
       @tab.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden
+      @core_field.should be_hidden(nil)
     end
   end
 
