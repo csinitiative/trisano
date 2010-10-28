@@ -69,6 +69,7 @@ body, p, ol, ul {
       text-decoration: underline; }
 
 .formnamesubtext {
+  display: inline-block;
   text-transform: uppercase;
   font-family: helvetica, sans-serif;
   font-size: 10px;
@@ -123,10 +124,24 @@ label {
   color: #333; }
 
 .required {
-  background: #FFE0C6; }
+  background: #FFE0C6;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #FF8C2C; }
 
 .required_if_others {
-  background: #FFFFCC; }
+  background: #FFFFCC;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #CCCCFE; }
+
+.tag {
+  display: inline-block;
+  padding-left: 2px;
+  padding-right: 2px; }
+
+.hidden_by_ancestry {
+  display: none; }
 
 .struck-through {
   text-decoration: line-through; }

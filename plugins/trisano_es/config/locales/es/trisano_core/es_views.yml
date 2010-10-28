@@ -47,6 +47,7 @@ es:
   enable_save_buttons: "Activar botones de guardar"
   previous: "Anterior"
   next: "Próximo"
+  required: "Required (EN)"
 
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
@@ -210,7 +211,9 @@ es:
   display_by_default: Display by default (EN)
   display_on: 'Display on {{disease}} (EN)'
   displayed: 'Displayed (EN)'
+  display: "Display (EN)"
   required_for: "{{thing1}} is required for {{thing2}} (EN)"
+  required_for_section: "Required for Section (EN)"
   contains_required_fields: 'The {{thing1}} contains required fields (EN)'
   section_name: '{{name}} section (EN)'
   tab_name: '{{name}} tab (EN)'

@@ -43,6 +43,7 @@ en:
   enable_save_buttons: "Enable Save Buttons"
   previous: "Previous"
   next: "Next"
+  required: "Required"
 
   please_exit: 'Please exit'
   assigned_jurisdiction: 'Assigned Jurisdiction'
@@ -204,7 +205,9 @@ en:
   display_by_default: Display by default
   display_on: 'Display on {{disease}}'
   displayed: 'Displayed'
+  display: 'Display'
   required_for: "{{thing1}} is required for {{thing2}}"
+  required_for_section: "Required for Section"
   contains_required_fields: 'The {{thing1}} contains required fields'
   section_name: '{{name}} section'
   tab_name: '{{name}} tab'

@@ -53,9 +53,11 @@ class CoreFieldsController < AdminController
         flash[:notice] = t("core_field_successfully_updated")
         format.html { redirect_to [@disease, @core_field] }
         format.xml  { head :ok }
+        format.js   { render :partial => 'core_field', :layout => false }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @core_field.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml  => @core_field.errors, :status => :unprocessable_entity }
+        format.js   { render :json => @core_field.errors, :status => :unprocessable_entity }
       end
     end
   end
