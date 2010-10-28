@@ -19,6 +19,7 @@ module Trisano
                 end.first
               end
             end
+            default_scope :include => :core_field_translations
           end
         end
 

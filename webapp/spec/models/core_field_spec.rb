@@ -19,6 +19,9 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreField do
   before :all do
+    if defined? CoreFieldTranslation
+      CoreFieldTranslation.delete_all
+    end
     CoreField.delete_all  # There's been fixutures spotted around these parts.
   end
 
@@ -251,6 +254,10 @@ describe CoreField do
       @core_field.should_not be_valid
       @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for Morbidity Events"]
     end
+
+    it "is required" do
+      @core_field.should be_required
+    end
   end
 
   describe "with a hidden disease association" do
@@ -267,6 +274,7 @@ describe CoreField do
       @core_field.should_not be_valid
       @core_field.errors.full_messages.map(&:strip).should == ["#{@core_field.name} is required for Morbidity Events"]
     end
+
   end
 
   describe "with at least one descendant that is required for an event" do
@@ -293,6 +301,11 @@ describe CoreField do
       @tab.update_attributes :rendered_attributes => { :rendered => false }
       @tab.should_not be_valid
       @tab.errors.full_messages.map(&:strip).should == ["The #{@tab.name} tab contains required fields"]
+    end
+
+    it "is required" do
+      @section.should be_required
+      @tab.should be_required
     end
   end
 
@@ -336,6 +349,14 @@ describe CoreField do
       @core_field.should be_valid
       @section.should be_valid
     end
+
+    it "makes the field required" do
+      @core_field.should be_required
+    end
+
+    it "does not make the section required" do
+      @section.should_not be_required
+    end
   end
 
   describe "#hidden_by_ancestry?" do
@@ -351,19 +372,48 @@ describe CoreField do
       @section.add_child @core_field
     end
 
-    it "is true when field is hidden" do
+    it "is not true if this field is hidden" do
       @core_field.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden_by_ancestry
+      @core_field.should_not be_hidden_by_ancestry(nil)
     end
 
     it "is true when an immediate parent is hidden" do
       @section.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden_by_ancestry
+      @core_field.should be_hidden_by_ancestry(nil)
     end
 
     it "is hidden when any ancestor is hidden" do
       @tab.update_attributes :rendered_attributes => { :rendered => false }
-      @core_field.should be_hidden_by_ancestry
+      @core_field.should be_hidden_by_ancestry(nil)
+    end
+  end
+
+  describe "#hidden?" do
+    before do
+      @tab = Factory.create :cmr_tab_core_field
+      @section = Factory.create :cmr_section_core_field, {
+        :tree_id => @tab.tree_id
+      }
+      @core_field = Factory.create :cmr_core_field, {
+        :tree_id => @section.tree_id,
+      }
+      @tab.add_child @section
+      @section.add_child @core_field
+    end
+
+    it "is true if this field is hidden" do
+      @core_field.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden(nil)
+    end
+
+    it "is true when an immediate parent is hidden" do
+      @section.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden(nil)
+    end
+
+    it "is hidden when any ancestor is hidden" do
+      @tab.update_attributes :rendered_attributes => { :rendered => false }
+      @core_field.should be_hidden(nil)
     end
   end
 

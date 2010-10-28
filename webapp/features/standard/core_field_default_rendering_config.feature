@@ -2,7 +2,7 @@ Feature: Configuring core fields to render by default
 
   Since not every case of rendering core fields will have a disease associated with it
   As an admin
-  I want to be able to configure which fields to display when no disease is selected
+  I want to be able to configure which fields to display when no disease is selected or configured
 
   Scenario: Make a core field disease specific (not default)
     Given I am logged in as a super user

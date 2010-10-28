@@ -123,6 +123,10 @@ class CoreField < ActiveRecord::Base
     end
   end
 
+  def required?
+    required_for_section? or required_for_event?
+  end
+
   def required_for_event?
     if container?
       full_set.any? do |field_or_section|
@@ -193,8 +197,12 @@ class CoreField < ActiveRecord::Base
     end
   end
 
-  def hidden_by_ancestry?(disease=nil)
-    !rendered?(disease) || !ancestors.all? { |ancestor| ancestor.rendered?(disease) }
+  def hidden?(disease)
+    !rendered?(disease) || hidden_by_ancestry?(disease)
+  end
+
+  def hidden_by_ancestry?(disease)
+    ancestors.any? { |ancestor| !ancestor.rendered?(disease) }
   end
 
   def morbidity_event?

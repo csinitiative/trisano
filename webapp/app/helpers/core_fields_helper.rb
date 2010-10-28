@@ -46,7 +46,7 @@ module CoreFieldsHelper
   def core_field_list_item(core_field, disease=nil, &block)
     cf_class = "cf-#{core_field.field_type}"
     cf_class << " roll" unless core_field.tab?
-    cf_class << " not-rendered" if core_field.hidden_by_ancestry?(disease)
+    cf_class << " not-rendered" if core_field.hidden?(disease)
     options = { :class => cf_class }
     content_tag :li, options, &block
   end
@@ -56,7 +56,40 @@ module CoreFieldsHelper
     label_tag "core_field[rendered_attributes][rendered]", label_text, :style => "display: inline"
   end
 
-  def copy_from_disease_dialog(disease)
+  def core_field_buttons(core_field, disease=nil)
+    <<-HTML
+      <div class="#{core_field_buttons_class(core_field, disease)}">
+        <a class="#{core_field_hide_button_class(core_field, disease)}">
+          #{t :hide}
+        </a>
+        <a class="#{core_field_display_button_class(core_field, disease)}">
+          #{t :display}
+        </a>
+        #{image_tag('redbox_spinner.gif', :class => 'ui-helper-hidden', :alt => 'Working...')}
+      </div>
+    HTML
+  end
+
+  def core_field_buttons_class(core_field, disease=nil)
+    result = ['core_field_buttons']
+    result << 'ui-helper-hidden' if core_field.required?
+    result << 'hidden_by_ancestry' if core_field.hidden_by_ancestry?(disease)
+    result.join(' ')
+  end
+
+  def core_field_hide_button_class(core_field, disease)
+    result = ['hide button']
+    result << 'ui-helper-hidden' unless core_field.rendered?(disease)
+    result.join(' ')
+  end
+
+  def core_field_display_button_class(core_field, disease)
+    result = ['display button']
+    result << 'ui-helper-hidden' if core_field.rendered?(disease)
+    result.join(' ')
+  end
+
+  def apply_to_disease_dialog(disease)
     result =  "<div class='apply_to_disease_dialog' style='display: none'>"
     result << image_tag('redbox_spinner.gif', :id => "diseaseListSpinner", :alt => 'Working...')
     result << "<label>#{link_to(t(:diseases), diseases_path)}</label>"

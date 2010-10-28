@@ -4,6 +4,13 @@ module CoreFieldSpecHelper
     CoreField.load!(core_fields)
   end
 
+  def given_core_fields_loaded_for(event_type)
+    fields = core_fields.select do |field_attr|
+      field_attr['event_type'] == event_type.to_s
+    end
+    CoreField.load! fields
+  end
+
   def given_cmr_core_tabs_loaded
     given_core_tabs_loaded_for :morbidity_event
   end

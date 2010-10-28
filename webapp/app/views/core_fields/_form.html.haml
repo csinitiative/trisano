@@ -21,10 +21,9 @@
   %tr
     %td{:colspan => 2}
       %span.vert
-        = hidden_field_tag "core_field[rendered_attributes][disease_id]", @disease.try(:id)
-        = hidden_field_tag "core_field[rendered_attributes][rendered]",   0, :id => nil
+        = hidden_field_tag "core_field[rendered_attributes][rendered]", 0, :id => nil
         - error_tag_if f.object, :errors_on => :rendered_attributes do
-          = check_box_tag    "core_field[rendered_attributes][rendered]",   1, f.object.rendered?(@disease)
+          = check_box_tag "core_field[rendered_attributes][rendered]", 1, f.object.rendered?(@disease)
           = core_field_rendered_label @disease
   - unless @disease || f.object.section?
     %tr
