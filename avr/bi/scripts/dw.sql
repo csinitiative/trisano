@@ -303,7 +303,7 @@ SELECT
         WHEN disev.disease_onset_date IS NULL THEN NULL
         WHEN extract(month from disev.disease_onset_date) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 3 AND extract(month from disev.disease_onset_date) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from disev.disease_onset_date) > 6 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 6 AND extract(month from disev.disease_onset_date) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_onset_quarter,
     to_char(disev.disease_onset_date, 'Month') AS date_disease_onset_month,
@@ -319,7 +319,7 @@ SELECT
         WHEN disev.date_diagnosed IS NULL THEN NULL
         WHEN extract(month from disev.date_diagnosed) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 3 AND extract(month from disev.date_diagnosed) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from disev.date_diagnosed) > 6 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 6 AND extract(month from disev.date_diagnosed) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_diagnosed_quarter,
     to_char(disev.date_diagnosed, 'Month') AS date_disease_diagnosed_month,
@@ -337,7 +337,7 @@ SELECT
         WHEN events."first_reported_PH_date" IS NULL THEN NULL
         WHEN extract(month from events."first_reported_PH_date") <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from events."first_reported_PH_date") > 3 AND extract(month from events."first_reported_PH_date") <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from events."first_reported_PH_date") > 6 AND extract(month from events."first_reported_PH_date") <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from events."first_reported_PH_date") > 6 AND extract(month from events."first_reported_PH_date") <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_reported_to_public_health_quarter,
     to_char(events."first_reported_PH_date", 'Month') AS date_reported_to_public_health_month,
@@ -353,7 +353,7 @@ SELECT
         WHEN events.event_onset_date IS NULL THEN NULL
         WHEN extract(month from events.event_onset_date) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from events.event_onset_date) > 3 AND extract(month from events.event_onset_date) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from events.event_onset_date) > 6 AND extract(month from events.event_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from events.event_onset_date) > 6 AND extract(month from events.event_onset_date) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_entered_into_system_quarter,
     to_char(events.event_onset_date, 'Month') AS date_entered_into_system_month,
@@ -623,7 +623,7 @@ SELECT
         WHEN disev.disease_onset_date IS NULL THEN NULL
         WHEN extract(month from disev.disease_onset_date) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.disease_onset_date) > 3 AND extract(month from disev.disease_onset_date) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from disev.disease_onset_date) > 6 AND extract(month from disev.disease_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 6 AND extract(month from disev.disease_onset_date) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_onset_quarter,
     to_char(disev.disease_onset_date, 'Month') AS date_disease_onset_month,
@@ -639,7 +639,7 @@ SELECT
         WHEN disev.date_diagnosed IS NULL THEN NULL
         WHEN extract(month from disev.date_diagnosed) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from disev.date_diagnosed) > 3 AND extract(month from disev.date_diagnosed) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from disev.date_diagnosed) > 6 AND extract(month from disev.date_diagnosed) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 6 AND extract(month from disev.date_diagnosed) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_disease_diagnosed_quarter,
     to_char(disev.date_diagnosed, 'Month') AS date_disease_diagnosed_month,
@@ -655,7 +655,7 @@ SELECT
         WHEN events.event_onset_date IS NULL THEN NULL
         WHEN extract(month from events.event_onset_date) <= 3 THEN 'Quarter 1'::TEXT
         WHEN extract(month from events.event_onset_date) > 3 AND extract(month from events.event_onset_date) <= 6 THEN 'Quarter 2'::TEXT
-        WHEN extract(month from events.event_onset_date) > 6 AND extract(month from events.event_onset_date) <= 8 THEN 'Quarter 3'::TEXT
+        WHEN extract(month from events.event_onset_date) > 6 AND extract(month from events.event_onset_date) <= 9 THEN 'Quarter 3'::TEXT
         ELSE 'Quarter 4'::TEXT
     END AS date_entered_into_system_quarter,
     to_char(events.event_onset_date, 'Month') AS date_entered_into_system_month,
