@@ -167,8 +167,8 @@ $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
     -f $ETL_SCRIPT $DEST_DB_NAME || DIE "Failed to create new data warehouse structures"
 
 echo "Processing plugin ETL"
-echo "Checking for directories in $TRISANO_PLUGIN_DIRECTORY"
 if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISANO_PLUGIN_DIRECTORY ]]; then
+    echo "Checking for plugins in $TRISANO_PLUGIN_DIRECTORY"
     for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
         if [ -r $plugin/avr/etl.sql ] ; then
             echo "Found ETL file for $plugin"
@@ -178,6 +178,8 @@ if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISAN
                 DIE "Error running ETL for plugin $plugin"
         fi
     done
+else
+    echo "The environment variable TRISANO_PLUGIN_DIRECTORY is set to \"$TRISANO_PLUGIN_DIRECTORY\", which not a readable directory. Skipping plugins."
 fi
 
 echo "Swapping schemas"
