@@ -554,9 +554,18 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def test_date
+      analysis_date || observation_date
+    end
+
     def observation_date
-      return nil if obx_segment.observation_date.blank?
-      Date.parse(obx_segment.observation_date).to_s
+      Date.parse(obx_segment.observation_date).to_s unless obx_segment.observation_date.blank?
+    rescue
+      "Could not be determined"
+    end
+
+    def analysis_date
+      Date.parse(obx_segment.analysis_date).to_s unless obx_segment.analysis_date.blank?
     rescue
       "Could not be determined"
     end

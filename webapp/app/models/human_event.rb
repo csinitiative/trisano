@@ -560,7 +560,7 @@ class HumanEvent < Event
           lab_hash = {
             "test_type_id"       => common_test_type.id,
             "collection_date"    => obr.collection_date,
-            "lab_test_date"      => obx.observation_date,
+            "lab_test_date"      => obx.test_date,
             "reference_range"    => obx.reference_range,
             "specimen_source_id" => obr.specimen_source.id,
             "staged_message_id"  => staged_message.id,

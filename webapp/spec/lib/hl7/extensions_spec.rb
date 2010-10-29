@@ -336,6 +336,14 @@ describe Message do
       it 'should parse a Default result properly' do
         @realm_min_test.result.should == '50'
       end
+
+      it 'should return OBX-19 for analysis_date if present' do
+        HL7::Message.parse(HL7MESSAGES[:nist_sample_5]).observation_requests.first.all_tests.first.analysis_date.should == '2010-07-30'
+      end
+
+      it 'should return OBX-14 for analysis_date if no OBX-19 present' do
+        HL7::Message.parse(HL7MESSAGES[:arup_1]).observation_requests.first.all_tests.first.analysis_date.should be_nil
+      end
     end
   end
 
