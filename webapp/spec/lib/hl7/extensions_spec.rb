@@ -224,6 +224,31 @@ describe Message do
       @hl7.observation_requests.first.tests.should_not be_nil
     end
 
+    it 'should return the OBR observation date (as collection date) if present' do
+      # this message has an OBR-7
+      HL7::Message.parse(HL7MESSAGES[:nist_obr_observation_date]).observation_requests.first.collection_date.should == Date.parse('201007281400').to_s
+    end
+
+    it 'should return the OBX observation date (as collection date) if appropriate' do
+      # this message has no OBR-7 but an OBX-14
+      HL7::Message.parse(HL7MESSAGES[:nist_obx_observation_date]).observation_requests.first.collection_date.should == Date.parse('201007281400').to_s
+    end
+
+    it 'should return the SPM collection date if appropriate' do
+      # this message has no OBR-7 or OBX-14 but an SPM-17
+      HL7::Message.parse(HL7MESSAGES[:nist_spm_collection_date]).observation_requests.first.collection_date.should == Date.parse('201007281359').to_s
+    end
+
+    it 'should return the OBR requested date if present' do
+      # this message has no OBR-7, OBX-14 or SPM-17 field but has an OBX-6
+      HL7::Message.parse(HL7MESSAGES[:nist_obr_requested_date]).observation_requests.first.collection_date.should == Date.parse('201007281358').to_s
+    end
+
+    it 'should return nil for observation date if no OBR-7, OBX-14, SPM-17 or OBX-6 present' do
+      # this message has no OBR-7, OBX-14, SPM-17 or OBR-6
+      HL7::Message.parse(HL7MESSAGES[:nist_no_collection_date]).observation_requests.first.collection_date.should be_nil
+    end
+
     describe 'specimen segment' do
       before :all do
         # This is an OBR segment that should have an SPM segment.

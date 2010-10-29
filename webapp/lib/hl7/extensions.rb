@@ -478,8 +478,16 @@ module StagedMessages
     end
 
     def collection_date
-      return nil if obr_segment.observation_date.blank?
-      Date.parse(obr_segment.observation_date).to_s
+      return Date.parse(obr_segment.observation_date).to_s unless
+        obr_segment.observation_date.blank?
+
+      all_tests.each do |obx|
+        return obx.observation_date if obx.observation_date
+      end
+
+      specimen.collection_date if specimen
+
+      Date.parse(obr_segment.requested_date).to_s unless obr_segment.requested_date.blank?
     rescue
       "Could not be determined"
     end
@@ -698,6 +706,12 @@ module StagedMessages
     # Returns an empty array if none.
     def tests
       @tests ||= spm_segment.collect_children(:OBX)
+    end
+
+    def collection_date
+      Date.parse(spm_segment.specimen_collection_date).to_s if
+        spm_segment and spm_segment.specimen_collection_date
+    rescue
     end
   end
 
