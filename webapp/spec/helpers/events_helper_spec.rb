@@ -94,15 +94,43 @@ describe EventsHelper do
 
   describe "original patient controls" do
 
+    before do
+      @parent_event = Factory.create(:morbidity_event)
+      @encounter_event = Factory.create(:encounter_event, :parent_event => @parent_event)
+    end
+
     it 'should display the patient name and disease for the parent event' do
-      @event = Factory.create(:morbidity_event)
-      @encounter_event = Factory.create(:encounter_event)
-      @encounter_event.stubs(:parent_event).returns(@event)
+      helper.original_patient_controls(@encounter_event).include?(@parent_event.party.full_name).should be_true
+    end
+
+    it "displays the disease for the parent event" do
       @encounter_event.stubs(:safe_call_chain).with(:parent_event, :disease_event, :disease, :disease_name).returns("Bubonic,Plague")
-      helper.original_patient_controls(@encounter_event).include?(@event.party.full_name).should be_true
       helper.original_patient_controls(@encounter_event).include?("Bubonic,Plague").should be_true
     end
 
+    describe "when the parent event has multiple contacts" do
+
+      before do
+        @contact_event = Factory.create(:contact_event, :parent_event => @parent_event)
+
+        @promoted_event = Factory.create(:contact_event, :parent_event => @parent_event)
+        login_as_super_user
+        @promoted_event.promote_to_morbidity_event
+      end
+
+      it "displays a contact navigation widget, if parent has multiple contacts" do
+        helper.original_patient_controls(@contact_event).should have_tag('select.contacts_nav')
+      end
+
+      it "displays a navigation message for promoted contacts" do
+        helper.original_patient_controls(@contact_event).should have_tag('option', '--- Navigate to Promoted Contacts ---')
+      end
+
+      it "displays a navigation message for contacts" do
+        helper.original_patient_controls(@promoted_event).should have_tag('option', '--- Navigate to Related Contacts ---')
+      end
+
+    end
   end
 
   describe "association recorded helper" do

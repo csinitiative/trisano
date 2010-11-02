@@ -716,17 +716,37 @@ module EventsHelper
 
   def original_patient_controls(event)
     disease = event.safe_call_chain(:parent_event, :disease_event, :disease, :disease_name)
-    returning "" do |result|
-      result << "<div>"
-      result << ct(:parent_patient)
-      result << "&nbsp;"
-      result << link_to_parent(event)
-      unless disease.blank?
-        result << "&nbsp;|&nbsp;"
-        result << "<span style='font-size: 12px; font-weight: light;'>#{h disease}</span>"
-      end
-      result << "</div>"
+    result = "<div>"
+    result << ct(:parent_patient) + "&nbsp;" + link_to_parent(event)
+    unless disease.blank?
+      result << "&nbsp;|&nbsp;<span style='font-size: 12px; font-weight: light;'>#{h disease}</span>"
     end
+    result << "<div style=\"text-align: right\">#{sibling_contact_navigation(event)}</div>"
+    result << "</div>"
+  end
+
+  def sibling_contact_navigation(event)
+    return nil if event.contact_siblings_quick_list.blank?
+    contact_navigation(event.contact_siblings_quick_list)
+  end
+
+  def contact_navigation(contacts)
+    return nil if contacts.blank?
+    contacts = contacts.partition { |event| event.type == 'ContactEvent' }.reject(&:empty?)
+    result = "<select class=\"contacts_nav\">"
+    contacts.each do |partition|
+      result << "<option>#{t(partition.first.type.tableize, :scope => :contact_nav)}</option>"
+      result << contact_navigation_options(partition)
+    end
+    result << "</select>"
+  end
+
+  def contact_navigation_options(contacts)
+    results = ""
+    contacts.each do |contact|
+      results << "<option value=\"#{edit_event_path(contact)}\">#{contact.full_name}</option>"
+    end
+    results
   end
 
   def link_to_parent(event)
@@ -734,6 +754,16 @@ module EventsHelper
     person = parent.party
     path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
     link_to(h(person.try(:full_name)), path)
+  end
+
+  def edit_event_path(event)
+    url_for(:controller => controller_name_from_event(event),
+            :id => event.id,
+            :action => :edit)
+  end
+
+  def controller_name_from_event(model)
+    model.type.tableize
   end
 
   def association_recorded?(association_collection)

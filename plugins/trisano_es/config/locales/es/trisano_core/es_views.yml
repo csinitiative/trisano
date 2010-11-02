@@ -189,6 +189,9 @@ es:
   parent_guardian: Padre/Tutor
   parent_patient: 'Paciente Principal'
   not_elevated: "No ha sido elevado a un acontecimiento de morbilidad"
+  contact_nav:
+    morbidity_events: '--- Navigate to Promoted Contacts (EN) ---'
+    contact_events:   '--- Navigate to Related Contacts (EN) ---'
 
 #core_field_elements
   add_core_field: 'Agregar Campo Principal'

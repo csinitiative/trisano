@@ -24,7 +24,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :load_user
   before_filter :prep_extensions
-  before_filter :initialize_code_select_cache
 
   helper_method :static_error_page_path
   helper_method :javascript_include_renderers, :dom_loaded_javascripts
@@ -216,7 +215,7 @@ class ApplicationController < ActionController::Base
   end
 
   def codes_for_select(code_name)
-    @code_select_cache.drop_down_selections(code_name, @event)
+    code_select_cache.drop_down_selections(code_name, @event)
   end
 
   private
@@ -238,7 +237,7 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def initialize_code_select_cache
-    @code_select_cache = CodeSelectCache.new
+  def code_select_cache
+    @code_select_cache ||= CodeSelectCache.new
   end
 end
