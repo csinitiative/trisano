@@ -499,7 +499,26 @@ class HumanEvent < Event
     # Create one lab result per OBX segment
     i = 0
     diseases = Set.new
+
+    # country
+    per_message_comments = ''
+    unless staged_message.patient.address_country.blank?
+      per_message_comments = "Country: #{staged_message.patient.address_country}"
+    end
+
     staged_message.observation_requests.each do |obr|
+      per_request_comments = per_message_comments
+
+      unless obr.filler_order_number.blank?
+        per_request_comments += ", " unless per_request_comments.blank?
+        per_request_comments += "Accession no: #{obr.filler_order_number}"
+      end
+
+      unless obr.specimen_id.blank?
+        per_request_comments += ", " unless per_request_comments.blank?
+        per_request_comments += "Specimen id: #{obr.specimen_id}"
+      end
+
       obr.tests.each do |obx|
         loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
         scale_type = nil
@@ -522,14 +541,21 @@ class HumanEvent < Event
 
         raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
 
+        comments = per_request_comments
+
+        unless obx.abnormal_flags.blank?
+          comments += ", " unless comments.blank?
+          comments += "Abnormal flags: #{obx.abnormal_flags}"
+        end
+
         result_hash = {}
 
         if scale_type != "Nom"
-          organism = loinc_code.organism
-          if organism
-            result_hash["organism_id"] = organism.id
+          if loinc_code.organism
+            result_hash["organism_id"] = loinc_code.organism.id
           else
-            result_hash["comment"] = "ELR Message: No organism mapped to LOINC code."
+            comments += ", " unless comments.blank?
+            comments += "ELR Message: No organism mapped to LOINC code."
           end
 
           loinc_code.diseases.each { |disease| diseases << disease }
@@ -553,6 +579,7 @@ class HumanEvent < Event
             result_hash["result_value"] = obx.result
           else
             result_hash["organism_id"] = organism.id
+            organism.diseases.each { |disease| diseases << disease }
           end
         end
 
@@ -566,7 +593,8 @@ class HumanEvent < Event
             "staged_message_id"  => staged_message.id,
             "units"              => obx.units,
             "test_status_id"     => obx.trisano_status_id,
-            "loinc_code"         => loinc_code
+            "loinc_code"         => loinc_code,
+            "comment"            => comments
           }.merge!(result_hash)
           lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
         rescue Exception => error

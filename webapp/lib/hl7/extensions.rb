@@ -390,6 +390,11 @@ module StagedMessages
       addr_components[4]
     end
 
+    # returns a string for use in the lab notes
+    def address_country
+      addr_components[5] if addr_components
+    end
+
     def telephone_empty?
       components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
     end
@@ -517,6 +522,16 @@ module StagedMessages
 
     def spm_segment
       specimen.spm_segment if specimen
+    end
+
+    def filler_order_number
+      obr_segment.filler_order_number.split(obr_segment.item_delim).first if obr_segment.filler_order_number
+    rescue
+    end
+
+    def specimen_id
+      spm_segment.specimen_id.split(spm_segment.item_delim).first.split('&').first if spm_segment.specimen_id
+    rescue
     end
 
     private
@@ -649,6 +664,11 @@ module StagedMessages
       return nil unless hl7_status_codes.has_key?(elr_result_status)
       status = ExternalCode.find_by_code_name_and_the_code('test_status', hl7_status_codes[elr_result_status])
       status ? status.id : status
+    end
+
+    def abnormal_flags
+      obx_segment.abnormal_flags.split(obx_segment.item_delim).first if obx_segment.abnormal_flags
+    rescue
     end
 
     private

@@ -125,6 +125,10 @@ describe Message do
       @hl7.patient_id.address_zip.should == "84444"
     end
 
+    it 'should return the country if present' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).patient_id.address_country.should == "USA"
+    end
+
     it "should have a non-empty telephone" do
       @hl7.patient_id.telephone_empty?.should == false
     end
@@ -222,6 +226,14 @@ describe Message do
 
     it 'should return a list of test_results' do
       @hl7.observation_requests.first.tests.should_not be_nil
+    end
+
+    it 'should return the filler_order_number (accession number)' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.filler_order_number.should == "9700123"
+    end
+
+    it 'should return the specimen ID (when SPM present)' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.specimen_id.should == "23456"
     end
 
     it 'should return the OBR observation date (as collection date) if present' do
@@ -335,6 +347,10 @@ describe Message do
 
       it 'should parse a Default result properly' do
         @realm_min_test.result.should == '50'
+      end
+
+      it 'should return the abnormal flags if set' do
+        HL7::Message.parse(HL7MESSAGES[:realm_cj_abnormal_flags]).observation_requests.first.all_tests.first.abnormal_flags.should == "H"
       end
 
       it 'should return OBX-19 for analysis_date if present' do
