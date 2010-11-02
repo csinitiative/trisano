@@ -318,6 +318,10 @@ describe Message do
           HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.all_tests.first
         @realm_ar_test =
           HL7::Message.parse(HL7MESSAGES[:realm_animal_rabies]).observation_requests.first.all_tests.first
+        @realm_hc_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_hepatitis_c_virus]).observation_requests.first.all_tests.find { |obx| obx.obx_segment.value_type == "SN" }
+        @realm_ce_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_cj_ce]).observation_requests.first.all_tests.first
       end
 
       it 'should take :loinc_scale from CWE.2 if present' do
@@ -343,6 +347,14 @@ describe Message do
       it 'should parse a CWE result properly' do
         @realm_cj_test.result.should == 'Campylobacter jejuni'
         @realm_ar_test.result.should == 'Detected'
+      end
+
+      it 'should parse an SN result properly' do
+        @realm_hc_test.result.should == '> 11.0'
+      end
+
+      it 'should parse a CE result properly' do
+        @realm_ce_test.result.should == 'Uncultured'
       end
 
       it 'should parse a Default result properly' do

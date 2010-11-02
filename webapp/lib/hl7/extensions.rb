@@ -589,7 +589,7 @@ module StagedMessages
       value_type = obx_segment.value_type
 
       klass = case value_type
-      when 'CWE'
+      when 'CE', 'CWE', 'SN'
         eval value_type
       else
         Default
@@ -715,10 +715,22 @@ module StagedMessages
       end
     end
 
+    class CE < Default
+      def to_s
+        field.split(delim)[4]
+      end
+    end
+
     # code^text^...
     class CWE < Default
       def to_s
         field.split(delim)[1]
+      end
+    end
+
+    class SN < Default
+      def to_s
+        field.gsub delim, ' '
       end
     end
   end
