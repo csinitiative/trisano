@@ -20,6 +20,28 @@ class TreatmentsController < AdminController
   def index
     @treatments = Treatment.all
   end
+
+  def new
+    @treatment = Treatment.new
+  end
+
+  def create
+    @treatment = Treatment.new(params[:treatment])
+
+    respond_to do |format|
+      if @treatment.save
+        flash[:notice] = t("treatment_created")
+        format.html { redirect_to(@treatment) }
+        format.xml  { render :xml => @treatment, :status => :created, :location => @treatment }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @treatment.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
   
+  def show
+    @treatment = Treatment.find(params[:id])
+  end
 
 end

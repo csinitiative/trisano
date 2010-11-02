@@ -2,17 +2,37 @@ Features: Adding and editing treatments
 
   Scenario: Viewing the list of treatments
     Given I am logged in as a super user
-    And the following treatments exist
-    | treatment_name |
-    | Rubbings       |
-    | Foot massage   |
-    | Leaches        |
-    | Garlic         |
+      And the following treatments exist
+      | treatment_name |
+      | Rubbings       |
+      | Foot massage   |
+      | Leaches        |
+      | Garlic         |
     When I go to the admin dashboard page
-    And I follow "Manage Treatments"
+      And I follow "Manage Treatments"
     Then I should see "Rubbings"
-    Then I should see "Foot massage"
-    Then I should see "Leaches"
-    Then I should see "Garlic"
-    
+      And I should see "Foot massage"
+      And I should see "Leaches"
+      And I should see "Garlic"
+
+  Scenario: Adding a treatment
+    Given I am logged in as a super user
+    When I go to the treatment admin page
+      And I press "Create New Treatment"
+      And I fill in "Treatment name" with "Rubbings"
+      And I press "Create"
+    Then I should see "Rubbings"
+      And I should see "Back to Treatments"
+
+  Scenario: Adding an invalid treatment
+    Given I am logged in as a super user
+    When I go to the treatment admin page
+      And I press "Create New Treatment"
+      And I press "Create"
+    Then I should see "prohibited this treatment from being saved"
+
+    When I fill in "Treatment name" with "Rubbings"
+      And I press "Create"
+    Then I should see "Rubbings"
+      And I should see "Back to Treatments"
 

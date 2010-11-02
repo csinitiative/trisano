@@ -255,6 +255,11 @@ en:
   inactive: 'Inactive'
   edit_disease: Edit disease
   cdc_send_case: 'CDC/NETSS export disease when case is:'
+#Treatments
+  create_new_treatment: 'Create New Treatment'
+  create_treatment: 'Create Treatment'
+  edit_treatment: 'Edit Treatment'
+  treatment_created: 'Treatment created'
 #Encounter events
   view_encounter_event: 'View Encounter Event: {{date}}'
   encounter_on: 'Encounter on {{date}}'

@@ -261,6 +261,11 @@ es:
   inactive: 'Inactivo'
   edit_disease: Editar enfermedad
   cdc_send_case: 'Exporta el CDC/NETSS la enfermedad cuando el caso es:'
+#Treatments
+  create_new_treatment: 'Create New Treatment (EN)'
+  create_treatment: 'Create Treatment (EN)'
+  edit_treatment: 'Edit Treatment (EN)'
+  treatment_created: 'Treatment created (EN)'
 #Encounter events
   view_encounter_event: 'Ver el Evento de Encuentro: {{date}}'
   encounter_on: 'Encuentro en {{date}}'

@@ -18,7 +18,7 @@
 class Treatment < ActiveRecord::Base
   belongs_to :treatment_type, :class_name => 'Code', :foreign_key => 'treatment_type_id'
   
-  validates_presence_of :treatment_name, :treatment_type_id
+  validates_presence_of :treatment_name
 
   class << self
 
