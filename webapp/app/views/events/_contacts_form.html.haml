@@ -31,7 +31,7 @@
       - core_element :contacts, f, 'vert-break' do
 
         = text_field_tag('contact_search_name')
-        = button_to_remote(t('search_button'), :method => :get, :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();")
+        = button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => 'contacts_search'}, :with => "'name=' + $('contact_search_name').value", :update => 'contact_search_results', :loading => "$('contact-search-spinner').show();", :complete => "$('contact-search-spinner').hide();" }, :id => "contact_search")
         = image_tag('redbox_spinner.gif', :id => 'contact-search-spinner', :style => "height: 16px; width: 16px; display: none;")
         %div#new_contacts
         %div#contact_search_results

@@ -52,7 +52,14 @@ class EventsController < ApplicationController
   end
 
   def contacts_search
-    @results = HumanEvent.find_by_name_and_bdate(:fulltext_terms => params[:name])
+    page = params[:page] ? params[:page] : 1
+
+    @results = HumanEvent.find_by_name_and_bdate(
+      :fulltext_terms => params[:name],
+      :page => page,
+      :page_size => 20
+    )
+    
     render :partial => "events/contacts_search", :layout => false
   end
 
