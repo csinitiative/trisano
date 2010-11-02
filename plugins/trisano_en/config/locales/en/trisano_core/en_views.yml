@@ -94,6 +94,7 @@ en:
   manage_queues: 'Manage Event Routing Queues'
   manage_help_text: 'Manage Event Fields'
   manage_system_codes: 'Manage System Codes'
+  manage_treatments: 'Manage Treatments'
   configure_cdc_export: 'Configure System for CDC Export'
   configure_csv_export: 'Configure System for CSV Export'
   send_system_message: 'Send System Messages'

@@ -98,6 +98,7 @@ es:
   manage_queues: 'Gestionar Colas de Enrutamiento de Eventos'
   manage_help_text: 'Agregar Texto de Ayuda a los Campos Principales'
   manage_system_codes: 'Gestionar Códigos del Sistema'
+  manage_treatments: 'Manage Treatments (EN)'
   configure_cdc_export: 'Configurar Sistema para Exportación CDC'
   configure_csv_export: 'Configurar Sistema para Exportación CSV'
   send_system_message: 'Enviar Mensajes del Sistema'
