@@ -732,10 +732,13 @@ module EventsHelper
 
   def contact_navigation(contacts)
     return nil if contacts.blank?
+
+    content_for(:javascript_includes) { javascript_include_tag 'contact_nav' }
+
     contacts = contacts.partition { |event| event.type == 'ContactEvent' }.reject(&:empty?)
     result = "<select class=\"contacts_nav\">"
     contacts.each do |partition|
-      result << "<option>#{t(partition.first.type.tableize, :scope => :contact_nav)}</option>"
+      result << "<option value="">#{t(partition.first.type.tableize, :scope => :contact_nav)}</option>"
       result << contact_navigation_options(partition)
     end
     result << "</select>"
@@ -1419,7 +1422,11 @@ module EventsHelper
 
   def alert_if_changed(form)
     javascript_tag do
-      "var formWatcher = new FormWatch('#{get_form_id(form)}');"
+      <<-JS
+        $j(function() {
+          var formWatcher = new FormWatch('#{get_form_id(form)}');
+        });
+      JS
     end
   end
 
