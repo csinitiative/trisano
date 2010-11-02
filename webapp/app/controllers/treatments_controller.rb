@@ -18,7 +18,7 @@
 class TreatmentsController < AdminController
 
   def index
-    @treatments = Treatment.all
+    @treatments = Treatment.all(:order => 'treatment_name ASC')
   end
 
   def new
@@ -39,7 +39,26 @@ class TreatmentsController < AdminController
       end
     end
   end
-  
+
+  def edit
+    @treatment = Treatment.find(params[:id])
+  end
+
+  def update
+    @treatment = Treatment.find(params[:id])
+
+    respond_to do |format|
+      if @treatment.update_attributes(params[:treatment])
+        flash[:notice] = t("treatment_updated")
+        format.html { redirect_to(@treatment) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @treatment.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
   def show
     @treatment = Treatment.find(params[:id])
   end

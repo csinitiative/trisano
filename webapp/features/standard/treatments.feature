@@ -22,6 +22,7 @@ Features: Adding and editing treatments
       And I fill in "Treatment name" with "Rubbings"
       And I press "Create"
     Then I should see "Rubbings"
+      And I should see "Treatment created"
       And I should see "Back to Treatments"
 
   Scenario: Adding an invalid treatment
@@ -34,5 +35,18 @@ Features: Adding and editing treatments
     When I fill in "Treatment name" with "Rubbings"
       And I press "Create"
     Then I should see "Rubbings"
+      And I should see "Back to Treatments"
+
+  Scenario: Editing a treatment
+    Given I am logged in as a super user
+      And the following treatments exist
+      | treatment_name |
+      | Rubbings       |
+    When I go to the treatment admin page
+      And I follow "Edit"
+      And I fill in "Treatment name" with "Pinches"
+      And I press "Update"
+    Then I should see "Pinches"
+      And I should see "Treatment updated"
       And I should see "Back to Treatments"
 

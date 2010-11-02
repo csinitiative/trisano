@@ -260,6 +260,7 @@ en:
   create_treatment: 'Create Treatment'
   edit_treatment: 'Edit Treatment'
   treatment_created: 'Treatment created'
+  treatment_updated: 'Treatment updated'
 #Encounter events
   view_encounter_event: 'View Encounter Event: {{date}}'
   encounter_on: 'Encounter on {{date}}'
