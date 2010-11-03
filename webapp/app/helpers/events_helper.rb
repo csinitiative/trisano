@@ -429,7 +429,7 @@ module EventsHelper
   def links_to_show_and_edit(event, options={})
     returning [] do |out|
       if options[:always_show] || User.current_user.can_view?(event)
-        out << link_to_action(event)
+        out << link_to_action(event, options)
       end
       if User.current_user.can_update?(event)
         out << link_to_action(event, options.merge(:prefix => 'edit'))

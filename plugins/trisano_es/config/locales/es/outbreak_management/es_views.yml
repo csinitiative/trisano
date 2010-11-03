@@ -17,6 +17,8 @@ es:
     edit_outbreak_event: "Editar Evento de Brote"
     view_outbreak_event: "Ver Evento de Brote"
     new_outbreak_event: "Evento de Brote Nuevo"
+    edit_outbreak: "Editar Brote"
+    show_outbreak: "Mostrar Brote"
     outbreak: "Brote"
     outbreaks: "Brotes"
     outbreak_information: "Información de Brote"
