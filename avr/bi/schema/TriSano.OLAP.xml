@@ -125,11 +125,6 @@
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
-        <Measure name="Died" datatype="Integer" aggregator="sum" visible="true">
-            <MeasureExpression>
-                <SQL dialect="postgres">CASE WHEN disease_event_died = 'Yes' THEN 1 ELSE 0 END</SQL>
-            </MeasureExpression>
-        </Measure>
         <Measure name="Acuity" datatype="Integer" aggregator="sum" visible="true">
             <MeasureExpression>
                 <SQL dialect="postgres">COALESCE(acuity, 0)</SQL>
@@ -435,11 +430,6 @@
 		<Measure name="Food handler" datatype="Integer" aggregator="sum" visible="true">
             <MeasureExpression>
                 <SQL dialect="postgres">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
-            </MeasureExpression>
-        </Measure>
-        <Measure name="Died" datatype="Integer" aggregator="sum" visible="true">
-            <MeasureExpression>
-                <SQL dialect="postgres">CASE WHEN disease_event_died = 'Yes' THEN 1 ELSE 0 END</SQL>
             </MeasureExpression>
         </Measure>
         <!-- Days from Onset to Diagnosis -->

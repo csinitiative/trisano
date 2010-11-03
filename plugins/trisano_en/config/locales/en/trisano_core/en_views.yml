@@ -94,6 +94,7 @@ en:
   manage_queues: 'Manage Event Routing Queues'
   manage_help_text: 'Manage Event Fields'
   manage_system_codes: 'Manage System Codes'
+  manage_treatments: 'Manage Treatments'
   configure_cdc_export: 'Configure System for CDC Export'
   configure_csv_export: 'Configure System for CSV Export'
   send_system_message: 'Send System Messages'
@@ -257,6 +258,12 @@ en:
   inactive: 'Inactive'
   edit_disease: Edit disease
   cdc_send_case: 'CDC/NETSS export disease when case is:'
+#Treatments
+  create_new_treatment: 'Create New Treatment'
+  create_treatment: 'Create Treatment'
+  edit_treatment: 'Edit Treatment'
+  treatment_created: 'Treatment created'
+  treatment_updated: 'Treatment updated'
 #Encounter events
   view_encounter_event: 'View Encounter Event: {{date}}'
   encounter_on: 'Encounter on {{date}}'

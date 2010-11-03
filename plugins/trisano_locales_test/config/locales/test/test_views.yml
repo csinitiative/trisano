@@ -38,6 +38,7 @@ test:
   unspecified: 'xUnspecified'
   previous: "xPrevious"
   next: "xNext"
+  manage_treatments: "xManage Treatments"
 
   please_exit: 'xPlease exit'
   assigned_jurisdiction: 'xAssigned Jurisdiction'

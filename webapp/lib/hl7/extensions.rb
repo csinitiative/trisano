@@ -390,6 +390,11 @@ module StagedMessages
       addr_components[4]
     end
 
+    # returns a string for use in the lab notes
+    def address_country
+      addr_components[5] if addr_components
+    end
+
     def telephone_empty?
       components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
     end
@@ -478,8 +483,16 @@ module StagedMessages
     end
 
     def collection_date
-      return nil if obr_segment.observation_date.blank?
-      Date.parse(obr_segment.observation_date).to_s
+      return Date.parse(obr_segment.observation_date).to_s unless
+        obr_segment.observation_date.blank?
+
+      all_tests.each do |obx|
+        return obx.observation_date if obx.observation_date
+      end
+
+      specimen.collection_date if specimen
+
+      Date.parse(obr_segment.requested_date).to_s unless obr_segment.requested_date.blank?
     rescue
       "Could not be determined"
     end
@@ -509,6 +522,16 @@ module StagedMessages
 
     def spm_segment
       specimen.spm_segment if specimen
+    end
+
+    def filler_order_number
+      obr_segment.filler_order_number.split(obr_segment.item_delim).first if obr_segment.filler_order_number
+    rescue
+    end
+
+    def specimen_id
+      spm_segment.specimen_id.split(spm_segment.item_delim).first.split('&').first if spm_segment.specimen_id
+    rescue
     end
 
     private
@@ -546,9 +569,18 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def test_date
+      analysis_date || observation_date
+    end
+
     def observation_date
-      return nil if obx_segment.observation_date.blank?
-      Date.parse(obx_segment.observation_date).to_s
+      Date.parse(obx_segment.observation_date).to_s unless obx_segment.observation_date.blank?
+    rescue
+      "Could not be determined"
+    end
+
+    def analysis_date
+      Date.parse(obx_segment.analysis_date).to_s unless obx_segment.analysis_date.blank?
     rescue
       "Could not be determined"
     end
@@ -557,7 +589,7 @@ module StagedMessages
       value_type = obx_segment.value_type
 
       klass = case value_type
-      when 'CWE'
+      when 'CE', 'CWE', 'SN'
         eval value_type
       else
         Default
@@ -634,6 +666,11 @@ module StagedMessages
       status ? status.id : status
     end
 
+    def abnormal_flags
+      obx_segment.abnormal_flags.split(obx_segment.item_delim).first if obx_segment.abnormal_flags
+    rescue
+    end
+
     private
 
     def loinc_text_segments
@@ -678,10 +715,22 @@ module StagedMessages
       end
     end
 
+    class CE < Default
+      def to_s
+        field.split(delim)[4]
+      end
+    end
+
     # code^text^...
     class CWE < Default
       def to_s
         field.split(delim)[1]
+      end
+    end
+
+    class SN < Default
+      def to_s
+        field.gsub delim, ' '
       end
     end
   end
@@ -698,6 +747,12 @@ module StagedMessages
     # Returns an empty array if none.
     def tests
       @tests ||= spm_segment.collect_children(:OBX)
+    end
+
+    def collection_date
+      Date.parse(spm_segment.specimen_collection_date).to_s if
+        spm_segment and spm_segment.specimen_collection_date
+    rescue
     end
   end
 

@@ -194,7 +194,6 @@ describe HumanEvent, 'parent/guardian field' do
     }
   end
 
-
   it 'should exist' do
     with_human_event do |event|
       event.respond_to?(:parent_guardian).should be_true
@@ -271,6 +270,15 @@ describe HumanEvent, 'adding staged messages' do
         event.labs.first.lab_results.first.result_value.should be_blank
         event.labs.first.lab_results.first.specimen_source.code_description.should =~ /#{staged_message.observation_requests.first.specimen_source}/i
         event.labs.first.lab_results.first.test_status.code_description.should == "Final"
+      end
+    end
+
+    it 'should set comments from PID-11.6, OBR-3, SPM-2 and OBX-8' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
+        event.labs.first.lab_results.first.comment.should == "Country: USA, Accession no: 9700123, Specimen id: 23456, Abnormal flags: H"
+        common_test_type.destroy
       end
     end
   end

@@ -12,19 +12,23 @@
 -#
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-%tr
-  %td
-    =ld(obx_wrapper.test_date)
-  %td
-    =h obx_wrapper.loinc_code
-  %td
-    =h obx_wrapper.test_type
-  %td
-    =h obx_wrapper.result
-  %td
-    =h obx_wrapper.units
-  %td
-    =h obx_wrapper.status
-  %td
-    =h obx_wrapper.reference_range
+
+- content_for :title do
+  =t 'create_treatment'
+
+/- content_for :name do
+
+- content_for :tools do
+  = link_to t('back_to', :name => t('treatments')), treatments_path
+  %p
+
+= error_messages_for :treatment
+
+- form_for(@treatment) do |f|
+
+  = render :partial => 'form', :locals => { :f => f }
+
+  = f.submit t("create")
+%br
+%br
 

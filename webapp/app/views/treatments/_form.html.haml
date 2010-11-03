@@ -12,19 +12,15 @@
 -#
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-%tr
-  %td
-    =ld(obx_wrapper.test_date)
-  %td
-    =h obx_wrapper.loinc_code
-  %td
-    =h obx_wrapper.test_type
-  %td
-    =h obx_wrapper.result
-  %td
-    =h obx_wrapper.units
-  %td
-    =h obx_wrapper.status
-  %td
-    =h obx_wrapper.reference_range
+
+%table.list
+  %tr
+    %th.forminformation
+      =t 'edit_treatment'
+  %tr
+    %td
+      %span.vert-break
+        = f.label(:treatment_name)
+        = f.text_field(:treatment_name, :size => 20, :maxlength => 100)
+      %p
 

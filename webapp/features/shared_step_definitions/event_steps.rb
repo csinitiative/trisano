@@ -92,10 +92,17 @@ Given /^a simple (.+) event in jurisdiction (.+) for the full name of (.+)$/ do 
       { "person_entity_attributes"=>
         { "person_attributes"=>
           { "first_name" => "#{first_name}", "middle_name" => "#{middle_name}", "last_name" => "#{last_name}"}
-        }
       }
+    }
   }
   @event = create_event_with_attributes(event_type, last_name, attrs, nil, jurisdiction)
+end
+
+Given /^(.+) simple (.+) events for last name (.+)$/ do |count, event_type, last_name|
+  count.to_i.times do |count|
+    attrs = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :first_name => count, :last_name => last_name }}}}
+    @event = create_event_with_attributes(event_type, last_name, attrs)
+  end
 end
 
 Given /^the morbidity event has the following contacts:$/ do |contacts|

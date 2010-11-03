@@ -77,11 +77,11 @@ describe Message do
     # PID|1||17744418^^^^MR||LIN^GENYAO^^^^^L||19840810|M||U^Unknown^HL70005|215 UNIVERSITY VLG^^SALT LAKE CITY^UT^84108^^M||^^PH^^^801^5854967|||||||||U^Unknown^HL70189\rORC||||||||||||^ROSENKOETTER^YUKI^K|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B
 
     it 'should return the patient name (formatted)' do
-      @hl7.patient_id.patient_name.should == 'Lin, Genyao'
+      @hl7.patient_id.patient_name.should == 'Zhang, George'
     end
 
     it 'should return the patient birth date' do
-      @hl7.patient_id.birth_date.should == Date.parse("19840810")
+      @hl7.patient_id.birth_date.should == Date.parse("19830922")
     end
 
     it 'should return the patient sex ID' do
@@ -102,7 +102,7 @@ describe Message do
     end
 
     it 'should return the street number' do
-      @hl7.patient_id.address_street_no.should == '215'
+      @hl7.patient_id.address_street_no.should == '42'
     end
 
     it 'should return the unit no' do
@@ -110,7 +110,7 @@ describe Message do
     end
 
     it 'should return the street name' do
-      @hl7.patient_id.address_street.should == "University Vlg"
+      @hl7.patient_id.address_street.should == "Happy Ln"
     end
 
     it 'should return the city' do
@@ -122,7 +122,11 @@ describe Message do
     end
 
     it 'should return the zip code' do
-      @hl7.patient_id.address_zip.should == "84108"
+      @hl7.patient_id.address_zip.should == "84444"
+    end
+
+    it 'should return the country if present' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).patient_id.address_country.should == "USA"
     end
 
     it "should have a non-empty telephone" do
@@ -137,7 +141,7 @@ describe Message do
     it "should return the phone number components" do
       a, n, e = @hl7.patient_id.telephone_home
       a.should == "801"
-      n.should == "5854967"
+      n.should == "5552346"
       e.should be_blank
     end
 
@@ -145,7 +149,7 @@ describe Message do
       hl7 = HL7::Message.parse(hl7_messages[:ihc_1])
       a, n, e = hl7.patient_id.telephone_home
       a.should == "801"
-      n.should == "7317292"
+      n.should == "5554412"
       e.should be_blank
     end
 
@@ -224,6 +228,39 @@ describe Message do
       @hl7.observation_requests.first.tests.should_not be_nil
     end
 
+    it 'should return the filler_order_number (accession number)' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.filler_order_number.should == "9700123"
+    end
+
+    it 'should return the specimen ID (when SPM present)' do
+      HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.specimen_id.should == "23456"
+    end
+
+    it 'should return the OBR observation date (as collection date) if present' do
+      # this message has an OBR-7
+      HL7::Message.parse(HL7MESSAGES[:nist_obr_observation_date]).observation_requests.first.collection_date.should == Date.parse('201007281400').to_s
+    end
+
+    it 'should return the OBX observation date (as collection date) if appropriate' do
+      # this message has no OBR-7 but an OBX-14
+      HL7::Message.parse(HL7MESSAGES[:nist_obx_observation_date]).observation_requests.first.collection_date.should == Date.parse('201007281400').to_s
+    end
+
+    it 'should return the SPM collection date if appropriate' do
+      # this message has no OBR-7 or OBX-14 but an SPM-17
+      HL7::Message.parse(HL7MESSAGES[:nist_spm_collection_date]).observation_requests.first.collection_date.should == Date.parse('201007281359').to_s
+    end
+
+    it 'should return the OBR requested date if present' do
+      # this message has no OBR-7, OBX-14 or SPM-17 field but has an OBX-6
+      HL7::Message.parse(HL7MESSAGES[:nist_obr_requested_date]).observation_requests.first.collection_date.should == Date.parse('201007281358').to_s
+    end
+
+    it 'should return nil for observation date if no OBR-7, OBX-14, SPM-17 or OBX-6 present' do
+      # this message has no OBR-7, OBX-14, SPM-17 or OBR-6
+      HL7::Message.parse(HL7MESSAGES[:nist_no_collection_date]).observation_requests.first.collection_date.should be_nil
+    end
+
     describe 'specimen segment' do
       before :all do
         # This is an OBR segment that should have an SPM segment.
@@ -281,6 +318,10 @@ describe Message do
           HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first.all_tests.first
         @realm_ar_test =
           HL7::Message.parse(HL7MESSAGES[:realm_animal_rabies]).observation_requests.first.all_tests.first
+        @realm_hc_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_hepatitis_c_virus]).observation_requests.first.all_tests.find { |obx| obx.obx_segment.value_type == "SN" }
+        @realm_ce_test =
+          HL7::Message.parse(HL7MESSAGES[:realm_cj_ce]).observation_requests.first.all_tests.first
       end
 
       it 'should take :loinc_scale from CWE.2 if present' do
@@ -308,8 +349,28 @@ describe Message do
         @realm_ar_test.result.should == 'Detected'
       end
 
+      it 'should parse an SN result properly' do
+        @realm_hc_test.result.should == '> 11.0'
+      end
+
+      it 'should parse a CE result properly' do
+        @realm_ce_test.result.should == 'Uncultured'
+      end
+
       it 'should parse a Default result properly' do
         @realm_min_test.result.should == '50'
+      end
+
+      it 'should return the abnormal flags if set' do
+        HL7::Message.parse(HL7MESSAGES[:realm_cj_abnormal_flags]).observation_requests.first.all_tests.first.abnormal_flags.should == "H"
+      end
+
+      it 'should return OBX-19 for analysis_date if present' do
+        HL7::Message.parse(HL7MESSAGES[:nist_sample_5]).observation_requests.first.all_tests.first.analysis_date.should == '2010-07-30'
+      end
+
+      it 'should return OBX-14 for analysis_date if no OBX-19 present' do
+        HL7::Message.parse(HL7MESSAGES[:arup_1]).observation_requests.first.all_tests.first.analysis_date.should be_nil
       end
     end
   end
