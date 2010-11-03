@@ -23,9 +23,9 @@
       %th=t('activerecord.attributes.participations_treatment.treatment_date')
       %th=t('activerecord.attributes.participations_treatment.stop_treatment_date')
 
-    - for treatment in event.interested_party.treatments
+    - for participations_treatment in event.interested_party.treatments
       %tr
-        %td= h(l(treatment.treatment_given_yn))
-        %td= h(treatment.treatment_name)
-        %td= ld(treatment.treatment_date)
-        %td= ld(treatment.stop_treatment_date)
+        %td= h(l(participations_treatment.treatment_given_yn))
+        %td= h(participations_treatment.try(:treatment).try(:treatment_name))
+        %td= ld(participations_treatment.treatment_date)
+        %td= ld(participations_treatment.stop_treatment_date)
