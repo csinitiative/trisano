@@ -20,6 +20,8 @@ class Treatment < ActiveRecord::Base
   
   validates_presence_of :treatment_name
 
+  named_scope :active, :conditions => ["active = ?", true]
+
   class << self
 
     def all_by_type(type_code)

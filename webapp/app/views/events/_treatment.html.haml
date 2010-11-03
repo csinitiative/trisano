@@ -20,8 +20,9 @@
       = f.label :treatment_given_yn_id
       = f.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
 
-    - core_element :treatment_name, f, :horiz do
-      = trisano_auto_complete(f, :treatment_name, nil, {:size => 50, :maxlength => 255}, {:url => {:controller => "events", :action => "auto_complete_for_treatment"}, :param_name => 'treatment' })
+    - core_element :treatment_id, f, :horiz do
+      = f.label :treatment_name
+      = f.core_dropdown_field(:treatment_id, Treatment.active(:order => 'treatment_name ASC'), :id, :treatment_name)
 
     - core_element :treatment_date, f, :horiz do
       = f.label :treatment_date

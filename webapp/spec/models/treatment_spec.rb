@@ -20,20 +20,22 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Treatment do
 
   describe "returning treatments" do
-    before(:each) do
-      @treatment_type_one = Factory.create(:treatment_type, :the_code => "TT1", :code_description => "Treatment Type 1")
-      @treatment_type_two = Factory.create(:treatment_type, :the_code => "TT2", :code_description => "Treatment Type 2")
-      @treatment_type_three = Factory.create(:treatment_type, :the_code => "TT3", :code_description => "Treatment Type 2")
-
-      @treatment_type_one_first = Factory.create(:treatment, :treatment_type => @treatment_type_one)
-      @treatment_type_one_second = Factory.create(:treatment, :treatment_type => @treatment_type_one)
-      @treatment_type_one_third = Factory.create(:treatment, :treatment_type => @treatment_type_one)
-
-      @treatment_type_two_first = Factory.create(:treatment, :treatment_type => @treatment_type_two)
-      @treatment_type_two_second = Factory.create(:treatment, :treatment_type => @treatment_type_two)
-    end
 
     describe "by type" do
+
+      before(:each) do
+        @treatment_type_one = Factory.create(:treatment_type, :the_code => "TT1", :code_description => "Treatment Type 1")
+        @treatment_type_two = Factory.create(:treatment_type, :the_code => "TT2", :code_description => "Treatment Type 2")
+        @treatment_type_three = Factory.create(:treatment_type, :the_code => "TT3", :code_description => "Treatment Type 2")
+
+        @treatment_type_one_first = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+        @treatment_type_one_second = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+        @treatment_type_one_third = Factory.create(:treatment, :treatment_type => @treatment_type_one)
+
+        @treatment_type_two_first = Factory.create(:treatment, :treatment_type => @treatment_type_two)
+        @treatment_type_two_second = Factory.create(:treatment, :treatment_type => @treatment_type_two)
+      end
+
       it "should raise an error if not passed a code" do
         lambda { Treatment.all_by_type("TT1") }.should raise_error(ArgumentError)
       end
@@ -42,6 +44,20 @@ describe Treatment do
         Treatment.all_by_type(@treatment_type_one).size.should == 3
         Treatment.all_by_type(@treatment_type_two).size.should == 2
         Treatment.all_by_type(@treatment_type_three).size.should == 0
+      end
+    end
+
+    describe "by active treatments" do
+      before(:each) do
+        @active_treatment_one = Factory.create(:treatment, :active => true)
+        @active_treatment_two = Factory.create(:treatment, :active => true)
+        @inactive_treatment = Factory.create(:treatment, :active => false)
+      end
+
+      it "should return only active treatments" do
+        Treatment.active.each do |treatment|
+          treatment.active.should be_true
+        end
       end
     end
     
