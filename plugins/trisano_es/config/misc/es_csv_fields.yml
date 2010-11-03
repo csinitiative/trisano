@@ -485,7 +485,7 @@ csv_field_00085:
   sort_order: 20
   export_group: treatment
   long_name: tratamiento
-  use_description: try(:treatment_name)
+  use_description: try(:treatment).try(:treatment_name)
   short_name: 
   use_code: 
   event_type:
