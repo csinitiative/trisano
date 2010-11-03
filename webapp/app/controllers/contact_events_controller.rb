@@ -46,17 +46,18 @@ class ContactEventsController < EventsController
 
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
-
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
         flash[:notice] = t("contact_event_successfully_updated")
-        format.html {
+        format.html do
           if go_back
             redirect_to edit_contact_event_url(@event, @query_params)
           else
-            redirect_to contact_event_url(@event, @query_params)
+            url = params[:redirect_to]
+            url = contact_event_url(@event, @query_params) if url.blank?
+            redirect_to url
           end
-        }
+        end
         format.xml  { head :ok }
         format.js   { render :inline => t("contact_saved"), :status => :created }
       else

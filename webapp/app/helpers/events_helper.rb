@@ -760,9 +760,13 @@ module EventsHelper
   end
 
   def edit_event_path(event)
-    url_for(:controller => controller_name_from_event(event),
-            :id => event.id,
-            :action => :edit)
+    url_options = @query_params || {}
+    url_options.merge!({
+      :controller => controller_name_from_event(event),
+      :id => event.id,
+      :action => :edit
+    })
+    url_for(url_options)
   end
 
   def controller_name_from_event(model)
@@ -1423,8 +1427,9 @@ module EventsHelper
   def alert_if_changed(form)
     javascript_tag do
       <<-JS
+        var formWatcher;
         $j(function() {
-          var formWatcher = new FormWatch('#{get_form_id(form)}');
+          formWatcher = new FormWatch('#{get_form_id(form)}');
         });
       JS
     end

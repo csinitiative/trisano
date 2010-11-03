@@ -117,7 +117,6 @@ class MorbidityEventsController < EventsController
     # Eager load answers that already exist so questions won't need to be retrieved 1-by-1
     # during validation on answers on the save
     @event.eager_load_answers
-
     respond_to do |format|
       if @event.save
         # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
@@ -129,7 +128,9 @@ class MorbidityEventsController < EventsController
           if go_back
             redirect_to edit_cmr_url(@event, @query_params)
           else
-            redirect_to cmr_url(@event, @query_params)
+            url = params[:redirect_to]
+            url = cmr_url(@event, @query_params) if url.blank?
+            redirect_to url
           end
         }
         format.xml  { head :ok }

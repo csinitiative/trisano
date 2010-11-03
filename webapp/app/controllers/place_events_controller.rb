@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class PlaceEventsController < EventsController
@@ -49,13 +49,15 @@ class PlaceEventsController < EventsController
       @event.validate_against_bday = true
       if @event.update_attributes(params[:place_event])
         flash[:notice] = t("place_event_updated")
-        format.html {
+        format.html do
           if go_back
-            render :action => "edit"
+            redirect_to edit_place_event_url(@event)
           else
-            redirect_to place_event_url(@event, @query_params)
+            url = params[:redirect_to]
+            url = place_event_url(@event, @query_params) if url.blank?
+            redirect_to url
           end
-        }
+        end
         format.xml  { head :ok }
         format.js   { render :inline => t("place_event_saved"), :status => :created }
       else

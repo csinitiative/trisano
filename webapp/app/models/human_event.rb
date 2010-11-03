@@ -595,39 +595,6 @@ class HumanEvent < Event
 
   end
 
-  def contacts_quick_list(reload=false)
-    if reload or @contacts_quick_list.nil?
-      @contacts_quick_list = self.class.find_by_sql([<<-SQL, self.id])
-        SELECT a.id,
-               a.workflow_state,
-               a.type,
-               TRIM(
-                 COALESCE(d.first_name, '')
-                 || ' '
-                 || COALESCE(d.last_name, '')
-               ) as full_name
-          FROM events a
-          JOIN participations b ON b.event_id = a.id AND b.type = 'InterestedParty'
-          JOIN entities c ON c.id = b.primary_entity_id AND c.deleted_at IS NULL
-          JOIN people d ON d.entity_id = c.id
-         WHERE a.parent_id = ?
-           AND a.type IN ('MorbidityEvent', 'ContactEvent')
-           AND a.deleted_at IS NULL
-      SQL
-    else
-      @contacts_quick_list
-    end
-  end
-
-  def contact_siblings_quick_list(reload=false)
-    return [] if parent_event.nil?
-    if reload or @contact_siblings.nil?
-      @contact_siblings = parent_event.contacts_quick_list.reject { |contact| contact == self }
-    else
-      @contact_siblings
-    end
-  end
-
   private
 
   def set_age_at_onset

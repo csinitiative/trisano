@@ -467,3 +467,37 @@ describe MorbidityEventsController do
   end
 
 end
+
+describe MorbidityEventsController, "cmrs/1/update with redirect_to option" do
+  before do
+    @parent_event = Factory.create(:morbidity_event)
+    @promoted_event = Factory.create(:contact_event, :parent_event => @parent_event)
+    login_as_super_user
+    @promoted_event.promote_to_morbidity_event
+  end
+
+  it "redirects to specified url if 'Save & Exit' clicked" do
+    put(:update, {
+          :id => @promoted_event.id,
+          :redirect_to => '/sample/url',
+          :morbidity_event => {
+            :first_reported_PH_date => Date.yesterday
+          }
+        },
+        :user_id => @current_user.uid)
+    response.should redirect_to('/sample/url')
+  end
+
+  it "does not redirect if 'Save & Continue' clicked" do
+    put(:update, {
+          :id => @promoted_event.id,
+          :redirect_to => '/sample/url',
+          :return => 1,
+          :morbidity_event => {
+            :first_reported_PH_date => Date.yesterday
+          }
+        },
+        :user_id => @current_user.uid)
+    response.should redirect_to(edit_cmr_url(@promoted_event))
+  end
+end
