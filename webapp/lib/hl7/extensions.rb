@@ -476,7 +476,7 @@ module StagedMessages
           ExternalCode.find(
             :first,
             :select => 'id',
-            :conditions => ['code_name = ? AND code_description ILIKE ?', 'specimen', self]
+            :conditions => ["code_name = 'specimen' AND code_description ILIKE ?", self]
           ).try(:id)
         end
       end
@@ -571,6 +571,10 @@ module StagedMessages
 
     def test_date
       analysis_date || observation_date
+    end
+
+    def test_performed
+      obx_segment.observation_sub_id.split(obx_segment.item_delim)[0]
     end
 
     def observation_date
