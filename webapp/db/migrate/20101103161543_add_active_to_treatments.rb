@@ -15,20 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class CreateMessageBatches < ActiveRecord::Migration
+class AddActiveToTreatments < ActiveRecord::Migration
   def self.up
-    create_table :message_batches do |t|
-      t.references :staged_messages
-
-      t.timestamps
-    end
-
-    add_column :staged_messages, :message_batch_id, :integer
+    add_column :treatments, :active, :boolean, :null => false, :default => true
+    add_index :treatments, :active
   end
 
   def self.down
-    remove_column :staged_messages, :message_batch_id
-
-    drop_table :message_batches
+    remove_index :treatments, :active
+    remove_column :treatments, :active
   end
 end

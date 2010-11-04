@@ -27,5 +27,4 @@ class ParticipationsTreatment < ActiveRecord::Base
                                        :on_or_before => lambda { Date.today },
                                        :on_or_after => :treatment_date
 
-  validates_length_of :treatment_name, :maximum => 255, :allow_blank => true
 end

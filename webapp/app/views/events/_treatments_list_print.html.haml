@@ -31,7 +31,7 @@
         .short
           %span.print-value= h(l(treatment.treatment_given_yn))
         .short
-          %span.print-value= h(treatment.treatment_name)
+          %span.print-value= h(treatment.try(:treatment).try(:treatment_name))
         .short
           %span.print-value= ld(treatment.treatment_date)
         .right

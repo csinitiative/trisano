@@ -29,14 +29,6 @@ When /^I answer all core field config questions$/ do
   end
 end
 
-When /^I save the event$/i do
-  if @contact_event
-    submit_form "edit_contact_event_#{@contact_event.id}"
-  else
-    submit_form "edit_morbidity_event_#{@event.id}"
-  end
-end
-
 Then /^I should see all core field config answers$/ do
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     response.should contain("#{core_field.key} before answer")

@@ -319,10 +319,10 @@ module CsvSpecHelper
   def treatment_output
     out = ""
     out << '"",' # treatment.id
-    out << "#{@treatment.treatment_given_yn.code_description},"
-    out << "#{@treatment.treatment_name},"
-    out << "#{@treatment.treatment_date},"
-    out << "#{@treatment.stop_treatment_date}"
+    out << "#{@participations_treatment.treatment_given_yn.code_description},"
+    out << "#{@participations_treatment.try(:treatment).try(:treatment_name)},"
+    out << "#{@participations_treatment.treatment_date},"
+    out << "#{@participations_treatment.stop_treatment_date}"
   end
 
   def csv_mock_event(event_type)
@@ -345,11 +345,13 @@ module CsvSpecHelper
     entity.stubs(:person).returns(@person)
     entity.stubs(:races).returns([])
 
-    @treatment = Factory.build(:participations_treatment)
-    @treatment.stubs(:treatment_given_yn).returns(simple_reference)
+    @treatment = Factory.build(:treatment, :treatment_name => "Antibiotics")
+    @participations_treatment = Factory.build(:participations_treatment)
+    @participations_treatment.stubs(:treatment_given_yn).returns(simple_reference)
+    @participations_treatment.stubs(:treatment).returns(@treatment)
     @treatment.stubs(:treatment_name).returns("Antibiotics")
-    @treatment.stubs(:treatment_date).returns("2008-02-01")
-    @treatment.stubs(:stop_treatment_date).returns("2009-02-01")
+    @participations_treatment.stubs(:treatment_date).returns("2008-02-01")
+    @participations_treatment.stubs(:stop_treatment_date).returns("2009-02-01")
 
     @contact = Factory.build(:participations_contact)
     @contact.stubs(:contact_type).returns(simple_reference)
@@ -358,7 +360,7 @@ module CsvSpecHelper
 
     patient = Factory.build(:interested_party)
     patient.stubs(:person_entity).returns(entity)
-    patient.stubs(:treatments).returns([@treatment])
+    patient.stubs(:treatments).returns([@participations_treatment])
     patient.stubs(:risk_factor).returns(nil)
 
     @disease = Factory.build(:disease_event)

@@ -8,6 +8,9 @@ Feature: Web API Cmrs Client
     Given the following active diseases:
       | Disease name |
       | AIDS         |
+    And the following treatments exist
+    | treatment_name |
+    | Rubbings       |
     When I visit the cmrs new page
 
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "David"
@@ -45,7 +48,7 @@ Feature: Web API Cmrs Client
     And I select "Yes" from "morbidity_event[interested_party_attributes][risk_factor_attributes][pregnant_id]"
     And I set the pregnancy due date to some future date
     And I select "Yes" from "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_given_yn_id]"
-    And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_name]" with "MyTreatment"
+    And I select "Rubbings" from "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
     And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_date]" with "1-6-2000"
     And I fill out the form field "morbidity_event[interested_party_attributes][treatments_attributes][0][stop_treatment_date]" with "1-7-2000"
     And I fill out the form field "morbidity_event[clinicians_attributes][0][person_entity_attributes][person_attributes][first_name]" with "Sam"

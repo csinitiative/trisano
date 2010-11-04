@@ -507,7 +507,7 @@ class HumanEvent < Event
     end
 
     staged_message.observation_requests.each do |obr|
-      per_request_comments = per_message_comments
+      per_request_comments = per_message_comments.clone
 
       unless obr.filler_order_number.blank?
         per_request_comments += ", " unless per_request_comments.blank?
@@ -541,7 +541,7 @@ class HumanEvent < Event
 
         raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
 
-        comments = per_request_comments
+        comments = per_request_comments.clone
 
         unless obx.abnormal_flags.blank?
           comments += ", " unless comments.blank?

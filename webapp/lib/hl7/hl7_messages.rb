@@ -46,7 +46,6 @@ IHC1
 
 HL7MESSAGES[:no_msh] = <<NOMSH
 PID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42 HAPPY LN^^SALT LAKE CITY^UT^84444^^M||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|X|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive||Negative||||F|||200903210007\r
-ARUP1
 NOMSH
 
 HL7MESSAGES[:no_pid] = <<NOPID

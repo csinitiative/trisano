@@ -22,5 +22,8 @@
       %span.vert-break
         = f.label(:treatment_name)
         = f.text_field(:treatment_name, :size => 20, :maxlength => 100)
+        %label{:for => 'active', :style => 'display: inline'}
+          = f.check_box(:active)
+          =t('active?')
       %p
 
