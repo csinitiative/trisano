@@ -21,7 +21,8 @@ gem "validates_timeliness", ">= 2.2.2"
 gem "mislav-will_paginate"
 gem "rubyzip"
 
-gem "ruby-hl7", :git => "git@github.com:ruby-hl7/ruby-hl7.git"
+# gem "ruby-hl7", :git => "git@github.com:ruby-hl7/ruby-hl7.git"
+gem "ruby-hl7", :git => "http://github.com/ruby-hl7/ruby-hl7.git"
 
 group :development do
   gem "mechanize"

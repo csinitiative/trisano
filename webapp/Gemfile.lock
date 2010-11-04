@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:ruby-hl7/ruby-hl7.git
+  remote: http://github.com/ruby-hl7/ruby-hl7.git
   revision: 321cd3272d49ebff9f0bd91a1f55e83226cdcd06
   specs:
     ruby-hl7 (0.4.0)
