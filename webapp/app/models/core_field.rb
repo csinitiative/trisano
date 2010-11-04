@@ -18,7 +18,7 @@
 class CoreField < ActiveRecord::Base
   include I18nCoreField
 
-  acts_as_nested_set :scope => :tree_id if table_exists?
+  acts_as_nested_set :scope => :tree_id if table_exists? && column_names.include?('tree_id')
 
   belongs_to :code_name
   has_many :core_fields_diseases, :dependent => :destroy, :autosave => true
@@ -60,22 +60,14 @@ class CoreField < ActiveRecord::Base
 
     def load!(hashes)
       transaction do
-        hashes.each do |attrs|
-          attrs.stringify_keys!
-          unless self.find_by_key(attrs['key'])
-            if (code_name = attrs.delete('code_name'))
-              attrs['code_name'] = CodeName.find_by_code_name(code_name)
+        hashes.each do |attributes|
+          attributes.stringify_keys!
+          unless self.find_by_key(attributes['key'])
+            if (code_name = attributes.delete('code_name'))
+              attributes['code_name'] = CodeName.find_by_code_name(code_name)
             end
-            if parent_key = attrs.delete('parent_key')
-              parent = CoreField.find_by_key(parent_key)
-              logger.fatal "Couldn't find parent key '#{parent_key}' for #{attrs.inspect}" unless parent
-              attrs['tree_id'] = parent.tree_id
-            else
-              attrs['tree_id'] ||= CoreField.next_tree_id
-            end
-            core_field = CoreField.create!(attrs)
-            if parent
-              parent.add_child core_field
+            place_in_tree(attributes) do |attributes|
+              CoreField.create!(attributes)
             end
           end
         end
@@ -103,8 +95,29 @@ class CoreField < ActiveRecord::Base
       super
     end
 
+    def nested_fields_supported?
+      column_names.include? 'tree_id'
+    end
 
     private
+
+    def place_in_tree(attributes, &block)
+      if nested_fields_supported?
+        parent = find_parent(attributes)
+        attributes['tree_id'] = parent ? parent.tree_id : next_tree_id
+        core_field = block[attributes]
+        parent.add_child(core_field) if parent
+        core_field
+      else
+        attributes.delete('parent_key')
+        block[attributes]
+      end
+    end
+
+    def find_parent(attributes)
+      parent_key = attributes.delete('parent_key')
+      CoreField.find_by_key(parent_key) if parent_key
+    end
 
     def event_fields_hash
       @event_fields_hash ||= {}
@@ -113,6 +126,7 @@ class CoreField < ActiveRecord::Base
     def tabs_cache
       @tabs_cache ||= {}
     end
+
   end
 
   def validate
@@ -128,13 +142,17 @@ class CoreField < ActiveRecord::Base
   end
 
   def required_for_event?
-    if container?
+    if self.class.nested_fields_supported? && container?
       full_set.any? do |field_or_section|
         field_or_section.read_attribute :required_for_event
       end
     else
       read_attribute :required_for_event
     end
+  end
+
+  def required_for_section?
+    read_attribute :required_for_section
   end
 
   def disease_associations_render?
