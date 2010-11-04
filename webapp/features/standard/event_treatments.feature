@@ -4,12 +4,12 @@ Feature: Event treatment fields
     Given I am logged in as a super user
 
   Scenario: Viewing treatment names associated with a morbidity event
-    Given a simple morbidity event for last name "Smoker"
+    Given a morbidity event exists with the disease African Tick Bite Fever
       And the morbidity event has the following treatments:
         | treatment_name |
-        | rubbings     |
-        | leaches     |
-        | bleeding     |
+        | rubbings       |
+        | leaches        |
+        | bleeding       |
     When I navigate to the event show page
     Then I should see "rubbings"
       And I should see "leaches"
@@ -17,15 +17,30 @@ Feature: Event treatment fields
 
   Scenario: Viewing treatment names associated with a contact event
     Given a simple morbidity event for last name "Smoker"
-      And the morbidity event has the following contacts:
+      And the morbidity event has the following contacts:  
         | last_name | first_name |
         | Davis     | James      |
-      And the following treatments exist
-        | treatment_name | active |
-        | Rubbings       | true   |
-        | Foot massage   | true   |
-        | Leeches        | true   |
-        | Garlic         | false  |
-    When I navigate to the contact event show page
-    Then I should see "Leeches"
-      And I should not see "Garlic"
+      And the contact event has the following treatments:  
+        | treatment_name |
+        | rubbings       |
+        | leaches        |
+        | bleeding       |
+    When I am on the event edit page
+      And I follow "Show Contact"
+    Then I should see "rubbings"
+      And I should see "leaches"
+      And I should see "bleeding"
+
+  Scenario: Viewing treatment names associated with an encounter event
+    Given a morbidity event exists with the disease African Tick Bite Fever
+      And there is an associated encounter event
+      And the encounter event has the following treatments:
+        | treatment_name |
+        | rubbings       |
+        | leaches        |
+        | bleeding       |
+    When I am on the event edit page
+      And I follow "Show Encounter"
+    Then I should see "rubbings"
+      And I should see "leaches"
+      And I should see "bleeding"

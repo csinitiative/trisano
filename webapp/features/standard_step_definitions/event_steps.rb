@@ -193,6 +193,10 @@ Then /^the Contact event should look deleted$/ do
   response.should have_xpath("//div[@class='patientname-inactive']")
 end
 
+Then /^the Contact event should not look deleted$/ do
+  response.should_not have_xpath("//div[@class='patientname-inactive']")
+end
+
 Then /^the Place event should look deleted$/ do
   response.should have_xpath("//div[@class='placename-inactive']")
 end
@@ -279,3 +283,10 @@ Then /^I should see the mortality data in the right place$/ do
     end
   end
 end
+
+# Local Variables:
+# mode: ruby
+# tab-width: 2
+# ruby-indent-level: 2
+# indent-tabs-mode: nil
+# End:

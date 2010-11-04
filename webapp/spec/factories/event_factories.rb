@@ -413,3 +413,10 @@ def disease!(disease_name)
   end
   disease
 end
+
+# Local Variables:
+# mode: ruby
+# tab-width: 2
+# ruby-indent-level: 2
+# indent-tabs-mode: nil
+# End:
