@@ -20,7 +20,7 @@ Feature: Event treatment fields
       And the morbidity event has the following contacts:  
         | last_name | first_name |
         | Davis     | James      |
-      And the contact event has the following treatments:  
+      And the contact event has the following treatments:
         | treatment_name |
         | rubbings       |
         | leaches        |

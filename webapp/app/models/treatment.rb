@@ -46,6 +46,26 @@ class Treatment < ActiveRecord::Base
         end
       end
     end
+
+    def treatments_for_event(event)
+      treatments = self.active
+      event_treatments = event.try(:interested_party).try(:treatments)
+
+      unless event_treatments.nil?
+        added_inactive_treatment = false
+        
+        event_treatments.each do |pt|
+          if pt.try(:treatment).try(:id) && !pt.try(:treatment).try(:active?)
+            treatments << pt.treatment
+            added_inactive_treatment = true
+          end
+        end
+
+        treatments = treatments.sort_by { |treatment| treatment.treatment_name }.uniq if added_inactive_treatment
+      end
+
+      treatments
+    end
   end
 
 end

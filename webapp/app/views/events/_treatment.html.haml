@@ -22,7 +22,7 @@
 
     - core_element :treatment_id, f, :horiz do
       = f.label :treatment_name
-      = f.core_dropdown_field(:treatment_id, Treatment.active(:order => 'treatment_name ASC'), :id, :treatment_name)
+      = f.core_dropdown_field(:treatment_id, Treatment.treatments_for_event(@event), :id, :treatment_name)
 
     - core_element :treatment_date, f, :horiz do
       = f.label :treatment_date
