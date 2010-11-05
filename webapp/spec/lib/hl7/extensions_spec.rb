@@ -261,6 +261,21 @@ describe Message do
       HL7::Message.parse(HL7MESSAGES[:nist_no_collection_date]).observation_requests.first.collection_date.should be_nil
     end
 
+    it 'should return OBR-16 for the clinician name if present' do
+      obr = HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first
+      obr.clinician_first_name.should == 'Alan'
+      obr.clinician_last_name.should == 'Admit'
+    end
+
+    it 'should return OBR-17 for the clinician telephone if present' do
+      obr = HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).observation_requests.first
+      obr.clinician_phone_type.should == external_codes(:telephonelocationtype_work)
+      a, n, e = obr.clinician_telephone
+      a.should == '555'
+      n.should == '5551005'
+      e.should be_blank
+    end
+
     describe 'specimen segment' do
       before :all do
         # This is an OBR segment that should have an SPM segment.

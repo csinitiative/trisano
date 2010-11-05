@@ -539,7 +539,53 @@ module StagedMessages
     rescue
     end
 
+    def clinician_first_name
+      clinician_name_components.third
+    rescue
+    end
+
+    def clinician_last_name
+      clinician_name_components.second
+    rescue
+    end
+
+    def clinician_phone_type
+      ExternalCode.find_by_code_name_and_the_code 'telephonelocationtype',
+        case clinician_phone_components.third
+        when 'PH'
+          'WT'
+        when 'CP'
+          'MT'
+        when 'BP'
+          'PAGE'
+        else
+          'UNK'
+        end
+    rescue
+    end
+
+    def clinician_telephone
+      area_code = number = extension = nil
+      unless clinician_phone_components[0].blank?
+        area_code, number, extension = Utilities.parse_phone(clinician_phone_components[0])
+      else
+        area_code = clinician_phone_components[5]
+        number = clinician_phone_components[6]
+        extension = clinician_phone_components[7]
+      end
+      return area_code, number, extension
+    rescue
+    end
+
     private
+
+    def clinician_name_components
+      obr_segment.ordering_provider.split(obr_segment.item_delim)
+    end
+
+    def clinician_phone_components
+      obr_segment.order_callback_phone_number.split(obr_segment.item_delim)
+    end
 
     # Take the specimen source from SPM-4
     # Returns +nil+ if no SPM segment.

@@ -281,6 +281,28 @@ describe HumanEvent, 'adding staged messages' do
         common_test_type.destroy
       end
     end
+
+    it 'should set clinician info when present' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
+        event.clinicians.size.should == 1
+
+        clinician = event.clinicians.first
+        clinician.person_entity.person.first_name.should == 'Alan'
+        clinician.person_entity.person.last_name.should == 'Admit'
+        clinician.person_entity.telephones.size.should == 1
+
+        telephone = clinician.person_entity.telephones.first
+        telephone.entity_location_type.should ==
+          external_codes(:telephonelocationtype_work)
+        telephone.area_code.should == '555'
+        telephone.phone_number.should == '5551005'
+        telephone.extension.should be_blank
+
+        common_test_type.destroy
+      end
+    end
   end
 
   describe "setting disease" do

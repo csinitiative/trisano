@@ -507,6 +507,24 @@ class HumanEvent < Event
     end
 
     staged_message.observation_requests.each do |obr|
+      unless obr.clinician_last_name.blank?
+        clinician = clinicians.build(:person_entity_attributes => {
+          :person_attributes => {
+            :last_name => obr.clinician_last_name,
+            :first_name => obr.clinician_first_name,
+            :person_type => 'clinician'
+          }
+        })
+        unless obr.clinician_telephone.blank?
+          area_code, number, extension = obr.clinician_telephone
+          clinician.person_entity.telephones.build(
+            :entity_location_type => obr.clinician_phone_type,
+            :area_code => area_code,
+            :phone_number => number,
+            :extension => extension)
+        end
+      end
+
       per_request_comments = per_message_comments.clone
 
       unless obr.filler_order_number.blank?
