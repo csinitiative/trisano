@@ -15,18 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class AddRequiredFieldsToCoreFields < ActiveRecord::Migration
+class WidenTreatmentNameOnTreatments < ActiveRecord::Migration
   def self.up
-    # using SQL because AR=JDBC can't seem to get this right
-    transaction do
-      execute "ALTER TABLE core_fields ADD COLUMN required_for_event boolean;"
-      execute "ALTER TABLE core_fields ALTER COLUMN required_for_event SET DEFAULT false;"
-      execute "UPDATE core_fields SET required_for_event = false;"
-      execute "ALTER TABLE core_fields ALTER COLUMN required_for_event SET NOT NULL;"
-    end
+    change_column :treatments, :treatment_name, :string, :null => false, :limit => 255
   end
 
   def self.down
-    remove_column :core_fields, :required_for_event
+    change_column :treatments, :treatment_name, :string, :null => false, :limit => 100
   end
 end

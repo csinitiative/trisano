@@ -372,6 +372,17 @@ describe Message do
       it 'should return OBX-14 for analysis_date if no OBX-19 present' do
         HL7::Message.parse(HL7MESSAGES[:arup_1]).observation_requests.first.all_tests.first.analysis_date.should be_nil
       end
+
+      it 'should return OBR-25 for status if present' do
+        @realm_cj_test.trisano_status_id.should == external_codes(:test_status_final).id
+        @realm_cj_test.status.should == 'P'
+      end
+
+      it 'should return OBX-11 for status when OBR-25 not present' do
+        test = HL7::Message.parse(HL7MESSAGES[:realm_cj_no_obr_25]).observation_requests.first.all_tests.first
+        test.trisano_status_id.should == external_codes(:test_status_prelim).id
+        test.status.should == 'P'
+      end
     end
   end
 

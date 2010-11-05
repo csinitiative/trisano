@@ -372,4 +372,9 @@ module ApplicationHelper
     block.call if block_given?
     concat "</div>" unless errors.empty?
   end
+
+  def wrap_if(expr, tag, &block)
+    value = block.call
+    (expr) ? "<#{tag}>#{value}</#{tag}>" : value
+  end
 end

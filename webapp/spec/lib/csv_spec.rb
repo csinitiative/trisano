@@ -305,9 +305,10 @@ describe Export::Csv do
           :discharge_date => Date.today - 11,
           :medical_record_number => "12345-3"
         )
-        
-        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
-        @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
+
+
+        @treatment_one = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Foot massage"))
+        @treatment_two = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Some pills"))
 
         output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments hospitalization_facilities)))
         output.size.should == 4
@@ -323,9 +324,9 @@ describe Export::Csv do
       end
       
       it "should render properly when there are more treatments than hospitals" do
-        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
-        @treatment_two = add_treatment_to_event(@event, :treatment_name => "Some pills")
-        @treatment_three = add_treatment_to_event(@event, :treatment_name => "Lots of love")
+        @treatment_one = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Foot massage"))
+        @treatment_two = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Some pills"))
+        @treatment_three = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Lots of love"))
         
         output = to_arry(Export::Csv.export(@event, :export_options => %w(treatments hospitalization_facilities)))
         output.size.should == 4
@@ -341,7 +342,7 @@ describe Export::Csv do
       end
 
       it "should not render treatments if that option is not passed to the export" do
-        @treatment_one = add_treatment_to_event(@event, :treatment_name => "Foot massage")
+        @treatment_one = add_treatment_to_event(@event, :treatment => Factory.create(:treatment, :treatment_name => "Foot massage"))
         output = to_arry(Export::Csv.export(@event))
         output.size.should == 2
         output[0].include?("treatment_name").should be_false

@@ -49,15 +49,20 @@ describe Treatment do
 
     describe "by active treatments" do
       before(:each) do
-        @active_treatment_one = Factory.create(:treatment, :active => true)
-        @active_treatment_two = Factory.create(:treatment, :active => true)
-        @inactive_treatment = Factory.create(:treatment, :active => false)
+        @active_treatment_one = Factory.create(:treatment, :treatment_name => "B Treatment", :active => true)
+        @active_treatment_two = Factory.create(:treatment, :treatment_name => "A Treatment", :active => true)
+        @inactive_treatment = Factory.create(:treatment, :treatment_name => "C Treatment", :active => false)
       end
 
       it "should return only active treatments" do
         Treatment.active.each do |treatment|
           treatment.active.should be_true
         end
+      end
+
+      it "should return only active treatments in alphabetical order" do
+        active_treatments = Treatment.active
+        active_treatments.index(Treatment.find_by_treatment_name("B Treatment")).should > active_treatments.index(Treatment.find_by_treatment_name("A Treatment"))
       end
     end
     

@@ -20,7 +20,9 @@ class Treatment < ActiveRecord::Base
   
   validates_presence_of :treatment_name
 
-  named_scope :active, :conditions => ["active = ?", true]
+  named_scope :active, 
+    :conditions => ["active = ?", true],
+    :order => "treatment_name ASC"
 
   class << self
 

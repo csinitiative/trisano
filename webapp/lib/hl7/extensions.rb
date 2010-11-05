@@ -476,7 +476,7 @@ module StagedMessages
           ExternalCode.find(
             :first,
             :select => 'id',
-            :conditions => ['code_name = ? AND code_description ILIKE ?', 'specimen', self]
+            :conditions => ["code_name = 'specimen' AND code_description ILIKE ?", self]
           ).try(:id)
         end
       end
@@ -534,6 +534,11 @@ module StagedMessages
     rescue
     end
 
+    def result_status
+      obr_segment.result_status
+    rescue
+    end
+
     private
 
     # Take the specimen source from SPM-4
@@ -571,6 +576,10 @@ module StagedMessages
 
     def test_date
       analysis_date || observation_date
+    end
+
+    def test_performed
+      obx_segment.observation_sub_id.split(obx_segment.item_delim)[0]
     end
 
     def observation_date
@@ -660,7 +669,8 @@ module StagedMessages
       # that says that admins should be able to dynamically map them.
       hl7_status_codes = { 'C' => 'F', 'F' => 'F', 'I' => 'I', 'P' => 'P', 'R' => 'P', 'S' => 'P' }
 
-      elr_result_status = self.status.upcase
+      elr_result_status = obx_segment.segment_parent.result_status
+      elr_result_status = self.status.upcase if elr_result_status.blank?
       return nil unless hl7_status_codes.has_key?(elr_result_status)
       status = ExternalCode.find_by_code_name_and_the_code('test_status', hl7_status_codes[elr_result_status])
       status ? status.id : status

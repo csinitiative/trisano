@@ -398,32 +398,41 @@ module EventsHelper
     button_to_function(text, "location.href = '#{event_search_cmrs_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
 
-  def show_and_edit_event_links(event)
+  def show_and_edit_event_links(event, options={})
     return if event.new_record?
-    show_and_edit_links[event.class.name][event]
+    show_and_edit_links[event.class.name][event, options]
+  end
+
+  def event_to_path_name
+    { "MorbidityEvent" => 'cmr' }
   end
 
   def show_and_edit_links
     Hash[
-      "MorbidityEvent", lambda { |event| links_to_show_and_edit(event, :show_cmr, :edit_cmr, :cmr_path, :edit_cmr_path) },
-      "ContactEvent"  , lambda { |event| links_to_show_and_edit(event, :show_contact, :edit_contact) },
-      "PlaceEvent"    , lambda { |event| links_to_show_and_edit(event, :show_place, :edit_place) },
-      "EncounterEvent", lambda { |event| links_to_show_and_edit(event, :show_encounter, :edit_encounter) }
+      "MorbidityEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
+      "ContactEvent"  , lambda { |event, options| links_to_show_and_edit(event, options) },
+      "PlaceEvent"    , lambda { |event, options| links_to_show_and_edit(event, options) },
+      "EncounterEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
     ]
   end
 
+  def link_to_action(event, options={})
+    action = options[:prefix] || 'show'
+    options[:prefix] += '_' if options[:prefix]
+    resource = event_to_path_name[event.class.name] || event.class.name.underscore
+    method = "#{options[:prefix]}#{resource}_path"
+    new_text = "#{action}_#{resource.gsub(/_event$/, '')}".to_sym
 
-  def links_to_show_and_edit(event, show_text, edit_text, *args)
-    options =   args.extract_options!
-    show_meth = args.first || "#{event.class.name.underscore}_path"
-    edit_meth = args.last  || "edit_#{event.class.name.underscore}_path"
-    user = User.current_user
+    link_to t(new_text, options), send(method, event), {:id => "#{action}-event-#{event.id}"}
+  end
+
+  def links_to_show_and_edit(event, options={})
     returning [] do |out|
-      if user.can_view?(event)
-        out << link_to(t(show_text, options), send(show_meth, event), {:id => "show-event-#{event.id}"})
+      if options[:always_show] || User.current_user.can_view?(event)
+        out << link_to_action(event, options)
       end
-      if user.can_update?(event)
-        out << link_to(t(edit_text, options), send(edit_meth, event), {:id => "edit-event-#{event.id}"})
+      if User.current_user.can_update?(event)
+        out << link_to_action(event, options.merge(:prefix => 'edit'))
       end
     end.join("&nbsp;|&nbsp;")
   end
