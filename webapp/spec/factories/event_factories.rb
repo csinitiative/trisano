@@ -98,7 +98,6 @@ end
 
 Factory.define :participations_treatment do |pt|
   pt.association :treatment
-  pt.treatment_name { Factory.next(:treatment_name) }
 end
 
 Factory.define :participations_contact do |pc|

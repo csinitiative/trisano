@@ -1708,34 +1708,37 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over treatment data" do
+      @leeches_treatment = Factory.create(:treatment, :treatment_name => "Leeches")
+      @maggots_treatment = Factory.create(:treatment, :treatment_name => "Maggots")
+
       @event_hash["interested_party_attributes"]["treatments_attributes"] =
         [
         {
           :treatment_given_yn_id => external_codes(:yesno_no).id,
           :treatment_date => Date.today,
           :stop_treatment_date => Date.today + 1,
-          :treatment_name => "Leeches"
+          :treatment_id => @leeches_treatment.id
         },
         {
           :treatment_given_yn_id => external_codes(:yesno_yes).id,
           :treatment_date => Date.today - 2,
           :stop_treatment_date => Date.today - 1,
-          :treatment_name => "Maggots"
+          :treatment_id => @maggots_treatment.id
         }
       ]
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.interested_party.treatments.size.should == 2
-      @new_event.interested_party.treatments.each do |t|
-        if t.treatment_name == "Leeches"
-          t.treatment_given_yn_id.should == external_codes(:yesno_no).id
-          t.treatment_date.should == Date.today
-          t.stop_treatment_date.should == Date.today + 1
-        elsif t.treatment_name == "Maggots"
-          t.treatment_given_yn_id.should == external_codes(:yesno_yes).id
-          t.treatment_date.should == Date.today - 2
-          t.stop_treatment_date.should == Date.today - 1
+      @new_event.interested_party.treatments.each do |pt|
+        if pt.treatment.treatment_name == "Leeches"
+          pt.treatment_given_yn_id.should == external_codes(:yesno_no).id
+          pt.treatment_date.should == Date.today
+          pt.stop_treatment_date.should == Date.today + 1
+        elsif pt.treatment.treatment_name == "Maggots"
+          pt.treatment_given_yn_id.should == external_codes(:yesno_yes).id
+          pt.treatment_date.should == Date.today - 2
+          pt.stop_treatment_date.should == Date.today - 1
         else
           # Forcing a stupid error, we should not get here.
           "treatments ".should == "Leecehs and Maggots"
