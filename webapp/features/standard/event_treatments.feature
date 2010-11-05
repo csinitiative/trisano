@@ -8,11 +8,11 @@ Feature: Event treatment fields
       And the morbidity event has the following treatments:
         | treatment_name |
         | rubbings       |
-        | leaches        |
+        | leeches        |
         | bleeding       |
     When I navigate to the event show page
     Then I should see "rubbings"
-      And I should see "leaches"
+      And I should see "leeches"
       And I should see "bleeding"
 
   Scenario: Viewing treatment names associated with a contact event
@@ -23,12 +23,12 @@ Feature: Event treatment fields
       And the contact event has the following treatments:
         | treatment_name |
         | rubbings       |
-        | leaches        |
+        | leeches        |
         | bleeding       |
     When I am on the event edit page
       And I follow "Show Contact"
     Then I should see "rubbings"
-      And I should see "leaches"
+      And I should see "leeches"
       And I should see "bleeding"
 
   Scenario: Viewing treatment names associated with an encounter event
@@ -37,10 +37,10 @@ Feature: Event treatment fields
       And the encounter event has the following treatments:
         | treatment_name |
         | rubbings       |
-        | leaches        |
+        | leeches        |
         | bleeding       |
     When I am on the event edit page
       And I follow "Show Encounter"
     Then I should see "rubbings"
-      And I should see "leaches"
+      And I should see "leeches"
       And I should see "bleeding"

@@ -55,3 +55,42 @@ Features: Editing treatments on events
     And I follow "Edit Encounter"
     Then I should see "Squeezings"
 
+  Scenario: Selected treatments should appear in show mode for morbidity events
+    Given a simple morbidity event for last name "Smoker"
+      And the following treatments exist
+      	| treatment_name | active |
+      	| Rubbings       | true   |
+      	| Foot massage   | true   |
+      	| Leeches        | true   |
+      	| Garlic         | false  |
+    When I go to edit the CMR
+      And I select "Leeches" from "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
+      And I save the event
+      And I navigate to the event show page
+    Then I should see "Leeches"
+      And I should not see "Rubbings"
+      And I should not see "Foot massage"
+      And I should not see "Garlic"
+
+  Scenario: Selected treatments should appear in show mode for contact events
+    Given a simple morbidity event for last name "Smoker"
+      And the morbidity event has the following contacts:
+        | last_name | first_name |
+        | Davis     | James      |
+      And the following treatments exist
+      	| treatment_name | active |
+      	| Rubbings       | true   |
+      	| Foot massage   | true   |
+      	| Leeches        | true   |
+      	| Garlic         | false  |
+    When I am on the event edit page
+      And I follow "Edit Contact"
+      And I select "Leeches" from "contact_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
+      And I save the contact event
+      And I am on the event edit page
+      And I follow "Show Contact"
+    Then I should see "Leeches"
+      And I should not see "Rubbings"
+      And I should not see "Foot massage"
+      And I should not see "Garlic"
+
