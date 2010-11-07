@@ -1962,12 +1962,13 @@ end
 describe Event, "mmwr date" do
   before do
     the_past = Date.today - 21
-    @expected_mmwr = Mmwr.new(the_past)
+    first_reported = the_past - 1.week
+    @expected_mmwr = Mmwr.new(first_reported)
     @event = Factory.create(:morbidity_event)
-    @event.update_attributes!(:created_at => the_past, :first_reported_PH_date => the_past - 1.day)
+    @event.update_attributes!(:created_at => the_past, :first_reported_PH_date => first_reported)
   end
 
-  it "is based on the date the event was created, if other relevant dates are blank" do
+  it "is based on first reported date, which is required" do
     assert_equal @expected_mmwr.mmwr_year, @event.MMWR_year, "Wrong MMWR year"
     assert_equal @expected_mmwr.mmwr_week, @event.MMWR_week, "Wrong MMWR week"
   end
