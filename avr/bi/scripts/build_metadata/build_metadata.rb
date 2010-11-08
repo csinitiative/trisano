@@ -115,7 +115,7 @@ PhysicalTable = Java::OrgPentahoPmsSchema::PhysicalTable
 PublisherUtil = Java::OrgPentahoPlatformUtilClient::PublisherUtil
 SecurityOwner = Java::OrgPentahoPmsSchemaSecurity::SecurityOwner
 SchemaMeta = Java::OrgPentahoPmsSchema::SchemaMeta
-#KettleEnvironment = Java::OrgPentahoDiCore::KettleEnvironment
+KettleEnvironment = Java::OrgPentahoDiCore::KettleEnvironment
 AggregationSettings = Java::OrgPentahoPmsSchemaConceptTypesAggregation::AggregationSettings
 Concept = Java::OrgPentahoPmsSchemaConcept::Concept
 ConceptPropertyLocalizedString = Java::OrgPentahoPmsSchemaConceptTypesLocalstring::ConceptPropertyLocalizedString
@@ -639,8 +639,7 @@ if __FILE__ == $0
   metadatadir = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage')
   FileUtils.mkdir metadatadir if (not File.exist?(metadatadir))
   metadataxmi = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', 'metadata.xmi')
-# Sample code so we know how to work with Pentaho 3.6
-  #KettleEnvironment.init()
+  KettleEnvironment.init
 
   db_connection do |conn|
     # load plugins

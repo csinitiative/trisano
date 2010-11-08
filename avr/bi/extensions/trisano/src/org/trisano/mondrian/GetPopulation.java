@@ -64,9 +64,13 @@ public class GetPopulation implements UserDefinedFunction {
             for (Dimension d : evaluator.getCube().getDimensions()) {
                 Integer depth;
 
+                // XXX: This only supports dimensions with one hierarchy
+                if (d.getHierarchies() == null || d.getHierarchies().length == 0)
+                    continue;
+
                 logger.debug("checking dimension " + d.getName());
                 HashMap<String, String> dimhash = new HashMap<String, String>();
-                depth = evaluator.getContext(d).getLevel().getDepth();
+                depth = evaluator.getContext(d.getHierarchies()[0]).getLevel().getDepth();
 
                 st.setInt(1, depth);
                 st.setInt(2, depth);
@@ -80,7 +84,7 @@ public class GetPopulation implements UserDefinedFunction {
                         // dimension
                         dimhash.put("name", d.getName());
                         dimhash.put("depth", depth.toString());
-                        dimhash.put("value", evaluator.getContext(d).getName());
+                        dimhash.put("value", evaluator.getContext(d.getHierarchies()[0]).getName());
                         dimhash.put("column", rs.getString(1));
                         dimhash.put("mapper", rs.getString(2));
                         dimensions.add(dimhash);
@@ -198,95 +202,6 @@ public class GetPopulation implements UserDefinedFunction {
 
         return population;
     }
-
-/*    public Object execute(Evaluator evaluator, UserDefinedFunction.Argument[] arguments) {
-        // Find the current level for dimensions that we care about for
-        // population statistics, and calculate the total population given
-        // those dimensions. Right now those dimensions are:
-        // * Disease
-        // * Investigating Jurisdiction
-        //
-        // Eventually this should probably implement some method to:
-        // 1) Not hard code which dimensions are meaningful
-        // 2) Handle multi-level dimensions
-        // 3) Handle dimensions where Mondrian's value for the dimension
-        //    differs from the population table's value
-        // TODO: test all this
-        ArrayList<String> vals = new ArrayList<String>();
-        Object arg = arguments[0].evaluateScalar(evaluator);
-        double population = 0;
-        java.sql.Connection conn = null;
-
-        if (!(arg instanceof Number))
-            return null;
-
-        try {
-            PreparedStatement st;
-            ResultSet rs;
-            String where = "", query;
-            int i;
-
-            conn = evaluator.getQuery().getConnection().getDataSource().getConnection();
-            st = conn.prepareStatement("SELECT dim_cols[?], mapping_func[?] FROM population.population_dimensions WHERE dim_name = ?");
-            for (Dimension d : evaluator.getCube().getDimensions()) {
-                String colname, colmapper;
-                Integer depth;
-
-                depth = evaluator.getContext(d).getLevel().getDepth();
-                if (depth != 0) {
-                    st.setInt(1, depth);
-                    st.setInt(2, depth);
-                    st.setString(3, d.getName());
-                    rs = st.executeQuery();
-                    if (rs.next()) {
-                        // rs.next() is true only if it returned something, or in
-                        // other words, only when this dimension is important to us
-                        colname = rs.getString(1);
-                        colmapper = rs.getString(2);
-                        logger.debug("Found a meaningful dimension: " + d.getName() + " with colname " + colname + ", depth " + depth + ", and mapping func " + colmapper);
-
-                        if (!where.equals(""))
-                            where += " AND ";
-                        where += colname + " = ";
-
-                        if (colmapper != null)
-                            where += colmapper + "(?)";
-                        else
-                            where += "?";
-                        vals.add(evaluator.getContext(d).getName());
-                    }
-                }
-            }
-            query = "SELECT sum(population) FROM population.population" +
-                (!where.equals("") ? " WHERE " + where : "");
-            logger.debug("Issuing query \"" + query + "\"");
-
-            st = conn.prepareStatement(query);
-            i = 0;
-            for (String s : vals) {
-                i++;
-                st.setString(i, s);
-            }
-            rs = st.executeQuery();
-            if (rs.next())
-                population = rs.getDouble(1);
-        }
-        catch (SQLException s) {
-            logger.warn("JDBC Error: " + s);
-        }
-        try {
-            if (conn != null)
-                conn.close();
-        }
-        catch (SQLException s) {
-            logger.warn("JDBC Error when disconnecting: " + s);
-        }
-
-        if (population == 0)
-            return null;
-        else
-            return population;
-    } */
 
     public String[] getReservedWords() { return null; }
 }
