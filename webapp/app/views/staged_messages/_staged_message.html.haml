@@ -24,6 +24,14 @@
             %p= "OBR #{index+1}"
             %p= t "specimen_source_is", :source => h(obr.specimen_source)
             %p= t "collected_on_date", :date =>ld(obr.collection_date)
+            - unless obr.test_performed.blank?
+              %p
+                = "#{t 'loinc_code'}:"
+                &= obr.test_performed
+            - unless obr.common_test_type.blank?
+              %p
+                = "#{t 'test_type'}:"
+                &= obr.common_test_type
           .results
             %table
               %tr

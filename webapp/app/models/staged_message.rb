@@ -140,7 +140,7 @@ class StagedMessage < ActiveRecord::Base
       obr.all_tests.each do |test|
         # error in OBX segment with set_id, field 3, component 1
         add_hl7_error(:missing_loinc, :obx, test.set_id.to_i, 3, 1) if test.loinc_code.blank?
-      end
+      end if obr.test_performed.blank?
     end
   end
 

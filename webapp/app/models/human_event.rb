@@ -538,7 +538,11 @@ class HumanEvent < Event
       end
 
       obr.tests.each do |obx|
-        loinc_code = LoincCode.find_by_loinc_code(obx.loinc_code)
+        # the LOINC code as a string from the HL7 message, as opposed
+        # to the :loinc_codes table entry
+        raw_loinc_code = obr.test_performed
+        raw_loinc_code = obx.loinc_code if raw_loinc_code.blank?
+        loinc_code = LoincCode.find_by_loinc_code(raw_loinc_code)
         scale_type = nil
         common_test_type = nil
 
@@ -551,13 +555,13 @@ class HumanEvent < Event
           # Look at other OBX fields for hints to the scale and common
           # test type.
           scale_type = obx.loinc_scale
-          raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => obx.loinc_code)) if scale_type.nil?
+          raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => raw_loinc_code)) if scale_type.nil?
 
           common_test_type_name = obx.loinc_common_test_type
           common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
         end
 
-        raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => obx.loinc_code)) if common_test_type.nil?
+        raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => raw_loinc_code)) if common_test_type.nil?
 
         comments = per_request_comments.clone
 
