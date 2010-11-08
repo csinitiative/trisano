@@ -94,3 +94,22 @@ Features: Editing treatments on events
       And I should not see "Foot massage"
       And I should not see "Garlic"
 
+  Scenario: Selected treatments should appear in show mode for encounter events
+    Given a morbidity event exists with the disease African Tick Bite Fever
+      And there is an associated encounter event
+      And the following treatments exist
+      	| treatment_name | active |
+      	| Rubbings       | true   |
+      	| Foot massage   | true   |
+      	| Leeches        | true   |
+      	| Garlic         | false  |
+    When I am on the event edit page
+      And I follow "Edit Encounter"
+      And I select "Leeches" from "encounter_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
+      And I save the encounter event
+      And I am on the event edit page
+      And I follow "Show Encounter"
+    Then I should see "Leeches"
+      And I should not see "Rubbings"
+      And I should not see "Foot massage"
+      And I should not see "Garlic"
