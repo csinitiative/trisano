@@ -13,7 +13,7 @@ var I18n = Class.create({
     }
     var value = I18n.translations.get(key);
     if (typeof value == 'undefined') {
-      return '';
+      return key;
     } else {
       var template = new Template(value);
       return template.evaluate(interpolations);

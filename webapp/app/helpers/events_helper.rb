@@ -745,12 +745,14 @@ module EventsHelper
     content_for(:javascript_includes) { javascript_include_tag 'contact_nav' }
 
     contacts = contacts.partition { |event| event.type == 'ContactEvent' }.reject(&:empty?)
-    result = "<select class=\"contacts_nav\">"
+    result = image_tag('redbox_spinner.gif', :id => 'contacts_nav_spinner', :style => 'display: none;')
+    result << "<select class=\"contacts_nav\">"
     contacts.each do |partition|
       result << "<option value="">#{t(partition.first.type.tableize, :scope => :contact_nav)}</option>"
       result << contact_navigation_options(partition)
     end
     result << "</select>"
+    result << "<div id=\"contacts_nav_dialog\" style=\"display: none\">#{t(:unsaved_changes)}</div>"
   end
 
   def contact_navigation_options(contacts)
@@ -769,13 +771,11 @@ module EventsHelper
   end
 
   def edit_event_path(event)
-    url_options = @query_params || {}
-    url_options.merge!({
+    url_for({
       :controller => controller_name_from_event(event),
       :id => event.id,
       :action => :edit
     })
-    url_for(url_options)
   end
 
   def controller_name_from_event(model)
@@ -784,7 +784,7 @@ module EventsHelper
 
   def association_recorded?(association_collection)
     return nil unless association_collection.respond_to?(:each)
-    (association_collection.empty? || association_collection.first.new_record?) ? false :true
+    (association_collection.empty? || association_collection.first.new_record?) ? false : true
   end
 
   def concat_core_field(mode, before_or_after, attribute, form_builder)

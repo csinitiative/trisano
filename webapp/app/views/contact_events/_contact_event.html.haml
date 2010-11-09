@@ -34,8 +34,6 @@
       %span{ :style => 'font-style: italic; font-size: small;'}
         = t("contact_event") |
         = ld(contact_event.event_onset_date)
-        - if (view_mode != :index)
-          = original_patient_controls(@event)  
     .tools
       = basic_contact_event_controls(contact_event, view_mode)
       = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }
