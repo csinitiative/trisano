@@ -133,6 +133,10 @@ class StagedMessage < ActiveRecord::Base
       add_hl7_error :missing_segment, :obr, 1
     end
 
+    if observation_requests.all? {|obr| obr.all_tests.blank?}
+      add_hl7_error :missing_segment, :obx, 1
+    end
+
     # error in PID segment, set ID 1 (only one PID), field 5, component 1
     add_hl7_error(:missing_last_name, :pid, 1, 5, 1) if self.patient.patient_last_name.blank?
 
@@ -140,7 +144,7 @@ class StagedMessage < ActiveRecord::Base
       obr.all_tests.each do |test|
         # error in OBX segment with set_id, field 3, component 1
         add_hl7_error(:missing_loinc, :obx, test.set_id.to_i, 3, 1) if test.loinc_code.blank?
-      end
+      end if obr.test_performed.blank?
     end
   end
 

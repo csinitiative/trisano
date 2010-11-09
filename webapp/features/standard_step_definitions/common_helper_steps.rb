@@ -73,6 +73,10 @@ When /^I save the contact event$/i do
   submit_form "edit_contact_event_#{contact_event_id}"
 end
 
+When /^I save the encounter event$/ do
+  submit_form "edit_encounter_event_#{@encounter.id}"
+end
+
 #
 # Error message helpers
 #

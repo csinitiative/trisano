@@ -213,7 +213,7 @@ describe Message do
 
   describe 'observation request' do
     it 'should return the test performed (without noise)' do
-      @hl7.observation_requests.first.test_performed.should == 'Hepatitis Be Antigen'
+      @hl7.observation_requests.first.test_performed.should == '13954-3'
     end
 
     it 'should return the collection date' do

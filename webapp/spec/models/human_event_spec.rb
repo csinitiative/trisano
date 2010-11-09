@@ -24,7 +24,7 @@ def with_human_event(event_hash=@event_hash, &block)
 end
 
 def set_loinc_code(msg, loinc)
-  msg.gsub(/(OBX\|.\|..\|)\d+-\d/, '\1'+loinc)
+  msg.gsub(/(OBR\|[^|]*\|[^|]*\|[^|]*\|)\d+-\d/, '\1'+loinc)
 end
 
 def set_obx_5(msg, value)
@@ -301,6 +301,11 @@ describe HumanEvent, 'adding staged messages' do
         telephone.extension.should be_blank
 
         common_test_type.destroy
+      end
+    end
+
+    it 'should take the LOINC code from OBR-4.1 when present' do
+      with_human_event do |event|
       end
     end
   end

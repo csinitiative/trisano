@@ -467,7 +467,16 @@ module StagedMessages
     end
 
     def test_performed
-      obr_segment.universal_service_id.split(obr_segment.item_delim)[1]
+      obr_segment.universal_service_id.split(obr_segment.item_delim)[0]
+    rescue
+      ''
+    end
+
+    def common_test_type
+      test_type = obr_segment.universal_service_id.split(obr_segment.item_delim)[1] if obr_segment.universal_service_id
+      test_type || LoincCode.find_by_loinc_code(test_performed).common_test_type.common_name
+    rescue
+      ''
     end
 
     def specimen_source
