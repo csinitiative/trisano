@@ -674,31 +674,34 @@ form.inplaceeditor-form a
   .batch-link
     :display block
     :font-size 0.8em
-  .request
-    .specimen
-      :float left
-      :background #EEEEEE
-      :width 17%
-      p
-        :margin-top 1px
-        :margin-bottom 1px
-      p + *
-        :text-indent 1em
-    .results
-      :display inline-block
-      :width 81%
-      table
-        :table-layout fixed
-        th
-          :text-align left
+  .specimen
+    :float left
+    :clear left
+    :background #EEEEEE
+    :width 17%
+    p
+      :margin-top 1px
+      :margin-bottom 1px
+    p + *
+      :text-indent 1em
+  .results
+    :display inline-block
+    :width 81%
+    table
+      :table-layout fixed
+      th
+        :text-align left
+  .footer
+    :clear both
+    :padding-top 1em
   .raw-message
-    clear: both
-    position: relative
-    border: solid 1px
-    padding: 3px
-    margin: 3px
-    left: 10%
-    width: 80%
+    :clear both
+    :position relative
+    :border solid 1px
+    :padding 3px
+    :margin 3px
+    :left 10%
+    :width 80%
 
 .hoverable
   b

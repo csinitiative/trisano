@@ -19,31 +19,29 @@
       .header
         %p= "#{h staged_message.patient.patient_name}&nbsp;&ndash;&nbsp;#{t('dob')} #{ld(staged_message.patient.birth_date)||t('unknown')}"
       -staged_message.observation_requests.each_with_index do |obr, index|
-        .request
-          .specimen
-            %p= "OBR #{index+1}"
-            %p= t "specimen_source_is", :source => h(obr.specimen_source)
-            %p= t "collected_on_date", :date =>ld(obr.collection_date)
-            - unless obr.test_performed.blank?
-              %p
-                = "#{t 'loinc_code'}:"
-                &= obr.test_performed
-            - unless obr.common_test_type.blank?
-              %p
-                = "#{t 'test_type'}:"
-                &= obr.common_test_type
-          .results
-            %table
-              %tr
-                %th=t 'test_date'
-                %th=t 'loinc_code'
-                %th=t 'test_type'
-                %th=t 'result'
-                %th=t 'units'
-                %th=t 'status'
-                %th=t 'reference_range'
-              =render obr.tests
-        %br
+        .specimen
+          %p= "OBR #{index+1}"
+          %p= t "specimen_source_is", :source => h(obr.specimen_source)
+          %p= t "collected_on_date", :date =>ld(obr.collection_date)
+          - unless obr.test_performed.blank?
+            %p
+              = "#{t 'loinc_code'}:"
+              &= obr.test_performed
+          - unless obr.common_test_type.blank?
+            %p
+              = "#{t 'test_type'}:"
+              &= obr.common_test_type
+        .results
+          %table
+            %tr
+              %th=t 'test_date'
+              %th=t 'loinc_code'
+              %th=t 'test_type'
+              %th=t 'result'
+              %th=t 'units'
+              %th=t 'status'
+              %th=t 'reference_range'
+            =render obr.tests
 
       .footer
         - if staged_message.message_batch

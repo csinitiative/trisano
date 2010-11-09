@@ -633,22 +633,26 @@ form.inplaceeditor-form a {
   .staged-message .batch-link {
     display: block;
     font-size: 0.8em; }
-  .staged-message .request .specimen {
+  .staged-message .specimen {
     float: left;
+    clear: left;
     background: #EEEEEE;
     width: 17%; }
-    .staged-message .request .specimen p {
+    .staged-message .specimen p {
       margin-top: 1px;
       margin-bottom: 1px; }
-    .staged-message .request .specimen p + * {
+    .staged-message .specimen p + * {
       text-indent: 1em; }
-  .staged-message .request .results {
+  .staged-message .results {
     display: inline-block;
     width: 81%; }
-    .staged-message .request .results table {
+    .staged-message .results table {
       table-layout: fixed; }
-      .staged-message .request .results table th {
+      .staged-message .results table th {
         text-align: left; }
+  .staged-message .footer {
+    clear: both;
+    padding-top: 1em; }
   .staged-message .raw-message {
     clear: both;
     position: relative;

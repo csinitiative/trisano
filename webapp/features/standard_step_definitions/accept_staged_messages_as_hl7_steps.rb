@@ -72,7 +72,7 @@ Then /^I should see value "([^\"]*)" in the message footer$/ do |value|
 end
 
 Then /^I should see value "([^\"]*)" in a message specimen$/ do |value|
-  response.should have_xpath("//div[@class='staged-message']/div[@class='request']/div[@class='specimen']//*[contains(text(), '#{value}')]")
+  response.should have_xpath("//div[@class='staged-message']/div[@class='specimen']//*[contains(text(), '#{value}')]")
 end
 
 Then /^I should see value "([^\"]*)" under label "([^\"]*)"$/ do |value, label|
