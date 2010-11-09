@@ -306,6 +306,12 @@ describe HumanEvent, 'adding staged messages' do
 
     it 'should take the LOINC code from OBR-4.1 when present' do
       with_human_event do |event|
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_obr_4])
+        event.should be_valid
+        event.labs.first.lab_results.first.loinc_code.should ==
+          LoincCode.find_by_loinc_code('625-4')
+        common_test_type.destroy
       end
     end
   end
