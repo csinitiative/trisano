@@ -9,7 +9,7 @@ $j(function() {
       $j('#apply_core_fields_to_disease_form').submit();
     };
 
-  $j('.apply_to_disease_dialog').dialog({
+    $j('.apply_to_disease_dialog').dialog({
       title: i18n.t('apply_to_diseases'),
       height: 300,
       width: 600,

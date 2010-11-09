@@ -4,37 +4,41 @@
 var FormWatch = Class.create();
 FormWatch.prototype = {
    initialize : function(form, options) {
-      this.submitted = false;
-      this.form = $(form);
+     this.submitted = false;
+     this.form = $(form);
       // Let's serialize this.form and store it...
-      this.formcontents = $(form).serialize();
+     this.formcontents = $(form).serialize();
       // Observe beforeunload event...
-      Event.observe(this.form, 'submit', function() {this.submitted = true; }.bind(this));
-      Event.observe(window, 'beforeunload', this.confirmExit.bind(this));
+     Event.observe(this.form, 'submit', function() {this.submitted = true; }.bind(this));
+     Event.observe(window, 'beforeunload', this.confirmExit.bind(this));
    },
-   confirmExit : function(ev) {
-      this.newcontents = this.form.serialize();
-      if ((this.formcontents != this.newcontents) && !(this.submitted)) {
-        ev.returnValue = i18n.t('form_changed');
-      }
-   }
-}
+
+  isDirty: function() {
+    var newcontents = this.form.serialize();
+    return this.formcontents != newcontents;
+  },
+
+  confirmExit : function(ev) {
+    if (this.isDirty() && !(this.submitted)) {
+      ev.returnValue = i18n.t('form_changed');
+    }
+  }
+};
 
 function mark_for_destroy(element) {
-    $(element).next('.should_destroy').value = 1;
-    $(element).up('.role_membership').hide();
+  $(element).next('.should_destroy').value = 1;
+  $(element).up('.role_membership').hide();
 }
 
 function toggle_investigator_forms(id_to_show) {
+  id_to_hide = $("active_form").value;
+  id_to_hide = "form_investigate_" + id_to_hide;
 
-    id_to_hide = $("active_form").value;
-    id_to_hide = "form_investigate_" + id_to_hide;
+  $("active_form").value = id_to_show;
+  id_to_show = "form_investigate_" + id_to_show;
 
-    $("active_form").value = id_to_show;
-    id_to_show = "form_investigate_" + id_to_show;
-
-    $(id_to_hide).hide();
-    $(id_to_show).show();
+  $(id_to_hide).hide();
+  $(id_to_show).show();
 }
 
 extractLocaleAsQueryString = function(path) {
@@ -60,7 +64,7 @@ joinAndPreserveLocale = function(base, ext) {
 
 scrollToTop = function() {
   $j(window).scrollTop(0);
-  return null
+  return null;
 };
 
 function sendConditionRequest(path, element, event_id, question_element_id, spinner_id) {
@@ -179,8 +183,8 @@ function post_and_return(form_id) {
   form.submit();
 }
 
-function post_and_exit(form_id) {
-  form = document.getElementById(form_id);
+function post_and_exit(form) {
+  form = $(form);
   url = build_url_with_tab_index(form.action);
   queryParams = url.toQueryParams();
   form.action = url;
