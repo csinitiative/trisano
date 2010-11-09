@@ -24,11 +24,17 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% content_for :name do %>
+  <% if @event.parent_event -%>
+    <div>
+      <span style='text-align: right;'>
+        <%= original_patient_controls(@event) %>
+      </span>
+    </div>
+  <% end -%>
   <table class='list'>
     <tr>
       <th class='forminformation'><%= t 'place_name' %></th>
       <th><%= t 'assigned_jurisdiction' %></th>
-      <th><%= t 'original_patient' %></th>
     </tr>
     <tr>
       <td class='forminformation'>
@@ -42,9 +48,6 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       </td>
       <td>
         <b><%= @event.primary_jurisdiction.short_name %></b>
-      </td>
-      <td>
-        <%= original_patient_controls(@event) %>
       </td>
     </tr>
   </table>
