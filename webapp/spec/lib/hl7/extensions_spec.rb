@@ -224,6 +224,10 @@ describe Message do
       @hl7.observation_requests.first.specimen_source.should == 'BLOOD'
     end
 
+    it 'should return SPM-8 for the specimen source when present' do
+      HL7::Message.parse(HL7MESSAGES[:realm_hepatitis_c_virus]).observation_requests.first.specimen_source.should == 'Venous structure'
+    end
+
     it 'should return a list of test_results' do
       @hl7.observation_requests.first.tests.should_not be_nil
     end
@@ -290,8 +294,8 @@ describe Message do
         @arup_3.specimen.spm_segment.should be_an(HL7::Message::Segment::SPM)
       end
 
-      it 'should return \'Whole Blood\' as the specimen source' do
-        @arup_3.specimen_source.should == 'Whole Blood'
+      it 'should return \'Structure of median cubital vein (body structure)\' as the specimen source' do
+        @arup_3.specimen_source.should == 'Structure of median cubital vein (body structure)'
       end
     end
 

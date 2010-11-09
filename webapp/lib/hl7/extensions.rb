@@ -601,8 +601,13 @@ module StagedMessages
     def specimen_source_2_5_1
       return nil unless spm_segment
 
+      specimen_source = spm_segment.specimen_source_site
+      specimen_source = spm_segment.specimen_type if specimen_source.blank?
+
+      return nil if specimen_source.blank?
+
       # The second delimited field is the name of the specimen
-      spm_segment.specimen_type.split(spm_segment.item_delim)[1]
+      specimen_source.split(spm_segment.item_delim).second
     end
 
     # Take the specimen source from OBR-15
