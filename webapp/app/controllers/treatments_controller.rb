@@ -18,7 +18,13 @@
 class TreatmentsController < AdminController
 
   def index
-    @treatments = Treatment.all(:order => 'treatment_name ASC')
+    options = { :order => 'treatment_name ASC' }
+
+    unless params[:treatment_name].blank?
+      options.merge!(:conditions => ["treatment_name ILIKE ?", "%#{params[:treatment_name]}%"])
+    end
+
+    @treatments = Treatment.all(options)
   end
 
   def new

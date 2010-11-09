@@ -20,6 +20,12 @@
 - content_for :tools_two do
   = button_to(t("create_new_treatment"), {:action => "new"}, { :method => :get })
 
+- content_for :tools do
+  = link_to "&lt; #{t('clear_search_criteria')}", treatments_path
+  %p
+
+=render(:partial => 'search_form')
+
 
 #rot
   %table.list
