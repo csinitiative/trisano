@@ -171,6 +171,7 @@ en:
   search_button: 'Search'
   save_and_exit: 'Save & Exit'
   save_and_continue: 'Save & Continue'
+  unsaved_changes: "You have unsaved changes."
   other_data_1: 'Other data 1'
   other_data_2: 'Other data 2'
   disease_not_specified: 'Disease not specified'

@@ -177,6 +177,7 @@ es:
   search_button: 'Buscar'
   save_and_exit: 'Guardar y Salir'
   save_and_continue: 'Guardar y Continuar'
+  unsaved_changes: "You have unsaved changes. (EN)"
   other_data_1: 'Datos adicionales 1'
   other_data_2: 'Datos adicionales 2'
   disease_not_specified: 'No se especificó enfermedad'
