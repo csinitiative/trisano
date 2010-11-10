@@ -17,14 +17,9 @@
 
 class TreatmentsController < AdminController
 
+  before_filter :load_treatments, :only => [:index, :merge]
   def index
-    options = { :order => 'treatment_name ASC' }
 
-    unless params[:treatment_name].blank?
-      options.merge!(:conditions => ["treatment_name ILIKE ?", "%#{params[:treatment_name]}%"])
-    end
-
-    @treatments = Treatment.all(options)
   end
 
   def new
@@ -67,6 +62,23 @@ class TreatmentsController < AdminController
 
   def show
     @treatment = Treatment.find(params[:id])
+  end
+
+  def merge
+    @treatment = Treatment.find(params[:id])
+    render :action => "index"
+  end
+
+  private
+
+  def load_treatments
+    options = { :order => 'treatment_name ASC' }
+
+    unless params[:treatment_name].blank?
+      options.merge!(:conditions => ["treatment_name ILIKE ?", "%#{params[:treatment_name]}%"])
+    end
+
+    @treatments = Treatment.all(options)
   end
 
 end

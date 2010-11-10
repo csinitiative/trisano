@@ -16,7 +16,6 @@
 - content_for :title do
   =t 'treatments'
 
-
 - content_for :tools_two do
   = button_to(t("create_new_treatment"), {:action => "new"}, { :method => :get })
 
@@ -26,21 +25,9 @@
 
 =render(:partial => 'search_form')
 
-
-#rot
-  %table.list
-    %tr
-      %th.forminformation
-        =t 'treatments'
-      %th
-    - for treatment in @treatments
-      %tr.roll
-        %td.forminformation
-          .formname
-            = link_to h(treatment.treatment_name), treatment
-          = treatment.active? ? t('active') :  t('inactive')
-        %td
-          .tools{:style => "position: absolute; right: 15px;"}
-            = link_to t('edit'), edit_treatment_path(treatment)
-            |
-            = link_to t('show'), treatment
+-if current_page?(:action => :merge)
+  =render_merge_treatment do
+    %br
+    =render(:partial => 'list')
+-else
+  =render(:partial => 'list')
