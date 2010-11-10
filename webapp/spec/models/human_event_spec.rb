@@ -304,6 +304,28 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
+    it 'should set multiple contact numbers when present' do
+      login_as_super_user
+      staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.telephones.size.should == 2
+      home_phone = event.interested_party.person_entity.telephones.first
+      work_phone = event.interested_party.person_entity.telephones.second
+
+      home_phone.entity_location_type.should ==
+        external_codes(:telephonelocationtype_home)
+      work_phone.entity_location_type.should ==
+        external_codes(:telephonelocationtype_work)
+
+      home_phone.area_code.should == '555'
+      home_phone.phone_number.should == '5552004'
+      home_phone.extension.should be_blank
+
+      work_phone.area_code.should == '955'
+      work_phone.phone_number.should == '5551009'
+      work_phone.extension.should be_blank
+    end
+
     it 'should take the LOINC code from OBR-4.1 when present' do
       with_human_event do |event|
         common_test_type = CommonTestType.create :common_name => 'Culture'

@@ -243,6 +243,14 @@ class StagedMessage < ActiveRecord::Base
                                                               :extension => extension,
                                                               :entity_location_type_id => patient.telephone_type_home.id)
       end
+
+      unless patient.telephone_work_empty?
+        area_code, number, extension = patient.telephone_work
+        event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                              :phone_number => number,
+                                                              :extension => extension,
+                                                              :entity_location_type_id => patient.telephone_type_work.id)
+      end
     end
 
     event.build_jurisdiction unless event.jurisdiction

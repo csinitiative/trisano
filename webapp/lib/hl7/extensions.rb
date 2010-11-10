@@ -413,17 +413,36 @@ module StagedMessages
         end
     end
 
+    def telephone_empty?
+      components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
+    end
+
     def telephone_home
-      phone_components = self.pid_segment.phone_home.split(pid_segment.item_delim)
-      area_code = number = extension = nil
-      unless phone_components[0].blank?
-        area_code, number, extension = Utilities.parse_phone(phone_components[0])
-      else
-        area_code = phone_components[5]
-        number = phone_components[6]
-        extension = phone_components[7]
-      end
-      return area_code, number, extension
+      phone_components = pid_segment.phone_home.split(pid_segment.item_delim)
+      split_phone phone_components
+    end
+
+    def telephone_type_work
+      ExternalCode.find_by_code_name_and_the_code 'telephonelocationtype',
+        case pid_segment.phone_business.split(pid_segment.item_delim).third
+        when 'PH'
+          'WT'
+        when 'CP'
+          'MT'
+        when 'BP'
+          'PAGE'
+        else
+          'UNK'
+        end
+    end
+
+    def telephone_work
+      phone_components = pid_segment.phone_business.split(pid_segment.item_delim)
+      split_phone phone_components
+    end
+
+    def telephone_work_empty?
+      components_empty?(pid_segment.phone_business.split(pid_segment.item_delim))
     end
 
     def notes
@@ -439,6 +458,18 @@ module StagedMessages
     end
 
     private
+
+    def split_phone(phone_components)
+      area_code = number = extension = nil
+      unless phone_components[0].blank?
+        area_code, number, extension = Utilities.parse_phone(phone_components[0])
+      else
+        area_code = phone_components[5]
+        number = phone_components[6]
+        extension = phone_components[7]
+      end
+      return area_code, number, extension
+    end
 
     def components_empty?(components)
       components.all? { |comp| comp.empty? }

@@ -173,6 +173,19 @@ describe Message do
       hl7.patient_id.telephone_type_home.should == external_codes(:telephonelocationtype_unknown)
     end
 
+    it 'should return a work telephone number when present' do
+      hl7 = HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni])
+      a, n, e = hl7.patient_id.telephone_work
+      a.should == '955'
+      n.should == '5551009'
+      e.should be_blank
+    end
+
+    it 'should return a work telephone type of Work if the HL7 type is PH' do
+      hl7 = HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni])
+      hl7.patient_id.telephone_type_work.should == external_codes(:telephonelocationtype_work)
+    end
+
     it 'should properly parse a PHIN White race code in an HL7 2.5.1 message' do
       hl7 = HL7::Message.parse HL7MESSAGES[:realm_minimal_message]
       hl7.patient_id.trisano_race_id.should == external_codes(:race_white).id
