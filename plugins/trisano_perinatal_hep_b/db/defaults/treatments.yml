@@ -1,24 +1,40 @@
 - treatment_type_code: "PHBV"
   treatment_name: "HBIG"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B Dose 1"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B Dose 2"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B Dose 3"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B - Comvax Dose 1"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B - Comvax Dose 2"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B - Comvax Dose 3"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
 - treatment_type_code: "PHBV"
   treatment_name: "Hepatitis B - Comvax Dose 4"
+  associated_diseases:
+    - Hepatitis B Pregnancy Event
 
