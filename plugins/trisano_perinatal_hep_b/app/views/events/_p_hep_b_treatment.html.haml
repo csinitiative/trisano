@@ -22,7 +22,7 @@
 
     - core_element :treatment_id, f, :horiz do
       = f.label :treatment_name
-      = f.core_dropdown_field(:treatment_id, Treatment.all_by_type(Code.find_by_code_name_and_the_code("treatment_type", "PHBV")), :id, :treatment_name)
+      = f.core_dropdown_field(:treatment_id, @event.possible_treatments, :id, :treatment_name)
 
     - core_element :treatment_date, f, :horiz do
       = f.label :treatment_date

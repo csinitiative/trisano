@@ -33,7 +33,7 @@ module Trisano
         def treatments_core_field
           "contact_event[treatments]"
         end
-        
+
       end
     end
   end

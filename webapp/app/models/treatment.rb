@@ -44,10 +44,18 @@ class Treatment < ActiveRecord::Base
           treatment_type_code = attrs.fetch('treatment_type_code')
           code = Code.find_by_code_name_and_the_code('treatment_type', treatment_type_code)
           raise "Could not find treatment_type code for #{treatment_type_code}" if code.nil?
-          unless self.find_by_treatment_type_id_and_treatment_name(code.id, attrs["treatment_name"])
+          unless treatment = self.find_by_treatment_type_id_and_treatment_name(code.id, attrs["treatment_name"])
             load_attrs = attrs.reject { |key, value| !attributes.include?(key) }
             load_attrs.merge!(:treatment_type_id => code.id)
-            Treatment.create!(load_attrs)
+            treatment = Treatment.create!(load_attrs)
+          end
+          if attrs['associated_diseases'] and not attrs['associated_diseases'].empty?
+            diseases = Disease.all(:conditions => ['disease_name IN (?)', attrs['associated_diseases']])
+            diseases.each do |disease|
+              unless disease.treatments.include?(treatment)
+                disease.treatments <<  treatment
+              end
+            end
           end
         end
       end
