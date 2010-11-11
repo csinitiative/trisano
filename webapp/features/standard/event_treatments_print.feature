@@ -9,10 +9,10 @@ Features: Printing events with treatments
     | last_name | first_name |
     | Davis     | James      |
     And the following treatments exist
-    | treatment_name | active |
-    | Rubbings       | true   |
-    | Foot massage   | true   |
-    | Leeches        | true   |
+    | treatment_name | active | default |
+    | Rubbings       | true   | true    |
+    | Foot massage   | true   | true    |
+    | Leeches        | true   | true    |
     When I go to edit the CMR
     And I select "Rubbings" from "morbidity_event_interested_party_attributes_treatments_attributes_0_treatment_id"
     And I save the event
@@ -27,8 +27,6 @@ Features: Printing events with treatments
     And I choose to print "All" data
     And I press "Print"
     Then I should see "Rubbings"
-
-    
 
 
 

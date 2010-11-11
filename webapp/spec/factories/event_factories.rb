@@ -85,7 +85,6 @@ end
 Factory.define :interested_party do |ip|
   ip.association :person_entity
   ip.association :risk_factor, :factory => :participations_risk_factor
-  ip.treatments {|treatments| [treatments.association(:participations_treatment)]}
 end
 
 Factory.define :interested_place do |ip|

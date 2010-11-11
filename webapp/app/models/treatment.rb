@@ -17,6 +17,8 @@
 
 class Treatment < ActiveRecord::Base
   belongs_to :treatment_type, :class_name => 'Code', :foreign_key => 'treatment_type_id'
+  has_many :disease_specific_treatments, :dependent => :destroy
+  has_many :diseases, :through => :disease_specific_treatments
 
   validates_presence_of :treatment_name
 
@@ -52,7 +54,7 @@ class Treatment < ActiveRecord::Base
     end
 
     def treatments_for_event(event)
-      treatments = self.active.default
+      treatments = self.active
       event_treatments = event.try(:interested_party).try(:treatments)
 
       unless event_treatments.nil?

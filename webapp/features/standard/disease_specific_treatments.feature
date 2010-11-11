@@ -18,3 +18,18 @@ Feature: Treatments listed by disease
      And I should not see the following treatment options:
        | treatment_name |
        | Placebo        |
+
+  Scenario: Treatments lists are based on the event's disease
+    Given disease "The Trots" exists
+      And a morbidity event exists with the disease The Trots
+      And the following treatments associated with the disease "The Trots":
+        | treatment_name | active | default |
+        | Water Joe      | true   | false   |
+     When I go to edit the cmr
+     Then I should see the following treatment options:
+        | treatment_name |
+        | Water Joe      |
+      And I should not see the following treatment options:
+        | treatment_name |
+        | Shot           |
+        | Beer           |

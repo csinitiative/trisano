@@ -23,6 +23,9 @@ describe Treatment do
     Treatment.delete_all
   end
 
+  it { should have_many(:diseases) }
+  it { should have_many(:disease_specific_treatments) }
+
   describe "returning treatments" do
 
     describe "by type" do
@@ -83,7 +86,7 @@ describe Treatment do
         @event.interested_party.treatments << Factory.create(:participations_treatment, :treatment => @inactive_treatment)
         treatments = Treatment.treatments_for_event(@event)
         treatments.detect {|treatment| treatment.treatment_name == @inactive_treatment.treatment_name }.should_not be_nil
-        treatments.index(Treatment.find_by_treatment_name("B Treatment")).should > treatments.index(Treatment.find_by_treatment_name("A Treatment"))
+        (treatments.index(Treatment.find_by_treatment_name("B Treatment")) > treatments.index(Treatment.find_by_treatment_name("A Treatment"))).should be_true
       end
 
       it "should not fail if treatments are not explicitly added to the event" do

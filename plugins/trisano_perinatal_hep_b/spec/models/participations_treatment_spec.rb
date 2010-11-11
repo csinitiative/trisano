@@ -22,7 +22,9 @@ describe ParticipationsTreatment, "in the Perinatal Hep B plugin" do
   describe "on a contact event with the disease Hep" do
 
     before(:each) do
-      @event = Factory(:contact_event)
+      @event = Factory.create(:contact_event)
+      @treatment = Factory.create(:treatment)
+      @event.interested_party.treatments.create!(:treatment_id => @treatment.id)
     end
 
     describe "when validating treatment date" do
@@ -42,7 +44,7 @@ describe ParticipationsTreatment, "in the Perinatal Hep B plugin" do
         @event.save
         @event.interested_party.treatments[0].errors.on(:treatment_date).should be_nil
       end
-      
+
       it "should not allow for a blank treatment date" do
         @event.interested_party.treatments[0].treatment_date = nil
         @event.save

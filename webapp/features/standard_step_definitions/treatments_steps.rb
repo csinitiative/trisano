@@ -37,3 +37,9 @@ Given /^the following treatments:$/ do |table|
   end
 end
 
+Given /^the following treatments associated with the disease "([^\"]*)":$/ do |disease_name, table|
+  disease = Disease.find_by_disease_name(disease_name)
+  table.hashes.each do |attributes|
+    disease.treatments.create!(attributes)
+  end
+end
