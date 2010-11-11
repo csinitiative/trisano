@@ -142,7 +142,12 @@ en:
               invalid: "The task interval is invalid"
             until_date:
               out_of_range: "date must fall within the next two years"
-
+        treatment:
+          attributes:
+            base:
+              failed_treatment_merge: 'Merge failed.'
+              cannot_merge_treatment_into_itself: 'Cannot merge a treatment into itself.'
+              no_treatments_for_merging: 'Unable to merge treatments: No treatments were provided for merging.'
         hospitalization_facility:
           attributes:
             base:

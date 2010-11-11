@@ -18,8 +18,8 @@
 class TreatmentsController < AdminController
 
   before_filter :load_treatments, :only => [:index, :merge]
-  def index
 
+  def index
   end
 
   def new
@@ -67,6 +67,18 @@ class TreatmentsController < AdminController
   def merge
     @treatment = Treatment.find(params[:id])
     render :action => "index"
+  end
+
+  def duplicates
+    @treatment = Treatment.find(params[:id])
+
+    if @treatment.merge(params[:to_merge])
+      flash[:notice] = 'Merge successful.'
+      redirect_to request.env["HTTP_REFERER"]
+    else
+      flash[:error] = @treatment.errors["base"]
+      redirect_to request.env["HTTP_REFERER"]
+    end
   end
 
   private

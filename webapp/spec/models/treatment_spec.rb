@@ -169,5 +169,63 @@ describe Treatment do
     end
     
   end
+
+  describe "merging duplicate treatments" do
+
+    before(:each) do
+      @good_treatment = Factory.create(:treatment, :treatment_name => "Foot rubbings")
+      @dupe_treatment_one = Factory.create(:treatment, :treatment_name => "Foot rubbingz")
+      @dupe_treatment_two = Factory.create(:treatment, :treatment_name => "Foot rubbingzz")
+
+      @pt_using_good_treatment = Factory.create(:participations_treatment, :treatment => @good_treatment)
+      @pt_using_dupe_one = Factory.create(:participations_treatment, :treatment => @dupe_treatment_one)
+      @pt_using_dupe_two = Factory.create(:participations_treatment, :treatment => @dupe_treatment_two)
+    end
+
+    it "should return true on success" do
+      @good_treatment.merge([@dupe_treatment_one.id, @dupe_treatment_two.id]).should be_true
+    end
+
+    it "should point the participations_treatments using the other treatments to this treatment" do
+      @good_treatment.merge([@dupe_treatment_one.id, @dupe_treatment_two.id]).should be_true
+      @pt_using_dupe_one.reload
+      @pt_using_dupe_two.reload
+
+      @pt_using_dupe_one.treatment.should == @good_treatment
+      @pt_using_dupe_two.treatment.should == @good_treatment
+    end
+
+    it "should delete the duplicate treatments" do
+      @good_treatment.merge([@dupe_treatment_one.id, @dupe_treatment_two.id]).should be_true
+      Treatment.find_by_id(@good_treatment.id).should_not be_nil
+      Treatment.find_by_id(@dupe_treatment_one.id).should be_nil
+      Treatment.find_by_id(@dupe_treatment_two.id).should be_nil
+    end
+    
+    it "should return nil if there was an error" do
+      @good_treatment.merge(0).should be_nil
+    end
+
+    it "should add an error to the treatment errors if there was an error" do
+      @good_treatment.merge(0).should be_nil
+      @good_treatment.errors.on(:base).should =~ /Merge failed./
+    end
+
+    it "should return nil with an error on the treatment if it was not provided any merge ids" do
+      @good_treatment.merge(0).should be_nil
+      @good_treatment.errors.empty?.should be_false
+    end
+
+    it "should return nil with an error if the treatment is provided with itself for merging" do
+      @good_treatment.merge(@good_treatment.id).should be_nil
+      @good_treatment.errors[:base].should =~ /Cannot merge a treatment into itself./
+    end
+
+    it "should return nill with an error if provided with an empty array" do
+      @good_treatment.merge([]).should be_nil
+      @good_treatment.errors[:base].should =~ /Unable to merge treatments: No treatments were provided for merging./
+    end
+  
+  end
   
 end

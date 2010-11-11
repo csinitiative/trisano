@@ -135,7 +135,12 @@ es:
               invalid: "Está inválido el intervalo de tareas"
             until_date:
               out_of_range: "la fecha debe figurarse dentro de los próximos dos años"
-
+        treatment:
+          attributes:
+            base:
+              failed_treatment_merge: 'Merge failed. (EN)'
+              cannot_merge_treatment_into_itself: 'Cannot merge a treatment into itself. (EN)'
+              no_treatments_for_merging: 'Unable to merge treatments: No treatments were provided for merging. (EN)'
         hospitalization_facility:
           attributes:
             base:

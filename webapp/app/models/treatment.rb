@@ -68,4 +68,36 @@ class Treatment < ActiveRecord::Base
     end
   end
 
+  def merge(treatment_ids)
+    treatment_ids = [treatment_ids].flatten.compact.uniq.collect { |id| id.to_i }
+    
+    if treatment_ids.empty?
+      errors.add(:base, :no_treatments_for_merging)
+      return nil
+    end
+
+    if treatment_ids.include?(self.id)
+      errors.add(:base, :cannot_merge_treatment_into_itself)
+      return nil
+    end
+
+    begin
+      Treatment.transaction do
+        treatment_ids.each do |treatment_id|
+          ParticipationsTreatment.find_all_by_treatment_id(treatment_id).each do |pt|
+            pt.update_attribute(:treatment_id, self.id)
+          end
+
+          Treatment.destroy(treatment_id)
+        end
+      end
+
+      return true
+    rescue Exception => ex
+      logger.error ex
+      errors.add(:base, :failed_treatment_merge, :msg => ex.message)
+      return nil
+    end
+  end
+
 end

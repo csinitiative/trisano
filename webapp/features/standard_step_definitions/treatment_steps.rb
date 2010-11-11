@@ -20,12 +20,19 @@ When /^I click merge for "([^\"]*)"$/ do |treatment_name|
   click_link("merge_#{treatment.id}")
 end
 
-Then /^I should see "([^\"]*)" in the treatment merge section$/ do |name|
-  response.should have_xpath("//div[@id='merge_treatment']//div[contains(text(), '#{name}')]")
+When /^I select the merge check box for the treatment "([^\"]*)"$/ do |treatment_name|
+  treatment = Treatment.find_by_treatment_name(treatment_name)
+  check("to_merge_#{treatment.id}")
 end
 
-Then /^I should see "([^\"]*)" in the treatment search results section$/ do |name|
-  response.should have_xpath("//div[@id='treatment_list']//a[contains(text(), '#{name}')]")
+Then /^I should see "([^\"]*)" in the treatment merge section$/ do |treatment_name|
+  response.should have_xpath("//div[@id='merge_treatment']//div[contains(text(), '#{treatment_name}')]")
 end
 
+Then /^I should see "([^\"]*)" in the treatment search results section$/ do |treatment_name|
+  response.should have_xpath("//div[@id='treatment_list']//a[contains(text(), '#{treatment_name}')]")
+end
 
+Then /^I should not see "([^\"]*)" in the treatment search results section$/ do |treatment_name|
+  response.should_not have_xpath("//div[@id='treatment_list']//a[contains(text(), '#{treatment_name}')]")
+end

@@ -19,7 +19,7 @@ module TreatmentsHelper
   
   def render_merge_treatment
 
-    haml_tag(:form,  :action => url_for(:controller => 'treatments', :action => 'duplicate', :id => @treatment), :method => :post, :id => "merge_form") do
+    haml_tag(:form,  :action => url_for(:controller => 'treatments', :action => 'duplicates', :id => @treatment), :method => :post, :id => "merge_form") do
       haml_tag(:div, :id => 'merge_treatment') do
         haml_tag(:table, :class => 'list') do
           haml_concat "<tr><th class='forminformation'>#{t("merge_treatment")}</th><th></th></tr>"
@@ -63,7 +63,7 @@ module TreatmentsHelper
       check_box << t("merge_into", :name => h(@treatment.treatment_name))
       haml_concat(check_box)
     else
-      haml_concat(link_to t('merge'), { :controller => 'treatments', :action => 'merge', :id => treatment }, :id => "merge_#{treatment.id}")
+      haml_concat(link_to t('merge'), { :controller => 'treatments', :action => 'merge', :id => treatment, :treatment_name => params[:treatment_name] }, :id => "merge_#{treatment.id}")
     end
     
   end
