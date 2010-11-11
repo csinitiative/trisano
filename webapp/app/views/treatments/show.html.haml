@@ -38,6 +38,8 @@
           .formname
             = h(@treatment.treatment_name)
           = @treatment.active? ? t('active') :  t('inactive')
+          -if @treatment.default?
+            =t(:default)
         %td
           .tools{:style => "position: absolute; right: 15px;"}
             = link_to t('edit'), edit_treatment_path(@treatment)

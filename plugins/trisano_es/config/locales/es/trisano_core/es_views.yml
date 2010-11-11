@@ -271,6 +271,8 @@ es:
   edit_treatment: 'Edit Treatment (EN)'
   treatment_created: 'Treatment created (EN)'
   treatment_updated: 'Treatment updated (EN)'
+  default?: 'Default? (EN)'
+  default: 'Default (EN)'
 #Encounter events
   view_encounter_event: 'Ver el Evento de Encuentro: {{date}}'
   encounter_on: 'Encuentro en {{date}}'

@@ -66,3 +66,20 @@ Features: Adding and editing treatments
     Then I should see "Treatment updated"
       And I should see "Active"
 
+  Scenario: Marking a treatment as a default
+    Given the following treatments exist
+    | treatment_name |
+    | Rubbings       |
+    When I go to the treatment admin page
+     And I follow "Edit"
+     And I check "Default"
+     And I press "Update"
+    Then I should see "Treatment updated"
+     And I should see "Default"
+
+    When I follow "Edit"
+     And I uncheck "Default"
+     And I press "Update"
+    Then I should see "Treatment updated" 
+     And I should not see "Default"
+

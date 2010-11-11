@@ -25,5 +25,8 @@
         %label{:for => 'active', :style => 'display: inline'}
           = f.check_box(:active)
           =t('active?')
+        %label{ :for => 'treatment_default', :style => 'display: inline' }
+          =f.check_box(:default)
+          =t('default?')
       %p
 
