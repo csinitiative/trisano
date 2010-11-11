@@ -74,11 +74,11 @@ class TreatmentsController < AdminController
 
     if @treatment.merge(params[:to_merge])
       flash[:notice] = 'Merge successful.'
-      redirect_to request.env["HTTP_REFERER"]
     else
-      flash[:error] = @treatment.errors["base"]
-      redirect_to request.env["HTTP_REFERER"]
+      flash[:error] = @treatment.errors["base"]      
     end
+
+    redirect_to request.env["HTTP_REFERER"]
   end
 
   private
