@@ -2,27 +2,33 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Treatment < ActiveRecord::Base
   belongs_to :treatment_type, :class_name => 'Code', :foreign_key => 'treatment_type_id'
-  
+  has_many :disease_specific_treatments, :dependent => :destroy
+  has_many :diseases, :through => :disease_specific_treatments
+
   validates_presence_of :treatment_name
 
-  named_scope :active, 
+  named_scope :active,
     :conditions => ["active = ?", true],
     :order => "treatment_name ASC"
+
+  named_scope :default, {
+    :conditions => { :default => true }
+  }
 
   class << self
 
@@ -30,7 +36,7 @@ class Treatment < ActiveRecord::Base
       raise ArgumentError unless type_code.is_a?(Code)
       self.find(:all, :conditions => ["treatment_type_id = ?", type_code.id], :include => :treatment_type)
     end
-    
+
     def load!(hashes)
       transaction do
         attributes = Treatment.new.attribute_names
@@ -46,31 +52,11 @@ class Treatment < ActiveRecord::Base
         end
       end
     end
-
-    def treatments_for_event(event)
-      treatments = self.active
-      event_treatments = event.try(:interested_party).try(:treatments)
-
-      unless event_treatments.nil?
-        added_inactive_treatment = false
-        
-        event_treatments.each do |pt|
-          if pt.try(:treatment).try(:id) && !pt.try(:treatment).try(:active?)
-            treatments << pt.treatment
-            added_inactive_treatment = true
-          end
-        end
-
-        treatments = treatments.sort_by { |treatment| treatment.treatment_name }.uniq if added_inactive_treatment
-      end
-
-      treatments
-    end
   end
 
   def merge(treatment_ids)
     treatment_ids = [treatment_ids].flatten.compact.uniq.collect { |id| id.to_i }
-    
+
     if treatment_ids.empty?
       errors.add(:base, :no_treatments_for_merging)
       return nil

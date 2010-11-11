@@ -62,6 +62,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
         :parent_event => @morbidity_event,
         :disease_event => Factory.create(:disease_event, :disease => @disease)
       )
+      @contact_event.interested_party.treatments.create!(:treatment_id => Factory.create(:treatment).id)
 
       @dsc = Factory.create(:disease_specific_callback,
         :callback_key => "treatment_date_required",

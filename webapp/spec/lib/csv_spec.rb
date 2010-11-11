@@ -93,7 +93,7 @@ describe Export::Csv do
   describe "when passed an event w/ a contact" do
     before do
       @morbidity_event = Factory.create(:morbidity_event)
-      @contact_event   = Factory.create(:contact_event)
+      @contact_event   = Factory.create(:contact_with_disease)
       @contact_event.parent_event = @morbidity_event
       @contact_event.save!
     end

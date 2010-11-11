@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
@@ -22,6 +22,9 @@ describe Treatment do
   before(:all) do
     Treatment.delete_all
   end
+
+  it { should have_many(:diseases) }
+  it { should have_many(:disease_specific_treatments) }
 
   describe "returning treatments" do
 
@@ -70,63 +73,8 @@ describe Treatment do
       end
     end
 
-    shared_examples_for "event with treatment" do
-      it "should return a collection of active treatments for a select list" do
-        treatments = Treatment.treatments_for_event(@event)
-        Treatment.active.each do |treatment|
-          treatment.active.should be_true
-        end
-        treatments.detect {|treatment| treatment.treatment_name == @inactive_treatment.treatment_name }.should be_nil
-      end
-
-      it "should also return an inactive treatment in the correct sorted order if it is associated with a morbidity event" do
-        @event.interested_party.treatments << Factory.create(:participations_treatment, :treatment => @inactive_treatment)
-        treatments = Treatment.treatments_for_event(@event)
-        treatments.detect {|treatment| treatment.treatment_name == @inactive_treatment.treatment_name }.should_not be_nil
-        treatments.index(Treatment.find_by_treatment_name("B Treatment")).should > treatments.index(Treatment.find_by_treatment_name("A Treatment"))
-      end
-
-      it "should not fail if treatments are not explicitly added to the event" do
-        treatments = Treatment.treatments_for_event(@event)
-        treatments.should_not be_empty
-      end
-    end
-
-    describe "Treatment#treatments_for_event" do
-      before(:each) do
-        @active_treatment_one = Factory.create(:treatment, :treatment_name => "B Treatment", :active => true)
-        @active_treatment_two = Factory.create(:treatment, :treatment_name => "C Treatment", :active => true)
-        @inactive_treatment = Factory.create(:treatment, :treatment_name => "A Treatment", :active => false)
-      end
-
-      describe "on morbidity events" do
-        before(:each) do
-          @event = Factory.create(:morbidity_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-      describe "on contact events" do
-        before(:each) do
-          @event = Factory.create(:contact_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-      describe "on encounter events" do
-        before(:each) do
-          @event = Factory.create(:encounter_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-
-    end
   end
-  
+
   describe "loading" do
     before(:each) do
       @code = Factory.create(:code, :code_name => "treatment_type", :the_code => "TC", :code_description => "Test Code")
@@ -167,7 +115,7 @@ describe Treatment do
       lambda {Treatment.load!(@treatment_hashes)}.should change {Treatment.count}.by(2)
       lambda {Treatment.load!(@treatment_hashes)}.should change {Treatment.count}.by(0)
     end
-    
+
   end
 
   describe "merging duplicate treatments" do
@@ -201,7 +149,7 @@ describe Treatment do
       Treatment.find_by_id(@dupe_treatment_one.id).should be_nil
       Treatment.find_by_id(@dupe_treatment_two.id).should be_nil
     end
-    
+
     it "should return nil if there was an error" do
       @good_treatment.merge(0).should be_nil
     end
@@ -225,7 +173,7 @@ describe Treatment do
       @good_treatment.merge([]).should be_nil
       @good_treatment.errors[:base].should =~ /Unable to merge treatments: No treatments were provided for merging./
     end
-  
+
   end
-  
+
 end

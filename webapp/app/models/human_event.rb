@@ -645,6 +645,31 @@ class HumanEvent < Event
 
   end
 
+  def possible_treatments(reload=false)
+    if reload or @possible_treatments.nil?
+      options = { :order => 'treatment_name' }
+
+      if disease = disease_event.try(:disease)
+        options[:joins] = 'LEFT JOIN disease_specific_treatments b ON b.treatment_id = treatments.id'
+        options[:conditions] = [<<-SQL, disease.id, self.id]
+          (active = true AND disease_id = ?)
+          OR treatments.id IN (
+            SELECT treatment_id FROM participations_treatments a
+              JOIN participations b ON b.id = a.participation_id AND b.event_id = ?)
+        SQL
+      else
+        options[:conditions] = [<<-SQL, self.id]
+          ("default" = true AND active = true)
+          OR id IN (
+            SELECT treatment_id FROM participations_treatments a
+              JOIN participations b ON b.id = a.participation_id AND b.event_id = ?)
+        SQL
+      end
+      @possible_treatments = Treatment.all(options)
+    end
+    @possible_treatments
+  end
+
   private
 
   def set_age_at_onset

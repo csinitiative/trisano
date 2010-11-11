@@ -9,8 +9,8 @@ Feature: Web API Cmrs Client
       | Disease name |
       | AIDS         |
     And the following treatments exist
-    | treatment_name |
-    | Rubbings       |
+    | treatment_name | active | default |
+    | Rubbings       | true   | true    |
     When I visit the cmrs new page
 
     And I fill out the form field "morbidity_event[interested_party_attributes][person_entity_attributes][person_attributes][first_name]" with "David"

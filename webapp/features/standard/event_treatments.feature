@@ -17,7 +17,7 @@ Feature: Event treatment fields
 
   Scenario: Viewing treatment names associated with a contact event
     Given a simple morbidity event for last name "Smoker"
-      And the morbidity event has the following contacts:  
+      And the morbidity event has the following contacts:
         | last_name | first_name |
         | Davis     | James      |
       And the contact event has the following treatments:

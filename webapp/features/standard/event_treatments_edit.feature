@@ -9,11 +9,11 @@ Features: Editing treatments on events
     | last_name | first_name |
     | Davis     | James      |
     And the following treatments exist
-    | treatment_name | active |
-    | Rubbings       | true   |
-    | Foot massage   | true   |
-    | Leeches        | true   |
-    | Garlic         | false  |
+    | treatment_name | active | default |
+    | Rubbings       | true   | true    |
+    | Foot massage   | true   | true    |
+    | Leeches        | true   | true    |
+    | Garlic         | false  | true    |
     When I go to edit the CMR
     Then I should see "Leeches"
     And I should not see "Garlic"
@@ -35,15 +35,15 @@ Features: Editing treatments on events
     | last_name | first_name |
     | Davis     | James      |
     And the morbidity event has the following treatments:
-    | treatment_name | active |
-    | Rubbings       | false  |
+    | treatment_name | active | default |
+    | Rubbings       | false  | true    |
     And the contact event has the following treatments:
-    | treatment_name | active |
-    | Bleedings       | false  |
+    | treatment_name | active | default |
+    | Bleedings      | false  | true    |
     And there is an associated encounter event
     And the encounter event has the following treatments:
-    | treatment_name | active |
-    | Squeezings       | false  |
+    | treatment_name | active | default |
+    | Squeezings     | false  | true    |
 
     When I go to edit the CMR
     Then I should see "Rubbings"
@@ -58,11 +58,11 @@ Features: Editing treatments on events
   Scenario: Selected treatments should appear in show mode for morbidity events
     Given a simple morbidity event for last name "Smoker"
       And the following treatments exist
-      	| treatment_name | active |
-      	| Rubbings       | true   |
-      	| Foot massage   | true   |
-      	| Leeches        | true   |
-      	| Garlic         | false  |
+        | treatment_name | active | default |
+        | Rubbings       | true   | true    |
+        | Foot massage   | true   | true    |
+        | Leeches        | true   | true    |
+        | Garlic         | false  | true    |
     When I go to edit the CMR
       And I select "Leeches" from "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
       And I save the event
@@ -78,11 +78,11 @@ Features: Editing treatments on events
         | last_name | first_name |
         | Davis     | James      |
       And the following treatments exist
-      	| treatment_name | active |
-      	| Rubbings       | true   |
-      	| Foot massage   | true   |
-      	| Leeches        | true   |
-      	| Garlic         | false  |
+        | treatment_name | active | default |
+        | Rubbings       | true   | true    |
+        | Foot massage   | true   | true    |
+        | Leeches        | true   | true    |
+        | Garlic         | false  | true    |
     When I am on the event edit page
       And I follow "Edit Contact"
       And I select "Leeches" from "contact_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
@@ -97,12 +97,12 @@ Features: Editing treatments on events
   Scenario: Selected treatments should appear in show mode for encounter events
     Given a morbidity event exists with the disease African Tick Bite Fever
       And there is an associated encounter event
-      And the following treatments exist
-      	| treatment_name | active |
-      	| Rubbings       | true   |
-      	| Foot massage   | true   |
-      	| Leeches        | true   |
-      	| Garlic         | false  |
+      And the following treatments associated with the disease "African Tick Bite Fever":
+        | treatment_name | active | default |
+        | Rubbings       | true   | true    |
+        | Foot massage   | true   | true    |
+        | Leeches        | true   | true    |
+        | Garlic         | false  | true    |
     When I am on the event edit page
       And I follow "Edit Encounter"
       And I select "Leeches" from "encounter_event[interested_party_attributes][treatments_attributes][0][treatment_id]"

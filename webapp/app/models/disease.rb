@@ -35,6 +35,9 @@ class Disease < ActiveRecord::Base
   has_many :core_fields_diseases, :dependent => :destroy
   has_many :core_fields, :through => :core_fields_diseases
 
+  has_many :treatments, :through => :disease_specific_treatments
+  has_many :disease_specific_treatments, :dependent => :destroy
+
   has_many :disease_specific_selections, :dependent => :destroy
 
   has_many :organisms, :finder_sql => %q{

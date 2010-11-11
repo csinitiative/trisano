@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ContactEvent < HumanEvent
@@ -20,7 +20,7 @@ class ContactEvent < HumanEvent
 
   supports :tasks
   supports :attachments
-  
+
   before_create do |contact|
     contact.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale))
   end
@@ -51,7 +51,7 @@ class ContactEvent < HumanEvent
       assign_to_queue
       assign_to_investigator
       investigate
-    end 
+    end
     state :rejected_by_lhd, :meta => {:description => I18n.translate('workflow.rejected_by_lhd')} do
       on_entry do |prior_state, triggering_event, *event_args|
         self.route_to_jurisdiction(Place.unassigned_jurisdiction)
@@ -100,7 +100,7 @@ class ContactEvent < HumanEvent
       assign_to_investigator
     end
     state :rejected_by_investigator do
-      on_entry do |prior_state, triggering_event, *event_args| 
+      on_entry do |prior_state, triggering_event, *event_args|
         self.investigator_id = nil
         self.investigation_started_date = nil
       end
@@ -131,7 +131,7 @@ class ContactEvent < HumanEvent
     end
     state :closed do
       assign_to_lhd
-    end        
+    end
   end
 
   class << self
@@ -195,7 +195,7 @@ class ContactEvent < HumanEvent
       base_errors.values.each { |msg| self.errors.add(:base, *msg) }
     end
   end
-  
+
   private
 
   def validate_disposition_date_against_birth_date(base_errors)
