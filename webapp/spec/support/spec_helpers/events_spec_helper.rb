@@ -13,7 +13,7 @@ module EventsSpecHelper
   def given_a_contact_with_disease(disease)
     morb = given_a_morb_with_disease disease
     contact = given_a_contact_for_morb morb
-    contact.disease_event.update_attributes! :disease => disease
+    contact.create_disease_event :disease => disease
     contact
   end
 end

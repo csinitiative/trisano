@@ -647,8 +647,8 @@ class HumanEvent < Event
 
   def possible_treatments(reload=false)
     if reload or @possible_treatments.nil?
-
       options = { :order => 'treatment_name' }
+
       if disease = disease_event.try(:disease)
         options[:joins] = 'LEFT JOIN disease_specific_treatments b ON b.treatment_id = treatments.id'
         options[:conditions] = [<<-SQL, disease.id, self.id]

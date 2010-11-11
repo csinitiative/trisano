@@ -27,10 +27,15 @@ end
 Factory.define :contact_event do |e|
   e.association :interested_party
   e.association :jurisdiction
-  e.association :disease_event
   e.association :parent_event, :factory => :morbidity_event
   e.association :participations_contact
 end
+
+Factory.define :contact_with_disease, :parent => :contact_event do |e|
+  e.association :disease_event
+end
+
+
 
 Factory.define :encounter_event do |e|
   e.association :parent_event, :factory => :morbidity_event

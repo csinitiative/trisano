@@ -376,7 +376,7 @@ module CsvSpecHelper
       m = Factory.build(:morbidity_event)
       m.stubs(:answers).returns([a])
     elsif event_type == :contact
-      m = Factory.build(:contact_event)
+      m = Factory.build(:contact_with_disease)
       m.stubs(:participations_contact).returns(@contact)
     else
       m = Factory.build(:place_event)

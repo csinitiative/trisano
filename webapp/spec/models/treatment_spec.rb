@@ -73,61 +73,6 @@ describe Treatment do
       end
     end
 
-    shared_examples_for "event with treatment" do
-      it "should return a collection of active treatments for a select list" do
-        treatments = Treatment.treatments_for_event(@event)
-        Treatment.active.each do |treatment|
-          treatment.active.should be_true
-        end
-        treatments.detect {|treatment| treatment.treatment_name == @inactive_treatment.treatment_name }.should be_nil
-      end
-
-      it "should also return an inactive treatment in the correct sorted order if it is associated with a morbidity event" do
-        @event.interested_party.treatments << Factory.create(:participations_treatment, :treatment => @inactive_treatment)
-        treatments = Treatment.treatments_for_event(@event)
-        treatments.detect {|treatment| treatment.treatment_name == @inactive_treatment.treatment_name }.should_not be_nil
-        (treatments.index(Treatment.find_by_treatment_name("B Treatment")) > treatments.index(Treatment.find_by_treatment_name("A Treatment"))).should be_true
-      end
-
-      it "should not fail if treatments are not explicitly added to the event" do
-        treatments = Treatment.treatments_for_event(@event)
-        treatments.should_not be_empty
-      end
-    end
-
-    describe "Treatment#treatments_for_event" do
-      before(:each) do
-        @active_treatment_one = Factory.create(:treatment, :treatment_name => "B Treatment", :active => true)
-        @active_treatment_two = Factory.create(:treatment, :treatment_name => "C Treatment", :active => true)
-        @inactive_treatment = Factory.create(:treatment, :treatment_name => "A Treatment", :active => false)
-      end
-
-      describe "on morbidity events" do
-        before(:each) do
-          @event = Factory.create(:morbidity_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-      describe "on contact events" do
-        before(:each) do
-          @event = Factory.create(:contact_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-      describe "on encounter events" do
-        before(:each) do
-          @event = Factory.create(:encounter_event)
-        end
-
-        it_should_behave_like "event with treatment"
-      end
-
-
-    end
   end
 
   describe "loading" do

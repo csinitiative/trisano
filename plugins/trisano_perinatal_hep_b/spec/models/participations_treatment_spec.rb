@@ -22,7 +22,7 @@ describe ParticipationsTreatment, "in the Perinatal Hep B plugin" do
   describe "on a contact event with the disease Hep" do
 
     before(:each) do
-      @event = Factory.create(:contact_event)
+      @event = Factory.create(:contact_with_disease)
       @treatment = Factory.create(:treatment)
       @event.interested_party.treatments.create!(:treatment_id => @treatment.id)
     end

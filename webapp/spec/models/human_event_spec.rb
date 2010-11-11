@@ -601,9 +601,8 @@ describe "Getting a quick list of all contact" do
   end
 end
 
-describe Event, "possible treatments" do
+describe HumanEvent, "#possible_treatments" do
   before do
-    @event = Factory.create(:morbidity_event)
     @treatments = {}
     [{ :treatment_name => 'Shot', :active => true, :default => true },
      { :treatment_name => 'Beer', :active => true, :default => true },
@@ -615,14 +614,32 @@ describe Event, "possible treatments" do
   end
 
   describe "when no disease is present" do
-    it "returns all active,  default treatments" do
-      @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Shot']
+    shared_examples_for "an event listing default treatments" do
+      it "returns all active, default treatments sorted by name" do
+        @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Shot']
+      end
+
+      it "returns any treatments already associated w/ the event in sorted order" do
+        @event.interested_party.treatments.create!(:treatment_id => @treatments['Leeches'].id)
+        @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Leeches', 'Shot']
+      end
     end
 
-    it "returns any treatments already associated w/ the event" do
-      @event.interested_party.treatments.create!(:treatment_id => @treatments['Leeches'].id)
-      @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Leeches', 'Shot']
+    describe "on a morbidity event" do
+      before { @event = Factory.create(:morbidity_event) }
+      it_should_behave_like "an event listing default treatments"
     end
+
+    describe "on a contact event" do
+      before { @event = Factory.create(:contact_event) }
+      it_should_behave_like "an event listing default treatments"
+    end
+
+    describe "on an encounter event" do
+      before { @event = Factory.create(:encounter_event) }
+      it_should_behave_like "an event listing default treatments"
+    end
+
   end
 
   describe "when a disease is present" do
@@ -630,23 +647,48 @@ describe Event, "possible treatments" do
       @disease = Factory.create(:disease)
       @disease.treatments << @treatments['Leeches']
       @disease.treatments << @treatments['Shot']
-
-      @event.create_disease_event(:disease => @disease)
     end
 
-    it "returns treatments associated w/ the disease" do
-      @event.possible_treatments.map(&:treatment_name).should == ['Leeches', 'Shot']
+    shared_examples_for "an event listing disease specific treatments" do
+      it "returns treatments associated w/ the disease" do
+        @event.possible_treatments.map(&:treatment_name).should == ['Leeches', 'Shot']
+      end
+
+      it "returns any treatment already associated w/ the event" do
+        @event.interested_party.treatments.create!(:treatment_id =>  @treatments['Beer'].id)
+        @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Leeches', 'Shot']
+      end
+
+      it "returns an empty array if no treatments are associated" do
+        DiseaseSpecificTreatment.destroy_all
+        ParticipationsTreatment.destroy_all
+        @event.possible_treatments.should == []
+      end
     end
 
-    it "returns any treatment already associated w/ the event" do
-      @event.interested_party.treatments.create!(:treatment_id =>  @treatments['Beer'].id)
-      @event.possible_treatments.map(&:treatment_name).should == ['Beer', 'Leeches', 'Shot']
+    describe "on a morbidity event" do
+      before do
+        @event = Factory.create(:morbidity_event)
+        @event.create_disease_event(:disease => @disease)
+      end
+      it_should_behave_like "an event listing disease specific treatments"
     end
 
-    it "returns an empty array if no treatments are associated" do
-      DiseaseSpecificTreatment.destroy_all
-      ParticipationsTreatment.destroy_all
-      @event.possible_treatments.should == []
+    describe "on a contact event" do
+      before do
+        @event = Factory.create(:contact_event)
+        @event.create_disease_event(:disease => @disease)
+      end
+      it_should_behave_like "an event listing disease specific treatments"
     end
+
+    describe "on an encounter event" do
+      before do
+        @event = Factory.create(:encounter_event)
+        @event.create_disease_event(:disease => @disease)
+      end
+      it_should_behave_like "an event listing disease specific treatments"
+    end
+
   end
 end
