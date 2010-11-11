@@ -304,6 +304,37 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
+    it 'should set death_date and died_id when appropriate' do
+      login_as_super_user
+      staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_died])
+
+      # build the required organism and disease for this
+      disease  = Factory.create :campylobacteriosis
+      organism = Factory.build :campylobacter_jejuni
+      organism.diseases << disease
+      organism.save!
+
+      organism.diseases.count.should == 1
+
+      obx = staged_message.observation_requests.first.all_tests.first
+      db_organism = Organism.first(:conditions => [ "organism_name ~* ?", '^'+obx.result+'$' ])
+      db_organism.should_not be_blank
+      db_organism.should == organism
+
+      db_organism.diseases.count.should == 1
+
+      # sets the patient date of death
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.person.date_of_death.should == Date.parse('20101111')
+
+      # set the died_id in the disease_event
+      common_test_type = CommonTestType.create :common_name => 'Culture'
+      event.add_labs_from_staged_message staged_message
+      event.disease_event.died.should == ExternalCode.yes
+
+      common_test_type.destroy
+    end
+
     it 'should set multiple contact numbers when present' do
       login_as_super_user
       staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])

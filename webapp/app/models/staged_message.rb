@@ -227,6 +227,10 @@ class StagedMessage < ActiveRecord::Base
                                                          :birth_date => self.patient.birth_date,
                                                          :birth_gender_id => self.patient.trisano_sex_id)
 
+      unless patient.death_date.blank?
+        event.interested_party.person_entity.person.date_of_death = patient.death_date
+      end
+
       unless self.patient.address_empty?
         event.build_address(:street_number => self.patient.address_street_no,
                             :unit_number => self.patient.address_unit_no,

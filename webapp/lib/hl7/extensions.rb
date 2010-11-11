@@ -292,6 +292,19 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def death_date
+      Date.parse(pid_segment.death_date)
+    rescue
+    end
+
+    # This returns the actual PID-30 value, not a boolean, so I'm not
+    # calling it dead? or died?  It will be mapped to that in the app
+    # code.
+    def dead_flag
+      pid_segment.death_indicator
+    rescue
+    end
+
     def trisano_sex_id
       sex_id = nil
 

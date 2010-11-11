@@ -596,7 +596,7 @@ class HumanEvent < Event
         when "Nom"
           # Try and find OBX-5 in the organism list, otherwise map to result_value
           # Eventually, we'll need to add more heuristics here for SNOMED etc.
-          organism = Organism.first(:conditions => [ "LOWER(organism_name) = ?", obx.result.downcase ])
+          organism = Organism.first(:conditions => [ "organism_name ~* ?", '^'+obx.result+'$' ])
           if organism.blank?
             result_hash["result_value"] = obx.result
           else
@@ -643,6 +643,16 @@ class HumanEvent < Event
       end
     end
 
+    unless staged_message.patient.dead_flag.blank? or disease_event.nil?
+      code = case staged_message.patient.dead_flag
+      when 'Y'
+        ExternalCode.yes
+      when 'N'
+        ExternalCode.no
+      end
+
+      self.disease_event.update_attribute :died_id, code.id
+    end
   end
 
   def possible_treatments(reload=false)
