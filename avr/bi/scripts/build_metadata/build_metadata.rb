@@ -129,6 +129,7 @@ DatabaseMeta = Java::OrgPentahoDiCoreDatabase::DatabaseMeta
 SecurityService = Java::OrgPentahoPmsSchemaSecurity::SecurityService
 SecurityReference = Java::OrgPentahoPmsSchemaSecurity::SecurityReference
 BooleanProperty = Java::OrgPentahoPmsSchemaConceptTypesBool::ConceptPropertyBoolean
+OperationName = 'Rebuild Reporting Metadata'
 
 $event_types = {}
 
@@ -634,6 +635,16 @@ def save_metadata(dg, meta, filename)
   cwm.remove_domain
 end
 
+def init_etl_success(conn)
+  conn.create_statement.execute_update("DELETE FROM trisano.etl_success WHERE operation = '#{OperationName}' AND NOT success");
+  conn.create_statement.execute_update("INSERT INTO trisano.etl_success (success, operation) VALUES (FALSE, '#{OperationName}')");
+end
+
+def mark_etl_success(conn)
+  conn.create_statement.execute_update("DELETE FROM trisano.etl_success WHERE operation = '#{OperationName}'");
+  conn.create_statement.execute_update("INSERT INTO trisano.etl_success (success, operation) VALUES (TRUE, '#{OperationName}')");
+end
+
 if __FILE__ == $0
   FileUtils.rm 'metadata.xmi', :force => true
   metadatadir = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage')
@@ -642,6 +653,7 @@ if __FILE__ == $0
   KettleEnvironment.init
 
   db_connection do |conn|
+    init_etl_success conn
     # load plugins
     plugin_objects = []
     puts "Trying to load plugins from #{plugin_directory}"
@@ -692,7 +704,9 @@ if __FILE__ == $0
       end
       i += 1 if dg['name'] != 'TriSano'
     end
-  end
+
+    mark_etl_success conn
+  end ## end of db_connection block
 
   # If there's a copy of metadata.xmi here, it should have been published to some
   # other directory, so remove this one.

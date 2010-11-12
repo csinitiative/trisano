@@ -53,6 +53,7 @@ INSERT INTO trisano.core_tables (make_category, table_name, table_description, t
 (true,  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',       'trisano.dw_encounter_telephones_view',              6,  NULL),
 (true,  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',      'trisano.dw_encounters_treatments_events_view',      6,  NULL),
 (true,  'dw_place_events_view',                      'Place Events',                      'trisano.dw_place_events_view',                      7,  'Place'),
+(true,  'etl_success',                               'Data Sync Status',                  'trisano.etl_success',                               9,  NULL),
 (true,  'avr_groups_view',                           'Disease Groups',                    'trisano.avr_groups_view',                           9,  NULL),
 (false, 'avr_groups_diseases_view',                  'avr_groups_diseases_view',          'trisano.avr_groups_diseases_view',                  9,  NULL);
 
@@ -445,7 +446,10 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 ('trisano.dw_morbidity_events_view',                  'event_date_age',                     'event_date_age',                     'ME Dt Crtd Age',            true),
 ('trisano.dw_morbidity_events_view',                  'event_created_age',                  'event_created_age',                  'ME Event Date Age',         true),
 ('trisano.dw_contact_events_view',                    'event_date_age',                     'event_date_age',                     'CE Dt Crtd Age',            true),
-('trisano.dw_contact_events_view',                    'event_created_age',                  'event_created_age',                  'CE Event Date Age',         true);
+('trisano.dw_contact_events_view',                    'event_created_age',                  'event_created_age',                  'CE Event Date Age',         true),
+('trisano.etl_success',                               'operation',                          'operation',                          'Operation',                 true),
+('trisano.etl_success',                               'success',                            'success',                            'Succeeded',                 true),
+('trisano.etl_success',                               'entrydate',                          'entrydate',                          'Operation Date',            true);
 
 DROP TABLE IF EXISTS trisano.core_relationships;
 

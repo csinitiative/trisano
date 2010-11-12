@@ -416,10 +416,12 @@ $$;
 DROP TABLE IF EXISTS trisano.etl_success;
 
 CREATE TABLE trisano.etl_success (
+    operation TEXT,
     success BOOLEAN,
-    entrydate TIMESTAMPTZ DEFAULT NOW()
+    entrydate TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (operation, success)
 );
-INSERT INTO trisano.etl_success (success) VALUES (FALSE);
+INSERT INTO trisano.etl_success (operation, success) VALUES ('Data Warehouse Initialization', TRUE);
 
 DROP TABLE IF EXISTS trisano.formbuilder_columns;
 DROP TABLE IF EXISTS trisano.formbuilder_tables;
@@ -476,8 +478,8 @@ BEGIN
     CREATE SCHEMA staging;
     EXECUTE 'DROP SCHEMA IF EXISTS public CASCADE';
     CREATE SCHEMA public;
-    TRUNCATE TABLE trisano.etl_success;
-    INSERT INTO trisano.etl_success (success) VALUES (FALSE);
+    DELETE FROM trisano.etl_success WHERE operation = 'Data Sync' AND NOT success;
+    INSERT INTO trisano.etl_success (operation, success) VALUES ('Data Sync', FALSE);
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
@@ -1852,9 +1854,10 @@ DECLARE
     tmprec RECORD;
     tblnum INTEGER;
 BEGIN
-    SELECT success INTO validetl FROM trisano.etl_success ORDER BY entrydate LIMIT 1;
+    SELECT success INTO validetl FROM trisano.etl_success
+        WHERE operation = 'Structure Modification' ORDER BY entrydate DESC LIMIT 1;
     IF NOT validetl THEN
-        RAISE EXCEPTION 'Last ETL process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
+        RAISE EXCEPTION 'Last ETL structure modification process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
     END IF;
 
     SELECT schemaname FROM trisano.current_schema_name LIMIT 1 INTO cur_schema;
@@ -2145,6 +2148,9 @@ BEGIN
     END LOOP;
 
     UPDATE trisano.current_schema_name SET schemaname = new_schema;
+
+    DELETE FROM trisano.etl_success WHERE operation = 'Data Sync';
+    INSERT INTO trisano.etl_success (success, operation) VALUES (TRUE, 'Data Sync');
 
     RETURN TRUE;
 END;
