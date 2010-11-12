@@ -448,9 +448,17 @@ CREATE UNIQUE INDEX formbuilder_columns_ix
 CREATE INDEX formbuilder_column_orig_name
     ON trisano.formbuilder_columns (orig_column_name);
 
+-- This table allows us to specify differences that should exist between the
+-- trisano.* views and the underlying warehouse_? tables. Tablename is the name
+-- of the table in the warehouse_* schema whose associated view should be modified,
+-- and addition is the SQL text to be appended to the view definition.
+-- group_name is an optional field allowing whatever creates these modifications
+-- to identify groups of changes, so they can be deleted or updated easily in, for instance,
+-- plugin build_metadata scripts.
 CREATE TABLE trisano.view_mods (
-    tablename TEXT PRIMARY KEY,
-    addition TEXT
+    table_name TEXT PRIMARY KEY,
+    group_name TEXT,
+    addition TEXT NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
@@ -1893,7 +1901,7 @@ BEGIN
       FROM
         pg_class
         JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
-        LEFT JOIN trisano.view_mods vm ON (pg_class.relname = vm.tablename)
+        LEFT JOIN trisano.view_mods vm ON (pg_class.relname = vm.table_name)
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'fb_%'
       LOOP
         tmp := 'CREATE VIEW trisano.' || tmprec.view_name || '_view AS SELECT *' || tmprec.addition ||

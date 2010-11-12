@@ -441,7 +441,11 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 ('trisano.dw_place_events_view',                      'state',                              'state',                              'PX St',                     true),
 ('trisano.dw_place_events_view',                      'street_name',                        'street_name',                        'PX Street Nm',              true),
 ('trisano.dw_place_events_view',                      'street_number',                      'street_number',                      'PX Street Nbr',             true),
-('trisano.dw_place_events_view',                      'unit_number',                        'unit_number',                        'PX Unit Nbr',               true);
+('trisano.dw_place_events_view',                      'unit_number',                        'unit_number',                        'PX Unit Nbr',               true),
+('trisano.dw_morbidity_events_view',                  'event_date_age',                     'event_date_age',                     'ME Dt Crtd Age',            true),
+('trisano.dw_morbidity_events_view',                  'event_created_age',                  'event_created_age',                  'ME Event Date Age',         true),
+('trisano.dw_contact_events_view',                    'event_date_age',                     'event_date_age',                     'CE Dt Crtd Age',            true),
+('trisano.dw_contact_events_view',                    'event_created_age',                  'event_created_age',                  'CE Event Date Age',         true);
 
 DROP TABLE IF EXISTS trisano.core_relationships;
 
@@ -483,5 +487,9 @@ INSERT INTO trisano.core_relationships (from_table, from_column, to_table, to_co
 ('dw_encounter_events_view'         , 'patient_entity_id'     , 'dw_encounter_email_addresses_view'         , 'entity_id'              , '0:N', 'Cd'),
 ('dw_encounter_events_view'         , 'patient_entity_id'     , 'dw_encounter_telephones_view'              , 'entity_id'              , '0:N', 'Ce'),
 ('avr_groups_view'                  , 'id'                    , 'avr_groups_diseases_view'                  , 'avr_group_id'           , '0:N', default);
+
+INSERT INTO trisano.view_mods (table_name, addition) VALUES
+    ('dw_morbidity_events', 'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age'),
+    ('dw_contact_events',   'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age');
 
 COMMIT;
