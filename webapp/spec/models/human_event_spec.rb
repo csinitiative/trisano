@@ -623,15 +623,16 @@ describe 'When added to an event using an existing person entity' do
 end
 
 
-describe "Getting a quick list of all contact" do
+describe "Getting a quick list of events" do
   before do
     @parent_event = Factory.create(:morbidity_event)
     @contact_event = Factory.create(:contact_event, :parent_event => @parent_event)
+    @place_event = Factory.create(:place_event, :parent_event => @parent_event)
   end
 
   describe "children" do
-    it "returns all contacts" do
-      @parent_event.contacts_quick_list.size.should == 1
+    it "returns all events" do
+      @parent_event.events_quick_list.size.should == 2
     end
 
     it "returns promoted contacts" do
@@ -639,23 +640,28 @@ describe "Getting a quick list of all contact" do
       login_as_super_user #need this to promote. pffft
       @promoted_event.promote_to_morbidity_event
 
-      @parent_event.contacts_quick_list.size.should == 2
+      @parent_event.events_quick_list.size.should == 3
     end
 
-    it "doesn't return place events" do
+    it "returns place events" do
       Factory.create(:place_event, :parent_event => @parent_event)
-      @parent_event.contacts_quick_list.size.should == 1
+      @parent_event.events_quick_list.collect { |event| event if event.class.name == 'PlaceEvent' }.compact.size.should == 2
     end
 
-    it "returns the contact patients' full name" do
-      full_name = @contact_event.interested_party.person_entity.person.full_name
-      @parent_event.contacts_quick_list.map(&:full_name).should == [full_name]
+    it "returns the events' names" do
+      @parent_event.events_quick_list.each do |event|
+        if event.class.name == "ContactEvent"
+          event.full_name.should == @contact_event.interested_party.person_entity.person.full_name
+        elsif event.class.name == "PlaceEvent"
+          event.full_name.should == @place_event.interested_place.place_entity.place.name
+        end
+      end
     end
   end
 
   describe "siblings" do
     it "excludes 'self' from results" do
-      @contact_event.contact_siblings_quick_list.should == []
+      @contact_event.events_quick_list.should == []
     end
   end
 end

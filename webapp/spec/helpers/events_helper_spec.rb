@@ -119,7 +119,7 @@ describe EventsHelper do
       end
 
       it "displays a contact navigation widget, if parent has multiple contacts" do
-        helper.original_patient_controls(@contact_event).should have_tag('select.contacts_nav')
+        helper.original_patient_controls(@contact_event).should have_tag('select.events_nav')
       end
 
       it "displays a navigation message for promoted contacts" do

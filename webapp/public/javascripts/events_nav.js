@@ -1,6 +1,6 @@
 $j(function() {
 
-  $j('.contacts_nav').change(function(event) {
+  $j('.events_nav').change(function(event) {
     var selector = $j(this);
     var cancelled = true;
 
@@ -8,7 +8,7 @@ $j(function() {
       var buttons = {};
       buttons[i18n.t('save_and_exit')] = function() {
         cancelled = false;
-        $j('#contacts_nav_spinner').show();
+        $j('#events_nav_spinner').show();
         $j(formWatcher.form).append(redirectTo(
                                       build_url_with_tab_index(
                                         selector.val())));
@@ -18,7 +18,7 @@ $j(function() {
 
       buttons[i18n.t('leave_without_saving')] = function() {
         cancelled = false;
-        $j('#contacts_nav_spinner').show();
+        $j('#events_nav_spinner').show();
         formWatcher.submitted = true;
         send_url_with_tab_index(selector.val());
         $j(this).dialog('close');
@@ -28,7 +28,7 @@ $j(function() {
     };
 
     var redirectTo = function(path) {
-      return '<input id="contacts_nav_redirect" type="hidden" name="redirect_to" value="' + path + '"/>';
+      return '<input id="events_nav_redirect" type="hidden" name="redirect_to" value="' + path + '"/>';
     };
 
     var formIsDirty = function() {
@@ -41,7 +41,7 @@ $j(function() {
 
     if ($j(this).val()) {
       if (formIsDirty()) {
-        $j('#contacts_nav_dialog').dialog({
+        $j('#events_nav_dialog').dialog({
           title: i18n.t('unsaved_changes'),
           height: 300,
           width: 600,
@@ -53,7 +53,7 @@ $j(function() {
           }
         });
       } else {
-        $j('#contacts_nav_spinner').show();
+        $j('#events_nav_spinner').show();
         send_url_with_tab_index(selector.val());
       }
     }

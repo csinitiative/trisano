@@ -184,9 +184,10 @@ en:
   parent_cmr: 'Parent CMR'
   parent_patient: Parent Patient
   not_elevated: "Not yet elevated to morbidity events"
-  contact_nav:
+  event_sibling_nav:
     morbidity_events: '--- Navigate to Promoted Contacts ---'
     contact_events:   '--- Navigate to Related Contacts ---'
+    place_events:   '--- Navigate to Related Places ---'
 
 #core_field_elements
   add_core_field: 'Add Core Field'
