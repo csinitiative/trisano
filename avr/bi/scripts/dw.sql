@@ -20,6 +20,11 @@
 -- database, using a schema called "staging".
 
 BEGIN;
+    DELETE FROM trisano.etl_success WHERE operation = 'Data Sync Subprocess - Structure Modification' AND NOT success;
+    INSERT INTO trisano.etl_success (success, operation) VALUES (FALSE, 'Data Sync Subprocess - Structure Modification');
+COMMIT;
+
+BEGIN;
     DROP SCHEMA IF EXISTS staging CASCADE;
     ALTER SCHEMA public RENAME TO staging;
     CREATE SCHEMA public;
@@ -1359,8 +1364,8 @@ UPDATE questions q SET form_short_name = f.short_name
 
 ANALYZE;
 
-TRUNCATE trisano.etl_success;
-INSERT INTO trisano.etl_success (success) VALUES (TRUE);
+DELETE FROM trisano.etl_success WHERE operation = 'Data Sync Subprocess - Structure Modification';
+INSERT INTO trisano.etl_success (success, operation) VALUES (TRUE, 'Data Sync Subprocess - Structure Modification');
 
 COMMIT;
 

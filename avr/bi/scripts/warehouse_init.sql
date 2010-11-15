@@ -416,10 +416,12 @@ $$;
 DROP TABLE IF EXISTS trisano.etl_success;
 
 CREATE TABLE trisano.etl_success (
+    operation TEXT,
     success BOOLEAN,
-    entrydate TIMESTAMPTZ DEFAULT NOW()
+    entrydate TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (operation, success)
 );
-INSERT INTO trisano.etl_success (success) VALUES (FALSE);
+INSERT INTO trisano.etl_success (operation, success) VALUES ('Data Warehouse Initialization', TRUE);
 
 DROP TABLE IF EXISTS trisano.formbuilder_columns;
 DROP TABLE IF EXISTS trisano.formbuilder_tables;
@@ -448,9 +450,17 @@ CREATE UNIQUE INDEX formbuilder_columns_ix
 CREATE INDEX formbuilder_column_orig_name
     ON trisano.formbuilder_columns (orig_column_name);
 
+-- This table allows us to specify differences that should exist between the
+-- trisano.* views and the underlying warehouse_? tables. Tablename is the name
+-- of the table in the warehouse_* schema whose associated view should be modified,
+-- and addition is the SQL text to be appended to the view definition.
+-- group_name is an optional field allowing whatever creates these modifications
+-- to identify groups of changes, so they can be deleted or updated easily in, for instance,
+-- plugin build_metadata scripts.
 CREATE TABLE trisano.view_mods (
-    tablename TEXT PRIMARY KEY,
-    addition TEXT
+    table_name TEXT PRIMARY KEY,
+    group_name TEXT,
+    addition TEXT NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION trisano.shorten_identifier(TEXT) RETURNS TEXT AS $$
@@ -468,8 +478,8 @@ BEGIN
     CREATE SCHEMA staging;
     EXECUTE 'DROP SCHEMA IF EXISTS public CASCADE';
     CREATE SCHEMA public;
-    TRUNCATE TABLE trisano.etl_success;
-    INSERT INTO trisano.etl_success (success) VALUES (FALSE);
+    DELETE FROM trisano.etl_success WHERE operation = 'Data Sync' AND NOT success;
+    INSERT INTO trisano.etl_success (operation, success) VALUES ('Data Sync', FALSE);
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
@@ -1844,9 +1854,10 @@ DECLARE
     tmprec RECORD;
     tblnum INTEGER;
 BEGIN
-    SELECT success INTO validetl FROM trisano.etl_success ORDER BY entrydate LIMIT 1;
+    SELECT success INTO validetl FROM trisano.etl_success
+        WHERE operation = 'Structure Modification' ORDER BY entrydate DESC LIMIT 1;
     IF NOT validetl THEN
-        RAISE EXCEPTION 'Last ETL process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
+        RAISE EXCEPTION 'Last ETL structure modification process was, apparently, not valid. Not swapping schemas. See table trisano.etl_success.';
     END IF;
 
     SELECT schemaname FROM trisano.current_schema_name LIMIT 1 INTO cur_schema;
@@ -1893,7 +1904,7 @@ BEGIN
       FROM
         pg_class
         JOIN pg_namespace ON (pg_class.relnamespace = pg_namespace.oid)
-        LEFT JOIN trisano.view_mods vm ON (pg_class.relname = vm.tablename)
+        LEFT JOIN trisano.view_mods vm ON (pg_class.relname = vm.table_name)
       WHERE pg_namespace.nspname = new_schema AND pg_class.relkind = 'r' AND relname NOT LIKE 'fb_%'
       LOOP
         tmp := 'CREATE VIEW trisano.' || tmprec.view_name || '_view AS SELECT *' || tmprec.addition ||
@@ -2137,6 +2148,9 @@ BEGIN
     END LOOP;
 
     UPDATE trisano.current_schema_name SET schemaname = new_schema;
+
+    DELETE FROM trisano.etl_success WHERE operation = 'Data Sync';
+    INSERT INTO trisano.etl_success (success, operation) VALUES (TRUE, 'Data Sync');
 
     RETURN TRUE;
 END;

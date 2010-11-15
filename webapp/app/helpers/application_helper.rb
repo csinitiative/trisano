@@ -166,6 +166,8 @@ module ApplicationHelper
   def tabbed_content(tabs, focus_tab, &block)
     raise ArgumentError, "Missing block" unless block_given?
 
+    focus_tab = 0 if tabs.size <= focus_tab.to_i
+
     tabs_string = tabs.map{|tab| "'#{tab.first}'"}.join(',')
 
     concat(

@@ -730,35 +730,39 @@ module EventsHelper
     unless disease.blank?
       result << "&nbsp;|&nbsp;<span style='font-size: 12px; font-weight: light;'>#{h disease}</span>"
     end
-    result << "<div style=\"text-align: right\">#{sibling_contact_navigation(event)}</div>"
+    result << "<div style=\"text-align: right\">#{event_sibling_navigation(event)}</div>"
     result << "</div>"
   end
 
-  def sibling_contact_navigation(event)
-    return nil if event.contact_siblings_quick_list.blank?
-    contact_navigation(event.contact_siblings_quick_list)
+  def event_sibling_navigation(event)
+    return nil if event.event_siblings_quick_list.blank?
+    event_navigation(event.event_siblings_quick_list)
   end
 
-  def contact_navigation(contacts)
-    return nil if contacts.blank?
+  def event_navigation(events)
+    return nil if events.blank?
 
-    content_for(:javascript_includes) { javascript_include_tag 'contact_nav' }
+    content_for(:javascript_includes) { javascript_include_tag 'events_nav' }
+    partitioned_events = []
 
-    contacts = contacts.partition { |event| event.type == 'ContactEvent' }.reject(&:empty?)
-    result = image_tag('redbox_spinner.gif', :id => 'contacts_nav_spinner', :style => 'display: none;')
-    result << "<select class=\"contacts_nav\">"
-    contacts.each do |partition|
-      result << "<option value="">#{t(partition.first.type.tableize, :scope => :contact_nav)}</option>"
-      result << contact_navigation_options(partition)
+    ['ContactEvent', 'PlaceEvent', 'MorbidityEvent'].each do |event_type|
+      partitioned_events << events.collect { |event| event if event.class.name == event_type }.compact
+    end
+    
+    result = image_tag('redbox_spinner.gif', :id => 'events_nav_spinner', :style => 'display: none;')
+    result << "<select class=\"events_nav\">"
+    partitioned_events.reject(&:empty?).each do |partition|
+      result << "<option value="">#{t(partition.first.class.name.tableize, :scope => :event_sibling_nav)}</option>"
+      result << event_navigation_options(partition)
     end
     result << "</select>"
-    result << "<div id=\"contacts_nav_dialog\" style=\"display: none\">#{t(:unsaved_changes)}</div>"
+    result << "<div id=\"events_nav_dialog\" style=\"display: none\">#{t(:unsaved_changes)}</div>"
   end
 
-  def contact_navigation_options(contacts)
+  def event_navigation_options(events)
     results = ""
-    contacts.each do |contact|
-      results << "<option value=\"#{edit_event_path(contact)}\">#{contact.full_name}</option>"
+    events.each do |event|
+      results << "<option value=\"#{edit_event_path(event)}\">#{event.full_name}</option>"
     end
     results
   end
@@ -779,7 +783,7 @@ module EventsHelper
   end
 
   def controller_name_from_event(model)
-    model.type.tableize
+    model.attributes["type"].tableize
   end
 
   def association_recorded?(association_collection)

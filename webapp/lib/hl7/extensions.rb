@@ -292,6 +292,19 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def death_date
+      Date.parse(pid_segment.death_date)
+    rescue
+    end
+
+    # This returns the actual PID-30 value, not a boolean, so I'm not
+    # calling it dead? or died?  It will be mapped to that in the app
+    # code.
+    def dead_flag
+      pid_segment.death_indicator
+    rescue
+    end
+
     def trisano_sex_id
       sex_id = nil
 
@@ -347,6 +360,22 @@ module StagedMessages
       race_object = ExternalCode.find_by_code_name_and_the_code('race', race)
       race_id = race_object.id if race_object
       race_id
+    end
+
+    def trisano_ethnicity_id
+      elr_ethnicity_code = pid_segment.ethnic_group.split(pid_segment.item_delim).first
+      ethnicity = case elr_ethnicity_code
+      when 'H'
+        'H'
+      when 'N'
+        'NH'
+      when 'U'
+        'UNK'
+      else
+      end
+      ethnicity_object = ExternalCode.find_by_code_name_and_the_code('ethnicity', ethnicity) if ethnicity
+      ethnicity_object.id if ethnicity_object
+    rescue
     end
 
     def address_empty?

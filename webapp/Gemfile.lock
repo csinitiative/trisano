@@ -1,6 +1,6 @@
 GIT
   remote: http://github.com/ruby-hl7/ruby-hl7.git
-  revision: 321cd32
+  revision: e1fa615286d630f90ee9c33e1ec16eac956a5843
   specs:
     ruby-hl7 (0.4.0)
       rake (>= 0.8.7)

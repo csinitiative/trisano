@@ -33,6 +33,11 @@ Factory.define(:scale_code, :class => 'external_code') do |sc|
   sc.the_code "Ord"
   sc.code_description "Ordinal"
 end
+
+Factory.define :campylobacter_jejuni, :class => 'Organism' do |organism|
+  organism.organism_name 'Campylobacter jejuni'
+end
+
 #
 # Sequences
 #

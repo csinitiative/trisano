@@ -304,6 +304,46 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
+    it 'should set death_date and died_id when appropriate' do
+      login_as_super_user
+      staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_died])
+
+      # build the required organism and disease for this
+      disease  = Factory.create :campylobacteriosis
+      organism = Factory.build :campylobacter_jejuni
+      organism.diseases << disease
+      organism.save!
+
+      organism.diseases.count.should == 1
+
+      obx = staged_message.observation_requests.first.all_tests.first
+      db_organism = Organism.first(:conditions => [ "organism_name ~* ?", '^'+obx.result+'$' ])
+      db_organism.should_not be_blank
+      db_organism.should == organism
+
+      db_organism.diseases.count.should == 1
+
+      # sets the patient date of death
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.person.date_of_death.should == Date.parse('20101111')
+
+      # set the died_id in the disease_event
+      common_test_type = CommonTestType.create :common_name => 'Culture'
+      event.add_labs_from_staged_message staged_message
+      event.disease_event.died.should == ExternalCode.yes
+
+      common_test_type.destroy
+    end
+
+    it 'should set the ethnicity field when present' do
+      login_as_super_user
+      common_test_type = CommonTestType.create :common_name => 'Culture'
+      staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.person.ethnicity.should == external_codes(:ethnicity_non_hispanic)
+      common_test_type.destroy
+    end
+
     it 'should set multiple contact numbers when present' do
       login_as_super_user
       staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
@@ -592,15 +632,16 @@ describe 'When added to an event using an existing person entity' do
 end
 
 
-describe "Getting a quick list of all contact" do
+describe "Getting a quick list of events" do
   before do
     @parent_event = Factory.create(:morbidity_event)
     @contact_event = Factory.create(:contact_event, :parent_event => @parent_event)
+    @place_event = Factory.create(:place_event, :parent_event => @parent_event)
   end
 
   describe "children" do
-    it "returns all contacts" do
-      @parent_event.contacts_quick_list.size.should == 1
+    it "returns all events" do
+      @parent_event.events_quick_list.size.should == 2
     end
 
     it "returns promoted contacts" do
@@ -608,23 +649,28 @@ describe "Getting a quick list of all contact" do
       login_as_super_user #need this to promote. pffft
       @promoted_event.promote_to_morbidity_event
 
-      @parent_event.contacts_quick_list.size.should == 2
+      @parent_event.events_quick_list.size.should == 3
     end
 
-    it "doesn't return place events" do
+    it "returns place events" do
       Factory.create(:place_event, :parent_event => @parent_event)
-      @parent_event.contacts_quick_list.size.should == 1
+      @parent_event.events_quick_list.collect { |event| event if event.class.name == 'PlaceEvent' }.compact.size.should == 2
     end
 
-    it "returns the contact patients' full name" do
-      full_name = @contact_event.interested_party.person_entity.person.full_name
-      @parent_event.contacts_quick_list.map(&:full_name).should == [full_name]
+    it "returns the events' names" do
+      @parent_event.events_quick_list.each do |event|
+        if event.class.name == "ContactEvent"
+          event.full_name.should == @contact_event.interested_party.person_entity.person.full_name
+        elsif event.class.name == "PlaceEvent"
+          event.full_name.should == @place_event.interested_place.place_entity.place.name
+        end
+      end
     end
   end
 
   describe "siblings" do
     it "excludes 'self' from results" do
-      @contact_event.contact_siblings_quick_list.should == []
+      @contact_event.events_quick_list.should == []
     end
   end
 end

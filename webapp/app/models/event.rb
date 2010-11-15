@@ -638,36 +638,48 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def contacts_quick_list(reload=false)
-    if reload or @contacts_quick_list.nil?
-      @contacts_quick_list = self.class.find_by_sql([<<-SQL, self.id])
-        SELECT a.id,
-               a.workflow_state,
-               a.type,
+  def events_quick_list(reload=false)
+    if reload or @events_quick_list.nil?
+      @events_quick_list = self.class.find_by_sql([<<-SQL, self.id, self.id])
+        SELECT ev.id,
+               ev.workflow_state,
+               ev.type,
                TRIM(
-                 COALESCE(d.first_name, '')
+                 COALESCE(pp.first_name, '')
                  || ' '
-                 || COALESCE(d.last_name, '')
+                 || COALESCE(pp.last_name, '')
                ) as full_name
-          FROM events a
-          JOIN participations b ON b.event_id = a.id AND b.type = 'InterestedParty'
-          JOIN entities c ON c.id = b.primary_entity_id AND c.deleted_at IS NULL
-          JOIN people d ON d.entity_id = c.id
-         WHERE a.parent_id = ?
-           AND a.type IN ('MorbidityEvent', 'ContactEvent')
-           AND a.deleted_at IS NULL
+          FROM events ev
+          JOIN participations pt ON pt.event_id = ev.id AND pt.type = 'InterestedParty'
+          JOIN entities en ON en.id = pt.primary_entity_id AND en.deleted_at IS NULL
+          JOIN people pp ON pp.entity_id = en.id
+         WHERE ev.parent_id = ?
+           AND ev.type IN ('MorbidityEvent', 'ContactEvent')
+           AND ev.deleted_at IS NULL
+        UNION
+        SELECT ev.id,
+               ev.workflow_state,
+               ev.type,
+               pl.name as full_name
+          FROM events ev
+          JOIN participations pt ON pt.event_id = ev.id AND pt.type = 'InterestedPlace'
+          JOIN entities en ON en.id = pt.primary_entity_id AND en.deleted_at IS NULL
+          JOIN places pl ON pl.entity_id = en.id
+         WHERE ev.parent_id = ?
+           AND ev.type IN ('PlaceEvent')
+           AND ev.deleted_at IS NULL;
       SQL
     else
-      @contacts_quick_list
+      @events_quick_list
     end
   end
 
-  def contact_siblings_quick_list(reload=false)
+  def event_siblings_quick_list(reload=false)
     return [] if parent_event.nil?
-    if reload or @contact_siblings.nil?
-      @contact_siblings = parent_event.contacts_quick_list.reject { |contact| contact == self }
+    if reload or @event_siblings.nil?
+      @event_siblings = parent_event.events_quick_list.reject { |event| event == self }
     else
-      @contact_siblings
+      @event_siblings
     end
   end
 
