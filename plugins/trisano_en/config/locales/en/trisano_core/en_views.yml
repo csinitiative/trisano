@@ -44,6 +44,7 @@ en:
   previous: "Previous"
   next: "Next"
   required: "Required"
+  update_failed: "Update failed. Please try again or contact your administrator."
 
   please_exit: 'Please exit'
   assigned_jurisdiction: 'Assigned Jurisdiction'
@@ -430,11 +431,13 @@ en:
 #treatments
   no_treatments: "No treatments have been recorded for this {{thing}}"
   treatments: "Treatments"
+  treatments_for: "Treatments for {{thing}}"
   treatment_given: 'Treatment Given'
   treatment_name: 'Treatment'
   treatment_date: 'Treatment Date'
   stop_treatment_date: 'Stop Treatment Date'
   add_treatment: "Add a Treatment"
+  disease_treatments_updated: "Disease treatments updated"
 
 #encounters
   no_encounters: "No encounters have been recorded for this {{thing}}"

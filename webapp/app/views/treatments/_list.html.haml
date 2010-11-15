@@ -25,7 +25,7 @@
           %td.forminformation
             .formname
               = link_to h(treatment.treatment_name), treatment
-            = treatment.active? ? t('active') :  t('inactive')
+            = treatment_status(treatment)
           %td
             .tools{:style => "position: absolute; right: 15px;"}
               = link_to t('edit'), edit_treatment_path(treatment)

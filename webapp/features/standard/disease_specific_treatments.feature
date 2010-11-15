@@ -19,7 +19,7 @@ Feature: Treatments listed by disease
        | treatment_name |
        | Placebo        |
 
-  Scenario: Treatments lists are based on the event's disease
+  Scenario: Event treatment selects are based on the event's disease
     Given disease "The Trots" exists
       And a morbidity event exists with the disease The Trots
       And the following treatments associated with the disease "The Trots":

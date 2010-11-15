@@ -177,6 +177,10 @@ def path_to(page_name)
     disease = Disease.find_by_disease_name($1)
     disease_core_field_path(disease, @core_field)
 
+  when /the disease specific treatments page for "([^\"]*)"/i
+    disease = Disease.find_by_disease_name($1)
+    disease_treatments_path(disease)
+
   when /edit the disease named "([^\"]*)"/
     edit_disease_path Disease.find_by_disease_name($1)
 

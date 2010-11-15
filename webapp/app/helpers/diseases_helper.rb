@@ -50,6 +50,7 @@ module DiseasesHelper
     links << link_to_unless_current(t(:edit), edit_disease_path(disease))
     links << link_to_unless_current(t(:show), disease)
     links << link_to_unless_current(t(:core_fields), disease_core_fields_path(disease))
+    links << link_to_unless_current(t(:treatments), disease_treatments_path(disease))
     links
   end
 

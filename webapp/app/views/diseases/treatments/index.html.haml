@@ -14,20 +14,19 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - content_for :title do
-  =t 'treatments'
-
-- content_for :tools_two do
-  = button_to(t("create_new_treatment"), {:action => "new"}, { :method => :get })
+  =t :treatments_for, :thing => @disease.disease_name
 
 - content_for :tools do
-  = link_to "&lt; #{t('clear_search_criteria')}", treatments_path
+  =link_to t(:back_to, :name => t(:diseases)), diseases_path
+  |
+  =link_to "#{t('clear_search_criteria')}", disease_treatments_path(@disease)
   %p
 
-=render(:partial => 'search_form')
+-unless @disease.treatments.empty?
+  =render_disease_treatments(@disease.treatments, :with => disassociate_disease_treatments_options(@disease))
+  %br.vert-break
+  %br
 
--if current_page?(:action => :merge)
-  =render_merge_treatment do
-    %br
-    =render(:partial => 'list')
--else
-  =render(:partial => 'list')
+=render(:partial => 'treatments/search_form')
+
+=render_disease_treatments(@treatments, :with => associate_disease_treatments_options(@disease))

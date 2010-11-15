@@ -36,3 +36,30 @@ end
 Then /^I should not see "([^\"]*)" in the treatment search results section$/ do |treatment_name|
   response.should_not have_xpath("//div[@id='treatment_list']//a[contains(text(), '#{treatment_name}')]")
 end
+
+Then /^I search treatments for "([^\"]*)"$/ do |search_string|
+  fill_in "Treatment", :with => search_string
+  click_button "Search"
+end
+
+Then /^I choose the association check box for the treatment "([^\"]*)"$/ do |treatment_name|
+  treatment = Treatment.find_by_treatment_name(treatment_name)
+  check("treatment_#{treatment.id}")
+end
+
+Given /^the following treatments are assocaited with the disease "([^\"]*)":$/ do |disease_name, table|
+  @disease = Disease.find_by_disease_name(disease_name)
+  table.hashes.each do |conditions|
+    treatment = Treatment.first(:conditions => conditions)
+    @disease.treatments << treatment
+  end
+end
+
+Then /^I should see "([^\"]*)" in the associated treatments section$/ do |treatment_name|
+  response.should have_tag('#associated_treatments a', treatment_name)
+end
+
+Then /^I should not see "([^\"]*)" in the associated treatments section$/ do |treatment_name|
+  response.should_not have_tag('#associated_treatments a', treatment_name)
+end
+

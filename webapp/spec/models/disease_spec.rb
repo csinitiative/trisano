@@ -273,4 +273,68 @@ describe Disease do
     end
   end
 
+  describe "#add_treatments" do
+    before do
+      @disease = Factory(:disease)
+      @treatment_1 = Factory(:treatment)
+      @treatment_2 = Factory(:treatment)
+      @treatment_ids = [@treatment_1, @treatment_2].map { |t| t.id.to_s }
+    end
+
+    it "adds treatment associations based on an array of treatment ids" do
+      @disease.add_treatments(@treatment_ids).should be_true
+      @disease.treatments.should == [@treatment_1, @treatment_2]
+    end
+
+    it "preserves existing treatment associations" do
+      @disease.add_treatments([@treatment_1.id])
+      @disease.add_treatments([@treatment_2.id])
+      @disease.treatments.should == [@treatment_1, @treatment_2]
+    end
+
+    it "does not fail if a treatment id in the array is already associated w/ the disease" do
+      @disease.add_treatments([@treatment_1.id])
+      @disease.add_treatments(@treatment_ids).should be_true
+      @disease.treatments.should == [@treatment_1, @treatment_2]
+    end
+
+    it "fails if a treatment id for a non-existent treatment is passed in the array" do
+      @disease.add_treatments([-1]).should be_false
+    end
+  end
+
+  describe "#remove_treatments" do
+    before do
+      @disease = Factory(:disease)
+      @treatment_1 = Factory(:treatment)
+      @treatment_2 = Factory(:treatment)
+      @disease.treatments << @treatment_1
+      @disease.treatments << @treatment_2
+    end
+
+    it "removes treatment associations based on an array of treatment ids" do
+      @disease.remove_treatments([@treatment_1.id.to_s, @treatment_2.id.to_s]).should be_true
+      @disease.treatments.should == []
+    end
+
+    it "only deletes associations of treatments w/ ids in the arguments array" do
+      @disease.remove_treatments([@treatment_1.id.to_s]).should be_true
+      @disease.treatments.should == [@treatment_2]
+    end
+
+    it "ignores duplicate ids in the arguments array" do
+      @disease.remove_treatments([@treatment_1.id.to_s, @treatment_1.id.to_s]).should be_true
+      @disease.treatments.should == [@treatment_2]
+    end
+
+    it "ignores ids of treatments that don't exist or aren't associated w/ the disease" do
+      @disease.remove_treatments(%w(-1)).should be_true
+      @disease.treatments.should == [@treatment_1, @treatment_2]
+    end
+
+    it "returns false if removal fails" do
+      @disease.remove_treatments(nil).should be_false
+    end
+
+  end
 end

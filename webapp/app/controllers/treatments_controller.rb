@@ -2,24 +2,54 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class TreatmentsController < AdminController
 
+  before_filter :load_disease, :only => [:index, :associate, :disassociate]
   before_filter :load_treatments, :only => [:index, :merge]
 
   def index
+    if @disease
+      render :template => '/diseases/treatments/index'
+    else
+      render :action => 'index'
+    end
+  end
+
+  def associate
+    head(:not_found) && return unless @disease
+    if @disease.add_treatments(params[:associations])
+      flash[:notice] = t(:disease_treatments_updated)
+    else
+      flash[:error] = t(:update_failed)
+    end
+    respond_to do |format|
+      format.html { redirect_to(disease_treatments_url(@disease)) }
+    end
+  end
+
+  def disassociate
+    head(:not_found) && return unless @disease
+    if @disease.remove_treatments(params[:associations])
+      flash[:notice] = t(:disease_treatments_updated)
+    else
+      flash[:error] = t(:update_failed)
+    end
+    respond_to do |format|
+      format.html { redirect_to(disease_treatments_url(@disease)) }
+    end
   end
 
   def new
@@ -75,7 +105,7 @@ class TreatmentsController < AdminController
     if @treatment.merge(params[:to_merge])
       flash[:notice] = 'Merge successful.'
     else
-      flash[:error] = @treatment.errors["base"]      
+      flash[:error] = @treatment.errors["base"]
     end
 
     redirect_to request.env["HTTP_REFERER"]
@@ -84,13 +114,20 @@ class TreatmentsController < AdminController
   private
 
   def load_treatments
-    options = { :order => 'treatment_name ASC' }
+    scope = Treatment.scoped(:order => 'treatment_name ASC')
 
     unless params[:treatment_name].blank?
-      options.merge!(:conditions => ["treatment_name ILIKE ?", "%#{params[:treatment_name]}%"])
+      scope = scope.scoped(:conditions => ["treatment_name ILIKE ?", "%#{params[:treatment_name]}%"])
     end
 
-    @treatments = Treatment.all(options)
+    if @disease and not @disease.treatment_ids.empty?
+      scope = scope.scoped(:conditions => ["id NOT IN (?)", @disease.treatment_ids])
+    end
+
+    @treatments = scope
   end
 
+  def load_disease
+    @disease = Disease.find(params[:disease_id]) if params[:disease_id]
+  end
 end

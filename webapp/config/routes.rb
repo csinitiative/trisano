@@ -24,6 +24,10 @@ ActionController::Routing::Routes.draw do |map|
     diseases.resources :core_fields, :collection => {
       :apply_to => :post
     }
+    diseases.resources :treatments, :only => [:index], :collection => {
+      :associate => :post,
+      :disassociate => :post
+    }
   end
 
   map.resources :event_queues

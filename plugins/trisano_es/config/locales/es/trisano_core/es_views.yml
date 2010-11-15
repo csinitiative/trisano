@@ -48,6 +48,7 @@ es:
   previous: "Anterior"
   next: "Próximo"
   required: "Required (EN)"
+  update_failed: "Update failed. Please try again or contact your administrator. (EN)"
 
   please_exit: 'Favor de salir'
   assigned_jurisdiction: 'Jurisdicción asignada'
@@ -436,11 +437,13 @@ es:
 #treatments
   no_treatments: "No se han registrado los tratamientos para este/a {{thing}}"
   treatments: "Tratamientos"
+  treatments_for: "Treatments for {{thing}}"
   treatment_given: 'Tratamiento Administrado'
   treatment_name: 'Tratamiento'
   treatment_date: 'Fecha de Tratamiento'
   stop_treatment_date: 'Fecha del Fin de Tratamiento'
   add_treatment: "Agregar Tratamiento"
+  disease_treatments_updated: "Disease treatements updated (EN)"
 
 #encounters
   no_encounters: "No se han registrado los encuentros para este/a {{thing}}"

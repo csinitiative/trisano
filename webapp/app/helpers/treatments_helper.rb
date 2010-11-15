@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module TreatmentsHelper
-  
+
   def render_merge_treatment
 
     haml_tag(:form,  :action => url_for(:controller => 'treatments', :action => 'duplicates', :id => @treatment), :method => :post, :id => "merge_form") do
@@ -47,13 +47,19 @@ module TreatmentsHelper
           haml_concat "</tr>"
         end
       end
-      
+
       haml_concat(yield) if block_given?
     end
   end
 
+  def treatment_status(treatment)
+    statuses = ""
+    statuses << (treatment.active? ? t(:active) : t(:inactive))
+    statuses << "&nbsp;#{t(:default)}" if treatment.default?
+    statuses
+  end
+
   def render_treatment_merge_actions(treatment)
-    
     if current_page?(:action => :merge)
       check_box = check_box_tag('to_merge[]',
         treatment.id,
@@ -65,6 +71,25 @@ module TreatmentsHelper
     else
       haml_concat(link_to t('merge'), { :controller => 'treatments', :action => 'merge', :id => treatment, :treatment_name => params[:treatment_name] }, :id => "merge_#{treatment.id}")
     end
-    
+  end
+
+  def render_disease_treatments(treatments, options = {})
+    options[:with] ||= {}
+    locals = { :treatments => treatments }.merge(options[:with])
+    render :partial => 'diseases/treatments/list', :locals => locals
+  end
+
+  def associate_disease_treatments_options(disease)
+    { :list_id => 'search_results',
+      :action => associate_disease_treatments_path(disease),
+      :action_text => t(:add)
+    }
+  end
+
+  def disassociate_disease_treatments_options(disease)
+    { :list_id => 'associated_treatments',
+      :action => disassociate_disease_treatments_path(disease),
+      :action_text => t(:remove)
+    }
   end
 end

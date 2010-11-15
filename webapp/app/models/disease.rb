@@ -170,6 +170,26 @@ class Disease < ActiveRecord::Base
     false
   end
 
+  def add_treatments(treatment_ids)
+    self.treatment_ids += treatment_ids
+    save!
+    true
+  rescue
+    logger.error $!
+    logger.error $!.backtrace.join("\n")
+    false
+  end
+
+  def remove_treatments(treatment_ids)
+    self.treatment_ids -= treatment_ids.map(&:to_i)
+    save!
+    true
+  rescue
+    logger.error $!
+    logger.error $!.backtrace.join("\n")
+    false
+  end
+
   private
 
   # Debt: The CDC code lives in two places right now: On disease, and as a conversion value. This
