@@ -362,6 +362,22 @@ module StagedMessages
       race_id
     end
 
+    def trisano_ethnicity_id
+      elr_ethnicity_code = pid_segment.ethnic_group.split(pid_segment.item_delim).first
+      ethnicity = case elr_ethnicity_code
+      when 'H'
+        'H'
+      when 'N'
+        'NH'
+      when 'U'
+        'UNK'
+      else
+      end
+      ethnicity_object = ExternalCode.find_by_code_name_and_the_code('ethnicity', ethnicity) if ethnicity
+      ethnicity_object.id if ethnicity_object
+    rescue
+    end
+
     def address_empty?
       components_empty?(addr_components)
     end

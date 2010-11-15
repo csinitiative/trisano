@@ -228,6 +228,12 @@ describe Message do
       hl7 = HL7::Message.parse HL7MESSAGES[:realm_campy_jejuni_bad_race_condition]
       hl7.patient_id.trisano_race_id.should == external_codes(:race_unknown).id
     end
+
+    it 'should properly parse PID-22 as ethnicity code if present' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_lead_laboratory_result]
+      hl7.patient_id.trisano_ethnicity_id.should_not be_blank
+      hl7.patient_id.trisano_ethnicity_id.should == external_codes(:ethnicity_non_hispanic).id
+    end
   end
 
   describe 'observation request' do

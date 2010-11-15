@@ -335,6 +335,15 @@ describe HumanEvent, 'adding staged messages' do
       common_test_type.destroy
     end
 
+    it 'should set the ethnicity field when present' do
+      login_as_super_user
+      common_test_type = CommonTestType.create :common_name => 'Culture'
+      staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.person.ethnicity.should == external_codes(:ethnicity_non_hispanic)
+      common_test_type.destroy
+    end
+
     it 'should set multiple contact numbers when present' do
       login_as_super_user
       staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
