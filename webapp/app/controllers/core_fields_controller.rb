@@ -71,7 +71,7 @@ class CoreFieldsController < AdminController
 
   def apply_to
     unless @disease
-      head :method_not_allowed
+      head :not_found
       return
     end
 

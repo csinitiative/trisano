@@ -57,7 +57,7 @@ describe CoreFieldsController do
 
     it "returns a 404 if the disease is missing" do
       post :apply_to
-      response.code.should == "405"
+      response.code.should == "404"
     end
 
     it "redirects to disease core fields index" do
