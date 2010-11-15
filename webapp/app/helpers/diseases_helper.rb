@@ -57,4 +57,58 @@ module DiseasesHelper
   def render_disease_tool_links(disease)
     disease_tool_links(disease).join('&nbsp;|&nbsp;')
   end
+
+  def apply_to_diseases_dialog(disease, action_path)
+    result =  "<div class='apply_to_disease_dialog' style='display: none'>"
+    result << image_tag('redbox_spinner.gif', :id => "diseaseListSpinner", :alt => 'Working...')
+    result << "<label>#{link_to(t(:diseases), diseases_path)}</label>"
+    result << form_tag(action_path, :id => 'apply_to_disease_form')
+    result << "<table class='list' id='dialog_disease_list'></table>"
+    result << '</form>'
+    result << "</div>"
+  end
+
+  def disease_list_template(disease)
+    <<-SCRIPT
+      <script id="diseaseListTemplate" type="text/x-jquery-tmpl">
+        {{if id != #{disease.id}}}
+          <tr class="roll">
+            <td><input type="checkbox" id="other_disease_${id}" name="other_disease_ids[]" value="${id}"/></td>
+            <td>
+              <label for="other_disease_${id}"
+              {{if active}}
+                <span class="active">
+              {{else}}
+                <span class="inactive">
+              {{/if}}
+                  ${disease_name}
+                </span>
+              </label>
+            </td>
+          </tr>
+        {{/if}}
+      </script>
+    SCRIPT
+  end
+
+  def apply_to_diseases_javascript_content
+    content_for :javascript_includes do
+      javascript_include_tag 'diseases'
+    end
+  end
+
+  def apply_to_diseases_button_content
+    content_for :tools_two do
+      "<button class=\"apply_to_diseases\">#{t(:apply_to_diseases)}</button>"
+    end
+  end
+
+  def render_apply_to_diseases(disease, apply_to_action)
+    apply_to_diseases_javascript_content
+    apply_to_diseases_button_content
+
+    result = apply_to_diseases_dialog(disease, apply_to_action)
+    result << disease_list_template(disease)
+  end
+
 end

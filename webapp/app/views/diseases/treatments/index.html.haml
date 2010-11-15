@@ -30,3 +30,5 @@
 =render(:partial => 'treatments/search_form')
 
 =render_disease_treatments(@treatments, :with => associate_disease_treatments_options(@disease))
+
+=render_apply_to_diseases(@disease, apply_to_disease_treatments_path(@disease))

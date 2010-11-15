@@ -89,34 +89,4 @@ module CoreFieldsHelper
     result.join(' ')
   end
 
-  def apply_to_disease_dialog(disease)
-    result =  "<div class='apply_to_disease_dialog' style='display: none'>"
-    result << image_tag('redbox_spinner.gif', :id => "diseaseListSpinner", :alt => 'Working...')
-    result << "<label>#{link_to(t(:diseases), diseases_path)}</label>"
-    result << form_tag(apply_to_disease_core_fields_path(disease), :id => 'apply_core_fields_to_disease_form')
-    result << "<table class='list' id='dialog_disease_list'></table>"
-    result << '</form>'
-    result << "</div>"
-  end
-
-  def disease_list_template(disease)
-    <<-SCRIPT
-      <script id="diseaseListTemplate" type="text/x-jquery-tmpl">
-        {{if id != #{disease.id}}}
-          <tr class="roll">
-            <td><input type="checkbox" id="other_disease_${id}" name="other_disease_ids[]" value="${id}"/></td>
-            <td>
-              {{if active}}
-                <span class="active">
-              {{else}}
-                <span class="inactive">
-              {{/if}}
-                <label for="other_disease_${id}">${disease_name}</label>
-              </span>
-            </td>
-          </tr>
-        {{/if}}
-      </script>
-    SCRIPT
-  end
 end

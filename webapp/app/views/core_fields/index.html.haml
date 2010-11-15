@@ -26,10 +26,6 @@
     =link_to t(:back_to, :name => @disease.disease_name), @disease
     %p
 
-  -content_for :tools_two do
-    %button.apply_to_diseases=t(:apply_to_diseases)
-
 =render_core_fields_list(@core_fields)
 -if @disease
-  =apply_to_disease_dialog(@disease)
-  =disease_list_template(@disease)
+  =render_apply_to_diseases(@disease, apply_to_disease_core_fields_path(@disease))
