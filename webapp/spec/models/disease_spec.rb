@@ -68,7 +68,7 @@ describe Disease do
     Factory.create(:disease, :active => true)
     Factory.create(:disease, :active => true)
     Factory.create(:disease, :active => false)
-    event = Factory.create(:event_with_disease_event)
+    event = Factory.create(:morbidity_event_with_disease)
     diseases = Disease.diseases_for_event(event)
     diseases.size.should == 2
   end
@@ -77,7 +77,7 @@ describe Disease do
     Factory.create(:disease, :active => true)
     Factory.create(:disease, :active => true)
     deactivated_disease = Factory.create(:disease, :active => false)
-    event = Factory.create(:event_with_disease_event)
+    event = Factory.create(:morbidity_event_with_disease)
     event.disease_event.disease = deactivated_disease
     event.save!
     diseases = Disease.diseases_for_event(event)

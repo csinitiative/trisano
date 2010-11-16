@@ -46,7 +46,7 @@ describe Export::Csv do
 
   before(:each) do
     @event = human_event_with_demographic_info!(
-      :event_with_disease_event,
+      :morbidity_event_with_disease,
       :last_name => "Johnson"
     )
 
@@ -54,7 +54,7 @@ describe Export::Csv do
     @event.save!
 
     @second_event = human_event_with_demographic_info!(
-      :event_with_disease_event,
+      :morbidity_event_with_disease,
       :last_name => "Johnson"
     )
   end

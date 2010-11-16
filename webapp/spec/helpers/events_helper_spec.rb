@@ -371,7 +371,7 @@ describe EventsHelper, "rendering replacement partials" do
         :disease_specific => true)
       @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
       helper.output_buffer = ""
-      @event = Factory.create(:event_with_disease_event)
+      @event = Factory.create(:morbidity_event_with_disease)
       assigns[:event] = @event
 
       given_no_before_partials
@@ -412,7 +412,7 @@ describe EventsHelper, "rendering replacement partials" do
         :disease_specific => false)
       @fb = ExtendedFormBuilder.new('morbidity_event', nil, nil, {}, nil)
       helper.output_buffer = ""
-      @event = Factory.create(:event_with_disease_event)
+      @event = Factory.create(:morbidity_event_with_disease)
       assigns[:event] = @event
 
       given_no_before_partials

@@ -73,7 +73,7 @@ end
 describe ParticipationsTreatment, "with an associated Morbidity Event" do
 
   before(:each) do
-    @event = Factory(:event_with_disease_event)
+    @event = Factory(:morbidity_event_with_disease)
   end
 
   describe "when validating against disease onset date" do
