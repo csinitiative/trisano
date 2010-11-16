@@ -35,6 +35,10 @@ module HL7
       @patient_id = self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
+    def pv1
+      @pv1 = self[:PV1] ? StagedMessages::Pv1Wrapper.new(self[:PV1]) : nil
+    end
+
     # Return an array of ObrWrapper objects corresponding to the OBR
     # segments of the HL7 message.  If no OBR segment is present, an
     # empty array is returned.
@@ -899,6 +903,20 @@ module StagedMessages
 
     def initialize(pv1_segment)
       @pv1_segment = pv1_segment
+    end
+
+    # Returns an array [ last_name, first_name ]
+    def attending_doctor
+      pv1_segment.attending_doctor.split(pv1_segment.item_delim).slice(1,2)
+    rescue
+      []
+    end
+
+    # Returns an array [ last_name, first_name ]
+    def consulting_doctor
+      pv1_segment.consulting_doctor.split(pv1_segment.item_delim).slice(1,2)
+    rescue
+      []
     end
   end
 

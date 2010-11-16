@@ -304,6 +304,29 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
+    it 'should set additional clinician info when present in PV1 segment' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_clinicians])
+        event.clinicians.size.should == 3
+
+        clinician = event.clinicians.first
+        clinician.person_entity.person.first_name.should == 'Susan'
+        clinician.person_entity.person.last_name.should == 'Jekyll'
+
+        clinician = event.clinicians.second
+        clinician.person_entity.person.first_name.should == 'Herbert'
+        clinician.person_entity.person.last_name.should == 'Hyde'
+
+        clinician = event.clinicians.third
+        clinician.person_entity.person.first_name.should == 'Alan'
+        clinician.person_entity.person.last_name.should == 'Admit'
+        clinician.person_entity.telephones.size.should == 1
+
+        common_test_type.destroy
+      end
+    end
+
     it 'should set death_date and died_id when appropriate' do
       login_as_super_user
       staged_message = StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_died])

@@ -236,6 +236,17 @@ describe Message do
     end
   end
 
+  describe 'pv1 wrapper' do
+    before :all do
+      @pv1 = HL7::Message.parse(HL7MESSAGES[:realm_cj_clinicians]).pv1
+    end
+
+    it 'should return clinician names from PV1-7 and PV1-9' do
+      @pv1.attending_doctor.should == %w{Jekyll Susan}
+      @pv1.consulting_doctor.should == %w{Hyde Herbert}
+    end
+  end
+
   describe 'observation request' do
     it 'should return the test performed (without noise)' do
       @hl7.observation_requests.first.test_performed.should == '13954-3'
