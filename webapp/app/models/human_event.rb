@@ -506,6 +506,28 @@ class HumanEvent < Event
       per_message_comments = "Country: #{staged_message.patient.address_country}"
     end
 
+    pv1 = staged_message.pv1
+
+    unless pv1.blank? or pv1.attending_doctor.blank?
+      clinicians.build(:person_entity_attributes => {
+        :person_attributes => {
+          :last_name => staged_message.pv1.attending_doctor[0],
+          :first_name => staged_message.pv1.attending_doctor[1],
+          :person_type => 'clinician'
+        }
+      })
+    end
+
+    unless pv1.blank? or pv1.consulting_doctor.blank?
+      clinicians.build(:person_entity_attributes => {
+        :person_attributes => {
+          :last_name => staged_message.pv1.consulting_doctor[0],
+          :first_name => staged_message.pv1.consulting_doctor[1],
+          :person_type => 'clinician'
+        }
+      })
+    end
+
     staged_message.observation_requests.each do |obr|
       unless obr.clinician_last_name.blank?
         clinician = clinicians.build(:person_entity_attributes => {

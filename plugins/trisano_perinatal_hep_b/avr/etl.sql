@@ -301,7 +301,7 @@ CREATE TABLE report3 AS
                                 CASE WHEN dce.first_name IS NULL OR dce.first_name = '' THEN '' ELSE dce.first_name || ' ' END ||
                                 CASE WHEN dce.middle_name IS NULL OR dce.middle_name = '' THEN '' ELSE dce.middle_name || ' ' END ||
                                 CASE WHEN dce.last_name IS NULL OR dce.last_name = '' THEN '' ELSE dce.last_name || ' ' END AS name,
-                                dce.birth_date,
+                                COALESCE(dce.birth_date, dme_2.actual_delivery_date) AS birth_date,
                                 hepb_dose1_date::TIMESTAMPTZ,
                                 hepb_dose2_date::TIMESTAMPTZ,
                                 hepb_comvax1_date::TIMESTAMPTZ,
@@ -315,6 +315,16 @@ CREATE TABLE report3 AS
                                                 (to_char(now() - dce.birth_date, 'DD')::INTEGER / 365)::TEXT || ' year'
                                             WHEN to_char(now() - dce.birth_date, 'DD')::INTEGER > 1 THEN
                                                 to_char(now() - dce.birth_date, 'DD') || ' days'
+                                            ELSE '1 day'
+                                        END
+                                    WHEN dme_2.actual_delivery_date IS NOT NULL THEN
+                                        CASE
+                                            WHEN to_char(now() - dme_2.actual_delivery_date, 'DD')::INTEGER / 365 > 1 THEN
+                                                (to_char(now() - dme_2.actual_delivery_date, 'DD')::INTEGER / 365)::TEXT || ' years'
+                                            WHEN to_char(now() - dme_2.actual_delivery_date, 'DD')::INTEGER / 365 = 1 THEN
+                                                (to_char(now() - dme_2.actual_delivery_date, 'DD')::INTEGER / 365)::TEXT || ' year'
+                                            WHEN to_char(now() - dme_2.actual_delivery_date, 'DD')::INTEGER > 1 THEN
+                                                to_char(now() - dme_2.actual_delivery_date, 'DD') || ' days'
                                             ELSE '1 day'
                                         END
                                     WHEN dce.age_in_years IS NOT NULL THEN
