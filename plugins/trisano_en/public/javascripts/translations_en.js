@@ -19,7 +19,7 @@ var i18n = new I18n('en', {
   or_higher: 'or higher',
   or: 'or',
   operation_failed: "Operation failed. Please try again.",
-  apply_to_diseases: "Apply Core Fields to Other Diseases",
+  apply_to_diseases: "Apply to Other Diseases",
   copy: 'Copy',
   cancel: 'Cancel',
   update: "Update",

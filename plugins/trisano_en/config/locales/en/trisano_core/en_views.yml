@@ -439,6 +439,8 @@ en:
   stop_treatment_date: 'Stop Treatment Date'
   add_treatment: "Add a Treatment"
   disease_treatments_updated: "Disease treatments updated"
+  disease_treatments_removed: "Disease treatments removed"
+  disease_treatments_copied:  "Disease treatments copied"
 
 #encounters
   no_encounters: "No encounters have been recorded for this {{thing}}"

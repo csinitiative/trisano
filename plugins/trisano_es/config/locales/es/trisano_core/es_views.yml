@@ -445,6 +445,8 @@ es:
   stop_treatment_date: 'Fecha del Fin de Tratamiento'
   add_treatment: "Agregar Tratamiento"
   disease_treatments_updated: "Disease treatements updated (EN)"
+  disease_treatments_removed: "Disease treatments removed (EN)"
+  disease_treatments_copied:  "Disease treatments copied (EN)"
 
 #encounters
   no_encounters: "No se han registrado los encuentros para este/a {{thing}}"

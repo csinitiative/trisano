@@ -17,7 +17,7 @@
 
 class TreatmentsController < AdminController
 
-  before_filter :load_disease, :only => [:index, :associate, :disassociate]
+  before_filter :load_disease, :only => [:index, :associate, :disassociate, :apply_to]
   before_filter :load_treatments, :only => [:index, :merge]
 
   def index
@@ -49,6 +49,18 @@ class TreatmentsController < AdminController
     end
     respond_to do |format|
       format.html { redirect_to(disease_treatments_url(@disease)) }
+    end
+  end
+
+  def apply_to
+    head(:not_found) && return unless @disease
+    if @disease.apply_treatments_to(params[:other_disease_ids])
+      flash[:notice] = t(:disease_treatments_copied)
+    else
+      flash[:error] = t(:update_failed)
+    end
+    respond_to do |format|
+      format.html { redirect_to disease_treatments_url(@disease) }
     end
   end
 

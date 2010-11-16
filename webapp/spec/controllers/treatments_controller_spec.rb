@@ -133,4 +133,47 @@ describe TreatmentsController do
       flash[:error].should == "Update failed. Please try again or contact your administrator."
     end
   end
+
+  describe "/apply_to" do
+    it "returns :not_found" do
+      post :apply_to
+      response.code.should == "404"
+    end
+  end
+
+  describe "/diseases/:disease_id/apply_to" do
+    before do
+      @disease = Factory(:disease)
+      Disease.expects(:find).with(@disease.id.to_s).returns(@disease)
+    end
+
+    it "applies treatment-to-disease associations to other diseases, by id" do
+      @disease.expects(:apply_treatments_to).with(%w(101 103)).returns(true)
+      post :apply_to, :disease_id => @disease.id, :other_disease_ids => %w(101 103)
+    end
+
+    it "redirects to the disease treatments listing on failure" do
+      @disease.expects(:apply_treatments_to).returns(false)
+      post :apply_to, :disease_id => @disease.id
+      response.should redirect_to(disease_treatments_url(@disease))
+    end
+
+    it "redirects to disease treatments listing on success" do
+      @disease.expects(:apply_treatments_to).returns(true)
+      post :apply_to, :disease_id => @disease.id
+      response.should redirect_to(disease_treatments_url(@disease))
+    end
+
+    it "displays success messages in flash :notice" do
+      @disease.expects(:apply_treatments_to).returns(true)
+      post :apply_to, :disease_id => @disease.id
+      flash[:notice].should == 'Disease treatments copied'
+    end
+
+    it "displays failure messages in flash :error" do
+      @disease.expects(:apply_treatments_to).returns(false)
+      post :apply_to, :disease_id => @disease.id
+      flash[:error].should == "Update failed. Please try again or contact your administrator."
+    end
+  end
 end

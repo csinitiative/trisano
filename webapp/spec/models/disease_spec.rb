@@ -335,6 +335,41 @@ describe Disease do
     it "returns false if removal fails" do
       @disease.remove_treatments(nil).should be_false
     end
+  end
 
+  describe "#apply_treatments_to" do
+    before do
+      @source = Factory(:disease)
+      @source.treatments << Factory(:treatment)
+      @source.treatments << Factory(:treatment)
+
+      @target_1 = Factory(:disease)
+      @target_2 = Factory(:disease)
+    end
+
+    it "copies treatments to other diseases, based on an array of disease ids" do
+      @source.apply_treatments_to([@target_1.id.to_s, @target_2.id.to_s])
+      @target_1.treatments.should == @source.treatments
+      @target_2.treatments.should == @source.treatments
+    end
+
+    it "replaces the existing treatment configuration of the target disease" do
+      @target_1.treatments << Factory(:treatment)
+      @source.apply_treatments_to([@target_1.id.to_s])
+      @target_1.treatments.should == @source.treatments
+    end
+
+    it "should not modify the treatments of the source disease" do
+      @source.apply_treatments_to([@source.id.to_s])
+      @source.treatments.size.should == 2
+    end
+
+    it "returns true if successful" do
+      @source.apply_treatments_to([@target_1.id.to_s, @target_2.id.to_s]).should be_true
+    end
+
+    it "returns false on failure" do
+      @source.apply_treatments_to(nil).should be_false
+    end
   end
 end

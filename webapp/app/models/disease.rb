@@ -160,13 +160,26 @@ class Disease < ActiveRecord::Base
       return false
     end
     transaction do
-      CoreFieldsDisease.delete_all_by_disease_ids other_disease_ids
+      CoreFieldsDisease.delete_by_disease_ids other_disease_ids
       CoreFieldsDisease.copy_by_disease_ids(self.id, other_disease_ids)
     end
     true
   rescue
     logger.error($!)
     errors.add(:base, :core_field_copy_failed)
+    false
+  end
+
+  def apply_treatments_to(other_disease_ids)
+    other_disease_ids = other_disease_ids.map(&:to_i).reject { |d_id| d_id == self.id }
+    transaction do
+      DiseaseSpecificTreatment.delete_by_disease_ids other_disease_ids
+      DiseaseSpecificTreatment.copy_by_disease_ids self.id, other_disease_ids
+    end
+    true
+  rescue
+    logger.error $!
+    logger.error $!.backtrace.join("\n")
     false
   end
 

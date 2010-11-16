@@ -26,7 +26,8 @@ ActionController::Routing::Routes.draw do |map|
     }
     diseases.resources :treatments, :only => [:index], :collection => {
       :associate => :post,
-      :disassociate => :post
+      :disassociate => :post,
+      :apply_to => :post
     }
   end
 

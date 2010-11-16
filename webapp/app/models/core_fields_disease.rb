@@ -25,7 +25,7 @@ class CoreFieldsDisease < ActiveRecord::Base
       end
     end
 
-    def delete_all_by_disease_ids(disease_ids)
+    def delete_by_disease_ids(disease_ids)
       delete_all(['disease_id in (?)', disease_ids])
     end
 

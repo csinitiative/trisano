@@ -75,15 +75,11 @@ module DiseasesHelper
           <tr class="roll">
             <td><input type="checkbox" id="other_disease_${id}" name="other_disease_ids[]" value="${id}"/></td>
             <td>
-              <label for="other_disease_${id}"
               {{if active}}
-                <span class="active">
+                <label class="active" for="other_disease_${id}">${disease_name}</label>
               {{else}}
-                <span class="inactive">
+                <label class="inactive" for="other_disease_${id}">${disease_name}</label>
               {{/if}}
-                  ${disease_name}
-                </span>
-              </label>
             </td>
           </tr>
         {{/if}}
