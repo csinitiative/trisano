@@ -18,6 +18,7 @@
 class AddVaccinationRowsToTreatments < ActiveRecord::Migration
   def self.up
     treatments = YAML.load_file(File.join(File.dirname(__FILE__), '..', '..', 'db', 'defaults', 'treatments.yml'))
+    treatments.each { |hash| hash.delete("associated_diseases") }
     Treatment.load!(treatments)
   end
 

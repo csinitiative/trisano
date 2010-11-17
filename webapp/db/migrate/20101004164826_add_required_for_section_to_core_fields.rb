@@ -1,3 +1,4 @@
+
 class AddRequiredForSectionToCoreFields < ActiveRecord::Migration
   def self.up
     # using SQL because AR=JDBC can't seem to get this right
