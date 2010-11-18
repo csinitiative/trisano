@@ -191,6 +191,7 @@ es:
   parent_cmr: 'CMR superior'
   parent_guardian: Padre/Tutor
   parent_patient: 'Paciente Principal'
+  parent_event: 'Parent Event (EN)'
   not_elevated: "No ha sido elevado a un acontecimiento de morbilidad"
   event_sibling_nav:
     morbidity_events: '--- Navigate to Promoted Contacts (EN) ---'
@@ -803,6 +804,9 @@ es:
   edit_address: "Editar Dirección"
   edit_phone: "Editar Teléfono"
   place: "Lugar"
+  new_place_for_event: 'Create new place exposure (EN)'
+  new_place_event: 'New Place Exposure (EN)'
+  place_exposure_created: 'Successfully created place exposure. (EN)'
 
   #Roles
   roles: "Funciones"

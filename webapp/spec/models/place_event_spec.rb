@@ -21,7 +21,6 @@ describe PlaceEvent do
 
   fixtures :diseases
 
-  # TGRII: Move these tests to Event
   describe "Initializing a new place event from an existing morbidity event" do
 
     patient_attrs = {
@@ -133,6 +132,78 @@ describe PlaceEvent do
       place_entity.canonical_address.postal_code.should == address.postal_code
     end
 
+  end
+
+  describe "creating a place event directly" do
+
+    before(:each) do
+      @parent_event = Factory.create(:morbidity_event_with_disease)
+      
+      @place_event_hash = {
+        "address_attributes"=> {
+          "city"=>"Salt Lake City",
+          "postal_code"=>"22991",
+          "unit_number"=>"12",
+          "street_number"=>"1",
+          "county_id"=>"",
+          "street_name"=>"1 South 6 North 5 West 16 East 45",
+          "state_id"=>""
+        },
+        "interested_place_attributes"=> {
+          "place_entity_attributes"=>{
+            "email_addresses_attributes"=>{
+              "0"=>{
+                "email_address"=>"js@uts.com"
+              }
+            },
+            "place_attributes"=>{
+              "name"=>"Swimmin' Hole",
+              "place_type_ids"=>[Place.exposed_types.first.id.to_s]
+            },
+          }
+        },
+        "parent_id"=> @parent_event.id,
+        "participations_place_attributes"=>{
+          "date_of_exposure"=>"November 9, 2010"
+        },
+      }
+    end
+
+    it "should not allow creation without any place attributes" do
+      @place_event_hash.merge!({
+          "interested_place_attributes"=> {
+            "place_entity_attributes"=>{
+              "place_attributes"=> {
+                "name"=>""
+              }
+            }
+          }
+        }
+      )
+      
+      place_event = PlaceEvent.create(@place_event_hash)
+      place_event.id.should be_nil
+      place_event.interested_place.place_entity.place.should be_nil
+    end
+
+    it "should set the jurisdiction of the parent event on the place event" do
+      @parent_event.jurisdiction.should_not be_nil
+      place_event = PlaceEvent.create(@place_event_hash)
+      place_event.jurisdiction.secondary_entity_id.should == @parent_event.jurisdiction.secondary_entity_id
+    end
+
+    it "should set the disease of the parent event on the place event" do
+      @parent_event.disease.should_not be_nil
+      place_event = PlaceEvent.create(@place_event_hash)
+      place_event.disease.disease.id.should == @parent_event.disease.disease.id
+    end
+
+    it "should add a note" do
+      place_event = PlaceEvent.create(@place_event_hash)
+      place_event.notes.empty?.should be_false
+      place_event.notes.first.note.should == "Place event created."
+    end
+    
   end
 
 end

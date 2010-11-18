@@ -37,6 +37,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% content_for :tools do %>
   <%= link_to_function(t('show'), "send_url_with_tab_index('#{place_event_path(@event)}')") if User.current_user.is_entitled_to_in?(:view_event, @event.primary_jurisdiction.entity_id) %>
+  |
+  <%= link_to(t('new_place_for_event'), new_place_event_path(:parent_event_id => @event.parent_id)) %>
 <% end %>
 
 <% @form_index = 0 %>

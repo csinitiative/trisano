@@ -20,10 +20,16 @@
     = error_messages_for :object => p.object
     -core_element :name, p, :horiz do
       =p.label(:name)
-      =h(p.object.name)
+      - if p.object.new_record?
+        = p.text_field(:name, :size => 25, :maxlength => 250)
+      - else
+        =h(p.object.name)
     -core_element :place_type_id, p, :horiz do
-      =p.label(:place_type_ids)
-      =h(p.object.formatted_place_descriptions)
+      - if p.object.new_record?
+        = exposed_type_selector(p)
+      - else
+        =p.label(:place_type_ids)
+        =h(p.object.formatted_place_descriptions)
 
   -event_form.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |p|
     -core_element :date_of_exposure, p, :horiz do

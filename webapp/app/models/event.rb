@@ -710,4 +710,30 @@ class Event < ActiveRecord::Base
     self.updated_at = Time.new
   end
 
+  # This method can be invoked by sub-classes before_create hooks in order to set
+  # attributes on them which may be required for saving. Jurisdiction and disease
+  # setting is also attempted by Event#initialize_children. The duplication that
+  # occurs by having the before_create hooks call direct_child_creation_initialization
+  # on the creation of a morbidity event with children doesn't incur any penalty
+  # when saving from the morbidity event level b/c the parent_event.*.nil? checks
+  # will return true in that scenario.
+  def direct_child_creation_initialization
+    build_jurisdiction_based_on_parent
+    build_disease_based_on_parent
+  end
+
+  def build_jurisdiction_based_on_parent
+    return if parent_event.nil? || parent_event.jurisdiction.nil? || !self.jurisdiction.nil?
+    parent_jurisdiction = Jurisdiction.new
+    parent_jurisdiction.secondary_entity_id = parent_event.jurisdiction.secondary_entity_id
+    build_jurisdiction(parent_jurisdiction.attributes)
+  end
+
+  def build_disease_based_on_parent
+    return if parent_event.nil? || parent_event.disease_event.nil? || !self.disease_event.nil?
+    parent_disease_event = DiseaseEvent.new
+    parent_disease_event.disease_id = parent_event.disease_event.disease_id
+    build_disease_event(parent_disease_event.attributes)
+  end
+  
 end

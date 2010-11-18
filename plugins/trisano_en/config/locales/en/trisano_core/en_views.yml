@@ -184,6 +184,7 @@ en:
   cmr_contacts: 'CMR Contacts'
   parent_cmr: 'Parent CMR'
   parent_patient: Parent Patient
+  parent_event: 'Parent Event'
   not_elevated: "Not yet elevated to morbidity events"
   event_sibling_nav:
     morbidity_events: '--- Navigate to Promoted Contacts ---'
@@ -800,6 +801,9 @@ en:
   edit_address: "Edit Address"
   edit_phone: "Edit Telephone"
   place: "Place"
+  new_place_for_event: 'Create new place exposure'
+  new_place_event: 'New Place Exposure'
+  place_exposure_created: 'Successfully created place exposure.'
 
   #Roles
   roles: "Roles"

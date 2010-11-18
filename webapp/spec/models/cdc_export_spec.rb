@@ -601,7 +601,7 @@ describe CdcExport do
 
     describe 'with one morb event' do
       before :each do
-        @morbidity_event = Factory.build :event_with_disease_event
+        @morbidity_event = Factory.build :morbidity_event_with_disease
         @morbidity_event.state_case_status_id = external_codes(:case_status_probable).id
         @morbidity_event.save!
 
@@ -640,7 +640,7 @@ describe CdcExport do
 
     describe 'with two events, each w/ a different state status' do
       before :each do
-        @probable_event = Factory.build :event_with_disease_event
+        @probable_event = Factory.build :morbidity_event_with_disease
         @probable_event.state_case_status_id = external_codes(:case_status_probable).id
         @probable_event.save!
 
@@ -673,7 +673,7 @@ describe CdcExport do
     fixtures :diseases, :external_codes
 
     before :each do
-      @morb = Factory(:event_with_disease_event)
+      @morb = Factory(:morbidity_event_with_disease)
       @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => Mmwr.new.mmwr_year - 1).mmwr_week_range.start_date
       @morb.state_case_status_id = external_codes(:case_status_confirmed).id
       @morb.save!

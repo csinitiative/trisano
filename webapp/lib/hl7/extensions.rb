@@ -851,7 +851,8 @@ module StagedMessages
 
     class CE < Default
       def to_s
-        field.split(delim)[4]
+        components = field.split(delim)
+        components[4].blank? ? components[1] : components[4]
       end
     end
 

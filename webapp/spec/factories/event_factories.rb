@@ -24,6 +24,10 @@ Factory.define :morbidity_event do |e|
   e.first_reported_PH_date Date.today - 1.day
 end
 
+Factory.define :morbidity_event_with_disease, :parent => :morbidity_event do |event|
+  event.association :disease_event
+end
+
 Factory.define :contact_event do |e|
   e.association :interested_party
   e.association :jurisdiction
@@ -34,8 +38,6 @@ end
 Factory.define :contact_with_disease, :parent => :contact_event do |e|
   e.association :disease_event
 end
-
-
 
 Factory.define :encounter_event do |e|
   e.association :parent_event, :factory => :morbidity_event
@@ -168,10 +170,6 @@ Factory.define :event_with_task, :parent => :morbidity_event do |event|
   event.after_create do |event|
     event.reload
   end
-end
-
-Factory.define :event_with_disease_event, :parent => :morbidity_event do |event|
-  event.association :disease_event
 end
 
 Factory.define :note do |n|

@@ -77,6 +77,10 @@ When /^I save the encounter event$/ do
   submit_form "edit_encounter_event_#{@encounter.id}"
 end
 
+When /^I save the new place event$/i do
+  submit_form "new_place_event"
+end
+
 #
 # Error message helpers
 #
@@ -148,16 +152,16 @@ end
 Then /^I should see these select options:$/ do |select_options|
   select_options.hashes.each do |option|
     assert_tag(:tag => 'option',
-               :content => option['text'],
-               :parent => { :tag => 'select' })
+      :content => option['text'],
+      :parent => { :tag => 'select' })
   end
 end
 
 Then /^I should not see these select options:$/ do |select_options|
   select_options.hashes.each do |option|
     assert_no_tag(:tag => 'option',
-                  :content => option['text'],
-                  :parent => { :tag => 'select' })
+      :content => option['text'],
+      :parent => { :tag => 'select' })
   end
 end
 

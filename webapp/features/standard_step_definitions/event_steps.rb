@@ -180,6 +180,10 @@ When(/^I navigate to the contact event show page$/) do
   visit contact_event_path(@event)
 end
 
+When(/^I navigate to the place event edit page$/) do
+  visit edit_place_event_path(@place_event)
+end
+
 When /^I "([^\"]*)" the routed event$/ do |action|
   set_hidden_field "morbidity_event[workflow_action]", :to => action.downcase
   submit_form "state_change"
