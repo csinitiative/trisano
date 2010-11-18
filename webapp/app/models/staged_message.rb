@@ -264,6 +264,10 @@ class StagedMessage < ActiveRecord::Base
                                                               :extension => extension,
                                                               :entity_location_type_id => patient.telephone_type_work.id)
       end
+
+      unless patient.primary_language.nil? or patient.primary_language.id.nil?
+        event.interested_party.person_entity.person.primary_language_id = patient.primary_language.id
+      end
     end
 
     event.build_jurisdiction unless event.jurisdiction

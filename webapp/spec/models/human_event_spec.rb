@@ -399,6 +399,13 @@ describe HumanEvent, 'adding staged messages' do
         common_test_type.destroy
       end
     end
+
+    it 'should take the primary language ID from PID-15 when possible' do
+      login_as_super_user
+      staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:cerner_en]
+      event = staged_message.new_event_from
+      event.interested_party.person_entity.person.primary_language_id.should == external_codes(:language_english).id
+    end
   end
 
   describe "setting disease" do

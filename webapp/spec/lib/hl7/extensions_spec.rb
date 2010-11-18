@@ -234,6 +234,17 @@ describe Message do
       hl7.patient_id.trisano_ethnicity_id.should_not be_blank
       hl7.patient_id.trisano_ethnicity_id.should == external_codes(:ethnicity_non_hispanic).id
     end
+
+    it 'should return nil for primary_language if not present' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:cerner_lead]
+      hl7.patient_id.primary_language.should be_nil
+    end
+
+    it 'should return the language ID when present' do
+      hl7 = HL7::Message.parse HL7MESSAGES[:cerner_en]
+      hl7.patient_id.primary_language.should == 'en'
+      hl7.patient_id.primary_language.id.should == external_codes(:language_english).id
+    end
   end
 
   describe 'pv1 wrapper' do

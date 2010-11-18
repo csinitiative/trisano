@@ -382,6 +382,16 @@ module StagedMessages
     rescue
     end
 
+    def primary_language
+      returning pid_segment.primary_language.split(pid_segment.item_delim).first do |iso_code|
+        def iso_code.id
+          external_code = ExternalCode.first :conditions => [ "code_name = 'language' AND the_code ~* ?", '^'+self+'$' ]
+          external_code.id if external_code
+        end unless iso_code.nil?
+      end
+    rescue
+    end
+
     def address_empty?
       components_empty?(addr_components)
     end
@@ -549,7 +559,7 @@ module StagedMessages
           ExternalCode.find(
             :first,
             :select => 'id',
-            :conditions => ["code_name = 'specimen' AND code_description ILIKE ?", self]
+            :conditions => ["code_name = 'specimen' AND code_description ~* ?", '^'+self+'$']
           ).try(:id)
         end
       end
