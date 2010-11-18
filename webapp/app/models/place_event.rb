@@ -22,10 +22,8 @@ class PlaceEvent < Event
   accepts_nested_attributes_for :interested_place
   accepts_nested_attributes_for :participations_place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
-  before_create do |place|
-    place.add_note(I18n.translate("system_notes.place_event_created", :locale => I18n.default_locale))
-  end
-
+  before_create :direct_child_creation_initialization, :add_place_event_creation_note
+  
   after_save :set_primary_entity_on_secondary_participations
 
   class << self
@@ -52,6 +50,10 @@ class PlaceEvent < Event
 
   private
 
+  def add_place_event_creation_note
+    self.add_note(I18n.translate("system_notes.place_event_created", :locale => I18n.default_locale))
+  end
+
   def set_primary_entity_on_secondary_participations
     reload
     self.participations.each do |participation|
@@ -75,6 +77,6 @@ class PlaceEvent < Event
         base_errors.values.each { |msg| self.errors.add(:base, *msg) }
       end
     end
-
   end
+  
 end

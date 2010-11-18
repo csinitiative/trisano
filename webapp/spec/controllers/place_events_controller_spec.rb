@@ -126,19 +126,6 @@ describe PlaceEventsController do
       end
     end
 
-    describe "handling GET /events/new" do
-
-      def do_get
-        get :new
-      end
-
-      it "should return a 405" do
-        do_get
-        response.code.should == "405"
-      end
-
-    end
-
     describe "handling GET /events/1/edit with update entitlement" do
 
       before(:each) do
@@ -178,14 +165,7 @@ describe PlaceEventsController do
     end
   end
 
-  describe 'handling POST /events' do
-    it 'should return 405' do
-      post :create
-      response.code.should == '405'
-    end
-  end
-
-    describe "handling successful POST /place_events/1/soft_delete with update entitlement" do
+  describe "handling successful POST /place_events/1/soft_delete with update entitlement" do
 
     before(:each) do
       mock_user
@@ -287,20 +267,20 @@ describe PlaceEventsController, "place_events/1/update with redirect_to option" 
 
   it "redirects to specified url if 'Save & Exit' clicked" do
     put(:update, {
-          :id => @place_event.id,
-          :redirect_to => '/sample/url'
-        },
-        :user_id => @current_user.uid)
+        :id => @place_event.id,
+        :redirect_to => '/sample/url'
+      },
+      :user_id => @current_user.uid)
     response.should redirect_to('/sample/url')
   end
 
   it "does not redirect if 'Save & Continue' clicked" do
     put(:update, {
-          :id => @place_event.id,
-          :redirect_to => '/sample/url',
-          :return => 1
-        },
-        :user_id => @current_user.uid)
+        :id => @place_event.id,
+        :redirect_to => '/sample/url',
+        :return => 1
+      },
+      :user_id => @current_user.uid)
     response.should redirect_to(edit_place_event_url(@place_event))
   end
 end
