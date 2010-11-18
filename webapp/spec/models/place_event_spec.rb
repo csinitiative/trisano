@@ -146,7 +146,6 @@ describe PlaceEvent do
           "unit_number"=>"12",
           "street_number"=>"1",
           "county_id"=>"",
-          "longitude"=>"",
           "street_name"=>"1 South 6 North 5 West 16 East 45",
           "state_id"=>""
         },
