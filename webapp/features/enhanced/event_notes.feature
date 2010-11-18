@@ -8,6 +8,7 @@ Feature: Notes can be added to an Event
     Given I am logged in as a super user
     When I go to the new CMR page
       And I fill in "Last name" with "Jones"
+      And I enter a valid first reported to public health date
       And I press "Save & Continue"
       And I wait for the page to load
     Then I should see "Event created for jurisdiction Unassigned"

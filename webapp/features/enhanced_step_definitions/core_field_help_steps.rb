@@ -31,7 +31,9 @@ end
 Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_type, mode|
   html_source = @browser.get_html_source
 
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? and disease_specific = ? and field_type != ?', event_type.gsub(" ", "_"), false, 'section'])
+  @core_fields ||= CoreField.all(:conditions => [<<-SQL, event_type.gsub(" ", "_"), false, %w(section tab event)])
+    event_type = ? and disease_specific = ? and field_type NOT IN (?)
+  SQL
   @core_fields.each do |core_field|
     # Ignore lab result fields in show mode
     unless (mode == "show" && core_field.key.include?("[labs]"))

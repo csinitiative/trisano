@@ -18,6 +18,7 @@
 When(/^I navigate to the new event page and start a simple event$/) do
   @browser.open "/trisano/cmrs/new"
   add_demographic_info(@browser, { :last_name => get_unique_name })
+  @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end
 
 When /^I go to the new CMR page$/ do
@@ -101,4 +102,8 @@ end
 Then /^I should have been scrolled back to the top of the page$/ do
   script = "selenium.browserbot.getCurrentWindow().$j(window).scrollTop();"
   @browser.get_eval(script).should == "0"
+end
+
+When /^I enter a valid first reported to public health date$/ do
+  @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end

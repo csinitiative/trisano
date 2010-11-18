@@ -25,7 +25,7 @@ end
 When /^I remove the (.+) treatment$/ do |index_string|
   click_core_tab(@browser, CLINICAL)
   index = index_string[0..1].to_i
-  @browser.check("xpath=//div[@id='treatments']//div[@class='treatment'][#{index}]//input[contains(@name, 'delete')][2]")
+  @browser.check("xpath=//div[@id='treatments']//div[@class='treatment'][#{index}]//input[contains(@name, 'destroy')][2]")
 end
 
 Then /^I should not see the treatment "([^\"]*)" on with a date (.+) days ago$/ do |treatment, days_ago|
