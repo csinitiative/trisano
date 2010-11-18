@@ -70,7 +70,7 @@ class Address < ActiveRecord::Base
 
   def compact_format
     result = number_and_street
-    result = "Unit #{self.unit_number}\n" + result unless self.unit_number.blank?
+    result << "\nUnit #{self.unit_number}" unless self.unit_number.blank?
     result << "\n#{city_state_zip}" unless city_state_zip.blank?
     result << "\n" unless county_name.blank? && district_name.blank?
     result << "\n#{county_name}" unless county_name.blank?
