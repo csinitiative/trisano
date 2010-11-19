@@ -343,7 +343,7 @@ BEGIN;
 -- parameters. This function converts text input to a date, trapping the
 -- exception and using a fallback alternate date when the text can't be
 -- converted to a date
-CREATE FUNCTION make_date(input_date text, alternate date) RETURNS date
+CREATE OR REPLACE FUNCTION make_date(input_date text, alternate date) RETURNS date
     AS $$
 DECLARE
     converted_date DATE;
@@ -457,6 +457,7 @@ CREATE INDEX formbuilder_column_orig_name
 -- group_name is an optional field allowing whatever creates these modifications
 -- to identify groups of changes, so they can be deleted or updated easily in, for instance,
 -- plugin build_metadata scripts.
+DROP TABLE IF EXISTS trisano.view_mods;
 CREATE TABLE trisano.view_mods (
     table_name TEXT PRIMARY KEY,
     group_name TEXT,
