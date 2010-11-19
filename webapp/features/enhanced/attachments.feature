@@ -1,4 +1,4 @@
-Features: Attaching documents to an Event.
+Feature: Attaching documents to an Event.
 
   To support better documenting of cases
   Correspondence and images files can be attached to an event.
