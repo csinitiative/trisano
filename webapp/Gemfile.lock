@@ -140,6 +140,3 @@ DEPENDENCIES
   warbler
   webrat (= 0.7.2.pre)
   wirble
-
-METADATA
-  version: 1.0.6
