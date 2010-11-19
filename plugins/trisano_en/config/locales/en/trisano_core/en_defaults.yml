@@ -99,7 +99,7 @@ en:
     abbr_month_names: [~, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
     # Used in date_select and datime_select.
     order: [ :year, :month, :day ]
-  
+
   validates_timeliness:
     error_value_formats:
       date: '%Y-%m-%d'
@@ -175,7 +175,7 @@ en:
     check_box: Checkboxes
     date: Date
     phone: Phone Number
-    
+
   question_styles:
     horizontal: Horizontal
     vertical: Vertical
@@ -267,6 +267,7 @@ en:
   no_loinc_code_maps_to_disease: "No LOINC code maps to a disease."
   event_disease_set_to: "Event's disease set to {{disease_name}}"
   loinc_code_maps_to_multiple_diseases: "LOINC code(s) map to multiple diseases:"
+  unmapped_language_code: "ELR language code {{lang_code}} not found among TriSano's external codes."
   loinc_code_must_be_blank_error: "must be blank when Scale is set to '{{code_description}}'"
   errors_saving_short_names: "Errors saving short names"
   role_membership_already_assigned: "is already assigned this role for this jurisdiction"

@@ -128,7 +128,7 @@ es:
   default_view: "Vista predeterminada"
   library_export_file_name: "exportación de bilbliotaca"
 
-  workflow: 
+  workflow:
     event_created_for_jurisdiction: "Evento creado para la jurisdicción"
     assigned_to_lhd: "Asignado/a(s) al departamento de salud local"
     accepted_by_lhd: "Aceptado/a(s) por el departamento de salud local"
@@ -169,7 +169,7 @@ es:
     check_box: Casilla de verificación
     date: Fecha
     phone: Número telefónico
-    
+
   question_styles:
     horizontal: Horizontal
     vertical: Vertical
@@ -261,6 +261,7 @@ es:
   no_loinc_code_maps_to_disease: "Ningún código LOINC correlaciona a una enfermedad."
   event_disease_set_to: "Se ha fijado la enfermedad del evento a {{diesase_name}}"
   loinc_code_maps_to_multiple_diseases: "Correlaciona(n) el(los) código(s) LOINC a multiples enfermedades:"
+  unmapped_language_code: "ELR language code {{lang_code}} not found among TriSano's external codes."
   loinc_code_must_be_blank_error: "debe estar vacío cuando la escala está fijada a '{{code_description}}'"
   errors_saving_short_names: "Se produjieron errores al guardar los nombres abreviados"
   role_membership_already_assigned: "ya se ha asignado esta función a esta jurisdicción"

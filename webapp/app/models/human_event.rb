@@ -665,6 +665,14 @@ class HumanEvent < Event
       end
     end
 
+    unless staged_message.patient.primary_language.blank? or
+      interested_party.person_entity.person.primary_language_id
+      staged_message.note ||= ''
+      staged_message.note.sub! /\s+$/, ''
+      staged_message.note += '. ' if staged_message.note.length > 0
+      staged_message.note += I18n.translate :unmapped_language_code, :lang_code => staged_message.patient.primary_language, :locale => I18n.default_locale
+    end
+
     unless staged_message.patient.dead_flag.blank? or disease_event.nil?
       code = case staged_message.patient.dead_flag
       when 'Y'
