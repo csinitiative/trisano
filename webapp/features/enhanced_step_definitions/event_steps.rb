@@ -81,6 +81,13 @@ When /^I select "([^\"]*)" from the sibling navigator and Save$/ do |option_text
   @browser.wait_for_page_to_load
 end
 
+When /^I select "([^\"]*)" from the sibling navigator and leave without saving$/ do |option_text|
+  @browser.select "css=.events_nav", option_text
+  @browser.wait_for_element_present "//button/span[contains(text(), 'Leave')]"
+  @browser.click "//button/span[contains(text(), 'Leave')]"
+  @browser.wait_for_page_to_load
+end
+
 
 Then /^I should be on the contact named "([^\"]*)"$/ do |last_name|
   @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
@@ -123,12 +130,17 @@ end
 
 Given /^a clean events table$/ do
   Address.destroy_all
+  ParticipationsRiskFactor.destroy_all
   Participation.destroy_all
+  Task.destroy_all
   Event.destroy_all
 end
 
 After('@clean_events') do
   Address.all.each(&:delete)
+  ParticipationsRiskFactor.destroy_all
+  Participation.destroy_all
+  Task.destroy_all
   Event.all.each(&:delete)
 end
 
