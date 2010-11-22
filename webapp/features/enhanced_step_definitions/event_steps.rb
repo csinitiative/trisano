@@ -43,8 +43,9 @@ When(/^I am on the event show page$/) do
   @browser.wait_for_page_to_load
 end
 
-# Consider refactoring the name of this one -- it really isn't navigating, it's
-# more like a "when I am on"
+# Consider refactoring the name of this one -- it really isn't
+# navigating, it's more like a "when I am on" -- doesn't 'I am on'
+# imply a verification that you are already there?
 When(/^I navigate to the event show page$/) do
   @browser.open "/trisano/cmrs/#{(@event).id}"
   @browser.wait_for_page_to_load
@@ -59,6 +60,24 @@ end
 When(/^I am on the contact event edit page$/) do
   @browser.open "/trisano/contact_events/#{(@contact_event).id}/edit"
   @browser.wait_for_page_to_load
+end
+
+When /^I navigate to the contact named "(.+)"$/ do |last_name|
+  @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
+                                      :conditions => ['people.last_name = ?', last_name])
+  @browser.open "/trisano/contact_events/#{@contact_event.id}/edit"
+  @browser.wait_for_page_to_load
+end
+
+When /^I select "([^\"]*)" from the sibling navigator$/ do |option_text|
+  @browser.select "css=.events_nav", option_text
+  @browser.wait_for_page_to_load
+end
+
+Then /^I should be on the contact named "([^\"]*)"$/ do |last_name|
+  @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
+                                      :conditions => ['people.last_name = ?', last_name])
+  @browser.get_location.should =~ /trisano\/contact_events\/#{@contact_event.id}\/edit/
 end
 
 When(/^I am on the place event edit page$/) do

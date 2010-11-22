@@ -19,6 +19,10 @@ Given(/^a basic morbidity event exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given /^a cmr exists$/ do
+  @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+end
+
 Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event = create_basic_event("morbidity", get_unique_name(1), disease.strip, get_random_jurisdiction_by_short_name)
   @event.disease_event.disease_onset_date = Date.yesterday
@@ -86,7 +90,7 @@ Given /^a simple (.+) event in jurisdiction (.+) for the full name of (.+)$/ do 
   first_name = name_array[0]
   middle_name = name_array[1]
   last_name = name_array[2]
-  
+
   attrs = {
     "interested_party_attributes"=>
       { "person_entity_attributes"=>
