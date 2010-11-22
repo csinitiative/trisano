@@ -88,6 +88,11 @@ When /^I select "([^\"]*)" from the sibling navigator and leave without saving$/
   @browser.wait_for_page_to_load
 end
 
+When /^I select "([^\"]*)" from the sibling navigator but cancel the dialog$/ do |option_text|
+  @browser.select "css=.events_nav", option_text
+  @browser.wait_for_element_present "//a/span[contains(text(), 'close')]"
+  @browser.click "//a/span[contains(text(), 'close')]"
+end
 
 Then /^I should be on the contact named "([^\"]*)"$/ do |last_name|
   @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
@@ -95,10 +100,16 @@ Then /^I should be on the contact named "([^\"]*)"$/ do |last_name|
   @browser.get_location.should =~ /trisano\/contact_events\/#{@contact_event.id}\/edit/
 end
 
-When /^I enter "([^\"]*)" as the contacts first name$/ do |text|
+When /^I enter "([^\"]*)" as the contact\'s first name$/ do |text|
   @browser.type("css=#contact_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name",
                 text)
 end
+
+Then /^no value should be selected in the sibling navigator$/ do
+  script = "selenium.browserbot.getCurrentWindow().$j('.events_nav').val();"
+  @browser.get_eval(script).should == ""
+end
+
 
 When(/^I am on the place event edit page$/) do
   @browser.open "/trisano/place_events/#{(@place_event).id}/edit"
