@@ -58,11 +58,11 @@ Feature: Ordering the events view by column
   Scenario: Sorting events by event date
     Given I am logged in as a super user
       And a simple morbidity event in jurisdiction Bear River for last name Abernathy
-      And that event was created 3 days ago
+      And the morbidity event was created 3 days ago
       And a simple morbidity event in jurisdiction Bear River for last name Benson
-      And that event was created 2 days ago
+      And the morbidity event was created 2 days ago
       And a simple morbidity event in jurisdiction Bear River for last name Cleveland
-      And that event was created 1 day ago
+      And the morbidity event was created 1 day ago
     When I visit the events index page
       And I follow "Event Date"
     Then the "Cleveland" event should come before the "Benson" event

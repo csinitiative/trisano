@@ -40,6 +40,10 @@ Given /^a simple (.+) event for last name (.+)$/ do |event_type, last_name|
   @event = create_basic_event(event_type, last_name)
 end
 
+Given /^a simple (.+) event, last name (.+), and disease (.+)$/ do |event_type, last_name, disease|
+  @event = create_basic_event(event_type, last_name, disease)
+end
+
 Given /^a simple (.+) event for full name (.+)$/ do |event_type, name|
   first_name, last_name = name.split(" ")
   attrs = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :first_name => first_name, :last_name => last_name }}}}
@@ -72,11 +76,20 @@ Given /^a simple (.+) event in jurisdiction (.+), last name (.+), and disease (.
   @event = create_basic_event(event_type, last_name, disease, jurisdiction)
 end
 
-Given /^that event was created (.+)$/ do |date|
+Given /^the (.+) event was created (.+)$/ do |event_type, date|
+  case event_type
+  when "contact"
+    event = @contact_event
+  when "place"
+    event = @place_event
+  else
+    event = @event
+  end
+
   new_date = eval(date.split(" ").join(".")).to_date
-  @event.first_reported_PH_date = new_date - 1.day
-  @event.created_at = new_date
-  @event.save!
+  event.first_reported_PH_date = new_date - 1.day
+  event.created_at = new_date
+  event.save!
 end
 
 Given /^the morbidity event state workflow state is "([^\"]*)"$/ do |workflow_state|
@@ -153,6 +166,11 @@ end
 
 Given /^there is a contact on the event named (.+)$/ do |last_name|
   @contact_event = add_contact_to_event(@event, last_name)
+end
+
+Given /^the contact has the disease (.+)$/ do |disease|
+  @contact_event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease))
+  @contact_event.save!
 end
 
 Given /^the contact event is deleted$/i do
