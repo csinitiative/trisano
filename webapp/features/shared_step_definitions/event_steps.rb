@@ -110,6 +110,7 @@ Given /^(.+) simple (.+) events for last name (.+)$/ do |count, event_type, last
 end
 
 Given /^the morbidity event has the following contacts:$/ do |contacts|
+  @contact_events = []
   contacts.hashes.each do |contact|
     hash = {
       "interested_party_attributes" => {
@@ -123,10 +124,9 @@ Given /^the morbidity event has the following contacts:$/ do |contacts|
     if disease_id = @event.try(:disease_event).try(:disease).try(:id)
       hash.merge!({ "disease_event_attributes"=> { "disease_id"=> disease_id }})
     end
-
-    @event.contact_child_events << ContactEvent.create!(hash)
+    @contact_events << ContactEvent.create!(hash)
+    @event.contact_child_events << @contact_events.last
   end
-  @event.save!
 end
 
 Given /^the morbidity event has the following deleted contacts:$/ do |contacts|

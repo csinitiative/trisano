@@ -6,6 +6,7 @@ Feature: Navigating directly between a CMR's children
 
   Background:
     Given I am logged in as a super user
+      And a clean events table
       And a cmr exists
       And the morbidity event has the following contacts:
         | last_name |
@@ -17,3 +18,11 @@ Feature: Navigating directly between a CMR's children
     When I navigate to the contact named "Wilson"
      And I select "Davis" from the sibling navigator
     Then I should be on the contact named "Davis"
+
+  Scenario: Save & Exit from one sibling to another
+    When I navigate to the contact named "Wilson"
+     And I enter "Fluffy" as the contacts first name
+     And I select "Davis" from the sibling navigator and Save
+    Then I should be on the contact named "Davis"
+     And I should see "Fluffy Wilson"
+

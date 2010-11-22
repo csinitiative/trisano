@@ -68,12 +68,12 @@ module TrisanoHelper
 
   def wait_for_element_present(name, browser=nil)
     browser = @browser.nil? ? browser : @browser
-    !60.times{ break if (browser.is_element_present(name) rescue false); sleep 1 }
+    !60.times{ return true if (browser.is_element_present(name) rescue false); sleep 1 }
   end
 
   def wait_for_element_not_present(name, browser=nil)
     browser = @browser.nil? ? browser : @browser
-    !60.times{ break unless (browser.is_element_present(name) rescue true); sleep 1 }
+    !60.times{ return false unless (browser.is_element_present(name) rescue true); sleep 1 }
   end
 
   #  Use set_fields after you navigate to any location by passing in a hash of 

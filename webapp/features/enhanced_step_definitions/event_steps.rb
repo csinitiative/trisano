@@ -74,10 +74,23 @@ When /^I select "([^\"]*)" from the sibling navigator$/ do |option_text|
   @browser.wait_for_page_to_load
 end
 
+When /^I select "([^\"]*)" from the sibling navigator and Save$/ do |option_text|
+  @browser.select "css=.events_nav", option_text
+  @browser.wait_for_element_present "//button/span[contains(text(), 'Save')]"
+  @browser.click "//button/span[contains(text(), 'Save')]"
+  @browser.wait_for_page_to_load
+end
+
+
 Then /^I should be on the contact named "([^\"]*)"$/ do |last_name|
   @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
                                       :conditions => ['people.last_name = ?', last_name])
   @browser.get_location.should =~ /trisano\/contact_events\/#{@contact_event.id}\/edit/
+end
+
+When /^I enter "([^\"]*)" as the contacts first name$/ do |text|
+  @browser.type("css=#contact_event_interested_party_attributes_person_entity_attributes_person_attributes_first_name",
+                text)
 end
 
 When(/^I am on the place event edit page$/) do
@@ -106,6 +119,12 @@ end
 
 Then /^events list should show (\d+) events$/ do |expected_count|
   @browser.get_xpath_count("//div[@class='patientname']").should == expected_count
+end
+
+Given /^a clean events table$/ do
+  Address.destroy_all
+  Participation.destroy_all
+  Event.destroy_all
 end
 
 After('@clean_events') do
