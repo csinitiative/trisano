@@ -194,9 +194,10 @@ es:
   parent_event: 'Parent Event (EN)'
   not_elevated: "No ha sido elevado a un acontecimiento de morbilidad"
   event_sibling_nav:
-    morbidity_events: '--- Navigate to Promoted Contacts (EN) ---'
-    contact_events:   '--- Navigate to Related Contacts (EN) ---'
-    place_events:   '--- Navigate to Related Places (EN) ---'
+    navigate_to:      '--- Navigate to...(EN)     ---'
+    morbidity_events: '--- Promoted Contacts (EN) ---'
+    contact_events:   '--- Related Contacts (EN)  ---'
+    place_events:     '--- Related Places (EN)    ---'
 
 #core_field_elements
   add_core_field: 'Agregar Campo Principal'

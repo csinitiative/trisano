@@ -748,9 +748,10 @@ module EventsHelper
     ['ContactEvent', 'PlaceEvent', 'MorbidityEvent'].each do |event_type|
       partitioned_events << events.collect { |event| event if event.class.name == event_type }.compact
     end
-    
+
     result = image_tag('redbox_spinner.gif', :id => 'events_nav_spinner', :style => 'display: none;')
     result << "<select class=\"events_nav\">"
+    result << "<option value="">#{t(:navigate_to, :scope => :event_sibling_nav)}</option>"
     partitioned_events.reject(&:empty?).each do |partition|
       result << "<option value="">#{t(partition.first.class.name.tableize, :scope => :event_sibling_nav)}</option>"
       result << event_navigation_options(partition)

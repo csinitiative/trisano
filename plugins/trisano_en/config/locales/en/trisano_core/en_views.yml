@@ -187,9 +187,10 @@ en:
   parent_event: 'Parent Event'
   not_elevated: "Not yet elevated to morbidity events"
   event_sibling_nav:
-    morbidity_events: '--- Navigate to Promoted Contacts ---'
-    contact_events:   '--- Navigate to Related Contacts ---'
-    place_events:   '--- Navigate to Related Places ---'
+    navigate_to:      '--- Navigate to...    ---'
+    morbidity_events: '--- Promoted Contacts ---'
+    contact_events:   '--- Related Contacts  ---'
+    place_events:     '--- Related Places    ---'
 
 #core_field_elements
   add_core_field: 'Add Core Field'
