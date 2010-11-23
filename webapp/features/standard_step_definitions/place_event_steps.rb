@@ -34,5 +34,5 @@ end
 
 def place_added_through_ui
   @event.reload
-  @place_event_added_through_ui ||= PlaceEvent.find(@event.place_child_event_ids.reject { |pe| pe == @place_event.id }.first)
+  @place_event_added_through_ui ||= PlaceEvent.find(@event.place_child_events.reject { |pe| pe.id == @place_event.id }.first)
 end

@@ -63,6 +63,6 @@
 
       =render_extensions :address_extension_renderers, :address_form => a
 
-      -if event.is_a?(ContactEvent)
+      -if event.is_a?(ContactEvent) && !event.new_record?
         %fieldset.vert
           =button_to_function(t('copy_from_original_patient'), "contact_parent_address('#{copy_address_contact_event_path(@event)}')")

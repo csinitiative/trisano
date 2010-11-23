@@ -21,9 +21,7 @@ class ContactEvent < HumanEvent
   supports :tasks
   supports :attachments
 
-  before_create do |contact|
-    contact.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale))
-  end
+  before_create :direct_child_creation_initialization, :add_contact_event_creation_note
 
   workflow do
     state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
@@ -197,6 +195,10 @@ class ContactEvent < HumanEvent
   end
 
   private
+
+  def add_contact_event_creation_note
+    self.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale))
+  end
 
   def validate_disposition_date_against_birth_date(base_errors)
     contact_bdate = self.try(:interested_party).try(:person_entity).try(:person).try(:birth_date)

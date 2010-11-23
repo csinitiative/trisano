@@ -128,19 +128,6 @@ describe ContactEventsController do
 
     end
 
-    describe "handling GET /events/new" do
-
-      def do_get
-        get :new
-      end
-
-      it "should return a 405" do
-        do_get
-        response.code.should == "405"
-      end
-
-    end
-
     describe "handling GET /events/1/edit with update entitlement" do
 
       before(:each) do

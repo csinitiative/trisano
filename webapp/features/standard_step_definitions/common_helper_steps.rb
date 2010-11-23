@@ -77,8 +77,8 @@ When /^I save the encounter event$/ do
   submit_form "edit_encounter_event_#{@encounter.id}"
 end
 
-When /^I save the new place event$/i do
-  submit_form "new_place_event"
+When /^I save the new (.+) event$/i do |event_type|
+  submit_form "new_#{event_type}_event"
 end
 
 #

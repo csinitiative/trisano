@@ -156,6 +156,9 @@ es:
 # contact_events
   view_contact_event: 'Ver el Cvento de Contacto: {{name}}'
   edit_contact_event: 'Editar el Evento de Contacto: {{name}}'
+  new_contact_for_event: 'Create new contact event (EN)'
+  new_contact_event: 'New contact event (EN)'
+  contact_event_created: 'Successfully created contact event. (EN)'
   jurisdiction: 'Jurisdicción'
   status: 'Estado'
   event_date: 'Event Date (EN)'

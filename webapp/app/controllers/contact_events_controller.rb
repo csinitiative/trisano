@@ -30,15 +30,40 @@ class ContactEventsController < EventsController
   end
 
   def new
-    render :text => t("contact_event_no_new"), :status => 405
+    @parent_event = MorbidityEvent.find(params[:parent_event_id])
+    @event = ContactEvent.new(:parent_id => @parent_event.id)
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @event }
+    end
   end
 
   def edit
-    # Filter #can_update? is called which loads up @event with the found event. Nothing to do here.
   end
 
   def create
-    render :text => t("contact_event_no_create"), :status => 405
+    @parent_event = MorbidityEvent.find(params[:contact_event][:parent_id])
+    @event = ContactEvent.new(params[:contact_event])
+
+    unless User.current_user.can?(:create_event, @parent_event)
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
+    end
+
+    respond_to do |format|
+      if @event.save
+        @event.reload
+        @event.try(:address).try(:establish_canonical_address)
+        flash[:notice] = t("contact_event_created")
+        format.html {
+          redirect_to edit_contact_event_url(@event)
+        }
+        format.xml  { render :xml => @event, :status => :created, :location => @event }
+      else
+        format.html { render :action => "new", :status => :unprocessable_entity }
+        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   def update
