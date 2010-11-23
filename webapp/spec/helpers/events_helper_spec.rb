@@ -123,11 +123,11 @@ describe EventsHelper do
       end
 
       it "displays a navigation message for promoted contacts" do
-        helper.original_patient_controls(@contact_event).should have_tag('option', '--- Navigate to Promoted Contacts ---')
+        helper.original_patient_controls(@contact_event).should have_tag('option', '--- Promoted Contacts ---')
       end
 
       it "displays a navigation message for contacts" do
-        helper.original_patient_controls(@promoted_event).should have_tag('option', '--- Navigate to Related Contacts ---')
+        helper.original_patient_controls(@promoted_event).should have_tag('option', '--- Related Contacts  ---')
       end
 
     end
