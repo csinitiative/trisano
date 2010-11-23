@@ -187,6 +187,22 @@ $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
     -d $DEST_DB_NAME -c "SELECT trisano.swap_schemas()" || \
     DIE "Problem swapping staging schema into production use"
 
+echo "Processing post-swap plugin ETL"
+if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISANO_PLUGIN_DIRECTORY ]]; then
+    echo "Checking for plugins in $TRISANO_PLUGIN_DIRECTORY"
+    for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
+        if [ -r $plugin/avr/post-etl.sql ] ; then
+            echo "Found post-ETL file for $plugin"
+            $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
+                -p $DEST_DB_PORT -U $DEST_DB_USER \
+                -f $plugin/avr/post-etl.sql $DEST_DB_NAME || \
+                DIE "Error running post-ETL for plugin $plugin"
+        fi
+    done
+else
+    echo "The environment variable TRISANO_PLUGIN_DIRECTORY is set to \"$TRISANO_PLUGIN_DIRECTORY\", which not a readable directory. Skipping post-swap plugins."
+fi
+
 echo "Fixing PostgreSQL verbosity"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
     -d $DEST_DB_NAME -c "alter role $DEST_DB_USER set client_min_messages = $CMM;" || \
