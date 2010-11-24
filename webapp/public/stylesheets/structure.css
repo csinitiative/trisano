@@ -93,6 +93,14 @@ form {
 .scroll th, .scroll td {
   white-space: nowrap; }
 
+.sortable td {
+  position: relative; }
+
+.sortable td .nodatatag {
+  position: absolute;
+  font-weight: bold;
+  font-style: italic; }
+
 .sortable th {
   text-decoration: underline;
   cursor: pointer;
