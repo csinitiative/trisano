@@ -157,12 +157,17 @@ class User < ActiveRecord::Base
 
   def self.investigators_for_jurisdictions(jurisdictions)
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
-    investigators = []
-    jurisdictions.each do |j|
-      Privilege.investigate_event.roles.all.each do |r|
-        investigators += r.role_memberships.for_jurisdiction(j).collect { |e| e.user }
-      end
-    end
+    investigators = User.find_by_sql([<<-SQL, jurisdictions])
+      SELECT DISTINCT e.id, e.uid, e.user_name, e.given_name, e.first_name, e.last_name
+        FROM privileges a
+        JOIN privileges_roles b ON b.privilege_id = a.id
+        JOIN roles c ON c.id = b.role_id
+        JOIN role_memberships d ON d.role_id = c.id
+        JOIN users e ON e.id = d.user_id
+       WHERE a.priv_name = 'investigate_event'
+         AND d.jurisdiction_id IN (?)
+       ORDER BY e.first_name, e.last_name;
+    SQL
     investigators.uniq.sort_by { |investigator| investigator.best_name }
   end
 
