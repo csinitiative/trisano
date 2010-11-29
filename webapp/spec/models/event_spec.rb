@@ -324,7 +324,7 @@ describe MorbidityEvent do
           @event.secondary_jurisdictions.length.should == 2
 
           @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Summit_County).id])
-          @event.secondary_jurisdictions.length.should == 1
+          @event.secondary_jurisdictions(true).length.should == 1
           @event.secondary_jurisdictions.include?(places(:Davis_County)).should_not be_true
           @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
         end
@@ -334,7 +334,7 @@ describe MorbidityEvent do
         it "should add some and remove others" do
           # Start with summit and Southeastern
           @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Summit_County).id, entities(:Southeastern_District).id])
-          @event.secondary_jurisdictions.length.should == 2
+          @event.secondary_jurisdictions(true).length.should == 2
           @event.secondary_jurisdictions.include?(places(:Southeastern_District)).should be_true
           @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
           @event.secondary_jurisdictions.include?(places(:Davis_County)).should_not be_true
@@ -342,9 +342,9 @@ describe MorbidityEvent do
           # Remove Southeastern, add Davis, Leave Summit alone
           @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Davis_County).id, entities(:Summit_County).id])
           @event.secondary_jurisdictions.length.should == 2
-          @event.secondary_jurisdictions.include?(places(:Davis_County)).should be_true
-          @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
-          @event.secondary_jurisdictions.include?(places(:Southeastern_District)).should_not be_true
+          @event.secondary_jurisdictions(true).include?(places(:Davis_County)).should be_true
+          @event.secondary_jurisdictions(true).include?(places(:Summit_County)).should be_true
+          @event.secondary_jurisdictions(true).include?(places(:Southeastern_District)).should_not be_true
         end
       end
 

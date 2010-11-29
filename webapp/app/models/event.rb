@@ -354,11 +354,11 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def secondary_jurisdictions
+  def secondary_jurisdictions(reload = false)
     if new_record?
       self.associated_jurisdictions.map {|j| j.try(:place_entity).try(:place)}
     else
-      eager_jurisdictions.select{|j| j['type'] == 'AssociatedJurisdiction'}.map do |j|
+      eager_jurisdictions(reload).select{|j| j['type'] == 'AssociatedJurisdiction'}.map do |j|
         j.place_entity.try(:place)
       end
     end
@@ -376,8 +376,11 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def eager_jurisdictions
-    all_jurisdictions(:include => {:place_entity => :place})
+  def eager_jurisdictions(reload = false)
+    if reload || @eager_jurisdictions.nil?
+      @eager_jurisdictions = all_jurisdictions(:include => {:place_entity => :place})
+    end
+    @eager_jurisdictions
   end
 
   # wow. wish this didn't return the disease_event.
