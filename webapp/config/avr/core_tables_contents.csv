@@ -26,5 +26,6 @@
 'true',  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',       'trisano.dw_encounter_telephones_view',              6,  NULL
 'true',  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',      'trisano.dw_encounters_treatments_events_view',      6,  NULL
 'true',  'dw_place_events_view',                      'Place Events',                      'trisano.dw_place_events_view',                      7,  'Place'
+'true',  'etl_success',                               'Data Sync Status',                  'trisano.etl_success',                               9,  NULL
 'true',  'avr_groups_view',                           'Disease Groups',                    'trisano.avr_groups_view',                           9,  NULL
 'false', 'avr_groups_diseases_view',                  'avr_groups_diseases_view',          'trisano.avr_groups_diseases_view',                  9,  NULL

@@ -1,0 +1,3 @@
+#INSERT INTO trisano.view_mods (table_name, addition) VALUES
+'dw_morbidity_events', 'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age'
+'dw_contact_events',   'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age'

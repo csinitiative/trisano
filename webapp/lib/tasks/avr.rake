@@ -42,6 +42,9 @@ if RUBY_PLATFORM =~ /java/
         database_pass   = db_config['development']['warehouse_password']
         database_driver = db_config['development']['warehouse_driver']
 
+        if database_host.nil? then
+            puts "Your warehouse database host isn't set - are the warehouse options configured in database.yml?"
+        end
         props = Java::JavaUtil::Properties.new
         props.setProperty "user", database_user
         props.setProperty "password", database_pass
@@ -146,8 +149,24 @@ if RUBY_PLATFORM =~ /java/
         recreate_table name, yml_file, yml_key, csv_file, insert
       end
 
+      desc "Set up trisano.core_view_mods"
+      task :recreate_core_view_mods do
+        db_connection do |conn|
+          begin
+            run_statements ['TRUNCATE TABLE trisano.view_mods'], conn
+            insert_stmt = 'INSERT INTO trisano.view_mods (table_name, addition) VALUES'
+            insert_stmt += csv_file_to_values './config/avr/core_view_mods.csv'
+            run_statement insert_stmt, conn
+          rescue
+            e = $!
+            puts "Some exception occurred recreating core view_mods entries: #{e}"
+            raise e
+          end
+        end
+      end
+
       desc "Set up core table AVR schema metadata"
-      task :metadata_schema_core => [:recreate_core_tables, :recreate_core_columns, :recreate_core_relationships]
+      task :metadata_schema_core => [:recreate_core_tables, :recreate_core_columns, :recreate_core_relationships, :recreate_core_view_mods]
 
       task :metadata_schema_plugins => [:metadata_schema_core] do
         db_connection do |conn|
