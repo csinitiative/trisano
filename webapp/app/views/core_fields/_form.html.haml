@@ -25,7 +25,7 @@
         - error_tag_if f.object, :errors_on => :rendered_attributes do
           = check_box_tag "core_field[rendered_attributes][rendered]", 1, f.object.rendered?(@disease)
           = core_field_rendered_label @disease
-  - unless @disease || f.object.section?
+  - unless @disease || f.object.container?
     %tr
       %td{:colspan => 2}
         %span{ :class => "vert" }
