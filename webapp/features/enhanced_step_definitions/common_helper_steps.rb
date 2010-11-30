@@ -30,6 +30,11 @@ Given /^I am logged in as "(.+)"$/ do |user_name|
   select(user_name, :from => "user_id")
 end
 
+When(/^I follow "(.+)"$/) do |link|
+  @browser.click("link=#{link}")
+  @browser.wait_for_page_to_load($load_time)
+end
+
 When(/^I click the "(.+)" link$/) do |link|
   @browser.click("link=#{link}")
   @browser.wait_for_page_to_load($load_time)
@@ -65,7 +70,12 @@ When /^I select "([^\"]*)" from "([^\"]*)"$/ do |value, select|
 end
 
 When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, text|
-  field_id = @browser.get_attribute "//label[text()='#{field}']@for" || field
+  begin
+    field_id = @browser.get_attribute "//label[text()='#{field}']@for"
+  rescue
+    field_id = field
+  end
+  
   @browser.type field_id, text
 end
 
@@ -77,6 +87,12 @@ end
 When /^I press "([^\"]*)"$/ do |button|
   @browser.click "//input[@value='#{button}']"
 end
+
+When /^I press "([^\"]*)" and wait to see "([^\"]*)"$/ do |button, text|
+  @browser.click "//input[@value='#{button}']"
+  @browser.wait_for_element "//*[contains(text(),'#{text}')]", :timeout_in_seconds => 3
+end
+
 
 When /^the following values are selected from "([^\"]*)":$/ do |select, values|
   values.raw.each do |value|

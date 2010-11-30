@@ -1,5 +1,4 @@
 
-
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
@@ -20,9 +19,10 @@
 <% content_for :tools do %>
   <%= link_to_function(t('show'), "send_url_with_tab_index('#{contact_event_path(@event)}')") %>
   |
-  <%= link_to(t('new_contact_for_event'), new_contact_event_path(:parent_event_id => @event.parent_id)) %>
-
+  <%= link_to(t('new_contact_for_event'), '#', :id => 'new-contact-for-event') %>
 <% end %>
+
+<%= render :partial => 'contact_events/search', :locals => { :event => @event } %>
 
 <% @form_index = 0 %>
 
@@ -60,3 +60,5 @@
   <%= event_form.submit t('save_and_exit'), :style => "display: none", :onclick => "this.disabled=true;" %>
 <% end %>
 <%= alert_if_changed(@event) %>
+
+<%= contact_edit_search_js %>

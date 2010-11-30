@@ -165,6 +165,10 @@ Then /^I should have been scrolled back to the top of the page$/ do
   @browser.get_eval(script).should == "0"
 end
 
+Then /^I should have a note that says "([^\"]*)"$/ do |text|
+  @browser.get_xpath_count("//div[@id='existing-notes']//p[contains(text(), '#{text}')]").to_i.should >= 1
+end
+
 When /^I enter a valid first reported to public health date$/ do
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end

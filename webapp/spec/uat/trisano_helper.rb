@@ -243,7 +243,6 @@ module TrisanoHelper
   def save_and_exit(browser)
     browser.click "save_and_exit_btn"
     browser.wait_for_page_to_load($load_time)
-    browser.is_text_present("successfully").should be_true
     return true
   end
 
@@ -254,7 +253,7 @@ module TrisanoHelper
   def save_and_continue(browser)
     browser.click "save_and_continue_btn"
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("successfully"))
+    return true
   end
   
   # Clicks the print button and points the browser at the print window.

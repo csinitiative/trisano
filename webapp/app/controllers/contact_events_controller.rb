@@ -17,6 +17,8 @@
 
 class ContactEventsController < EventsController
 
+  before_filter :load_parent, :only => [:new, :create]
+
   def index
     render :text => t("contact_event_no_index"), :status => 405
   end
@@ -30,7 +32,6 @@ class ContactEventsController < EventsController
   end
 
   def new
-    @parent_event = MorbidityEvent.find(params[:parent_event_id])
     @event = ContactEvent.new(:parent_id => @parent_event.id)
 
     respond_to do |format|
@@ -43,13 +44,15 @@ class ContactEventsController < EventsController
   end
 
   def create
-    @parent_event = MorbidityEvent.find(params[:contact_event][:parent_id])
-    @event = ContactEvent.new(params[:contact_event])
-
     unless User.current_user.can?(:create_event, @parent_event)
-      render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
+      render :partial => "events/permission_denied",
+        :locals => { :reason => t("no_event_create_privs"), :event => @event },
+        :layout => true,
+        :status => 403 and return
     end
-
+    
+    instantiate_contact
+    
     respond_to do |format|
       if @event.save
         @event.reload
@@ -121,6 +124,26 @@ class ContactEventsController < EventsController
     else
       flash.now[:error] = t("could_not_promote_to_morbidity")
       render :action => :edit, :status => :bad_request
+    end
+  end
+
+  private
+
+  def load_parent
+    @parent_event = MorbidityEvent.find(parent_id_from_params)
+  end
+
+  def parent_id_from_params
+    params[:parent_id].blank? ? params[:contact_event][:parent_id] : params[:parent_id]
+  end
+
+  def instantiate_contact
+    if params[:from_person]
+      @event = ContactEvent.new(:parent_id => @parent_event.id)
+      person_entity = PersonEntity.find(params[:from_person])
+      @event.build_interested_party(:primary_entity_id => person_entity.id)
+    else
+      @event = ContactEvent.new(params[:contact_event])
     end
   end
 end

@@ -14,6 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -# Display the search results of a contact live search
+- results_action = params[:results_action].blank? ? 'add' : params[:results_action]
 
 %br
 - if defined? @results
@@ -76,13 +77,20 @@
               - else
                 =t 'private'
           %td
-            - fields_for(:morbidity_event, MorbidityEvent.new, :builder => ExtendedFormBuilder) do |f|
-              - contact_event = ContactEvent.new
-              - contact_event.build_interested_party(:primary_entity_id => result['entity_id'])
-              - contact_event.build_participations_contact
-              - contact_event.interested_party.person_entity.telephones.build
-              = add_record_link f, :contact_child_events, t("add_contact"), :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}", :insert => 'new_contacts'
-
+            -if results_action == 'new'
+              = link_to(I18n.t(:create_contact_event_this_person), contact_events_path(:from_person => result['entity_id'], :parent_id => params[:parent_id]), :method => :post)
+            - elsif results_action == 'add'
+              - fields_for(:morbidity_event, MorbidityEvent.new, :builder => ExtendedFormBuilder) do |f|
+                - contact_event = ContactEvent.new
+                - contact_event.build_interested_party(:primary_entity_id => result['entity_id'])
+                - contact_event.build_participations_contact
+                - contact_event.interested_party.person_entity.telephones.build
+                = add_record_link f, :contact_child_events, t("add_contact"), :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}", :insert => 'new_contacts'
+              
 %br
 = will_paginate @results, :renderer => "RemoteLinkRenderer",:remote => {:with => "'name=' + $('contact_search_name').value", :update => "contact_search_results", :loading => visual_effect(:appear, "loader"),:complete =>visual_effect(:fade,"loader" ) }
 %hr
+
+- if(defined?(@results) && User.current_user.is_entitled_to?(:create_event))
+  %br
+  = link_to(t("create_a_contact"), new_contact_event_path(:parent_id => params[:parent_id]), :id => "create_contact")

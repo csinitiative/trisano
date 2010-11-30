@@ -1,0 +1,8 @@
+- event = @event || event
+%div{ :id => "contact-search", :style => 'display: none; position: relative;' }
+  %div{ :style => 'background-color: #fff; border: solid 2px; padding: 15px; border-color: #000' }
+    %h2 Contact search
+    = contact_search_interface(:results_action => :new, :parent_id => event.parent_id)
+    
+    %br
+    = link_to(t('close'), '#', :id => 'close-contact-search')
