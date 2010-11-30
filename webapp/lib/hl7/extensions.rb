@@ -18,15 +18,8 @@
 require 'ruby-hl7'
 
 ######## Extensions to the ruby-hl7 gem
-class String
-  def hl7_batch?
-    match(/^FHS/)
-  end
-end
-
 module HL7
   class Message
-
     def message_header
       @message_header = self[:MSH] ? StagedMessages::MshWrapper.new(self[:MSH]) : nil
     end
@@ -60,48 +53,10 @@ module HL7
     def enhanced_ack_mode?
       message_header.enhanced_ack_mode?
     end
-
-    class << self
-      def parse_batch(batch) # :yields: message
-        raise HL7::ParseError, 'badly_formed_batch_message' unless
-          batch.hl7_batch?
-
-        # JRuby seems to change our literal \r characters in sample
-        # messages (from here documents) into newlines.  We make a copy
-        # here, reverting to carriage returns.  The input is unchanged.
-        #
-        # This does not occur when posts are received with CR
-        # characters, only in sample messages from here documents.  The
-        # expensive copy is only incurred when the batch message has a
-        # newline character in it.
-        batch = batch.gsub("\n", "\r") if batch.include?("\n")
-
-        raise HL7::ParseError, 'empty_batch_message' unless
-          match = /\rMSH/.match(batch)
-
-        match.post_match.split(/\rMSH/).each_with_index do |_msg, index|
-          if md = /\rBTS/.match(_msg)
-            # TODO: Validate the message count in the BTS segment
-            # should == index + 1
-            _msg = md.pre_match
-          end
-
-          yield 'MSH' + _msg
-        end
-      end
-    end
   end
 end
 
 class HL7::Message::Segment
-  def self.add_child_type(child_type)
-    if @child_types
-      @child_types << child_type.to_sym
-    else
-      has_children [ child_type.to_sym ]
-    end
-  end
-
   def collect_children(child_type)
     seg_name = child_type.to_s
     raise HL7::Exception, "invalid child type #{seg_name}" unless
@@ -115,105 +70,6 @@ class HL7::Message::Segment
       t
     end
   end
-end
-
-######## Extensions to existing HL7::Message::Segment::XXX classes
-
-class HL7::Message::Segment::MSH
-  add_field :principal_language_of_message
-  add_field :alternate_character_set_handling_scheme
-  add_field :message_profile_identifier
-end
-
-class HL7::Message::Segment::MSA
-  weight 1
-end
-
-class HL7::Message::Segment::PID
-  has_children [:NTE, :PV1, :PV2]
-end
-
-class HL7::Message::Segment::OBR
-  # Already declared in the gem
-  # has_children [:OBX]
-
-  # Can't call has_children repeatedly, since it defines methods.
-  # The :add_child_type method, defined above, allows us to add new
-  # types to a class after has_children has already been called.
-
-  add_child_type :NTE
-  add_child_type :SPM
-end
-
-class HL7::Message::Segment::OBX
-  add_field :performing_organization_name, :idx => 23
-end
-
-######## New HL7::Message::Segment::XXX classes
-
-class HL7::Message::Segment::SFT < HL7::Message::Segment
-  weight 0
-  # The sample SFT segments seem to have Set ID before SFT-1, software
-  # vendor organization.  This is sensible, since each software
-  # component that retransmits a message is supposed to add its own SFT
-  # segment.  A Set ID is required to distinguish among multiple SFT
-  # segments.
-  add_field :set_id
-  add_field :software_vendor_organization
-  add_field :software_certified_version_or_release_number # NEW longest method name ever.
-  add_field :software_product_name
-  add_field :software_binary_id
-  add_field :software_product_information
-  add_field :software_install_date
-end
-
-class HL7::Message::Segment::ERR < HL7::Message::Segment
-  weight 2
-  add_field :error_code_and_location
-  add_field :error_location
-  add_field :hl7_error_code
-  add_field :severity
-  add_field :application_error_code
-  add_field :application_error_parameter
-  add_field :diagnostic_information
-  add_field :user_message
-  add_field :help_desk_contact_point, :idx => 12
-end
-
-class HL7::Message::Segment::SPM < HL7::Message::Segment
-  # Weight doesn't really matter, since this always occurs as a child
-  # of an OBR segment.
-  weight 100 # fixme
-  has_children [:OBX]
-  add_field :set_id
-  add_field :specimen_id
-  add_field :specimen_parent_ids
-  add_field :specimen_type
-  add_field :specimen_type_modifier
-  add_field :specimen_additives
-  add_field :specimen_collection_method
-  add_field :specimen_source_site
-  add_field :specimen_source_site_modifier
-  add_field :specimen_collection_site
-  add_field :specimen_role
-  add_field :specimen_collection_amount
-  add_field :grouped_specimen_count
-  add_field :specimen_description
-  add_field :specimen_handling_code
-  add_field :specimen_risk_code
-  add_field :specimen_collection_date
-  add_field :specimen_received_date
-  add_field :specimen_expiration_date
-  add_field :specimen_availability
-  add_field :specimen_reject_reason
-  add_field :specimen_quality
-  add_field :specimen_appropriateness
-  add_field :specimen_condition
-  add_field :specimen_current_quantity
-  add_field :number_of_specimen_containers
-  add_field :container_type
-  add_field :container_condition
-  add_field :specimen_child_role
 end
 
 ####### Classes for parsing certain data types
