@@ -683,6 +683,8 @@ class HumanEvent < Event
 
       self.disease_event.update_attribute :died_id, code.id
     end
+
+    self.parent_guardian = staged_message.next_of_kin.parent_guardian.slice(0,2).join(', ') if staged_message.next_of_kin
   end
 
   def possible_treatments(reload=false)

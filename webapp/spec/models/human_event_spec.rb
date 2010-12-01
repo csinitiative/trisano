@@ -196,7 +196,7 @@ describe HumanEvent, 'parent/guardian field' do
 
   it 'should exist' do
     with_human_event do |event|
-      event.respond_to?(:parent_guardian).should be_true
+      event.should respond_to(:parent_guardian)
     end
   end
 
@@ -405,6 +405,28 @@ describe HumanEvent, 'adding staged messages' do
       staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:cerner_en]
       event = staged_message.new_event_from
       event.interested_party.person_entity.person.primary_language_id.should == external_codes(:language_english).id
+    end
+
+    it 'should populate the parent_guardian field when present' do
+      with_human_event do |event|
+        disease = Disease.create :disease_name => 'Lead poisoning',
+          :cdc_code => '32010'
+        disease.should_not be_nil
+
+        common_test_type = CommonTestType.new :common_name => 'Blood lead test'
+        common_test_type.diseases << disease
+        common_test_type.save!
+
+        loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
+          :scale => ExternalCode.loinc_scale_by_the_code("Qn")
+        loinc_code.diseases << disease
+        loinc_code.save!
+
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_lead_laboratory_result])
+        event.should be_valid
+        event.parent_guardian.should == 'Mum, Martha'
+      end
     end
   end
 

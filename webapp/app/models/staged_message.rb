@@ -171,6 +171,11 @@ class StagedMessage < ActiveRecord::Base
   rescue
   end
 
+  def next_of_kin
+    hl7.next_of_kin
+  rescue
+  end
+
   def pv1
     hl7.pv1
   rescue

@@ -242,6 +242,16 @@ describe Message do
     end
   end
 
+  describe 'next of kin' do
+    before :all do
+      @nk1 = HL7::Message.parse(HL7MESSAGES[:realm_lead_laboratory_result]).next_of_kin
+    end
+
+    it 'should return the parent or guardian name when present' do
+      @nk1.parent_guardian.should == [ 'Mum', 'Martha', 'M', '', '', '', 'L' ]
+    end
+  end
+
   describe 'pv1 wrapper' do
     before :all do
       @pv1 = HL7::Message.parse(HL7MESSAGES[:realm_cj_clinicians]).pv1

@@ -28,6 +28,10 @@ module HL7
       @patient_id = self[:PID] ? StagedMessages::PidWrapper.new(self[:PID]) : nil
     end
 
+    def next_of_kin
+      @next_of_kin = self[:NK1] ? StagedMessages::Nk1Wrapper.new(self[:NK1]) : nil
+    end
+
     def pv1
       @pv1 = self[:PV1] ? StagedMessages::Pv1Wrapper.new(self[:PV1]) : nil
     end
@@ -384,6 +388,28 @@ module StagedMessages
         ids << xcode.id if xcode
         ids
       end
+    end
+  end
+
+  class Nk1Wrapper
+    attr_reader :nk1_segment
+
+    def initialize(nk1_segment, options={})
+      @nk1_segment = nk1_segment
+    end
+
+    # Returns the NK1-2 components as an array if the relationship is
+    # parent or guardian, i.e.
+    # last, first, middle, suffix, prefix, degree, name type code, etc.
+    def parent_guardian
+      case nk1_segment.relationship.split(nk1_segment.item_delim).first
+      when 'FTH','GRD','MTH','PAR'
+        nk1_segment.name.split nk1_segment.item_delim
+      else
+        []
+      end
+    rescue
+      []
     end
   end
 
