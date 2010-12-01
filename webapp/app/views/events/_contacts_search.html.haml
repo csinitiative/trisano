@@ -91,6 +91,6 @@
 = will_paginate @results, :renderer => "RemoteLinkRenderer",:remote => {:with => "'name=' + $('contact_search_name').value", :update => "contact_search_results", :loading => visual_effect(:appear, "loader"),:complete =>visual_effect(:fade,"loader" ) }
 %hr
 
-- if(defined?(@results) && User.current_user.is_entitled_to?(:create_event))
+- if(results_action == 'new' && defined?(@results) && User.current_user.is_entitled_to?(:create_event))
   %br
   = link_to(t("create_a_contact"), new_contact_event_path(:parent_id => params[:parent_id]), :id => "create_contact")
