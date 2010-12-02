@@ -96,8 +96,9 @@ end
 Given /^that form has core follow ups configured for all core fields$/ do
   @default_view = @form.investigator_view_elements_container.children[0]
 
-  # Create a core follow up for every core field that can be followed up on
-  CoreField.find_all_by_event_type(@form.event_type).each do |core_field|
+  # Return every core_field that we could create a core follow up for
+  @core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type).map do |core_field|
+    result = nil
     if core_field.can_follow_up
       follow_up_element = FollowUpElement.new
       follow_up_element.core_path = core_field.key
@@ -114,17 +115,18 @@ Given /^that form has core follow ups configured for all core fields$/ do
         elsif core_field.field_type == "numeric"
           follow_up_element.condition = "1"
         end
-
       end
 
       follow_up_element.parent_element_id = @default_view.id
-      follow_up_element.save_and_add_to_form
+      if follow_up_element.save_and_add_to_form
+        result = core_field
+      end
 
       # Add question to follow up container
       create_question_on_form(@form, { :question_text => "#{core_field.key} follow up?", :short_name => Digest::MD5::hexdigest(core_field.name) }, follow_up_element)
-
     end
-  end
+    result
+  end.compact
 end
 
 Given /^that form has core field configs configured for all core fields$/ do

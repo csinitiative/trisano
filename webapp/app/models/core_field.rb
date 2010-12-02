@@ -28,6 +28,15 @@ class CoreField < ActiveRecord::Base
   validates_presence_of :event_type
   before_validation :normalize_attributes
 
+  named_scope :default_follow_up_core_fields_for, lambda { |event_type|
+    { :conditions => {
+        :event_type => event_type,
+        :can_follow_up => true,
+        :disease_specific => false
+      }
+    }
+  }
+
   class << self
 
     def find_event_fields_for(event_type, *args)
