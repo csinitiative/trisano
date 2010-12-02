@@ -1340,6 +1340,12 @@ module Selenium
             do_command("waitForCondition", [script,timeout,])
         end
 
+        def wait_for_ajax(timeout=5000)
+          wait_for_condition(<<-JS, timeout)
+            selenium.browserbot.getCurrentWindow().Ajax.activeRequestCount == 0;
+          JS
+        end
+
 
         # Specifies the amount of time that Selenium will wait for actions to complete.
         # 

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'yaml'
@@ -20,7 +20,7 @@ require 'yaml'
 module TrisanoHelper
   #Define constants for standard resources
   FORM = "forms"
-  
+
   # Constants for the tab names
   DEMOGRAPHICS = "Demographics"
   CLINICAL = "Clinical"
@@ -33,10 +33,10 @@ module TrisanoHelper
   NOTES = "Notes"
   ADMIN = "Administrative"
   OUTBREAK = "Outbreak"
-  
+
   # Tabs for place events
   PLACE = "Place"
-  
+
   # Constants for element id prefixes
   VIEW_ID_PREFIX = "view_"
   CORE_VIEW_ID_PREFIX = "core_view_"
@@ -48,10 +48,10 @@ module TrisanoHelper
   QUESTION_ID_PREFIX = "question_"
   FOLLOW_UP_ID_PREFIX = "follow_up_"
   VALUE_SET_ID_PREFIX = "value_set_"
-    
+
   INVESTIGATOR_QUESTION_ID_PREFIX = "question_investigate_"
   INVESTIGATOR_ANSWER_ID_PREFIX = "investigator_answer_"
-  
+
   TAB_ELEMENT_IDS_BY_NAME = {
     DEMOGRAPHICS => "demographic_tab",
     CLINICAL => "clinical_tab",
@@ -76,18 +76,18 @@ module TrisanoHelper
     !60.times{ return false unless (browser.is_element_present(name) rescue true); sleep 1 }
   end
 
-  #  Use set_fields after you navigate to any location by passing in a hash of 
-  #  fields and values and this method will set them all. It will work for 
-  #  updating existing items or creating new ones. cmr_helper_example shows how 
-  #  to create a complete CMR with the helper. The hash created in this example 
-  #  could be helpful for other tests. Note that this method does not submit 
-  #  for you. 
+  #  Use set_fields after you navigate to any location by passing in a hash of
+  #  fields and values and this method will set them all. It will work for
+  #  updating existing items or creating new ones. cmr_helper_example shows how
+  #  to create a complete CMR with the helper. The hash created in this example
+  #  could be helpful for other tests. Note that this method does not submit
+  #  for you.
   def set_fields(browser, value_hash)
     fields = browser.get_all_fields
-    
+
     value_hash.each_pair do |key, value|
       if fields.index(key) != nil
-        browser.type(key, value) 
+        browser.type(key, value)
       else
         begin
           browser.select(key,"label=" + value)
@@ -105,7 +105,7 @@ module TrisanoHelper
       end
     end
   end
-  
+
   # Use get_full_cmr to create a cmr with every field filled in (excludes repeating elements)
   # It uses random words for text fields
   def create_cmr_from_hash(browser, cmr_hash)
@@ -116,7 +116,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return save_cmr(browser)
   end
-  
+
   # Use get_full_cmr to create a cmr with only the last name filled in
   # It uses random words for the last name field
   def get_nil_cmr()
@@ -125,7 +125,7 @@ module TrisanoHelper
   def current_user(browser = @browser)
     browser.get_selected_label("user_id")
   end
-  
+
   #Use click_core_tab to change tabs in CMR views
   def click_core_tab(browser, tab_name)
     case tab_name
@@ -188,20 +188,20 @@ module TrisanoHelper
         browser.is_element_present("link=< Back to list") and
         browser.is_element_present("disable_tabs"))
   end
-  
+
   def click_nav_cmrs(browser)
     browser.click 'link=EVENTS'
     browser.wait_for_page_to_load($load_time)
     return (browser.is_text_present("List Morbidity Events") and
         browser.is_element_present("link=EVENTS"))
   end
-  
+
   def click_nav_search(browser)
     browser.click 'link=SEARCH'
     browser.wait_for_page_to_load($load_time)
     return browser.is_text_present("Event Search")
   end
-  
+
   def click_nav_forms(browser)
     click_nav_admin(browser)
     browser.click 'link=Manage Forms'
@@ -215,7 +215,7 @@ module TrisanoHelper
         browser.is_element_present("//input[@value='Create New Form']")
     )
   end
-  
+
   def click_nav_admin(browser)
     unless browser.is_element_present("link=ADMIN")
       @browser.open "/trisano/cmrs"
@@ -225,7 +225,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return(browser.is_text_present("Admin Dashboard"))
   end
-  
+
   def edit_cmr(browser)
     browser.click "link=Edit"
     browser.wait_for_page_to_load($load_time)
@@ -255,7 +255,7 @@ module TrisanoHelper
     browser.wait_for_page_to_load($load_time)
     return true
   end
-  
+
   # Clicks the print button and points the browser at the print window.
   #
   # To close the window after inspecting it, do something like the following:
@@ -267,7 +267,7 @@ module TrisanoHelper
     else
       browser.click "link=Print"
     end
-    
+
     wait_for_element_present("//div[contains(@id, 'printing_controls')]")
     browser.click "print_all"
     browser.get_eval("selenium.browserbot.findElement(\"//form[contains(@action, 'print')]\").target='doit';")
@@ -298,13 +298,13 @@ module TrisanoHelper
     links.delete_if{|link| link.index(element_id_prefix) == nil}
     browser.click(links[order-1])
   end
-  
+
   def type_field_by_order(browser, element_id_prefix, order, value)
     fields = browser.get_all_fields
     fields.delete_if{|field| field.index(element_id_prefix) != 0}
     browser.type(fields[order], value)
   end
-  
+
   # Use click_resource methods from any standard resource index page
   def click_resource_edit(browser, resource, name)
     id = get_resource_id(browser, name)
@@ -316,7 +316,7 @@ module TrisanoHelper
       return -1
     end
   end
-  
+
   def click_resource_show(browser, resource, name)
     id = get_resource_id(browser, name)
     if id > 0
@@ -327,10 +327,11 @@ module TrisanoHelper
       return -1
     end
   end
-  
+
   def create_simplest_cmr(browser, last_name)
     click_nav_new_cmr(browser)
     browser.type "morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name", last_name
+    first_reported_to_ph_date browser, Date.today
     yield browser if block_given?
     return save_cmr(browser)
   end
@@ -347,7 +348,7 @@ module TrisanoHelper
     yield browser if block_given?
     return save_cmr(browser)
   end
-  
+
   def answer_investigator_question(browser, question_text, answer, html_source=nil)
     answer_id = get_investigator_answer_id(browser, question_text, html_source)
     begin
@@ -375,7 +376,7 @@ module TrisanoHelper
     browser.wait_for_condition("#{script} == true", 3000).should == "OK"
     browser.wait_for_condition("#{script} == false", 3000).should == "OK"
   end
-  
+
   def answer_multi_select_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_answer_id(browser, question_text)
     begin
@@ -385,7 +386,7 @@ module TrisanoHelper
     end
     return true
   end
-  
+
   def answer_check_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
@@ -395,7 +396,7 @@ module TrisanoHelper
     end
     return true
   end
-  
+
   def answer_radio_investigator_question(browser, question_text, answer)
     answer_id = get_investigator_click_answer_id(browser, question_text)
     begin
@@ -405,7 +406,7 @@ module TrisanoHelper
     end
     return true
   end
-    
+
   def switch_user(browser, user_id)
     current_user = @browser.get_selected_label("user_id")
     if current_user != user_id
@@ -414,7 +415,7 @@ module TrisanoHelper
       return browser.is_text_present("#{user_id}:")
     end
   end
-  
+
   #TODO
   def click_question(browser, question, action)
     case action
@@ -432,7 +433,7 @@ module TrisanoHelper
     else #TODO - this is an error
     end
   end
-  
+
   #Get a unique name with the input number of words in it
   def get_unique_name(words=1)
     if words > 1000
@@ -448,11 +449,11 @@ module TrisanoHelper
     end
     return ret
   end
-  
+
   def num_times_text_appears(browser, text)
     browser.get_html_source.scan(/#{text}/).size
   end
-  
+
   def assert_tab_contains_question(browser, tab_name, question_text, html_source=nil)
     html_source = browser.get_html_source if html_source.nil?
     question_position = html_source.index(question_text)
@@ -462,7 +463,7 @@ module TrisanoHelper
     tab_element_id = TAB_ELEMENT_IDS_BY_NAME[tab_name]
     assert_contains(browser, tab_element_id, answer_input_element_id)
   end
-  
+
   def get_record_number(browser)
     html_source = browser.get_html_source
     text_position = html_source.index("Record number</label>")
@@ -555,7 +556,7 @@ module TrisanoHelper
     browser.type('css=textarea[id$=_note]', note_text)
     browser.click('css=input[id$=_note_type]') if options[:is_admin]
   end
-  
+
   def note_count(browser, note_type="All")
     if note_type == "All"
       return browser.get_eval(%Q{selenium.browserbot.getCurrentWindow().$$('span.note-type').length}).to_i
@@ -638,9 +639,9 @@ module TrisanoHelper
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_last_name')]", attributes[:last_name]) if attributes[:last_name]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_first_name')]", attributes[:first_name]) if attributes[:first_name]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_middle_name')]", attributes[:middle_name]) if attributes[:middle_name]
-    
+
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_number')]", attributes[:street_number]) if attributes[:street_number]
-      
+
     # //div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_street_name')]
     # //div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_unit_number')]
     browser.type("//div[@id='demographic_tab']//div[@id='person_form']//input[contains(@id, '_city')]", attributes[:city]) if attributes[:city]
@@ -755,7 +756,7 @@ module TrisanoHelper
     browser.type("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//textarea[contains(@id, '_description')]", attributes[:description]) if attributes[:description]
     browser.select("//div[@id='encounter_child_events']//div[@class='encounter'][#{index}]//select[contains(@id, '_location_type')]", "label=#{attributes[:location_type]}") if attributes[:location_type]
   end
-  
+
   #
   # Reporting Tab
   #
@@ -780,6 +781,12 @@ module TrisanoHelper
     browser.type("//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", attributes[:PH_date]) if attributes[:PH_date]
   end
 
+  def first_reported_to_ph_date(browser, date)
+    click_core_tab browser, REPORTING
+    sleep 1
+    browser.type "//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", date
+  end
+
   #
   # Admin Tab
   #
@@ -794,24 +801,24 @@ module TrisanoHelper
     # Fill in the rest...
 
   end
-  
+
   private
-  
+
   def assert_contains(browser, container_element, element)
     begin
       result = browser.get_eval("window.document.getElementById(\"#{element}\").descendantOf(\"#{container_element}\")")
     rescue
       result = false
     end
-    
+
     return (result == "true") ? true : false
   end
-  
+
   def add_question_to_element(browser, element_name, element_id_prefix, question_attributes, expect_error=false)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
     add_question_attributes(browser, element_id, question_attributes, expect_error)
   end
-  
+
   def add_question_to_core_field_config(browser, element_name, element_id_prefix, question_attributes)
     element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
     add_question_attributes(browser, element_id, question_attributes)
@@ -845,7 +852,7 @@ module TrisanoHelper
     browser.type("question_element_question_attributes_short_name", question_attributes[:short_name])  if question_attributes.include? :short_name
     browser.type("question_element_question_attributes_help_text", question_attributes[:help_text]) if question_attributes[:help_text]
   end
-  
+
   def add_follow_up_to_element(browser, element_name, element_id_prefix, condition, core_label=nil)
     element_id = get_form_element_id(browser, element_name, element_id_prefix)
     browser.click("add-follow-up-#{element_id}")
@@ -855,12 +862,12 @@ module TrisanoHelper
     else
       browser.type "model_auto_completer_tf", condition
     end
-    
+
     browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
     browser.click "//input[contains(@id, 'create_follow_up_submit')]"
     wait_for_element_not_present("new-follow-up-form", browser)
   end
-      
+
   def add_follow_up_to_core_field_config(browser, element_name, element_id_prefix, condition, core_label=nil)
     element_id = get_form_element_id_for_core_field(browser, element_name, element_id_prefix)
     browser.click("add-follow-up-#{element_id}")
@@ -870,7 +877,7 @@ module TrisanoHelper
     else
       browser.type "model_auto_completer_tf", condition
     end
-    
+
     browser.select "follow_up_element_core_path", "label=#{core_label}" unless core_label.nil?
     browser.click "//input[contains(@id, 'create_follow_up_submit')]"
     wait_for_element_not_present("new-follow-up-form", browser)
@@ -887,7 +894,7 @@ module TrisanoHelper
     html_source = browser.get_html_source
     # Start from form_children to avoid finding something up in the top portion of the page
     name_position = html_source.index(name, html_source.index("form_children"))
-    
+
     begin
       id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
       raise if html_source[id_start_position..id_start_position+1].to_i == 0
@@ -896,18 +903,18 @@ module TrisanoHelper
       name_position = id_start_position - (element_prefix_length+1)
       retry if retry_count < 5
     end
-    
+
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
-  
+
   def get_library_element_id(browser, name, element_id_prefix)
     retry_count = 0
     element_prefix_length = element_id_prefix.size
     html_source = browser.get_html_source
     # Start from form_children to avoid finding something up in the top portion of the page
     name_position = html_source.index(name, html_source.index("Library Administration"))
-    
+
     begin
       id_start_position = html_source.rindex("#{element_id_prefix}", name_position) + element_prefix_length
       raise if html_source[id_start_position..id_start_position+1].to_i == 0
@@ -916,7 +923,7 @@ module TrisanoHelper
       id_start_position.nil? ? name_position = 1 : name_position = id_start_position - (element_prefix_length+1)
       retry if retry_count < 5
     end
-    
+
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
@@ -931,7 +938,7 @@ module TrisanoHelper
     id_end_position = html_source.index("\"", id_start_position)-1
     html_source[id_start_position..id_end_position]
   end
-  
+
   def get_investigator_answer_id(browser, question_text, html_source=nil)
     html_source = browser.get_html_source if html_source.nil?
     question_position = html_source.index(question_text)
@@ -943,7 +950,7 @@ module TrisanoHelper
 
     html_source[id_start_position..id_end_position]
   end
- 
+
   # This only works for investigator questions on contact events
   def get_investigator_click_answer_id(browser, question_text)
     html_source = browser.get_html_source
@@ -952,7 +959,7 @@ module TrisanoHelper
     id_end_position = html_source.index("_", id_start_position) -1
     html_source[id_start_position..id_end_position]
   end
-  
+
   def get_random_word
     wordlist = ["Lorem","ipsum","dolor","sit","amet","consectetuer","adipiscing","elit","Duis","sodales","dignissim","enim","Nunc","rhoncus","quam","ut","quam","Quisque","vitae","urna","Duis","nec","sapien","Proin","mollis","congue","mauris","Fusce","lobortis","tristique","elit","Phasellus","aliquam","dui","id","placerat","hendrerit","dolor","augue","posuere","tellus","at","ultricies","libero","leo","vel","leo","Nulla","purus","Ut","lacus","felis","tempus","at","egestas","nec","cursus","nec","magna","Ut","fringilla","aliquet","arcu","Vestibulum","ante","ipsum","primis","in","faucibus","orci","luctus","et","ultrices","posuere","cubilia","Curae","Etiam","vestibulum","urna","sit","amet","sem","Nunc","ac","ipsum","In","consectetuer","quam","nec","lectus","Maecenas","magna","Nulla","ut","mi","eu","elit","accumsan","gravida","Praesent","ornare","urna","a","lectus","dapibus","luctus","Integer","interdum","bibendum","neque","Nulla","id","dui","Aenean","tincidunt","dictum","tortor","Proin","sagittis","accumsan","nulla","Etiam","consectetuer","Etiam","eget","nibh","ut","sem","mollis","luctus","Etiam","mi","eros","blandit","in","suscipit","ut","vestibulum","et","velit","Fusce","laoreet","nulla","nec","neque","Nam","non","nulla","ut","justo","ullamcorper","egestas","In","porta","ipsum","nec","neque","Cras","non","metus","id","massa","ultrices","rhoncus","Donec","mattis","odio","sagittis","nunc","Vivamus","vehicula","justo","vitae","tincidunt","posuere","risus","pede","lacinia","dolor","quis","placerat","justo","arcu","ut","tortor","Aliquam","malesuada","lectus","id","condimentum","sollicitudin","arcu","mauris","adipiscing","turpis","a","sollicitudin","erat","metus","vel","magna","Proin","scelerisque","neque","id","urna","lobortis","vulputate","In","porta","pulvinar","urna","Cras","id","nulla","In","dapibus","vestibulum","pede","In","ut","velit","Aliquam","in","turpis","vitae","nunc","hendrerit","ullamcorper","Aliquam","rutrum","erat","sit","amet","velit","Nullam","pharetra","neque","id","pede","Phasellus","suscipit","ornare","mi","Ut","malesuada","consequat","ipsum","Suspendisse","suscipit","aliquam","nisl","Suspendisse","iaculis","magna","eu","ligula","Sed","porttitor","eros","id","euismod","auctor","dolor","lectus","convallis","justo","ut","elementum","magna","magna","congue","nulla","Pellentesque","eget","ipsum","Pellentesque","tempus","leo","id","magna","Cras","mi","dui","pellentesque","in","pellentesque","nec","blandit","nec","odio","Pellentesque","eget","risus","In","venenatis","metus","id","magna","Etiam","blandit","Integer","a","massa","vitae","lacus","dignissim","auctor","Mauris","libero","metus","aliquet","in","rhoncus","sed","volutpat","quis","libero","Nam","urna"]
     begin
@@ -964,7 +971,7 @@ module TrisanoHelper
     result
 
   end
-  
+
   def get_resource_id(browser, name)
     html_source = browser.get_html_source
     pos1 = html_source.index(name)
@@ -1012,13 +1019,13 @@ module TrisanoHelper
     browser.is_visible("//div[@id='WzTtDiV']").should be_false
     return true
   end
-  
+
   def is_disease_active(browser, disease_name)
     html_source = browser.get_html_source
     start = html_source.index(disease_name) + disease_name.length
     html_source[start..start+100].index("Active").nil? ? false : true
   end
-  
+
   def is_disease_inactive(browser, disease_name)
     html_source = browser.get_html_source
     start = html_source.index(disease_name) + disease_name.length

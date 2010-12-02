@@ -2,23 +2,23 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'CDC export follow ups' do
-  
+
   # $dont_kill_browser = true
 
   before :all do
@@ -64,13 +64,14 @@ describe 'CDC export follow ups' do
 
     add_demographic_info(@browser, { :last_name => "#{get_unique_name(1)} mumpy cdc" })
     add_clinical_info(@browser, { :disease => "Mumps" })
+    first_reported_to_ph_date @browser, Date.today
     add_admin_info(@browser, { :state_case_status => "Confirmed" })
     save_and_continue(@browser)
     add_clinical_info(@browser, { :pregnant => "Yes" })
     wait_for_element_present("//label[text()='#{@field_name}']")
     @browser.select("//label[text()='#{@field_name}']/../select", "Second trimester")
     save_cmr(@browser)
-    
+
     # check the cdc output
     @browser.open "/trisano/cdc_events/current_week.txt"
     @browser.wait_for_page_to_load($load_time)
