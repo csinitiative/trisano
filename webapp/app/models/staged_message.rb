@@ -186,6 +186,11 @@ class StagedMessage < ActiveRecord::Base
   rescue
   end
 
+  def pv2
+    hl7.pv2
+  rescue
+  end
+
   def lab_name
     first_obx = observation_requests.first.all_tests.first.obx_segment
     name = first_obx.performing_organization_name

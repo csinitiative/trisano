@@ -40,6 +40,10 @@ module HL7
       @pv1 = self[:PV1] ? StagedMessages::Pv1Wrapper.new(self[:PV1]) : nil
     end
 
+    def pv2
+      @pv2 = self[:PV2] ? StagedMessages::Pv2Wrapper.new(self[:PV2]) : nil
+    end
+
     # Return an array of ObrWrapper objects corresponding to the OBR
     # segments of the HL7 message.  If no OBR segment is present, an
     # empty array is returned.
@@ -462,6 +466,11 @@ module StagedMessages
     rescue
     end
 
+    def facility_name
+      orc_segment.ordering_facility_name.split(orc_segment.item_delim).first
+    rescue
+    end
+
     private
 
     def clinician_name_components
@@ -871,6 +880,17 @@ module StagedMessages
     rescue
       []
     end
+
+    def hospitalized_id
+      case pv1_segment.patient_class
+      when 'I'
+        ExternalCode.yes.id
+      when 'O'
+        ExternalCode.no.id
+      else
+      end
+    rescue
+    end
   end
 
   class Pv2Wrapper
@@ -878,6 +898,11 @@ module StagedMessages
 
     def initialize(pv2_segment)
       @pv2_segment = pv2_segment
+    end
+
+    def facility_name
+      pv2_segment.clinic_organization_name.split(pv2_segment.item_delim).first
+    rescue
     end
   end
 end

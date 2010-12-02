@@ -284,6 +284,12 @@ describe Message do
       @pv1.attending_doctor.should == %w{Jekyll Susan}
       @pv1.consulting_doctor.should == %w{Hyde Herbert}
     end
+
+    it 'should return the hospitalized_id' do
+      pv1 = HL7::Message.parse(HL7MESSAGES[:realm_campylobacter_jejuni]).pv1
+      pv1.should_not be_blank
+      pv1.hospitalized_id.should == ExternalCode.no.id
+    end
   end
 
   describe 'observation request' do

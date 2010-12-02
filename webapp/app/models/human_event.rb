@@ -704,6 +704,12 @@ class HumanEvent < Event
       self.disease_event.update_attribute :died_id, code.id
     end
 
+    unless disease_event.nil? or staged_message.pv1.blank? or
+      staged_message.pv1.hospitalized_id.nil?
+      hospitalized_id = staged_message.pv1.hospitalized_id
+      self.disease_event.update_attribute :hospitalized_id, hospitalized_id
+    end
+
     self.parent_guardian = staged_message.next_of_kin.parent_guardian.slice(0,2).join(', ') if staged_message.next_of_kin
   end
 

@@ -463,6 +463,26 @@ describe HumanEvent, 'adding staged messages' do
         common_test_type.destroy
       end
     end
+
+    it 'should take the hospitalization status from PV1-2' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+
+        # build the required organism and disease for this
+        disease  = Factory.create :campylobacteriosis
+        organism = Factory.build :campylobacter_jejuni
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
+        event.should be_valid
+        event.disease_event.should_not be_nil
+        event.disease_event.hospitalized_id.should == ExternalCode.no.id
+        common_test_type.destroy
+      end
+    end
   end
 
   describe "setting disease" do
