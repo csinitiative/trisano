@@ -507,6 +507,24 @@ class HumanEvent < Event
     end
 
     pv1 = staged_message.pv1
+    orc = staged_message.common_order
+    unless orc.nil? or orc.clinician_last_name.blank?
+      clinician = clinicians.build(:person_entity_attributes => {
+        :person_attributes => {
+          :last_name => orc.clinician_last_name,
+          :first_name => orc.clinician_first_name,
+          :person_type => 'clinician'
+        }
+      })
+      unless orc.clinician_telephone.blank?
+        area_code, number, extension = orc.clinician_telephone
+        clinician.person_entity.telephones.build(
+          :entity_location_type => orc.clinician_phone_type,
+          :area_code => area_code,
+          :phone_number => number,
+          :extension => extension)
+      end
+    end
 
     unless pv1.blank? or pv1.attending_doctor.blank?
       clinicians.build(:person_entity_attributes => {
@@ -529,7 +547,9 @@ class HumanEvent < Event
     end
 
     staged_message.observation_requests.each do |obr|
-      unless obr.clinician_last_name.blank?
+      unless obr.clinician_last_name.blank? or
+        (orc and (obr.clinician_last_name == orc.clinician_last_name and
+        obr.clinician_first_name == orc.clinician_first_name))
         clinician = clinicians.build(:person_entity_attributes => {
           :person_attributes => {
             :last_name => obr.clinician_last_name,

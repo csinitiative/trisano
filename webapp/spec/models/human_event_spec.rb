@@ -311,17 +311,17 @@ describe HumanEvent, 'adding staged messages' do
         event.clinicians.size.should == 3
 
         clinician = event.clinicians.first
-        clinician.person_entity.person.first_name.should == 'Susan'
-        clinician.person_entity.person.last_name.should == 'Jekyll'
-
-        clinician = event.clinicians.second
-        clinician.person_entity.person.first_name.should == 'Herbert'
-        clinician.person_entity.person.last_name.should == 'Hyde'
-
-        clinician = event.clinicians.third
         clinician.person_entity.person.first_name.should == 'Alan'
         clinician.person_entity.person.last_name.should == 'Admit'
         clinician.person_entity.telephones.size.should == 1
+
+        clinician = event.clinicians.second
+        clinician.person_entity.person.first_name.should == 'Susan'
+        clinician.person_entity.person.last_name.should == 'Jekyll'
+
+        clinician = event.clinicians.third
+        clinician.person_entity.person.first_name.should == 'Herbert'
+        clinician.person_entity.person.last_name.should == 'Hyde'
 
         common_test_type.destroy
       end
@@ -426,6 +426,41 @@ describe HumanEvent, 'adding staged messages' do
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_lead_laboratory_result])
         event.should be_valid
         event.parent_guardian.should == 'Mum, Martha'
+      end
+    end
+
+    it 'should take the clinician info from ORC-12/14 if present' do
+      with_human_event do |event|
+        @hl7 = HL7::Message.parse HL7MESSAGES[:realm_campylobacter_jejuni]
+        @orc_segment = @hl7[:ORC]
+        @orc_segment.ordering_provider = '^Moreau^Glenda'
+        @orc_segment.call_back_phone_number = '^PRN^PH^^1^800^5551212'
+
+        common_test_type = CommonTestType.create :common_name => 'Culture'
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => @hl7.to_hl7)
+        event.should be_valid
+
+        event.clinicians.size.should == 2
+
+        # from the ORC segment
+        clinician = event.clinicians.first
+        clinician.person_entity.person.first_name.should == 'Glenda'
+        clinician.person_entity.person.last_name.should == 'Moreau'
+        clinician.person_entity.telephones.size.should == 1
+
+        telephone = clinician.person_entity.telephones.first
+        telephone.entity_location_type.should ==
+          external_codes(:telephonelocationtype_work)
+        telephone.area_code.should == '800'
+        telephone.phone_number.should == '5551212'
+        telephone.extension.should be_blank
+
+        # from the OBR segment
+        clinician = event.clinicians.second
+        clinician.person_entity.person.first_name.should == 'Alan'
+        clinician.person_entity.person.last_name.should == 'Admit'
+
+        common_test_type.destroy
       end
     end
   end

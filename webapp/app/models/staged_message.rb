@@ -176,6 +176,11 @@ class StagedMessage < ActiveRecord::Base
   rescue
   end
 
+  def common_order
+    hl7.common_order
+  rescue
+  end
+
   def pv1
     hl7.pv1
   rescue

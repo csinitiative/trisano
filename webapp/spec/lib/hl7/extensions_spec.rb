@@ -252,6 +252,29 @@ describe Message do
     end
   end
 
+  describe 'common order' do
+    before :all do
+      @hl7 = HL7::Message.parse HL7MESSAGES[:nist_sample_6]
+      @orc_segment = @hl7[:ORC]
+      @orc_segment.ordering_provider = '^Moreau^Glenda'
+      @orc_segment.call_back_phone_number = '^PRN^PH^^1^800^5551212'
+      @orc = @hl7.common_order
+    end
+
+    it 'should return the clinician name from ORC-12' do
+      @orc.clinician_last_name.should == 'Moreau'
+      @orc.clinician_first_name.should == 'Glenda'
+    end
+
+    it 'should return the clinician phone number from ORC-14' do
+      @orc.clinician_phone_type.should == external_codes(:telephonelocationtype_work)
+      a, n, e = @orc.clinician_telephone
+      a.should == '800'
+      n.should == '5551212'
+      e.should be_blank
+    end
+  end
+
   describe 'pv1 wrapper' do
     before :all do
       @pv1 = HL7::Message.parse(HL7MESSAGES[:realm_cj_clinicians]).pv1
