@@ -708,6 +708,32 @@ class HumanEvent < Event
       staged_message.pv1.hospitalized_id.nil?
       hospitalized_id = staged_message.pv1.hospitalized_id
       self.disease_event.update_attribute :hospitalized_id, hospitalized_id
+
+      if hospitalized_id == ExternalCode.yes.id
+        facility_name = staged_message.pv2.facility_name if staged_message.pv2
+        facility_name = staged_message.common_order.facility_name if facility_name.blank? and staged_message.common_order
+
+        # assign the facility name, which requires finding or building a
+        # place
+        unless facility_name.blank?
+          # do we already have this?
+          place_entity = PlaceEntity.first :conditions => [ "places.name = ?", facility_name ],
+            :joins => "INNER JOIN places ON places.entity_id = entities.id"
+
+          # no? create it
+          place_entity ||= PlaceEntity.new :place_attributes => {
+            :name => facility_name,
+            :short_name => facility_name
+          }
+
+          # make it a hospital
+          place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
+          place_entity.place.place_types << place_code unless place_entity.place.place_types.include?(place_code)
+
+          # associate it with this event
+          self.hospitalization_facilities.build :place_entity => place_entity
+        end
+      end
     end
 
     self.parent_guardian = staged_message.next_of_kin.parent_guardian.slice(0,2).join(', ') if staged_message.next_of_kin
