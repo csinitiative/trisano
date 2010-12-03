@@ -64,9 +64,15 @@ describe 'Creating a new cmr from an existing patient' do
     @browser.get_value('id=morbidity_event_disease_event_attributes_disease_id').should == ''
   end
 
+  it "leaves the date first reported to public heath field blank" do
+    get_first_reported_ph(@browser).should == ""
+    first_reported_to_ph_date(@browser, Date.today)
+  end
+
   it 'should be able to change patient information' do
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_birth_date', @birth_date)
     save_cmr(@browser).should be_true
+    @browser.is_element_present("//span[@class='data_birth_date'][text()='1980-03-09']").should be_true
   end
 
   it 'should show patient information changes in original cmr' do

@@ -2,25 +2,25 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Encounter event notes' do
-  
+
   # $dont_kill_browser = true
-  
+
   before(:all) do
     @cmr_last_name = get_random_word << " encounter-uat"
     @date = "March 10, 2009"
@@ -28,7 +28,7 @@ describe 'Encounter event notes' do
     @admin_note = get_unique_name(3) << " encounter-uat"
     @clinical_note = get_unique_name(3) << " encounter-uat"
   end
-  
+
   after(:all) do
     @cmr_last_name = nil
     @date = nil
@@ -59,20 +59,20 @@ describe 'Encounter event notes' do
     save_and_continue(@browser)
     enter_note(@browser, @clinical_note)
     save_and_continue(@browser)
-    
+
     @browser.get_html_source.include?(@admin_note).should be_true
     @browser.get_html_source.include?(@clinical_note).should be_true
   end
 
   it "should filter notes for encounter events in edit mode" do
-    note_count(@browser).should eql(3)
-    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser).should eql(6)
+    note_count(@browser, "Administrative").should eql(5)
     note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("admin-notes")
     sleep(2)
-    note_count(@browser).should eql(2)
-    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser).should eql(5)
+    note_count(@browser, "Administrative").should eql(5)
     note_count(@browser, "Clinical").should eql(0)
 
     @browser.click("clinical-notes")
@@ -83,22 +83,22 @@ describe 'Encounter event notes' do
 
     @browser.click("all-notes")
     sleep(2)
-    note_count(@browser).should eql(3)
-    note_count(@browser, "Administrative").should eql(2)
+    note_count(@browser).should eql(6)
+    note_count(@browser, "Administrative").should eql(5)
     note_count(@browser, "Clinical").should eql(1)
   end
 
   it "should filter notes for encounter events in show mode" do
     save_and_exit(@browser)
 
-    note_count(@browser).should eql(4)
-    note_count(@browser, "Administrative").should eql(3)
+    note_count(@browser).should eql(7)
+    note_count(@browser, "Administrative").should eql(6)
     note_count(@browser, "Clinical").should eql(1)
 
     @browser.click("admin-notes")
     sleep(2)
-    note_count(@browser).should eql(3)
-    note_count(@browser, "Administrative").should eql(3)
+    note_count(@browser).should eql(6)
+    note_count(@browser, "Administrative").should eql(6)
     note_count(@browser, "Clinical").should eql(0)
 
     @browser.click("clinical-notes")
@@ -109,8 +109,8 @@ describe 'Encounter event notes' do
 
     @browser.click("all-notes")
     sleep(2)
-    note_count(@browser).should eql(4)
-    note_count(@browser, "Administrative").should eql(3)
+    note_count(@browser).should eql(7)
+    note_count(@browser, "Administrative").should eql(6)
     note_count(@browser, "Clinical").should eql(1)
   end
 
@@ -118,7 +118,7 @@ describe 'Encounter event notes' do
     @browser.click("link=#{@cmr_last_name}")
     @browser.wait_for_page_to_load($load_time)
     # With the two morb notes and four encounter notes, we should have six on the morb event
-    note_count(@browser).should eql(6)
+    note_count(@browser).should eql(9)
   end
-  
+
 end

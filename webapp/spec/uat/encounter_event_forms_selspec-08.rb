@@ -2,25 +2,25 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'Encounter event forms' do
-  
+
  # $dont_kill_browser = true
-  
+
   before(:all) do
     @form_name = get_unique_name(4) + " en-f uat"
     @second_form_name = get_unique_name(4) + " en-f uat"
@@ -32,7 +32,7 @@ describe 'Encounter event forms' do
     @date = "March 10, 2009"
     @description = get_unique_name(3) << " en-f-uat"
   end
-  
+
   after(:all) do
     @form_name = nil
     @second_form_name = nil
@@ -48,7 +48,7 @@ describe 'Encounter event forms' do
   it "should create a basic form for encounter events" do
     @browser.open "/trisano"
     create_new_form_and_go_to_builder(@browser, @form_name, @disease, "All Jurisdictions", "Encounter Event")
-    add_question_to_view(@browser, "Default View", { 
+    add_question_to_view(@browser, "Default View", {
         :question_text => @question_text,
         :data_type => 'Single line text',
         :short_name => get_random_word

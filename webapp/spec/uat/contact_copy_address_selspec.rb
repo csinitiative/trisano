@@ -2,26 +2,26 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'active_support'
 
 require File.dirname(__FILE__) + '/spec_helper'
 describe 'Copying an address from the Original Patient' do
-  
+
   # $dont_kill_browser = true
-  
+
   before(:all) do
     @last_name = get_unique_name(1) + "-copy-uat"
     @first_contact = get_unique_name(1) + "-copy-uat"
@@ -29,7 +29,7 @@ describe 'Copying an address from the Original Patient' do
     @browser.open "/trisano/cmrs"
     @city = 'BYOB'
   end
-  
+
   it 'should create a new cmr with associated contacts and "save & continue".' do
     click_nav_new_cmr(@browser).should be_true
 
@@ -41,6 +41,7 @@ describe 'Copying an address from the Original Patient' do
     @browser.select "//div[@id='person_form']//select[contains(@id, 'state_id')]", 'Utah'
     @browser.select "//div[@id='person_form']//select[contains(@id, 'county_id')]", 'Beaver'
     @browser.type "//div[@id='person_form']//input[contains(@id, 'postal_code')]", '12345'
+    first_reported_to_ph_date @browser, Date.today
 
     click_core_tab(@browser, "Contacts")
     @browser.type "//div[@class='contact'][1]//input[contains(@id, 'last_name')]", @first_contact

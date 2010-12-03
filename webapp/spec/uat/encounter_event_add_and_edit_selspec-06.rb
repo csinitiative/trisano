@@ -85,7 +85,7 @@ describe 'Updating a task' do
     @browser.is_element_present("css=TD.struck-through").should be_false
     edit_cmr(@browser)
     # Assumes there is only one delete checkbox on the cmr
-    @browser.click('css=input[id$=_delete]')
+    @browser.click('css=input[id$=_destroy]')
     save_cmr(@browser)
     @browser.is_element_present("css=TD.struck-through").should be_true
   end

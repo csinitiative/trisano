@@ -343,6 +343,7 @@ module TrisanoHelper
     browser.type("morbidity_event_address_attributes_street_name", "Happy St.")
     click_core_tab(browser, CLINICAL)
     browser.select "morbidity_event_disease_event_attributes_disease_id", "label=#{disease_label}"
+    first_reported_to_ph_date browser, Date.today
     click_core_tab(browser, ADMIN)
     browser.select "morbidity_event_jurisdiction_attributes_secondary_entity_id", "label=#{jurisdiction_label}" if jurisdiction_label
     yield browser if block_given?
@@ -785,6 +786,12 @@ module TrisanoHelper
     click_core_tab browser, REPORTING
     sleep 1
     browser.type "//div[@id='reported_dates']//input[contains(@id, '_PH_date')]", date
+  end
+
+  def get_first_reported_ph(browser)
+    click_core_tab browser, REPORTING
+    sleep 1
+    browser.get_value "//div[@id='reported_dates']//input[contains(@id, '_PH_date')]"
   end
 
   #
