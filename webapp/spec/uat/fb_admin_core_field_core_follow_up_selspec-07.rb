@@ -47,9 +47,8 @@ describe 'Form Builder Admin Core-Field Core-Follow-Up Functionality' do
 
     # Enter the answer that meets the follow-up condition
     click_core_tab(@browser, DEMOGRAPHICS)
-    watch_for_core_field_spinner('birth_gender_id') do 
-      add_demographic_info(@browser, { :birth_gender => "Female" })
-    end
+    add_demographic_info(@browser, { :birth_gender => "Female" })
+    @browser.wait_for_ajax
     @browser.is_text_present(@follow_up_question_text).should be_true
 
     # Enter an answer that does not meet the follow-up condition
