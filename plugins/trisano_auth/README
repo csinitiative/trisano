@@ -18,12 +18,14 @@
 TrisanoAuth
 ================
 
+NOTE: This plugin can only be used on NEW implementations. You CANNOT add it to an existing install! 
+
 Adds AuthLogic support to TriSano (R).
 
 To enable this plugin, you need to:
-1) script/generate trisano_auth
-2) smackdb (you can't just migrate)
-3) Remove any auth related parameters in site_config.yml (or setup.yml).
+1) include TrisanoAuth and authlogic in your deployment descriptor
+2) Remove any auth related parameters in site_config.yml (or setup.yml)
+3) Disable user switching (also in site_config.yml)
 
 The default password for all default users is 'changeme'.
 
