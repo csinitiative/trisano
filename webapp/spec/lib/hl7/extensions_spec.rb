@@ -254,11 +254,10 @@ describe Message do
 
   describe 'common order' do
     before :all do
-      @hl7 = HL7::Message.parse HL7MESSAGES[:nist_sample_6]
-      @orc_segment = @hl7[:ORC]
-      @orc_segment.ordering_provider = '^Moreau^Glenda'
-      @orc_segment.call_back_phone_number = '^PRN^PH^^1^800^5551212'
-      @orc = @hl7.common_order
+      @hl7 = HL7MESSAGES[:nist_orc_clinician]
+      @hl7.should_not be_nil
+      @orc = HL7::Message.parse(HL7MESSAGES[:nist_orc_clinician]).common_order
+      @orc.should_not be_nil
     end
 
     it 'should return the clinician name from ORC-12' do

@@ -496,11 +496,7 @@ describe HumanEvent, 'adding staged messages' do
 
         organism.diseases.count.should == 1
 
-        # munge this message to have inpatient status
-        hl7 = HL7::Message.parse HL7MESSAGES[:realm_campylobacter_jejuni]
-        hl7.pv1.pv1_segment.patient_class = 'I'
-
-        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => hl7.to_hl7)
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_inpatient])
         event.should be_valid
         event.hospitalization_facilities.size.should == 1
         hospital = event.hospitalization_facilities.first.place_entity.place
