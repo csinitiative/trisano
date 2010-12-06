@@ -27,4 +27,4 @@ DEFAULT_LOGGER = Logging::Logger['server']
 
 
 #make translation fail loud
-require 'trisano/i18n/fail_fast'
+#require 'trisano/i18n/fail_fast'
