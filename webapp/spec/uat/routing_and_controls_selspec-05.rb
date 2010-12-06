@@ -2,22 +2,22 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/spec_helper'
 
-$dont_kill_browser = true
+# $dont_kill_browser = true
 
 describe 'Sytem functionality for routing and workflow' do
 
@@ -26,7 +26,7 @@ describe 'Sytem functionality for routing and workflow' do
     @person_2 = get_unique_name(2)
     @person_3 = get_unique_name(2)
     @uid = get_unique_name(1)+get_unique_name(1)
-    @uname = get_unique_name(2)    
+    @uname = get_unique_name(2)
   end
 
   it "should allow for new event_queues" do
@@ -40,7 +40,7 @@ describe 'Sytem functionality for routing and workflow' do
     # We need a queue first
     @browser.click "admin_queues"
     @browser.wait_for_page_to_load $load_time
-    
+
     @browser.click "create_event_queue"
     @browser.wait_for_page_to_load $load_time
 
@@ -58,6 +58,7 @@ describe 'Sytem functionality for routing and workflow' do
   it "create a new morbidity event" do
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => @person_1})
+    first_reported_to_ph_date @browser, Date.today
     save_cmr(@browser).should be_true
   end
 
@@ -140,6 +141,7 @@ describe 'Sytem functionality for routing and workflow' do
   it "should allow for secondary jurisdictions" do
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => @person_3})
+    first_reported_to_ph_date @browser, Date.today
     save_cmr(@browser).should be_true
 
     @browser.click "link=Route to Local Health Depts."
@@ -211,13 +213,13 @@ describe 'Sytem functionality for routing and workflow' do
     @browser.click "route_event_btn"
     @browser.wait_for_page_to_load($load_time)
     switch_user(@browser, "surveillance_mgr")
-    @browser.is_text_present("Permission denied: You do not have view privileges for this jurisdiction")
+    @browser.is_text_present("You have accessed an out-of-jurisdiction event.").should be_true
   end
 
   it 'should allow creating a new investigator' do
     switch_user(@browser, "default_user").should be_true
     navigate_to_user_admin(@browser)
-    @browser.click "//input[@value='Create new user']"
+    @browser.click "//input[@value='Create New User']"
     @browser.wait_for_page_to_load($load_time)
     @browser.type "user_uid", @uid
     @browser.type "user_user_name", @uname
@@ -234,6 +236,7 @@ describe 'Sytem functionality for routing and workflow' do
   it 'should be able to route a cmr to an individual investigator' do
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => @person_1})
+    first_reported_to_ph_date @browser, Date.today
     save_cmr(@browser).should be_true
 
     @browser.click "link=Route to Local Health Depts."
@@ -283,10 +286,12 @@ describe 'Sytem functionality for routing and workflow' do
 
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => @person_2})
+    first_reported_to_ph_date @browser, Date.today
     save_cmr(@browser).should be_true
 
     click_nav_new_cmr(@browser).should be_true
     add_demographic_info(@browser, {  :last_name => get_unique_name(2)})
+    first_reported_to_ph_date @browser, Date.today
     save_cmr(@browser).should be_true
 
     @browser.open "/trisano/cmrs"
