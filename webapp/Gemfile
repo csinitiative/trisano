@@ -5,9 +5,6 @@ gem "rails", "2.3.5"
 platforms :jruby do
   gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.kofnopre1"
   gem "jruby-openssl"
-  group :cli do
-    gem "warbler"
-  end
 end
 
 platforms :ruby_18, :ruby_19 do
@@ -15,6 +12,8 @@ platforms :ruby_18, :ruby_19 do
 end
 
 gem "logging"
+gem "warbler"
+
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
 gem "validates_timeliness", ">= 2.2.2"
