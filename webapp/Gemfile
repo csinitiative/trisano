@@ -12,8 +12,9 @@ platforms :ruby_18, :ruby_19 do
 end
 
 gem "logging"
-gem "warbler"
-
+group :cli do
+  gem "warbler"
+end
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
 gem "validates_timeliness", ">= 2.2.2"
