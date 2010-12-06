@@ -223,7 +223,7 @@ module TrisanoHelper
     end
     browser.click 'link=ADMIN'
     browser.wait_for_page_to_load($load_time)
-    return(browser.is_text_present("Admin Dashboard"))
+    browser.is_text_present("Admin Dashboard")
   end
 
   def edit_cmr(browser)
