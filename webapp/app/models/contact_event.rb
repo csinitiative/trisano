@@ -204,7 +204,7 @@ class ContactEvent < HumanEvent
     contact_bdate = self.try(:interested_party).try(:person_entity).try(:person).try(:birth_date)
     return if contact_bdate.nil?
 
-    disposition_date = self.try(:participations_contact).disposition_date
+    disposition_date = self.try(:participations_contact).try(:disposition_date)
     return if disposition_date.nil?
 
     if (disposition_date < contact_bdate)
