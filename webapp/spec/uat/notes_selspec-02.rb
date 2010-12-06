@@ -32,6 +32,7 @@ describe 'Associating notes with an event.' do
     @browser.wait_for_page_to_load $load_time
     click_nav_new_cmr(@browser).should be_true
     @browser.type('morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', "Smith")
+    first_reported_to_ph_date @browser, Date.today
     click_core_tab(@browser, NOTES)
     save_and_continue(@browser)
 

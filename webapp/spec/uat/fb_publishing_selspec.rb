@@ -38,6 +38,6 @@ describe 'Publishing a form with a short name that is already active' do
 
     #now go back and try to publish to deactivated form
     click_build_form(@browser, @form_one_name)
-    publish_form_failure
+    publish_form_failure.should be_true
   end
 end
