@@ -34,6 +34,13 @@ class Address < ActiveRecord::Base
     "#{self.street_number} #{street_name}".strip
   end
 
+  def number_street_and_unit
+    nsu = number_and_street
+    nsu << "\nUnit #{unit_number}" unless unit_number.blank?
+
+    nsu.strip
+  end
+
   def city_state_zip
     return '' if self.city.blank? && self.state.blank? && self.postal_code.blank?
 
@@ -58,8 +65,7 @@ class Address < ActiveRecord::Base
   end
 
   def formatted_address
-    fa = number_and_street
-    fa << ", Unit: #{self.unit_number}" unless self.unit_number.blank?
+    fa = number_street_and_unit
     fa << ", #{self.city}" unless self.city.blank?
     fa << ", #{self.state.the_code}" unless self.state.blank?
     fa << " #{self.postal_code}" unless self.postal_code.blank?
