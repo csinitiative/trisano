@@ -371,11 +371,6 @@ describe StagedMessage do
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
     end
 
-    it "should raise an error if LOINC code exists but is not linked to a common name" do
-      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unlinked_loinc])
-      lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnlinkedLoincCode)
-    end
-
     it 'should create a lab result and link to it' do
       m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m

@@ -24,7 +24,7 @@ def with_human_event(event_hash=@event_hash, &block)
 end
 
 def set_loinc_code(msg, loinc)
-  msg.gsub(/(OBR\|[^|]*\|[^|]*\|[^|]*\|)\d+-\d/, '\1'+loinc)
+  msg.gsub(/(OBX\|[^|]*\|[^|]*\|)\d+-\d/, '\1'+loinc)
 end
 
 def set_obx_5(msg, value)

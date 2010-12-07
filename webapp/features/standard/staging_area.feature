@@ -157,6 +157,7 @@ Feature: Staging Electronic Messages
     Then I should see the new lab result with 'Hep-B Ag'
     And I should see a middle name of George
 
+  @pending
   Scenario: Attempting to assign message with unknown LOINC code
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNKNOWN_LOINC"
@@ -171,6 +172,7 @@ Feature: Staging Electronic Messages
     Then I should see a 'is unknown to TriSano' message
     And I should see a state of 'Unprocessable'
 
+  @pending
   Scenario: Attempting to assign message with unlinked LOINC code
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNLINKED_LOINC"

@@ -580,11 +580,7 @@ class HumanEvent < Event
       end
 
       obr.tests.each do |obx|
-        # the LOINC code as a string from the HL7 message, as opposed
-        # to the :loinc_codes table entry
-        raw_loinc_code = obr.test_performed
-        raw_loinc_code = obx.loinc_code if raw_loinc_code.blank?
-        loinc_code = LoincCode.find_by_loinc_code(raw_loinc_code)
+        loinc_code = LoincCode.find_by_loinc_code obx.loinc_code
         scale_type = nil
         common_test_type = nil
 
@@ -597,13 +593,19 @@ class HumanEvent < Event
           # Look at other OBX fields for hints to the scale and common
           # test type.
           scale_type = obx.loinc_scale
-          raise(StagedMessage::UnknownLoincCode, I18n.translate('unknown_loinc_code', :loinc_code => raw_loinc_code)) if scale_type.nil?
+          if scale_type.nil?
+            # TODO: Make a note
+            next
+          end
 
           common_test_type_name = obx.loinc_common_test_type
           common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
         end
 
-        raise(StagedMessage::UnlinkedLoincCode, I18n.translate('loinc_code_known_but_not_linked', :loinc_code => raw_loinc_code)) if common_test_type.nil?
+        if common_test_type.nil?
+          # TODO: Make a note
+          next
+        end
 
         comments = per_request_comments.clone
 
@@ -667,7 +669,18 @@ class HumanEvent < Event
         i += 1
         self.add_note(I18n.translate("system_notes.elr_with_test_type_assigned", :test_type => obx.test_type, :locale => I18n.default_locale))
       end
+
+      # Grab any diseases associated with this OBR
+      loinc_code = LoincCode.find_by_loinc_code obr.test_performed
+      loinc_code.diseases.each { |disease| diseases << disease } if loinc_code and diseases.blank?
     end
+
+    unless i > 0
+      # All OBX invalid
+      # TODO: I18n
+      raise StagedMessage::UnknownLoincCode, "All OBX segments invalid"
+    end
+
     self.labs_attributes = [ lab_attributes ]
 
     # Assign disease
