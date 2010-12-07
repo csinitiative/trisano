@@ -99,11 +99,10 @@ form
 .scroll th, .scroll td
   :white-space nowrap
   
-.sortable td
-  :position relative
-  
-.sortable td .nodatatag
-  :position absolute
+.sortable td.nodata
+  :max-width 1px
+  :width 1px
+  :overflow visible
   :font-weight bold
   :font-style italic
   
