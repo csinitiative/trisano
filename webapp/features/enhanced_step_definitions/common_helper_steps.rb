@@ -61,7 +61,7 @@ When(/^I click and confirm the "(.+)" link$/) do |text|
   @browser.wait_for_page_to_load($load_time)
 end
 
-When /^I wait for the page to load$/ do
+When /^I wait for the page to load$/i do
   @browser.wait_for_page_to_load
 end
 

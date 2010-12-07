@@ -23,3 +23,15 @@ Then /^I should see the following associated treatments:$/ do |table|
   end
 end
 
+When /^I select treatment "([^\"]*)"$/ do |treatment_name|
+  @browser.select "//div[@id='treatments']/div[@class='treatment'][last()]//select[contains(@name, 'treatment_id')]", treatment_name
+end
+
+When /^I add treatment "([^\"]*)"$/ do |treatment_name|
+  @browser.click "link=Add a Treatment"
+  When %{I select treatment "#{treatment_name}"}
+end
+
+When /^I remove treatment "([^\"]*)"$/ do |treatment_name|
+  @browser.click "//select/option[@selected][text()='#{treatment_name}']/../../..//input[@type='checkbox'][contains(@name, '_destroy')]"
+end

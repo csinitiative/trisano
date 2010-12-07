@@ -172,3 +172,8 @@ end
 When /^I enter a valid first reported to public health date$/ do
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end
+
+When /^I enter basic CMR data$/ do
+  @browser.type 'morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name', 'Smoker'
+  When %{I enter a valid first reported to public health date}
+end
