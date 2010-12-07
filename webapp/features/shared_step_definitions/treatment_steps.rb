@@ -16,7 +16,20 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^the following treatments exist$/ do |table|
-  table.hashes.each do |hash|
-    @treatment = Factory.create(:treatment, hash)
+  table.hashes.each do |attributes|
+    @treatment = Treatment.first :conditions => attributes
+    if @treatment.nil?
+      @treatment = Factory.create :treatment, attributes
+    end
+  end
+end
+
+Given /^the event has the following treatments:$/ do |table|
+  table.hashes.each do |attributes|
+    @treatment = Treatment.first :conditions => attributes
+    if @treatment.nil?
+      @treatment = Factory.create :treatment, attributes
+    end
+    @event.interested_party.treatments.create(:treatment =>  @treatment)
   end
 end
