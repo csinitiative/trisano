@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
 #
@@ -39,19 +39,19 @@ cd $CURRENT
 cd $BI_BITS_HOME
 BI_BITS_HOME=$PWD
 
-if [ ! -d $BI_BITS_HOME ]; then
+if [[ ! -d $BI_BITS_HOME ]]; then
     echo "$BI_BITS_HOME is not a directory"
     exit
 fi
 
-if [ ! -d $TRISANO_SOURCE_HOME/avr/bi ]; then
+if [[ ! -d $TRISANO_SOURCE_HOME/avr/bi ]]; then
     echo "$TRISANO_SOURCE_HOME is not the root directory of the TriSano source tree"
     exit
 fi
 
 # VERIFY THESE NAMES BEFORE RUNNING SCRIPT
-BI_SERVER_ZIP=biserver-ce-3.0.0-STABLE.tar.gz
-REPORT_DESIGNER_ZIP=prd-ce-3.0.0.37992.stable.zip
+BI_SERVER_ZIP=biserver-ce-3.6.0-stable.tar.gz
+REPORT_DESIGNER_ZIP=prd-ce-3.6.1-stable.zip
 
 BI_SERVER_NAME=biserver-ce
 ADMIN_CONSOLE_NAME=administration-console
@@ -62,12 +62,12 @@ ADMIN_CONSOLE_HOME=$BI_BITS_HOME/$ADMIN_CONSOLE_NAME
 BI_TARBALL=trisano-ce-bi.tar.gz
 DW_TARBALL=trisano-dw.tar.gz
 
-if [ ! -e $BI_SERVER_ZIP ]; then
+if [[ ! -e $BI_SERVER_ZIP ]]; then
     echo "Could not locate BI Server archive: $BI_BITS_HOME/$BI_SERVER_ZIP"
     exit
 fi
 
-if [ ! -e $REPORT_DESIGNER_ZIP ]; then
+if [[ ! -e $REPORT_DESIGNER_ZIP ]]; then
     echo "Could not locate Report Designer archive: $BI_BITS_HOME/$REPORT_DESIGNER_ZIP"
     exit
 fi
@@ -75,23 +75,40 @@ fi
 # Explode the BI server
 echo
 echo " * Exploding the BI Server archive (please wait...)"
+if [[ -d $BISERVER_HOME ]]; then
+    rm -rf $BISERVER_HOME
+fi
 tar zxf $BI_SERVER_ZIP
 echo " * Exploding the Report Designer archive (please wait...)"
+if [[ -d $BI_BITS_HOME/report-designer ]]; then
+    rm -rf $BI_BITS_HOME/report-designer
+fi
 unzip -qq $REPORT_DESIGNER_ZIP
 
 # Copy SiteMinder XML config files
 echo " * Configuring BI Server to use SiteMinder"
 
 # Backup originals
-cp $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-acegi-security.xml.org
-cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml.org
-cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml.org
+applicationContext-spring-security-hibernate.properties
+if [[ -f $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties ]]; then
+    cp $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties $BI_SERVER_HOME/pentaho-solutions/system/applicationContext-spring-security-hibernate.properties.org
+fi
+#if [[ -f $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml ]]; then
+#    cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/pentaho-spring-beans.xml.org
+#fi
+if [[ -f $BI_SERVER_HOME/pentaho-solutions/system/mondrian/mondrian.properties ]]; then
+    cp $BI_SERVER_HOME/pentaho-solutions/system/mondrian/mondrian.properties $BI_SERVER_HOME/pentaho-solutions/system/mondrian/mondrian.properties.org
+fi
+if [[ -f $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml ]]; then
+    cp $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/pentaho.xml.org
+fi
 
 # Copy in new ones
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security-siteminder.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security.xml $BI_SERVER_HOME/pentaho-solutions/system/
-cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
+#cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-acegi-security-siteminder.xml $BI_SERVER_HOME/pentaho-solutions/system/
+#cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho-spring-beans.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/applicationContext-spring-security-hibernate.properties $BI_SERVER_HOME/pentaho-solutions/system/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/pentaho.xml $BI_SERVER_HOME/pentaho-solutions/system/
+cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/mondrian.properties $BI_SERVER_HOME/pentaho-solutions/system/mondrian/
 cp $TRISANO_SOURCE_HOME/avr/bi/bi_server_replacement_files/publisher_config.xml $BI_SERVER_HOME/pentaho-solutions/system/
 
 # Step 2: Copy custom jar files
@@ -138,7 +155,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.rb $BI_SERV
 cp --preserve=mode $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata.sh $BI_SERVER_HOME/pentaho-solutions/TriSano
 cp $TRISANO_SOURCE_HOME/avr/jdbc/repository.properties $BI_SERVER_HOME/pentaho-solutions/TriSano/jdbc
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/jruby-complete-1.5.2.jar $BI_SERVER_HOME/lib
-cp $TRISANO_SOURCE_HOME/avr/pentaho-metadata-2.2.0-SNAPSHOT.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/pentaho-metadata-2.2.0.jar
+cp $TRISANO_SOURCE_HOME/avr/pentaho-metadata-3.2.2.1.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/pentaho-metadata-2.2.0.jar
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/trisano.jar $BI_SERVER_HOME/tomcat/webapps/pentaho/WEB-INF/lib/
 cp $TRISANO_SOURCE_HOME/avr/bi/extensions/trisano/dist/jruby-complete-1.5.2.jar $BI_SERVER_HOME/pentaho-solutions/TriSano
 
@@ -160,8 +177,7 @@ cp $TRISANO_SOURCE_HOME/avr/bi/scripts/build_metadata/build_metadata_schema.sql 
 echo " * Bundling sample reports"
 REPORT_DIR=sample_reports
 mkdir $REPORT_DIR
-cp $TRISANO_SOURCE_HOME/avr/bi/reports/CasesByDiseaseAndJurisdiction.report $REPORT_DIR
-cp $TRISANO_SOURCE_HOME/avr/bi/reports/LTBI_Cases_By_Country.report $REPORT_DIR
+cp $TRISANO_SOURCE_HOME/avr/bi/reports/*.report $REPORT_DIR
 
 # Create TriSano tarballs
 echo " * Creating distribution packages (please wait...)"
