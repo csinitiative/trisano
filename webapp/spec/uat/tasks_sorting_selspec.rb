@@ -74,10 +74,10 @@ describe 'Sorting tasks on the Dashboard' do
     ['Name', 'Description', 'Category', 'Priority'].each do |column|
       @browser.click("link=#{column}")
       sleep(3)
-      @browser.get_text("//tbody/tr[1]/td[1]").should == (Date.today + 1).strftime("%Y-%m-%d")
+      @browser.get_text("//div[@id='tasks']//tbody/tr[1]/td[1]").should == (Date.today + 1).strftime("%Y-%m-%d")
       @browser.click("link=Due date")
       sleep(3)
-      @browser.get_text("//tbody/tr[1]/td[1]").should == Date.today.strftime("%Y-%m-%d")
+      @browser.get_text("//div[@id='tasks']//tbody/tr[1]/td[1]").should == Date.today.strftime("%Y-%m-%d")
     end
   end
 
