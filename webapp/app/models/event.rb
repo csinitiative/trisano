@@ -96,7 +96,7 @@ class Event < ActiveRecord::Base
     :order => "created_at ASC"
 
   named_scope :active, :conditions => ['deleted_at IS NULL']
-  named_scope :morbs_or_contacts, 
+  named_scope :morbs_or_contacts,
     :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)],
     :order => "created_at ASC"
 
@@ -188,7 +188,7 @@ class Event < ActiveRecord::Base
   def suppressed_validations
     @suppressed_validations ||= []
   end
-  
+
   class << self
 
     def active_ibis_records(start_date, end_date)
@@ -201,7 +201,7 @@ class Event < ActiveRecord::Base
       WHERE
       Event.find(:all,
         :include => [:disease_event, :address],
-        :conditions => [where_clause, start_date, end_date, start_date, end_date]) 
+        :conditions => [where_clause, start_date, end_date, start_date, end_date])
     end
 
     def deleted_ibis_records(start_date, end_date)
@@ -324,6 +324,10 @@ class Event < ActiveRecord::Base
       sql << "order by events.id;"
     end
 
+  end
+
+  def short_type
+    @short_type ||= self.type.sub(/event$/i, '')
   end
 
   def deleted?
@@ -738,5 +742,4 @@ class Event < ActiveRecord::Base
     parent_disease_event.disease_id = parent_event.disease_event.disease_id
     build_disease_event(parent_disease_event.attributes)
   end
-  
 end
