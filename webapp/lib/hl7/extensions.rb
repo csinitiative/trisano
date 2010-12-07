@@ -291,7 +291,13 @@ module StagedMessages
     def address_trisano_state_id
       unless addr_components[3].blank?
         state_object = ExternalCode.find_by_code_name_and_the_code('state', addr_components[3])
-        state_object.id if state_object
+        if state_object
+          state_object.id
+        else
+          # case-insensitive search
+          state_object = ExternalCode.first :conditions => [ "code_name = 'state' AND code_description ~* ?", '^'+addr_components[3]+'$' ]
+          state_object.id if state_object
+        end
       else
         nil
       end

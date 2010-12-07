@@ -116,6 +116,10 @@ describe Message do
       @hl7.patient_id.address_trisano_state_id.should == external_codes(:state_utah).id
     end
 
+    it 'should return the state ID when the full state name is used' do
+      HL7::Message.parse(HL7MESSAGES[:nist_sample_6]).patient_id.address_trisano_state_id.should == external_codes(:state_alaska).id
+    end
+
     it 'should return the zip code' do
       @hl7.patient_id.address_zip.should == "84444"
     end
