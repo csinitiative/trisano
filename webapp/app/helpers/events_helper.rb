@@ -421,7 +421,12 @@ module EventsHelper
     options[:prefix] += '_' if options[:prefix]
     resource = event_to_path_name[event.class.name] || event.class.name.underscore
     method = "#{options[:prefix]}#{resource}_path"
-    new_text = "#{action}_#{resource.gsub(/_event$/, '')}".to_sym
+
+    unless options[:action_only]
+      new_text = "#{action}_#{resource.gsub(/_event$/, '')}".to_sym
+    else
+      new_text = action.to_sym
+    end
 
     link_to t(new_text, options), send(method, event), {:id => "#{action}-event-#{event.id}"}
   end
