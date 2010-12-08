@@ -40,7 +40,10 @@ Feature: Event treatment fields
         | leeches        |
         | bleeding       |
     When I am on the event edit page
-      And I follow "Show Encounter"
     Then I should see "rubbings"
-      And I should see "leeches"
-      And I should see "bleeding"
+     And I should see "leeches"
+     And I should see "bleeding"
+    When I follow "Show Encounter"
+    Then I should see "rubbings"
+     And I should see "leeches"
+     And I should see "bleeding"
