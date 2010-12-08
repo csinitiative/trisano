@@ -17,10 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-# Installs application on the same machine that script is run on. Assumes Tomcat is installed.
-# You must run ./package_app.sh prior to running this script.
-# Set TOMCAT_HOME environment variable to override default of/opt/tomcat/apache-tomcat-6.0.14
-
 #. setenv.sh
 
 dump_path=$PWD/dump

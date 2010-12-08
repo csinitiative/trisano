@@ -65,16 +65,16 @@ namespace :trisano do
     # database.yml to have the proper settings for the target database.
     # To simplify things we just reset it every time based on the contents
     # of config.yml
-    def replace_database_yml(environment, host, port, database, nedss_user, nedss_user_pwd)
+    def replace_database_yml(options)
       puts "creating database.yml based on contents of config.yml in #{WEB_APP_CONFIG_DIR}"
-      db_config = { environment => 
-          { 'adapter' => 'jdbcpostgresql',
+      db_config = { options[:environment] =>
+          { 'adapter' => 'postgresql',
           'encoding' => 'unicode', 
-          'database' => database, 
-          'username' => nedss_user, 
-          'password' => nedss_user_pwd,
-          'host' => host, 
-          'port' => port
+          'database' => options[:database],
+          'username' => options[:user],
+          'password' => options[:password],
+          'host' => options[:host],
+          'port' => options[:port]
         }      
       }
       File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
@@ -156,13 +156,27 @@ namespace :trisano do
     desc "Sets the database.yml to use the privileged user info"
     task :set_priv_database_yml do
       initialize_config
-      replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
+      replace_database_yml(
+        :environment => @environment, 
+        :host => @host,
+        :port => @port,
+        :database => @database,
+        :user => @priv_uname,
+        :password => @priv_password
+      )
     end
 
     desc "Sets the database.yml to use the application user info"
     task :set_trisano_database_yml do
       initialize_config
-      replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)            
+      replace_database_yml(
+        :environment => @environment,
+        :host => @host,
+        :port => @port,
+        :database => @database,
+        :user => @trisano_user,
+        :password => @trisano_user_pwd
+      )
     end
     
     desc "Create the database, the user, and apply security permissions"
@@ -271,7 +285,14 @@ namespace :trisano do
     desc "Package the application with the settings from config.yml"
     task :package_app => [:overwrite_urls] do
       initialize_config
-      replace_database_yml(@environment, @host, @port, @database, @trisano_user, @trisano_user_pwd)                
+      replace_database_yml(
+        :environment => @environment,
+        :host => @host,
+        :port => @port,
+        :database => @database,
+        :user => @trisano_user,
+        :password => @trisano_user_pwd
+      )
       puts "creating .war deployment archive"
       cd '../webapp/'
       if binstubs?
@@ -285,8 +306,15 @@ namespace :trisano do
 
     desc "Migrate the database"
     task :upgrade_db => ['dump_db'] do
-      initialize_config   
-      replace_database_yml(@environment, @host, @port, @database, @priv_uname, @priv_password)            
+      initialize_config
+      replace_database_yml(
+        :environment => @environment,
+        :host => @host,
+        :port => @port,
+        :database => @database,
+        :user => @priv_uname,
+        :password => @priv_password
+      )
       cd '../webapp/'
       ruby "-S rake db:migrate RAILS_ENV=#{@environment}"
       puts "resetting db permissions"
