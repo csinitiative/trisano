@@ -43,12 +43,16 @@ class EventsController < ApplicationController
   def contacts_search
     page = params[:page] ? params[:page] : 1
 
-    @results = HumanEvent.find_by_name_and_bdate(
-      :fulltext_terms => params[:name],
-      :page => page,
-      :page_size => 20
-    )
-    
+    begin
+      @results = HumanEvent.find_by_name_and_bdate(
+        :fulltext_terms => params[:name],
+        :page => page,
+        :page_size => 20
+      )
+    rescue
+      flash[:error] = t(:invalid_search_criteria)
+    end
+
     render :partial => "events/contacts_search", :layout => false
   end
 

@@ -66,3 +66,12 @@ Feature: Creating new contact events
     And the contact should have the jurisdiction of its parent event
     And the contact should have the disease of its parent event
 
+  Scenario: Trying an invalid search
+    Given I am logged in as a super user
+    And a basic morbidity event exists
+    And there is a contact on the event named "The Shack"
+    When I am on the contact event edit page
+    And I click the "Create new contact event" link and wait to see "Contact search"
+    And I fill in "contact_search_name" with "Bad search!!!!"
+    And I press "Search" and wait to see "Invalid search criteria"
+    Then I should see "Invalid search criteria"
