@@ -176,6 +176,7 @@ es:
         person_entity:
           telephones: Números de teléfono de paciente
           email_addresses: Direcciones de email de paciente
+          race_ids: Patient race (EN)
           person:
             date_of_death: Fecha de muerte del paciente
             age_at_onset: Edad cuando se inició actividad

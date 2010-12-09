@@ -227,6 +227,7 @@ en:
           telephones: Patient telephones
           demographics_section: Demographics
           email_addresses: Patient email addresses
+          race_ids: Patient race
           person:
             date_of_death: Patient date of death
             age_at_onset: Age at onset

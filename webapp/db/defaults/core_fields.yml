@@ -10,13 +10,6 @@
   fb_accessible: false
   can_follow_up: false
   field_type: event
-  event_type: place_event
-  key: place_event
-
-- help_text:
-  fb_accessible: false
-  can_follow_up: false
-  field_type: event
   event_type: contact_event
   key: contact_event
 
@@ -26,6 +19,13 @@
   field_type: event
   event_type: encounter_event
   key: encounter_event
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: event
+  event_type: place_event
+  key: place_event
 
 # Tabs
 - help_text:
@@ -726,6 +726,15 @@
   field_type: drop_down
   key: morbidity_event[interested_party][person_entity][person][ethnicity_id]
   code_name: ethnicity
+  parent_key: morbidity_event[interested_party][person_entity][demographics_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_event
+  field_type: multi_select
+  key: morbidity_event[interested_party][person_entity][race_ids]
+  code_name: race
   parent_key: morbidity_event[interested_party][person_entity][demographics_section]
 
 - help_text:
