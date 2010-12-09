@@ -51,6 +51,10 @@ namespace :trisano do
       ENV["PGPASSWORD"] = @priv_password 
     end
 
+    def distro_dir
+      File.expand_path File.dirname(__FILE__) +  '/../../../distro'
+    end
+
     def binstubs?
       File.directory?('bin')
     end
@@ -103,7 +107,7 @@ namespace :trisano do
         puts "Granting of privileges to TriSano user: #{@trisano_user} failed. Could not install plpgsql language into database."
         return success
       end
-      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f ./database/load_grant_function.sql")
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f #{distro_dir}/database/load_grant_function.sql")
       unless success
         puts "Granting of privileges to TriSano user: #{@trisano_user} failed.  Could not create grant privileges function."
         return success
@@ -135,7 +139,7 @@ namespace :trisano do
     end
 
     def dump_db_to_file(dump_file_name)
-      dirname = './dump'
+      dirname = "#{distro_dir}/dump"
       if !File.directory? dirname
         puts "adding directory #{dirname}"
         FileUtils.mkdir(dirname)
@@ -234,7 +238,7 @@ namespace :trisano do
       if @dump_file.nil?
         raise "attribute dump_file_name is not specified in config.yml - please add it and try again."
       end
-      dirname = './dump'
+      dirname = "#{distro_dir}/dump"
       sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'") do |ok, res|
         if ! ok
           raise "Failed creating database: #{@database} with error #{res.exitstatus}. Try running drop_db_and_user.rb."
