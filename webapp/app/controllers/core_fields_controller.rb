@@ -21,7 +21,7 @@ class CoreFieldsController < AdminController
   before_filter :inject_disease_into_core_field_hash, :only => [:update]
 
   def index
-    @core_fields = CoreField.roots
+    @core_fields = CoreField.roots :order => 'tree_id'
 
     respond_to do |format|
       format.html
