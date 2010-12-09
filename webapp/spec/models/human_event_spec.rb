@@ -248,6 +248,30 @@ describe HumanEvent, 'adding staged messages' do
       }
     end
 
+    before :all do
+      common_test_type = CommonTestType.create :common_name => 'Culture'
+
+      disease = Disease.create :disease_name => 'Lead poisoning',
+        :cdc_code => '32010'
+      disease.should_not be_nil
+
+      common_test_type = CommonTestType.new :common_name => 'Blood lead test'
+      common_test_type.diseases << disease
+      common_test_type.save!
+
+      loinc_code = LoincCode.new :common_test_type => common_test_type,
+        :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
+        :scale => ExternalCode.loinc_scale_by_the_code("Qn")
+      loinc_code.diseases << disease
+      loinc_code.save!
+    end
+
+    after :all do
+      CommonTestType.find_by_common_name('Culture').destroy
+      CommonTestType.find_by_common_name('Blood lead test').destroy
+      Disease.find_by_disease_name('Lead poisoning').destroy
+    end
+
     it 'should raise an exception when not passed a staged message' do
       with_human_event do |event|
         lambda{event.add_labs_from_staged_message("noise")}.should raise_error(ArgumentError)
@@ -275,16 +299,13 @@ describe HumanEvent, 'adding staged messages' do
 
     it 'should set comments from PID-11.6, OBR-3, SPM-2 and OBX-8' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
         event.labs.first.lab_results.first.comment.should == "Country: USA, Accession no: 9700123, Specimen id: 23456, Abnormal flags: H"
-        common_test_type.destroy
       end
     end
 
     it 'should set clinician info when present' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni])
         event.clinicians.size.should == 1
 
@@ -299,14 +320,11 @@ describe HumanEvent, 'adding staged messages' do
         telephone.area_code.should == '555'
         telephone.phone_number.should == '5551005'
         telephone.extension.should be_blank
-
-        common_test_type.destroy
       end
     end
 
     it 'should set additional clinician info when present in PV1 segment' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_clinicians])
         event.clinicians.size.should == 3
 
@@ -322,8 +340,6 @@ describe HumanEvent, 'adding staged messages' do
         clinician = event.clinicians.third
         clinician.person_entity.person.first_name.should == 'Herbert'
         clinician.person_entity.person.last_name.should == 'Hyde'
-
-        common_test_type.destroy
       end
     end
 
@@ -351,20 +367,15 @@ describe HumanEvent, 'adding staged messages' do
       event.interested_party.person_entity.person.date_of_death.should == Date.parse('20101111')
 
       # set the died_id in the disease_event
-      common_test_type = CommonTestType.create :common_name => 'Culture'
       event.add_labs_from_staged_message staged_message
       event.disease_event.died.should == ExternalCode.yes
-
-      common_test_type.destroy
     end
 
     it 'should set the ethnicity field when present' do
       login_as_super_user
-      common_test_type = CommonTestType.create :common_name => 'Culture'
       staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
       event = staged_message.new_event_from
       event.interested_party.person_entity.person.ethnicity.should == external_codes(:ethnicity_non_hispanic)
-      common_test_type.destroy
     end
 
     it 'should set multiple contact numbers when present' do
@@ -391,12 +402,10 @@ describe HumanEvent, 'adding staged messages' do
 
     it 'should take the LOINC code from OBR-4.1 when present' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_obr_4])
         event.should be_valid
         event.labs.first.lab_results.first.loinc_code.should ==
           LoincCode.find_by_loinc_code('625-4')
-        common_test_type.destroy
       end
     end
 
@@ -409,20 +418,6 @@ describe HumanEvent, 'adding staged messages' do
 
     it 'should populate the parent_guardian field when present' do
       with_human_event do |event|
-        disease = Disease.create :disease_name => 'Lead poisoning',
-          :cdc_code => '32010'
-        disease.should_not be_nil
-
-        common_test_type = CommonTestType.new :common_name => 'Blood lead test'
-        common_test_type.diseases << disease
-        common_test_type.save!
-
-        loinc_code = LoincCode.new :common_test_type => common_test_type,
-          :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
-          :scale => ExternalCode.loinc_scale_by_the_code("Qn")
-        loinc_code.diseases << disease
-        loinc_code.save!
-
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_lead_laboratory_result])
         event.should be_valid
         event.parent_guardian.should == 'Mum, Martha'
@@ -436,7 +431,6 @@ describe HumanEvent, 'adding staged messages' do
         @orc_segment.ordering_provider = '^Moreau^Glenda'
         @orc_segment.call_back_phone_number = '^PRN^PH^^1^800^5551212'
 
-        common_test_type = CommonTestType.create :common_name => 'Culture'
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => @hl7.to_hl7)
         event.should be_valid
 
@@ -459,15 +453,11 @@ describe HumanEvent, 'adding staged messages' do
         clinician = event.clinicians.second
         clinician.person_entity.person.first_name.should == 'Alan'
         clinician.person_entity.person.last_name.should == 'Admit'
-
-        common_test_type.destroy
       end
     end
 
     it 'should take the hospitalization status from PV1-2' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
-
         # build the required organism and disease for this
         disease  = Factory.create :campylobacteriosis
         organism = Factory.build :campylobacter_jejuni
@@ -480,14 +470,11 @@ describe HumanEvent, 'adding staged messages' do
         event.should be_valid
         event.disease_event.should_not be_nil
         event.disease_event.hospitalized_id.should == ExternalCode.no.id
-        common_test_type.destroy
       end
     end
 
     it 'should take the hospital name from PV2-23 or ORC-21' do
       with_human_event do |event|
-        common_test_type = CommonTestType.create :common_name => 'Culture'
-
         # build the required organism and disease for this
         disease  = Factory.create :campylobacteriosis
         organism = Factory.build :campylobacter_jejuni
@@ -504,7 +491,50 @@ describe HumanEvent, 'adding staged messages' do
         hospital.short_name.should == 'Level Seven Healthcare, Inc.'
         hospital.place_types.size.should == 1
         hospital.place_types.first.should == Code.find_by_code_name_and_the_code('placetype', 'H')
-        common_test_type.destroy
+      end
+    end
+
+    it 'should show different LOINC codes for each OBX segment' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.find_by_common_name 'Culture'
+
+        # build the required organism and disease for this
+        disease  = Factory.create :campylobacteriosis
+        organism = Factory.build :campylobacter_jejuni
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        cj_loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '6331-3', :test_name => 'Campylobacter jejuni AB',
+          :scale => ExternalCode.loinc_scale_by_the_code("Nom")
+        cj_loinc_code.diseases << disease
+        cj_loinc_code.save!
+
+        disease  = Factory.create :shigellosis
+        organism = Factory.build :shigella
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        sh_loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '17576-0', :test_name => 'Shigella',
+          :scale => ExternalCode.loinc_scale_by_the_code("Nom")
+        sh_loinc_code.diseases << disease
+        sh_loinc_code.save!
+
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:nist_sample_6])
+        event.should be_valid
+
+        # There are 3 OBX segments, but one doesn't map.
+        event.labs.first.lab_results.size.should == 2
+        event.labs.first.lab_results.first.loinc_code.should == cj_loinc_code
+        event.labs.first.lab_results.second.loinc_code.should == sh_loinc_code
+
+        sh_loinc_code.destroy
+        cj_loinc_code.destroy
       end
     end
   end

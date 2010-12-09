@@ -38,6 +38,10 @@ Factory.define :campylobacter_jejuni, :class => 'Organism' do |organism|
   organism.organism_name 'Campylobacter jejuni'
 end
 
+Factory.define :shigella, :class => Organism do |organism|
+  organism.organism_name 'Shigella'
+end
+
 #
 # Sequences
 #

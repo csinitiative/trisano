@@ -332,11 +332,15 @@ module StagedMessages
 
     def telephone_empty?
       components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
+    rescue
+      true
     end
 
     def telephone_home
       phone_components = pid_segment.phone_home.split(pid_segment.item_delim)
       split_phone phone_components
+    rescue
+      []
     end
 
     def telephone_type_work
@@ -356,10 +360,14 @@ module StagedMessages
     def telephone_work
       phone_components = pid_segment.phone_business.split(pid_segment.item_delim)
       split_phone phone_components
+    rescue
+      []
     end
 
     def telephone_work_empty?
       components_empty?(pid_segment.phone_business.split(pid_segment.item_delim))
+    rescue
+      true
     end
 
     def notes
