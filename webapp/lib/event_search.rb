@@ -9,6 +9,7 @@ module EventSearch
   module ClassMethods
     def find_by_criteria(*args)
       options = args.extract_options!
+      options[:fulltext_terms] = options[:fulltext_terms].strip if options[:fulltext_terms]
       return unless issue_query?(options)
       Event.find_by_sql(construct_criteria_sql(options))
     end

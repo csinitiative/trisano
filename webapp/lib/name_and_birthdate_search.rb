@@ -2,6 +2,7 @@ module NameAndBirthdateSearch
 
   def find_by_name_and_bdate(options)
     options.symbolize_keys!
+    options[:fulltext_terms] = options[:fulltext_terms].strip if options[:fulltext_terms]
     validate_bdate(options)
     unless options[:use_starts_with_search]
       options[:fulltext_terms] ||= "#{options.delete(:last_name)} #{options.delete(:first_name)}".strip

@@ -54,6 +54,11 @@ describe "searching" do
         result = Event.find_by_criteria(:fulltext_terms => 'jaime')
         result.map(&:last_name).should == ['Jaime', 'James']
       end
+
+      it "searching for 'jaime ' with a trailing space should not cause an error" do
+        result = Event.find_by_criteria(:fulltext_terms => 'jaime ')
+        result.map(&:last_name).should == ['Jaime', 'James']
+      end
     end
   end
 
@@ -115,6 +120,16 @@ describe "searching" do
 
       it "using 'jame' should return 'James' first" do
         result = HumanEvent.find_by_name_and_bdate(:last_name => 'jame')
+        result.collect(&:last_name).should == ['James', 'Jaime']
+      end
+
+      it "should return 'James' using fulltext search" do
+        result = HumanEvent.find_by_name_and_bdate(:fulltext_terms => 'james')
+        result.collect(&:last_name).should == ['James', 'Jaime']
+      end
+
+      it "should return 'James' using fulltext search with trailing whitespace" do
+        result = HumanEvent.find_by_name_and_bdate(:fulltext_terms => 'james ')
         result.collect(&:last_name).should == ['James', 'Jaime']
       end
 
