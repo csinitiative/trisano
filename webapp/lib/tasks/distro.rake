@@ -64,6 +64,21 @@ namespace :trisano do
         raise "attribute #{attribute} is not specified in config.yml - please add it and try again."
       end
     end
+
+    def with_replaced_database_yml(options)
+      backup_database_yml
+      replace_database_yml(options)
+      yield if block_given?
+      restore_database_yml
+    end
+
+    def backup_database_yml
+      File.copy(WEB_APP_CONFIG_DIR + "database.yml", WEB_APP_CONFIG_DIR + "database.yml.bak", true)
+    end
+
+    def restore_database_yml
+      File.move(WEB_APP_CONFIG_DIR + "database.yml.bak", WEB_APP_CONFIG_DIR + "database.yml", true)
+    end
     
     # Both the creation of the .war file and running of migrations require 
     # database.yml to have the proper settings for the target database.
@@ -81,8 +96,8 @@ namespace :trisano do
           'port' => options[:port]
         }      
       }
-      File.open(WEB_APP_CONFIG_DIR + "/database.yml", "w") {|file| file.puts(db_config.to_yaml) }                    
-    end    
+      File.open(WEB_APP_CONFIG_DIR + "database.yml", "w") {|file| file.puts(db_config.to_yaml) }
+    end
 
     def change_text_in_file(file, regex_to_find, text_to_put_in_place)
       text= File.read file
@@ -289,42 +304,44 @@ namespace :trisano do
     desc "Package the application with the settings from config.yml"
     task :package_app => [:overwrite_urls] do
       initialize_config
-      replace_database_yml(
+      db_config_options = {
         :environment => @environment,
         :host => @host,
         :port => @port,
         :database => @database,
         :user => @trisano_user,
         :password => @trisano_user_pwd
-      )
-      puts "creating .war deployment archive"
-      cd '../webapp/'
-      if binstubs?
-        ruby "bin/warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
-      else
-        ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+      }
+      with_replaced_database_yml(db_config_options) do
+        puts "creating .war deployment archive"
+        cd '../webapp/'
+        if binstubs?
+          ruby "bin/warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+        else
+          ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
+        end
+        FileUtils.mv('trisano.war', '../distro')
+        puts "Success packaging trisano.war"
       end
-      FileUtils.mv('trisano.war', '../distro')
-      puts "Success packaging trisano.war"
     end
 
     desc "Migrate the database"
     task :upgrade_db => ['dump_db'] do
       initialize_config
-      replace_database_yml(
-        :environment => @environment,
+      db_config_options = { :environment => @environment,
         :host => @host,
         :port => @port,
         :database => @database,
         :user => @priv_uname,
         :password => @priv_password
-      )
-      cd '../webapp/'
-      ruby "-S rake db:migrate RAILS_ENV=#{@environment}"
-      puts "resetting db permissions"
-      cd '../distro/'
-      if ! create_db_permissions
-        raise "failed to set db permissions"
+      }
+
+      with_replaced_database_yml(db_config_options) do
+        cd '../webapp/'
+        ruby "-S rake db:migrate RAILS_ENV=#{@environment}"
+        puts "resetting db permissions"
+        cd '../distro/'
+        raise "failed to set db permissions" if !create_db_permissions
       end
     end
 
