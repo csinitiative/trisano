@@ -404,6 +404,7 @@ describe HumanEvent, 'adding staged messages' do
       with_human_event do |event|
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_obr_4])
         event.should be_valid
+        # Which might just be nil...
         event.labs.first.lab_results.first.loinc_code.should ==
           LoincCode.find_by_loinc_code('625-4')
       end
@@ -535,6 +536,61 @@ describe HumanEvent, 'adding staged messages' do
 
         sh_loinc_code.destroy
         cj_loinc_code.destroy
+      end
+    end
+
+    it 'should assign a disease from the OBX segment even if the OBR segment has associated diseases' do
+      with_human_event do |event|
+        # build the required organism and disease for this
+        disease  = Factory.create :campylobacteriosis
+        organism = Factory.build :campylobacter_jejuni
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+
+        staged_message.observation_requests.size.should == 1
+        obr_loinc = staged_message.observation_requests.first.test_performed
+        obr_loinc.should_not be_nil
+        obr_loinc.should == '625-4'
+
+        # DEBT
+        # With the default deployment of TriSano, 625-4 maps to 8
+        # different diseases.  Here it's not even defined.  Maybe that
+        # scenario should be mocked up to verify the following test.
+        # Meanwhile, we simply verify the OBR LOINC code.  The disease
+        # assignment occurs on the basis of the association built
+        # immediately above.
+
+        # LoincCode.find_by_loinc_code(obr_loinc).diseases.count.should > 1
+
+        event.add_labs_from_staged_message staged_message
+
+        event.should be_valid
+        event.disease_event.should_not be_nil
+        event.disease_event.disease.should_not be_nil
+        event.disease_event.disease.should == disease
+      end
+    end
+
+    it "should assign a staged message to a CMR even if some OBX segments don't map" do
+      with_human_event do |event|
+        staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_lead_laboratory_result]
+        staged_message.observation_requests.first.all_tests.size.should == 2
+
+        event.add_labs_from_staged_message staged_message
+        event.should be_valid
+        event.labs.first.lab_results.size.should == 1
+      end
+    end
+
+    it "should reject a staged message if all it's OBX segments are invalid" do
+      with_human_event do |event|
+        lambda do
+          event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:ihc_1])
+        end.should raise_error(StagedMessage::UnknownLoincCode, "All OBX segments invalid")
       end
     end
   end
