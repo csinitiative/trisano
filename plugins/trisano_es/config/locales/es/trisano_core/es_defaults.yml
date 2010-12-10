@@ -258,7 +258,15 @@ es:
   not_a_valid_staged_message: "{{staged_message}} no es un mensaje de fases válido"
   unknown_loinc_code: "Desconoce TriSano el código LOINC, {{loinc_code}}."
   loinc_code_known_but_not_linked: "Se reconoce el código LOINC, {{loinc_code}}, but no está ligado a un tipo de prueba común."
+  all_obx_unprocessable: "All LOINC codes in message unknown or unlinked."
   no_loinc_code_maps_to_disease: "Ningún código LOINC correlaciona a una enfermedad."
+
+  # For items in comments field assigned by human_event
+  country: "Country"
+  accession_no: "Accession no"
+  abnormal_flags: "Abnormal flags"
+  specimen_id: "Specimen ID"
+
   event_disease_set_to: "Se ha fijado la enfermedad del evento a {{diesase_name}}"
   loinc_code_maps_to_multiple_diseases: "Correlaciona(n) el(los) código(s) LOINC a multiples enfermedades:"
   unmapped_language_code: "ELR language code {{lang_code}} not found among TriSano's external codes."

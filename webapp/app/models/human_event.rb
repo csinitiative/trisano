@@ -503,7 +503,7 @@ class HumanEvent < Event
     # country
     per_message_comments = ''
     unless staged_message.patient.address_country.blank?
-      per_message_comments = "Country: #{staged_message.patient.address_country}"
+      per_message_comments = "#{I18n.translate :country}: #{staged_message.patient.address_country}"
     end
 
     pv1 = staged_message.pv1
@@ -571,39 +571,39 @@ class HumanEvent < Event
 
       unless obr.filler_order_number.blank?
         per_request_comments += ", " unless per_request_comments.blank?
-        per_request_comments += "Accession no: #{obr.filler_order_number}"
+        per_request_comments += "#{I18n.translate :accession_no}: #{obr.filler_order_number}"
       end
 
       unless obr.specimen_id.blank?
         per_request_comments += ", " unless per_request_comments.blank?
-        per_request_comments += "Specimen id: #{obr.specimen_id}"
+        per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
       end
 
       obr.tests.each do |obx|
         loinc_code = LoincCode.find_by_loinc_code obx.loinc_code
-        scale_type = nil
-        common_test_type = nil
+        @scale_type = nil
+        @common_test_type = nil
 
         if loinc_code
-          scale_type = loinc_code.scale.the_code
-          common_test_type = loinc_code.common_test_type ||
+          @scale_type = loinc_code.scale.the_code
+          @common_test_type = loinc_code.common_test_type ||
             CommonTestType.find_by_common_name(obx.loinc_common_test_type)
         else
           # No :loinc_code entry.
           # Look at other OBX fields for hints to the scale and common
           # test type.
-          scale_type = obx.loinc_scale
-          if scale_type.nil?
-            # TODO: Make a note
+          @scale_type = obx.loinc_scale
+          if @scale_type.nil?
+            self.add_note I18n.translate(:unknown_loinc_code, :loinc_code => obx.loinc_code)
             next
           end
 
           common_test_type_name = obx.loinc_common_test_type
-          common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
+          @common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
         end
 
-        if common_test_type.nil?
-          # TODO: Make a note
+        if @common_test_type.nil?
+          self.add_note I18n.translate(:loinc_code_known_but_not_linked, :loinc_code => obx.loinc_code)
           next
         end
 
@@ -611,12 +611,12 @@ class HumanEvent < Event
 
         unless obx.abnormal_flags.blank?
           comments += ", " unless comments.blank?
-          comments += "Abnormal flags: #{obx.abnormal_flags}"
+          comments += "#{I18n.translate :abnormal_flags}: #{obx.abnormal_flags}"
         end
 
         result_hash = {}
 
-        if scale_type != "Nom"
+        if @scale_type != "Nom"
           if loinc_code.organism
             result_hash["organism_id"] = loinc_code.organism.id
           else
@@ -627,7 +627,7 @@ class HumanEvent < Event
           loinc_code.diseases.each { |disease| diseases << disease }
         end
 
-        case scale_type
+        case @scale_type
         when "Ord", "OrdQn"
           obx_result = obx.result.gsub(/\s/, '').downcase
           if map_id = result_map[obx_result]
@@ -651,7 +651,7 @@ class HumanEvent < Event
 
         begin
           lab_hash = {
-            "test_type_id"       => common_test_type.id,
+            "test_type_id"       => @common_test_type.id,
             "collection_date"    => obr.collection_date,
             "lab_test_date"      => obx.test_date,
             "reference_range"    => obx.reference_range,
@@ -678,7 +678,7 @@ class HumanEvent < Event
     unless i > 0
       # All OBX invalid
       # TODO: I18n
-      raise StagedMessage::UnknownLoincCode, "All OBX segments invalid"
+      raise StagedMessage::UnknownLoincCode, I18n.translate(:all_obx_unprocessable)
     end
 
     self.labs_attributes = [ lab_attributes ]

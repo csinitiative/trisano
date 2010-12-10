@@ -300,7 +300,7 @@ describe HumanEvent, 'adding staged messages' do
     it 'should set comments from PID-11.6, OBR-3, SPM-2 and OBX-8' do
       with_human_event do |event|
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
-        event.labs.first.lab_results.first.comment.should == "Country: USA, Accession no: 9700123, Specimen id: 23456, Abnormal flags: H"
+        event.labs.first.lab_results.first.comment.should == "Country: USA, Accession no: 9700123, Specimen ID: 23456, Abnormal flags: H"
       end
     end
 
@@ -590,7 +590,7 @@ describe HumanEvent, 'adding staged messages' do
       with_human_event do |event|
         lambda do
           event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:ihc_1])
-        end.should raise_error(StagedMessage::UnknownLoincCode, "All OBX segments invalid")
+        end.should raise_error(StagedMessage::UnknownLoincCode, "All LOINC codes in message unknown or unlinked.")
       end
     end
   end
