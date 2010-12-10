@@ -251,14 +251,20 @@ describe HumanEvent, 'adding staged messages' do
     before :all do
       common_test_type = CommonTestType.create :common_name => 'Culture'
 
-      disease = Disease.create :disease_name => 'Lead poisoning',
-        :cdc_code => '32010'
-      disease.should_not be_nil
+      disease = Factory.create :pertussis
+      organism = Factory.create :bordetella_pertussis
+      loinc_code = LoincCode.new :common_test_type => common_test_type,
+        :loinc_code => '548-8', :test_name => 'Bordetella pertussis',
+        :scale => ExternalCode.loinc_scale_by_the_code("Ord"),
+        :organism => organism
+      loinc_code.diseases << disease
+      loinc_code.save!
 
       common_test_type = CommonTestType.new :common_name => 'Blood lead test'
       common_test_type.diseases << disease
       common_test_type.save!
 
+      disease = Factory.create :lead_poisoning
       loinc_code = LoincCode.new :common_test_type => common_test_type,
         :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
         :scale => ExternalCode.loinc_scale_by_the_code("Qn")
@@ -586,11 +592,27 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
-    it "should reject a staged message if all it's OBX segments are invalid" do
+    it "should reject a staged message if all its OBX segments are invalid" do
       with_human_event do |event|
         lambda do
           event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:ihc_1])
         end.should raise_error(StagedMessage::UnknownLoincCode, "All LOINC codes in message unknown or unlinked.")
+      end
+    end
+
+    it 'should assign the clinician telephone from the OBR segment when appropriate' do
+      # On assignment, we check the ORC segment first.  If the same
+      # clinician appears in the OBR segment, as often happens, we
+      # ignore the second occurrence.  But sometimes the phone appears
+      # only in the OBR segment, not the ORC segment.  In that case,
+      # TriSano did not previously register the OBR phone number.
+      # That has been fixed.
+      with_human_event do |event|
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:cerner_sequential])
+        event.should be_valid
+        orc_clinician = event.clinicians.first
+        orc_clinician.should_not be_nil
+        orc_clinician.person_entity.telephones.should_not be_blank
       end
     end
   end

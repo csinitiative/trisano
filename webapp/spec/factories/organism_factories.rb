@@ -34,12 +34,16 @@ Factory.define(:scale_code, :class => 'external_code') do |sc|
   sc.code_description "Ordinal"
 end
 
-Factory.define :campylobacter_jejuni, :class => 'Organism' do |organism|
+Factory.define :campylobacter_jejuni, :class => Organism do |organism|
   organism.organism_name 'Campylobacter jejuni'
 end
 
 Factory.define :shigella, :class => Organism do |organism|
   organism.organism_name 'Shigella'
+end
+
+Factory.define :bordetella_pertussis, :class => Organism do |organism|
+  organism.organism_name 'Bordetella pertussis'
 end
 
 #

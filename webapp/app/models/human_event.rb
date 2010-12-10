@@ -509,16 +509,17 @@ class HumanEvent < Event
     pv1 = staged_message.pv1
     orc = staged_message.common_order
     unless orc.nil? or orc.clinician_last_name.blank?
-      clinician = clinicians.build(:person_entity_attributes => {
+      @orc_clinician = clinicians.build(:person_entity_attributes => {
         :person_attributes => {
           :last_name => orc.clinician_last_name,
           :first_name => orc.clinician_first_name,
           :person_type => 'clinician'
         }
       })
-      unless orc.clinician_telephone.blank?
+      unless orc.clinician_telephone.blank? or
+        orc.clinician_telephone.all?{|x|x.nil?}
         area_code, number, extension = orc.clinician_telephone
-        clinician.person_entity.telephones.build(
+        @orc_clinician.person_entity.telephones.build(
           :entity_location_type => orc.clinician_phone_type,
           :area_code => area_code,
           :phone_number => number,
@@ -547,23 +548,33 @@ class HumanEvent < Event
     end
 
     staged_message.observation_requests.each do |obr|
-      unless obr.clinician_last_name.blank? or
-        (orc and (obr.clinician_last_name == orc.clinician_last_name and
-        obr.clinician_first_name == orc.clinician_first_name))
-        clinician = clinicians.build(:person_entity_attributes => {
-          :person_attributes => {
-            :last_name => obr.clinician_last_name,
-            :first_name => obr.clinician_first_name,
-            :person_type => 'clinician'
-          }
-        })
-        unless obr.clinician_telephone.blank?
-          area_code, number, extension = obr.clinician_telephone
-          clinician.person_entity.telephones.build(
-            :entity_location_type => obr.clinician_phone_type,
-            :area_code => area_code,
-            :phone_number => number,
-            :extension => extension)
+      unless orc.nil? or orc.clinician_last_name.blank?
+        @clinician =
+        unless orc and
+          (obr.clinician_last_name == orc.clinician_last_name and
+          obr.clinician_first_name == orc.clinician_first_name)
+          clinicians.build(:person_entity_attributes => {
+            :person_attributes => {
+              :last_name => obr.clinician_last_name,
+              :first_name => obr.clinician_first_name,
+              :person_type => 'clinician'
+            }
+          })
+        else
+          @orc_clinician
+        end
+
+        if orc.nil? or orc.clinician_telephone.blank? or
+          orc.clinician_telephone.all?{|x|x.nil?}
+          unless obr.clinician_telephone.blank? or
+            obr.clinician_telephone.all?{|x|x.nil?}
+            area_code, number, extension = obr.clinician_telephone
+            @clinician.person_entity.telephones.build(
+              :entity_location_type => obr.clinician_phone_type,
+              :area_code => area_code,
+              :phone_number => number,
+              :extension => extension)
+          end
         end
       end
 
