@@ -1976,3 +1976,20 @@
   key: encounter_event[labs][place_entity][place][name]
   parent_key: encounter_event[labs_section]
   required_for_section: true
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: place_event
+  key: place_event[interested_place][place_entity][telephones]
+  parent_key: place_event[interested_place][place_entity][phone_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: place_event
+  key: place_event[interested_place][place_entity][email_addresses]
+  parent_key: place_event[interested_place][place_entity][phone_section]
+

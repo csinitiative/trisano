@@ -19,6 +19,8 @@ en:
         place_entity:
           place_name_section: Place Name
           phone_section: Telephones/Email
+          telephones: Place telephones
+          email_addresses: Place email addresses
           place:
             name: Name
             place_type_id: Type

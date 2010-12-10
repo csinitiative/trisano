@@ -23,6 +23,8 @@ es:
         state_id: Estado
       interested_place:
         place_entity:
+          telephones: Place telephones (EN)
+          email_addresses: Place email addresses (EN)
           place:
             name: Nombre
             place_type_id: Tipo
