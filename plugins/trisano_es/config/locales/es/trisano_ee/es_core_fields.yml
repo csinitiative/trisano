@@ -8,3 +8,7 @@ es:
       address:
         latitude: Latitud
         longitude: Longitud
+    place_event:
+      address:
+        latitude: Latitud
+        longitude: Longitud

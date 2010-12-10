@@ -15,6 +15,7 @@ en:
         county_id: County
         street_name: Street name
         state_id: State
+        district: District
       interested_place:
         place_entity:
           place_name_section: Place Name

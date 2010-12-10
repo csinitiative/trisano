@@ -1378,6 +1378,15 @@
 - help_text:
   fb_accessible: true
   can_follow_up: false
+  field_type: single_line_text
+  event_type: place_event
+  key: place_event[address][district]
+  code_name: district
+  parent_key: place_event[address_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[investigation_started_date]
@@ -1833,6 +1842,7 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[address][district]
+  code_name: district
   parent_key: contact_event[address_section]
 
 - help_text:

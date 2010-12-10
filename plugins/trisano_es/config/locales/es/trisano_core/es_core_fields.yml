@@ -21,6 +21,7 @@ es:
         county_id: Departamento/Municipio
         street_name: Nombre de calle
         state_id: Estado
+        district: District (EN)
       interested_place:
         place_entity:
           telephones: Place telephones (EN)
