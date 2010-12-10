@@ -13,6 +13,8 @@ es:
       place_tab: Lugar
       investigation_tab: Investigación
       notes_tab: Apuntes
+      participations_place:
+        date_of_exposure: Date of Exposure (EN)
       address:
         city: Ciudad
         postal_code: Código postal

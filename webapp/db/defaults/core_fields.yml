@@ -1060,6 +1060,23 @@
 - help_text:
   fb_accessible: true
   can_follow_up: false
+  event_type: place_event
+  field_type: drop_down
+  key: place_event[interested_place][place_entity][place][place_type_id]
+  parent_key: place_event[interested_place][place_entity][place_name_section]
+  required_for_event: true
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: place_event
+  field_type: date
+  key: place_event[participations_place][date_of_exposure]
+  parent_key: place_event[interested_place][place_entity][place_name_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[results_reported_to_clinician_date]
@@ -1073,15 +1090,6 @@
   key: contact_event[interested_party][risk_factor][food_handler_id]
   code_name: yesno
   parent_key: contact_event[contact_oriented_section]
-
-- help_text:
-  fb_accessible: true
-  can_follow_up: false
-  event_type: place_event
-  field_type: drop_down
-  key: place_event[interested_place][place_entity][place][place_type_id]
-  parent_key: place_event[address_section]
-  required_for_event: true
 
 - help_text:
   fb_accessible: true

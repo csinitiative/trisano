@@ -7,6 +7,8 @@ en:
       notes_tab: Notes
       address_section: Address
       event_notes_section: Event Notes
+      participations_place:
+        date_of_exposure: Date of Exposure
       address:
         city: City
         postal_code: Zip code
