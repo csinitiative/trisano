@@ -1979,6 +1979,15 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][place_entity][place][name]
+  parent_key: encounter_event[labs_section]
+  required_for_section: true
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
   field_type: drop_down
   event_type: encounter_event
   key: encounter_event[labs][lab_results][test_type]
@@ -1989,11 +1998,93 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][organism]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][test_result]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
   field_type: single_line_text
   event_type: encounter_event
-  key: encounter_event[labs][place_entity][place][name]
+  key: encounter_event[labs][lab_results][result_value]
   parent_key: encounter_event[labs_section]
-  required_for_section: true
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][units]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][reference_range]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  code_name: test_status
+  key: encounter_event[labs][lab_results][test_status]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  code_name: specimen
+  key: encounter_event[labs][lab_results][specimen_source]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][collection_date]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][lab_test_date]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  code_name: yesno
+  key: encounter_event[labs][lab_results][specimen_sent_to_state]
+  parent_key: encounter_event[labs_section]
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: multi_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][comment]
+  parent_key: encounter_event[labs_section]
 
 - help_text:
   fb_accessible: true
