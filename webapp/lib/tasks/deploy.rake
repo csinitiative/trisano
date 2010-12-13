@@ -39,7 +39,7 @@ namespace :trisano do
     TOMCAT_DEPLOYED_WAR_NAME = TOMCAT_DEPLOY_DIR_NAME + '/' + WAR_FILE_NAME
     # Override with env variable if you are running locally http://localhost:8080
     TRISANO_URL = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
-    TRISANO_SVN_ROOT = ENV['TRISANO_SVN_ROOT'] ||= '~/projects/trisano'
+    TRISANO_REPO_ROOT = ENV['TRISANO_REPO_ROOT'] ||= '~/projects/trisano'
     TRISANO_DIST_DIR = ENV['TRISANO_DIST_DIR'] ||= '~/trisano-dist'
 
     def core_release_tasks(delete_war = true)
@@ -48,7 +48,7 @@ namespace :trisano do
       filename = "trisano-release-" + t.strftime("%m-%d-%Y-%I%M%p") + ".tar.gz"
       dist_dirname = TRISANO_DIST_DIR + "/" + tformated
 
-      sh "cp -R #{TRISANO_SVN_ROOT} #{dist_dirname}"
+      sh "cp -R #{TRISANO_REPO_ROOT} #{dist_dirname}"
 
       p "removing .git directory"
       sh "rm -rf #{dist_dirname}/.git"
@@ -196,7 +196,7 @@ namespace :trisano do
 
     desc "package production .war file, include database dump, scripts, and configuration files in a .tar"
     task :prod_release  do
-      puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
+      puts "!!WARNING!!: using following TRISANO_REPO_ROOT #{TRISANO_REPO_ROOT}. Please ensure it is correct."
       ruby "-S rake trisano:deploy:create_db_config"
       ruby "-S rake -f ../webapp/Rakefile trisano:distro:package_app"
       ruby "-S rake trisano:deploy:core_prod_release"
@@ -209,7 +209,7 @@ namespace :trisano do
 
     desc "package production .war file with demo/testing data, include database dump, scripts, and configuration files in a .tar"
     task :test_release  do
-      puts "!!WARNING!!: using following TRISANO_SVN_ROOT: #{TRISANO_SVN_ROOT}. Please ensure it is correct."
+      puts "!!WARNING!!: using following TRISANO_REPO_ROOT #{TRISANO_REPO_ROOT}. Please ensure it is correct."
       puts "==================== This release will include test/demo data. ===================="
       puts "==================== It is not intended to be used for a clean system install ====="
       ruby "-S rake trisano:deploy:create_demo_db_config"
