@@ -19,19 +19,19 @@ user = nil
 begin
   User.transaction do
     puts "Removing the default users"
-    utah = User.find_by_uid("utah")
+    default = User.find_by_uid("default")
     det = User.find_by_uid("det")
     surveillance = User.find_by_uid("surveillance")
     investigator = User.find_by_uid("investigator")   
     lhd_mgr = User.find_by_uid("lhd_mgr")
     state_mgr = User.find_by_uid("state_mgr")
  
-    if utah
+    if default
       # ActiveRecord will trickle down and delete role_memberships and entitlements
-      utah.destroy
-      puts "Successfully removed user with uid 'utah'"
+      default.destroy
+      puts "Successfully removed user with uid 'default'"
     else
-      puts "User with uid of 'utah' not found"
+      puts "User with uid of 'default' not found"
     end
 
     if det

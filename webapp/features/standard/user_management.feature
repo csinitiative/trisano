@@ -6,7 +6,7 @@ Feature: Creating and editing users
   Scenario: Viewing the user account
     Given I am logged in as a super user
     When I go to view the default user
-    Then I should see "utah"
+    Then I should see "default"
 
   Scenario: Creating a new user account
     Given I am logged in as a super user

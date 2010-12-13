@@ -1,6 +1,6 @@
 default_user:
   id: 1
-  uid: utah
+  uid: default
   user_name: default_user
   last_name: Johnson
   given_name:

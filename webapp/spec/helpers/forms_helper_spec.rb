@@ -21,6 +21,15 @@ require RAILS_ROOT + '/app/helpers/application_helper'
 describe FormsHelper do
   include HtmlSpecHelper
 
+  before(:all) do
+    CoreFieldTranslation.delete_all
+    CoreField.delete_all
+  end
+
+  after :all do
+    Fixtures.reset_cache
+  end
+
   # Debt: setting up these tests needs to be easier
   before do
     @core_field = Factory.create(:cmr_core_field, :key => 'morbidity_event[places]')
@@ -54,15 +63,15 @@ describe FormsHelper do
   describe "follow up (core path) select" do
     before do
       fu_field = Factory.create(:cmr_core_field,
-                                :key => 'morbidity_event[other_data_1]',
-                                :can_follow_up => true)
+        :key => 'morbidity_event[other_data_1]',
+        :can_follow_up => true)
       fu_field.clone.update_attributes!(:key => 'morbidity_event[acuity]')
     end
 
     it "should have only follow up fields" do
       options = helper.follow_up_select_options(:morbidity_event)
       options.should == [['Acuity', 'morbidity_event[acuity]'],
-                         ['Other Data (First Field)', 'morbidity_event[other_data_1]']]
+        ['Other Data (First Field)', 'morbidity_event[other_data_1]']]
     end
   end
 

@@ -24,7 +24,7 @@ end
 
 def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
   # notes need a user, so set to default if current user is nil
-  User.current_user ||= User.find_by_uid('utah')
+  User.current_user ||= User.find_by_uid('default')
   returning Kernel.const_get(event_type.capitalize + "Event").new do |event|
     event.first_reported_PH_date = Date.yesterday.to_s(:db) if event.respond_to?(:first_reported_PH_date)
     event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }

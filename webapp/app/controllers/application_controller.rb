@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
       load_user_by_uid(session[:user_id])
     elsif !auth_src_env.blank?
       I18nLogger.info("logger.using_user_in_env_variable", :auth_src_env => auth_src_env)
-      load_user_by_uid(ENV[auth_src_env])
+      load_user_by_uid(user_from_env(auth_src_env))
     elsif !auth_src_header.blank?
       I18nLogger.info("logger.using_user_in_header", :auth_src_header => auth_src_header)
       load_user_by_uid(request.headers[auth_src_header])
@@ -219,6 +219,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def user_from_env(auth_src_env)
+    if RAILS_ENV == "development" || RAILS_ENV == "test" || RAILS_ENV == "uattest"
+      ENV[auth_src_env].blank? ? 'default' : ENV[auth_src_env]
+    else
+      ENV[auth_src_env]
+    end
+  end
 
   # Accepts an error code (403, 404, etc.) and returns a path to a static HTML
   # file.

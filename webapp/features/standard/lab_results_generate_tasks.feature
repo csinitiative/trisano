@@ -10,7 +10,7 @@ Feature: Adding Lab Results to an Event Generates a Task
       And the following disease to common test types mapping exists
         | disease_name | common_name |
         | Mumps        | Lumpy       |
-      And the event is assigned to user "utah"
+      And the event is assigned to user "default"
     When I go to edit the CMR
      And I click on the lab tab
      And I enter a lab name of 'Elephant Lab'

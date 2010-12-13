@@ -42,7 +42,7 @@ Spec::Runner.configure do |config|
   $trisano_download_file_url = ENV['TRISANO_DOWNLOAD_FILE_URL'] ||= "/home/#{ENV['USERNAME']}/downloads/"
 
   trisano_url = ENV['TRISANO_URL'] ||= 'http://ut-nedss-dev.csinitiative.com'
-  trisano_url = trisano_url.sub("//", "//utah:arches@")
+  trisano_url = trisano_url.sub("//", "//default:arches@")
 
   RAILS_ROOT = File.dirname(__FILE__) + "/../../"
   
