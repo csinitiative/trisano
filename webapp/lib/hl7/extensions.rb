@@ -312,10 +312,6 @@ module StagedMessages
       addr_components[5] if addr_components
     end
 
-    def telephone_empty?
-      components_empty?(self.pid_segment.phone_home.split(pid_segment.item_delim))
-    end
-
     def telephone_type_home
       ExternalCode.find_by_code_name_and_the_code 'telephonelocationtype',
         case pid_segment.phone_home.split(pid_segment.item_delim).third

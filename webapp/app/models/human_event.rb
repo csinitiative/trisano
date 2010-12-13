@@ -548,35 +548,29 @@ class HumanEvent < Event
     end
 
     staged_message.observation_requests.each do |obr|
-      unless orc.nil? or orc.clinician_last_name.blank?
-        @clinician =
-        unless orc and
-          (obr.clinician_last_name == orc.clinician_last_name and
-          obr.clinician_first_name == orc.clinician_first_name)
-          clinicians.build(:person_entity_attributes => {
-            :person_attributes => {
-              :last_name => obr.clinician_last_name,
-              :first_name => obr.clinician_first_name,
-              :person_type => 'clinician'
-            }
-          })
-        else
-          @orc_clinician
-        end
+      # According to the spec, if ORC-12 and OBR-16 are populated,
+      # they must have the same value, and we often find this to be the
+      # case, so we check here to see if this is the same clinician as
+      # ORC-12 or a new one.
 
-        if orc.nil? or orc.clinician_telephone.blank? or
-          orc.clinician_telephone.all?{|x|x.nil?}
-          unless obr.clinician_telephone.blank? or
-            obr.clinician_telephone.all?{|x|x.nil?}
-            area_code, number, extension = obr.clinician_telephone
-            @clinician.person_entity.telephones.build(
-              :entity_location_type => obr.clinician_phone_type,
-              :area_code => area_code,
-              :phone_number => number,
-              :extension => extension)
-          end
-        end
-      end
+      # The same sort of relationship is supposed to hold between
+      # ORC-14 and OBR-17, but sometimes we find that one is populated
+      # and not the other.  In particular, often the phone number is
+      # present in OBR-17 but not in ORC-14.  Here we check for both.
+      @clinician = @orc_clinician
+      @clinician = clinicians.build(:person_entity_attributes => {
+        :person_attributes => {
+          :last_name => obr.clinician_last_name,
+          :first_name => obr.clinician_first_name,
+          :person_type => 'clinician'
+        }
+      }) unless @clinician or obr.clinician_last_name.blank?
+
+      @clinician.person_entity.telephones.build(
+        :entity_location_type => obr.clinician_phone_type,
+        :area_code => area_code,
+        :phone_number => number,
+        :extension => extension) if (orc.nil? or orc.clinician_telephone.blank? or orc.clinician_telephone.all?{|x|x.nil?}) and not (obr.clinician_telephone.blank? or obr.clinician_telephone.all?{|x|x.nil?})
 
       per_request_comments = per_message_comments.clone
 

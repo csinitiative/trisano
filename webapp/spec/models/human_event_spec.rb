@@ -434,32 +434,27 @@ describe HumanEvent, 'adding staged messages' do
     it 'should take the clinician info from ORC-12/14 if present' do
       with_human_event do |event|
         @hl7 = HL7::Message.parse HL7MESSAGES[:realm_campylobacter_jejuni]
-        @orc_segment = @hl7[:ORC]
-        @orc_segment.ordering_provider = '^Moreau^Glenda'
-        @orc_segment.call_back_phone_number = '^PRN^PH^^1^800^5551212'
+        @obr_segment = @hl7.observation_requests.first.obr_segment
+        @obr_segment.ordering_provider = ''
+        @obr_segment.order_callback_phone_number = ''
 
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => @hl7.to_hl7)
         event.should be_valid
 
-        event.clinicians.size.should == 2
+        event.clinicians.size.should == 1
 
         # from the ORC segment
         clinician = event.clinicians.first
-        clinician.person_entity.person.first_name.should == 'Glenda'
-        clinician.person_entity.person.last_name.should == 'Moreau'
+        clinician.person_entity.person.first_name.should == 'Alan'
+        clinician.person_entity.person.last_name.should == 'Admit'
         clinician.person_entity.telephones.size.should == 1
 
         telephone = clinician.person_entity.telephones.first
         telephone.entity_location_type.should ==
           external_codes(:telephonelocationtype_work)
-        telephone.area_code.should == '800'
-        telephone.phone_number.should == '5551212'
+        telephone.area_code.should == '555'
+        telephone.phone_number.should == '5551005'
         telephone.extension.should be_blank
-
-        # from the OBR segment
-        clinician = event.clinicians.second
-        clinician.person_entity.person.first_name.should == 'Alan'
-        clinician.person_entity.person.last_name.should == 'Admit'
       end
     end
 
@@ -613,6 +608,52 @@ describe HumanEvent, 'adding staged messages' do
         orc_clinician = event.clinicians.first
         orc_clinician.should_not be_nil
         orc_clinician.person_entity.telephones.should_not be_blank
+      end
+    end
+
+    it 'should assign an ORC clinician when the OBR clinician fields are blank' do
+      with_human_event do |event|
+        common_test_type = CommonTestType.find_by_common_name 'Culture'
+
+        # build the required organism and disease for this
+        disease  = Factory.create :campylobacteriosis
+        organism = Factory.build :campylobacter_jejuni
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        cj_loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '6331-3', :test_name => 'Campylobacter jejuni AB',
+          :scale => ExternalCode.loinc_scale_by_the_code("Nom")
+        cj_loinc_code.diseases << disease
+        cj_loinc_code.save!
+
+        disease  = Factory.create :shigellosis
+        organism = Factory.build :shigella
+        organism.diseases << disease
+        organism.save!
+
+        organism.diseases.count.should == 1
+
+        sh_loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '17576-0', :test_name => 'Shigella',
+          :scale => ExternalCode.loinc_scale_by_the_code("Nom")
+        sh_loinc_code.diseases << disease
+        sh_loinc_code.save!
+
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:nist_orc_clinician])
+        event.should be_valid
+        event.clinicians.size.should == 1
+        person_entity = event.clinicians.first.person_entity
+        person_entity.person.last_name.should == 'Moreau'
+        person_entity.person.first_name.should == 'Glenda'
+        telephone = person_entity.telephones.first
+        telephone.entity_location_type.should ==
+          external_codes(:telephonelocationtype_work)
+        telephone.area_code.should == '800'
+        telephone.phone_number.should == '5551212'
+        telephone.extension.should be_blank
       end
     end
   end
