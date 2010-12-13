@@ -22,7 +22,6 @@
 require 'net/http'
 require 'uri'
 require 'cgi'
-require File.expand_path(File.dirname(__FILE__) + '/../../lib/selenium_grid/selenium_driver_extensions')
 
 # Defines an object that runs Selenium commands.
 # 
@@ -1519,6 +1518,4 @@ module SeleniumHelper
     end
   end
 end
-
-Selenium::SeleniumDriver.instance_eval { include SeleniumDriverExtensions }
 
