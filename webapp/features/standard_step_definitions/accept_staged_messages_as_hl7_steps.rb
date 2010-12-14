@@ -63,6 +63,10 @@ When /^I post the "([^\"]*)" message directly to "([^\"]*)"$/ do |msg, path|
   visit path, :post, msg
 end
 
+When /^I create a new CMR from the message$/ do
+  visit event_staged_message_path(@staged_message), :post
+end
+
 Then /^I should see value "([^\"]*)" in the message header$/ do |value|
   response.should have_xpath("//div[@class='staged-message']/div[@class='header']//*[contains(text(), '#{value}')]")
 end

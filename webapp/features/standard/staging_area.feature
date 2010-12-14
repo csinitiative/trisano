@@ -211,7 +211,6 @@ Feature: Staging Electronic Messages
     When I visit the staged message show page
     Then I should see value "ARUP LABORATORIES" in the message footer
 
-  @pending
   Scenario: Assigning a staged message with a home phone number
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
@@ -220,7 +219,7 @@ Feature: Staging Electronic Messages
       | 625-4      | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
-    And I follow "Create a CMR from this message"
+    And I create a new CMR from the message
     Then I should receive a 200 response
     And I should remain on the staged message show page
     And I should see value "Assigned" in the message footer
