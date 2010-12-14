@@ -224,7 +224,6 @@ Feature: Staging Electronic Messages
     And I should remain on the staged message show page
     And I should see value "Assigned" in the message footer
 
-  @pending
   Scenario: Viewing a staged message with a home phone number
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
@@ -233,11 +232,10 @@ Feature: Staging Electronic Messages
       | 625-4      | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
-    And I follow "Create a CMR from this message"
+    And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Home" under Telephones/Email on the Demographic tab
 
-  @pending
   Scenario: Viewing a staged message with a cell phone number
     Given I am logged in as a super user
     And I have the staged message "realm_cj_cell_phone"
@@ -246,6 +244,6 @@ Feature: Staging Electronic Messages
       | 625-4      | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
-    And I follow "Create a CMR from this message"
+    And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Mobile" under Telephones/Email on the Demographic tab
