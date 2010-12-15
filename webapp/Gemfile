@@ -4,7 +4,7 @@ gem "rails", "2.3.5"
 
 platforms :jruby do
   gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.kofnopre1"
-  gem "jruby-openssl"
+  gem "jruby-openssl", "= 0.7.2"
 end
 
 platforms :ruby_18, :ruby_19 do

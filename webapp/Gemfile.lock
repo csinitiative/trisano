@@ -41,7 +41,7 @@ GEM
     hirb (0.3.4)
     jdbc-postgres (8.4.701-java)
     jruby-jars (1.5.2)
-    jruby-openssl (0.7.1)
+    jruby-openssl (0.7.2)
       bouncy-castle-java
     jruby-rack (1.0.3)
     json_pure (1.4.6)
@@ -121,7 +121,7 @@ DEPENDENCIES
   faker
   haml (= 2.0.7)
   hirb
-  jruby-openssl
+  jruby-openssl (= 0.7.2)
   logging
   mechanize
   mislav-will_paginate
