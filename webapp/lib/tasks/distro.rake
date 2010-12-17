@@ -363,5 +363,21 @@ namespace :trisano do
       end
     end
 
+    desc "Starts a server instance based on the current distro config."
+    task :server do
+      initialize_config
+      db_config_options = {
+        :environment => @environment,
+        :host => @host,
+        :port => @port,
+        :database => @database,
+        :user => @trisano_user,
+        :password => @trisano_user_pwd
+      }
+      with_replaced_database_yml(db_config_options) do
+        sh("script/runner -e #{@environment} script/set_default_admin_uid.rb")
+        sh("script/server -e #{@environment}")
+      end
+    end
   end
 end
