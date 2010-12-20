@@ -656,6 +656,28 @@ describe HumanEvent, 'adding staged messages' do
         telephone.extension.should be_blank
       end
     end
+
+    it 'should assign the same PersonEntity as a clinician to multiple events' do
+      e1 = HumanEvent.new
+      e2 = HumanEvent.new
+
+      s1 = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+      s2 = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+
+      e1.add_labs_from_staged_message s1
+      e1.save!
+
+      e2.add_labs_from_staged_message s2
+      e2.save!
+
+      e1.should be_valid
+      e2.should be_valid
+
+      e1.clinicians.size.should == 1
+      e2.clinicians.size.should == 1
+
+      e1.clinicians.first.person_entity.should == e2.clinicians.first.person_entity
+    end
   end
 
   describe "setting disease" do

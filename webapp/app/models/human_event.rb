@@ -508,69 +508,14 @@ class HumanEvent < Event
 
     pv1 = staged_message.pv1
     orc = staged_message.common_order
-    unless orc.nil? or orc.clinician_last_name.blank?
-      @orc_clinician = clinicians.build(:person_entity_attributes => {
-        :person_attributes => {
-          :last_name => orc.clinician_last_name,
-          :first_name => orc.clinician_first_name,
-          :person_type => 'clinician'
-        }
-      })
-      unless orc.clinician_telephone.blank? or
-        orc.clinician_telephone.all?{|x|x.nil?}
-        area_code, number, extension = orc.clinician_telephone
-        @orc_clinician.person_entity.telephones.build(
-          :entity_location_type => orc.clinician_phone_type,
-          :area_code => area_code,
-          :phone_number => number,
-          :extension => extension)
-      end
-    end
+    @orc_clinician = find_or_build_clinician(orc.clinician_last_name, orc.clinician_first_name, orc.clinician_phone_type, orc.clinician_telephone) unless orc.nil? or orc.clinician_last_name.blank?
 
-    unless pv1.blank? or pv1.attending_doctor.blank?
-      clinicians.build(:person_entity_attributes => {
-        :person_attributes => {
-          :last_name => staged_message.pv1.attending_doctor[0],
-          :first_name => staged_message.pv1.attending_doctor[1],
-          :person_type => 'clinician'
-        }
-      })
-    end
+    find_or_build_clinician(staged_message.pv1.attending_doctor[0], staged_message.pv1.attending_doctor[1]) unless pv1.nil? or pv1.attending_doctor.blank?
 
-    unless pv1.blank? or pv1.consulting_doctor.blank?
-      clinicians.build(:person_entity_attributes => {
-        :person_attributes => {
-          :last_name => staged_message.pv1.consulting_doctor[0],
-          :first_name => staged_message.pv1.consulting_doctor[1],
-          :person_type => 'clinician'
-        }
-      })
-    end
+    find_or_build_clinician(staged_message.pv1.consulting_doctor[0], staged_message.pv1.consulting_doctor[1]) unless pv1.nil? or pv1.consulting_doctor.blank?
 
     staged_message.observation_requests.each do |obr|
-      # According to the spec, if ORC-12 and OBR-16 are populated,
-      # they must have the same value, and we often find this to be the
-      # case, so we check here to see if this is the same clinician as
-      # ORC-12 or a new one.
-
-      # The same sort of relationship is supposed to hold between
-      # ORC-14 and OBR-17, but sometimes we find that one is populated
-      # and not the other.  In particular, often the phone number is
-      # present in OBR-17 but not in ORC-14.  Here we check for both.
-      @clinician = @orc_clinician
-      @clinician = clinicians.build(:person_entity_attributes => {
-        :person_attributes => {
-          :last_name => obr.clinician_last_name,
-          :first_name => obr.clinician_first_name,
-          :person_type => 'clinician'
-        }
-      }) unless @clinician or obr.clinician_last_name.blank?
-
-      @clinician.person_entity.telephones.build(
-        :entity_location_type => obr.clinician_phone_type,
-        :area_code => area_code,
-        :phone_number => number,
-        :extension => extension) if (orc.nil? or orc.clinician_telephone.blank? or orc.clinician_telephone.all?{|x|x.nil?}) and not (obr.clinician_telephone.blank? or obr.clinician_telephone.all?{|x|x.nil?})
+      find_or_build_clinician(obr.clinician_last_name, obr.clinician_first_name, obr.clinician_phone_type, obr.clinician_telephone) unless obr.clinician_last_name.blank?
 
       per_request_comments = per_message_comments.clone
 
@@ -704,6 +649,7 @@ class HumanEvent < Event
     end
 
     unless staged_message.patient.primary_language.blank? or
+      interested_party.nil? or
       interested_party.person_entity.person.primary_language_id
       staged_message.note ||= ''
       staged_message.note.sub! /\s+$/, ''
@@ -783,6 +729,47 @@ class HumanEvent < Event
   end
 
   private
+
+  def find_or_build_clinician(last_name, first_name, telephone_type=nil, telephone=nil)
+    person_attributes = {
+      :last_name   => last_name ,
+      :first_name  => first_name,
+      :person_type => 'clinician'
+    }
+    person = Person.first :conditions => person_attributes
+    if person
+      person_entity_id = person.person_entity.id
+      @clinician = clinicians.to_a.find do |c|
+        c.secondary_entity_id == person_entity_id
+      end
+      @clinician ||= clinicians.build :secondary_entity_id => person_entity_id
+    else
+      @clinician = clinicians.to_a.find do |c|
+        c.person_entity.person.last_name == last_name && c.person_entity.person.first_name == first_name
+      end
+      @clinician ||= clinicians.build :person_entity_attributes => { :person_attributes => person_attributes }
+    end
+
+    unless telephone_type.nil? or telephone.blank? or telephone.all? {|x|x.nil?}
+      area_code, number, extension = telephone
+      telephone_attributes = {
+        :entity_location_type => telephone_type,
+        :area_code => area_code,
+        :phone_number => number,
+        :extension => extension
+      }
+
+      @clinician.person_entity.telephones.to_a.find do |t|
+        t.entity_location_type == telephone_type &&
+        t.area_code == area_code &&
+        t.phone_number == number &&
+        t.extension == extension
+      end or @clinician.person_entity.telephones.build(telephone_attributes)
+    end
+
+    @clinician
+  rescue
+  end
 
   def set_age_at_onset
     birthdate = safe_call_chain(:interested_party, :person_entity, :person, :birth_date)
