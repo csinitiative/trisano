@@ -5,6 +5,7 @@ TAGS
 .emacs.desktop
 *.tmproj
 .rvmrc
+.vagrant
 *.war
 tmp
 log
@@ -15,6 +16,7 @@ distro/upgrade_db_output.txt
 *.dump_obfu
 dump
 *.swp
+*.DS_Store*
 distro/config.yml
 webapp/config/database.yml
 webapp/config/site_config.yml

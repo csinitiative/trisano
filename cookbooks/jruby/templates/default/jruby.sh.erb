@@ -1,0 +1,4 @@
+if [ -d <%= @destination %> ]; then
+  export JRUBY_HOME=<%= @destination %>
+  export PATH=$PATH:<%= @destination %>/bin
+fi
