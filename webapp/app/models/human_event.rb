@@ -369,9 +369,43 @@ class HumanEvent < Event
         end
       end
     end
+  end
 
-    if event_components.include?("notes")
+  def update_from_params(event_params)
+=begin
+    labs_attributes = event_params['labs_attributes']
+
+    if labs_attributes
+      i = 0
+
+      loop do
+        lab_attributes = labs_attributes[i.to_s]
+        break unless lab_attributes
+        place_entity_attributes = lab_attributes['place_entity_attributes']
+        place_attributes = place_entity_attributes['place_attributes']
+
+        new_lab_name = place_attributes['name']
+
+        old_place = Place.find place_attributes['id']
+
+        if new_lab_name != old_place.name and
+          (new_place=Place.find_by_name(new_lab_name))
+          # This exists, just associate this PlaceEntity instead of
+          # the old one.
+          place_attributes['id'] = new_place.id
+          place_entity_attributes['id'] = new_place.entity.id
+
+          lab = Lab.find lab_attributes['id']
+          lab.secondary_entity_id = new_place.entity.id
+          lab.save!
+        end
+
+        i += 1
+      end
     end
+
+=end
+    self.attributes = event_params
   end
 
   def state_description

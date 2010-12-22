@@ -109,7 +109,7 @@ class MorbidityEventsController < EventsController
     go_back = params.delete(:return)
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
-    @event.attributes = params[:morbidity_event]
+    @event.update_from_params(params[:morbidity_event])
 
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
