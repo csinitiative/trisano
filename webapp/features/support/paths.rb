@@ -30,6 +30,9 @@ def path_to(page_name)
   when /the admin dashboard page/i
     admin_path
 
+  when /the analysis page/i
+    analysis_path
+
   when /the jurisdictions page/i
     jurisdictions_path
 
