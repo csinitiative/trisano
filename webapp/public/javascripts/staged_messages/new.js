@@ -1,5 +1,5 @@
 $j(function() {
-  $j('#input_type').change(function() {
+  $j('#input_type').live('change', function() {
     if (!$j(this).val()) return false;
 
     $j('#inputPane').children('.inputMessage').remove().end().append(

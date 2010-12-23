@@ -47,6 +47,7 @@ group :test, :uattest do
   gem "webrat", "= 0.7.2.pre"
   gem "database_cleaner"
   gem "selenium-client"
+  gem "jasmine"
 end
 
 gem "wirble", :group => :cli
