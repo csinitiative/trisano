@@ -1,17 +1,15 @@
-
 jruby = node[:jruby]
 
-bash "Untar JRuby" do
+bash "Extract JRuby" do
   cwd jruby[:untar]
-  code "tar xzf #{jruby[:file]}"
+  code "tar -xzf #{jruby[:file]}"
   action :nothing
 end
 
-# Download jruby
 remote_file jruby[:file] do
   source   jruby[:link]
   checksum jruby[:sha]
-  notifies :run, resources(:bash => "Untar JRuby"), :immediately
+  notifies :run, resources(:bash => "Extract JRuby"), :immediately
 end
 
 link jruby[:destination] do
