@@ -364,9 +364,13 @@ function focus_first() {
     } else {
         activeTab = $('main-content');
     }
-    YAHOO.util.Dom.getElementsBy(function(el) {
-      return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A') && (el.type != "hidden");
-    }, '', activeTab)[0].focus();
+    try {
+      YAHOO.util.Dom.getElementsBy(function(el) {
+        return (el.tagName == 'SELECT' || el.tagName == 'INPUT' || el.tagName == 'A') && (el.type != "hidden");
+      }, '', activeTab)[0].focus();
+    } catch(error) {
+      // no-op, the element cannot receive focus. Catch to allow further JS to not be interfered with on IE8
+    }
 }
 
 function focus_init() {
