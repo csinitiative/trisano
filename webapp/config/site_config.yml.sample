@@ -11,8 +11,8 @@ base:
   #google_client_id: gme-collabsw
   # Channel indicates the customer or deployment for tracking purposes
   google_channel: developer
-  # API 2 & 3 are supported, anything other than 3 defaults to 2
-  google_api_version: 3
+  # Only v2 is currently supported
+  # google_api_version: 2
 
   # Configuration options for HL7 ACK^R01^ACK messages
   hl7:
