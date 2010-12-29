@@ -50,4 +50,4 @@ group :test, :uattest do
   gem "jasmine"
 end
 
-gem "wirble", :group => :cli
+gem "sparrowhawk", "0.9.2", :group => :development

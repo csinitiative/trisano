@@ -69,6 +69,7 @@ namespace :trisano do
       backup_database_yml
       replace_database_yml(options)
       yield if block_given?
+    ensure
       restore_database_yml
     end
 
@@ -300,7 +301,7 @@ namespace :trisano do
         change_text_in_file('../webapp/app/helpers/layout_helper.rb', "http://github.com/csinitiative/trisano/tree/master", @source_url) 
       end
     end
-    
+
     desc "Package the application with the settings from config.yml"
     task :package_app => [:overwrite_urls] do
       initialize_config
@@ -315,11 +316,13 @@ namespace :trisano do
       with_replaced_database_yml(db_config_options) do
         puts "creating .war deployment archive"
         cd '../webapp/'
-        if binstubs?
-          ruby "bin/warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
-        else
-          ruby "-S bundle exec warble war RAILS_ENV=#{@environment} basicauth=#{@basicauth} min_runtimes=#{@min_runtimes} max_runtimes=#{@max_runtimes} runtime_timeout=#{@runtime_timeout}"
-        end
+        Sparrowhawk::Configuration.new do |config|
+          config.other_files = FileList['Rakefile']
+          config.application_dirs = %w(app config lib vendor db script)
+          config.environment = @environment
+          config.runtimes = @min_runtimes.to_i..@max_runtimes.to_i
+          config.war_file = 'trisano.war'
+        end.war.build
         FileUtils.mv('trisano.war', '../distro')
         puts "Success packaging trisano.war"
       end
