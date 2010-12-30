@@ -50,4 +50,5 @@ group :test, :uattest do
   gem "jasmine"
 end
 
-gem "sparrowhawk", "0.9.2", :group => :development
+gem "sparrowhawk", "0.9.3", :group => :development
+

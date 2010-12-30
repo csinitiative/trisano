@@ -98,7 +98,7 @@ GEM
     selenium-client (1.2.18)
     selenium-rc (2.2.4)
       selenium-client (>= 1.2.18)
-    sparrowhawk (0.9.2)
+    sparrowhawk (0.9.3)
       jruby-jars
       jruby-rack
       rubyzip
@@ -148,7 +148,7 @@ DEPENDENCIES
   ruby-hl7 (>= 1.0.2)
   rubyzip
   selenium-client
-  sparrowhawk (= 0.9.2)
+  sparrowhawk (= 0.9.3)
   unicorn
   validates_timeliness (>= 2.2.2)
   warbler
