@@ -1,0 +1,5 @@
+maintainer       "Collaborative Software Initiative"
+maintainer_email "trisano-dev@googlegroups.com"
+license          "AGPL"
+description      "TriSano application prep"
+version          "0.1"

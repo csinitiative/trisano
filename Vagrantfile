@@ -32,7 +32,7 @@ Vagrant::Config.run do |config|
   config.vm.provisioner = :chef_solo
   config.chef.cookbooks_path = "cookbooks"
 
-  %w[apt openssl ruby rubygems postgresql::server java jruby].each {|r|
+  %w[apt openssl ruby rubygems postgresql::server java jruby trisano].each {|r|
     config.chef.add_recipe r
   }
   
