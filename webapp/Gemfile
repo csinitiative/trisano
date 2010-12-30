@@ -30,7 +30,7 @@ group :development do
   gem "hirb"
 end
 
-group :test, :devlopment do
+group :test, :development do
   gem "mongrel"
   platforms :ruby_18, :ruby_19 do
     gem "unicorn"
@@ -51,4 +51,5 @@ group :test, :uattest do
 end
 
 gem "sparrowhawk", "0.9.3", :group => :development
+
 
