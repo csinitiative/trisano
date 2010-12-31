@@ -64,4 +64,8 @@ Vagrant::Config.run do |config|
   #
   # config.chef.validation_client_name = "ORGNAME-validator"
 
+  config.vm.customize do |vm|
+    vm.memory_size = 2048
+  end
+
 end
