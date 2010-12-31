@@ -42,14 +42,14 @@ bash "chown vagrant home" do
   code "sudo chown -R vagrant.vagrant /home/vagrant/"
 end
 
-bash "gem install bundler" do
-  code "sudo gem install bundler"
-end
-
-bash "install bundle" do
-  cwd "/vagrant/webapp"
-  code "bundle install --local"
-end
+#bash "gem install bundler" do
+#  code "sudo gem install bundler"
+#end
+#
+#bash "install bundle" do
+#  cwd "/vagrant/webapp"
+#  code "bundle install --local"
+#end
 
 bash "copy database config" do
   cwd "/vagrant/webapp"
