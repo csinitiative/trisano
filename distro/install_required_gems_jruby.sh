@@ -26,7 +26,7 @@ WEBAPP_DIR=../webapp
 
 echo "installing gems"
 jruby -S gem update --system
-jruby -S gem install --no-ri --no-rdoc $GEM_DIR/bundler-1.0.0.gem
+jruby -S gem install --no-ri --no-rdoc $GEM_DIR/bundler-1.0.7.gem
 
 cd $WEBAPP_DIR
 bundle install --local --binstubs
