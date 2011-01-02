@@ -107,13 +107,22 @@ namespace :trisano do
 
     def create_db_user
       puts "Creating TriSano user: #{@trisano_user}."
-      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
-      unless success
-        puts "Failed creating TriSano user: #{@trisano_user}"
-        return success
+      if db_user_exists?
+        puts "TriSano user #{@trisano_user} already exists. Moving on."
+        return true
       end
-      puts "Success creating TriSano user: #{@trisano_user}"
+
+      success = system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
+      if not success
+        puts "Failed creating TriSano user: #{@trisano_user}"
+      else
+        puts "Success creating TriSano user: #{@trisano_user}"
+      end
       return success
+    end
+
+    def db_user_exists?
+     %x[#{psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c "SELECT usename FROM pg_user WHERE usename = '#{@trisano_user}'"] =~ /1 row/
     end
 
     def create_db_permissions 
