@@ -122,7 +122,7 @@ namespace :trisano do
     end
 
     def db_user_exists?
-     %x[#{psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c "SELECT usename FROM pg_user WHERE usename = '#{@trisano_user}'"] =~ /1 row/
+     %x[#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c "SELECT usename FROM pg_user WHERE usename = '#{@trisano_user}'"] =~ /1 row/
     end
 
     def create_db_permissions 
