@@ -674,7 +674,7 @@ describe CdcExport do
 
     before :each do
       @morb = Factory(:morbidity_event_with_disease)
-      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => Mmwr.new.mmwr_year - 1).mmwr_week_range.start_date
+      @morb.disease_event.disease_onset_date = Mmwr.week(8, :for_year => 2009).mmwr_week_range.start_date
       @morb.state_case_status_id = external_codes(:case_status_confirmed).id
       @morb.save!
 
