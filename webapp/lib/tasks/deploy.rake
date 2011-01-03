@@ -198,7 +198,7 @@ namespace :trisano do
     task :prod_release  do
       puts "!!WARNING!!: using following TRISANO_REPO_ROOT #{TRISANO_REPO_ROOT}. Please ensure it is correct."
       ruby "-S rake trisano:deploy:create_db_config"
-      ruby "-S rake -f ../webapp/Rakefile trisano:distro:package_app"
+      ruby "-S rake trisano:distro:package_app"
       ruby "-S rake trisano:deploy:core_prod_release"
     end
 
