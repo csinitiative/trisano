@@ -74,6 +74,44 @@ namespace :trisano do
       sh "tar czfh #{filename} ./#{tformated}"
     end
 
+    desc "delete trisano war file and exploded directory from Tomcat"
+    task :deletewar do
+      puts "attempting to delete war file from Tomcat"
+      if File.file? TOMCAT_DEPLOYED_WAR_NAME
+        File.delete(TOMCAT_DEPLOYED_WAR_NAME)
+        puts "deleted deployed war file"
+      else
+        puts "war file not found - did not delete"
+      end
+
+      puts "attempting to delete deployed exploded war directory #{TOMCAT_DEPLOYED_EXPLODED_WAR_DIR}"
+      if File.directory? TOMCAT_DEPLOYED_EXPLODED_WAR_DIR
+        FileUtils.remove_dir(TOMCAT_DEPLOYED_EXPLODED_WAR_DIR)
+        puts "deleted deployed exploded war directory"
+      else
+        puts "deployed exploded war directory not found - did not delete"
+      end
+    end
+
+    desc "copy trisano war file to Tomcat"
+    task :copywar do
+      puts "attempting to copy #{WAR_FILE_NAME} war file to Tomcat #{TOMCAT_DEPLOY_DIR_NAME}"
+      if files_exist
+        File.copy(WAR_FILE_NAME, TOMCAT_DEPLOY_DIR_NAME, true)
+      else
+        which_files_exist
+      end
+    end
+
+    def files_exist
+      File.file? WAR_FILE_NAME
+      File.directory? TOMCAT_DEPLOY_DIR_NAME
+    end
+
+    def which_files_exist
+      puts "#{WAR_FILE_NAME} exists? #{File.file? WAR_FILE_NAME} #{TOMCAT_DEPLOY_DIR_NAME} exists? #{File.directory? TOMCAT_DEPLOY_DIR_NAME}"
+    end
+
     desc "stop Tomcat"
     task :stoptomcat do
       puts "attempting to stop Tomcat"
@@ -112,6 +150,16 @@ namespace :trisano do
         retry if (retries -= 1) > 0
         raise
       end
+    end
+
+    desc "redeploy Tomcat"
+    task :redeploytomcat => [:stoptomcat, :deletewar, :copywar, :starttomcat, :smoke] do
+      puts "redeploy Tomcat success"
+    end
+
+    desc "redeploy Tomcat"
+    task :redeploytomcat_no_smoke => [:stoptomcat, :deletewar, :copywar, :starttomcat] do
+      puts "redeploy Tomcat success"
     end
 
     desc "Create database configuration file for a production install"
