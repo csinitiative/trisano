@@ -12,9 +12,6 @@ platforms :ruby_18, :ruby_19 do
 end
 
 gem "logging"
-group :cli do
-  gem "warbler"
-end
 gem "rails_inheritable_attributes_manager"
 gem "haml", "2.0.7"
 gem "validates_timeliness", ">= 2.2.2"
@@ -28,6 +25,7 @@ group :development do
   gem "rest-open-uri"
   gem "ci_reporter"
   gem "hirb"
+  gem "sparrowhawk", "0.9.5"
 end
 
 group :test, :development do
@@ -49,5 +47,3 @@ group :test, :uattest do
   gem "selenium-client"
   gem "jasmine"
 end
-
-gem "sparrowhawk", "0.9.5", :group => :development
