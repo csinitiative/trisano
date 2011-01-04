@@ -5,12 +5,12 @@ http://www.trisano.org
 
 TriSano® is an open source, highly configurable, comprehensive surveillance and outbreak management application for global public health and healthcare. It allows local, state, federal and international agencies to identify, investigate, and mitigate communicable and chronic diseases, environmental hazards, and bioterrorism events. TriSano® supports secure data exchange with laboratories, clinicians, hospitals, vital records, immunization registries, and health information exchanges as well as offers sophisticated analysis, visualization, and reporting of contact and case information. TriSano® increases overall effectiveness in preventing morbidity and mortality through decreased reporting time, automated assignment and routing processes, easy form-creation tools, trend analysis, detection of anomalies, and quality assurance.
 
-*Public Health Officials:* See the {TriSano®.org website}[http://trisano.org]
+<b>Public Health Officials:</b> See the {TriSano®.org website}[http://trisano.org]
 for more information.
 
-*IRC:* #trisano on freenode (http://irc.freenode.net:6667)
-*Developers:* http://groups.google.com/group/trisano-dev
-*Users:* http://groups.google.com/group/trisano-user
+<b>IRC:</b> #trisano on freenode (http://irc.freenode.net:6667)
+<b>Developers:</b> http://groups.google.com/group/trisano-dev
+<b>Users:</b> http://groups.google.com/group/trisano-user
 
 Collaborative Software Foundation
 1 SW Columbia Street, #640
