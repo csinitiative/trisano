@@ -8,9 +8,9 @@ TriSano® is an open source, highly configurable, comprehensive surveillance and
 <b>Public Health Officials:</b> See the {TriSano®.org website}[http://trisano.org]
 for more information.
 
-<b>IRC:</b> #trisano on freenode (http://irc.freenode.net:6667)
-<b>Developers:</b> http://groups.google.com/group/trisano-dev
-<b>Users:</b> http://groups.google.com/group/trisano-user
+- <b>IRC:</b> #trisano on freenode (http://irc.freenode.net:6667)
+- <b>Developers:</b> http://groups.google.com/group/trisano-dev
+- <b>Users:</b> http://groups.google.com/group/trisano-user
 
 Collaborative Software Foundation
 1 SW Columbia Street, #640
