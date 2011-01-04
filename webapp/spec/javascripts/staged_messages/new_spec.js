@@ -46,9 +46,17 @@ describe('New Staged Message view', function(){
   it('adds the appropriate div when the selector is changed', function(){
     $input_type = jQuery('select#input_type', $d);
 
-    $input_type.val('file').change();
+    $input_type.val('file').trigger('change');
     expect($input_type.val()).toEqual('file');
 
     /* to be continued */
+    var $input_pane;
+    expect(function() {
+      $input_pane = jQuery('div#inputPane', $d);
+    }).not.toThrow();
+    expect($input_pane).toBeDefined();
+    expect($input_pane).not.toBeNull();
+    expect($input_pane.children().size()).toEqual(1);
+    expect($input_pane.text()).toMatch(/file/);
   });
 });
