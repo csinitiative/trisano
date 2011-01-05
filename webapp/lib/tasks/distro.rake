@@ -350,7 +350,7 @@ namespace :trisano do
 
       with_replaced_database_yml(db_config_options) do
         cd '../webapp/'
-        ruby "-S rake db:migrate RAILS_ENV=#{@environment}"
+        ruby "-S rake db:migrate RAILS_ENV=#{@environment} &> ../distro/upgrade_db_output.txt"
         puts "resetting db permissions"
         cd '../distro/'
         raise "failed to set db permissions" if !create_db_permissions
