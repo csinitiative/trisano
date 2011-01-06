@@ -23,11 +23,11 @@ require 'rake/rdoctask'
 
 require 'tasks/rails'
 
-# Added for ci_reporter
-require 'rubygems'
-gem 'ci_reporter'
-require 'ci/reporter/rake/rspec' # use for RSpec
-require 'ci/reporter/rake/test_unit' # for Test::Unit
+namespace :trisano do
+  def rakefile_dir file_name=''
+    File.expand_path File.join(File.dirname(__FILE__), file_name)
+  end
+end
 
 Rake::Task["db:test:prepare"].enhance {
   #TODO: Rake::Task["db:seed"].invoke
