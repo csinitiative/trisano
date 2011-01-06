@@ -157,7 +157,6 @@ Feature: Staging Electronic Messages
     Then I should see the new lab result with 'Hep-B Ag'
     And I should see a middle name of George
 
-  @pending
   Scenario: Attempting to assign message with unknown LOINC code
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNKNOWN_LOINC"
@@ -169,10 +168,9 @@ Feature: Staging Electronic Messages
     And I click 'Similar Events' for the staged message
     And I click 'Create a CMR from this message'
 
-    Then I should see a 'is unknown to TriSano' message
+    Then I should see a 'All LOINC codes in message unknown or unlinked' message
     And I should see a state of 'Unprocessable'
 
-  @pending
   Scenario: Attempting to assign message with unlinked LOINC code
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNLINKED_LOINC"
@@ -185,7 +183,7 @@ Feature: Staging Electronic Messages
     And I click 'Create a CMR from this message'
 
     Then I should remain on the staged message show page
-    And I should see a 'is known but not linked' message
+    Then I should see a 'All LOINC codes in message unknown or unlinked' message
     And I should see a state of 'Unprocessable'
 
   Scenario: Discarding a message
