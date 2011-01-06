@@ -245,3 +245,15 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Mobile" under Telephones/Email on the Demographic tab
+
+  Scenario: Assigning a staged message with a lab name
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "GHH Lab" under Lab name on the Laboratory tab
