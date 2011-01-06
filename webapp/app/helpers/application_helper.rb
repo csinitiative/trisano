@@ -377,6 +377,6 @@ module ApplicationHelper
 
   def wrap_if(expr, tag, &block)
     value = block.call
-    (expr) ? "<#{tag}>#{value}</#{tag}>" : value
+    (expr) ? "<#{tag}>#{value}</#{tag}>" : "#{value}"
   end
 end
