@@ -16,24 +16,22 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require(File.join(File.dirname(__FILE__), 'config', 'boot'))
-
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-
 require 'tasks/rails'
 
-namespace :trisano do
-  def rakefile_dir file_name=''
-    File.expand_path File.join(File.dirname(__FILE__), file_name)
-  end
+def rakefile_dir file_name=''
+  File.expand_path File.join(File.dirname(__FILE__), file_name)
 end
 
-Rake::Task["db:test:prepare"].enhance {
-  #TODO: Rake::Task["db:seed"].invoke
-  ruby "-S rake db:seed RAILS_ENV=test"
-  ruby "-S rake spec:db:fixtures:load FIXTURES=codes,code_translations,external_codes,external_code_translations RAILS_ENV=test"
-}
+def runner *args, &block
+  ruby rakefile_dir('script/runner'), *args, &block
+end
+
+def rake *args, &block
+  ruby "-S", "rake", *args, &block
+end
 
 Dir["#{RAILS_ROOT}/vendor/trisano/*/tasks/**/*.rake"].sort.each { |ext| load ext }
 Dir["#{RAILS_ROOT}/vendor/trisano/*/lib/tasks/**/*.rake"].sort.each { |ext| load ext }

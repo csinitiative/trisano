@@ -56,6 +56,21 @@ test:
   warehouse_database: trisano_warehouse
   warehouse_driver: org.postgresql.Driver
 
+feature:
+  adapter: postgresql
+  encoding: unicode
+  database: trisano_feature
+  username: trisano_user
+  password: password
+  host: localhost
+  port: 5432
+  warehouse_host: localhost
+  warehouse_port: 5432
+  warehouse_username: trisano_su
+  warehouse_password: password
+  warehouse_database: trisano_warehouse
+  warehouse_driver: org.postgresql.Driver
+
 production:
   adapter: postgresql
   encoding: unicode

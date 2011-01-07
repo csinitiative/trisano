@@ -60,6 +60,9 @@ test:
   auth_allow_user_switch: true
   max_search_results: 50
 
+feature:
+  inherit: test
+
 production:
   inherit: base
   locale:

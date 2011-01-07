@@ -37,65 +37,57 @@ def role_translation_files
   %w(es_roles)
 end
 
-namespace :trisano do
-
-  namespace :dev do
-    desc "Load Spanish translations"
-    task :load_defaults do
-      Rake::Task['trisano:es:load_code_translations'].invoke
-      Rake::Task['trisano:es:load_csv_translations'].invoke
-      Rake::Task['trisano:es:load_role_translations'].invoke
-    end
-
-    desc "Prep cukes w/ Spanish translations"
-    task :feature_prep do
-      Rake::Task['trisano:es:load_code_translations'].invoke
-      Rake::Task['trisano:es:load_csv_translations'].invoke
-      Rake::Task['trisano:es:load_role_translations'].invoke
-    end
-
+namespace :db do
+  task :load_defaults do
+    Rake::Task['es:load_code_translations'].invoke
+    Rake::Task['es:load_csv_translations'].invoke
+    Rake::Task['es:load_role_translations'].invoke
   end
 
-  namespace :es do
-    desc "Run specs specific to the spanish plugin"
-    Spec::Rake::SpecTask.new(:spec => [:spec_banner, 'db:test:prepare']) do |t|
-      t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
-      t.spec_files = FileList[File.join(File.dirname(__FILE__), '..', 'spec')]
+  namespace :feature do
+    task :feature_prep do
+      Rake::Task['es:load_code_translations'].invoke
+      Rake::Task['es:load_csv_translations'].invoke
+      Rake::Task['es:load_role_translations'].invoke
     end
+  end
+end
 
-    task :spec_banner do
-      puts
-      puts "*** Running es specs ***"
-    end
+namespace :es do
+  desc "Run spanish translation specs standalone"
+  Spec::Rake::SpecTask.new(:spec => [:spec_banner, 'db:test:prepare']) do |t|
+    t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
+    t.spec_files = FileList[File.join(File.dirname(__FILE__), '..', 'spec')]
+  end
 
-    desc "Load Spanish translations of TriSano codes"
-    task :load_code_translations do
-      puts "Load code translations"
-      file_names = code_translation_files.join(',')
-      file_list = FileList[File.join(db_translations_dir, "{#{file_names}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_code_translations.rb es #{file_list.join(' ')}")
-    end
+  task :spec_banner do
+    puts
+    puts "*** Running es specs ***"
+  end
 
-    desc "Load Spanish translations for csv fields"
-    task :load_csv_translations do
-      puts "Load csv translations"
-      file_name = csv_translation_files.join(',')
-      file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_csv_translations.rb es #{file_list.join(' ')}")
-    end
+  task :load_code_translations do
+    puts "Load code translations"
+    file_names = code_translation_files.join(',')
+    file_list = FileList[File.join(db_translations_dir, "{#{file_names}}.yml")]
+    sh("#{RAILS_ROOT}/script/load_code_translations.rb es #{file_list.join(' ')}")
+  end
 
-    desc "Load Spanish translations for roles"
-    task :load_role_translations do
-      puts "Load role translations"
-      file_name = role_translation_files.join(',')
-      file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_role_translations.rb es #{file_list.join(' ')}")
-    end
+  task :load_csv_translations do
+    puts "Load csv translations"
+    file_name = csv_translation_files.join(',')
+    file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
+    sh("#{RAILS_ROOT}/script/load_csv_translations.rb es #{file_list.join(' ')}")
+  end
 
+  task :load_role_translations do
+    puts "Load role translations"
+    file_name = role_translation_files.join(',')
+    file_list = FileList[File.join(db_translations_dir, "{#{file_name}}.yml")]
+    sh("#{RAILS_ROOT}/script/load_role_translations.rb es #{file_list.join(' ')}")
   end
 
 end
 
 task :spec do |t|
-  Rake::Task['trisano:es:spec'].invoke
+  Rake::Task['es:spec'].invoke
 end

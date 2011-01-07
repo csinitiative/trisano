@@ -17,9 +17,38 @@
 
 require 'ftools'
 require 'fileutils'
-require 'logger'
 require 'yaml'
+require 'sparrowhawk'
 
+namespace :tomcat do
+  desc 'Start tomcat instance'
+  task :start => 'trisano:tomcat:start'
+
+  desc "Stop tomcat instance"
+  task :stop => 'trisano:tomcat:stop'
+end
+
+namespace :distro do
+  namespace :db do
+    desc "Drop, restore, and migrate data dump"
+    task :upgrade => 'trisano:distro:db:upgrade'
+  end
+
+  desc 'Create and deploy war'
+  task :deploy => 'trisano:distro:deploy'
+
+  desc "Create a tar for distribution"
+  task :tar => 'trisano:distro:tar'
+
+  desc "Create a war distribution"
+  task :war => 'trisano:distro:war'
+
+  namespace :test do
+    desc "Full release path monty! Restores the db from a dump, migrates it, and then deploys the war to Tomcat"
+    task :release => 'trisano:distro:test:release'
+  end
+end
+  
 namespace :trisano do
   def deploy_dir file_name=''
     File.join server_home, 'webapps', file_name
@@ -43,12 +72,10 @@ namespace :trisano do
   end
 
   namespace :tomcat do
-    desc "stop Tomcat"
     task :stop do
       sleep 30 if stop_tomcat 
     end
 
-    desc "start Tomcat"
     task :start do
       sh server_bin("startup.sh")
     end
@@ -310,7 +337,6 @@ namespace :trisano do
         end
       end
 
-      desc "Drops, restores, and migrates a data dump"
       task :upgrade => [:drop, :restore, :migrate, :set_default_admin]
       
       ## "Sometimes we do this to make sure we can get into a application instance
@@ -331,7 +357,7 @@ namespace :trisano do
 
       ## "Create a database schema based on the current plugin configuration"
       task :schema do
-        ruby "-S rake trisano:dev:release_db_rebuild_full RAILS_ENV=development"
+        ruby "-S rake db:release:reset RAILS_ENV=development"
         #TODO: Do this in a throw away database and then throw it away
         sh "pg_dump -x -O trisano_development > #{distro_dir('database/trisano_schema.sql')}"
       end
@@ -339,7 +365,7 @@ namespace :trisano do
       namespace :schema do
         ## "Create a database schema with demo data based on the current plugin configuration"
         task :demo do
-          ruby "-S rake trisano:dev:db_rebuild_full RAILS_ENV=development"
+          ruby "-S db:reset RAILS_ENV=development"
           sh "pg_dump -x -O trisano_development > #{distro_dir('database/trisano_schema.sql')}"
         end
       end
@@ -372,7 +398,6 @@ namespace :trisano do
       end
     end
 
-    desc "Package the application with the settings from config.yml"
     task :war => [:overwrite_urls] do
       initialize_config
       db_config_options = {
@@ -397,7 +422,7 @@ namespace :trisano do
 
     namespace :war do
       task :deploy do
-       Rake::Task['trisano:distro:war'].invoke unless File.file? distro_dir(war_name)
+       Rake::Task['distro:war'].invoke unless File.file? distro_dir(war_name)
        File.move distro_dir(war_name), deploy_dir, true
       end
 
@@ -407,10 +432,8 @@ namespace :trisano do
       end
     end
  
-    desc "Create and deploy the war"
     task :deploy => ['trisano:tomcat:stop', 'trisano:distro:war:undeploy', 'trisano:distro:war:deploy', 'trisano:tomcat:start']
 
-    desc "Create a tar for distribution"
     task :tar do
       puts "!!WARNING!!: using following TRISANO_REPO_ROOT #{repo_root}. Please ensure it is correct."
       ruby "-S rake trisano:distro:db:schema"
@@ -430,7 +453,6 @@ namespace :trisano do
     end
  
     namespace :test do
-      desc "Full release path monty! Restores the db from a dump, migrates it, and then deploys the war to Tomcat"
       task :release => ['trisano:tomcat:stop', 'trisano:distro:db:upgrade', 'trisano:distro:deploy', 'trisano:distro:smoke']
     end
 

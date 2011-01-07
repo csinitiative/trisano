@@ -17,7 +17,7 @@
 
 # Sets up the Rails environment for Cucumber
 
-ENV["RAILS_ENV"] = "test"
+ENV["RAILS_ENV"] = "feature"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 
 gem 'cucumber', '>= 0.6.3'
