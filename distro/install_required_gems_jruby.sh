@@ -19,8 +19,6 @@
 
 # install the .gem files that are required to run the system
 
-. setenv.sh
-
 GEM_DIR=../lib/gems/
 WEBAPP_DIR=../webapp
 

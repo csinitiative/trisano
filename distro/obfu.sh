@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#. setenv.sh
 
 dump_path=$PWD/dump
 dump_dir_contents=$(find "$dump_path" -type f)
