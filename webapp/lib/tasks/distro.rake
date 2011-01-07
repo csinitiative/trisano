@@ -215,7 +215,7 @@ namespace :trisano do
       dist_dirname = working_dir timestamp
       File.makedirs dist_dirname
 
-      sh "cp -R #{repo_root} #{dist_dirname}"
+      sh "cp -R #{repo_root}/ #{dist_dirname}"
 
       sh "rm -rf #{dist_dirname}/.git"
 
