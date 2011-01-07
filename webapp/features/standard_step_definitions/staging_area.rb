@@ -166,6 +166,10 @@ Then %r{^I should see "([^\"]*)" under Telephones/Email on the Demographic tab} 
   response.should have_xpath("//div[@id='demographic_tab']//div[@class='data_telephones']//span[contains(text(), '#{phone_type}')]")
 end
 
-Then %r{^I should see "([^\"]*)" under Lab name on the Laboratory tab$} do |lab_name|
-  response.should have_xpath("//div[@id='lab_info_tab']//div[@id='labs']//b[contains(text(), '#{lab_name}')]")
+Then %r{^I should see "([^\"]*)" on the Laboratory tab$} do |text|
+  response.should have_xpath("//div[@id='lab_info_tab']//div[@id='labs']//b[contains(text(), '#{text}')]")
+end
+
+Then %r{^I should see "([^\"]*)" under "([^\"]*)" on the Clinical tab$} do |text, label|
+  response.should have_xpath("//div[@id='clinical_tab']//span[contains(text(), '#{text}')]/label[contains(text(), '#{label}')]")
 end

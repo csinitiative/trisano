@@ -233,6 +233,20 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Home" under Telephones/Email on the Demographic tab
+    And I should see "(555) 555-2004" under Telephones/Email on the Demographic tab
+
+  Scenario: Viewing a staged message with a work phone number
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Work" under Telephones/Email on the Demographic tab
+    And I should see "(955) 555-1009" under Telephones/Email on the Demographic tab
 
   Scenario: Viewing a staged message with a cell phone number
     Given I am logged in as a super user
@@ -256,4 +270,17 @@ Feature: Staging Electronic Messages
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "GHH Lab" under Lab name on the Laboratory tab
+    Then I should see "GHH Lab" on the Laboratory tab
+
+  @pending
+  Scenario: Assigning a staged message with a dead patient
+    Given I am logged in as a super user
+    And I have the staged message "realm_cj_died"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name       |
+      | 625-4      | Culture           |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "2010-11-11" under "Date of death" on the Clinical tab
