@@ -29,50 +29,45 @@ def test_role_translation_files
 end
 
 # locales tests are here, because they rely on test translations
-namespace :trisano do
-
-  namespace :dev do
-    desc "Load test translations"
-    task :load_defaults do
-      # Debt: Codes and CSV translations are loaded with an earlier hack; sync when it makes sense
-      # Rake::Task['trisano:test:load_code_translations'].invoke
-      # Rake::Task['trisano:test:load_csv_translations'].invoke
-      Rake::Task['trisano:locales_test:load_role_translations'].invoke
-    end
-
-    desc "Prep cukes w/ test translations"
-    task :feature_prep do
-      # Debt: Codes and CSV translations are loaded with an earlier hack; sync when it makes sense
-      # Rake::Task['trisano:test:load_code_translations'].invoke
-      # Rake::Task['trisano:test:load_csv_translations'].invoke
-      Rake::Task['trisano:locales_test:load_role_translations'].invoke
-    end
+namespace :dev do
+  task :load_defaults do
+    # Debt: Codes and CSV translations are loaded with an earlier hack; sync when it makes sense
+    # Rake::Task['test:load_code_translations'].invoke
+    # Rake::Task['test:load_csv_translations'].invoke
+    Rake::Task['locales_test:load_role_translations'].invoke
   end
 
-  namespace :locales_test do
-    task :spec => [:spec_banner, 'db:test:prepare']
-    desc "Runs specs fromt the locales test plugin"
-    Spec::Rake::SpecTask.new(:spec) do |t|
-      t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
-      t.spec_files = FileList[File.join(File.dirname(__FILE__), '..', 'spec')]
-    end
-
-    task :spec_banner do
-      puts
-      puts "*** Running locale tests ***"
-    end
-
-    desc "Load test translations for roles"
-    task :load_role_translations do
-      puts "Load role translations"
-      file_name = test_role_translation_files.join(',')
-      file_list = FileList[File.join(test_db_translations_dir, "{#{file_name}}.yml")]
-      sh("#{RAILS_ROOT}/script/load_role_translations.rb test #{file_list.join(' ')}")
+  namespace :feature do
+    task :prepare do
+      # Debt: Codes and CSV translations are loaded with an earlier hack; sync when it makes sense
+      # Rake::Task['test:load_code_translations'].invoke
+      # Rake::Task['test:load_csv_translations'].invoke
+      Rake::Task['locales_test:load_role_translations'].invoke
     end
   end
+end
 
+namespace :locales_test do
+  task :spec => [:spec_banner, 'db:test:prepare']
+  desc "Runs specs fromt the locales test plugin"
+  Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_opts = ['--options', "\"#{RAILS_ROOT}/spec/spec.opts\""]
+    t.spec_files = FileList[File.join(File.dirname(__FILE__), '..', 'spec')]
+  end
+
+  task :spec_banner do
+    puts
+    puts "*** Running locale tests ***"
+  end
+
+  task :load_role_translations do
+    puts "Load role translations"
+    file_name = test_role_translation_files.join(',')
+    file_list = FileList[File.join(test_db_translations_dir, "{#{file_name}}.yml")]
+    sh("#{RAILS_ROOT}/script/load_role_translations.rb test #{file_list.join(' ')}")
+  end
 end
 
 task :spec do |t|
-  Rake::Task['trisano:locales_test:spec'].invoke
+  Rake::Task['locales_test:spec'].invoke
 end
