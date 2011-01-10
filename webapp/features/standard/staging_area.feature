@@ -284,6 +284,18 @@ Feature: Staging Electronic Messages
     And I visit the assigned-to event
     Then I should see "Not Hispanic or Latino" under Ethnicity on the Demographic tab
 
+  Scenario: Assigning a staged message with a collection date
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "2008-08-15" on the Laboratory tab
+
   @pending
   Scenario: Assigning a staged message with a dead patient
     Given I am logged in as a super user
