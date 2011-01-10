@@ -68,6 +68,9 @@ class CoreField < ActiveRecord::Base
     end
 
     def load!(hashes)
+      reset_column_information
+      acts_as_nested_set(:scope => :tree_id) if table_exists? && column_names.include?('tree_id')
+
       transaction do
         hashes.each do |attributes|
           attributes.stringify_keys!

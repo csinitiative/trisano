@@ -38,6 +38,7 @@ class Treatment < ActiveRecord::Base
     end
 
     def load!(hashes)
+      reset_column_information
       transaction do
         attributes = Treatment.new.attribute_names
         hashes.each do |attrs|

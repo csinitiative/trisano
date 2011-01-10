@@ -13,6 +13,7 @@ module Trisano
 
         module ClassMethods
           def create_perinatal_hep_b_associations
+            reset_column_information
             fields = YAML::load_file(File.join(RAILS_ROOT, 'vendor', 'trisano', 'trisano_perinatal_hep_b', 'config', 'misc', 'en_csv_fields.yml')).values
             fields.each do |field|
               core_field = CoreField.find_by_key(field["core_field_key"])

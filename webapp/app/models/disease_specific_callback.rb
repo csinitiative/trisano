@@ -31,6 +31,7 @@ class DiseaseSpecificCallback < ActiveRecord::Base
     end
   
     def create_associations(callbacks)
+      reset_column_information
       transaction do
         callbacks.each do |callback|
           disease = Disease.find_by_disease_name(callback["disease_name"])
