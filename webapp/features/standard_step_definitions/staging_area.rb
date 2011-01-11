@@ -100,11 +100,19 @@ When /^I visit the assigned-to event$/ do
 end
 
 Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
-  @scale = CodeName.loinc_scale.external_codes.first
+  @scale = ExternalCode.find_by_code_name_and_the_code 'loinc_scale', 'Nom'
   loinc_test_maps.rows.each do |loinc_test_map|
-    d = LoincCode.new(:loinc_code => loinc_test_map.first, :scale_id => @scale.id)
-    d.build_common_test_type(:common_name => loinc_test_map.last) unless loinc_test_map.last.blank?
-    d.save
+    d = LoincCode.new(:loinc_code => loinc_test_map.first, :test_name => loinc_test_map.second, :scale_id => @scale.id)
+    d.common_test_type = CommonTestType.find_or_create_by_common_name loinc_test_map.third
+    d.save!
+  end
+end
+
+Given /^the following organism mapping exists$/ do |organism_maps|
+  organism_maps.rows.each do |organism_map|
+    o = Organism.find_or_create_by_organism_name organism_map.first
+    d = Disease.find_or_create_by_disease_name organism_map.second
+    DiseasesOrganism.create :disease => d, :organism => o
   end
 end
 
@@ -179,4 +187,10 @@ Then %r{^I should see "([^\"]*)" on the Clinical tab$} do |text|
 
   # DEBT: This test is too weak, but why doesn't this work?
   # response.should have_xpath("//div[@id='clinical_tab'][contains(text(), '#{text}')]")
+end
+
+Then /^I should have a disease event$/ do
+  @staged_message.assigned_event.should_not be_nil
+  @staged_message.assigned_event.labs.count.should > 0
+  @staged_message.assigned_event.disease_event.should_not be_nil
 end

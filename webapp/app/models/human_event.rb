@@ -661,7 +661,6 @@ class HumanEvent < Event
 
     unless i > 0
       # All OBX invalid
-      # TODO: I18n
       raise StagedMessage::UnknownLoincCode, I18n.translate(:all_obx_unprocessable)
     end
 
