@@ -6,7 +6,7 @@ namespace :db do
 
   task :seed do
     # make sure models have a fresh view of the data
-    ruby %Q{-S rake db:load_codes_and_defaults RAILS_ENV=#{RAILS_ENV}}
+    rake "db:load_codes_and_defaults", "RAILS_ENV=#{RAILS_ENV}"
     Rake::Task['db:load_test_and_demo_data'].invoke
   end
   
@@ -81,6 +81,6 @@ namespace :db do
   end
 
   Rake::Task["db:test:prepare"].enhance do
-    ruby "-S rake spec:db:fixtures:load FIXTURES=codes,code_translations,external_codes,external_code_translations,privileges RAILS_ENV=test"
+    rake "spec:db:fixtures:load", "FIXTURES=codes,code_translations,external_codes,external_code_translations,privileges", "RAILS_ENV=test"
   end 
 end

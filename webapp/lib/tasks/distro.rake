@@ -19,6 +19,7 @@ require 'ftools'
 require 'fileutils'
 require 'yaml'
 require 'sparrowhawk'
+require 'tasks/helpers'
 
 namespace :tomcat do
   desc 'Start tomcat instance'
@@ -54,52 +55,22 @@ namespace :trisano do
     File.join server_home, 'webapps', file_name
   end
 
-  def server_home
-    ENV['TOMCAT_HOME'] ||= '/opt/tomcat/apache-tomcat-6.0.14'
-  end
-
-  def server_bin file_name=''
-    File.join server_home, 'bin', file_name
-  end
-
   def trisano_host path=""
     host ||= ENV['TRISANO_URL'] || 'http://localhost:8080'
     File.join host, path
   end
  
-  def stop_tomcat
-    %x[#{server_bin('shutdown.sh')} 2>&1] !~ /Connection refused/
-  end
-
-  namespace :tomcat do
-    task :stop do
-      sleep 30 if stop_tomcat 
-    end
-
-    task :start do
-      sh server_bin("startup.sh")
-    end
-  end
+  Tasks::Helpers::Tomcat.new
 
   namespace :distro do
+    include Tasks::Helpers::DistributionHelpers
+
     def war_name
       'trisano.war'
     end
 
     def war_file
       File.join rakefile_dir, war_name
-    end
-
-    def webapp_config_dir file_name=''
-      File.join rakefile_dir, 'config', file_name
-    end
-
-    def distro_dir file_name=''
-      File.expand_path File.join(rakefile_dir, '..', 'distro', file_name)
-    end
-
-    def distro_config
-      YAML::load_file distro_dir('config.yml')
     end
 
     def repo_root
@@ -111,129 +82,9 @@ namespace :trisano do
       File.expand_path File.join(@working_dir, file_name)
     end
 
-    def initialize_config
-      config = distro_config
-      @host = config['host'] unless validate_config_attribute(config, 'host')
-      @port = config['port'] unless validate_config_attribute(config, 'port')
-      @database = config['database'] unless validate_config_attribute(config, 'database')
-      postgres_dir = config['postgres_dir'] unless validate_config_attribute(config, 'postgres_dir')
-      @psql = postgres_dir + "/psql" 
-      @pgdump = postgres_dir + "/pg_dump"
-      @priv_uname = config['priv_uname'] unless validate_config_attribute(config, 'priv_uname')
-      @priv_password = config['priv_passwd'] unless validate_config_attribute(config, 'priv_passwd')
-      @trisano_user = config['trisano_uname'] unless validate_config_attribute(config, 'trisano_uname')
-      @trisano_user_pwd = config['trisano_user_passwd'] unless validate_config_attribute(config, 'trisano_user_passwd')
-      @environment = config['environment'] unless validate_config_attribute(config, 'environment')
-      @basicauth = config['basicauth'] unless validate_config_attribute(config, 'basicauth')
-      @min_runtimes = config['min_runtimes'] unless validate_config_attribute(config, 'min_runtimes')
-      @max_runtimes = config['max_runtimes'] unless validate_config_attribute(config, 'max_runtimes')
-      @runtime_timeout = config['runtime_timeout'] unless validate_config_attribute(config, 'runtime_timeout')
-      @dump_file = config['dump_file_name'] 
-      @support_url = config['support_url']
-      @source_url = config['source_url']
-      @feedback_url = config['feedback_url']
-      @feedback_email = config['feedback_email']
-      @default_admin_uid = config['default_admin_uid']
-
-      ENV["PGPASSWORD"] = @priv_password 
-    end
-
-    def binstubs?
-      File.directory?('bin')
-    end
-
-    def validate_config_attribute(config, attribute)
-      if config[attribute].nil?
-        raise "attribute #{attribute} is not specified in config.yml - please add it and try again."
-      end
-    end
-
-    def with_replaced_database_yml(options)
-      backup_database_yml
-      replace_database_yml(options)
-      yield if block_given?
-    ensure
-      restore_database_yml
-    end
-
-    def backup_database_yml
-      File.copy(webapp_config_dir("database.yml"), webapp_config_dir("database.yml.bak"), true)
-    end
-
-    def restore_database_yml
-      File.move(webapp_config_dir("database.yml.bak"), webapp_config_dir("database.yml"), true)
-    end
-    
-    # Both the creation of the .war file and running of migrations require 
-    # database.yml to have the proper settings for the target database.
-    # To simplify things we just reset it every time based on the contents
-    # of config.yml
-    def replace_database_yml(options)
-      puts "creating database.yml based on contents of config.yml in #{webapp_config_dir}"
-      db_config = { options[:environment] =>
-          { 'adapter' => 'postgresql',
-          'encoding' => 'unicode', 
-          'database' => options[:database],
-          'username' => options[:user],
-          'password' => options[:password],
-          'host' => options[:host],
-          'port' => options[:port]
-        }      
-      }
-      File.open(webapp_config_dir("database.yml"), "w") {|file| file.puts(db_config.to_yaml) }
-    end
-
     def change_text_in_file(file, regex_to_find, text_to_put_in_place)
       text= File.read file
       File.open(file, 'w+'){|f| f << text.gsub(regex_to_find, text_to_put_in_place)}
-    end
-
-    def create_db_user
-      unless db_user_exists?
-        system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c \"CREATE USER #{@trisano_user} ENCRYPTED PASSWORD '#{@trisano_user_pwd}'\"")
-      end
-    end
-
-    def db_user_exists?
-     %x[#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c "SELECT usename FROM pg_user WHERE usename = '#{@trisano_user}'"] =~ /1 row/
-    end
-
-    def create_db_permissions 
-      system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -c 'GRANT ALL ON SCHEMA public TO #{@trisano_user}'") and
-        system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f #{distro_dir}/database/load_grant_function.sql") and
-        system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -c \"SELECT pg_grant('#{@trisano_user}', 'all', '%', 'public')\"") or
-        raise "Failed to grant permissions for #{@trisano_user}"
-    end
-
-    def create_db 
-      success = system( "#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c \"CREATE DATABASE #{@database} ENCODING='UTF8'\"") and
-        system("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -e -f #{distro_dir('database/trisano_schema.sql')}") or
-        raise "Failed to create database" 
-    end
-
-    def drop_db
-      unless system "#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'DROP DATABASE IF EXISTS #{@database}'"
-        raise "Failed to drop database"
-      end
-    end
-
-    def drop_db_user
-      unless system "#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'DROP USER IF EXISTS #{@trisano_user}'"
-        raise "Failed to drop user"
-      end
-    end
-
-    def dump_db_to_file(dump_file_name)
-      dirname = "#{distro_dir}/dump"
-      unless File.directory? dirname
-        FileUtils.mkdir(dirname)
-      end            
-      # dump sans access privs/acl & sans object owner - we grant auth on restore to make moving dump files between envIRONments easier
-      filename = "#{dirname}/#{dump_file_name}"
-      File.open(filename, 'w') {|f| f.write("\\set ON_ERROR_STOP\n\n") }
-      unless system("#{@pgdump} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} -x -O >> #{filename}")
-        raise "Failed to dump database"
-      end
     end
 
     def core_release_tasks(delete_war = true)
@@ -270,103 +121,57 @@ namespace :trisano do
     end
 
     namespace :db do
-
       ## "Create a database based on the distribution configuration"
       task :create do
-        initialize_config
         create_db
+        load_db_schema
         create_db_user 
         create_db_permissions
       end
 
       ## "Drop distribution database (and associated entities)"
       task :drop do
-        initialize_config
         drop_db 
         drop_db_user
       end
 
       ## "Export the distribution database"
       task :dump do
-        initialize_config
-        t = Time.now
-        filename = "#{@database}-#{t.strftime("%m-%d-%Y-%I%M%p")}.dump"
-        dump_db_to_file(filename)
+        dump_db_to_file
       end
  
       ## "Restore database from a dump file and apply currently configured distribution permission"
       task :restore do
-        initialize_config
-        if @dump_file.nil?
-          raise "attribute dump_file_name is not specified in config.yml - please add it and try again."
-        end
-        dirname = "#{distro_dir}/dump"
-        sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} postgres -e -c 'CREATE DATABASE #{@database}'") do |ok, res|
-          if ! ok
-            raise "Failed creating database: #{@database} with error #{res.exitstatus}. Try running 'rake trisano:distro:db:drop'"
-          end
-        end
-        sh("#{@psql} -U #{@priv_uname} -h #{@host} -p #{@port} #{@database} < #{dirname}/#{@dump_file}") do |ok, res|
-          if ! ok
-            raise "Failed importing dumpfile: #{@dump_file} into database #{@database} with error #{res.exitstatus}"
-          end
-        end
-        if ! create_db_user
-          puts "assuming already exists and continuing ..."
-        end
-        if ! create_db_permissions
-          raise "failed to set db permissions"
-        end
-        puts "Success restoring TriSano db: #{@database} from #{dirname}/#{@dump_file}"     
+        create_db
+        load_dump
+        create_db_user
+        create_db_permissions
       end
 
       ## "Run migrations against the configured distribution database"
       task :migrate => [:dump] do
-        initialize_config
-        db_config_options = { :environment => @environment,
-          :host => @host,
-          :port => @port,
-          :database => @database,
-          :user => @priv_uname,
-          :password => @priv_password
-        }
-
-        with_replaced_database_yml(db_config_options) do
-          ruby "-S rake db:migrate RAILS_ENV=#{@environment} &> #{distro_dir('upgrade_db_output.txt')}"
-          raise "failed to set db permissions" if !create_db_permissions
-        end
+        migrate
       end
 
       task :upgrade => [:drop, :restore, :migrate, :set_default_admin]
       
       ## "Sometimes we do this to make sure we can get into a application instance
       task :set_default_admin do
-        initialize_config
-        db_config_options = { :environment => @environment,
-          :host => @host,
-          :port => @port,
-          :database => @database,
-          :user => @priv_uname,
-          :password => @priv_password
-        }
-
-        with_replaced_database_yml(db_config_options) do
-          ruby "#{rakefile_dir('script/runner')} #{rakefile_dir('script/set_default_admin_uid.rb')}"
-        end
+        set_default_admin
       end
 
       ## "Create a database schema based on the current plugin configuration"
       task :schema do
         ruby "-S rake db:release:reset RAILS_ENV=development"
         #TODO: Do this in a throw away database and then throw it away
-        sh "pg_dump -x -O trisano_development > #{distro_dir('database/trisano_schema.sql')}"
+        dump_db_to_file 'database/trisano_schema.sql'
       end
 
       namespace :schema do
         ## "Create a database schema with demo data based on the current plugin configuration"
         task :demo do
           ruby "-S db:reset RAILS_ENV=development"
-          sh "pg_dump -x -O trisano_development > #{distro_dir('database/trisano_schema.sql')}"
+          dump_db_to_file 'database/trisano_schema.sql'
         end
       end
     end
@@ -432,7 +237,7 @@ namespace :trisano do
       end
     end
  
-    task :deploy => ['trisano:tomcat:stop', 'trisano:distro:war:undeploy', 'trisano:distro:war:deploy', 'trisano:tomcat:start']
+    task :deploy => ['tomcat:stop', 'trisano:distro:war:undeploy', 'trisano:distro:war:deploy', 'trisano:tomcat:start']
 
     task :tar do
       puts "!!WARNING!!: using following TRISANO_REPO_ROOT #{repo_root}. Please ensure it is correct."
@@ -453,7 +258,7 @@ namespace :trisano do
     end
  
     namespace :test do
-      task :release => ['trisano:tomcat:stop', 'trisano:distro:db:upgrade', 'trisano:distro:deploy', 'trisano:distro:smoke']
+      task :release => ['tomcat:stop', 'trisano:distro:db:upgrade', 'trisano:distro:deploy', 'trisano:distro:smoke']
     end
 
     ## "smoke test that ensures trisano was deployed"
