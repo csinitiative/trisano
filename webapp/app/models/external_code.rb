@@ -129,6 +129,7 @@ class ExternalCode < ActiveRecord::Base
   end
 
   def self.load!(hashes)
+    reset_column_information
     transaction do
       hashes.map do |attribs|
         code = find_by_code_name_and_the_code(attribs["code_name"], attribs["the_code"])

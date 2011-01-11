@@ -26,6 +26,7 @@ class DiseaseSpecificValidation < ActiveRecord::Base
     end
   
     def create_associations(validations)
+      reset_column_information
       transaction do
         validations.each do |validation|
           disease = Disease.find_by_disease_name(validation["disease_name"])

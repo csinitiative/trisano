@@ -24,6 +24,7 @@ class DiseaseSpecificSelection < ActiveRecord::Base
 
   class << self
     def load!(selections)
+      reset_column_information
       transaction do
         selections.map do |selection|
           disease = Disease.find(:first, :conditions => selection['disease'])

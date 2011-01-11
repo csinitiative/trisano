@@ -284,7 +284,54 @@ Feature: Staging Electronic Messages
     And I visit the assigned-to event
     Then I should see "Not Hispanic or Latino" under Ethnicity on the Demographic tab
 
-  @pending
+  Scenario: Assigning a staged message with a collection date
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "2008-08-15" on the Laboratory tab
+
+  Scenario: Assigning a staged message with a test date
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "2009-06-05" on the Laboratory tab
+
+  Scenario: Assigning a staged message with a test status
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Final" on the Laboratory tab
+
+  Scenario: Assigning a staged message with comment fields
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name |
+      | 625-4      | Culture     |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Country: USA, Accession no: 9700123, Specimen ID: 23456" on the Laboratory tab
+
   Scenario: Assigning a staged message with a dead patient
     Given I am logged in as a super user
     And I have the staged message "realm_cj_died"
@@ -295,4 +342,17 @@ Feature: Staging Electronic Messages
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "2010-11-11" under "Date of death" on the Clinical tab
+    Then I should see "2010-11-11" on the Clinical tab
+
+  @pending
+  Scenario: Assigning a staged message for an inpatient
+    Given I am logged in as a super user
+    And I have the staged message "realm_cj_inpatient"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | common_name       |
+      | 625-4      | Culture           |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Level Seven Healthcare" on the Clinical tab

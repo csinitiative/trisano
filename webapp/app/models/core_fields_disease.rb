@@ -8,6 +8,7 @@ class CoreFieldsDisease < ActiveRecord::Base
 
   class << self
     def create_associations(disease_name, fields)
+      reset_column_information
       transaction do
         disease = Disease.find_by_disease_name(disease_name)
         fields.each do |field|

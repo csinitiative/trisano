@@ -29,6 +29,7 @@ namespace :perinatal_hep_b do
     load 'load_codes.rb'
     puts "Loading Perinatal Hep B default data"
     load 'load_defaults.rb'
+    puts "Creating Perinatal Hep B associations"
     CoreFieldsDisease.create_perinatal_hep_b_associations
     CsvField.create_perinatal_hep_b_associations
     DiseaseSpecificValidation.create_perinatal_hep_b_associations
