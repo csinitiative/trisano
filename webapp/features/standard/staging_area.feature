@@ -371,3 +371,19 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Mum, Martha" under Parent/Guardian on the Demographic tab
+
+  Scenario: Assigning a staged message with a language code
+    Given I am logged in as a super user
+    And I have the staged message "cerner_en"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name      | common_name     |
+      | 548-8      | Culture Sputum | Culture         |
+    And the following organism mapping exists
+      | organism_name        | disease_name |
+      | Bordetella pertussis | Pertussis    |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should have a disease event
+    And I should see "English" under Primary language on the Demographic tab
