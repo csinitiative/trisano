@@ -178,6 +178,14 @@ Then %r{^I should see "([^\"]*)" under Ethnicity on the Demographic tab$} do |et
   response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_ethnicity'][contains(text(), '#{ethnicity}')]")
 end
 
+Then %r{^I should see "([^\"]*)" under Parent/Guardian on the Demographic tab$} do |guardian|
+  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_parent_guardian'][contains(text(), '#{guardian}')]")
+end
+
+Then %r{^I should see "([^\"]*)" under Primary language on the Demographic tab$} do |guardian|
+  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_primary_language'][contains(text(), '#{guardian}')]")
+end
+
 Then %r{^I should see "([^\"]*)" on the Laboratory tab$} do |text|
   response.should have_xpath("//div[@id='lab_info_tab']//div[@id='labs']//b[contains(text(), '#{text}')]")
 end
