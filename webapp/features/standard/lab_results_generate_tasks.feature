@@ -42,10 +42,10 @@ Feature: Adding Lab Results to an Event Generates a Task
       And there is a morbidity event with a matching name and birth date
       And the event is assigned to user "investigator"
       And the following loinc code to common test types mapping exists
-        | loinc_code | test_name  | common_name |
-        | 10000-1    | Blood Test | Blood Test  |
-        | 20000-2    | Urine Test | Urine Test  |
-        | 13954-3    | Hep-B Ag   | Hep-B Ag    |
+        | loinc_code | test_name  | common_name | loinc_scale |
+        | 10000-1    | Blood Test | Blood Test  | Nom         |
+        | 20000-2    | Urine Test | Urine Test  | Nom         |
+        | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
     When I visit the staged message show page
       And I click 'Similar Events' for the staged message
       And I click the 'Assign lab result' link of the found event
@@ -64,10 +64,10 @@ Feature: Adding Lab Results to an Event Generates a Task
       And there is a morbidity event with a matching name and birth date
       And the event is assigned to user "default_user"
       And the following loinc code to common test types mapping exists
-        | loinc_code | test_name  | common_name |
-        | 10000-1    | Blood Test | Blood Test  |
-        | 20000-2    | Urine Test | Urine Test  |
-        | 13954-3    | Hep-B Ag   | Hep-B Ag    |
+        | loinc_code | test_name  | common_name | loinc_scale |
+        | 10000-1    | Blood Test | Blood Test  | Nom         |
+        | 20000-2    | Urine Test | Urine Test  | Nom         |
+        | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
     When I visit the staged message show page
       And I click 'Similar Events' for the staged message
       And I click the 'Assign lab result' link of the found event

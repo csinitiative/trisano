@@ -100,10 +100,10 @@ When /^I visit the assigned-to event$/ do
 end
 
 Given /^the following loinc code to common test types mapping exists$/ do |loinc_test_maps|
-  @scale = ExternalCode.find_by_code_name_and_the_code 'loinc_scale', 'Nom'
   loinc_test_maps.rows.each do |loinc_test_map|
+    @scale = ExternalCode.find_or_create_by_code_name_and_the_code('loinc_scale', loinc_test_map.fourth)
     d = LoincCode.new(:loinc_code => loinc_test_map.first, :test_name => loinc_test_map.second, :scale_id => @scale.id)
-    d.common_test_type = CommonTestType.find_or_create_by_common_name loinc_test_map.third
+    d.common_test_type = CommonTestType.find_or_create_by_common_name(loinc_test_map.third)
     d.save!
   end
 end
