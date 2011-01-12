@@ -26,6 +26,7 @@ avr/mdr.*
 /webapp/db/development_structure.sql
 /webapp/db/names.sql
 /install
+/webapp/config/deploy
 /webapp/public/javascripts/ext
 /webapp/public/images/ext
 /webapp/.bundle/config

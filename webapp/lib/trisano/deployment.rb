@@ -9,12 +9,14 @@ module Trisano
       def use_deployment(deployment)
         delete_all_plugin_links
         delete_installer_symlink
+        delete_deploy_symlink
         delete_ext_javascripts
         delete_ext_images
         prep_plugin_dir
         d = new(deployment)
         d.create_plugin_symlinks
         d.create_installer_symlink
+        d.create_deploy_symlink
         d.create_javascript_links
         d.create_image_links
       end
@@ -28,6 +30,12 @@ module Trisano
       def delete_installer_symlink
         if File.exists?(trisano_installer) && File.symlink?(trisano_installer)
           FileUtils.rm(trisano_installer)
+        end
+      end
+
+      def delete_deploy_symlink
+        if File.exists?(trisano_deploy) && File.symlink?(trisano_deploy)
+          FileUtils.rm(trisano_deploy)
         end
       end
 
@@ -79,6 +87,10 @@ module Trisano
         File.expand_path(File.join(app_path, 'install'))
       end
 
+      def trisano_deploy
+        File.expand_path(File.join(app_path, 'webapp', 'config', 'deploy'))
+      end
+
       def app_path
         File.expand_path(
           File.join(
@@ -125,6 +137,10 @@ module Trisano
           FileUtils.ln_sf(installer(descriptor['installer']), trisano_installer)
         end
       end
+    end
+
+    def create_deploy_symlink
+      FileUtils.ln_sf(File.join(app_path, 'webapp', 'config', 'ce-deploy'), trisano_deploy)
     end
 
     def create_javascript_links
