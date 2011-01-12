@@ -69,31 +69,3 @@ describe ParticipationsTreatment do
     @pt.errors.on(:stop_treatment_date).should == "must be on or after #{Date.today}"
   end
 end
-
-describe ParticipationsTreatment, "with an associated Morbidity Event" do
-
-  before(:each) do
-    @event = Factory(:morbidity_event_with_disease)
-  end
-
-  describe "when validating against disease onset date" do
-
-    before(:each) do
-      @event.disease_event.update_attributes(:disease_onset_date => 1.month.ago.to_date)
-    end
-    
-    it "should not allow for a treatment date prior to onset date" do
-      pending
-      @event.interested_party.treatments[0].update_attributes(:treatment_date => 2.months.ago.to_date)
-      @event.save # Fire MorbidityEvent validators again.
-      @event.interested_party.treatments[0].errors.on(:treatment_date).should == "must be on or after #{1.month.ago.to_date}"
-    end
-    
-    it "should not allow for a treatment date prior to onset date" do
-      pending
-      @event.interested_party.treatments[0].update_attributes(:stop_treatment_date => 2.months.ago.to_date)
-      @event.save # Fire MorbidityEvent validators again.
-      @event.interested_party.treatments[0].errors.on(:stop_treatment_date).should == "must be on or after #{1.month.ago.to_date}"
-    end
-  end
-end

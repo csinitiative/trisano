@@ -161,7 +161,6 @@ describe LibraryElementsController do
       end
 
       it 'should send export file' do
-        pending "Does not work with current mix of Rails and rspec -- address once version mismatches have been addressed"
         Form.expects(:export_library).returns("library-export.zip")
         @controller.expects(:send_file).with("library-export.zip")
         do_post

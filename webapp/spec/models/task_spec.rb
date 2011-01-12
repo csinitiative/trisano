@@ -314,19 +314,3 @@ describe Task, 'with repeating tasks' do
   end
 end
 
-
-describe Task, "with an associated Morbidity event" do
-  before(:each) do
-    @event = Factory(:event_with_task)
-    @disease_event = Factory(:disease_event, :event => @event)
-  end
-
-  it "should not allow a task due date prior to disease onset date" do
-    pending
-    @disease_event.update_attributes(:disease_onset_date => 1.month.ago.to_date)
-    @event.tasks[0].update_attributes(:due_date => 2.months.ago.to_date)
-    @event.save
-    @event.tasks[0].errors.on(:due_date).should == "must be on or after #{@disease_event.disease_onset_date}"
-  end
-end
-
