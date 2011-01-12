@@ -25,5 +25,15 @@ module Tasks::Helpers
         @tomcat.webapp_dir.should == '/fake/path/webapp'
       end
     end
+
+    context "#stop_tomcat" do
+      before do
+        @tomcat = Tomcat.new :tomcat_home => '/fake/path'
+      end
+
+      it "fails immediately if the shutdown.sh script cannot be found" do
+        lambda { @tomcat.stop_server }.should raise_error
+      end
+    end
   end
 end

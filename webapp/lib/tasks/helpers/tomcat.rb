@@ -36,12 +36,12 @@ module Tasks::Helpers
     end
 
     def stop_server
+      raise %{#{shutdown_script}: not found} unless File.file? shutdown_script
       stop_out_and_err = %x[#{shutdown_script}  2>&1]
       ok = stop_out_and_err !~ /Connection refused/
+      puts stop_out_and_err
       yield ok if block_given?
       ok
-    ensure
-      puts stop_out_and_err
     end
 
     def undeploy application
