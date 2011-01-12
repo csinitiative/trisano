@@ -1,7 +1,19 @@
 module Tasks::Helpers
   module DistributionHelpers
     def distro
-      @distro ||= DistributionConfiguration.default_distro
+      @distro ||= Distribution.default_distro
+    end
+
+    def tomcat
+      @tomcat = Tomcat.new
+    end
+
+    def start_tomcat
+      tomcat.start_server
+    end
+
+    def stop_tomcat
+      tomcat.stop_server { |stopped| sleep 30 if stopped }
     end
 
     def create_db
@@ -42,6 +54,38 @@ module Tasks::Helpers
 
     def set_default_admin
       distro.set_default_admin
+    end
+
+    def overwrite_urls
+      distro.overwrite_urls
+    end
+
+    def create_war
+      distro.create_war
+    end
+
+    def distro_war_exists?
+      distro.distro_war_exists?
+    end
+
+    def deploy_war
+      File.move distro.distro_war_file, tomcat.webapp_dir, true
+    end
+
+    def undeploy_war
+      tomcat.undeploy 'trisano'
+    end
+
+    def create_tar_without_war
+      distro.create_tar
+    end
+
+    def create_tar
+      distro.create_tar false
+    end
+
+    def repo_root
+      Distribution.repo_root
     end
   end
 end

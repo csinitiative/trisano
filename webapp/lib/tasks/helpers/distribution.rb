@@ -1,9 +1,10 @@
+require 'fileutils'
 require 'yaml'
-require 'rake/tasklib'
+require 'sparrowhawk'
 
 module Tasks::Helpers
 
-  class DistributionConfiguration
+  class Distribution
     class << self
       def default_distro
         load_from_file default_config_file
@@ -29,7 +30,7 @@ module Tasks::Helpers
     
     attr_reader :options
 
-    %w{host port database postgres_dir priv_uname priv_passwd trisano_uname trisano_user_passwd environment basicauth min_runtime max_runtimes runtime_timeout}.each do |attr|
+    %w{host port database postgres_dir priv_uname priv_passwd trisano_uname trisano_user_passwd environment basicauth min_runtimes max_runtimes runtime_timeout}.each do |attr|
       define_method attr do
         unless value = options[attr]
           raise "attribute #{attr} is not specified in config.yml - please add it and try again"
@@ -108,7 +109,7 @@ module Tasks::Helpers
     end
 
     def dump_db_to_file file_name=nil
-      file_name ||= "dump/#{timstamp_dump_name}"
+      file_name ||= "dump/#{timestamp_dump_name}"
       file_name = File.expand_path file_name, distro_dir
       File.makedirs File.dirname(file_name), :verbose
       # dump sans access privs/acl & sans object owner - we grant auth on restore to make moving dump files between envIRONments easier
@@ -119,13 +120,12 @@ module Tasks::Helpers
     end
 
     def timestamp_dump_name
-      timestamp = Time.now.strftime "%m-%d-%Y-%I%M%p"
       "#{database}-#{timestamp}.dump"
     end
 
     def migrate
       with_replaced_database_yml privileged_db_config do
-        ruby "-S rake db:migrate RAILS_ENV=#{environment} &> #{distro_dir('upgrade_db_output.txt')}"
+        ruby "-S rake db:migrate RAILS_ENV=#{environment} > #{distro_dir('upgrade_db_output.txt')}"
         create_db_permissions
       end
     end
@@ -136,9 +136,96 @@ module Tasks::Helpers
       end
     end
 
+    def overwrite_urls
+      if support_url
+        puts "overwriting TriSano Support URL with #{support_url}"
+        change_text_in_file app_dir('app/helpers/layout_helper.rb'), "http://www.trisano.org/collaborate/\'", "#{support_url}\'"
+      end
+      if feedback_url
+        puts "overwriting TriSano Feedback URL with #{feedback_url}"
+        change_text_in_file app_dir('app/helpers/layout_helper.rb'), "http://groups.google.com/group/trisano-user", feedback_url
+        change_text_in_file app_dir('app/controllers/application_controller.rb'), "http://groups.google.com/group/trisano-user", feedback_url
+        change_text_in_file app_dir('public/500.html'), "http://groups.google.com/group/trisano-user", feedback_url
+        change_text_in_file app_dir('public/503.html'), "http://groups.google.com/group/trisano-user", feedback_url
+      end
+      if feedback_email
+        puts "overwriting TriSano Feedback email with #{feedback_email}"
+        change_text_in_file(app_dir('app/helpers/layout_helper.rb'), "trisano-usergooglegroups.com", feedback_email)
+      end
+      if source_url
+        puts "overwriting TriSano Source URL with #{source_url}"
+        change_text_in_file(app_dir('app/helpers/layout_helper.rb'), "http://github.com/csinitiative/trisano/tree/master", source_url) 
+      end
+    end
+
+    def create_war
+      with_replaced_database_yml trisano_user_db_config do
+        Sparrowhawk::Configuration.new do |config|
+          config.other_files = FileList[app_dir('Rakefile')]
+          config.application_dirs = %w(app config lib vendor db script)
+          config.environment = environment
+          config.runtimes = min_runtimes.to_i..max_runtimes.to_i
+          config.war_file = war_file
+        end.war.build
+        FileUtils.mv war_file, distro_war_file
+      end
+    end
+
+    def create_tar without_war = true
+      filename = "trisano-release-#{timestamp}.tar.gz"
+      dist_dirname = working_dir timestamp
+      File.makedirs dist_dirname
+
+      sh "cp -R #{repo_root}/ #{dist_dirname}"
+
+      sh "rm -rf #{dist_dirname}/.git"
+
+      # tried to get tar --exclude to work, but had no luck - bailing to a simpler approach
+      cd dist_dirname
+
+      File.delete "./webapp/#{war_name}" if File.file? "./webapp/#{war_name}"
+      File.delete "./distro/#{war_name}" if File.file? "./distro/#{war_name}" and without_war
+
+      sh "rm -f ./webapp/log/*.*"
+      sh "rm -rf ./webapp/nbproject"
+      sh "rm -rf ./distro/dump"
+      sh "rm -rf ./webapp/tmp"
+      sh "rm -rf ./distro/*.txt"
+      sh "rm -rf ./webapp/vendor/plugins/safe_record"
+      sh "rm -rf ./webapp/vendor/plugins/safe_erb"
+
+      cd working_dir
+      sh "tar czfh #{filename} ./#{timestamp}"
+    end
+
+    def war_exists?
+      File.file? war_file 
+    end
+    
+    def war_name
+      'trisano.war'
+    end
+
+    def war_file
+      app_dir war_name
+    end
+
+    def distro_war_exists?
+      File.file? distro_war_file
+    end
+
+    def distro_war_file
+      distro_dir war_name
+    end
+
     private
 
-    def repo_root file_name
+    def working_dir file_name=''
+      @working_dir ||= ENV['TRISANO_DIST_DIR'] || '~/trisano-dist'
+      File.expand_path file_name, @working_dir
+    end
+
+    def repo_root file_name=''
       File.expand_path file_name, self.class.repo_root
     end
 
@@ -175,6 +262,15 @@ module Tasks::Helpers
            :password    ,  priv_passwd]
     end
 
+    def trisano_user_db_config
+      Hash[:environment , environment,
+           :host        , host,
+           :port        , port,
+           :database    , database,
+           :user        , trisano_uname,
+           :password    , trisano_user_passwd]
+    end
+
     def with_replaced_database_yml(options)
       backup_database_yml
       replace_database_yml(options)
@@ -189,6 +285,15 @@ module Tasks::Helpers
 
     def restore_database_yml
       File.move(config_dir("database.yml.bak"), config_dir("database.yml"), true)
+    end
+
+    def change_text_in_file(file, regex, replacement)
+      text = File.read file
+      File.open(file, 'w+'){ |io| io << text.gsub(regex, replacement) }
+    end
+
+    def timestamp
+      @timestamp ||= Time.now.strftime "%m-%d-%Y-%I%M%p"
     end
 
   end
