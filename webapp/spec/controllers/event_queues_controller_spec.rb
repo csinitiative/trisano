@@ -316,7 +316,6 @@ describe EventQueuesController do
     end
 
     it "should find the event_queue requested" do
-      pending "Not  sure why this doesn't work"
       EventQueue.expects(:find).with("1").returns(@event_queue)
       do_delete
     end
