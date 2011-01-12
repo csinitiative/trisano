@@ -351,7 +351,7 @@ namespace :trisano do
         }
 
         with_replaced_database_yml(db_config_options) do
-          ruby "#{rakefile_dir('script/runner')} #{rakefile_dir('script/set_default_admin_uid.rb')}"
+          ruby "#{rakefile_dir('script/runner')} -e #{@environment} #{rakefile_dir('script/set_default_admin_uid.rb')}"
         end
       end
 
