@@ -61,8 +61,8 @@ es:
   change_filter: "Cambiar filtro"
   view_on_calendar: "Ver en calendario"
 
-  trisano_full_name: "CSI TriSano&reg; Enterprise Edition 3.0 RC1"
-  trisano_ce: "TriSano&reg; 3.0 RC1"
+  trisano_full_name: "CSI TriSano&reg; Enterprise Edition 3.0 RC2"
+  trisano_ce: "TriSano&reg; 3.0 RC2"
   trisano_support: "Soporte"
   about: "Acerca de"
   user_feedback: "Comentarios de usuarios"
@@ -71,7 +71,7 @@ es:
   help: "AYUDA"
   license: "Licencia"
   collaborate: "Colaborar"
-  copyright: "Copyright ¬© 2009 Collaborative Software Foundation"
+  copyright: "Copyright ¬© 2011 Collaborative Software Foundation"
   save_button_help: "Si los botones de guardar se hallan oscurecidos sin motivo, haga clic aquí para activarlos."
 
   before_create: "Favor de buscar la persona en cuestión antes de crear un evento de morbilidad nuevo."

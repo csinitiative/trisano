@@ -50,8 +50,8 @@ test:
   change_filter: "xChange filter"
   view_on_calendar: "xView on calendar"
 
-  trisano_full_name: "xCSI TriSano&reg; Enterprise Edition 3.0 RC1"
-  trisano_ce: "xTriSano&reg; 3.0 RC1"
+  trisano_full_name: "xCSI TriSano&reg; Enterprise Edition 3.0 RC2"
+  trisano_ce: "xTriSano&reg; 3.0 RC2"
   trisano_support: "xSupport"
   about: "xAbout"
   user_feedback: "xUser Feedback"
@@ -60,7 +60,7 @@ test:
   help: "xHELP"
   license: "xLicense"
   collaborate: "xCollaborate"
-  copyright: "xCopyright © 2009 Collaborative Software Foundation"
+  copyright: "xCopyright © 2011 Collaborative Software Foundation"
 
   before_create: "xBefore creating a new morbidity event, please search for the person in question."
   use_starts_with: "xUse starts with search"
