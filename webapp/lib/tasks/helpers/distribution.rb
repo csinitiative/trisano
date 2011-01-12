@@ -132,7 +132,7 @@ module Tasks::Helpers
 
     def set_default_admin
       with_replaced_database_yml privileged_db_config do
-        ruby "#{app_dir('script/runner')} #{app_dir('script/set_default_admin_uid.rb')}"
+        ruby "#{app_dir('script/runner')} -e #{environment} #{app_dir('script/set_default_admin_uid.rb')}"
       end
     end
 

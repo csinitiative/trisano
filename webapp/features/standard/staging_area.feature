@@ -71,10 +71,10 @@ Feature: Staging Electronic Messages
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    | Blood Test  |
-      | 20000-2    | Urine Test  |
-      | 13954-3    | Hep-B Ag    |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test | Blood Test  |
+      | 20000-2    | Urine Test | Urine Test  |
+      | 13954-3    | Hep-B Ag   | Hep-B Ag    |
 
     When I visit the staged message show page
       And I click 'Similar Events' for the staged message
@@ -95,10 +95,10 @@ Feature: Staging Electronic Messages
     And I have the staged message "ARUP_1"
     And there is a contact event with a matching name and birth date
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    | Blood Test  |
-      | 20000-2    | Urine Test  |
-      | 13954-3    | Hep-B Ag    |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test | Blood Test  |
+      | 20000-2    | Urine Test | Urine Test  |
+      | 13954-3    | Hep-B Ag   | Hep-B Ag    |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -118,10 +118,10 @@ Feature: Staging Electronic Messages
     And I have the staged message "ARUP_1"
     And there is a morbidity event with a matching name and birth date
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    | Blood Test  |
-      | 20000-2    | Urine Test  |
-      | 13954-3    | Hep-B Ag    |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test | Blood Test  |
+      | 20000-2    | Urine Test | Urine Test  |
+      | 13954-3    | Hep-B Ag   | Hep-B Ag    |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -143,10 +143,10 @@ Feature: Staging Electronic Messages
     And there is a morbidity event with a matching name and birth date
     And that event also has a middle name of George
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    | Blood Test  |
-      | 20000-2    | Urine Test  |
-      | 13954-3    | Hep-B Ag    |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test | Blood Test  |
+      | 20000-2    | Urine Test | Urine Test  |
+      | 13954-3    | Hep-B Ag   | Hep-B Ag    |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -161,8 +161,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNKNOWN_LOINC"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    | Blood Test  |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test | Blood Test  |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -175,8 +175,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a user with manage_staged_message privs
     And I have the staged message "UNLINKED_LOINC"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 10000-1    |             |
+      | loinc_code | test_name  | common_name |
+      | 10000-1    | Blood Test |             |
 
     When I visit the staged message show page
     And I click 'Similar Events' for the staged message
@@ -213,8 +213,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -226,8 +226,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -239,8 +239,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -252,8 +252,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_cj_cell_phone"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -264,8 +264,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -276,8 +276,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -288,8 +288,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -300,8 +300,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -312,8 +312,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -324,8 +324,8 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_campylobacter_jejuni"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name |
-      | 625-4      | Culture     |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
@@ -336,23 +336,26 @@ Feature: Staging Electronic Messages
     Given I am logged in as a super user
     And I have the staged message "realm_cj_died"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name       |
-      | 625-4      | Culture           |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "2010-11-11" on the Clinical tab
 
-  @pending
   Scenario: Assigning a staged message for an inpatient
     Given I am logged in as a super user
     And I have the staged message "realm_cj_inpatient"
     And the following loinc code to common test types mapping exists
-      | loinc_code | common_name       |
-      | 625-4      | Culture           |
+      | loinc_code | test_name           | common_name |
+      | 625-4      | Bacteria identified | Culture     |
+    And the following organism mapping exists
+      | organism_name        | disease_name       |
+      | Campylobacter jejuni | Campylobacteriosis |
     When I visit the staged message show page
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "Level Seven Healthcare" on the Clinical tab
+    Then I should have a disease event
+    And I should see "Level Seven Healthcare" on the Clinical tab
