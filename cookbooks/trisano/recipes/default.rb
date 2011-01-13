@@ -42,6 +42,20 @@ bash "chown log dir" do
   code "sudo chown -R vagrant.vagrant /var/log/trisano"
 end
 
+bash "make release dir" do
+  code "mkdir -p /home/vagrant/TriSano/releases"
+  not_if do
+    File.exists?("/home/vagrant/TriSano/releases")
+  end
+end 
+
+bash "make release log dir" do
+  code "mkdir -p /home/vagrant/TriSano/shared/log"
+  not_if do
+    File.exists?("/home/vagrant/TriSano/shared/log")
+  end
+end 
+
 bash "touch stop file" do
   code "sudo touch /usr/share/postgresql/8.4/tsearch_data/empty.stop"
 end
