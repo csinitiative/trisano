@@ -23,6 +23,14 @@ package "postgresql-plperl-8.4" do
   action :install
 end
 
+package "libcurl4-openssl-dev" do
+  action :install
+end
+
+gem_package "passenger"
+
+gem_package "bundler"
+
 bash "make log dir" do
   code "sudo mkdir /var/log/trisano"
   not_if do
@@ -42,10 +50,6 @@ bash "chown vagrant home" do
   code "sudo chown -R vagrant.vagrant /home/vagrant/"
 end
 
-#bash "gem install bundler" do
-#  code "sudo gem install bundler"
-#end
-#
 #bash "install bundle" do
 #  cwd "/vagrant/webapp"
 #  code "bundle install --local"
