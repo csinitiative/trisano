@@ -411,3 +411,46 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     And I should see "> 11.0" on the Laboratory tab
+
+  Scenario: Assigning a staged message with a clinician in the OBR segment
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name           | common_name | loinc_scale |
+      | 625-4      | Bacteria identified | Culture     | Nom         |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Admit, Alan" on the Clinical tab
+    And I should see "Work: (555) 555-1005" on the Clinical tab
+
+  Scenario: Assigning a staged message with a clinician in the ORC segment
+    Given I am logged in as a super user
+    And I have the staged message "nist_orc_clinician"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name                   | common_name | loinc_scale |
+      | 625-4      | Bacteria identified         | Culture     | Nom         |
+      | 6331-3     | Campylobacter sp identified | Culture     | Nom         |
+      | 17576-0    | Shigella sp identified      | Culture     | Nom         |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Moreau, Glenda" on the Clinical tab
+    And I should see "Work: (800) 555-1212" on the Clinical tab
+
+  Scenario: Assigning a staged message with clinicians in the PV1 segment
+    Given I am logged in as a super user
+    And I have the staged message "realm_cj_clinicians"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name           | common_name | loinc_scale |
+      | 625-4      | Bacteria identified | Culture     | Nom         |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Admit, Alan" on the Clinical tab
+    And I should see "Work: (555) 555-1005" on the Clinical tab
+    And I should see "Jekyll, Susan" on the Clinical tab
+    And I should see "Hyde, Herbert" on the Clinical tab
