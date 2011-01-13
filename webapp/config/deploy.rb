@@ -15,8 +15,7 @@ set :copy_exclude, [".git"]
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
-  task :restart do ; end
-#  task :restart, :roles => :app, :except => { :no_release => true } do
-#    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#  end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+  end
 end
