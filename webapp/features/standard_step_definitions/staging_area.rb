@@ -116,6 +116,12 @@ Given /^the following organism mapping exists$/ do |organism_maps|
   end
 end
 
+Given /^the following specimen mappings exist$/ do |specimen_maps|
+  specimen_maps.rows.each do |specimen_map|
+    ExternalCode.find_or_create_by_code_name_and_the_code_and_code_description('specimen', specimen_map.second, specimen_map.first)
+  end
+end
+
 Then /^I should see the new lab result with '(.+)'$/ do |test_type|
   response.should contain(@staged_message.message_header.sending_facility)
   response.should contain(test_type)

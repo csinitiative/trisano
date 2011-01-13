@@ -454,3 +454,18 @@ Feature: Staging Electronic Messages
     And I should see "Work: (555) 555-1005" on the Clinical tab
     And I should see "Jekyll, Susan" on the Clinical tab
     And I should see "Hyde, Herbert" on the Clinical tab
+
+  Scenario: Assigning a staged message with a specimen in SPM-8
+    Given I am logged in as a super user
+    And I have the staged message "realm_lead_laboratory_result"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name     | common_name     | loinc_scale |
+      | 10368-9    | Lead BldCmCnc | Blood lead test | Qn          |
+    And the following specimen mappings exist
+      | specimen                  | the_code |
+      | Venous structure of digit | VSD      |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Venous structure of digit" on the Laboratory tab
