@@ -18,6 +18,14 @@ GEM
     activesupport (2.3.5)
     bouncy-castle-java (1.5.0145.2)
     builder (2.1.2)
+    capistrano (2.5.19)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.0.0)
+    capistrano-ext (1.2.1)
+      capistrano (>= 1.0.0)
     cgi_multipart_eof_fix (2.5.0)
     ci_reporter (1.6.2)
       builder (>= 2.1.2)
@@ -38,6 +46,7 @@ GEM
     fastthread (1.0.7)
     gem_plugin (0.2.3)
     haml (2.0.7)
+    highline (1.6.1)
     hirb (0.3.4)
     jasmine (1.0.1.1)
       json_pure (>= 1.4.3)
@@ -67,6 +76,13 @@ GEM
       gem_plugin (>= 0.2.3)
     mongrel (1.1.5-java)
       gem_plugin (>= 0.2.3)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
+    net-ssh (2.0.23)
+    net-ssh-gateway (1.0.1)
+      net-ssh (>= 1.99.1)
     nokogiri (1.4.3.1)
     nokogiri (1.4.3.1-java)
       weakling (>= 0.0.3)
@@ -121,6 +137,8 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-jdbcpostgresql-adapter (= 1.0.0.kofnopre1)
+  capistrano
+  capistrano-ext
   ci_reporter
   cucumber (= 0.6.3)
   cucumber-rails (= 0.3.0)

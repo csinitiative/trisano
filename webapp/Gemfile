@@ -26,6 +26,8 @@ group :development do
   gem "ci_reporter"
   gem "hirb"
   gem "sparrowhawk", "0.9.5"
+  gem "capistrano"
+  gem "capistrano-ext"
 end
 
 group :test, :development do
