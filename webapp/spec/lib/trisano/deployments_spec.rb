@@ -48,6 +48,20 @@ describe Deployment do
     Deployment.delete_installer_symlink
   end
 
+  it "should link deployer, if specified in descriptor" do
+    given_other_deployment('a_deployment', {'cap_deploy' => 'deploy_this'})
+    given_other_project_dir('deploy_this')
+    given_no_cap_deploy_link
+    FileUtils.expects(:ln_sf).with(expanded_other_project_path('deploy_this'), cap_deploy_symlink)
+    Deployment.new(other_project_deployment('a_deployment')).create_cap_deploy_symlink
+  end
+
+  it "should delete deploy symlink, if present" do
+    given_cap_deploy_symlink
+    FileUtils.expects(:rm).with(cap_deploy_symlink)
+    Deployment.delete_cap_deploy_symlink
+  end
+
   it "should delete ext javascript dir, if present" do
     File.expects(:exists?).with(Deployment.ext_javascripts).returns(true)
     FileUtils.expects(:rm_rf).with(Deployment.ext_javascripts)

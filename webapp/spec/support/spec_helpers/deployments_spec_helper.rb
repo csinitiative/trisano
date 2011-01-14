@@ -54,9 +54,18 @@ module DeploymentsSpecHelper
     File.expects(:exists?).with(installer_symlink).returns(false)
   end
 
+  def given_no_cap_deploy_link
+    File.expects(:exists?).with(cap_deploy_symlink).returns(false)
+  end
+
   def given_installer_symlink
     File.expects(:exists?).with(installer_symlink).returns(true)
     File.expects(:symlink?).with(installer_symlink).returns(true)
+  end
+
+  def given_cap_deploy_symlink
+    File.expects(:exists?).with(cap_deploy_symlink).returns(true)
+    File.expects(:symlink?).with(cap_deploy_symlink).returns(true)
   end
 
   def given_ext_javascript_symlink(link_name)
@@ -90,6 +99,10 @@ module DeploymentsSpecHelper
 
   def installer_symlink
     File.expand_path(File.join(RAILS_ROOT, '../install'))
+  end
+
+  def cap_deploy_symlink
+    File.expand_path(File.join(RAILS_ROOT, 'config/deploy'))
   end
 
   def plugin_path(name)

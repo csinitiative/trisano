@@ -3,3 +3,5 @@ plugins:
 - trisano_locales
 - trisano_en
 - trisano_perinatal_hep_b
+
+cap_deploy: webapp/config/ce-deploy

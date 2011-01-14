@@ -9,14 +9,14 @@ module Trisano
       def use_deployment(deployment)
         delete_all_plugin_links
         delete_installer_symlink
-        delete_deploy_symlink
+        delete_cap_deploy_symlink
         delete_ext_javascripts
         delete_ext_images
         prep_plugin_dir
         d = new(deployment)
         d.create_plugin_symlinks
         d.create_installer_symlink
-        d.create_deploy_symlink
+        d.create_cap_deploy_symlink
         d.create_javascript_links
         d.create_image_links
       end
@@ -33,9 +33,9 @@ module Trisano
         end
       end
 
-      def delete_deploy_symlink
-        if File.exists?(trisano_deploy) && File.symlink?(trisano_deploy)
-          FileUtils.rm(trisano_deploy)
+      def delete_cap_deploy_symlink
+        if File.exists?(trisano_cap_deploy_path) && File.symlink?(trisano_cap_deploy_path)
+          FileUtils.rm(trisano_cap_deploy_path)
         end
       end
 
@@ -87,7 +87,7 @@ module Trisano
         File.expand_path(File.join(app_path, 'install'))
       end
 
-      def trisano_deploy
+      def trisano_cap_deploy_path
         File.expand_path(File.join(app_path, 'webapp', 'config', 'deploy'))
       end
 
@@ -139,8 +139,12 @@ module Trisano
       end
     end
 
-    def create_deploy_symlink
-      FileUtils.ln_sf(File.join(app_path, 'webapp', 'config', 'ce-deploy'), trisano_deploy)
+    def create_cap_deploy_symlink
+      if descriptor['cap_deploy']
+        unless File.exists?(trisano_cap_deploy_path)
+          FileUtils.ln_sf(cap_deploy(descriptor['cap_deploy']), trisano_cap_deploy_path)
+        end
+      end      
     end
 
     def create_javascript_links
@@ -170,6 +174,10 @@ module Trisano
 
     def installer(name)
       Installer.new(name, self).installer_path
+    end
+
+    def cap_deploy(name)
+      CapDeploy.new(name, self).cap_deploy_path
     end
 
     def descriptor
@@ -247,6 +255,19 @@ module Trisano
         path = File.join(@deployment.base_path, @installer_name)
         return path if File.exists?(path)
         raise "Could not find installer at #{path}"
+      end
+    end
+
+    class CapDeploy
+      def initialize(path, deployment)
+        @cap_deploy_path = path
+        @deployment = deployment
+      end
+
+      def cap_deploy_path
+        path = File.join(@deployment.base_path, @cap_deploy_path)
+        return path if File.exists?(path)
+        raise "Could not find cap deploy directory at #{path}"
       end
     end
   end
