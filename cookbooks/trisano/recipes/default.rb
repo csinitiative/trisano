@@ -64,35 +64,37 @@ bash "chown vagrant home" do
   code "sudo chown -R vagrant.vagrant /home/vagrant/"
 end
 
-#bash "install bundle" do
-#  cwd "/vagrant/webapp"
-#  code "bundle install --local"
-#end
+bash "install bundle" do
+  cwd "/vagrant/webapp"
+  code "bundle install --local"
+end
 
 bash "copy database config" do
   cwd "/vagrant/webapp"
   code "cp config/database.yml.sample config/database.yml"
 end
 
-#template "config.yml" do
-#  source "config.yml.erb"
-#  path "/vagrant/distro/config.yml"
-#end
-#
-#bash "create trisano_user" do
-#  code "createuser trisano_user"
-#  user "postgres"
-#  timeout 5
-#end
-#
-#bash "create trisano_admin" do
-#  code "createuser trisano_admin"
-#  user "postgres"
-#  timeout 5
-#end
-#
-#bash "set database user passwords" do
-#  code "psql < \"alter role trisano_user password 'password'; alter role trisano_admin password 'password';\""
-#  user "postgres"
-#  timeout 5
-#end
+template "config.yml" do
+  source "config.yml.erb"
+  path "/vagrant/distro/config.yml"
+end
+
+ruby "create trisano_user" do
+  code "system('createuser -s trisano_user')"
+  user "postgres"
+  timeout 5
+  not_if { %x[psql -c "SELECT usename FROM pg_user WHERE usename = 'trisano_user'"].include?("1 row") }
+end
+
+ruby "create trisano_admin" do
+  code "system('createuser -s trisano_admin')"
+  user "postgres"
+  timeout 5
+  not_if { %x[psql -c "SELECT usename FROM pg_user WHERE usename = 'trisano_admin'"].include?("1 row") }
+end
+
+bash "set database user passwords" do
+  code "psql -c \"alter role trisano_user password 'password'; alter role trisano_admin password 'password';\""
+  user "postgres"
+  timeout 5
+end
