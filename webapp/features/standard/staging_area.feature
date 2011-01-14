@@ -282,7 +282,7 @@ Feature: Staging Electronic Messages
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "Not Hispanic or Latino" under Ethnicity on the Demographic tab
+    Then I should see "Not Hispanic or Latino" under "Ethnicity" on the Demographic tab
 
   Scenario: Assigning a staged message with a collection date
     Given I am logged in as a super user
@@ -370,7 +370,7 @@ Feature: Staging Electronic Messages
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "Mum, Martha" under Parent/Guardian on the Demographic tab
+    Then I should see "Mum, Martha" under "Parent/Guardian" on the Demographic tab
 
   Scenario: Assigning a staged message with a language code
     Given I am logged in as a super user
@@ -386,7 +386,7 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should have a disease event
-    And I should see "English" under Primary language on the Demographic tab
+    And I should see "English" under "Primary language" on the Demographic tab
 
   Scenario: Assigning a staged message with a CE value in OBX-5
     Given I am logged in as a super user
@@ -469,3 +469,47 @@ Feature: Staging Electronic Messages
     And I create a new CMR from the message
     And I visit the assigned-to event
     Then I should see "Venous structure of digit" on the Laboratory tab
+
+  Scenario: Assigning a staged message with an address in PID-11
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name           | common_name | loinc_scale |
+      | 625-4      | Bacteria identified | Culture     | Nom         |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "2222" under "Street number" on the Demographic tab
+    And I should see "Home Street" under "Street name" on the Demographic tab
+    And I should see "Ann Arbor" under "City" on the Demographic tab
+    And I should see "Michigan" under "State" on the Demographic tab
+    And I should see "99999" under "Zip code" on the Demographic tab
+
+  Scenario: Assigning a staged message with a reference range
+    Given I am logged in as a super user
+    And I have the staged message "realm_lead_laboratory_result"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name     | common_name     | loinc_scale |
+      | 10368-9    | Lead BldCmCnc | Blood lead test | Qn          |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "<10 ug/dL" on the Laboratory tab
+
+  Scenario: Assigning a staged message with basic personal info in PID-5, 7 and 8
+    Given I am logged in as a super user
+    And I have the staged message "realm_campylobacter_jejuni"
+    And the following loinc code to common test types mapping exists
+      | loinc_code | test_name           | common_name | loinc_scale |
+      | 625-4      | Bacteria identified | Culture     | Nom         |
+    When I visit the staged message show page
+    And I follow "Similar Events"
+    And I create a new CMR from the message
+    And I visit the assigned-to event
+    Then I should see "Everyman" under "Last name" on the Demographic tab
+    And I should see "Adam" under "First name" on the Demographic tab
+    And I should see "A" under "Middle name" on the Demographic tab
+    And I should see "1980-06-02" under "Date of birth" on the Demographic tab
+    And I should see "Male" under "Birth gender" on the Demographic tab

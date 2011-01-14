@@ -180,16 +180,24 @@ Then %r{^I should see "([^\"]*)" under Telephones/Email on the Demographic tab} 
   response.should have_xpath("//div[@id='demographic_tab']//div[@class='data_telephones']//span[contains(text(), '#{phone_type}')]")
 end
 
-Then %r{^I should see "([^\"]*)" under Ethnicity on the Demographic tab$} do |ethnicity|
-  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_ethnicity'][contains(text(), '#{ethnicity}')]")
-end
+Then %r{^I should see "([^\"]*)" under "([^\"]*)" on the Demographic tab$} do |text, label|
+  spnclass = {
+    'Ethnicity'        => 'ethnicity'       ,
+    'Parent/Guardian'  => 'parent_guardian' ,
+    'Primary language' => 'primary_language',
+    'Street number'    => 'street_number'   ,
+    'Street name'      => 'street_name'     ,
+    'City'             => 'city'            ,
+    'State'            => 'state'           ,
+    'Zip code'         => 'postal_code'     ,
+    'Last name'        => 'last_name'       ,
+    'First name'       => 'first_name'      ,
+    'Middle name'      => 'middle_name'     ,
+    'Date of birth'    => 'birth_date'      ,
+    'Birth gender'     => 'birth_gender'
+  }[label]
 
-Then %r{^I should see "([^\"]*)" under Parent/Guardian on the Demographic tab$} do |guardian|
-  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_parent_guardian'][contains(text(), '#{guardian}')]")
-end
-
-Then %r{^I should see "([^\"]*)" under Primary language on the Demographic tab$} do |guardian|
-  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_primary_language'][contains(text(), '#{guardian}')]")
+  response.should have_xpath("//div[@id='demographic_tab']//span[@class='data_#{spnclass}'][contains(text(), '#{text}')]")
 end
 
 Then %r{^I should see "([^\"]*)" on the Laboratory tab$} do |text|
