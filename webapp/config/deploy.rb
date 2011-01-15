@@ -1,6 +1,7 @@
 require 'capistrano/ext/multistage'
 
 set :application, "TriSano"
+set :stages, %w(vagrant tomcat)
 set :default_stage, "vagrant"
 
 set :repository, "."
