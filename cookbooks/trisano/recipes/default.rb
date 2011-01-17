@@ -27,6 +27,14 @@ package "libcurl4-openssl-dev" do
   action :install
 end
 
+package "tomcat6" do
+  action :install
+end
+
+package "tomcat6-user" do
+  action :install
+end
+
 gem_package "passenger"
 
 gem_package "bundler"
@@ -56,8 +64,18 @@ bash "make release log dir" do
   end
 end 
 
+bash "make shared system dir" do
+  code "mkdir -p /home/vagrant/TriSano/shared/system"
+  not_if { File.exists? "/home/vagrant/TriSano/shared/system" }
+end
+
 bash "touch stop file" do
   code "sudo touch /usr/share/postgresql/8.4/tsearch_data/empty.stop"
+end
+
+bash "create tomcat instance" do
+  code "tomcat6-instance-create /home/vagrant/tomcat6"
+  not_if { File.directory? "/home/vagrant/tomcat6" }
 end
 
 bash "chown vagrant home" do
