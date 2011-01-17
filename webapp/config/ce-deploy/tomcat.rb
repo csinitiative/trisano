@@ -12,48 +12,46 @@ namespace :deploy do
   task :default do
     update
     tomcat.stop
-    transaction do
-      tomcat.undeploy_war
-      tomcat.deploy_war
-    end
+    tomcat.undeploy_trisano
+    tomcat.build_war
     tomcat.start
   end
 
   namespace :tomcat do
-    desc "Stop tomcat on the server. Assumes an /etc/init.d style script"
+    desc "Stop tomcat on the server. Assumes ~/tomcat6/bin/shutdown.sh"
     task :stop do
-      tomcat_script = fetch('tomcat_script', '/etc/init.d/tomcat6')
-      try_sudo "#{tomcat_script} stop"
+      tomcat_script = fetch('tomcat_script', '~/tomcat6/bin/shutdown.sh')
+      run "#{tomcat_script}"
     end
 
-    desc "Start tomcat on the server. Assumes an /etc/init.d style script"
+    desc "Start tomcat on the server. Assumes ~/tomcat6/bin/startup.sh"
     task :start do
-      tomcat_script = fetch('tomcat_script', '/etc/init.d/tomcat6')
-      try_sudo "#{tomcat_script} start"
+      tomcat_script = fetch('tomcat_script', '~/tomcat6/bin/startup.sh')
+      run "#{tomcat_script}"
     end
 
-    desc "Builds the war and deploys it to tomcat_deploy_to"
-    task :deploy_war do
-      tomcat_deploy_to = fetch('tomcat_deploy_to', '/var/lib/tomcat6/webapps')
+    desc <<-DESC
+      Builds the war. Ensures the the webapps directory has a symlink to \
+      the current trisano.war. By default, this means making a link from \
+      ~/TriSano/current/trisano.war to ~/tomcat6/webapps/trisano.war. \
+      \
+      The webapps directory can be changed by setting 'tomcat_deploy_to'.
+    DESC
+    task :build_war do
+      tomcat_deploy_to = fetch('tomcat_deploy_to', '~/tomcat6/webapps')
       rails_env = fetch(:rails_env, 'production')
-      run "cd #{current_path} && rake war RAILS_ENV=#{rails_env}"
-      try_sudo "mv #{current_path}/trisano.war #{tomcat_deploy_to}/trisano.war"
-    end
-
-    desc "Removes the currently deployed war from tomcat_deploy_to"
-    task :undeploy_war do
-      tomcat_deploy_to = fetch('tomcat_deploy_to', '/var/lib/tomcat6/webapps')
       on_rollback do
-        if File.file? "#{previous_release}/trisano.war"
-          try_sudo "mv #{previous_relase}/trisano.war #{tomcat_deploy_to}/trisano.war"
-        else
-          puts "No previous war file to deploy. Skipping step"
+        if File.file? "#{current_path}/trisano.war"
+          run "rm #{current_path}/trisano.war"
         end
       end
-      try_sudo "rm -rf #{tomcat_deploy_to}/trisano"
-      if File.file? "#{tomcat_deploy_to}/trisano.war"
-        try_sudo "rm #{tomcat_deploy_to}/trisano.war"
-      end
+      run "cd #{current_path} && rake war RAILS_ENV=#{rails_env}"
+    end
+
+    desc "Removes the exploded war from the webapps directory"
+    task :undeploy_trisano do
+      tomcat_deploy_to = fetch('tomcat_deploy_to', '~/tomcat6/webapps')
+      run "rm -rf #{tomcat_deploy_to}/trisano"
     end
   end
 end
