@@ -41,16 +41,21 @@ namespace :deploy do
       tomcat_deploy_to = fetch('tomcat_deploy_to', '~/tomcat6/webapps')
       rails_env = fetch(:rails_env, 'production')
       on_rollback do
-        if File.file? "#{current_path}/trisano.war"
-          run "rm #{current_path}/trisano.war"
+        run "rm -f #{current_path}/trisano.war"
+        run "rm -f #{tomcat_deploy_to}/trisano.war"
+        if File.exists? "#{previous_release}/trisano.war"
+          run "ln -s #{previous_release}/trisano.war #{tomcat_deploy_to}/trisano.war"
         end
       end
       run "cd #{current_path} && rake war RAILS_ENV=#{rails_env}"
+      run "rm -f #{tomcat_deploy_to}/trisano.war"
+      run "ln -s #{current_path}/trisano.war #{tomcat_deploy_to}/trisano.war"
     end
 
     desc "Removes the exploded war from the webapps directory"
     task :undeploy_trisano do
       tomcat_deploy_to = fetch('tomcat_deploy_to', '~/tomcat6/webapps')
+      on_rollback { run "rm -rf #{tomcat_deploy_to}/trisano" }
       run "rm -rf #{tomcat_deploy_to}/trisano"
     end
   end
