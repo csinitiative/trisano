@@ -514,25 +514,14 @@ class HumanEvent < Event
     # In addition to organisms specified directly for nominal tests, ordinal and quantitative tests can have organisms too.
     # TriSano maintains a loinc code to organism relationship in the database
 
-    # For ordinal tests, a single result has multiple synonyms, such as: "Positive", " Confirmed", " Detected", " Definitive"
-    # So, first load the TriSano test_results, then bust out the slash-separated synonyms into hash keys whose value is the test_result ID.
-    # I.e: { "Positive" => 1, "Confirmed" => 1, "Negative" => 2, ... }
-    test_results = ExternalCode.find_all_by_code_name("test_result")
-    result_map = {}
-    test_results.each do |result|
-      result.code_description.split('/').each do |component|
-        result_map[component.gsub(/\s/, '').downcase] = result.id
-      end
-    end
-
     # Set the lab name
-    lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.lab_name } },
+    @lab_attributes = { "place_entity_attributes"=> { "place_attributes"=> { "name"=> staged_message.lab_name } },
       "lab_results_attributes" => {}
     }
 
     # Create one lab result per OBX segment
     i = 0
-    diseases = Set.new
+    @diseases = Set.new
 
     # country
     per_message_comments = ''
@@ -542,7 +531,7 @@ class HumanEvent < Event
 
     pv1 = staged_message.pv1
     orc = staged_message.common_order
-    @orc_clinician = find_or_build_clinician(orc.clinician_last_name, orc.clinician_first_name, orc.clinician_phone_type, orc.clinician_telephone) unless orc.nil? or orc.clinician_last_name.blank?
+    find_or_build_clinician(orc.clinician_last_name, orc.clinician_first_name, orc.clinician_phone_type, orc.clinician_telephone) unless orc.nil? or orc.clinician_last_name.blank?
 
     find_or_build_clinician(staged_message.pv1.attending_doctor[0], staged_message.pv1.attending_doctor[1]) unless pv1.nil? or pv1.attending_doctor.blank?
 
@@ -551,112 +540,36 @@ class HumanEvent < Event
     staged_message.observation_requests.each do |obr|
       find_or_build_clinician(obr.clinician_last_name, obr.clinician_first_name, obr.clinician_phone_type, obr.clinician_telephone) unless obr.clinician_last_name.blank?
 
-      per_request_comments = per_message_comments.clone
+      @per_request_comments = per_message_comments.clone
 
       unless obr.filler_order_number.blank?
-        per_request_comments += ", " unless per_request_comments.blank?
-        per_request_comments += "#{I18n.translate :accession_no}: #{obr.filler_order_number}"
+        @per_request_comments += ", " unless @per_request_comments.blank?
+        @per_request_comments += "#{I18n.translate :accession_no}: #{obr.filler_order_number}"
       end
 
       unless obr.specimen_id.blank?
-        per_request_comments += ", " unless per_request_comments.blank?
-        per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
+        @per_request_comments += ", " unless @per_request_comments.blank?
+        @per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
       end
 
       obr.tests.each do |obx|
-        loinc_code = LoincCode.find_by_loinc_code obx.loinc_code
-        @scale_type = nil
-        @common_test_type = nil
-
-        if loinc_code
-          @scale_type = loinc_code.scale.the_code
-          @common_test_type = loinc_code.common_test_type ||
-            CommonTestType.find_by_common_name(obx.loinc_common_test_type)
-        else
-          # No :loinc_code entry.
-          # Look at other OBX fields for hints to the scale and common
-          # test type.
-          @scale_type = obx.loinc_scale
-          if @scale_type.nil?
-            self.add_note I18n.translate(:unknown_loinc_code, :loinc_code => obx.loinc_code)
-            next
-          end
-
-          common_test_type_name = obx.loinc_common_test_type
-          @common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
+        set_loinc_scale_and_test_type obx
+        if @scale_type.nil?
+          self.add_note I18n.translate(:unknown_loinc_code, :loinc_code => obx.loinc_code)
+          next
         end
-
         if @common_test_type.nil?
           self.add_note I18n.translate(:loinc_code_known_but_not_linked, :loinc_code => obx.loinc_code)
           next
         end
-
-        comments = per_request_comments.clone
-
-        unless obx.abnormal_flags.blank?
-          comments += ", " unless comments.blank?
-          comments += "#{I18n.translate :abnormal_flags}: #{obx.abnormal_flags}"
-        end
-
-        result_hash = {}
-
-        if @scale_type != "Nom"
-          if loinc_code.organism
-            result_hash["organism_id"] = loinc_code.organism.id
-          else
-            comments += ", " unless comments.blank?
-            comments += "ELR Message: No organism mapped to LOINC code."
-          end
-
-          loinc_code.diseases.each { |disease| diseases << disease }
-        end
-
-        case @scale_type
-        when "Ord", "OrdQn"
-          obx_result = obx.result.gsub(/\s/, '').downcase
-          if map_id = result_map[obx_result]
-            result_hash["test_result_id"] = map_id
-          else
-            result_hash["result_value"] = obx.result
-          end
-        when "Qn"
-          result_hash["result_value"] = obx.result
-        when "Nom"
-          # Try and find OBX-5 in the organism list, otherwise map to result_value
-          # Eventually, we'll need to add more heuristics here for SNOMED etc.
-          organism = Organism.first(:conditions => [ "organism_name ~* ?", '^'+obx.result+'$' ])
-          if organism.blank?
-            result_hash["result_value"] = obx.result
-          else
-            result_hash["organism_id"] = organism.id
-            organism.diseases.each { |disease| diseases << disease }
-          end
-        end
-
-        begin
-          lab_hash = {
-            "test_type_id"       => @common_test_type.id,
-            "collection_date"    => obr.collection_date,
-            "lab_test_date"      => obx.test_date,
-            "reference_range"    => obx.reference_range,
-            "specimen_source_id" => obr.specimen_source.id,
-            "staged_message_id"  => staged_message.id,
-            "units"              => obx.units,
-            "test_status_id"     => obx.trisano_status_id,
-            "loinc_code"         => loinc_code,
-            "comment"            => comments
-          }.merge!(result_hash)
-          lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
-        rescue Exception => error
-          raise StagedMessage::BadMessageFormat, error.message
-        end
+        add_lab_results staged_message, obr, obx, i
         i += 1
         self.add_note(I18n.translate("system_notes.elr_with_test_type_assigned", :test_type => obx.test_type, :locale => I18n.default_locale))
       end
 
       # Grab any diseases associated with this OBR
       loinc_code = LoincCode.find_by_loinc_code obr.test_performed
-      loinc_code.diseases.each { |disease| diseases << disease } if loinc_code and diseases.blank?
+      loinc_code.diseases.each { |disease| @diseases << disease } if loinc_code and @diseases.blank?
     end
 
     unless i > 0
@@ -664,20 +577,20 @@ class HumanEvent < Event
       raise StagedMessage::UnknownLoincCode, I18n.translate(:all_obx_unprocessable)
     end
 
-    self.labs_attributes = [ lab_attributes ]
+    self.labs_attributes = [ @lab_attributes ]
 
     # Assign disease
     unless self.disease_event  # Don't overwrite disease if already there.
-      case diseases.size
+      case @diseases.size
       when 0
         staged_message.note = "#{staged_message.note} #{I18n.translate('no_loinc_code_maps_to_disease', :locale => I18n.default_locale)} "
       when 1
         disease_event = DiseaseEvent.new
-        disease_event.disease = diseases.to_a.first
+        disease_event.disease = @diseases.to_a.first
         self.build_disease_event(disease_event.attributes)
         staged_message.note = "#{staged_message.note} #{I18n.translate('event_disease_set_to', :disease_name => disease_event.disease.disease_name, :locale => I18n.default_locale)} "
       else
-        staged_message.note = "#{staged_message.note} #{I18n.translate('loinc_code_maps_to_multiple_diseases', :locale => I18n.default_locale)}" + diseases.collect { |d| d.disease_name }.join('; ') + ". "
+        staged_message.note = "#{staged_message.note} #{I18n.translate('loinc_code_maps_to_multiple_diseases', :locale => I18n.default_locale)}" + @diseases.collect { |d| d.disease_name }.join('; ') + ". "
       end
     end
 
@@ -762,6 +675,110 @@ class HumanEvent < Event
   end
 
   private
+
+  def add_lab_results(staged_message, obr, obx, i)
+    comments = @per_request_comments.clone
+
+    unless obx.abnormal_flags.blank?
+      comments += ", " unless comments.blank?
+      comments += "#{I18n.translate :abnormal_flags}: #{obx.abnormal_flags}"
+    end
+
+    result_hash = {}
+
+    if @scale_type != "Nom"
+      if @loinc_code.organism
+        result_hash["organism_id"] = @loinc_code.organism.id
+      else
+        comments += ", " unless comments.blank?
+        comments += "ELR Message: No organism mapped to LOINC code."
+      end
+
+      @loinc_code.diseases.each { |disease| @diseases << disease }
+    end
+
+    case @scale_type
+    when "Ord", "OrdQn"
+      obx_result = obx.result.gsub(/\s/, '').downcase
+      if map_id = result_map[obx_result]
+        result_hash["test_result_id"] = map_id
+      else
+        result_hash["result_value"] = obx.result
+      end
+    when "Qn"
+      result_hash["result_value"] = obx.result
+    when "Nom"
+      # Try and find OBX-5 in the organism list, otherwise map to result_value
+      # Eventually, we'll need to add more heuristics here for SNOMED etc.
+      organism = Organism.first(:conditions => [ "organism_name ~* ?", '^'+obx.result+'$' ])
+      if organism.blank?
+        result_hash["result_value"] = obx.result
+      else
+        result_hash["organism_id"] = organism.id
+        organism.diseases.each { |disease| @diseases << disease }
+      end
+    end
+
+    begin
+      lab_hash = {
+        "test_type_id"       => @common_test_type.id,
+        "collection_date"    => obr.collection_date,
+        "lab_test_date"      => obx.test_date,
+        "reference_range"    => obx.reference_range,
+        "specimen_source_id" => obr.specimen_source.id,
+        "staged_message_id"  => staged_message.id,
+        "units"              => obx.units,
+        "test_status_id"     => obx.trisano_status_id,
+        "loinc_code"         => @loinc_code,
+        "comment"            => comments
+      }.merge!(result_hash)
+      @lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
+    rescue Exception => error
+      raise StagedMessage::BadMessageFormat, error.message
+    end
+  end
+
+  def set_loinc_scale_and_test_type(obx)
+    @loinc_code = LoincCode.find_by_loinc_code obx.loinc_code
+    @scale_type = nil
+    @common_test_type = nil
+
+    if @loinc_code
+      @scale_type = @loinc_code.scale.the_code
+      @common_test_type = @loinc_code.common_test_type ||
+        CommonTestType.find_by_common_name(obx.loinc_common_test_type)
+    else
+      # No :loinc_code entry.
+      # Look at other OBX fields for hints to the scale and common
+      # test type.
+      @scale_type = obx.loinc_scale
+
+      common_test_type_name = obx.loinc_common_test_type
+      @common_test_type = CommonTestType.find_by_common_name(common_test_type_name) if common_test_type_name
+    end
+  end
+
+  def result_map
+    self.class.result_map
+  end
+
+  class << self
+    def result_map
+      # For ordinal tests, a single result has multiple synonyms, such as: "Positive", " Confirmed", " Detected", " Definitive"
+      # So, first load the TriSano test_results, then bust out the slash-separated synonyms into hash keys whose value is the test_result ID.
+      # I.e: { "Positive" => 1, "Confirmed" => 1, "Negative" => 2, ... }
+      unless @result_map
+        test_results = ExternalCode.find_all_by_code_name("test_result")
+        @result_map = {}
+        test_results.each do |result|
+          result.code_description.split('/').each do |component|
+            @result_map[component.gsub(/\s/, '').downcase] = result.id
+          end
+        end
+      end
+      @result_map
+    end
+  end
 
   def find_or_build_clinician(last_name, first_name, telephone_type=nil, telephone=nil)
     person_attributes = {
