@@ -170,14 +170,9 @@ namespace :trisano do
     ## "smoke test that ensures trisano was deployed"
     task :smoke do
       
-      def trisano_host path=""
-        host = ENV['TRISANO_URL'] || 'http://localhost:8080'
-        File.join host, path
-      end
- 
       require 'mechanize'
       retries = 5
-      url = trisano_host('trisano')
+      url = ENV['TRISANO_URL'] || 'http://localhost:8080/trisano'
       begin
         sleep 10
 
