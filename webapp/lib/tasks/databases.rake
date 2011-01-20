@@ -38,6 +38,30 @@ namespace :db do
     load "#{RAILS_ROOT}/script/load_test_and_demo_data.rb"
   end
 
+  desc "Dump the complete database so it can be restored later"
+  task :dump => :environment do
+    ar_config = ActiveRecord::Base.configurations[RAILS_ENV]
+    puts "Dumping to #{File.expand_path("db/#{RAILS_ENV}_data.sql")}"
+    %x{export PGPASSWORD=#{ar_config['password']} &&
+       pg_dump -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} -b -f db/#{RAILS_ENV}_data.sql #{ar_config['database']}}
+    raise "Error dumping database" if $?.exitstatus == 1
+  end
+
+  desc "Restore the database from the dump file, if it's available"
+  task :restore do
+    rails_env = ENV['RAILS_ENV'] || 'development'
+    ar_config = YAML::load_file('config/database.yml')[rails_env]
+    if File.exists? "db/#{rails_env}_data.sql"
+      %x{export PGPASSWORD=#{ar_config['password']} &&
+         psql -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} -c "DROP DATABASE IF EXISTS #{ar_config['database']}" template1 &&
+         createdb -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} #{ar_config['database']} &&
+         psql -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} #{ar_config['database']} < db/#{rails_env}_data.sql}
+      raise "Error restoring database" if $?.exitstatus == 1
+    else
+      puts "Dump isn't available. Skipping."
+    end
+  end
+    
   ## "release bits don't include demo data."
   namespace :release do
     task :reset => ['db:drop', 'db:release:setup']
