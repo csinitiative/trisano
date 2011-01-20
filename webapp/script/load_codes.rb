@@ -36,7 +36,7 @@ CodeName.transaction do
 end
 
 # Codes represented as an array of hashes
-codes = YAML::load_file "#{RAILS_ROOT}/../plugins/trisano_en/config/misc/en_codes.yml"
+codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_codes.yml"
 
 # Can't simply delete all and insert as the delete may trigger a FK constraint
 Code.transaction do
@@ -78,12 +78,12 @@ def load_codes(model, codes)
 end
 
 # Codes that have been added later in the development cycle are in distinct files.  Cutting and pasting for now
-codes = YAML::load_file "#{RAILS_ROOT}/../plugins/trisano_en/config/misc/en_test_types.yml"
+codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_test_types.yml"
 load_codes(ExternalCode, codes)
 
-codes = YAML::load_file "#{RAILS_ROOT}/../plugins/trisano_en/config/misc/en_test_results.yml"
+codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_test_results.yml"
 load_codes(ExternalCode, codes)
 
-codes = YAML::load_file "#{RAILS_ROOT}/../plugins/trisano_en/config/misc/en_contact_types.yml"
+codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_contact_types.yml"
 load_codes(ExternalCode, codes)
 
