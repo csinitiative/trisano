@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-config = YAML::load_file "../distro/config.yml"
-@default_admin_uid = config['default_admin_uid']
+@default_admin_uid = config_option(:default_admin_uid)
 
 puts "Setting default administrator UID to #{@default_admin_uid}"
 
