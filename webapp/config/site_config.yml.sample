@@ -66,6 +66,8 @@ feature:
 
 production:
   inherit: base
+  # Use auth_src_header to specify a header carrying UIDs
+  # auth_src_header: TRISANO_UID
   locale:
     # Configure user locale switching (off in production, by default)
     allow_switching: false
