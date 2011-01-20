@@ -8,6 +8,7 @@ set :repository, "."
 set :scm, :none
 set :deploy_via, :copy
 set :copy_exclude, [".git"]
+set :copy_compression, :zip
 
 depend :remote, :command, "rake"
 depend :remote, :command, "bundle"
