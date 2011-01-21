@@ -18,6 +18,8 @@ depend :remote, :command, "rake"
 depend :remote, :command, "bundle"
 
 after 'deploy:update_code', 'deploy:update_database_yml'
+before 'deploy:migrate', "deploy:dump_db"
+before "deploy:rollback",  "deploy:restore_db"
 
 namespace :deploy do
   task :start do ; end
@@ -54,6 +56,18 @@ namespace :deploy do
     update
     run "cd #{latest_release} && rake db:setup RAILS_ENV=#{rails_env}"
     restart
+  end
+  
+  desc "Dumps the database before running migrations"
+  task :dump_db do
+    rails_env = fetch :rails_env, 'production'
+    run "cd #{latest_release} && rake db:dump RAILS_ENV=#{rails_env}"
+  end
+
+  desc "Restores the db from the a dump if the dump is available"
+  task :restore_db do
+    rails_env = fetch :rails_env, 'production'
+    run "cd #{latest_release} && rake db:restore RAILS_ENV=#{rails_env}"
   end
 
 end
