@@ -5,6 +5,7 @@ require 'capistrano/helpers'
 extend Capistrano::Helpers::Prompts
 extend Capistrano::Helpers::SiteConfig
 
+default_run_options[:pty] = true
 set :application, "TriSano"
 set :stages, %w(vagrant tomcat)
 set :default_stage, "vagrant"
