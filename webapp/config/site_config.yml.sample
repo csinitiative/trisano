@@ -13,6 +13,7 @@ base:
   google_channel: developer
   # Only v2 is currently supported
   # google_api_version: 2
+  default_admin_uid: trisano_admin # the initial user that has admin privileges
 
   # Configuration options for HL7 ACK^R01^ACK messages
   hl7:
@@ -65,6 +66,8 @@ feature:
 
 production:
   inherit: base
+  # Use auth_src_header to specify a header carrying UIDs
+  # auth_src_header: TRISANO_UID
   locale:
     # Configure user locale switching (off in production, by default)
     allow_switching: false
