@@ -26,7 +26,7 @@ class AddTranslationTables < ActiveRecord::Migration
       end
       add_index :csv_field_translations, [:csv_field_id, :locale], :unique => true
 
-      if RAILS_ENV == "production"
+      if ENV['UPGRADE']
         execute(<<-SQL)
           INSERT INTO code_translations (id, code_id, locale, code_description, created_at, updated_at)
             SELECT nextval('code_translations_id_seq'), id, 'en', code_description, now(), now()
