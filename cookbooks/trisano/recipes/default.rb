@@ -51,22 +51,26 @@ bash "chown log dir" do
 end
 
 bash "make release dir" do
-  code "mkdir -p /home/vagrant/TriSano/releases"
+  code "mkdir -p /opt/csi/TriSano/releases"
   not_if do
-    File.exists?("/home/vagrant/TriSano/releases")
+    File.exists?("/opt/csi/TriSano/releases")
   end
 end 
 
 bash "make release log dir" do
-  code "mkdir -p /home/vagrant/TriSano/shared/log"
+  code "mkdir -p /opt/csi/TriSano/shared/log"
   not_if do
-    File.exists?("/home/vagrant/TriSano/shared/log")
+    File.exists?("/opt/csi/TriSano/shared/log")
   end
 end 
 
 bash "make shared system dir" do
-  code "mkdir -p /home/vagrant/TriSano/shared/system"
-  not_if { File.exists? "/home/vagrant/TriSano/shared/system" }
+  code "mkdir -p /opt/csi/TriSano/shared/system"
+  not_if { File.exists? "/opt/csi/TriSano/shared/system" }
+end
+
+bash "chown application install directory" do
+  code "sudo chown -R vagrant.vagrant /opt/csi/TriSano"
 end
 
 bash "touch stop file" do
