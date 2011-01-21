@@ -1,4 +1,8 @@
+$:.unshift(File.expand_path('../lib', File.dirname(__FILE__))).uniq!
 require 'capistrano/ext/multistage'
+require 'capistrano/helpers'
+
+extend Capistrano::Helpers::Prompts
 
 set :application, "TriSano"
 set :stages, %w(vagrant tomcat)
@@ -12,10 +16,28 @@ set :copy_exclude, [".git"]
 depend :remote, :command, "rake"
 depend :remote, :command, "bundle"
 
+before 'deploy:symlink', 'deploy:update_database_yml'
+
 namespace :deploy do
   task :start do ; end
   task :stop do ; end
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+  end
+
+  task :update_database_yml, :roles => :app do
+    require 'erb'
+    require 'yaml'
+    rails_env = fetch :rails_env, 'production'
+
+    db_config = YAML::load ERB.new(IO.read("config/database.yml.sample")).result(binding)
+    db_config.keys.each { |key| db_config.delete(key) unless key == rails_env }
+
+    db_config[rails_env]['database'] = database
+    db_config[rails_env]['username'] = username
+    db_config[rails_env]['password'] = password
+    db_config[rails_env]['host']     = database_host
+
+    put db_config.to_yaml, "#{release_path}/config/database.yml"
   end
 end
