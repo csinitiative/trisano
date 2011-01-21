@@ -30,13 +30,11 @@ Vagrant::Config.run do |config|
   # Enable provisioning with chef solo, specifying a cookbooks path (relative
   # to this Vagrantfile), and adding some recipes and/or roles.
   #
-  config.vm.provisioner = :chef_solo
-  config.chef.cookbooks_path = "cookbooks"
+  config.vm.provision :chef_solo, :cookbooks_path => "cookbooks",
+    :run_list => ["recipe[apt]", "recipe[openssl]", "recipe[ruby]",
+    "recipe[rubygems]", "recipe[postgresql::server]",
+    "recipe[java]", "recipe[jruby]", "recipe[trisano]"]
 
-  %w[apt openssl ruby rubygems postgresql::server java jruby trisano].each {|r|
-    config.chef.add_recipe r
-  }
-  
   # config.chef.add_recipe "mysql"
   # config.chef.add_role "web"
   #
