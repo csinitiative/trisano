@@ -12,7 +12,7 @@ development:
   adapter: postgresql
   encoding: unicode
   database: trisano_development
-  username: trisano_use
+  username: trisano_user
   password: password
   host: localhost
   port: 5432

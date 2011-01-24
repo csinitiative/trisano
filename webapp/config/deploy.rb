@@ -3,6 +3,7 @@ require 'capistrano/ext/multistage'
 require 'capistrano/helpers'
 
 extend Capistrano::Helpers::Prompts
+extend Capistrano::Helpers::SiteConfig
 
 set :application, "TriSano"
 set :stages, %w(vagrant tomcat)
@@ -18,6 +19,8 @@ depend :remote, :command, "rake"
 depend :remote, :command, "bundle"
 
 after 'deploy:update_code', 'deploy:update_database_yml'
+after 'deploy:update_code', 'deploy:update_site_config_yml'
+
 before 'deploy:migrate', "deploy:dump_db"
 before "deploy:rollback",  "deploy:restore_db"
 
@@ -47,6 +50,17 @@ namespace :deploy do
     db_config[rails_env]['host']     = database_host
 
     put db_config.to_yaml, "#{release_path}/config/database.yml"
+  end
+
+  task :update_site_config_yml, :roles => :app do
+    require 'yaml'
+    rails_env = fetch :rails_env, 'production'
+    site_config = YAML::load_file("config/site_config.yml.sample")
+    site_config[rails_env] = site_config['base'].merge(site_config[rails_env])
+    site_config.keys.each { |key| site_config.delete(key) unless key == rails_env }
+
+    site_config[rails_env] = update_site_config site_config[rails_env]
+    put site_config.to_yaml, "#{release_path}/config/site_config.yml"
   end
 
   desc <<-DESC
