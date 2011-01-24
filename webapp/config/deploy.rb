@@ -36,6 +36,11 @@ namespace :deploy do
     db_config = YAML::load ERB.new(IO.read("config/database.yml.sample")).result(binding)
     db_config.keys.each { |key| db_config.delete(key) unless key == rails_env }
 
+    ask_for :database, 'Database name:'
+    ask_for :username, 'Database user:'
+    ask_for :host,     'Database host:'
+    ask_for_password :password, 'Database password:'
+
     db_config[rails_env]['database'] = database
     db_config[rails_env]['username'] = username
     db_config[rails_env]['password'] = password

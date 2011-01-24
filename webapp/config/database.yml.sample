@@ -11,10 +11,10 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: trisano_development              # <% ask_for          :database, 'Database name:' %>
-  username: trisano_user                     # <% ask_for          :username, 'Database user:' %>
-  password: password                         # <% ask_for_password :password, 'Database password:' %>
-  host: localhost                            # <% ask_for          :database_host, 'Database host:' %>
+  database: trisano_development
+  username: trisano_use
+  password: password
+  host: localhost
   port: 5432
   warehouse_host: localhost
   warehouse_port: 5432
