@@ -6,7 +6,7 @@ set :port, 2222
 ## configure the database.yml
 set :database, 'trisano_production'
 set :username, 'trisano_user'
-set :password, 'password'
+set :database_password, 'password'
 set :database_host, 'localhost'
 
 ## site config settings

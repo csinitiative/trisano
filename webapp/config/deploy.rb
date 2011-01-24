@@ -44,11 +44,11 @@ namespace :deploy do
     ask_for :database, 'Database name:'
     ask_for :username, 'Database user:'
     ask_for :host,     'Database host:'
-    ask_for_password :password, 'Database password:'
+    ask_for_password :database_password, 'Database password:'
 
     db_config[rails_env]['database'] = database
     db_config[rails_env]['username'] = username
-    db_config[rails_env]['password'] = password
+    db_config[rails_env]['password'] = database_password
     db_config[rails_env]['host']     = database_host
 
     put db_config.to_yaml, "#{release_path}/config/database.yml"
