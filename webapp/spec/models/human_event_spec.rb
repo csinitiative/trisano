@@ -418,7 +418,7 @@ describe HumanEvent, 'adding staged messages' do
 
     it 'should take the primary language ID from PID-15 when possible' do
       login_as_super_user
-      staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:cerner_en]
+      staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_cj_en]
       event = staged_message.new_event_from
       event.interested_party.person_entity.person.primary_language_id.should == external_codes(:language_english).id
     end
@@ -603,7 +603,15 @@ describe HumanEvent, 'adding staged messages' do
       # TriSano did not previously register the OBR phone number.
       # That has been fixed.
       with_human_event do |event|
-        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:cerner_sequential])
+        staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+        hl7 = staged_message.hl7
+        hl7.should_not be_nil
+        obr = hl7[:OBR]
+        obr.should_not be_nil
+
+        obr.order_callback_phone_number = ''
+
+        event.add_labs_from_staged_message StagedMessage.new(:hl7_message => hl7.to_hl7)
         event.should be_valid
         orc_clinician = event.clinicians.first
         orc_clinician.should_not be_nil

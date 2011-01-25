@@ -18,7 +18,7 @@ gem "validates_timeliness", ">= 2.2.2"
 gem "mislav-will_paginate"
 gem "rubyzip"
 
-gem "ruby-hl7", ">= 1.0.2"
+gem "ruby-hl7", "1.0.3"
 
 group :development do
   gem "mechanize"

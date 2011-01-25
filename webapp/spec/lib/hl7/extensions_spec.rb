@@ -235,12 +235,12 @@ describe Message do
     end
 
     it 'should return nil for primary_language if not present' do
-      hl7 = HL7::Message.parse HL7MESSAGES[:cerner_lead]
+      hl7 = HL7::Message.parse HL7MESSAGES[:nist_sample_1]
       hl7.patient_id.primary_language.should be_nil
     end
 
     it 'should return the language ID when present' do
-      hl7 = HL7::Message.parse HL7MESSAGES[:cerner_en]
+      hl7 = HL7::Message.parse HL7MESSAGES[:realm_cj_en]
       hl7.patient_id.primary_language.should == 'en'
       hl7.patient_id.primary_language.id.should == external_codes(:language_english).id
     end
