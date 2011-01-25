@@ -28,6 +28,7 @@ module Capistrano::Helpers
     def update_google_api config
       config['google_api_key'] = google_api_key if exists? :google_api_key
       config['google_channel'] = google_channel if exists? :google_channel
+      config['google_client_id'] = google_client_id if exists? :google_client_id
       config
     end
 
