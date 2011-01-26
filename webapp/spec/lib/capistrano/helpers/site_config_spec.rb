@@ -15,8 +15,13 @@ module Capistrano::Helpers
       @values.key? symbol
     end
 
-    def fetch symbol, default_value=nil
-      @values[symbol].nil? ? default_value : @values[symbol]
+    def fetch symbol, *args
+      value = @values[symbol]
+      if value.nil?
+        raise "#{symbol} does not exist" if args.empty?
+        value = args.first.respond_to?(:call) ? args.first.call : args.first
+      end
+      value
     end
     
     before do
@@ -27,8 +32,7 @@ module Capistrano::Helpers
       @values.keys.each { |key| self.class.send(:remove_method, key) }
     end
     
-    it "only generates keys for set values" do
-      set :bi_server_url, 'some_url'
+    it "only generates default values, when nothing is set" do
       generate_site_config.size.should == 1
     end
 
@@ -43,13 +47,18 @@ module Capistrano::Helpers
     end
 
     it "sets user switch availability" do
-      set :auth_allow_user_switch, false
-      generate_site_config['auth_allow_user_switch'].should be_false
+      set :user_switching, true
+      generate_site_config['auth_allow_user_switch'].should be_true
     end
 
     it "sets whether user switch appears below the footer" do
       set :auth_allow_user_switch_hidden, false
       generate_site_config['auth_allow_user_switch_hidden'].should be_false
+    end
+
+    it "sets the authentication header for site minder integration" do
+      set :auth_src_header, 'TRISANO_UID'
+      generate_site_config['auth_src_header'].should == 'TRISANO_UID'
     end
 
     it "sets the google api key" do
@@ -87,7 +96,7 @@ module Capistrano::Helpers
     end
     
     it "sets the login timeout" do
-      set :login_timeout, 30
+      set :auth_login_timeout, 30
       generate_site_config['trisano_auth']['login_timeout'].should == 30
     end
 
@@ -111,6 +120,15 @@ module Capistrano::Helpers
     it "turns the locale witching on" do
       set :locale_switching, true
       generate_site_config['locale']['allow_switching'].should == true
+    end
+
+    it "sets the default admin uid" do
+      set :default_admin_uid, 'dave'
+      generate_site_config['default_admin_uid'].should == 'dave'
+    end
+
+    it "defaults the default_admin uid to trisano_admin" do
+      generate_site_config['default_admin_uid'].should == 'trisano_admin'
     end
   end
 end
