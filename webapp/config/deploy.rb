@@ -1,6 +1,7 @@
 $:.unshift(File.expand_path('../lib', File.dirname(__FILE__))).uniq!
 require 'capistrano/ext/multistage'
 require 'capistrano/helpers'
+require 'bundler/capistrano'
 
 extend Capistrano::Helpers::Prompts
 extend Capistrano::Helpers::SiteConfig
