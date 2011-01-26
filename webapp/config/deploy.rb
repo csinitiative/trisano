@@ -55,13 +55,8 @@ namespace :deploy do
   end
 
   task :update_site_config_yml, :roles => :app do
-    require 'yaml'
     rails_env = fetch :rails_env, 'production'
-    site_config = YAML::load_file("config/site_config.yml.sample")
-    site_config[rails_env] = site_config['base'].merge(site_config[rails_env])
-    site_config.keys.each { |key| site_config.delete(key) unless key == rails_env }
-
-    site_config[rails_env] = update_site_config site_config[rails_env]
+    site_config = { rails_env => generate_site_config }
     put site_config.to_yaml, "#{release_path}/config/site_config.yml"
   end
 
