@@ -35,7 +35,7 @@ namespace :db do
 
   ## "Load test/demo data"
   task :load_test_and_demo_data do
-    load "#{RAILS_ROOT}/script/load_test_and_demo_data.rb"
+    runner "#{RAILS_ROOT}/script/load_test_and_demo_data.rb"
   end
 
   desc "Dump the complete database so it can be restored later"

@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
     end
 
     def set_default_admin_uid(uid, options={})
+      reset_column_information
       admin_role = Role.find_by_role_name("Administrator")
       options = options.merge(:role_membership_attributes => [{ :role_id => admin_role.id, :jurisdiction_id => Place.unassigned_jurisdiction.entity_id }])
       user = User.find_or_create_by_uid(uid)
@@ -72,7 +73,7 @@ class User < ActiveRecord::Base
     end
 
     def load_default_users(users)
-      # Can't simply delete all and insert as the delete may trigger a FK constraint
+      reset_column_information
       User.transaction do
         users.each do |user|
           u = User.find_or_initialize_by_uid(:uid => user['uid'], :user_name => user['user_name'])
@@ -183,8 +184,8 @@ class User < ActiveRecord::Base
     { :conditions => { :privileges => { :priv_name => priv_name.to_s } },
       :select => "DISTINCT ON(users.id) users.*",
       :joins => [ "INNER JOIN role_memberships ON role_memberships.user_id = users.id",
-                  "INNER JOIN privileges_roles ON privileges_roles.role_id = role_memberships.role_id",
-                  "INNER JOIN privileges ON privileges.id = privileges_roles.privilege_id" ]
+        "INNER JOIN privileges_roles ON privileges_roles.role_id = role_memberships.role_id",
+        "INNER JOIN privileges ON privileges.id = privileges_roles.privilege_id" ]
     }
   }
 
