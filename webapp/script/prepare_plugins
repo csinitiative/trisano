@@ -2,8 +2,16 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'trisano/deployment'
 
+def after_plugins_hook
+  File.expand_path '~/.trisano/hooks/after_prepare_plugins'
+end
+
+def trisano_root
+  File.expand_path('../..', File.dirname(__FILE__))
+end
+
 def default_deployment
-  File.join(File.dirname(__FILE__), '..', '..', 'deployments', 'development')
+  File.join trisano_root, 'deployments', 'development'
 end
 
 # if a user accidentally includes the descriptor.yml file in the descriptor path strip it off
@@ -11,3 +19,6 @@ deployment = (ARGV.shift || default_deployment).gsub(/descriptor\.yml$/, '')
 
 Trisano::Deployment.use_deployment(deployment)
 
+if File.exists? after_plugins_hook
+  exec "cd #{trisano_root} && #{after_plugins_hook}"
+end
