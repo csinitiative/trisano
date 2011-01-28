@@ -1,7 +1,7 @@
 base:
   bi_server_url: http://localhost:18080/pentaho/Home
-  # Uncommenting help_url will display HELP link (defaults to wiki help)
-  help_url: https://wiki.csinitiative.com/display/tri30/Help
+  # Help url is optional, but can be used to link to custom help documentation.
+  #help_url: https://wiki.csinitiative.com/display/tri30/Help
   auth_allow_user_switch: false
   # Displays user switch below footer on mouseover
   auth_allow_user_switch_hidden: false

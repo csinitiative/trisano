@@ -50,8 +50,8 @@ test:
   change_filter: "xChange filter"
   view_on_calendar: "xView on calendar"
 
-  trisano_full_name: "xCSI TriSano&reg; Enterprise Edition 3.0 RC2"
-  trisano_ce: "xTriSano&reg; 3.0 RC2"
+  trisano_full_name: xCSI TriSano&reg; Enterprise Edition
+  trisano_ce: xTriSano&reg;
   trisano_support: "xSupport"
   about: "xAbout"
   user_feedback: "xUser Feedback"

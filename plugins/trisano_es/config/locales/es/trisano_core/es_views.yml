@@ -61,8 +61,8 @@ es:
   change_filter: "Cambiar filtro"
   view_on_calendar: "Ver en calendario"
 
-  trisano_full_name: "CSI TriSano&reg; Enterprise Edition 3.0 RC2"
-  trisano_ce: "TriSano&reg; 3.0 RC2"
+  trisano_full_name: CSI TriSano&reg; Enterprise Edition
+  trisano_ce: TriSano&reg;
   trisano_support: "Soporte"
   about: "Acerca de"
   user_feedback: "Comentarios de usuarios"

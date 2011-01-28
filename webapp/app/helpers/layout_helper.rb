@@ -21,6 +21,7 @@
 require 'trisano'
 
 module LayoutHelper
+  include Trisano
   extensible_helper
 
   def render_footer
@@ -31,12 +32,12 @@ module LayoutHelper
     result << "</div>"
     result << "<div class='foottext'>"
     result << "<div class='top'>"
-    result << "<a href='https://wiki.csinitiative.com/display/tri/TriSano+-+3.0+RC2+Release+Notes'>#{t('trisano_ce')}</a>"
+    result << link_to_release_notes(application.actual_name)
     result << "</div>"
     result << "<div class='bottom'>"
     result << "<a href='http://www.trisano.org/collaborate/'>#{t('collaborate')}</a>"
     result << "&nbsp;|&nbsp;"
-    result << "#{t('user_feedback')} (<a href='http://groups.google.com/group/trisano-user'>#{t('web')}</a>, <a href='mailto:#{Trisano.application.bug_report_address}'>#{t 'email'}</a>)"
+    result << "#{t('user_feedback')} (<a href='http://groups.google.com/group/trisano-user'>#{t('web')}</a>, <a href='mailto:#{application.bug_report_address}'>#{t 'email'}</a>)"
     result << "&nbsp;|&nbsp;"
     result << "<a href='http://www.trisano.org'>#{t('about')}</a>"
     result << "&nbsp;|&nbsp;"
@@ -50,6 +51,14 @@ module LayoutHelper
     result << "</div>"
 
     result
+  end
+
+  def link_to_release_notes text
+    link_to text, release_notes_url
+  end
+
+  def release_notes_url
+    "https://wiki.csinitiative.com/display/#{application.subscription_space}/TriSano+-+#{application.version_number}+Release+Notes"
   end
 
   # some javascript just needs to be in the hosted page
@@ -129,7 +138,17 @@ module LayoutHelper
         items << {:link => admin_path, :t => :admin}
       end
       items << {:link => settings_path, :t => :settings}
+      if application.has_help?
+        items << {:link => help_url, :t => :help, :options => {:popup => true}}
+      end
     end
+  end
+
+  def help_url
+    unless help_url = config_option(:help_url)
+      help_url = "https://wiki.csinitiative.com/display/#{application.subscription_space}/Help"
+    end
+    help_url
   end
 
   def render_user_tools(user)
