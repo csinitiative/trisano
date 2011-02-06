@@ -36,7 +36,7 @@ class MorbidityEventsController < EventsController
     @export_options = params[:export_options]
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @event }
+      format.xml
       format.csv
       format.print { @print_options = params[:print_options] || [] }
     end
