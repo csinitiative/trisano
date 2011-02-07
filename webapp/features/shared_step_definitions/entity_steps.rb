@@ -15,12 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Given(/^a place entity named (.+) of type (.+) exists$/) do |place_name, type_description|
-   @place_entity = create_place_entity(place_name, type_description)
-end
-
-Given(/^a place entity of type (.+) exists$/) do |type_description|
-   @place_entity = create_place_entity(get_unique_name(2), type_description)
+Given(/^a place entity of type (.+) exists$/) do |type_code|
+   @place_entity = create_place_entity!(get_unique_name(2), type_code)
 end
 
 

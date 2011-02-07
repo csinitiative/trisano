@@ -26,6 +26,7 @@ describe PlaceEntity do
     PrivilegesRole.delete_all
     Place.delete_all
     PlaceEntity.delete_all
+    Treatment.delete_all
     Code.delete_all
   end
 
@@ -41,7 +42,7 @@ describe PlaceEntity do
 
       describe "places used as hospitalization facilities" do
         before do
-          @pool = create_place!('P', 'Davis Nat')
+          @pool = create_place_entity!('Davis Nat', 'P')
           @event = Factory.create(:morbidity_event)
           @event.hospitalization_facilities.build(:secondary_entity_id => @pool.id).save!
         end
@@ -59,7 +60,7 @@ describe PlaceEntity do
 
       describe "place used as disagnostic facilities" do
         before do
-          @pool = create_place!('P', 'Diagnostic Facility')
+          @pool = create_place_entity!('Diagnostic Facility', 'P')
           @event = Factory.create(:morbidity_event)
           @event.diagnostic_facilities.build(:secondary_entity_id => @pool.id).save!
         end
@@ -77,7 +78,7 @@ describe PlaceEntity do
 
       describe "place used as a lab" do
         before do
-          @pool = create_place!('P', 'Labby Lab')
+          @pool = create_place_entity!('Labby Lab', 'P')
           @event = Factory.create(:morbidity_event)
           @event.labs.build(:secondary_entity_id => @pool.id).save!
         end
@@ -97,9 +98,9 @@ describe PlaceEntity do
         before do
           @event = Factory.create(:morbidity_event)
           @event.place_child_events.build(:interested_place_attributes => {
-                                            :place_entity_attributes => {
-                                              :place_attributes => {
-                                                :name => "FallMart"}}}).save!
+              :place_entity_attributes => {
+                  :place_attributes => {
+                      :name => "FallMart"}}}).save!
         end
 
         it "should find places that have been utilized as place exposures if a matching name is used" do
@@ -115,7 +116,7 @@ describe PlaceEntity do
 
       describe "place used as a reporting agency" do
         before do
-          @pool = create_place!('P', 'Reporters Inc.')
+          @pool = create_place_entity!('Reporters Inc.', 'P')
           @event = Factory.create(:morbidity_event)
           @event.build_reporting_agency(:secondary_entity_id => @pool.id).save!
         end
@@ -149,7 +150,7 @@ describe PlaceEntity do
       after(:all) { Fixtures.reset_cache }
 
       it "should find places by thier code type" do
-        p = create_place!(:diagnostic, 'Dark Moor')
+        p = create_place_entity!('Dark Moor', :diagnostic)
         psf = PlacesSearchForm.new(:place_type => 'H')
         results = PlaceEntity.by_name_and_participation_type(psf)
         PlaceEntity.by_name_and_participation_type(psf).should == [p]
@@ -158,24 +159,9 @@ describe PlaceEntity do
     end
   end
 
-end
-
-describe PlaceEntity do
-
   describe "using jurisdiction named scopes" do
-    before do
-      HospitalsParticipation.delete_all
-      Participation.delete_all
-      RoleMembership.delete_all
-      PrivilegesRole.delete_all
-      Place.delete_all
-      PlaceEntity.delete_all
-      Code.delete_all
-    end
 
-    after(:all) { Fixtures.reset_cache }
-
-    before do
+    before(:each) do
       @jurisdiction_one = create_jurisdiction_entity(:place_attributes => {:name => 'JurisOne'})
       @jurisdiction_two = create_jurisdiction_entity(:place_attributes => {:name => 'JurisTwo'})
       @jurisdiction_unassigned = create_jurisdiction_entity(:place_attributes => {:name => "Unassigned"})
@@ -201,5 +187,32 @@ describe PlaceEntity do
 
   end
 
-end
+  describe "using lab named scope" do
+    
+    before(:each) do
+      @lab_name_array = ['ARUP', 'BRUP', 'CRUP', 'DRUP']
+      @lab_name_array.each { |lab_name| create_place_entity!(lab_name, 'L') }
 
+      @pool = create_place_entity!('A Pool', 'P')
+      @school = create_place_entity!('A School', 'S')
+
+      @hospital_slash_lab = create_place_entity!('Hospital Lab', 'L')
+      @hospital_slash_lab.place.place_types << create_code!('placetype', 'H')
+
+      @labs = PlaceEntity.labs
+    end
+
+    it "should include all place entities with the lab type" do
+      @labs.size.should == 5 # The four lab-only labs and our one hospital/lab
+      @lab_name_array.each { |lab_name| @labs.detect { |lab| lab.place.name == lab_name }.should_not be_nil }
+      @labs.include?(@hospital_slash_lab).should be_true
+    end
+
+    it "should not include non-labs" do
+      @labs.include?(@pool).should be_false
+      @labs.include?(@school).should be_false
+    end
+
+  end
+
+end

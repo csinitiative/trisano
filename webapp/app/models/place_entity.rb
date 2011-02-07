@@ -20,12 +20,19 @@ class PlaceEntity < Entity
   accepts_nested_attributes_for :place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
 
   named_scope :jurisdictions,
-    :joins => "INNER JOIN places p on entities.id = p.entity_id INNER JOIN places_types on p.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
-    :conditions => "codes.the_code = 'J' AND codes.code_name = 'placetype'",
-    :order => 'p.name',
-    :readonly => false
+              :joins => "INNER JOIN places p on entities.id = p.entity_id INNER JOIN places_types on p.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
+              :conditions => "codes.the_code = 'J' AND codes.code_name = 'placetype'",
+              :order => 'p.name',
+              :readonly => false
 
-  named_scope :active, :conditions => "entities.deleted_at IS NULL"
+  named_scope :labs,
+              :joins => "INNER JOIN places p on entities.id = p.entity_id INNER JOIN places_types on p.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
+              :conditions => "codes.the_code = 'L' AND codes.code_name = 'placetype'",
+              :order => 'p.name',
+              :readonly => false
+
+  named_scope :active,
+              :conditions => "entities.deleted_at IS NULL"
 
 
   # Intended to be chained to one of the other jurisdiction named scopes

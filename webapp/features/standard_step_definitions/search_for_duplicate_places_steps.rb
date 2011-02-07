@@ -45,7 +45,7 @@ Given /^the place entity has a canonical address of:$/i do |addresses|
 end
 
 Given(/^a diagnosing facility named (.+) exists$/) do |place_name|
-  @diagnosing_facility = create_place_entity(place_name, "Hospital / ICP")
+  @diagnosing_facility = create_place_entity!(place_name, "H")
 end
 
 When(/^I search for Manzanita$/) do

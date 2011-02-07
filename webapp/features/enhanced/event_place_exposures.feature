@@ -6,7 +6,7 @@ Feature: Managing place exposures on events
   @clean
   Scenario: Adding and removing place exposures in new mode
     Given I am logged in as a super user
-    And a place entity of type Food Establishment exists
+    And a place entity of type FE exists
 
     When I navigate to the new event page and start a simple event
     And I add an existing place exposure
@@ -27,7 +27,7 @@ Feature: Managing place exposures on events
   Scenario: Adding and removing place exposures in edit mode
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
-    And a place entity of type Food Establishment exists
+    And a place entity of type FE exists
 
     When I navigate to the event edit page
     And I add an existing place exposure

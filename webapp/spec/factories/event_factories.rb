@@ -302,7 +302,7 @@ def add_place_to_event(event, name)
 end
 
 def add_lab_to_event(event, lab_name_or_lab_place_entity, lab_result_attributes={})
-  lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : create_lab!(lab_name_or_lab_place_entity)    
+  lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : create_lab!(lab_name_or_lab_place_entity)
   lab_result = Factory.create(:lab_result, lab_result_attributes)
   lab = Factory.create(:lab, :secondary_entity => lab_place_entity, :lab_results => [lab_result])
   event.labs << lab
@@ -327,19 +327,19 @@ def add_hospitalization_facility_to_event(event, hospital_name, hospitals_partic
 end
 
 def create_lab!(name)
-  create_place!(:lab, name)
+  create_place_entity!(name, :lab)
 end
 
 def create_hospitalization_facility!(name)
-  create_place!(:hospitalization, name)
+  create_place_entity!(name, :hospitalization)
 end
 
 def create_diagnostic_facility!(name)
-  create_place!(:diagnostic, name)
+  create_place_entity!(name, :diagnostic)
 end
 
 def create_reporting_agency!(name)
-  create_place!(:agency, name)
+  create_place_entity!(name, :agency)
 end
 
 def create_place_exposure!(name)
@@ -352,7 +352,7 @@ def create_place_exposure!(name)
   place_event.save!
 end
 
-def create_place!(type, name)
+def create_place_entity!(name, type)
   place_entity = Factory.build(:place_entity)
   place_entity.place.name = name
   begin
@@ -360,9 +360,7 @@ def create_place!(type, name)
   rescue NoMethodError => e
     the_code = type
   end
-  type = Code.find_by_code_name_and_the_code('placetype', the_code)
-  type = Factory.create(:code, :code_name => 'placetype',:the_code => the_code) unless type
-  place_entity.place.place_types << type
+  place_entity.place.place_types << create_code!('placetype', the_code)
   place_entity.save!
   place_entity
 end
@@ -373,6 +371,15 @@ def create_contact!(name)
   person.last_name = name
   contact_event.save!
   contact_event
+end
+
+# Since codes might already be in the database from a code load, an attempt
+# is first made to find the code. If it is not present, a factory is used
+# to create the code. This is getting around legacy cruft.
+def create_code!(code_name, the_code)
+  code = Code.find_by_code_name_and_the_code(code_name, the_code)
+  code = Factory.create(:code, :code_name => code_name, :the_code => the_code) unless code
+  code
 end
 
 def human_event_with_demographic_info!(type, demographic_info={ :last_name => Factory.next(:last_name) })
@@ -414,10 +421,3 @@ def disease!(disease_name)
   end
   disease
 end
-
-# Local Variables:
-# mode: ruby
-# tab-width: 2
-# ruby-indent-level: 2
-# indent-tabs-mode: nil
-# End:

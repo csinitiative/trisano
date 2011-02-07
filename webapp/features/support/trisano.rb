@@ -62,14 +62,6 @@ def jurisdiction_id_by_name(name)
   Place.all_by_name_and_types(name || "Unassigned", 'J', true).first.entity_id
 end
 
-def create_place_entity(place_name, place_type)
-  type = Code.find_by_code_name_and_code_description("placetype", place_type)
-  place = Factory.build(:place, :name => place_name)
-  place.place_types << type
-  place.save!
-  @place_entity = Factory.create(:place_entity, :place => place)
-end
-
 # Core field keys do not have the _attributes in them that Rails throws
 # in for nested forms. This method takes a core field key and converts it
 # to a key that can be used to identify form elements in the browser.
