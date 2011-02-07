@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class FormElement < ActiveRecord::Base
-  include Export::Cdc::FormElementExt
+  include Trisano::CorePathCallable
 
   before_destroy :delete_questions
 

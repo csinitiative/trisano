@@ -17,6 +17,7 @@
 
 class CoreField < ActiveRecord::Base
   include I18nCoreField
+  include Trisano::CorePathCallable
 
   acts_as_nested_set :scope => :tree_id if table_exists? && column_names.include?('tree_id')
 

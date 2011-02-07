@@ -185,14 +185,6 @@ module Export
 
     end
 
-    module FormElementExt
-      def call_chain
-        if core_path
-          path = core_path.scan(/\[([^\[\]]*)\]/).collect{|group| group[0].gsub(/_id$/, '')}
-        end
-      end
-    end
-
     module Record
       include PostgresFu
 

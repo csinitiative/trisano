@@ -1,0 +1,9 @@
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<content>
+<% CoreField.find_all_by_event_type('morbidity_event', :order => 'key ASC').each do |cf| -%>
+  <%  next if !cf.rendered_on_event?(@event) || cf.container? -%>
+  <% p cf.key -%>
+  <key><%= cf.key -%></key>
+  <value><%= @event.safe_call_chain(*cf.call_chain) -%><value
+<% end -%>
+</content>
