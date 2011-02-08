@@ -121,6 +121,9 @@ Rails::Initializer.run do |config|
     require 'menu_array'
     require 'i18n_logger'
     require 'i18n_core_field'
+
+    # Use a custom xml parser for handling incoming xml
+    ActiveSupport::XmlMini.backend = :NamespaceFilter
   end
 
 end

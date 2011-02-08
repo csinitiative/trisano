@@ -379,4 +379,8 @@ module ApplicationHelper
     value = block.call
     (expr) ? "<#{tag}>#{value}</#{tag}>" : "#{value}"
   end
+
+  def xml_link_to(url, options = {})
+    tag('atom:link', options.merge(:href => url))
+  end
 end

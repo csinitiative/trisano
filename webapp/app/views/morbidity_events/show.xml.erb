@@ -1,9 +1,13 @@
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<content>
-<% CoreField.find_all_by_event_type('morbidity_event', :order => 'key ASC').each do |cf| -%>
-  <%  next if !cf.rendered_on_event?(@event) || cf.container? -%>
-  <% p cf.key -%>
-  <key><%= cf.key -%></key>
-  <value><%= @event.safe_call_chain(*cf.call_chain) -%><value
-<% end -%>
-</content>
+<?xml version="1.0" encoding="UTF-8"?>
+<morbidity-event xmlns:atom="http://www.w3.org/2005/Atom">
+  <%= xml_link_to cmr_url(@event), :rel => :self %>
+  <%= xml_link_to edit_cmr_url(@event), :rel => :edit %>
+  <first-reported-PH-date><%= @event.first_reported_PH_date.xmlschema -%></first-reported-PH-date>
+  <interested-party-attributes>
+    <person-entity-attributes>
+      <person-attributes>
+        <last-name><%= @event.safe_call_chain(:interested_party, :person_entity, :person, :last_name) %></last-name>
+      </person-attributes>
+    </person-entity-attributes>
+  </interested-party-attributes>
+</morbidity-event>

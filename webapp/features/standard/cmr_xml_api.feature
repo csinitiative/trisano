@@ -10,3 +10,9 @@ Feature: XML API for CMRs
      Then I should have an xml document
      When I use xpath to find the patient's last name
      Then I should have 1 node
+
+  Scenario: Putting a CMR back using the XML representation
+    Given a basic morbidity event exists
+     When I retrieve the event's XML representation
+      And I put the XML back
+     Then I should get a 200 response
