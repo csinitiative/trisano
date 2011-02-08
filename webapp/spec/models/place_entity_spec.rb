@@ -152,7 +152,6 @@ describe PlaceEntity do
       it "should find places by thier code type" do
         p = create_place_entity!('Dark Moor', :diagnostic)
         psf = PlacesSearchForm.new(:place_type => 'H')
-        results = PlaceEntity.by_name_and_participation_type(psf)
         PlaceEntity.by_name_and_participation_type(psf).should == [p]
       end
 
@@ -213,6 +212,21 @@ describe PlaceEntity do
       @labs.include?(@school).should be_false
     end
 
+  end
+
+  describe "using place name convenience method" do
+    before(:each) do
+      @place_entity = create_place_entity!('A Pool', 'P')
+    end
+
+    it "should return the name of the place" do
+      @place_entity.name.should == 'A Pool'
+    end
+
+    it "should return nil if there isn't a place associated with the place entity" do
+      @place_entity.place = nil
+      @place_entity.name.should be_nil
+    end
   end
 
 end

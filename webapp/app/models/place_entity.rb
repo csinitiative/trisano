@@ -29,6 +29,7 @@ class PlaceEntity < Entity
               :joins => "INNER JOIN places p on entities.id = p.entity_id INNER JOIN places_types on p.id = places_types.place_id INNER JOIN codes on places_types.type_id = codes.id",
               :conditions => "codes.the_code = 'L' AND codes.code_name = 'placetype'",
               :order => 'p.name',
+              :include => :place,
               :readonly => false
 
   named_scope :active,
@@ -87,6 +88,12 @@ class PlaceEntity < Entity
     end
     scope = scope.with_place_names_like(search_data.name)
     scope
+  end
+
+  # Convenience method to allow a place entity's place name to be accessible through
+  # the place entity directly, enabling things like collection_select to work easily.
+  def name
+    place.name unless place.nil?
   end
 
 end
