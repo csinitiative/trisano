@@ -34,12 +34,12 @@ describe Place, "in the Perinatal Hep B plugin" do
   end
 
   it "should return active, expected delivery facilities" do
-    good = create_place!('expected_delivery', 'Hillcrest')
+    good = create_place_entity!('Hillcrest', 'expected_delivery')
     Place.expected_delivery_facilities.include?(good.place).should be_true
-    deleted = create_place!('expected_delivery', 'Gonecrest')
+    deleted = create_place_entity!('Gonecrest', 'expected_delivery')
     deleted.update_attributes!(:deleted_at => DateTime.now)
     Place.expected_delivery_facilities.include?(deleted.place).should be_false
-    wrong = create_place!('lab', 'Wrongcrest')
+    wrong = create_place_entity!('Wrongcrest', 'lab')
     Place.expected_delivery_facilities.include?(wrong.place).should be_false
   end
 
