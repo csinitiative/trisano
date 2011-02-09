@@ -322,8 +322,8 @@ es:
   add_forms: 'Agregar formularios'
   remove_forms: 'Eliminar formularios'
   add_to_event: 'Agregar al evento'
-  search_existing_clinician: "Buscar un clínico existente"
-  add_clinician: "Agregar un clínico"
+  add_existing_clinician: "Agregar a un clínico existente"
+  add_clinician: "Agregar a un clínico"
   search_existing_diagnostic_facility: "Buscar una institución diagnóstica existente"
   add_diagnostic_facility: "Agregar una institución diagnóstica"
   diagnostic_types: "Tipos de lugar"
