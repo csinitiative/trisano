@@ -19,8 +19,6 @@ class HospitalizationFacility < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   has_one :hospitals_participation, :foreign_key => :participation_id, :dependent => :destroy
 
-  # Ordinarily we would accept nested attributes for place_entity too.  But currently we're not allowing them to add new
-  # hospitals, only link to existing ones.  Change that, when asked to.
   accepts_nested_attributes_for :hospitals_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def validate

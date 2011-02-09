@@ -69,26 +69,50 @@ class HumanEvent < Event
     :reject_if => proc { |attrs| attrs.has_key?("place_entity_attributes") && attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :labs,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| rewrite_attrs(attrs) }
+    :reject_if => proc { |attrs| reject_or_rewrite_attrs(attrs) }
   accepts_nested_attributes_for :participations_contact, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :participations_encounter, :reject_if => proc { |attrs| attrs.all? { |k, v| ((k == "user_id") ||  (k == "encounter_location_type")) ? true : v.blank? } }
 
   class << self
-    def rewrite_attrs(attrs)
-      entity_attrs = attrs["place_entity_attributes"]
-      lab_attrs = entity_attrs["place_attributes"]
-      return true if (lab_attrs.all? { |k, v| v.blank? } && attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } })
-
-      # If there's a lab with the same name already in the database, use that instead.
-      existing_labs = Place.labs_by_name(lab_attrs["name"])
-      unless existing_labs.empty?
-        attrs["secondary_entity_id"] = existing_labs.first.entity_id
-        attrs.delete("place_entity_attributes")
-      else
-        lab_attrs["place_type_ids"] = [Code.lab_place_type_id]
-      end
-
+    # Lab participations will either receive a place entity hash or a secondary_entity_id.
+    #
+    # Place entity hashes are received when the operation needs the flexibility to create
+    # a new lab (place entity) in the system (automated staged messaging assignment).
+    #
+    # A secondary_entity_id will be received from drop-down select lists of labs in the UI.
+    #
+    # Both structures are inspected to determine nested-attribute rejection. If place
+    # attributes are received, an attempt is made to reuse an existing entity to avoid
+    # creating duplicates.
+    def reject_or_rewrite_attrs(attrs)
+      return true if (lab_place_attributes_blank?(attrs) && lab_result_attributes_blank?(attrs))
+      rewrite_attributes_to_reuse_place_entities(attrs)
       return false
+    end
+
+    def lab_place_attributes_blank?(attrs)
+      if attrs["place_entity_attributes"]
+        return attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? }
+      else
+        return attrs["secondary_entity_id"].blank?
+      end
+    end
+
+    def lab_result_attributes_blank?(attrs)
+      attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+    end
+    
+    def rewrite_attributes_to_reuse_place_entities(attrs)
+      if attrs["place_entity_attributes"]
+        place_attributes = attrs["place_entity_attributes"]["place_attributes"]
+        existing_labs = Place.labs_by_name(place_attributes["name"])
+        unless existing_labs.empty?
+          attrs["secondary_entity_id"] = existing_labs.first.entity_id
+          attrs.delete("place_entity_attributes")
+        else
+          place_attributes["place_type_ids"] = [Code.lab_place_type_id]
+        end
+      end
     end
 
     def get_allowed_queues(query_queues)

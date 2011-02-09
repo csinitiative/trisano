@@ -17,16 +17,13 @@
 
 Given /^I have an existing contact event$/ do
   @event = Factory.create(:contact_with_disease, :address => Factory.create(:address))
-
-  # we build (rather then create) some form bits because they have special save mechanisms.
   @form =  Factory.build(:form)
   @form.save_and_initialize_form_elements
   @form.investigator_view_elements_container.add_child Factory.create(:view_element, :tree_id => @form.form_base_element.tree_id)
   @form.save!
   @published_form = @form.publish
-
   @event.add_forms(@published_form.id)
-  @event.labs << Factory.create(:lab)
+  add_lab_to_event(@event, "ARUP")
   @event.save!
 end
 

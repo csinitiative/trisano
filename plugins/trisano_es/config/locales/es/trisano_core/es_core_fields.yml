@@ -82,6 +82,7 @@ es:
             middle_name: Segundo nombre de contacto
       labs:
         name: Laboratorios
+        secondary_entity_id: Resultados de laboratorio | Laboratorio
         lab_results:
           comment: Resultados de laboratorio | Comentario
           organism: Resultados de laboratorio | Organismo
@@ -95,9 +96,6 @@ es:
           specimen_sent_to_state: "Resultados de laboratorio | Muestra enviada al laboratorio provincial"
           lab_test_date: Resultados de laboratorio | Fecha de prueba de laboratorio
           specimen_source: "Resultados de laboratorio | Fuente de muestra"
-        place_entity:
-          place:
-            name: Resultados de laboratorio | Nombre de laboratorio
       imported_from_id: Se importó de
     morbidity_event:
       name: Evento de Morbilidad
@@ -197,6 +195,7 @@ es:
       state_case_status_id: Estado de caso provincial
       labs:
         name: Laboratorios
+        secondary_entity_id: Resultados de laboratorio | Laboratorio
         lab_results:
           organism: Resultados de laboratorio | Organismo
           comment: Resultados de laboratorio | Comentario
@@ -210,9 +209,6 @@ es:
           specimen_sent_to_state: "Resultados de laboratorio | Muestra enviada al laboratorio provincial"
           lab_test_date: Resultados de laboratorio | Fecha de prueba de laboratorio
           specimen_source: "Resultados de laboratorio | Fuente de muestra"
-        place_entity:
-          place:
-            name: Resultados de laboratorio | Nombre de laboratorio
       imported_from_id: Se importó de
     encounter_event:
       name: Encounter Event (EN)

@@ -157,6 +157,8 @@ en:
         secondary_entity_id: Jurisdiction responsible for investigation
 
       lab:
+        secondary_entity_id: Lab
+        place_entity: Lab
         _delete: Remove lab (with results)
         _destroy: Remove lab (with results)
 

@@ -104,6 +104,7 @@ en:
             middle_name: Contact middle name
       labs:
         name: Labs
+        secondary_entity_id: Lab results | Lab
         lab_results:
           comment: Lab results | Comment
           organism: Lab results | Organism
@@ -117,9 +118,6 @@ en:
           specimen_sent_to_state: Lab results | Specimen sent to state lab
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
-        place_entity:
-          place:
-            name: Lab results | Lab name
       imported_from_id: Imported from
     morbidity_event:
       name: Morbidity Event
@@ -248,6 +246,7 @@ en:
       state_case_status_id: State case status
       labs:
         name: Labs
+        secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
           comment: Lab results | Comment
@@ -261,9 +260,6 @@ en:
           specimen_sent_to_state: Lab results | Specimen sent to state lab
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
-        place_entity:
-          place:
-            name: Lab results | Lab name
       imported_from_id: Imported from
     encounter_event:
       name: Encounter Event
@@ -276,6 +272,7 @@ en:
       labs_section: Labs
       labs:
         name: Labs
+        secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
           comment: Lab results | Comment
@@ -289,9 +286,6 @@ en:
           specimen_sent_to_state: Lab results | Specimen sent to state lab
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
-        place_entity:
-          place:
-            name: Lab results | Lab name
       treatments_section: Treatments
       treatments: Encounter treatments
       event_notes_section: Event Notes

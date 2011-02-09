@@ -60,7 +60,7 @@ describe HumanEvent, 'associations'  do
       end
 
       it "Should allow labs to be deleted via a nested attribute" do
-        @event.labs.build
+        @event.labs.build( { :secondary_entity_id => Factory.create(:place_entity).id.to_s } )
         @event.save
         @event.labs_attributes = [ { "id" => "#{@event.labs[0].id}", "_destroy"=>"1"} ]
         @event.labs[0].should be_marked_for_destruction
@@ -110,12 +110,39 @@ describe HumanEvent, 'associations'  do
         @event.clinicians.should be_empty
       end
 
-      it "should reject labs with no lab entries" do
+      it "should reject labs with a place entity structure with no lab entries" do
         @event.labs_attributes = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "" } }, "lab_results_attributes" => {} } ]
         @event.labs.should be_empty
       end
 
-      it "should reuse existing labs" do
+      it "should reject labs with a secondary_entity_id structure with no lab entries" do
+        @event.labs_attributes = [ { "secondary_entity_id" => "", "lab_results_attributes" => {} } ]
+        @event.labs.should be_empty
+      end
+
+      it "should reject labs without place_entity_attributes or a secondary_entity_id" do
+        @event.labs_attributes = [ { "lab_results_attributes" => {} } ]
+        @event.labs.should be_empty
+      end
+      
+      it "should accept labs with a place entity with place attributes" do
+        @event.labs_attributes = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "ARUP" } }, "lab_results_attributes" => {} } ]
+        @event.labs.should_not be_empty
+      end
+
+      it "should accept labs with only a secondary_entity_id" do
+        @event.labs_attributes = [ { "secondary_entity_id" => Factory.create(:place_entity).id.to_s, "lab_results_attributes" => {} } ]
+        @event.labs.should_not be_empty
+      end
+
+      it "should associate labs with a secondary_entity_id with that entity" do
+        lab_place_entity = Factory.create(:place_entity)
+        @event.labs_attributes = [ { "secondary_entity_id" => lab_place_entity.id.to_s, "lab_results_attributes" => {} } ]
+        @event.save!
+        @event.labs[0].place_entity.id.should == lab_place_entity.id
+      end
+
+      it "should reuse existing labs if passed a place entity" do
         @event.labs_attributes = [ { "place_entity_attributes" => { "place_attributes" => { "name" => places(:Existing_Lab_One).name } }, "lab_results_attributes" => {} } ]
         @event.labs[0].secondary_entity_id.should == places(:Existing_Lab_One).entity_id
       end

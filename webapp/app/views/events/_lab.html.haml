@@ -26,16 +26,14 @@
 %div{:class => 'lab', :style => "clear: both;"}
   = error_messages_for :object => lab_form.object
 
-  - lab_form.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
-    - pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+  - core_element(:secondary_entity_id, lab_form, :horiz) do
+    = lab_form.label :secondary_entity_id
+    = lab_form.collection_select(:secondary_entity_id, PlaceEntity.labs, :id, :name, { :include_blank => true }, { :class => 'required_if_others' })
 
-      - core_element(:name, p, :horiz) do
-        = trisano_auto_complete(p, :name, t("lab"), {:size => 50, :maxlength => 255, :class => 'required_if_others'}, {:url => {:controller => "events", :action => "auto_complete_for_lab_name"}, :param_name => 'lab_name' })
-
-      - if defined?(f) && !f.object.new_record?
-        %span.horiz
-          = f.label :_destroy
-          = f.check_box :_destroy
+  - if defined?(f) && !f.object.new_record?
+    %span.horiz
+      = f.label :_destroy
+      = f.check_box :_destroy
 
   - lab_form.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result_fields|
     = render :partial => "events/lab_result", :locals => { :f => lab_result_fields }
