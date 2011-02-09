@@ -49,7 +49,7 @@ class MorbidityEventsController < EventsController
 
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @event }
+      format.xml
     end
   end
 
@@ -97,7 +97,7 @@ class MorbidityEventsController < EventsController
             redirect_to cmr_url(@event, @query_params)
           end
         }
-        format.xml  { render :xml => @event, :status => :created, :location => @event }
+        format.xml { head :created, :location => cmr_url(@event) }
       else
         format.html { render :action => "new", :status => :unprocessable_entity }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }

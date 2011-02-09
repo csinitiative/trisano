@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<morbidity-event xmlns:atom="http://www.w3.org/2005/Atom">
+  <% if morbidity_event.new_record? -%>
+    <%= xml_link_to cmrs_url, :rel => :index %>
+    <%= xml_link_to new_cmr_url, :rel => :self %>
+  <% else -%>
+    <%= xml_link_to cmr_url(@event), :rel => :self %>
+    <%= xml_link_to edit_cmr_url(@event), :rel => :edit %>
+  <% end -%>
+  <first-reported-PH-date><%= @event.first_reported_PH_date.try(:xmlschema) -%></first-reported-PH-date>
+  <interested-party-attributes>
+    <person-entity-attributes>
+      <person-attributes>
+        <last-name><%= @event.safe_call_chain(:interested_party, :person_entity, :person, :last_name) %></last-name>
+      </person-attributes>
+    </person-entity-attributes>
+  </interested-party-attributes>
+</morbidity-event>
