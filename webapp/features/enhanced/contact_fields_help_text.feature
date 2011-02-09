@@ -9,6 +9,7 @@ Feature: Contact event, viewing core field help text
     And all core field configs for a contact event have help text
     And a basic morbidity event exists
     And there is a contact on the event named Contacto
+    And a lab named "Labby"
 
     When I am on the contact event edit page
     Then I should see help text for all contact event core fields in edit mode

@@ -327,6 +327,8 @@ def add_hospitalization_facility_to_event(event, hospital_name, hospitals_partic
 end
 
 def create_lab!(name)
+  existing_lab = Place.labs_by_name(name).first
+  return existing_lab.entity unless existing_lab.nil?
   create_place_entity!(name, :lab)
 end
 
@@ -373,9 +375,6 @@ def create_contact!(name)
   contact_event
 end
 
-# Since codes might already be in the database from a code load, an attempt
-# is first made to find the code. If it is not present, a factory is used
-# to create the code. This is getting around legacy cruft.
 def create_code!(code_name, the_code)
   code = Code.find_by_code_name_and_the_code(code_name, the_code)
   code = Factory.create(:code, :code_name => code_name, :the_code => the_code) unless code
