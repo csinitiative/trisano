@@ -101,6 +101,7 @@ def mock_user
   @user.stubs(:best_name).returns("Johnny Johnson")
   @user.stubs(:disabled?).returns(false)
   @user.stubs(:destroyed?).returns(false)
+  @user.stubs(:can?).returns(true)
 
   @role_membership = Factory.build(:role_membership)
   @role = Factory.build(:role)

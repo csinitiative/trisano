@@ -24,3 +24,4 @@ Feature: XML API for CMRs
       And I POST the XML to the collection
      Then I should get a 201 response
       And the Location header should have a link to the new event
+

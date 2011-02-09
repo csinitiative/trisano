@@ -501,3 +501,44 @@ describe MorbidityEventsController, "cmrs/1/update with redirect_to option" do
     response.should redirect_to(edit_cmr_url(@promoted_event))
   end
 end
+
+describe MorbidityEventsController, "xml api" do
+  before do
+    mock_user
+    @event = Factory.create(:morbidity_event)
+  end
+  
+  it "returns xml for the event" do
+    request.env['HTTP_ACCEPT'] = 'application/xml'
+    get :show, :id => @event
+    response.should be_success
+    response.content_type.should == 'application/xml'
+  end
+
+  context "for creating events" do
+    fixtures :places, :places_types, :entities, :users
+
+    before do
+      @xml = <<-XML
+        <morbidity-event>
+        <first-reported-PH-date>#{Date.today.xmlschema}</first-reported-PH-date>
+        <interested-party-attributes>
+        <person-entity-attributes>
+        <race_ids>#{ExternalCode.find_by_code_description_and_code_name('White', 'race').id}</race_ids>
+        <race_ids>#{ExternalCode.find_by_code_description_and_code_name('Asian', 'race').id}</race_ids>
+        <person-attributes><last-name>Smoker</last-name></person-attributes>
+        </person-entity-attributes></interested-party-attributes>
+        </morbidity-event>
+      XML
+    end
+
+    it "can create events for patients w/ multiple races" do
+      request.env['HTTP_ACCEPT'] = 'application/xml'
+      post :create, Hash.from_xml(@xml), :user_id => 'default_user'
+      response.code.should == "201"
+      response.headers['Location'].should =~ %r{/cmrs/\d+}
+      assigns[:event].should_not be_nil
+      assigns[:event].safe_call_chain(*%w(interested_party person_entity race_ids size)).should == 2
+    end
+  end
+end

@@ -26,6 +26,10 @@ class ExternalCodesController < AdminController
     @code_name = CodeName.find_by_code_name(params[:code_name], :conditions => { :external => true })
     raise(ActiveRecord::RecordNotFound, t("could_not_find_code_name_for_name", :name => params[:code_name])) unless @code_name
     @external_codes = @code_name.external_codes.find(:all, :order => 'the_code')
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @external_codes }
+    end
   end
 
   def new_code

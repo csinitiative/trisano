@@ -4,14 +4,18 @@
     <%= xml_link_to cmrs_url, :rel => :index %>
     <%= xml_link_to new_cmr_url, :rel => :self %>
   <% else -%>
-    <%= xml_link_to cmr_url(@event), :rel => :self %>
-    <%= xml_link_to edit_cmr_url(@event), :rel => :edit %>
+    <%= xml_link_to cmr_url(morbidity_event), :rel => :self %>
+    <%= xml_link_to edit_cmr_url(morbidity_event), :rel => :edit %>
   <% end -%>
-  <first-reported-PH-date><%= @event.first_reported_PH_date.try(:xmlschema) -%></first-reported-PH-date>
+  <first-reported-PH-date><%= morbidity_event.first_reported_PH_date.try(:xmlschema) -%></first-reported-PH-date>
   <interested-party-attributes>
     <person-entity-attributes>
+      <%= xml_link_to index_code_url(:code_name => 'race'), :rel => 'race' %>
+      <% for race_id in (morbidity_event.safe_call_chain(:interested_party, :person_entity, :race_ids) || []) -%>
+        <race_ids><%= race_id -%></race_ids>
+      <% end -%>
       <person-attributes>
-        <last-name><%= @event.safe_call_chain(:interested_party, :person_entity, :person, :last_name) %></last-name>
+        <last-name><%= morbidity_event.safe_call_chain(:interested_party, :person_entity, :person, :last_name) %></last-name>
       </person-attributes>
     </person-entity-attributes>
   </interested-party-attributes>

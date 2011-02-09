@@ -381,6 +381,15 @@ module ApplicationHelper
   end
 
   def xml_link_to(url, options = {})
+    options = options.symbolize_keys
+    options[:rel] = link_relation_for(options[:rel])
     tag('atom:link', options.merge(:href => url))
   end
+  
+  def link_relation_for(rel)
+    return rel.to_s if rel.to_s.starts_with? 'http'
+    understood = %w(self alternate bookmark edit related previous next first last up enclosure index)
+    understood.include?(rel.to_s) ? rel.to_s : "http://trisano.org/api/rels/#{rel}"
+  end
+
 end
