@@ -1405,9 +1405,10 @@ module EventsHelper
       <script type="text/javascript">
         //<![CDATA[
           $j(function(){ $j('select#_clinician_id').live('change', function(){
-              entity_id = $j('select#_clinician_id').val();
+              var selector = $j(this);
+              var entity_id = selector.val();
               if (!entity_id) return false;
-              $j('img#clinician_id_spinner').show();
+              var image = $j('img#clinician_id_spinner').show();
               new Ajax.Updater('selected_clinicians',
                 "#{url_for :controller => :morbidity_events,
                   :action => :clinicians_search_selection,
@@ -1419,8 +1420,8 @@ module EventsHelper
                   insertion: Insertion.Bottom,
                   method: 'get',
                   onComplete: function() {
-                    $j('img#clinician_id_spinner').hide();
-                    $j('select#_clinician_id').val('');
+                    image.hide();
+                    selector.val('');
                   }
                 }
               );
@@ -1429,6 +1430,25 @@ module EventsHelper
         //]]>
       </script>
     HTML
+  end
+
+  # Renders a reusable in-line contact search form.
+  #
+  # table: name of the database table or the plural of the model name;
+  #        can be a symbol or anything responding to to_s.
+  #
+  # Options:
+  #   * results_action: For in-line mulitples, use 'add', for
+  #     links to the contact new/edit views, use 'new'
+  #   * parent_id: The id of the parent event if applicable
+  def search_interface(table, options={}, &block)
+    model = table.to_s.singularize
+    haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
+    # TODO: Add "#{model}_search_type" if :with_type specified
+    haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}, :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
+    haml_concat(image_tag('redbox_spinner.gif', :id => "#{model}-search-spinner", :style => "height: 16px; width: 16px; display: none;"))
+    yield if block_given?
+    haml_tag(:div, :id => "#{model}_search_results")
   end
 
   def live_search_callback(options = {})
@@ -1514,5 +1534,20 @@ module EventsHelper
 
   def link_to_top
     "<a href='' onclick='scrollToTop(); return false;'>&uarr; Return to top</a>"
+  end
+
+  private
+
+  def search_with_option(model, options)
+    results_action = options[:results_action].blank? ? 'add' : options[:results_action].to_s
+    with_option = "'name=' + $('#{model}_search_name').value + '&results_action=#{results_action.to_s}"
+
+    if options[:parent_id]
+      with_option << "&parent_id=#{options[:parent_id]}'"
+    elsif options[:with_type]
+      with_option << "&type=' + $('#{model}_search_type').value"
+    else
+      with_option << "'"
+    end
   end
 end
