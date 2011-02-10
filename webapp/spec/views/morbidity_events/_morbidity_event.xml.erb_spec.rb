@@ -12,7 +12,7 @@ describe "/_morbidity_event.xml.erb" do
 
   it "should have a link to race options" do
     response.should have_tag 'morbidity-event interested-party-attributes person-entity-attributes' do
-      with_tag '[rel=?]', 'http://trisano.org/api/rels/race'
+      with_tag '[rel=?]', 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'
     end
   end
 end
