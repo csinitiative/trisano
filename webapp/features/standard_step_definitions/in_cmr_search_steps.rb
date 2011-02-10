@@ -5,12 +5,6 @@ Given /^an active clinician named "([^\"]*)"$/ do |name|
   @clinician_entity.save!
 end
 
-When /^I search for a clinician named "([^\"]*)"$/ do |name|
-  visit url_for({ :controller => :morbidity_events,
-                  :action => :auto_complete_for_clinicians_search,
-                  :last_name => name})
-end
-
 Given /^a diagnostic facility named "([^\"]*)"$/ do |name|
   create_diagnostic_facility!(name)
 end
