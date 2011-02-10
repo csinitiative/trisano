@@ -730,7 +730,7 @@
 
 - help_text:
   fb_accessible: true
-  can_follow_up: true
+  can_follow_up: false
   event_type: morbidity_event
   field_type: multi_select
   key: morbidity_event[interested_party][person_entity][race_ids]
