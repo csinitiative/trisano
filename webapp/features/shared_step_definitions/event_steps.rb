@@ -198,7 +198,5 @@ Given /^all core field configs for a (.+) have help text$/ do |event_type|
 end
 
 Given /^the event has a lab$/i do
-  lab = Factory.build(:lab)
-  @event.labs << lab
-  @event.save!
+  add_lab_to_event(@event, "ARUP")
 end

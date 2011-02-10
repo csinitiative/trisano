@@ -53,7 +53,7 @@ module PerinatalHepBSpecHelper
   end
 
   def create_delivery_facility!(type, name)
-    create_place!(type, name)
+    create_place_entity!(name, type)
   end
 
   def given_p_hep_b_core_fields_loaded

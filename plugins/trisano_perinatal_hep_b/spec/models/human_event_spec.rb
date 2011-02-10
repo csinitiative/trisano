@@ -43,7 +43,7 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
   describe "removing expected delivery data" do
     before do
       @event = Factory.create(:morbidity_event)
-      entity = create_place!('expected_delivery', 'Arkham')
+      entity = create_place_entity!('Arkham', 'expected_delivery')
       @event.build_expected_delivery_facility(:place_entity => entity).save!
     end
 
@@ -58,7 +58,7 @@ describe HumanEvent, "in the Perinatal Hep B plugin" do
   describe "removing actual delivery data" do
     before do
       @event = Factory.create(:morbidity_event)
-      entity = create_place!('actual_delivery', 'Arkham')
+      entity = create_place_entity!('Arkham', 'actual_delivery')
       @event.build_actual_delivery_facility(:place_entity => entity).save!
     end
 

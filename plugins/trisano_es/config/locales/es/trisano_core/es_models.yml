@@ -158,6 +158,8 @@ es:
         secondary_entity_id: Jurisdicción encargada de la investigación
 
       lab:
+        secondary_entity_id: Laboratorio
+        place_entity: Laboratorio
         _delete: Eliminar laboratorio (y resultados)
         _destroy: Eliminar laboratorio (y resultados)
 

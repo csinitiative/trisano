@@ -3,18 +3,18 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %div{:id => "clinicians"}
-  =live_search(t('search_existing_clinician'), :search_field => 'clinicians_search', :results => 'live_search_clinicians', :select => 'last_name', :event_type => event_form.object_name)
+  !=clinician_dropdown
 
   -event_form.fields_for(:clinicians, :builder => ExtendedFormBuilder) do |clinician_fields|
     -# Currently we don't allow editing clinician information (because changing it for one event will change it for all).
@@ -25,7 +25,7 @@
       =render :partial => 'events/clinician', :locals => { :f => clinician_fields }
     -else
       =render :partial => 'events/clinician_show', :locals => { :f => clinician_fields }
-  #live_search_clinicians
+  #selected_clinicians
 
   -blank_clinician = Clinician.new
   -blank_clinician.build_person_entity

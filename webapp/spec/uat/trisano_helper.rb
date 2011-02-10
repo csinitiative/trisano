@@ -736,7 +736,7 @@ module TrisanoHelper
     click_core_tab(browser, LABORATORY)
     browser.click("link=Add a new lab result") unless lab_index == 1
     sleep(1)
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//input[contains(@id, '_place_entity_attributes_place_attributes_name')]", attributes[:lab_name]) if attributes[:lab_name]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:lab_name]}") if attributes[:lab_name]
     browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]

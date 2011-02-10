@@ -915,9 +915,9 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
-  field_type: single_line_text
+  field_type: drop_down
   event_type: contact_event
-  key: contact_event[labs][place_entity][place][name]
+  key: contact_event[labs][secondary_entity_id]
   parent_key: contact_event[labs_section]
   required_for_section: true
 
@@ -1487,9 +1487,9 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
-  field_type: single_line_text
+  field_type: drop_down
   event_type: morbidity_event
-  key: morbidity_event[labs][place_entity][place][name]
+  key: morbidity_event[labs][secondary_entity_id]
   parent_key: morbidity_event[labs_section]
   required_for_section: true
 
@@ -1979,9 +1979,9 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
-  field_type: single_line_text
+  field_type: drop_down
   event_type: encounter_event
-  key: encounter_event[labs][place_entity][place][name]
+  key: encounter_event[labs][secondary_entity_id]
   parent_key: encounter_event[labs_section]
   required_for_section: true
 

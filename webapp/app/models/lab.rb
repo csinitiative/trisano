@@ -23,10 +23,12 @@ class Lab < Participation
     lab.event.add_note(I18n.translate("system_notes.lab_and_results_deleted", :locale => I18n.default_locale))
   end
 
-  accepts_nested_attributes_for :lab_results, 
-    :allow_destroy => true, 
+  validates_presence_of :place_entity
+
+  accepts_nested_attributes_for :lab_results,
+    :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
-  accepts_nested_attributes_for :place_entity, 
+  accepts_nested_attributes_for :place_entity,
     :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
 end

@@ -11,9 +11,10 @@ Feature: Adding Lab Results to an Event Generates a Task
         | disease_name | common_name |
         | Mumps        | Lumpy       |
       And the event is assigned to user "default"
+      And a lab named "Elephant Lab"
     When I go to edit the CMR
      And I click on the lab tab
-     And I enter a lab name of 'Elephant Lab'
+     And I select "Elephant Lab" from "Lab"
      And I select a test type of 'Lumpy'
      And I save the edit event form
     Then I should be on the show CMR page
@@ -28,9 +29,10 @@ Feature: Adding Lab Results to an Event Generates a Task
         | disease_name | common_name     |
         | Mumps        | Something Mumpy |
       And the event is assigned to user "default_user"
+      And a lab named "Elephant Lab"
     When I go to edit the CMR
       And I click on the lab tab
-      And I enter a lab name of 'Elephant Lab'
+      And I select "Elephant Lab" from "Lab"
       And I select a test type of 'Something Mumpy'
       And I save the edit event form
     Then I should be on the show CMR page

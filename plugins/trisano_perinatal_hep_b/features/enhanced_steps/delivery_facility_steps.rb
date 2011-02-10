@@ -112,7 +112,7 @@ When /^I select an actual delivery facility from the list$/ do
 end
 
 Given /^there is an (.+) facility named "([^\"]*)"$/ do |type, name|
-  create_place!(type.gsub(' ', '_'), name)
+  create_place_entity!(name, type.gsub(' ', '_'))
 end
 
 When /^I fill in the actual delivery date$/ do

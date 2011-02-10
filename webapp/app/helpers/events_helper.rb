@@ -1397,6 +1397,38 @@ module EventsHelper
     JS
   end
 
+  def clinician_dropdown
+    # DEBT: This needs to be refactored and made more general.
+    <<-HTML
+      #{collection_select nil, :clinician_id, Person.clinicians, :entity_id, :last_comma_first_middle, :prompt => t(:add_existing_clinician)}
+      #{image_tag 'redbox_spinner.gif', :alt => 'working...', :id => 'clinician_id_spinner', :height => '16', :width => '16', :style => 'display: none;'}
+      <script type="text/javascript">
+        //<![CDATA[
+          $j(function(){ $j('select#_clinician_id').live('change', function(){
+              entity_id = $j('select#_clinician_id').val();
+              if (!entity_id) return false;
+              $j('img#clinician_id_spinner').show();
+              new Ajax.Updater('selected_clinicians',
+                '/morbidity_events/clinicians_search_selection?event_type=morbidity_event',
+                {
+                  asynchronous: true,
+                  evalScripts: true,
+                  parameters: { id: entity_id },
+                  insertion: Insertion.Bottom,
+                  method: 'get',
+                  onComplete: function() {
+                    $j('img#clinician_id_spinner').hide();
+                    $j('select#_clinician_id').val('');
+                  }
+                }
+              );
+            });
+          });
+        //]]>
+      </script>
+    HTML
+  end
+
   def live_search_callback(options = {})
     options = {:attribute => 'name'}.merge(options)
 
