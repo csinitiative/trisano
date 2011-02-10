@@ -2,7 +2,7 @@ Feature: Managing clinicians on events
 
   To enable users to add and remove clinicians
   I want to be able to add and remove clinicians
-    
+
   Scenario: Adding and removing clinicians in new mode
     Given I am logged in as a super user
     And there is a clinician
@@ -21,7 +21,7 @@ Feature: Managing clinicians on events
     And I check a clinician to remove
     And I save the event
     Then I should not see the removed clinician
-    
+
   Scenario: Adding clinicians in edit mode
     Given I am logged in as a super user
     And there is a clinician
@@ -39,6 +39,5 @@ Feature: Managing clinicians on events
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
     When I navigate to the event edit page
-    And I search for the deleted clinician
     Then I should not see the deleted clinician
 

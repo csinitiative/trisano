@@ -21,16 +21,15 @@ end
 
 Given(/^a deleted clinician exists with a name similar to another clinician$/) do
   @common_name = get_unique_name(1)
-  @clinician = Factory.create(:person_entity, :person => Factory.create(:clinician, :last_name => "#{@common_name}-Active"))
+  @clinician = Factory.create(:person_entity, :person => Factory.create(:clinician, :last_name => @common_name))
   @deleted_clinician = Factory.create(:person_entity, :person => Factory.create(:clinician, :last_name => "#{@common_name}-Deleted"), :deleted_at => Time.now)
 end
 
 When(/^I add an existing clinician$/) do
   click_core_tab(@browser, "Clinical")
-  @browser.type_keys("clinicians_search", @clinician.person.last_name)
 
-  wait_for_element_present("//div[@id='clinicians_search_choices']/ul")
-  @browser.click "//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@clinician.person.last_name}']"
+  @browser.select("//select[@id='_clinician_id']", @clinician.person.last_comma_first_middle)
+
   wait_for_element_present("//div[@class='existing_clinician']")
 end
 
@@ -68,8 +67,7 @@ Then(/^I should see all added clinicians$/) do
 end
 
 Then(/^I should not see the deleted clinician$/) do
-  @browser.is_element_present("//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@clinician.person.last_name}']").should be_true
-  @browser.is_element_present("//div[@id='clinicians_search_choices']/ul/li/span[@class='last_name'][text()='#{@deleted_clinician.person.last_name}']").should be_false
+  @browser.is_element_present("//select[@id='_clinician_id']/option[text()='#{@deleted_clinician.person.last_comma_first_middle}']").should be_false
 end
 
 

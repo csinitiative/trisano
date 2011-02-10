@@ -4,11 +4,6 @@ Feature: Ajax-y searches from within CMRs
   As an investigator
   I need to be able to search for existing enitities while filling in cases
 
-  Scenario: Searching for clinicians
-    Given an active clinician named "Jones"
-     When I search for a clinician named "Jones"
-     Then I should see "Jones"
-
   Scenario: Searching for diagnostic facilities
     Given a diagnostic facility named "Hiccup Labs"
      When I search for a diagnostic facility named "Hiccup"

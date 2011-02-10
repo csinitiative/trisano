@@ -1400,7 +1400,7 @@ module EventsHelper
   def clinician_dropdown
     # DEBT: This needs to be refactored and made more general.
     <<-HTML
-      #{collection_select nil, :clinician_id, Person.clinicians, :entity_id, :last_comma_first_middle, :prompt => t(:add_existing_clinician)}
+      #{collection_select nil, :clinician_id, Person.active_clinicians, :entity_id, :last_comma_first_middle, :prompt => t(:add_existing_clinician)}
       #{image_tag 'redbox_spinner.gif', :alt => 'working...', :id => 'clinician_id_spinner', :height => '16', :width => '16', :style => 'display: none;'}
       <script type="text/javascript">
         //<![CDATA[
@@ -1409,7 +1409,9 @@ module EventsHelper
               if (!entity_id) return false;
               $j('img#clinician_id_spinner').show();
               new Ajax.Updater('selected_clinicians',
-                '/morbidity_events/clinicians_search_selection?event_type=morbidity_event',
+                "#{url_for :controller => :morbidity_events,
+                  :action => :clinicians_search_selection,
+                  :event_type => :morbidity_event}",
                 {
                   asynchronous: true,
                   evalScripts: true,

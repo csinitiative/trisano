@@ -32,14 +32,6 @@ class EventsController < ApplicationController
     render :inline => "<%= auto_complete_result(@items, 'name') %>"
   end
 
-  def auto_complete_for_clinicians_search
-    @clinicians = Person.active_clinicians.find(:all,
-      :include => {:person_entity => :telephones},
-      :conditions => ["LOWER(last_name) LIKE ?", params[:last_name].downcase + '%'],
-      :limit => 20)
-    render :partial => "events/clinicians_search", :layout => false, :locals => {:clinicians => @clinicians}
-  end
-
   def contacts_search
     page = params[:page] ? params[:page] : 1
 

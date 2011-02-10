@@ -316,7 +316,7 @@ en:
   add_forms: 'Add Forms'
   remove_forms: 'Remove Forms'
   add_to_event: 'Add to Event'
-  add_existing_clinician: "add an existing clinician"
+  add_existing_clinician: "Add an existing clinician"
   add_clinician: "Add a clinician"
   search_existing_diagnostic_facility: "Search for an existing diagnostic facility"
   add_diagnostic_facility: "Add a diagnostic facility"
