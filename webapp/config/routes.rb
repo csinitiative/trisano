@@ -84,6 +84,7 @@ ActionController::Routing::Routes.draw do |map|
     codes.codes            'codes',                                   :action => 'index'
     codes.create_code      'codes/:code_name',                        :conditions => { :method => :post },  :action => 'create_code'
     codes.index_code       'codes/:code_name',                        :action => 'index_code'
+    codes.formatted_index_code 'codes/:code_name.:format',            :action => 'index_code'
     codes.new_code         'codes/:code_name/new',                    :action => 'new_code'
     codes.update_code      'codes/:code_name/:the_code',              :conditions => { :method => :post },  :action => 'update_code'
     codes.show_code        'codes/:code_name/:the_code',              :action => 'show_code'

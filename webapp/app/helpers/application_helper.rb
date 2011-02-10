@@ -389,7 +389,7 @@ module ApplicationHelper
   def link_relation_for(rel)
     return rel.to_s if rel.to_s.starts_with? 'http'
     understood = %w(self alternate bookmark edit related previous next first last up enclosure index)
-    understood.include?(rel.to_s) ? rel.to_s : "http://trisano.org/api/rels/#{rel}"
+    understood.include?(rel.to_s) ? rel.to_s : "https://wiki.csinitiative.com/display/tri/Relationship+-+#{rel}"
   end
 
 end

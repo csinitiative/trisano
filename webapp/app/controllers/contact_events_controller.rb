@@ -61,7 +61,7 @@ class ContactEventsController < EventsController
         format.html {
           redirect_to edit_contact_event_url(@event)
         }
-        format.xml  { render :xml => @event, :status => :created, :location => @event }
+        format.xml  { head :status => :created, :location => @event }
       else
         format.html { render :action => "new", :status => :unprocessable_entity }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }

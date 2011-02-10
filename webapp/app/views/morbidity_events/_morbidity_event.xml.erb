@@ -10,7 +10,7 @@
   <first-reported-PH-date><%= morbidity_event.first_reported_PH_date.try(:xmlschema) -%></first-reported-PH-date>
   <interested-party-attributes>
     <person-entity-attributes>
-      <%= xml_link_to index_code_url(:code_name => 'race'), :rel => 'race' %>
+      <%= xml_link_to index_code_url(:code_name => 'race'), :rel => 'Race' %>
       <% for race_id in (morbidity_event.safe_call_chain(:interested_party, :person_entity, :race_ids) || []) -%>
         <race_ids><%= race_id -%></race_ids>
       <% end -%>
