@@ -22,16 +22,6 @@ class EventsController < ApplicationController
   before_filter :can_index?, :only => [:index, :export]
   before_filter :set_tab_index
 
-  def auto_complete_for_lab_name
-    @items = Place.find(:all, :select => "DISTINCT ON (LOWER(TRIM(name))) name",
-      :include => [:place_types, :entity],
-      :conditions => [ "LOWER(name) LIKE ? and codes.code_name = 'placetype' AND codes.the_code = 'L' AND entities.deleted_at IS NULL", params[:lab_name].downcase + '%'],
-      :order => "LOWER(TRIM(name)) ASC",
-      :limit => 20
-    )
-    render :inline => "<%= auto_complete_result(@items, 'name') %>"
-  end
-
   def contacts_search
     page = params[:page] ? params[:page] : 1
 
