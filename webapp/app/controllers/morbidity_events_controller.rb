@@ -18,9 +18,6 @@
 class MorbidityEventsController < EventsController
   include EventsHelper
 
-  # Debt: I don't think this is needed anymore
-  before_filter :capture_old_attributes, :only => [:update]
-
   def index
     return unless index_processing
 
@@ -187,10 +184,6 @@ class MorbidityEventsController < EventsController
     @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
-  end
-
-  def capture_old_attributes
-    @old_attributes = @event.attributes
   end
 
   def index_processing
