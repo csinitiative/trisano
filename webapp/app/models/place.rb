@@ -50,6 +50,10 @@ class Place < ActiveRecord::Base
     }
   }
 
+  named_scope :starts_with, lambda { |name|
+    { :conditions => [ "name ~* ?", "^#{name}" ] }
+  }
+
   class << self
 
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.

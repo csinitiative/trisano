@@ -45,9 +45,22 @@ class EventsController < ApplicationController
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
 
-  def auto_complete_for_places_search
-    places_by_name_and_types(params[:place_name], Place.epi_type_codes)
-    render :partial => "events/places_search", :layout => false, :locals => {:places => @places}
+  def places_search
+    page = params[:page] ? params[:page] : 1
+    name = params[:name]
+    # DEBT: Sure there must be a better way to parse this.
+    type_ids = params[:types].sub(/^\[(.*)\]$/, '\1').split(',').map {|s| s.to_i}
+    types = Code.find(type_ids).map{|c|c.the_code}
+
+    begin
+      @places = Place.starts_with(name).types(types).paginate(:include => { :entity => [:addresses, :canonical_address] }, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @places = []
+    end
+
+    render :partial => "events/places_search", :layout => false
   end
 
   def places_search_selection
