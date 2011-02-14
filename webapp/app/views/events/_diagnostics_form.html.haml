@@ -13,19 +13,15 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:id => "diagnostic_facilities"}
-  = live_search(t('search_existing_diagnostic_facility'), :search_field => 'diagnostics_search', :results => 'live_search_diagnostics', :select => 'place_name', :event_type => event_form.object_name)
-
-  - event_form.fields_for(:diagnostic_facilities, :builder => ExtendedFormBuilder) do |diagnostic_fields|
-    -# Currently we don't allow editing diagnostic information (because changing it for one event will change it for all).
-    -# This will change soon, and when it does we can undo this.
-
-    -# If this is a new record and we are not returning from a failed validation
-    - if diagnostic_fields.object.new_record? && diagnostic_fields.object.secondary_entity_id.nil?
-      = render :partial => 'events/diagnostic', :locals => { :f => diagnostic_fields }
-    - else
-      = render :partial => 'events/diagnostic_show', :locals => { :f => diagnostic_fields }
-  #live_search_diagnostics
+%div#diagnostic_facilities
+  - search_interface :diagnostic_facilities
+  %div#existing-facilities
+    - event_form.fields_for(:diagnostic_facilities, :builder => ExtendedFormBuilder) do |diagnostic_fields|
+      -# If this is a new record and we are not returning from a failed validation
+      - if diagnostic_fields.object.new_record? && diagnostic_fields.object.secondary_entity_id.nil?
+        = render :partial => 'events/diagnostic', :locals => { :f => diagnostic_fields }
+      - else
+        = render :partial => 'events/diagnostic_show', :locals => { :f => diagnostic_fields }
 
   - blank_diagnostic = DiagnosticFacility.new
   - blank_diagnostic.build_place_entity
@@ -34,4 +30,3 @@
   %p{:style => "clear: both;"}
     %br
     = add_record_link event_form, :diagnostic_facilities, t("add_diagnostic_facility"), :object => blank_diagnostic, :partial => 'events/diagnostic'
-

@@ -43,6 +43,13 @@ class Place < ActiveRecord::Base
     }
   }
 
+  named_scope :diagnostic_facilities, lambda { |name|
+    { :conditions => ["places.name ILIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (?) AND entities.deleted_at IS NULL", name + '%', Place.diagnostic_type_codes],
+      :include => [:place_types, :entity],
+      :order => 'LOWER(TRIM(places.name)) ASC'
+    }
+  }
+
   class << self
 
     # TODO:  Does not yet take into account multiple edits of a single hospital.  Can probably be optimized.

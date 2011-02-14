@@ -32,7 +32,7 @@ class EventsController < ApplicationController
         :page_size => 20
       )
     rescue
-      flash[:error] = t(:invalid_search_criteria)
+      flash.now[:error] = t(:invalid_search_criteria)
     end
 
     render :partial => "events/contacts_search", :layout => false
@@ -60,9 +60,17 @@ class EventsController < ApplicationController
     render :partial => "events/place_exposure_show", :layout => false, :locals => {:event_type => params[:event_type]}
   end
 
-  def auto_complete_for_diagnostics_search
-    places_by_name_and_types(params[:place_name], Place.diagnostic_type_codes)
-    render :partial => "events/places_search", :layout => false, :locals => {:places => @places}
+  def diagnostic_facilities_search
+    page = params[:page] || 1
+    name = (params[:name] || '').strip
+    begin
+      @places = Place.diagnostic_facilities(name).paginate(:include => { :entity => [:addresses, :canonical_address] }, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @places = []
+    end
+    render :partial => "events/diagnostics_search", :layout => false
   end
 
   def diagnostics_search_selection

@@ -1536,6 +1536,21 @@ module EventsHelper
     "<a href='' onclick='scrollToTop(); return false;'>&uarr; Return to top</a>"
   end
 
+  def ajaxy_pagination(results, table)
+    id_base = table.to_s.singularize
+    result = will_paginate(results, {
+      :renderer => 'RemoteLinkRenderer',
+      :remote => {
+        :with => "'name=#{params[:name]}'",
+        :update => "#{id_base}_search_results",
+        :loading => visual_effect(:appear, "#{id_base}_loader"),
+        :complete => visual_effect(:fade, "#{id_base}_loader") } } )
+    result << image_tag('redbox_spinner.gif',
+      :id => "#{id_base}_loader",
+        :style => 'display: none') if result
+    result
+  end
+
   private
 
   def search_with_option(model, options)

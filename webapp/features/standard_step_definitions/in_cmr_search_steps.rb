@@ -11,8 +11,8 @@ end
 
 When /^I search for a diagnostic facility named "([^\"]*)"$/ do |name|
   visit url_for({ :controller => :morbidity_events,
-                  :action => :auto_complete_for_diagnostics_search,
-                  :place_name => name })
+                  :action => :diagnostic_facilities_search,
+                  :name => name })
 end
 
 Given /^a place exposure named "([^\"]*)"$/ do |name|

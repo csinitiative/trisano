@@ -17,9 +17,6 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-# Many specs are commented out. The mocking exercise is not a small undertaking.
-# Perhaps it can be chipped away at.
-
 describe EventsController do
   describe "handling GET /events/auto_complete_for_places_search" do
 
@@ -49,4 +46,28 @@ describe EventsController do
     end
   end
 
+  context "Adding a diagnostic facility search result to a cmr" do
+    before do
+      mock_user
+      @place_entity = Factory.create(:place_entity)
+    end
+
+    it "renders diagnostic show partial" do
+      get :diagnostics_search_selection, :id => @place_entity.id, :event_type => 'morbidity_event'
+      response.should be_a_success
+      response.should render_template 'events/_diagnostic_show'
+    end
+  end
+
+  context "Using ajax to search for diagnosic facilities" do
+    before do
+      mock_user
+    end
+
+    it "should render the diagnostics search partial" do
+      get :diagnostic_facilities_search, :name => 'Example'
+      response.should be_a_success
+      response.should render_template('events/_diagnostics_search')
+    end
+  end
 end

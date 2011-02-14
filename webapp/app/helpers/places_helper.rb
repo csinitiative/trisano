@@ -43,4 +43,19 @@ module PlacesHelper
       return raw_shortname
     end
   end
+
+  def preferred_address(place)
+    address = place.safe_call_chain(:entity, :canonical_address) || place.safe_call_chain(:entity, :addresses, :last)
+    if address
+      result = []
+      result << address.street_number
+      result << address.street_name
+      result << address.city
+      result << address.county.try(:code_description)
+      result << address.postal_code
+      result.compact.join("\n")
+    else
+      ""
+    end
+  end
 end
