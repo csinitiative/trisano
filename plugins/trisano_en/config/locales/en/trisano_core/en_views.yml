@@ -1046,7 +1046,7 @@ en:
       create_event: "Create events"
       view_event: "View events"
       update_event: "Update events"
-      route_event_to_any_lhd: "Route events to an local health department"
+      route_event_to_any_lhd: "Route events to a local health department"
       accept_event_for_lhd: "Accept events for local health department"
       route_event_to_investigator: "Route events to investigators"
       accept_event_for_investigation: "Accept events for investigation"
