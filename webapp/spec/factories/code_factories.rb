@@ -40,7 +40,7 @@ Factory.sequence(:code_name) do |n|
 end
 
 Factory.sequence(:the_code) do |n|
-  "a#{n}"
+  "a#{Time.now.to_i.to_s}#{n}"
 end
 
 Factory.sequence(:code_description) do |n|

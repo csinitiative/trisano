@@ -1441,11 +1441,14 @@ module EventsHelper
   #   * results_action: For in-line mulitples, use 'add', for
   #     links to the contact new/edit views, use 'new'
   #   * parent_id: The id of the parent event if applicable
+  #   * url: Enhance or overwrite default url options for searching.
+  #     Follows the same rules a url_for.
   def search_interface(table, options={}, &block)
     model = table.to_s.singularize
     haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
+    url_options = options.delete(:url) || {}
     # TODO: Add "#{model}_search_type" if :with_type specified
-    haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}, :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
+    haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}.merge(url_options), :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
     haml_concat(image_tag('redbox_spinner.gif', :id => "#{model}-search-spinner", :style => "height: 16px; width: 16px; display: none;"))
     yield if block_given?
     haml_tag(:div, :id => "#{model}_search_results")

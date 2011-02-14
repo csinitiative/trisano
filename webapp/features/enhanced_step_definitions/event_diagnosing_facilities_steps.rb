@@ -17,10 +17,11 @@
 
 When(/^I add an existing diagnosing facility$/) do
   click_core_tab(@browser, "Clinical")
-  @browser.type_keys("diagnostics_search", "b")
-  wait_for_element_present("//div[@id='diagnostics_search_choices']/ul")
-  @browser.click "//div[@id='diagnostics_search_choices']/ul/li/span[@class='place_name'][text()='Beaver Valley Hospital']"
-  wait_for_element_present("//div[@class='existing_diagnostic']")
+  @browser.type("diagnostic_facility_search_name", "b")
+  @browser.click "diagnostic_facility_search"
+  @browser.wait_for_ajax
+  @browser.click "//div[@id='diagnostic_facility_search_results']//td[text()='Beaver Valley Hospital']/../td/a"
+  @browser.wait_for_ajax
 end
 
 When(/^I click remove for that diagnosing facility$/) do
