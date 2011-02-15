@@ -83,48 +83,76 @@ describe Place do
   end
 
   describe "class method" do
-    it "hospitals should return a list of hospitals" do
-      h = Place.hospitals
-      h.length.should == 3
-      h[0].name.should == places(:AVH).name
-      h[1].name.should == places(:BRVH).name
-      h[2].name.should == places(:BRVH2).name
+
+    describe "hospitals" do
+      it "should return a list of hospitals" do
+        h = Place.hospitals
+        h.length.should == 3
+        h[0].name.should == places(:AVH).name
+        h[1].name.should == places(:BRVH).name
+        h[2].name.should == places(:BRVH2).name
+      end
+
+      it "should return a list of hospitals with no duplicate names" do
+        h = Place.hospitals(true)
+        h.length.should == 2
+        h[0].name.should == places(:AVH).name
+        h[1].name.should == places(:BRVH).name
+      end
+
+      it "should not return deleted hospitals" do
+        @hospital_to_delete = places(:AVH)
+        @hospital_to_delete.entity.deleted_at = Time.now
+        @hospital_to_delete.entity.save!
+        h = Place.hospitals
+        h.length.should == 2
+
+        # Setting back to un-deleted to avoid future fixture panic until this is factoried up
+        @hospital_to_delete.entity.deleted_at = nil
+        @hospital_to_delete.entity.save!
+      end
     end
 
-    it "hospitals should return a list of hospitals with no duplicate names" do
-      h = Place.hospitals(true)
-      h.length.should == 2
-      h[0].name.should == places(:AVH).name
-      h[1].name.should == places(:BRVH).name
+    describe "reporting_agencies" do
+
+      it "should return active reporting agencies" do
+        place_to_find = create_reporting_agency!("Zack's Reporting Agency Shack")
+        Place.reporting_agencies_by_name("Zack's Reporting Agency Shack").first.should == place_to_find.place
+      end
+
+      it "should do a starts-with search" do
+        place_to_find = create_reporting_agency!("Zack's Reporting Agency Shack")
+        another_place_to_find = create_reporting_agency!("Zack's Zippy Reporting Agency Shack")
+        reporting_agencies = Place.reporting_agencies_by_name("Zack's")
+        [place_to_find, another_place_to_find].each do |place_entity|
+          reporting_agencies.include?(place_entity.place).should be_true
+        end
+      end
+
+      it "should not return soft-deleted reporting agencies" do
+        place_to_find = create_reporting_agency!("Zack's Reporting Agency Shack")
+        place_to_find.update_attribute(:deleted_at, Time.now)
+        Place.reporting_agencies_by_name("Zack's Reporting Agency Shack").empty?.should be_true
+      end
     end
 
-    it "hospitals should not return deleted hospitals" do
-      @hospital_to_delete = places(:AVH)
-      @hospital_to_delete.entity.deleted_at = Time.now
-      @hospital_to_delete.entity.save!
-      h = Place.hospitals
-      h.length.should == 2
+    describe "jurisdictions" do
+      it "should return a list of jurisdictions" do
+        h = Place.jurisdictions
+        h.length.should == 4
+      end
 
-      # Setting back to un-deleted to avoid future fixture panic until this is factoried up
-      @hospital_to_delete.entity.deleted_at = nil
-      @hospital_to_delete.entity.save!
-    end
+      it "should not return deleted jurisdictions" do
+        @jurisdiction_to_delete = places(:Southeastern_District)
+        @jurisdiction_to_delete.entity.deleted_at = Time.now
+        @jurisdiction_to_delete.entity.save!
+        h = Place.jurisdictions
+        h.length.should == 3
 
-    it "jurisdictions should return a list of jurisdictions" do
-      h = Place.jurisdictions
-      h.length.should == 4
-    end
-
-    it "jurisdictions should not return deleted jurisdictions" do
-      @jurisdiction_to_delete = places(:Southeastern_District)
-      @jurisdiction_to_delete.entity.deleted_at = Time.now
-      @jurisdiction_to_delete.entity.save!
-      h = Place.jurisdictions
-      h.length.should == 3
-
-      # Setting back to un-deleted to avoid future fixture panic until this is factoried up
-      @jurisdiction_to_delete.entity.deleted_at = nil
-      @jurisdiction_to_delete.entity.save!
+        # Setting back to un-deleted to avoid future fixture panic until this is factoried up
+        @jurisdiction_to_delete.entity.deleted_at = nil
+        @jurisdiction_to_delete.entity.save!
+      end
     end
 
     it "exposed_types should return all place type codes minus the juridsdiction type" do

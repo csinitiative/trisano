@@ -41,5 +41,30 @@ describe EventsController do
       response.should be_a_success
       response.should render_template('events/_diagnostics_search')
     end
+    end
+
+  context "Adding a reporting agency search result to a cmr" do
+    before do
+      mock_user
+      @place_entity = Factory.create(:place_entity)
+    end
+
+    it "renders reporting agency partial" do
+      get :reporting_agency_search_selection, :id => @place_entity.id, :event_type => 'morbidity_event'
+      response.should be_a_success
+      response.should render_template 'events/_reporting_agency'
+    end
+  end
+
+  context "Using ajax to search for reporting agencies" do
+    before do
+      mock_user
+    end
+
+    it "should render the reporting agency search partial" do
+      get :reporting_agencies_search, :name => 'Example'
+      response.should be_a_success
+      response.should render_template('events/_reporting_agencies_search')
+    end
   end
 end

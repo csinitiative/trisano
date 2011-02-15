@@ -35,7 +35,7 @@ end
 
 When /^I search for a reporting agency named "([^\"]*)"$/ do |name|
   visit url_for({ :controller => :morbidity_events,
-                  :action => :auto_complete_for_reporting_agency_search,
+                  :action => :reporting_agencies_search,
                   :place_name => name })
 end
 
