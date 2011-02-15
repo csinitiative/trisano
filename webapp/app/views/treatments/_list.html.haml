@@ -14,22 +14,24 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 #treatment_list
-  %table.list
-    %tr
-      %th.forminformation
-        =t 'treatments'
-      %th
-    - for treatment in @treatments
-      - if (@treatment.nil? || (!@treatment.nil? && @treatment != treatment))
-        %tr.roll
-          %td.forminformation
-            .formname
-              = link_to h(treatment.treatment_name), treatment
-            = treatment_status(treatment)
-          %td
-            .tools{:style => "position: absolute; right: 15px;"}
-              = link_to t('edit'), edit_treatment_path(treatment)
-              |
-              = link_to t('show'), treatment
-              |
-              =render_treatment_merge_actions(treatment)
+  %table.list.sortable
+    %thead
+      %tr
+        %th.forminformation
+          =t 'treatments'
+        %th
+    %tbody
+      - for treatment in @treatments
+        - if (@treatment.nil? || (!@treatment.nil? && @treatment != treatment))
+          %tr.roll
+            %td.forminformation
+              .formname
+                = link_to h(treatment.treatment_name), treatment
+              = treatment_status(treatment)
+            %td
+              .tools{:style => "position: absolute; right: 15px;"}
+                = link_to t('edit'), edit_treatment_path(treatment)
+                |
+                = link_to t('show'), treatment
+                |
+                =render_treatment_merge_actions(treatment)

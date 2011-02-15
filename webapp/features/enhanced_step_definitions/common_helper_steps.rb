@@ -40,6 +40,12 @@ When(/^I click the "(.+)" link$/) do |link|
   @browser.wait_for_page_to_load($load_time)
 end
 
+When(/^I click the "(.+)" table header( (\d)+ times)?$/) do |th, ignore, times|
+  (times || "1").to_i.times do
+    @browser.click("xpath=//th[contains(text(), '#{th}')]")
+  end
+end
+
 When(/^I click the "(.+)" link and wait to see "(.+)"$/) do |link, text|
   @browser.click "link=#{link}"
   @browser.wait_for_element "//*[contains(text(),'#{text}')]", :timeout_in_seconds => 3
@@ -75,7 +81,7 @@ When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, text|
   rescue
     field_id = field
   end
-  
+
   @browser.type field_id, text
 end
 
@@ -110,6 +116,10 @@ end
 
 Then /^I should see "([^\"]*)"$/ do |text|
   @browser.get_html_source.should =~ /#{text}/i
+end
+
+Then(/^I should see the following in order:$/) do |values|
+  @browser.get_html_source.should =~ /#{values.raw.join(".*")}/im
 end
 
 Then /^I should not see "([^\"]*)"$/ do |text|
