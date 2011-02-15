@@ -6,13 +6,19 @@ Feature: Managing reporting agencies on events
   Scenario: Adding and removing existing reporting agencies in new mode
     Given I am logged in as a super user
     And a place entity of type PUB exists
-
     When I navigate to the new event page and start a simple event
     And I add an existing reporting agency
     And I click remove for that reporting agency
     Then I should not see the reporting agency
 
-    When I add an existing reporting agency
+    When I save the event
+    Then I should not see the reporting agency
+
+  Scenario: Adding an existing reporting agency in new mode
+    Given I am logged in as a super user
+    And a place entity of type PUB exists
+    When I navigate to the new event page and start a simple event
+    And I add an existing reporting agency
     And I save the event
     Then I should see the added reporting agency
 
@@ -20,12 +26,16 @@ Feature: Managing reporting agencies on events
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     And a place entity of type PUB exists
-
     When I navigate to the event edit page
     And I add an existing reporting agency
     And I click remove for that reporting agency
     Then I should not see the reporting agency
 
-   When I add an existing reporting agency
+  Scenario: Adding existing reporting agencies in edit mode
+    Given I am logged in as a super user
+    And a morbidity event exists in Bear River with the disease African Tick Bite Fever
+    And a place entity of type PUB exists
+    When I navigate to the event edit page
+    And I add an existing reporting agency
     And I save the event
     Then I should see the added reporting agency
