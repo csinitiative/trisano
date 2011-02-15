@@ -1449,8 +1449,11 @@ module EventsHelper
   def search_interface(table, options={}, &block)
     model = table.to_s.singularize
 
-    haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
-    search_button_with_script_and_spinner table, options
+    haml_tag 'span.horiz' do
+      haml_tag(:label, :for => "#{model}_search_name") { haml_concat t(:name) }
+      haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
+      search_button_with_script_and_spinner table, options
+    end
 
     yield if block_given?
 

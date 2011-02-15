@@ -24,8 +24,10 @@
     #place_child_events
 
       - form_for Place.new do |pf|
-        = epi_type_selector(pf)
+        %span#place_search_types.horiz
+          = epi_type_selector(pf)
         - search_interface :places, :with_types => 'place[place_type_ids][]'
+        %hr/
 
       #existing-places
         -# Currently we don't allow editing place information (because changing it for one event will change it for all).

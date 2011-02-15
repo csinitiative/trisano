@@ -16,11 +16,12 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 When(/^I add an existing contact$/) do
+  click_core_tab(@browser, 'Contacts')
   @existing_contact_name = get_unique_name(2)
   @contact_event.interested_party.person_entity.person.last_name = @existing_contact_name
   @contact_event.interested_party.person_entity.person.save!
   @browser.type("contact_search_name", @contact_event.interested_party.person_entity.person.last_name)
-  @browser.click("//input[@value='Search']")
+  @browser.click("contact_search")
 
   wait_for_element_present("//div[@id='contact_search_results']/table")
   @browser.click "//div[@id='contact_search_results']//a[@id='add_contact_#{@contact_event.id}']"
