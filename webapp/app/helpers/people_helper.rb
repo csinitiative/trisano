@@ -20,9 +20,9 @@ module PeopleHelper
 
   def render_person_name(person)
     <<-END
+      <span class="data_last_name">#{h(person.last_name)}</span>,
       <span class="data_first_name">#{h(person.first_name)}</span>
       <span class="data_middle_name">#{h(person.middle_name)}</span>
-      <span class="data_last_name">#{h(person.last_name)}</span>
     END
   end
 

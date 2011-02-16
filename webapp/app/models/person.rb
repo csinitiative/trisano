@@ -177,7 +177,15 @@ class Person < ActiveRecord::Base
     end
 
     def people_search_order(options)
-      fulltext_order(options) || "last_name, first_name ASC"
+      unless options[:order_by].blank?
+        options[:order_by].sub!(/^person_name\s+(\w+)$/, 'last_name \1, first_name \1, middle_name \1')
+        options[:order_by].sub!(/^address\s+(\w+)$/, 'addresses.street_number \1, addresses.street_name \1' +
+                                ', addresses.unit_number \1, addresses.city \1, state_name \1' +
+                                ', addresses.postal_code \1')
+        sanitize_sql(options[:order_by])
+      else
+        fulltext_order(options) || "last_name, first_name ASC"
+      end
     end
 
     def excluding_conditions(options)

@@ -16,9 +16,9 @@
 #entity_search_results
   %table.list
     %tr
-      %th=t "person_name"
-      %th=t "address"
-      %th=t "birth_date"
+      %th= sortable_column_header :person_name
+      %th= sortable_column_header :address
+      %th= sortable_column_header :birth_date
       %th=t "actions"
     - @people.each do |person|
       - fields_for(person, :builder => ExtendedFormBuilder) do |f|

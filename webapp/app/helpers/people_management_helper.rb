@@ -54,4 +54,18 @@ module PeopleManagementHelper
      :postal_code].any? {|f| record[f]}
   end
 
+  def sortable_column_header(name, property=nil)
+    property ||= name
+    direction = if params[:sort_order] && params[:sort_order].match(/^#{property.to_s}/)
+      (params[:sort_order].match(/asc$/i)) ? 'DESC' : 'ASC'
+    else
+      'ASC'
+    end
+
+    params = request.query_parameters.merge({
+      :sort_order => "#{property} #{direction}"
+    })
+    link_to t(name), params
+  end
+
 end
