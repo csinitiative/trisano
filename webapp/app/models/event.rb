@@ -197,9 +197,8 @@ class Event < ActiveRecord::Base
         <<-WHERE
           events.type = 'MorbidityEvent' AND
           events.deleted_at IS NULL AND
-          disease_events.disease_id IS NOT NULL AND
           (
-            (events.created_at BETWEEN ? AND ?) OR
+            (events.created_at::date BETWEEN ?::date AND ?::date) OR
             (events.ibis_updated_at BETWEEN ? AND ?)
           )
         WHERE
@@ -209,7 +208,7 @@ class Event < ActiveRecord::Base
         <<-WHERE
           events.type = 'MorbidityEvent'
           AND events.sent_to_ibis = true
-          AND events.deleted_at BETWEEN ? AND ?
+          AND events.deleted_at::date BETWEEN ?::date AND ?::date
         WHERE
       end
 

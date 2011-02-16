@@ -728,48 +728,90 @@ describe MorbidityEvent do
     end
   end
 
-  describe "when exporting to IBIS" do
-    describe " and finding records to be exported" do
-
-      fixtures :events, :diseases, :disease_events, :entities
-
-      before :each do
-        anthrax = diseases(:anthrax)
-
-        # NON_IBIS: Not sent to IBIS, no disease
-        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis1" } } },
-            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
-            "event_name" => "Ibis1" } )
-        # NEW: Not sent to IBIS, has disease
-        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis2" } } },
-            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
-            "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "event_name" => "Ibis2" } )
-        # UPDATED: Sent to IBIS, has disease
-        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
-            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
-            "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "sent_to_ibis" => true,
-            "ibis_updated_at" => Date.today,
-            "event_name" => "Ibis3" } )
-        # DELETED: Sent to IBIS, has disease, deleted
-        MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Ibis4" } } },
-            "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id },
-            "disease_event_attributes" => { "disease_id" => anthrax.id },
-            "deleted_at" => Date.today,
-            "sent_to_ibis" => true,
-            "event_name" => "Ibis4" } )
+  context "IBIS exports" do
+    let(:event) do
+      Factory.create(:morbidity_event_with_disease, {
+        :first_reported_PH_date => Date.parse("2009-11-29"),
+        :created_at => DateTime.parse("2009-11-30 13:30")
+      })
+    end
+      
+    describe "includes records" do
+      it "created on the first day of the date range" do
+        Event.exportable_ibis_records("2009-11-30", "2009-12-1").should be_empty
+        event.should_not be_nil
+        results = Event.exportable_ibis_records("2009-11-30", "2009-12-1")
+        results.map(&:record_number).should == [event.record_number]
       end
 
-      it "should find all IBIS exportable records" do
-        events = Event.exportable_ibis_records(Date.today - 1, Date.today + 1)
-        events.collect! { |event| Event.find(event['event_id']) }
-        events.size.should == 4   # 3 above and 1 in the fixtures
-        event_names = events.collect { |event| event.event_name }
-        event_names.include?("Marks Chicken Pox").should be_true
-        event_names.include?("Ibis2").should be_true
-        event_names.include?("Ibis3").should be_true
-        event_names.include?("Ibis4").should be_true
+      it "created on the last day of the date range" do
+        Event.exportable_ibis_records("2009-11-29", "2009-11-30").should be_empty
+        event.should_not be_nil
+        results = Event.exportable_ibis_records("2009-11-29", "2009-11-30")
+        results.map(&:record_number).should == [event.record_number]
+      end
+
+      it "created between the start and end dates" do
+        Event.exportable_ibis_records("2009-11-15", "2009-12-15").should be_empty
+        event.should_not be_nil
+        results = Event.exportable_ibis_records("2009-11-15", "2009-12-15")
+        results.map(&:record_number).should == [event.record_number]
+      end
+
+      it "ibis updated on the first day of the date range" do
+        Event.exportable_ibis_records("2009-12-15", "2009-12-16").should be_empty
+        event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        results = Event.exportable_ibis_records("2009-12-15", "2009-12-16")
+        results.map(&:record_number).should == [event.record_number]
+      end
+
+      it "ibis updated on the last day of the date range" do
+        Event.exportable_ibis_records("2009-12-14", "2009-12-15").should be_empty
+        event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        results = Event.exportable_ibis_records("2009-12-14", "2009-12-15")
+        results.map(&:record_number).should == [event.record_number]
+      end
+
+      it "ibis updated between the start and end dates" do
+        Event.exportable_ibis_records("2009-12-01", "2009-12-31").should be_empty
+        event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        results = Event.exportable_ibis_records("2009-12-01", "2009-12-31")
+        results.map(&:record_number).should == [event.record_number]
+      end
+
+      describe "sent to ibis, and then later deleted" do
+        it "if deleted on the first day of the date range" do
+          Event.exportable_ibis_records("2009-12-15", "2009-12-16").should == []
+          event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
+          results = Event.exportable_ibis_records("2009-12-15", "2009-12-16")
+          results.map(&:record_number).should == [event.record_number]
+        end
+
+        it "if deleted on the last day of the date range" do
+          Event.exportable_ibis_records("2009-12-14", "2009-12-15").should == []
+          event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
+          results = Event.exportable_ibis_records("2009-12-14", "2009-12-15")
+          results.map(&:record_number).should == [event.record_number]
+        end
+
+        it "if deleted between the date ranges" do
+          Event.exportable_ibis_records("2009-12-01", "2009-12-31").should == []
+          event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
+          results = Event.exportable_ibis_records("2009-12-01", "2009-12-31")
+          results.map(&:record_number).should == [event.record_number]
+        end
+      end
+    end
+
+    describe "excludes records" do
+      it "if they don't have a disease" do
+        event.disease_event.update_attributes!(:disease => nil)
+        Event.exportable_ibis_records("2009-11-29", "2009-11-30").should == []
+      end
+
+      it "if they are deleted" do
+        event.update_attributes!(:deleted_at => DateTime.parse("2009-11-30 15:00"))
+        Event.exportable_ibis_records("2009-11-29", "2009-11-30").should == []
       end
     end
   end
