@@ -761,23 +761,6 @@ describe MorbidityEvent do
             "event_name" => "Ibis4" } )
       end
 
-      it "should find active (new and updated) records" do
-        events = Event.active_ibis_records(Date.today - 1, Date.today + 1)
-        events.size.should == 4   # 2 above and 2 in the fixtures
-        events.collect! { |event| Event.find(event.id) }
-        event_names = events.collect { |event| event.event_name }
-        event_names.include?("Marks Chicken Pox").should be_true
-        event_names.include?("Ibis2").should be_true
-        event_names.include?("Ibis3").should be_true
-      end
-
-      it "should find deleted records" do
-        events = Event.deleted_ibis_records(Date.today - 1, Date.today + 1)
-        events.collect! { |event| Event.find(event.id) }
-        events.size.should == 1
-        events.first.event_name.should ==  "Ibis4"
-      end
-
       it "should find all IBIS exportable records" do
         events = Event.exportable_ibis_records(Date.today - 1, Date.today + 1)
         events.collect! { |event| Event.find(event['event_id']) }

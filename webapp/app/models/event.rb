@@ -191,31 +191,6 @@ class Event < ActiveRecord::Base
 
   class << self
 
-    def active_ibis_records(start_date, end_date)
-      # New: Record has not been sent to IBIS, record has a disease, record has not been soft-deleted
-      where_clause = <<-WHERE
-        events.type = 'MorbidityEvent'
-        AND events.deleted_at IS NULL
-        AND disease_events.disease_id IS NOT NULL
-        AND ((events.created_at BETWEEN ? AND ?) OR (events.ibis_updated_at BETWEEN ? AND ?))
-      WHERE
-      Event.find(:all,
-        :include => [:disease_event, :address],
-        :conditions => [where_clause, start_date, end_date, start_date, end_date])
-    end
-
-    def deleted_ibis_records(start_date, end_date)
-      # Deleted: Record has been sent to IBIS, record has been soft-deleted
-      where_clause = <<-WHERE
-        events.type = 'MorbidityEvent'
-        AND events.sent_to_ibis = ?
-        AND events.deleted_at BETWEEN ? AND ?
-      WHERE
-      Event.find(:all,
-        :include => [:disease_event, :state_case_status, :lhd_case_status],
-        :conditions => [where_clause, true, start_date, end_date])
-    end
-
     # Does not return full on Event objects. Returns find_by_sql-records.
     def exportable_ibis_records(start_date, end_date)
       active_sql = ibis_export_sql do
