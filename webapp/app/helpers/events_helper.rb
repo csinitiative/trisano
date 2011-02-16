@@ -1432,7 +1432,7 @@ module EventsHelper
     HTML
   end
 
-  # Renders a reusable in-line contact search form.
+  # Renders a reusable in-line search form.
   #
   # table: name of the database table or the plural of the model name;
   #        can be a symbol or anything responding to to_s.
@@ -1443,14 +1443,20 @@ module EventsHelper
   #   * parent_id: The id of the parent event if applicable
   #   * url: Enhance or overwrite default url options for searching.
   #     Follows the same rules a url_for.
+  #   * with_types: If logically true (not +false+ or +nil+), the value
+  #     is used as the name of an element from which to take the
+  #     +types+ parameter in the AJAX search request.
   def search_interface(table, options={}, &block)
     model = table.to_s.singularize
-    haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
-    url_options = options.delete(:url) || {}
-    # TODO: Add "#{model}_search_type" if :with_type specified
-    haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}.merge(url_options), :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
-    haml_concat(image_tag('redbox_spinner.gif', :id => "#{model}-search-spinner", :style => "height: 16px; width: 16px; display: none;"))
+
+    haml_tag 'span.horiz' do
+      haml_tag(:label, :for => "#{model}_search_name") { haml_concat t(:name) }
+      haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
+      search_button_with_script_and_spinner table, options
+    end
+
     yield if block_given?
+
     haml_tag(:div, :id => "#{model}_search_results")
   end
 
@@ -1562,10 +1568,35 @@ module EventsHelper
 
     if options[:parent_id]
       with_option << "&parent_id=#{options[:parent_id]}'"
-    elsif options[:with_type]
-      with_option << "&type=' + $('#{model}_search_type').value"
+    elsif options[:with_types]
+      with_option << "&types='+$j.#{model}_search_types()"
     else
       with_option << "'"
     end
+  end
+
+  def search_types_script(model, name)
+    haml_tag :script, :type => 'text/javascript' do
+      haml_concat <<-JS
+        //<![CDATA[
+          $j(function(){
+            $j.#{model}_search_types = function() {
+              return '[' + $j('input:checked[name="#{name}"]').map(function(){
+                return $j(this).val();
+              }).toArray().join(',') + ']';
+            };
+          });
+        //]]>
+      JS
+    end
+  end
+
+  def search_button_with_script_and_spinner(table, options)
+    model = table.to_s.singularize
+    url_options = options.delete(:url) || {}
+
+    search_types_script(model, options[:with_types]) if options[:with_types]
+    haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}.merge(url_options), :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
+    haml_concat(image_tag('redbox_spinner.gif', :id => "#{model}-search-spinner", :style => "height: 16px; width: 16px; display: none;"))
   end
 end

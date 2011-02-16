@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+When(/^I navigate to the admin dashboard page$/) do
+  @browser.open "/trisano/admin"
+  @browser.wait_for_page_to_load
+end
+
 When(/^I navigate to the place management tool$/) do
    navigate_to_place_admin(@browser)
 end

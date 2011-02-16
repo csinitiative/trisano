@@ -17,21 +17,22 @@
 
 
 When(/^I add an existing place exposure$/) do
-  click_core_tab(@browser, "Epidemiological")
-  @browser.type_keys("places_search", @place_entity.place.name)
-  wait_for_element_present("//div[@id='places_search_choices']/ul")
-  @browser.click "//div[@id='places_search_choices']/ul/li/span[@class='place_name'][text()='#{@place_entity.place.name}']"
+  click_core_tab(@browser, EPI)
+  @browser.type('place_search_name', @place_entity.place.name)
+  @browser.click('place_search')
+  wait_for_element_present("//div[@id='place_search_results']/table")
+  @browser.click "//div[@id='place_search_results']//a[@id='add_place_entity_#{@place_entity.id}']"
   wait_for_element_present("//div[@class='existing_place']")
 end
 
 When(/^I click remove for that place exposure$/) do
   # This may need to be more specific at some point
   @browser.click("link=Remove")
-  wait_for_element_not_present("//div[@id='live_search_places']/div[@class='existing_place']")
+  wait_for_element_not_present("//div[@id='place_child_events']/div[@class='existing_place']")
 end
 
 Then(/^I should not see the place exposure$/) do
-  @browser.is_element_present("//div[@id='live_search_places']/div[@class='existing_place']").should be_false
+  @browser.is_element_present("//div[@id='place_child_events']/div[@class='existing_place']").should be_false
 end
 
 When(/^I add a new place exposure$/) do
@@ -55,7 +56,7 @@ Then(/^I should see the removed place exposure as deleted$/) do
   #  selenium.browserbot.getCurrentWindow().$("//td[contains(text(), '#{@place_entity.place.name}')]")[0].hasClassName('struck-through')
   #SCRIPT
   #  @browser.get_eval(script)
-  
+
   # Could not get the above to work. This more generic test will do for now.
   @browser.is_element_present("//td[@class='struck-through']").should be_true
 end

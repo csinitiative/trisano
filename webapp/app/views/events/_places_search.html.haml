@@ -3,30 +3,37 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--# Display the search results of a places live search
-%ul
-  - places.each do |place|
-    %li{:name => "#{place.entity_id}"}
-      %span.place_name= h(place.name)
-      %br
-      %span.place_type= "&nbsp;&nbsp;#{h(place.formatted_place_descriptions)}"
-      - address = place.entity.canonical_address.nil? ? place.entity.addresses.last : place.entity.canonical_address
-      - unless address.nil?
-        %br
-        %span.place_address
-          =h address.street_number
-          =h address.street_name
-          =h address.city
-          =h address.county.code_description unless address.county.nil?
-          =h address.postal_code
-      %br
+-# Display the search results of a places paginated search
+- if flash[:error]
+  #flash-message.error-message
+    = flash[:error]
+
+%br
+-if places.empty?
+  %b=t(:no_results)
+-else
+  %table.list
+    %tr
+      %th= t :name
+      %th= t :address
+      %th= t :type
+      %th= t :actions
+    - for place in places do
+      %tr
+        %td=place.name
+        %td=h preferred_address(place)
+        %td=place.formatted_place_descriptions
+        %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'bottom', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
+
+  %br
+  = ajaxy_pagination(places, 'places')

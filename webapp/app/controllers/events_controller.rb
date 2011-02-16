@@ -45,9 +45,24 @@ class EventsController < ApplicationController
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
 
-  def auto_complete_for_places_search
-    places_by_name_and_types(params[:place_name], Place.epi_type_codes)
-    render :partial => "events/places_search", :layout => false, :locals => {:places => @places}
+  def places_search
+    page = params[:page] ? params[:page] : 1
+    name = params[:name]
+    # DEBT: Sure there must be a better way to parse this.
+    type_ids = params[:types].sub(/^\[(.*)\]$/, '\1').split(',').map {|s| s.to_i}
+    types = Code.find(type_ids).map{|c|c.the_code}
+
+    types = Place.epi_type_codes if types.blank?
+
+    begin
+      @places = Place.starts_with(name).types(types).paginate(:include => { :entity => [:addresses, :canonical_address] }, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @places = []
+    end
+
+    render :partial => "events/places_search", :layout => false, :locals => { :places => @places }
   end
 
   def places_search_selection
@@ -80,16 +95,25 @@ class EventsController < ApplicationController
     render :partial => "events/diagnostic_show", :layout => false, :locals => {:event_type => params[:event_type]}
   end
 
-  def auto_complete_for_reporting_agency_search
-    places_by_name_and_types(params[:place_name], Place.agency_type_codes)
-    render :partial => 'events/reporting_agency_choices', :layout => false, :locals => {:places => @places}
+  def reporting_agencies_search
+    page = params[:page] || 1
+    name = (params[:name] || '').strip
+
+    begin
+      @places = Place.reporting_agencies_by_name(name).paginate(:include => { :entity => [:addresses, :canonical_address] }, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @places = []
+    end
+    render :partial => "events/reporting_agencies_search", :layout => false
   end
 
   def reporting_agency_search_selection
-    place_entity = PlaceEntity.find(params[:id])
-    agency = ReportingAgency.new
-    agency.place_entity = place_entity
-    render(:update) { |page| page.update_reporting_agency(agency) }
+    reporting_agency_entity = PlaceEntity.find(params[:id])
+    @reporting_agency = ReportingAgency.new
+    @reporting_agency.place_entity = reporting_agency_entity
+    render :partial => "events/reporting_agency", :layout => false, :locals => {:event_type => params[:event_type]}
   end
 
   # This action is for development/testing purposes only.  This is not a "real" login action

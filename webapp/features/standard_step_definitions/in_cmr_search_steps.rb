@@ -20,9 +20,13 @@ Given /^a place exposure named "([^\"]*)"$/ do |name|
 end
 
 When /^I search for a place exposure named "([^\"]*)"$/ do |name|
+  codes = Place.epi_type_codes.map do |the_code|
+    Code.find_by_code_name_and_the_code('placetype', the_code).id
+  end
+
   visit url_for({ :controller => :morbidity_events,
-                  :action => :auto_complete_for_places_search,
-                  :place_name => name })
+                  :action => :places_search,
+                  :name => name, :types => "[#{codes.join(',')}]"})
 end
 
 Given /^a reporting agency named "([^\"]*)"$/ do |name|
@@ -31,7 +35,7 @@ end
 
 When /^I search for a reporting agency named "([^\"]*)"$/ do |name|
   visit url_for({ :controller => :morbidity_events,
-                  :action => :auto_complete_for_reporting_agency_search,
+                  :action => :reporting_agencies_search,
                   :place_name => name })
 end
 

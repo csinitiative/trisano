@@ -2,17 +2,17 @@
 -#
 -# This file is part of TriSano.
 -#
--# TriSano is free software: you can redistribute it and/or modify it under the 
--# terms of the GNU Affero General Public License as published by the 
--# Free Software Foundation, either version 3 of the License, 
+-# TriSano is free software: you can redistribute it and/or modify it under the
+-# terms of the GNU Affero General Public License as published by the
+-# Free Software Foundation, either version 3 of the License,
 -# or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but 
--# WITHOUT ANY WARRANTY; without even the implied warranty of 
--# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+-# TriSano is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -# GNU Affero General Public License for more details.
 -#
--# You should have received a copy of the GNU Affero General Public License 
+-# You should have received a copy of the GNU Affero General Public License
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -core_section :place_exposures_section, f do
@@ -21,30 +21,34 @@
   -# Handles pre- and post-questions and help for places as a whole
   - core_element :places, f, 'vert-break' do
 
-    %div{:id => 'place_child_events'}
-      = live_search(t('search_existing_place'), :search_field => 'places_search', :results => 'live_search_places', :select => 'place_name', :event_type => f.object_name)
+    #place_child_events
 
-      -# Currently we don't allow editing place information (because changing it for one event will change it for all).
-      -# This will change soon, and when it does we can undo this.
-      - f.fields_for(:place_child_events, :builder => ExtendedFormBuilder) do |place_form|
-        - next if place_form.object.deleted_at
-        - if place_form.object.new_record? && place_form.object.interested_place.primary_entity_id.nil?
-          = render :partial => 'events/place_exposure', :locals => { :f => place_form }
-        - else
-          = render :partial => 'events/place_exposure_show', :locals => { :f => place_form }
-        #live_search_places
+      - form_for Place.new do |pf|
+        %span#place_search_types.horiz
+          = epi_type_selector(pf)
+        - search_interface :places, :with_types => 'place[place_type_ids][]'
+        %hr/
 
-    %span{:style => "clear: both; padding-top: 20px"}
+      #existing-places
+        -# Currently we don't allow editing place information (because changing it for one event will change it for all).
+        -# This will change soon, and when it does we can undo this.
+        - f.fields_for(:place_child_events, :builder => ExtendedFormBuilder) do |place_form|
+          - next if place_form.object.deleted_at
+          - if place_form.object.new_record? && place_form.object.interested_place.primary_entity_id.nil?
+            = render :partial => 'events/place_exposure', :locals => { :f => place_form }
+          - else
+            = render :partial => 'events/place_exposure_show', :locals => { :f => place_form }
 
-      - blank_place = PlaceEvent.new
-      - blank_place.build_participations_place
-      - blank_place.build_interested_place
-      - blank_place.interested_place.build_place_entity
-      - blank_place.interested_place.place_entity.build_place
-      - blank_place.interested_place.place_entity.build_canonical_address
+      %span{:style => "clear: both; padding-top: 20px"}
 
-      = add_record_link f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure"
-      -# bah, this is ugly
-      -extensions = render_extensions :cmr_place_exposure_extensions
-      =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"
+        - blank_place = PlaceEvent.new
+        - blank_place.build_participations_place
+        - blank_place.build_interested_place
+        - blank_place.interested_place.build_place_entity
+        - blank_place.interested_place.place_entity.build_place
+        - blank_place.interested_place.place_entity.build_canonical_address
 
+        = add_record_link f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure"
+        -# bah, this is ugly
+        -extensions = render_extensions :cmr_place_exposure_extensions
+        =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"

@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../../spec_helper'
@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 include ApplicationHelper
 
 describe "/events/_places_search.html.haml" do
-  
+
   before(:each) do
     mock_user
     @place = Factory.build(:place)
@@ -42,17 +42,20 @@ describe "/events/_places_search.html.haml" do
     @place.stubs(:place_types).returns([@place_type])
     @place.stubs(:entity).returns(@place_entity)
     @place.stubs(:formatted_place_descriptions).returns(@place_types.code_description)
+
+    @places = [ @place ]
+    @places.stubs(:total_pages).returns(1)
   end
 
   describe 'place auto-complete' do
-    
+
     it 'should be successful' do
-      render 'events/_places_search.html.haml', :locals => { :places => [@place]}
+      render 'events/_places_search.html.haml', :locals => { :places => @places}
       response.should be_success
     end
 
     it 'should display the place name, type, and address info' do
-      render 'events/_places_search.html.haml', :locals => { :places => [@place]}
+      render 'events/_places_search.html.haml', :locals => { :places => @places}
       response.should have_text(/Eastside Waders Super Special Wading Pool/)
       response.should have_text(/Warm Wading Pool/)
       response.should have_text(/123/)

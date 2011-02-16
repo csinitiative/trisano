@@ -17,15 +17,15 @@
 
 When(/^I add an existing reporting agency$/) do
   click_core_tab(@browser, "Reporting")
-  @browser.type_keys("reporting_agency_search", @place_entity.place.name)
-  wait_for_element_present("//div[@id='reporting_agency_search_choices']/ul")
-  @browser.click "//div[@id='reporting_agency_search_choices']/ul/li/div[@class='place_name'][text()='#{@place_entity.place.name}']"
-  sleep 1
+  @browser.type_keys("reporting_agency_search_name", @place_entity.place.name)
+  @browser.click("reporting_agency_search")
+  @browser.wait_for_ajax
+  @browser.click "//div[@id='reporting_agency_search_results']//td[text()='#{@place_entity.place.name}']/../td/a"
+  @browser.wait_for_ajax
 end
 
 When(/^I click remove for that reporting agency$/) do
-  # This may need to be more specific at some point
-  @browser.click("link=Remove")
+  @browser.click("//div[@id='reporting_agency']//a[text()='Remove']")
   wait_for_element_not_present("//div[@id='reporting_agency']/div")
 end
 

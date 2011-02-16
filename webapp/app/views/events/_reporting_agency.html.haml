@@ -16,7 +16,7 @@
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - agency_form = nil
-- if f
+- if defined?(f) && !f.blank?
   - agency_form = f
 - else
   - fields_for("morbidity_event[reporting_agency_attributes]", reporting_agency, :builder => ExtendedFormBuilder) do |ra|
