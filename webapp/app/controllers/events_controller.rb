@@ -52,6 +52,8 @@ class EventsController < ApplicationController
     type_ids = params[:types].sub(/^\[(.*)\]$/, '\1').split(',').map {|s| s.to_i}
     types = Code.find(type_ids).map{|c|c.the_code}
 
+    types = Place.epi_type_codes if types.blank?
+
     begin
       @places = Place.starts_with(name).types(types).paginate(:include => { :entity => [:addresses, :canonical_address] }, :page => page, :per_page => 10)
     rescue

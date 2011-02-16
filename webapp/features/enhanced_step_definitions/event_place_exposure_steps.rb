@@ -19,15 +19,6 @@
 When(/^I add an existing place exposure$/) do
   click_core_tab(@browser, EPI)
   @browser.type('place_search_name', @place_entity.place.name)
-  @browser.click('placeplace_type_S')
-  @browser.click('placeplace_type_P')
-  @browser.click('placeplace_type_FE')
-  @browser.click('placeplace_type_DC')
-  @browser.click('placeplace_type_RA')
-  @browser.click('placeplace_type_E')
-  @browser.click('placeplace_type_CF')
-  @browser.click('placeplace_type_LCF')
-  @browser.click('placeplace_type_GLE')
   @browser.click('place_search')
   wait_for_element_present("//div[@id='place_search_results']/table")
   @browser.click "//div[@id='place_search_results']//a[@id='add_place_entity_#{@place_entity.id}']"
