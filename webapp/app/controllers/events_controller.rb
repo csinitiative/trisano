@@ -62,7 +62,7 @@ class EventsController < ApplicationController
       @places = []
     end
 
-    render :partial => "events/places_search", :layout => false
+    render :partial => "events/places_search", :layout => false, :locals => { :places => @places }
   end
 
   def places_search_selection

@@ -42,19 +42,20 @@ describe "/events/_places_search.html.haml" do
     @place.stubs(:place_types).returns([@place_type])
     @place.stubs(:entity).returns(@place_entity)
     @place.stubs(:formatted_place_descriptions).returns(@place_types.code_description)
+
+    @places = [ @place ]
+    @places.stubs(:total_pages).returns(1)
   end
 
   describe 'place auto-complete' do
 
     it 'should be successful' do
-      pending 'broken by de-dupe change'
-      render 'events/_places_search.html.haml', :locals => { :places => [@place]}
+      render 'events/_places_search.html.haml', :locals => { :places => @places}
       response.should be_success
     end
 
     it 'should display the place name, type, and address info' do
-      pending 'broken by de-dupe change'
-      render 'events/_places_search.html.haml', :locals => { :places => [@place]}
+      render 'events/_places_search.html.haml', :locals => { :places => @places}
       response.should have_text(/Eastside Waders Super Special Wading Pool/)
       response.should have_text(/Warm Wading Pool/)
       response.should have_text(/123/)

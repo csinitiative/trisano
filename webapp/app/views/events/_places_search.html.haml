@@ -19,7 +19,7 @@
     = flash[:error]
 
 %br
--if @places.empty?
+-if places.empty?
   %b=t(:no_results)
 -else
   %table.list
@@ -28,7 +28,7 @@
       %th= t :address
       %th= t :type
       %th= t :actions
-    - for place in @places do
+    - for place in places do
       %tr
         %td=place.name
         %td=h preferred_address(place)
@@ -36,4 +36,4 @@
         %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'bottom', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
 
   %br
-  = ajaxy_pagination(@places, 'places')
+  = ajaxy_pagination(places, 'places')
