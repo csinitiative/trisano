@@ -217,6 +217,13 @@ class Person < ActiveRecord::Base
       end
     end
 
+    def types
+      [
+          ["Interested party (patient, contact)", "InterestedParty"],
+          ["Clinician", "Clinician"],
+          ["Reporter", "Reporter"]
+      ]
+    end
   end
 
 end
