@@ -24,6 +24,10 @@ When(/^I navigate to the place management tool$/) do
    navigate_to_place_admin(@browser)
 end
 
+When /^I open the place management tool$/ do
+  @browser.open "/trisano/places"
+end
+
 When(/^I search for a place named (.+)/) do |name|
    @browser.type("name", name)
    @browser.click("submit_place_search")

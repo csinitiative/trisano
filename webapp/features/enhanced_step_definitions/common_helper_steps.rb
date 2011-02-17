@@ -55,6 +55,11 @@ When(/^I click the "(.+)" button$/) do |button|
   @browser.click("//input[contains(@value, '#{button}')]")
 end
 
+When(/^I click the "(.+)" button and wait for the page to load$/) do |button|
+  @browser.click("//input[contains(@value, '#{button}')]")
+  @browser.wait_for_page_to_load
+end
+
 When(/^I click and confirm the "(.+)" button$/) do |button|
   @browser.click("//input[contains(@value, '#{button}')]")
   @browser.get_confirmation()
