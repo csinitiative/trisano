@@ -50,6 +50,14 @@ Given /^a simple (.+) event for full name (.+)$/ do |event_type, name|
   @event = create_event_with_attributes(event_type, last_name, attrs)
 end
 
+Given /^the person has a simple (.+) event$/ do |event_type|
+  @event = create_basic_event(event_type)
+end
+
+Given /^the person has a simple (.+) event with the disease (.+)$/ do |event_type, disease|
+  @event = create_basic_event(event_type, nil, disease)
+end
+
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
   test_type_id = CommonTestType.find_by_common_name(test_type).id
   attrs = { "labs_attributes" =>

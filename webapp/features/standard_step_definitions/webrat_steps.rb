@@ -37,20 +37,20 @@ When /^I follow "(.*)"$/ do |link|
 end
 
 When /^I fill in "(.*)" with "(.*)"$/ do |field, value|
-  fill_in(field, :with => value) 
+  fill_in(field, :with => value)
 end
 
 When /^I select "(.*)" from "(.*)"$/ do |value, field|
-  select(value, :from => field) 
+  select(value, :from => field)
 end
 
 # Use this step in conjunction with Rail's datetime_select helper. For example:
-# When I select "December 25, 2008 10:00" as the date and time 
+# When I select "December 25, 2008 10:00" as the date and time
 When /^I select "(.*)" as the date and time$/ do |time|
   select_datetime(time)
 end
 
-# Use this step when using multiple datetime_select helpers on a page or 
+# Use this step when using multiple datetime_select helpers on a page or
 # you want to specify which datetime to select. Given the following view:
 #   <%= f.label :preferred %><br />
 #   <%= f.datetime_select :preferred %>
@@ -66,7 +66,7 @@ end
 # Use this step in conjuction with Rail's time_select helper. For example:
 # When I select "2:20PM" as the time
 # Note: Rail's default time helper provides 24-hour time-- not 12 hour time. Webrat
-# will convert the 2:20PM to 14:20 and then select it. 
+# will convert the 2:20PM to 14:20 and then select it.
 When /^I select "(.*)" as the time$/ do |time|
   select_time(time)
 end
@@ -92,11 +92,11 @@ When /^I select "(.*)" as the "(.*)" date$/ do |date, date_label|
 end
 
 When /^I check "(.*)"$/ do |field|
-  check(field) 
+  check(field)
 end
 
 When /^I uncheck "(.*)"$/ do |field|
-  uncheck(field) 
+  uncheck(field)
 end
 
 When /^I choose "(.*)"$/ do |field|
@@ -109,6 +109,10 @@ end
 
 Then /^I should see "(.*)"$/ do |text|
   response.body.should =~ /#{text}/m
+end
+
+Then /^I should see the following in order:$/ do |values|
+  response.body.should =~ /#{values.raw.join(".*")}/im
 end
 
 Then /^I should not see "([^\"]*)"$/ do |text|
