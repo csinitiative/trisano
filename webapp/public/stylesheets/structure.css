@@ -107,6 +107,10 @@ form {
   cursor: pointer;
   white-space: nowrap; }
 
+.sortable th.nosort {
+  text-decoration: none;
+  cursor: auto; }
+
 .horiz-scroll {
   width: 100%;
   overflow: auto; }
