@@ -32,6 +32,7 @@ Feature: Searching for existing people or events before adding a CMR
      When I search for last_name = "Jones"
      Then I should see results for just the morbidity event
 
+  @pending
   Scenario: Searches include people without events
     Given a simple morbidity event for last name Jones
       And a person with the last name "Jones"
