@@ -32,13 +32,12 @@ Feature: Searching for existing people or events before adding a CMR
      When I search for last_name = "Jones"
      Then I should see results for just the morbidity event
 
-  @pending
-  Scenario: Searches include people without events
+  Scenario: Searches do not include people without events
     Given a simple morbidity event for last name Jones
       And a person with the last name "Jones"
       And I am logged in as a super user
      When I search for last_name = "Jones"
-     Then I should see both the CMR and the entity
+     Then I should see the CMR but not the entity
 
   Scenario: Searches do not include deleted people
     Given a deleted person with the last name "Jones"

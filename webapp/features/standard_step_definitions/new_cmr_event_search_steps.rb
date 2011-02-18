@@ -89,27 +89,27 @@ end
 
 When /^I search for last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
-  fill_in "last_name", :with => last_name 
-  fill_in "first_name", :with => first_name 
+  fill_in "last_name", :with => last_name
+  fill_in "first_name", :with => first_name
   click_button "Search"
 end
 
 When /^I search for last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
   visit event_search_cmrs_path
-  fill_in "last_name", :with => last_name 
-  fill_in "birth_date", :with => birth_date 
+  fill_in "last_name", :with => last_name
+  fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
 When /^I search for birth date = "([^\"]*)"$/ do |birth_date|
   visit event_search_cmrs_path
-  fill_in "birth_date", :with => birth_date 
+  fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
 When /^I search for last_name starting with "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
-  fill_in "last_name", :with => last_name 
+  fill_in "last_name", :with => last_name
   check "use_starts_with_search"
   click_button "Search"
 end
@@ -176,6 +176,18 @@ Then /^I should see both the CMR and the entity/ do
       tr.should contain("Jones")
       tr.should contain("None")
     end
+  end
+end
+
+Then /^I should see the CMR but not the entity/ do
+  response.should have_selector("table.list") do |table|
+    table.count.should == 1
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Morbidity Event")
+    end
+
+    table.should_not have_xpath "//table[@class='list']//tr[not(contains(text(), 'Morbidity Event'))]"
   end
 end
 
