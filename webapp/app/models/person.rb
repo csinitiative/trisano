@@ -103,6 +103,7 @@ class Person < ActiveRecord::Base
     #   :show_deleted => true
     def find_all_for_filtered_view(options = {})
       options[:fulltext_terms] ||= "#{options[:last_name]} #{options[:first_name]}".strip
+      options.delete(:fulltext_terms) if options[:fulltext_terms].blank? || options[:use_starts_with_search]
 
       row_count = Person.count_by_sql(construct_count_sql(options))
       find_options = {
@@ -134,6 +135,10 @@ class Person < ActiveRecord::Base
 
     def search_select_fields(options)
       returning [] do |fields|
+        unless options[:person_type].blank?
+          fields << "DISTINCT(entities.id)"
+          fields << "search_results.rank AS rank" if include_fulltext?(options)
+        end
         fields << "people.*"
         fields << "addresses.street_number"
         fields << "addresses.street_name"
@@ -161,9 +166,12 @@ class Person < ActiveRecord::Base
         unless options[:show_deleted]
           joins << "INNER JOIN entities on people.entity_id = entities.id"
         end
+        unless options[:person_type].blank?
+          joins << "LEFT JOIN participations ON people.entity_id = participations.#{options[:person_type] == 'InterestedParty' ? 'primary_entity_id' : 'secondary_entity_id'}"
+        end
         joins << "LEFT JOIN addresses ON people.entity_id = addresses.entity_id AND addresses.event_id IS NULL"
         joins << "LEFT JOIN external_codes AS states ON addresses.state_id = states.id"
-        joins << fulltext_join(options)
+        joins << fulltext_join(options) if include_fulltext?(options)
       end.compact
     end
 
@@ -171,6 +179,7 @@ class Person < ActiveRecord::Base
       returning [] do |conditions|
         conditions << name_conditions(options)
         conditions << birth_date_conditions(options)
+        conditions << type_conditions(options)
         conditions << deleted_conditions(options)
         conditions << excluding_conditions(options)
       end.flatten.compact.join("\nAND\n")
@@ -184,7 +193,7 @@ class Person < ActiveRecord::Base
                                 ', addresses.postal_code \1')
         sanitize_sql(options[:order_by])
       else
-        fulltext_order(options) || "last_name, first_name ASC"
+        options[:use_starts_with_search].blank? ? (fulltext_order(options) || "last_name, first_name ASC") : "last_name, first_name ASC"
       end
     end
 
@@ -211,13 +220,27 @@ class Person < ActiveRecord::Base
       end
     end
 
+    def type_conditions(options)
+      unless options[:person_type].blank?
+        sanitize_sql_for_conditions(["participations.type = ?", options[:person_type]])
+      end
+    end
+
     def deleted_conditions(options)
       unless options[:show_deleted]
         "entities.deleted_at IS NULL"
       end
     end
 
-    def types
+    def include_fulltext?(options)
+      options[:use_starts_with_search].blank? && options[:fulltext_terms]
+    end
+
+    def search_type_options
+      [[nil, nil]] + valid_search_types
+    end
+
+    def valid_search_types
       [
           ["Interested party (patient, contact)", "InterestedParty"],
           ["Clinician", "Clinician"],

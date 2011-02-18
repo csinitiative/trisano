@@ -402,6 +402,7 @@ en:
   birth_date: "Birth date"
   gender: "Gender"
   people_normal_case: "People"
+  person_type: "Person type"
 #reporting
   reporting_information: "Reporting Information"
   reporting_agency: "Reporting Agency"

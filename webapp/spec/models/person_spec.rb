@@ -288,7 +288,7 @@ describe Person do
 
     describe "types" do
       it "all types returned should be names of sub-classes of Participation" do
-        Person.types.each do |type|
+        Person.valid_search_types.each do |type|
           obj = eval(type[1]).new
           obj.is_a?(Participation).should be_true
           obj.respond_to?(:person_entity).should be_true

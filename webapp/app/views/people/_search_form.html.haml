@@ -27,6 +27,10 @@
     = text_field_tag :birth_date, params[:birth_date]
 
   %span.horiz
+    = label_tag :person_type, t(:person_type)
+    = select_tag(:person_type, options_for_select(Person.search_type_options, :selected => params[:person_type]))
+
+  %span.horiz
     %label=t "items_per_page"
     - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
     =select_tag('per_page', page_options)

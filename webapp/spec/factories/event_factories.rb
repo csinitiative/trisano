@@ -133,7 +133,6 @@ Factory.define :lab do |l|
   l.lab_results { |lr| [lr.association(:lab_result)] }
 end
 
-# common_test_type factory defined in common_test_type_factories.rb
 Factory.define :lab_result do |lr|
   lr.test_type { |ctt| ctt.association(:common_test_type) }
 end
@@ -319,8 +318,8 @@ def add_hospitalization_facility_to_event(event, hospital_name, hospitals_partic
   hospital_place_entity = create_hospitalization_facility!(hospital_name)
   hospitals_participation = Factory.create(:hospitals_participation, hospitals_participations_attributes)
   hospitalization_facility = Factory.create(:hospitalization_facility,
-    :place_entity => hospital_place_entity,
-    :hospitals_participation => hospitals_participation
+                                            :place_entity => hospital_place_entity,
+                                            :hospitals_participation => hospitals_participation
   )
   event.hospitalization_facilities << hospitalization_facility
   hospitalization_facility
@@ -367,12 +366,50 @@ def create_place_entity!(name, type)
   place_entity
 end
 
+def create_patient!(name)
+  first_name, last_name = split_name(name)
+  morbidity_event = Factory.build(:morbidity_event)
+  person = morbidity_event.interested_party.person_entity.person
+  person.first_name = first_name
+  person.last_name = last_name
+  morbidity_event .save!
+  morbidity_event
+end
+
 def create_contact!(name)
+  first_name, last_name = split_name(name)
   contact_event = Factory.build(:contact_event)
   person = contact_event.interested_party.person_entity.person
-  person.last_name = name
+  person.first_name = first_name
+  person.last_name = last_name
   contact_event.save!
   contact_event
+end
+
+def create_clinician!(name)
+  first_name, last_name = split_name(name)
+  morbidity_event = Factory.build(:morbidity_event)
+  clinician = Factory.build(:clinician, :first_name => first_name, :last_name => last_name)
+  clinician_entity = Factory.build(:person_entity)
+  clinician_entity.person = clinician
+  morbidity_event.clinicians << Clinician.new(:person_entity => clinician_entity)
+  morbidity_event.save!
+end
+
+def create_reporter!(name)
+  first_name, last_name = split_name(name)
+  morbidity_event = Factory.build(:morbidity_event)
+  reporter = Factory.build(:person, :first_name => first_name, :last_name => last_name)
+  reporter_entity = Factory.build(:person_entity)
+  reporter_entity.person = reporter
+  morbidity_event.reporter = Reporter.new(:person_entity => reporter_entity)
+  morbidity_event.save!
+end
+
+def split_name(name)
+  name_one, name_two = name.split(" ")
+  name_two.nil? ? (last_name = name_one; first_name = nil) : (last_name = name_two; first_name = name_one)
+  return first_name, last_name
 end
 
 def create_code!(code_name, the_code)
