@@ -323,6 +323,7 @@ es:
   remove_forms: 'Eliminar formularios'
   add_to_event: 'Agregar al evento'
   add_existing_clinician: "Agregar a un clínico existente"
+  add_existing_reporter: "Add an existing reporter (EN)"
   add_clinician: "Agregar a un clínico"
   search_existing_diagnostic_facility: "Buscar una institución diagnóstica existente"
   add_diagnostic_facility: "Agregar una institución diagnóstica"

@@ -318,6 +318,7 @@ en:
   add_to_event: 'Add to Event'
   add_existing_clinician: "Add an existing clinician"
   add_clinician: "Add a clinician"
+  add_existing_reporter: "Add an existing reporter"
   search_existing_diagnostic_facility: "Search for an existing diagnostic facility"
   add_diagnostic_facility: "Add a diagnostic facility"
   diagnostic_types: "Place types"
