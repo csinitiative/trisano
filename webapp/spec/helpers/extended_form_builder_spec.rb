@@ -226,6 +226,25 @@ describe ExtendedFormBuilder, "returning a core field" do
   end
 end
 
+describe ExtendedFormBuilder, "fields_for" do
+  before do
+    configure_request
+  end
+
+  it "should render block, even if association is nil" do
+    @template.expects(:fields_for).with do |name, obj, first_arg, options|
+      name == "morbidity_event[interested_party_attributes]" &&
+        obj.is_a?(InterestedParty) &&
+        first_arg == obj &&
+        options == { :builder => ExtendedFormBuilder }
+    end
+
+    @form = ExtendedFormBuilder.new('morbidity_event', MorbidityEvent.new, @template, {}, nil)
+    @form.fields_for(:interested_party, :builder => ExtendedFormBuilder) 
+  end
+      
+end
+
 describe ExtendedFormBuilder::CorePath do
 
   before do

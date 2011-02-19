@@ -2,32 +2,27 @@
 .contact_from_search
   - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
     = ip.hidden_field(:primary_entity_id)
-
-    - contact_entity = ip.object.person_entity
-    - person = contact_entity.person
-    - contact_phone = contact_entity.primary_phone
-    - contact_event_data = f.object.participations_contact
-
-    %span.horiz{:style => "clear: both;"}
-      = label_tag t("name")
-      = person.last_comma_first
-    %span.horiz
+    - ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+      - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+        %span.horiz{:style => "clear: both;"}
+          = label_tag t("name")
+          = h(p.object.last_comma_first)
       = label_tag t("phone")
-      -unless contact_phone.nil?
-        %span.horiz= contact_phone.simple_format
+      -unless pe.object.primary_phone.nil?
+        %span.horiz= pe.object.primary_phone.simple_format
 
-    - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+  - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+    %span.horiz
+      = pc_fields.label(:disposition_id)
+      = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+    %span.horiz
+      = pc_fields.label(:contact_type_id)
+      = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+    - if f.object.new_record?
+      -# This place was added via live search. Provide a mechanism for removing the place before saving.
       %span.horiz
-        = pc_fields.label(:disposition_id)
-        = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
-      %span.horiz
-        = pc_fields.label(:contact_type_id)
-        = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
-      - if f.object.new_record?
-        -# This place was added via live search. Provide a mechanism for removing the place before saving.
-        %span.horiz
-          &nbsp;
-          %br
-          = link_to_function(t("remove"), "this.up().up().remove()", :id => "remove_#{uniq_id}")
+        &nbsp;
+        %br
+        = link_to_function(t("remove"), "this.up().up().remove()", :id => "remove_#{uniq_id}")
   %br
   %br
