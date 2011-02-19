@@ -222,9 +222,9 @@ describe Person, 'named scopes for clinicians' do
   end
 
   it "should return all active clinicians" do
-    Person.active_clinicians.size.should == 2
-    Person.active_clinicians.detect { |clinician| clinician.person_entity.id == @deleted_clinician.id }.should be_nil
-    Person.active_clinicians.detect { |clinician| clinician.person_entity.id == @non_clinician.id }.should be_nil
+    Person.active.clinicians.size.should == 2
+    Person.active.clinicians.detect { |clinician| clinician.person_entity.id == @deleted_clinician.id }.should be_nil
+    Person.active.clinicians.detect { |clinician| clinician.person_entity.id == @non_clinician.id }.should be_nil
   end
 
 end

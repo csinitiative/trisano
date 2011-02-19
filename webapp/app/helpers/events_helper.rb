@@ -1397,27 +1397,27 @@ module EventsHelper
     JS
   end
 
-  def clinician_dropdown
-    # DEBT: This needs to be refactored and made more general.
+  def person_dropdown(person_type, options={})
+    plural_type = person_type.to_s.pluralize
+    controller = @event.type == "MorbidityEvent" ? "cmr" : @event.type.underscore
+    updater_url = send("#{plural_type}_search_selection_#{controller}_path", @event, :event_type => @event.type.underscore)
+    updater_id = options.delete(:id) || "selected_#{plural_type}"
     <<-HTML
-      #{collection_select nil, :clinician_id, Person.active_clinicians, :entity_id, :last_comma_first_middle, :prompt => t(:add_existing_clinician)}
-      #{image_tag 'redbox_spinner.gif', :alt => 'working...', :id => 'clinician_id_spinner', :height => '16', :width => '16', :style => 'display: none;'}
+      #{collection_select nil, "#{person_type}_id", Person.active.send(plural_type), :entity_id, :last_comma_first_middle, :prompt => t("add_existing_#{person_type}")}
+      #{image_tag 'redbox_spinner.gif', :alt => 'working...', :id => "#{person_type}_id_spinner", :height => '16', :width => '16', :style => 'display:none;'}
       <script type="text/javascript">
         //<![CDATA[
-          $j(function(){ $j('select#_clinician_id').live('change', function(){
+          $j(function(){ $j('select#_#{person_type}_id').live('change', function() {
               var selector = $j(this);
               var entity_id = selector.val();
               if (!entity_id) return false;
-              var image = $j('img#clinician_id_spinner').show();
-              new Ajax.Updater('selected_clinicians',
-                "#{url_for :controller => :morbidity_events,
-                  :action => :clinicians_search_selection,
-                  :event_type => :morbidity_event}",
+              var image = $j('img##{person_type}_id_spinner').show();
+              new Ajax.Updater('#{updater_id}', '#{updater_url}',
                 {
                   asynchronous: true,
                   evalScripts: true,
-                  parameters: { id: entity_id },
-                  insertion: Insertion.Bottom,
+                  parameters: { entity_id: entity_id },
+                  #{options[:insertion] ? "insertion: Insertion.#{options[:insertion].capitalize}," : ""}
                   method: 'get',
                   onComplete: function() {
                     image.hide();
@@ -1430,6 +1430,10 @@ module EventsHelper
         //]]>
       </script>
     HTML
+  end
+
+  def clinician_dropdown options={}
+    person_dropdown :clinician, options
   end
 
   # Renders a reusable in-line search form.

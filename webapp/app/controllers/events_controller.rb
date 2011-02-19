@@ -39,7 +39,7 @@ class EventsController < ApplicationController
   end
 
   def clinicians_search_selection
-    clinician_entity = PersonEntity.find(params[:id])
+    clinician_entity = PersonEntity.find(params[:entity_id])
     @clinician = Clinician.new
     @clinician.person_entity = clinician_entity
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }

@@ -135,7 +135,9 @@ ActionController::Routing::Routes.draw do |map|
       :state => :post,
       :jurisdiction => :post,
       :soft_delete => :post,
-      :export_single => :post
+      :export_single => :post,
+      :reporters_search_selection => :get,
+      :clinicians_search_selection => :get
     },
     :new => {
       :lab_form => :get,

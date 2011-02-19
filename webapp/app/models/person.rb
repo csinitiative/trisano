@@ -36,6 +36,10 @@ class Person < ActiveRecord::Base
   validates_length_of :first_name, :maximum => 25, :allow_blank => true
   validates_length_of :middle_name, :maximum => 25, :allow_blank => true
 
+  named_scope :active, 
+    :include => :person_entity,
+    :conditions => "entities.deleted_at IS NULL"
+
   named_scope :clinicians,
      :conditions => "person_type = 'clinician'",
      :order => "last_name, first_name"
