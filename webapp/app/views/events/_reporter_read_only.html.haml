@@ -1,0 +1,34 @@
+#reporter
+  - fields_for @event, :builder => ExtendedFormBuilder do |f|
+    - f.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
+      = r.hidden_field(:secondary_entity_id)
+      - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+        - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+          - core_element :last_name, p, :horiz do
+            = p.label(:last_name, t('reporter_last_name'))
+            = h(p.object.last_name)
+          - core_element :first_name, p, :horiz do
+            = p.label(:first_name, t('reporter_first_name'))
+            = h(p.object.first_name)
+
+        -# phone = pe.object.telephones.last  # Works around issue where 1.0 code was duping reporter phone with each save.
+        - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |phone_fields|
+          -if Telephone.use?(:country_code)
+            - core_element :country_code, phone_fields, :horiz do
+              = phone_fields.label(:country_code)
+              = h(phone_fields.object.country_code)
+          -if Telephone.use?(:area_code)
+            - core_element :area_code, phone_fields, :horiz do
+              = phone_fields.label(:area_code)
+              = h(phone_fields.object.area_code)
+          - core_element :phone_number, phone_fields, :horiz do
+            = phone_fields.label(:phone_number)
+            = h(phone_fields.object.phone_number)
+          - core_element :extension, phone_fields, :horiz do
+            = phone_fields.label(:extension)
+            = h(phone_fields.object.extension)
+
+      %span.horiz
+        =label_tag "&nbsp;"
+        -#= link_to_function t(:remove) do |page|
+          -# page[:reporter].replace_html render(:partial => "events/reporter_form")

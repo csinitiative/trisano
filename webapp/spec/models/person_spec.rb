@@ -229,6 +229,34 @@ describe Person, 'named scopes for clinicians' do
 
 end
 
+describe Person do
+  context "reporters search" do
+    let(:reporter) do
+      Factory.create(:reporter).person
+    end
+
+    it "should return reporters" do
+      Person.reporters.should be_empty
+      reporter.should_not be_nil
+      Person.reporters.should == [reporter]
+    end
+    
+    it "should not return duplicate reporters" do
+      lambda do
+        Factory.create(:reporter, :secondary_entity => reporter.person_entity)
+      end.should change(Reporter, :count).by(2)
+      Person.reporters.count.should == 1
+    end
+
+    it "should be able to return only active (not deleted) reporters" do
+      reporter.delete.should be_true
+      Person.reporters.should == [reporter]
+      Person.active.reporters.should == []
+    end
+
+  end
+end
+
 describe Person, 'with an associated disease event' do
   before do
     @entity = Factory.create(:person_entity, :person => Factory.create(:person))

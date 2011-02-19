@@ -17,6 +17,7 @@
 
 class Reporter < Participation
   belongs_to :person_entity,  :foreign_key => :secondary_entity_id
+  belongs_to :person, :foreign_key => :secondary_entity_id, :primary_key => :entity_id
   accepts_nested_attributes_for :person_entity, :reject_if => proc { |attrs| check_person_attrs(attrs) }
 
   def self.check_person_attrs(attrs)

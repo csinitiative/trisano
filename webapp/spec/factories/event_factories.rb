@@ -89,6 +89,11 @@ Factory.define :place_entity do |pe|
   pe.association :place
 end
 
+Factory.define :reporter do |r|
+  r.primary_entity { Factory.create(:interested_party).person_entity }
+  r.secondary_entity { Factory.create(:person_entity) }
+end
+
 Factory.define :interested_party do |ip|
   ip.association :person_entity
   ip.association :risk_factor, :factory => :participations_risk_factor

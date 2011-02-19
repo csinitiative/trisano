@@ -19,6 +19,7 @@ class Person < ActiveRecord::Base
   include FulltextSearch
 
   belongs_to :person_entity, :foreign_key => 'entity_id'
+  has_many   :participations, :foreign_key => 'secondary_entity_id', :primary_key => 'entity_id' 
 
   belongs_to :birth_gender, :class_name => 'ExternalCode'
   belongs_to :ethnicity, :class_name => 'ExternalCode'
@@ -44,10 +45,10 @@ class Person < ActiveRecord::Base
      :conditions => "person_type = 'clinician'",
      :order => "last_name, first_name"
 
-  named_scope :active_clinicians,
-     :include => [:person_entity],
-     :conditions => "person_type = 'clinician' AND entities.deleted_at IS NULL",
-     :order => "last_name, first_name"
+  named_scope :reporters,
+    :include => :participations,
+    :conditions => "participations.type = 'Reporter'",
+    :order => 'last_name, first_name'
 
   def full_name
     "#{self.first_name} #{self.last_name}".strip
@@ -100,6 +101,10 @@ class Person < ActiveRecord::Base
         evt.disease_event.died.yes?
       end
     end.nil?
+  end
+
+  def delete
+    person_entity.try(:update_attributes, :deleted_at => DateTime.now)
   end
 
   class << self

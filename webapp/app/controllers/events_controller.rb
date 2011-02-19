@@ -44,6 +44,12 @@ class EventsController < ApplicationController
     @clinician.person_entity = clinician_entity
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
+  
+  def reporters_search_selection
+    @event = Event.find(params[:id])
+    @event.build_reporter(:secondary_entity => Entity.find(params[:entity_id]))
+    render :partial => "events/reporter_read_only", :layout => false
+  end
 
   def places_search
     page = params[:page] ? params[:page] : 1
