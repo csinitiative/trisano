@@ -112,7 +112,7 @@ class PeopleController < ApplicationController
       end
     end
   end
-  
+
   def update
     go_back = params.delete(:return)
 
@@ -159,7 +159,7 @@ class PeopleController < ApplicationController
                                                   :last_name => params[:last_name],
                                                   :birth_date => params[:birth_date],
                                                   :person_type => params[:person_type],
-                                                  :order_by => params[:sort_order],
+                                                  :order_by => params[:sort_order].try(:clone),
                                                   :use_starts_with_search => params[:use_starts_with_search],
                                                   :page => params[:page],
                                                   :include => [:person_entity],

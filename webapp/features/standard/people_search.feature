@@ -38,7 +38,7 @@ Feature: Searching for people
     And I should not see "Contactia"
     And I should see "Cliniciania"
     And I should not see "Reporteria"
-    
+
   Scenario: Searching by last name and reporter person type with fulltext
     When I go to the people search page
     And I fill in "Last name" with "Roberts"
@@ -92,3 +92,19 @@ Feature: Searching for people
     And I should not see "Cliniciania"
     And I should see "Reporteria"
 
+  Scenario: Sorting with a search applied
+    Given I am logged in as a super user
+      And a simple morbidity event for full name John Doe
+      And a simple morbidity event for full name Jane Doe
+      And a simple morbidity event for last name Marx
+     When I go to the people search page
+      And I fill in "Last name" with "Doe"
+      And I press "Search"
+      And I follow "Person Name"
+     Then I should see the following in order:
+       | Jane |
+       | John |
+      And I follow "Person Name"
+     Then I should see the following in order:
+       | John |
+       | Jane |

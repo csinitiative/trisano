@@ -62,10 +62,7 @@ module PeopleManagementHelper
       'ASC'
     end
 
-    params = request.query_parameters.merge({
-      :sort_order => "#{property} #{direction}"
-    })
-    link_to t(name), params
+    link_to t(name), request.query_parameters.merge({ :sort_order => "#{property} #{direction}" })
   end
 
 end

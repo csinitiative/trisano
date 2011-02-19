@@ -300,3 +300,58 @@ describe Person do
   end
 
 end
+
+describe Person, '#find_all_for_filtered_view' do
+  before do
+    @john = Factory.create(:person_entity, :person => Person.create(:first_name => 'John', :last_name => 'Doe'))
+    @jane = Factory.create(:person_entity, :person => Person.create(:first_name => 'Jane', :last_name => 'Doe'))
+    @options = {
+      :first_name => nil,
+      :last_name => 'Doe',
+      :birth_date => nil,
+      :order_by => nil,
+      :use_starts_with_search => true,
+      :page => nil,
+      :include => [ :person_entity ],
+      :per_page => nil,
+      :excluding => nil
+    }
+  end
+
+  it 'should default to ordering by last name, then first name' do
+    people = Person.find_all_for_filtered_view(@options)
+    people.count.should == 2
+    people.first.first_name.should == 'Jane'
+    people.last.first_name.should == 'John'
+  end
+
+  it 'should properly order found people when given a column name' do
+    people = Person.find_all_for_filtered_view(@options.merge({ :order_by => 'first_name ASC' }))
+    people.count.should == 2
+    people.first.first_name.should == 'Jane'
+    people.last.first_name.should == 'John'
+  end
+
+  it 'should order by last + first name when ordered by pseudo column person_name' do
+    people = Person.find_all_for_filtered_view(@options.merge({ :order_by => 'person_name ASC' }))
+    people.count.should == 2
+    people.first.first_name.should == 'Jane'
+    people.last.first_name.should == 'John'
+  end
+
+  it 'should order by all address columns' do
+    address_attrs = {
+      :street_number => 123,
+      :street_name => 'Sesame Street',
+      :city => 'Land of Makebelieve',
+      :postal_code => '12345'
+    }
+    @john.update_attributes(:canonical_address_attributes => address_attrs)
+    @jane.update_attributes(:canonical_address_attributes => address_attrs.merge(:postal_code => '54321'))
+
+    people = Person.find_all_for_filtered_view(@options.merge({ :order_by => 'address DESC' }))
+    people.count.should == 2
+    people.first.first_name.should == 'Jane'
+    people.last.first_name.should == 'John'
+  end
+end
