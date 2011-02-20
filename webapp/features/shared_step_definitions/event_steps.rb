@@ -197,6 +197,15 @@ Given /^there is a place on the event named (.+)$/ do |name|
   @place_event = add_place_to_event(@event, name)
 end
 
+Given /^all core fields have help text$/ do
+  ActiveRecord::Base.connection.execute(<<-SQL)
+    UPDATE core_field_translations a
+    SET help_text = (
+      SELECT key || ' help text' FROM core_fields b
+       WHERE a.core_field_id = b.id)
+    WHERE locale = '#{I18n.locale}'
+  SQL
+end
 
 Given /^all core field configs for a (.+) have help text$/ do |event_type|
   CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
