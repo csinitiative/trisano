@@ -10,8 +10,7 @@ Feature: Morbidity event form core field configs
       And that form is published
       And a morbidity event exists with a disease that matches the form
      When I am on the event edit page
-     Then I should see all of the core field config questions
-     When I answer all core field config questions
+      And I answer all core field config questions
       And I save the event
      Then I should see all of the core field config questions
       And I should see all core field config answers
