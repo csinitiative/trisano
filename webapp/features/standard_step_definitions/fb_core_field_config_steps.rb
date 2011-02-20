@@ -16,9 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Then /^I should see all of the core field config questions$/ do
+  label_text = Nokogiri::HTML(response.body).xpath("//label").text
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
-    response.should contain("#{core_field.key} before?")
-    response.should contain("#{core_field.key} after?")
+    label_text.should contain("#{core_field.key} before?")
+    label_text.should contain("#{core_field.key} after?")
   end
 end
 
@@ -30,8 +31,9 @@ When /^I answer all core field config questions$/ do
 end
 
 Then /^I should see all core field config answers$/ do
+  divs_text =  Nokogiri::HTML(response.body).css("div").text
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
-    response.should contain("#{core_field.key} before answer")
-    response.should contain("#{core_field.key} after answer")
+    divs_text.should contain("#{core_field.key} before answer")
+    divs_text.should contain("#{core_field.key} after answer")
   end
 end
