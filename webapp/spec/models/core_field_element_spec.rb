@@ -20,6 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CoreFieldElement do
 
   before(:each) do
+    CoreField.delete_all
     @form = Form.new(:name => 'Test form', :event_type => 'morbidity_event', :short_name => 'cfespec')
     @form.save_and_initialize_form_elements
     @core_field_element = CoreFieldElement.new
