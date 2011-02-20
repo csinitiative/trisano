@@ -6,8 +6,9 @@ Then /^I should see help text for all (.*) event core fields$/ do |type|
 end
 
 Then /^I should see all the core fields$/ do
+  doc = Nokogiri::HTML(response.body)
   CoreField.all(:conditions => ['field_type != ?', 'event']).each do |cf|
-    response.should have_tag('a', cf.name)
+    doc.xpath("//a[text()='#{cf.name}']").should_not be_empty
   end
 end
 
