@@ -243,7 +243,7 @@ describe Person do
     end
 
     it "should be able to return only active (not deleted) reporters" do
-      reporter.delete.should be_true
+      reporter.person_entity.update_attributes(:deleted_at => DateTime.now).should be_true
       Person.reporters.should == [reporter]
       Person.active.reporters.should == []
     end
