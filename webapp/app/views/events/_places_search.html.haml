@@ -33,7 +33,7 @@
         %td=place.name
         %td=h preferred_address(place)
         %td=place.formatted_place_descriptions
-        %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'bottom', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
+        %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'top', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
 
   %br
   = ajaxy_pagination(places, 'places')
