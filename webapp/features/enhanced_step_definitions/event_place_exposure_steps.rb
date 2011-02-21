@@ -63,10 +63,10 @@ end
 
 When(/^I add two new place exposures$/) do
   @first_new_place_name = get_unique_name(2)
-  add_place(@browser, { :name => @first_new_place_name, :place_type => "S" }, 1)
+  add_place(@browser, { :name => @first_new_place_name, :place_type => "S" })
 
   @second_new_place_name = get_unique_name(2)
-  add_place(@browser, { :name => @second_new_place_name, :place_type => "S" }, 2)
+  add_place(@browser, { :name => @second_new_place_name, :place_type => "S" })
 end
 
 Then(/^I should see both new place exposures$/) do
