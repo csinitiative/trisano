@@ -29,10 +29,7 @@
 
     -core_section :reporter_section, f do
       = person_dropdown :reporter, :id => 'reporter'
-      - if f.object.reporter.nil? || f.object.reporter.new_record?
-        = render :partial => "events/reporter_form"
-      - else
-        = render :partial => "events/reporter_read_only"
+      = render_reporter_form @event
     -core_section :reported_dates_section, f do
       #reported_dates
         %span.vert-break

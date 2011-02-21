@@ -1388,6 +1388,11 @@ module EventsHelper
     Export::Csv.export(events, options)
   end
 
+  def render_reporter_form(event, render_remove_link=false)
+    locals = { :event => event, :render_remove_link => render_remove_link }
+    render :partial => 'events/reporter_form', :locals => locals
+  end
+
   # wraps up remote function so it can be used in a prototype callback
   def remote_function_callback(options)
     <<-JS.gsub(/\s+/, ' ')
@@ -1399,8 +1404,10 @@ module EventsHelper
 
   def person_dropdown(person_type, options={})
     plural_type = person_type.to_s.pluralize
-    controller = @event.type == "MorbidityEvent" ? "cmr" : @event.type.underscore
-    updater_url = send("#{plural_type}_search_selection_#{controller}_path", @event, :event_type => @event.type.underscore)
+    updater_url = url_for(:controller => "events",
+                          :action => "#{plural_type}_search_selection",
+                          :event_type => @event.type.camelize,
+                          :event_id => @event.id)
     updater_id = options.delete(:id) || "selected_#{plural_type}"
     <<-HTML
       #{collection_select nil, "#{person_type}_id", Person.active.send(plural_type), :entity_id, :last_comma_first_middle, :prompt => t("add_existing_#{person_type}")}

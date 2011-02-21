@@ -46,9 +46,13 @@ class EventsController < ApplicationController
   end
   
   def reporters_search_selection
-    @event = Event.find(params[:id])
+    if params[:event_id]
+      @event = Event.find(params[:event_id])
+    else
+      @event = params[:event_type].camelize.constantize.new
+    end
     @event.build_reporter(:secondary_entity => Entity.find(params[:entity_id]))
-    render :partial => "events/reporter_read_only", :layout => false
+    render :layout => false
   end
 
   def places_search

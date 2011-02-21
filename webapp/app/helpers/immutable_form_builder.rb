@@ -10,7 +10,7 @@ class ImmutableFormBuilder < ExtendedFormBuilder
 
   module ImmutableMethods
     def text_field(method, options={})
-      @template.h(@object.send(method))
+      @template.send(:h, @object.send(method))
     end
   end
 end
