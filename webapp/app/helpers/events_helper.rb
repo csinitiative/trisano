@@ -153,7 +153,7 @@ module EventsHelper
     options[:partial] ||= method.to_s.singularize
     options[:form_builder_local] ||= :f
     options[:insert] ||= method
-    options[:insertion_point] || 'bottom'
+    options[:insertion_point] ||= 'bottom'
 
     link_to_function_options[:id] = options[:html_id] unless options[:html_id].nil?
 
