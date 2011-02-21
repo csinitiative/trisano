@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -153,6 +153,7 @@ module EventsHelper
     options[:partial] ||= method.to_s.singularize
     options[:form_builder_local] ||= :f
     options[:insert] ||= method
+    options[:insertion_point] || 'bottom'
 
     link_to_function_options[:id] = options[:html_id] unless options[:html_id].nil?
 
@@ -161,7 +162,7 @@ module EventsHelper
         html = h render(:partial => options[:partial], :locals => { options[:form_builder_local] => f })
         page << %{
           $('#{options[:insert]}').insert({
-            bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime())
+            #{options[:insertion_point]}: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime())
           });
         }
       end

@@ -1,4 +1,4 @@
--# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 -#
 -# This file is part of TriSano.
 -#
@@ -21,13 +21,26 @@
   -# Handles pre- and post-questions and help for places as a whole
   - core_element :places, f, 'vert-break' do
 
-    #place_child_events
+    - form_for Place.new do |pf|
+      %span#place_search_types.horiz
+        = epi_type_selector(pf)
+      - search_interface :places, :with_types => 'place[place_type_ids][]'
+      %hr/
 
-      - form_for Place.new do |pf|
-        %span#place_search_types.horiz
-          = epi_type_selector(pf)
-        - search_interface :places, :with_types => 'place[place_type_ids][]'
-        %hr/
+    %span{:style => "clear: both; padding-top: 20px"}
+      - blank_place = PlaceEvent.new
+      - blank_place.build_participations_place
+      - blank_place.build_interested_place
+      - blank_place.interested_place.build_place_entity
+      - blank_place.interested_place.place_entity.build_place
+      - blank_place.interested_place.place_entity.build_canonical_address
+
+      = add_record_link(f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure", :insertion_point => 'top')
+      -# bah, this is ugly
+      -extensions = render_extensions :cmr_place_exposure_extensions
+      =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"
+    
+    #place_child_events
 
       #existing-places
         -# Currently we don't allow editing place information (because changing it for one event will change it for all).
@@ -39,16 +52,4 @@
           - else
             = render :partial => 'events/place_exposure_show', :locals => { :f => place_form }
 
-      %span{:style => "clear: both; padding-top: 20px"}
 
-        - blank_place = PlaceEvent.new
-        - blank_place.build_participations_place
-        - blank_place.build_interested_place
-        - blank_place.interested_place.build_place_entity
-        - blank_place.interested_place.place_entity.build_place
-        - blank_place.interested_place.place_entity.build_canonical_address
-
-        = add_record_link f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure"
-        -# bah, this is ugly
-        -extensions = render_extensions :cmr_place_exposure_extensions
-        =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"

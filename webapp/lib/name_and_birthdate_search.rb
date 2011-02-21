@@ -72,7 +72,7 @@ module NameAndBirthdateSearch
     returning [] do |joins|
       joins << "INNER JOIN entities pplentities ON pplentities.id = people.entity_id"
       joins << "LEFT JOIN external_codes ON external_codes.id = people.birth_gender_id"
-      joins << "LEFT JOIN participations pplpart ON (pplpart.type = 'InterestedParty' AND pplpart.primary_entity_id = people.entity_id)"
+      joins << "INNER JOIN participations pplpart ON (pplpart.type = 'InterestedParty' AND pplpart.primary_entity_id = people.entity_id)"
       joins << "LEFT JOIN events ON (events.id = pplpart.event_id AND events.type in ('MorbidityEvent', 'ContactEvent'))"
       joins << "LEFT JOIN participations jurispart ON (jurispart.type = 'Jurisdiction' AND jurispart.event_id = pplpart.event_id)"
       joins << "LEFT JOIN places jurisplace ON (jurisplace.entity_id = jurispart.secondary_entity_id)"

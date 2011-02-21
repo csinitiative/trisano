@@ -1,4 +1,4 @@
--# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 -#
 -# This file is part of TriSano.
 -#
@@ -16,9 +16,9 @@
 #entity_search_results
   %table.list
     %tr
-      %th=t "person_name"
-      %th=t "address"
-      %th=t "birth_date"
+      %th= sortable_column_header :person_name
+      %th= sortable_column_header :address
+      %th= sortable_column_header :birth_date
       %th=t "actions"
     - @people.each do |person|
       - fields_for(person, :builder => ExtendedFormBuilder) do |f|

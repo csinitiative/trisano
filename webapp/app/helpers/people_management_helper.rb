@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -52,6 +52,17 @@ module PeopleManagementHelper
     [:city,
      :state_name,
      :postal_code].any? {|f| record[f]}
+  end
+
+  def sortable_column_header(name, property=nil)
+    property ||= name
+    direction = if params[:sort_order] && params[:sort_order].match(/^#{property.to_s}/)
+      (params[:sort_order].match(/asc$/i)) ? 'DESC' : 'ASC'
+    else
+      'ASC'
+    end
+
+    link_to t(name), request.query_parameters.merge({ :sort_order => "#{property} #{direction}" })
   end
 
 end

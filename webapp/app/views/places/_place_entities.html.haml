@@ -1,4 +1,4 @@
--# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 -#
 -# This file is part of TriSano.
 -#
@@ -17,9 +17,9 @@
   %thead
     %tr{:style => 'text-align: left'}
       %th=t 'place_name'
-      %th{ :class => "{ sorter: 'text' }" }=t 'address'
+      %th{ :class => "{sorter: 'text'}" }=t 'address'
       %th=t 'place_type'
-      %th=t 'actions'
+      %th{ :class => "nosort {sorter: false}" }=t 'actions'
   %tbody
     -place_entities.each do |place_entity|
       %tr.search-active.tabular

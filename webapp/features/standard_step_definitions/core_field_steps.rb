@@ -1,13 +1,15 @@
 Then /^I should see help text for all (.*) event core fields$/ do |type|
+  doc = Nokogiri::HTML(response.body)
   core_fields = CoreField.event_fields("#{type}_event").values.each do |core_field|
     next if core_field.disease_specific or core_field.container?
-    response.should have_tag("span#core_help_text_#{core_field.id}")
+    doc.css("span#core_help_text_#{core_field.id}").should_not be_empty
   end
 end
 
 Then /^I should see all the core fields$/ do
+  doc = Nokogiri::HTML(response.body)
   CoreField.all(:conditions => ['field_type != ?', 'event']).each do |cf|
-    response.should have_tag('a', cf.name)
+    doc.xpath("//a[text()='#{cf.name}']").should_not be_empty
   end
 end
 

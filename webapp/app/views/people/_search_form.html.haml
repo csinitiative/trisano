@@ -1,4 +1,4 @@
--# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 -#
 -# This file is part of TriSano.
 -#
@@ -25,6 +25,10 @@
   %span.horiz
     = label_tag :birth_date, t("birth_date")
     = text_field_tag :birth_date, params[:birth_date]
+
+  %span.horiz
+    = label_tag :person_type, t(:person_type)
+    = select_tag(:person_type, options_for_select(Person.search_type_options, :selected => params[:person_type]))
 
   %span.horiz
     %label=t "items_per_page"

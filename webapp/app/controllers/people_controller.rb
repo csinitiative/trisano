@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -113,8 +113,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  # PUT /people/1
-  # PUT /people/1.xml
   def update
     go_back = params.delete(:return)
 
@@ -160,7 +158,8 @@ class PeopleController < ApplicationController
       @people = Person.find_all_for_filtered_view(:first_name => params[:first_name],
                                                   :last_name => params[:last_name],
                                                   :birth_date => params[:birth_date],
-                                                  :order_by => params[:sort_order],
+                                                  :person_type => params[:person_type],
+                                                  :order_by => params[:sort_order].try(:clone),
                                                   :use_starts_with_search => params[:use_starts_with_search],
                                                   :page => params[:page],
                                                   :include => [:person_entity],

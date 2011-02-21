@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -22,12 +22,16 @@ def log_in_as(user)
   @current_user = User.find_by_user_name(user)
 end
 
-def create_basic_event(event_type, last_name, disease=nil, jurisdiction=nil)
+def create_basic_event(event_type, last_name=nil, disease=nil, jurisdiction=nil)
   # notes need a user, so set to default if current user is nil
   User.current_user ||= User.find_by_uid('default')
   returning Kernel.const_get(event_type.capitalize + "Event").new do |event|
     event.first_reported_PH_date = Date.yesterday.to_s(:db) if event.respond_to?(:first_reported_PH_date)
-    event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+    if last_name.nil?
+      event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
+    else
+      event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+    end
     event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease)) if disease
     event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types(jurisdiction || "Unassigned", 'J', true).first.entity_id)
     event.add_note("Dummy Note")
@@ -49,8 +53,8 @@ end
 def add_encounter_to_event(event, options={})
   returning event.encounter_child_events.build do |child|
     child.attributes = { :participations_encounter_attributes => {
-      :encounter_date => options[:encounter_date] || Date.today, 
-      :user_id => options[:user_id] || 1, 
+      :encounter_date => options[:encounter_date] || Date.today,
+      :user_id => options[:user_id] || 1,
       :encounter_location_type => options[:location_id] || "clinic" }
     }
     event.save!

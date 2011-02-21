@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -48,6 +48,14 @@ Given /^a simple (.+) event for full name (.+)$/ do |event_type, name|
   first_name, last_name = name.split(" ")
   attrs = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :first_name => first_name, :last_name => last_name }}}}
   @event = create_event_with_attributes(event_type, last_name, attrs)
+end
+
+Given /^the person has a simple (.+) event$/ do |event_type|
+  @event = create_basic_event(event_type)
+end
+
+Given /^the person has a simple (.+) event with the disease (.+)$/ do |event_type, disease|
+  @event = create_basic_event(event_type, nil, disease)
 end
 
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
@@ -189,6 +197,15 @@ Given /^there is a place on the event named (.+)$/ do |name|
   @place_event = add_place_to_event(@event, name)
 end
 
+Given /^all core fields have help text$/ do
+  ActiveRecord::Base.connection.execute(<<-SQL)
+    UPDATE core_field_translations a
+    SET help_text = (
+      SELECT key || ' help text' FROM core_fields b
+       WHERE a.core_field_id = b.id)
+    WHERE locale = '#{I18n.locale}'
+  SQL
+end
 
 Given /^all core field configs for a (.+) have help text$/ do |event_type|
   CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
