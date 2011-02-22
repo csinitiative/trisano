@@ -413,7 +413,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   # To avoid stubbing associations everywhere, we'll just instantiate a 
   # new instance of the correct type if the assocation is blank
   def fields_for_with_nested_attributes(association_name, args, block)
-    unless args.first.respond_to?(:new_record)
+    unless args.first.respond_to?(:new_record?)
       if @object.send(association_name).blank?
         blank_instance = @object.class.reflections[association_name.to_sym].klass.new
         args.unshift blank_instance

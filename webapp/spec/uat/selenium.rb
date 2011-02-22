@@ -1341,7 +1341,8 @@ module Selenium
 
         def wait_for_ajax(timeout=5000)
           wait_for_condition(<<-JS, timeout)
-            selenium.browserbot.getCurrentWindow().Ajax.activeRequestCount == 0;
+            selenium.browserbot.getCurrentWindow().Ajax.activeRequestCount == 0 &&
+              selenium.browserbot.getCurrentWindow().jQuery.active == 0;
           JS
         end
 

@@ -11,6 +11,7 @@
       -unless pe.object.primary_phone.nil?
         %span.horiz= pe.object.primary_phone.simple_format
 
+  %span.vert-break
   - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
     %span.horiz
       = pc_fields.label(:disposition_id)

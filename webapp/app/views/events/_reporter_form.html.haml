@@ -37,4 +37,4 @@
           - if render_remove_link
             = label_tag "&nbsp;"
             = link_to_function t(:remove) do |page|
-              - page[:reporter].replace_html render_reporter_form(event.class.new)
+              - page[:reporter].replace render_reporter_form(event.class.new)

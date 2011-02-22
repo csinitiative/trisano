@@ -37,11 +37,6 @@ When /^I complete the actual delivery facility fields$/ do
   @browser.type("xpath=//*[@id='actual_delivery_facility']//label[text()='Extension']/../input", '77')
 end
 
-When /^I save and continue$/ do
-  @browser.click("//*[@id='save_and_continue_btn']")
-  @browser.wait_for_page_to_load
-end
-
 Then /^I should see the expected delivery facility data$/ do
   @browser.wait_for_element("css=#expected_delivery_facility a")
   @browser.wait_for_element("xpath=//label[text()='Expected delivery facility']")

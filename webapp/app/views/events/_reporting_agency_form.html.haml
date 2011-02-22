@@ -28,7 +28,7 @@
           = render(:partial => 'events/reporting_agency', :locals => {:f => ra})
 
     -core_section :reporter_section, f do
-      = person_dropdown :reporter, :id => 'reporter'
+      = reporter_dropdown :id => 'reporter', :insertion => :replaceWith
       = render_reporter_form @event
     -core_section :reported_dates_section, f do
       #reported_dates

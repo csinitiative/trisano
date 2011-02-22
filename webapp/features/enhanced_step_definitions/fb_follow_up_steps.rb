@@ -105,6 +105,10 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
   end
 end
 
+When /^I remove read only entities from the event$/ do
+  When %{I remove the reporter from the event}
+end
+
 Then /^I should not see any of the core follow up questions$/ do
   sleep 3 # Wait a sec or three for all of the core follow ups to disappear
   html_source = @browser.get_html_source

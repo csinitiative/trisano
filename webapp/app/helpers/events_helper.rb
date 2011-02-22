@@ -1407,9 +1407,10 @@ module EventsHelper
     plural_type = person_type.to_s.pluralize
     updater_url = url_for(:controller => "events",
                           :action => "#{plural_type}_search_selection",
-                          :event_type => @event.type.camelize,
+                          :event_type => @event.type.underscore,
                           :event_id => @event.id)
     updater_id = options.delete(:id) || "selected_#{plural_type}"
+    insertion = options[:insertion] || :append
     <<-HTML
       #{collection_select nil, "#{person_type}_id", Person.active.send(plural_type), :entity_id, :last_comma_first_middle, :prompt => t("add_existing_#{person_type}")}
       #{image_tag 'redbox_spinner.gif', :alt => 'working...', :id => "#{person_type}_id_spinner", :height => '16', :width => '16', :style => 'display:none;'}
@@ -1420,19 +1421,15 @@ module EventsHelper
               var entity_id = selector.val();
               if (!entity_id) return false;
               var image = $j('img##{person_type}_id_spinner').show();
-              new Ajax.Updater('#{updater_id}', '#{updater_url}',
-                {
-                  asynchronous: true,
-                  evalScripts: true,
-                  parameters: { entity_id: entity_id },
-                  #{options[:insertion] ? "insertion: Insertion.#{options[:insertion].capitalize}," : ""}
-                  method: 'get',
-                  onComplete: function() {
-                    image.hide();
-                    selector.val('');
-                  }
+              $j.ajax({
+                url: '#{updater_url}',
+                data: { entity_id: entity_id },
+                success: function(data) { $j('##{updater_id}').#{insertion}(data) },
+                complete: function() {
+                  image.hide();
+                  selector.val('');
                 }
-              );
+              });
             });
           });
         //]]>
@@ -1442,6 +1439,10 @@ module EventsHelper
 
   def clinician_dropdown options={}
     person_dropdown :clinician, options
+  end
+
+  def reporter_dropdown options={}
+    person_dropdown :reporter, options
   end
 
   # Renders a reusable in-line search form.

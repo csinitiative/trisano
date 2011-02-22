@@ -21,6 +21,7 @@ Feature: Morbidity event form core follow ups
     And I should see all follow up answers
 
     When I am on the event edit page
+    And I remove read only entities from the event
     And I answer all of the core follow ups with a non-matching condition
     Then I should not see any of the core follow up questions
     And I should not see any follow up answers
