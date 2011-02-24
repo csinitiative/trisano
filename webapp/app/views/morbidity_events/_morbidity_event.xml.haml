@@ -1,0 +1,15 @@
+!!! XML
+= xml_for morbidity_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |builder| 
+  - if morbidity_event.new_record? 
+    = builder.link_to cmrs_url, :rel => :index 
+    = builder.link_to new_cmr_url, :rel => :self 
+  - else 
+    = builder.link_to cmr_url(morbidity_event), :rel => :self 
+    = builder.link_to edit_cmr_url(morbidity_event), :rel => :edit 
+  = builder.render :first_reported_PH_date 
+  = builder.xml_for :interested_party do |builder|
+    = builder.xml_for :person_entity do |builder|
+      = builder.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 
+      = builder.render :race_ids
+      = builder.xml_for :person do |builder|
+        = builder.render :last_name

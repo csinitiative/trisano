@@ -380,6 +380,10 @@ module ApplicationHelper
     (expr) ? "<#{tag}>#{value}</#{tag}>" : "#{value}"
   end
 
+  def xml_for(record, options = {}, &block)
+    XmlBuilder.new(record, self, options, &block).build
+  end
+
   def xml_link_to(url, options = {})
     options = options.symbolize_keys
     options[:rel] = link_relation_for(options[:rel])
