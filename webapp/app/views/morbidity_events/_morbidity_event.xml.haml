@@ -1,19 +1,36 @@
 !!! XML
-= xml_for morbidity_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |builder| 
+= xml_for morbidity_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |morb| 
   - if morbidity_event.new_record? 
-    = builder.link_to cmrs_url, :rel => :index 
-    = builder.link_to new_cmr_url, :rel => :self 
+    = morb.link_to cmrs_url, :rel => :index 
+    = morb.link_to new_cmr_url, :rel => :self 
   - else 
-    = builder.link_to cmr_url(morbidity_event), :rel => :self 
-    = builder.link_to edit_cmr_url(morbidity_event), :rel => :edit 
-  = builder.link_to index_code_url(:code_name => 'imported'), :rel => :imported
-  = builder.link_to index_code_url(:code_name => 'case'), :rel => :case
-  = builder.link_to index_code_url(:code_name => 'yesno'), :rel => :yesno
-  - ['acuity', 'event_name', 'other_data_1', 'other_data_2', 'outbreak_name', 'parent_guardian', ['imported_from_id', {:rel => :imported}], ['lhd_case_status_id', {:rel => :case}], ['state_case_status_id', {:rel => :case}], 'first_reported_PH_date', ['outbreak_associated_id', {:rel => :yesno}], 'results_reported_to_clinician_date'].each do |field|
-    = builder.render *field
-  = builder.xml_for :interested_party do |builder|
-    = builder.xml_for :person_entity do |builder|
-      = builder.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 
-      = builder.render :race_ids
-      = builder.xml_for :person do |builder|
-        = builder.render :last_name
+    = morb.link_to cmr_url(morbidity_event), :rel => :self 
+    = morb.link_to edit_cmr_url(morbidity_event), :rel => :edit 
+  = morb.link_to index_code_url(:code_name => 'imported'), :rel => :imported
+  = morb.link_to index_code_url(:code_name => 'case'),   :rel => :case
+  = morb.link_to index_code_url(:code_name => 'yesno'),  :rel => :yesno
+  = morb.link_to index_code_url(:code_name => 'state'),  :rel => :state
+  = morb.link_to index_code_url(:code_name => 'county'), :rel => :county
+  = morb.link_to diseases_url, :rel => :disease
+  = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
+
+  - morb.fields.each do |field|
+    = morb.render *field
+  = morb.xml_for :address do |address|
+    - address.fields.each do |field|
+      = address.render *field
+
+  = morb.xml_for :disease_event do |disease_event|
+    - disease_event.fields.each do |field|
+      = disease_event.render *field
+
+  = morb.xml_for :jurisdiction do |j|
+    - j.fields.each do |field|
+      = j.render *field
+
+  = morb.xml_for :interested_party do |patient|
+    = patient.xml_for :person_entity do |pe|
+      = pe.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 
+      = pe.render :race_ids
+      = pe.xml_for :person do |person|
+        = person.render :last_name

@@ -26,4 +26,11 @@ class DiseaseEvent < ActiveRecord::Base
                                   :on_or_before => lambda { Date.today },
                                   :on_or_after => :disease_onset_date
 
+  def xml_fields
+    [[:hospitalized_id,   {:rel => :yesno }],
+     [:disease_id,        {:rel => :disease}],
+     :disease_onset_date,
+     :date_diagnosed,
+     [:died_id,           {:rel => :yesno}]]
+  end
 end

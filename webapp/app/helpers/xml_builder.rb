@@ -35,6 +35,10 @@ class XmlBuilder
     XmlBuilder.new(tag_name, association_instance(attribute), @template, options, &block).build
   end
 
+  def fields
+    @object.xml_fields
+  end
+
   private
 
   def link_relation_for(rel)
@@ -48,7 +52,7 @@ class XmlBuilder
     when Date
       value.xmlschema
     else
-      value
+      @template.send(:h, value)
     end
   end
 

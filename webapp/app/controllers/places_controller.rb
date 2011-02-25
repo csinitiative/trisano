@@ -17,33 +17,24 @@
 
 class PlacesController < ApplicationController
 
+  before_filter :check_permissions
   before_filter :init_search_form, :only => [:index]
 
   def index
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
-    unless params[:name].nil?
-      @place_entities = PlaceEntity.by_name_and_participation_type(@search_form)
+    @place_entities = (params[:name] ? PlaceEntity.by_name_and_participation_type(@search_form) : [])
+    respond_to do |format|
+      format.html 
+      format.xml { render :xml => @place_entities.to_xml(:include => :place) }
     end
   end
 
   def edit
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     @place_entity = PlaceEntity.find(params[:id])
     @place_entity.build_canonical_address if @place_entity.canonical_address.nil?
     @place_entity.telephones << Telephone.new if @place_entity.telephones.empty?
   end
 
   def update
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     @place_entity = PlaceEntity.find(params[:id])
 
     if @place_entity.update_attributes(params[:place_entity])
@@ -57,18 +48,10 @@ class PlacesController < ApplicationController
   end
 
   def show
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     @place_entity = PlaceEntity.find(params[:id])
   end
 
   def new
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     @place_entity = PlaceEntity.new
     @place_entity.place = Place.new
     @place_entity.canonical_address = Address.new
@@ -76,10 +59,6 @@ class PlacesController < ApplicationController
   end
 
   def create
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     @place_entity = PlaceEntity.new
     @place_entity.place = Place.new
     @place_entity.update_attributes(params[:place_entity])
@@ -98,5 +77,17 @@ class PlacesController < ApplicationController
 
   def init_search_form
     @search_form = PlacesSearchForm.new(params)
+  end
+
+  def check_permissions
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      respond_to do |format|
+        format.html do
+          render :partial => "places/permission_denied", :locals => { :reason => t("no_place_management_privs") }, :layout => true, :status => 403
+        end
+        format.xml { head :forbidden }
+      end
+      return
+    end
   end
 end

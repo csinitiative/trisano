@@ -206,6 +206,21 @@ class MorbidityEvent < HumanEvent
     end
   end
 
+  def xml_fields
+    ['acuity',
+     'event_name',
+     'other_data_1',
+     'other_data_2',
+     'outbreak_name',
+     'parent_guardian',
+     ['imported_from_id', {:rel => :imported}],
+     ['lhd_case_status_id', {:rel => :case}],
+     ['state_case_status_id', {:rel => :case}],
+     'first_reported_PH_date',
+     ['outbreak_associated_id', {:rel => :yesno}],
+     'results_reported_to_clinician_date']
+  end
+
   private
 
   def generate_mmwr

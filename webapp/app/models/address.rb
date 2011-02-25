@@ -30,6 +30,16 @@ class Address < ActiveRecord::Base
   validates_length_of :city, :maximum => 255, :allow_blank => true
   validates_length_of :unit_number, :maximum => 10, :allow_blank => true
 
+  def xml_fields
+    [['state_id',  {:rel => :state}],
+     ['county_id', {:rel => :county}],
+     'unit_number',
+     'postal_code',
+     'street_name',
+     'street_number',
+     'city']
+  end
+
   def number_and_street
     "#{self.street_number} #{street_name}".strip
   end
