@@ -15,6 +15,7 @@ class XmlBuilder
   end
 
   def render(attribute, options = {})
+    options[:rel] = link_relation_for(options[:rel]) if options[:rel]
     value = cast(@object.send(attribute))
     case value
     when Array
@@ -39,7 +40,7 @@ class XmlBuilder
   def link_relation_for(rel)
     return rel.to_s if rel.to_s.starts_with? 'http'
     understood = %w(self alternate bookmark edit related previous next first last up enclosure index)
-    understood.include?(rel.to_s) ? rel.to_s : "https://wiki.csinitiative.com/display/tri/Relationship+-+#{rel}"
+    understood.include?(rel.to_s) ? rel.to_s : "https://wiki.csinitiative.com/display/tri/Relationship+-+#{rel.to_s.camelize}"
   end
 
   def cast(value)

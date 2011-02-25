@@ -22,6 +22,34 @@ module Trisano
 
       end
 
+      class Css
+        def initialize(css)
+          @css = css
+        end
+
+        def matches?(text)
+          doc = Nokogiri::XML(text)
+          @node_count = doc.css(@css, supported_namespaces).size
+          @node_count > 0
+        end
+
+        def failure_message_for_should
+          "expected at least 1 node for css <#{@css}>. Found 0."
+        end
+
+        def failure_message_for_should_not
+          "expected 0 nodes for css <#{@css}>. Found #{@node_count}"
+        end
+
+        def supported_namespaces
+          {'atom' => "http://www.w3.org/2005/Atom"}
+        end
+      end
+
+      def have_css(css)
+        Css.new(css)
+      end
+
       class BlankOption < Base
         def matches?(document)
           return false if document.nil?

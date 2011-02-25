@@ -6,7 +6,11 @@
   - else 
     = builder.link_to cmr_url(morbidity_event), :rel => :self 
     = builder.link_to edit_cmr_url(morbidity_event), :rel => :edit 
-  = builder.render :first_reported_PH_date 
+  = builder.link_to index_code_url(:code_name => 'imported'), :rel => :imported
+  = builder.link_to index_code_url(:code_name => 'case'), :rel => :case
+  = builder.link_to index_code_url(:code_name => 'yesno'), :rel => :yesno
+  - ['acuity', 'event_name', 'other_data_1', 'other_data_2', 'outbreak_name', 'parent_guardian', ['imported_from_id', {:rel => :imported}], ['lhd_case_status_id', {:rel => :case}], ['state_case_status_id', {:rel => :case}], 'first_reported_PH_date', ['outbreak_associated_id', {:rel => :yesno}], 'results_reported_to_clinician_date'].each do |field|
+    = builder.render *field
   = builder.xml_for :interested_party do |builder|
     = builder.xml_for :person_entity do |builder|
       = builder.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 

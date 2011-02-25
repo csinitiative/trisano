@@ -30,6 +30,7 @@ Spec::Runner.configure do |config|
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 
   config.include(CustomMatchers)
+  config.include(Trisano::HTML::Matchers)
 
   # == Fixtures
   #
