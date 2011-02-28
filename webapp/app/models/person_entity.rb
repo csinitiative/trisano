@@ -30,4 +30,8 @@ class PersonEntity < Entity
 
   has_many :interested_parties, :foreign_key => :primary_entity_id
   has_many :human_events, :through => :interested_parties
+
+  def xml_fields
+    [[:race_ids, {:rel => 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'}]]
+  end
 end

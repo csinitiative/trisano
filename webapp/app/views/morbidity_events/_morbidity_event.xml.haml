@@ -11,6 +11,10 @@
   = morb.link_to index_code_url(:code_name => 'yesno'),  :rel => :yesno
   = morb.link_to index_code_url(:code_name => 'state'),  :rel => :state
   = morb.link_to index_code_url(:code_name => 'county'), :rel => :county
+  = morb.link_to index_code_url(:code_name => 'ethnicity'), :rel => :ethnicity
+  = morb.link_to index_code_url(:code_name => 'race'), :rel => :race
+  = morb.link_to index_code_url(:code_name => 'gender'), :rel => :gender
+  = morb.link_to index_code_url(:code_name => 'language'), :rel => :language
   = morb.link_to diseases_url, :rel => :disease
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
 
@@ -33,7 +37,8 @@
       - rf.fields.each do |field|
         = rf.render *field
     = patient.xml_for :person_entity do |pe|
-      = pe.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 
-      = pe.render :race_ids
+      - pe.fields.each do |field|
+        = pe.render *field
       = pe.xml_for :person do |person|
-        = person.render :last_name
+        - person.fields.each do |field|
+          = person.render *field

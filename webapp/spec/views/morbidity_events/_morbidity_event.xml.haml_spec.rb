@@ -76,14 +76,19 @@ describe "/_morbidity_event.xml.haml" do
     end
   end
 
-  it "should include the patient's last name" do
-    response.should have_tag 'morbidity-event interested-party-attributes person-entity-attributes person-attributes last-name'
+  it "should have the patient's demographics data" do
+    [:birth_date,
+     :first_name,
+     :middle_name,
+     :last_name,
+     %w(ethnicity_id https://wiki.csinitiative.com/display/tri/Relationship+-+Ethnicity),
+     :date_of_death,
+     %w(birth_gender_id https://wiki.csinitiative.com/display/tri/Relationship+-+Gender),
+     %w(primary_language_id https://wiki.csinitiative.com/display/tri/Relationship+-+Language)
+    ].each do |field, rel|
+      assert_field('morbidity-event interested-party-attributes person-entity-attributes person-attributes', field, rel)
+    end
+    assert_field 'morbidity-event interested-party-attributes person-entity-attributes', :race_ids, 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'
   end
 
-  it "should have race tags" do
-    response.should have_tag 'morbidity-event interested-party-attributes person-entity-attributes' do
-      with_tag 'race-ids'
-      with_tag '[rel=?]', 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'
-    end
-  end
 end

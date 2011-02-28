@@ -16,13 +16,14 @@ class XmlBuilder
 
   def render(attribute, options = {})
     options[:rel] = link_relation_for(options[:rel]) if options[:rel]
-    value = cast(@object.send(attribute))
+    value = @object.send(attribute)
     case value
     when Array
-      value << options
-      tags attribute, *value
+      values = value.map { |v| cast(v) }
+      values << options
+      tags attribute, *values
     else
-      tags attribute, value, options
+      tags attribute, cast(value), options
     end
   end
 

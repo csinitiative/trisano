@@ -50,6 +50,18 @@ class Person < ActiveRecord::Base
     :conditions => "participations.type = 'Reporter'",
     :order => 'last_name, first_name'
 
+
+  def xml_fields
+    [:birth_date,
+     :first_name,
+     :middle_name,
+     :last_name,
+     :date_of_death,
+     [:birth_gender_id, {:rel => :gender}],
+     [:primary_language_id, {:rel => :language}],
+     [:ethnicity_id, {:rel => :ethnicity}]]
+  end
+
   def full_name
     "#{self.first_name} #{self.last_name}".strip
   end
