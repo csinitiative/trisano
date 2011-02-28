@@ -8,18 +8,22 @@ module ActiveSupport
 
     def merge_element!(hash, element)
       return unless element.namespace.blank?
-      super
+      result = super
+      result = result.each {|k, v| result.delete(k) if v.blank? }
+      result
     end
 
     def get_attributes(element)
       attributes = super
-      remove_namespace_attributes(attributes)
+      remove_attributes_if(attributes) do |k, v|
+        k.starts_with("xmlns") or k == 'rel'
+      end
     end
 
-    def remove_namespace_attributes(attributes)
+    def remove_attributes_if(attributes)
       attributes = attributes.stringify_keys
-      attributes.keys.each do |k|
-        attributes.delete(k) if k.starts_with? 'xmlns'
+      attributes.each do |k, v|
+        attributes.delete(k) if yield(k, v)
       end
       attributes
     end
