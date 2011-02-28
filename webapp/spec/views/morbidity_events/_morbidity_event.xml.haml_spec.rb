@@ -60,6 +60,21 @@ describe "/_morbidity_event.xml.haml" do
   it "should have jurisdiction data" do
     assert_field "morbidity-event jurisdiction-attributes", "secondary-entity-id", "https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction"
   end
+  
+  it "should have risk factor data" do
+    [:occupation,
+     %w(healthcare_worker_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno),
+     :pregnancy_due_date,
+     :risk_factors_notes,
+     %w(food_handler_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno),
+     %w(group_living_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno),
+     :risk_factors,
+     %w(pregnant_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno),
+     %w(day_care_association_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno)
+    ].each do |field, rel|
+      assert_field("morbidity-event interested-party-attributes risk-factor-attributes", field, rel)
+    end
+  end
 
   it "should include the patient's last name" do
     response.should have_tag 'morbidity-event interested-party-attributes person-entity-attributes person-attributes last-name'

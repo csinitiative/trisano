@@ -29,6 +29,9 @@
       = j.render *field
 
   = morb.xml_for :interested_party do |patient|
+    = patient.xml_for :risk_factor do |rf|
+      - rf.fields.each do |field|
+        = rf.render *field
     = patient.xml_for :person_entity do |pe|
       = pe.link_to index_code_url(:code_name => 'race'), :rel => 'Race' 
       = pe.render :race_ids

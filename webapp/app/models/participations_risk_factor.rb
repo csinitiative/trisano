@@ -28,4 +28,16 @@ class ParticipationsRiskFactor < ActiveRecord::Base
   validates_date :pregnancy_due_date, {
     :allow_blank => true
   }
+
+  def xml_fields
+    [:occupation,
+     [:healthcare_worker_id, {:rel => :yesno}],
+     :pregnancy_due_date,
+     :risk_factors_notes,
+     [:food_handler_id, {:rel => :yesno}],
+     [:group_living_id, {:rel => :yesno}],
+     [:pregnant_id, {:rel => :yesno}],
+     [:day_care_association_id, {:rel => :yesno}],
+     :risk_factors]
+  end
 end
