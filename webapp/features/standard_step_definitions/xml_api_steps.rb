@@ -25,6 +25,10 @@ When /^I use xpath to find (.*)$/ do |xpath_name|
   @node_set = @xml.xpath(xpath_to(xpath_name))
 end
 
+When /^I make the XML invalid$/ do
+  @xml.at_xpath("//first-reported-PH-date").content = ""
+end
+
 When /^I PUT the XML back/ do
   url = @xml.at_xpath("//atom:link[@rel='self']").attribute('href').value
   put url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'

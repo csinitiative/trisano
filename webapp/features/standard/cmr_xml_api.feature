@@ -17,6 +17,13 @@ Feature: XML API for CMRs
       And I PUT the XML back
      Then I should get a 200 response
 
+  Scenario: Putting an invalid CMR should returns errors
+    Given a basic morbidity event exists
+    When I retrieve the event's XML representation
+    And I make the XML invalid
+    And I PUT the XML back
+    Then I should get a 422 response
+
   Scenario: Creating a CMR from an XML representation
      When I retrieve a new CMR xml representation
       And I replace the patient's last name with "Davis"

@@ -9,7 +9,7 @@ module ActiveSupport
     def merge_element!(hash, element)
       return unless element.namespace.blank?
       result = super
-      result = result.each {|k, v| result.delete(k) if v.blank? }
+      remove_empty_nested_attributes(result)
       result
     end
 
@@ -20,6 +20,8 @@ module ActiveSupport
       end
     end
 
+    private
+
     def remove_attributes_if(attributes)
       attributes = attributes.stringify_keys
       attributes.each do |k, v|
@@ -27,5 +29,12 @@ module ActiveSupport
       end
       attributes
     end
+
+    def remove_empty_nested_attributes(result)
+      result.each do |k, v|
+        result.delete(k) if k.to_s.ends_with?('-attributes') && v.values.all? { |v| v.blank? }
+      end
+    end
+
   end
 end
