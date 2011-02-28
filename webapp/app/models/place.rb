@@ -211,6 +211,10 @@ class Place < ActiveRecord::Base
     end
   end
 
+  def xml_fields
+    [:name, [:place_type_ids, {:rel => :place_type}]]
+  end
+
   def place_descriptions
     place_types.sort_by(&:sort_order).collect { |pt| pt.code_description }
   end

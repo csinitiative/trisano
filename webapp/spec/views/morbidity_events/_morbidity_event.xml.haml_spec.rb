@@ -91,4 +91,17 @@ describe "/_morbidity_event.xml.haml" do
     assert_field 'morbidity-event interested-party-attributes person-entity-attributes', :race_ids, 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'
   end
 
+  it "should have reporter data" do
+    [:last_name, :first_name].each do |field, rel|
+      assert_field('morbidity-event reporter-attributes person-entity-attributes person-attributes', field, rel)
+    end
+  end
+
+  it "should have reporting agency data" do
+    [:name,
+     %w(place_type_ids https://wiki.csinitiative.com/display/tri/Relationship+-+Placetype)
+    ].each do |field, rel|
+      assert_field('morbidity-event reporting-agency-attributes place-entity-attributes place-attributes', field, rel)
+    end
+  end
 end

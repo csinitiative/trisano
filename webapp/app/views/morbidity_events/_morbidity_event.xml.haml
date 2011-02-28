@@ -15,6 +15,8 @@
   = morb.link_to index_code_url(:code_name => 'race'), :rel => :race
   = morb.link_to index_code_url(:code_name => 'gender'), :rel => :gender
   = morb.link_to index_code_url(:code_name => 'language'), :rel => :language
+  -# TODO: place_type code resouce doesn't work yet.
+  = morb.link_to index_code_url(:code_name => 'placetype'), :rel => :place_type
   = morb.link_to diseases_url, :rel => :disease
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
 
@@ -42,3 +44,15 @@
       = pe.xml_for :person do |person|
         - person.fields.each do |field|
           = person.render *field
+  
+  = morb.xml_for :reporter do |reporter|
+    = reporter.xml_for :person_entity do |pe|
+      = pe.xml_for :person do |person|
+        = person.render :first_name
+        = person.render :last_name
+
+  = morb.xml_for :reporting_agency do |agency|
+    = agency.xml_for :place_entity do |pe|
+      = pe.xml_for :place do |place|
+        - place.fields.each do |field|
+          = place.render *field
