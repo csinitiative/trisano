@@ -255,7 +255,7 @@ describe MorbidityEventsController do
         request.env['HTTP_REFERER'] = "/some_path"
         @event.expects(:assign_to_lhd)
         @event.expects(:save!)
-        post :jurisdiction, :id => "1", :jurisdiction_id => "2"
+        post :jurisdiction, :id => "1", :routing => { :jurisdiction_id => "2" }
       end
 
       it "should find the event requested" do
@@ -289,7 +289,7 @@ describe MorbidityEventsController do
           @event.expects(:assign_to_lhd)
           @event.expects(:save!)
           request.env['HTTP_REFERER'] = "/some_path"
-          post :jurisdiction, :id => "1", :jurisdiction_id => "2", :secondary_jurisdiction_ids => ["3", "4"], :note => ""
+          post :jurisdiction, :id => "1", :routing => { :jurisdiction_id => "2", :note => "" }, :secondary_jurisdiction_ids => ["3", "4"]
         end
       end
     end
@@ -507,7 +507,7 @@ describe MorbidityEventsController, "xml api" do
     mock_user
     @event = Factory.create(:morbidity_event)
   end
-  
+
   it "returns xml for the event" do
     request.env['HTTP_ACCEPT'] = 'application/xml'
     get :show, :id => @event

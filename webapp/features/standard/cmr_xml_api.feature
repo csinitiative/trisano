@@ -39,3 +39,25 @@ Feature: XML API for CMRs
     And I PUT the XML back
     And I go to the CMR show page
     Then I should see "Updated from the API"
+
+  Scenario: Retrieve an edit_jurisdiction template
+    Given a basic morbidity event exists
+    When I retrieve the edit_jurisdiction XML representation
+    Then I should have an xml document
+    And these xpaths should exist:
+      | /routing/atom:link       |
+      | /routing/jurisdiction-id |
+      | /routing/note            |
+
+  Scenario: Route a CMR to a jurisdiction
+    Given a basic morbidity event exists
+    When I retrieve the edit_jurisdiction XML representation
+    And I replace jurisdiction-id with jurisdiction "Bear River"
+    And I add the assignment note "Hello, Bear River"
+    And I POST the XML to route a CMR to a jurisdiction
+    And I retrieve the event's XML representation
+    Then these xpaths should exist:
+      | //jurisdiction-attributes                     |
+      | //jurisdiction-attributes/secondary-entity-id |
+    And I should see the new jurisdiction
+    And I should see "Hello, Bear River"

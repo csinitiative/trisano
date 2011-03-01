@@ -347,7 +347,7 @@ module EventsHelper
         controls << routing_form_tag(:jurisdiction, event) do
           returning "" do |form|
             form << "<span>#{ct(:investigating_jurisdiction)} &nbsp;</span>"
-            form << select_tag("jurisdiction_id", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
+            form << select_tag("routing[jurisdiction_id]", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
 
             form << "<br />#{ct(:also_grant_access)}"
             form << "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
@@ -357,7 +357,7 @@ module EventsHelper
             end
             form << "</div></div>"
 
-            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("note", '')}</div><br/>"
+            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("routing[note]", '')}</div><br/>"
             form << submit_tag(t(:route_event), :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
           end
         end

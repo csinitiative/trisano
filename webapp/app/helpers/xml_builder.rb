@@ -5,7 +5,7 @@ class XmlBuilder
     @template = args.pop
     @object = args.pop
     @current_object = @object
-    @name = args.empty? ? @object.class.name.underscore : args.pop
+    @name = args.pop || @object.class.name.underscore
     @proc = block
   end
 
