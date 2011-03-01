@@ -1468,7 +1468,7 @@ module EventsHelper
     model = table.to_s.singularize
 
     haml_tag 'span.horiz' do
-      haml_tag(:label, :for => "#{model}_search_name") { haml_concat t(:name) }
+      haml_tag(:label, :for => "#{model}_search_name") { haml_concat t(options.delete(:label_name) || :name) }
       haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
       search_button_with_script_and_spinner table, options
     end
@@ -1584,13 +1584,14 @@ module EventsHelper
     results_action = options[:results_action].blank? ? 'add' : options[:results_action].to_s
     with_option = "'name=' + $('#{model}_search_name').value + '&results_action=#{results_action.to_s}"
 
-    if options[:parent_id]
-      with_option << "&parent_id=#{options[:parent_id]}'"
-    elsif options[:with_types]
+    with_option << "&parent_id=#{options[:parent_id]}" if options[:parent_id]
+    if options[:with_types]
       with_option << "&types='+$j.#{model}_search_types()"
     else
       with_option << "'"
     end
+    with_option << "'" unless options[:parent_id] || options[:with_types]
+    with_option
   end
 
   def search_types_script(model, name)

@@ -44,7 +44,7 @@ class EventsController < ApplicationController
     @clinician.person_entity = clinician_entity
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
-  
+
   def reporters_search_selection
     if params[:event_id]
       @event = Event.find(params[:event_id])

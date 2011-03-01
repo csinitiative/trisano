@@ -157,6 +157,8 @@ en:
   contact_event_created: 'Contact event was successfully created.'
   create_a_contact: 'Create a new contact'
   create_contact_event_this_person: 'Create a new contact using this person'
+  create_a_place: 'Create a new place exposure'
+  create_place_event_this_person: 'Create a new place exposure using this place'
   jurisdiction: 'Jurisdiction'
   demographic: 'Demographic'
   clinical: 'Clinical'
