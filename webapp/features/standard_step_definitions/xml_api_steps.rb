@@ -64,3 +64,8 @@ Then /^the Location header should have a link to the new event$/ do
   headers['Location'].should =~ %r{http://www.example.com/cmrs/\d+}
 end
 
+When /^I add "([^\"]*)" as (a|an) (.*) note$/ do |note_text, ignore, note_type|
+  note_form = @xml.at_xpath("//notes-attributes").children.last
+  note_form.css('note').first.content = note_text
+  note_form.css('note-type').first.content = note_type
+end

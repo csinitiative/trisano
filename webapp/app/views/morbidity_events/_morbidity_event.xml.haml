@@ -56,3 +56,7 @@
       = pe.xml_for :place do |place|
         - place.fields.each do |field|
           = place.render *field
+
+  = morb.xml_for :notes do |notes|
+    - notes.fields.each do |field|
+      = notes.render *field

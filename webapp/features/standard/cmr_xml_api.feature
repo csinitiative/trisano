@@ -32,3 +32,10 @@ Feature: XML API for CMRs
      Then I should get a 201 response
       And the Location header should have a link to the new event
 
+  Scenario: Adding a note to a CMR
+    Given a basic morbidity event exists
+    When I retrieve the event's XML representation
+    And I add "Updated from the API" as an administrative note
+    And I PUT the XML back
+    And I go to the CMR show page
+    Then I should see "Updated from the API"

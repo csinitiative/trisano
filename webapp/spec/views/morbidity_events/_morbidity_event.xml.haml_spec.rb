@@ -97,4 +97,10 @@ describe "/_morbidity_event.xml.haml" do
       assert_xml_field('morbidity-event reporting-agency-attributes place-entity-attributes place-attributes', field, rel)
     end
   end
+
+  it "should have nested notes data" do
+    [:note_type, :note].each do |field, rel|
+      assert_xml_field('morbidity-event notes-attributes i0', field, rel)
+    end
+  end
 end

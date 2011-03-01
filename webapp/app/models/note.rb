@@ -26,4 +26,8 @@ class Note < ActiveRecord::Base
   before_create do |note|
     note.user ||= User.current_user
   end
+
+  def xml_fields
+    [:note, :note_type]
+  end
 end
