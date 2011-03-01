@@ -22,15 +22,18 @@ When(/^I add an existing reporting agency$/) do
   @browser.wait_for_ajax
   @browser.click "//div[@id='reporting_agency_search_results']//td[text()='#{@place_entity.place.name}']/../td/a"
   @browser.wait_for_ajax
+  script = "selenium.browserbot.getCurrentWindow().$j('#reporting_agency span').text();"
+  @browser.get_eval(script).should =~ /#{@place_entity.place.name}/
 end
 
 When(/^I click remove for that reporting agency$/) do
   @browser.click("//div[@id='reporting_agency']//a[text()='Remove']")
-  wait_for_element_not_present("//div[@id='reporting_agency']/div")
+  @browser.wait_for_ajax
 end
 
 Then(/^I should not see the reporting agency$/) do
-  @browser.is_element_present("//div[@id='reporting_agency']/div").should be_false
+  script = "selenium.browserbot.getCurrentWindow().$j('#reporting_agency span').text();"
+  @browser.get_eval(script).should_not =~ /#{@place_entity.place.name}/
 end
 
 Then(/^I should see the added reporting agency$/) do

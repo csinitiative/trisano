@@ -52,7 +52,7 @@ describe EventsController do
     it "renders reporting agency partial" do
       get :reporting_agency_search_selection, :id => @place_entity.id, :event_type => 'morbidity_event'
       response.should be_a_success
-      response.should render_template 'events/_reporting_agency'
+      response.should render_template 'events/reporting_agency_search_selection.html.haml'
     end
   end
 
