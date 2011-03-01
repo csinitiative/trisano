@@ -4,6 +4,7 @@ class XmlBuilder
     @options = args.extract_options!
     @template = args.pop
     @object = args.pop
+    @current_object = @object
     @name = args.empty? ? @object.class.name.underscore : args.pop
     @proc = block
   end
@@ -16,7 +17,7 @@ class XmlBuilder
 
   def render(attribute, options = {})
     options[:rel] = link_relation_for(options[:rel]) if options[:rel]
-    value = @object.send(attribute)
+    value = @current_object.send(attribute)
     case value
     when Array
       values = value.map { |v| cast(v) }
@@ -28,16 +29,24 @@ class XmlBuilder
   end
 
   def build
-    tags @name, @template.capture(self, &@proc), @options
+    if @object.is_a? Array
+      tags @name, @options do
+        index_tags(@object)
+      end
+    else
+      tags @name, @template.capture(self, &@proc), @options
+    end
   end
 
-  def xml_for(attribute, options ={}, &block)
+  def xml_for(attribute, options={}, &block)
     tag_name = nested_attribute(attribute) || attribute
-    XmlBuilder.new(tag_name, association_instance(attribute), @template, options, &block).build
+    new_instance_or_array = association_instance(attribute)
+    options = options.dup
+    XmlBuilder.new(tag_name, new_instance_or_array, @template, options, &block).build
   end
 
   def fields
-    @object.xml_fields
+    @current_object.xml_fields
   end
 
   private
@@ -60,22 +69,47 @@ class XmlBuilder
   def tags(name, *values_and_options)
     tag_name = name.to_s.dasherize
     options = values_and_options.extract_options!
-    if values_and_options.empty?
-      @template.tag tag_name, options
+    if block_given?
+      open_tag(tag_name, yield, options)
     else
-      values_and_options.collect do |value|
-        result = @template.tag(tag_name, options, true)
-        result << (value || "")
-        result << "</#{tag_name}>"
-      end.join("\n")
+      if values_and_options.empty?
+        closed_tag(tag_name, options)
+      else
+        values_and_options.collect do |value|
+          open_tag(tag_name, (value || ""), options)
+        end.join("\n")
+      end
     end
   end
 
+  def open_tag(tag_name, value, options)
+    result = @template.tag(tag_name, options, true)
+    result << value
+    result << "</#{tag_name}>"
+  end
+
+  def closed_tag(tag_name, options)
+    @template.tag(tag_name, options)
+  end
+
   def nested_attribute(attribute)
-    "#{attribute}_attributes" if @object.respond_to? "#{attribute}_attributes="
+    "#{attribute}_attributes" if @current_object.respond_to? "#{attribute}_attributes="
   end
 
   def association_instance(attribute)
-    @object.send(attribute) || @object.class.reflections[attribute].klass.new
+    reflection = @current_object.class.reflections[attribute]
+    if reflection.macro == :has_many
+      @current_object.send(attribute) + [reflection.klass.new]
+    else
+      @current_object.send(attribute) || reflection.klass.new
+    end
+  end
+
+  def index_tags(objects)
+    i = -1
+    objects.map do |object|
+      @current_object = object
+      tags "i#{i += 1}", @template.capture(self, &@proc), @options.dup
+    end.join("\n")
   end
 end
