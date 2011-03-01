@@ -1389,6 +1389,11 @@ module EventsHelper
     Export::Csv.export(events, options)
   end
 
+  def render_reporting_agency_form(event, render_remove_link=false)
+    locals = { :event => event, :render_remove_link => render_remove_link }
+    render(:partial => 'events/reporting_agency', :locals => locals)
+  end
+
   def render_reporter_form(event, render_remove_link=false)
     locals = { :event => event, :render_remove_link => render_remove_link }
     render :partial => 'events/reporter_form', :locals => locals

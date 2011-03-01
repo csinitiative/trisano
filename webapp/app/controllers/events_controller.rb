@@ -120,10 +120,14 @@ class EventsController < ApplicationController
   end
 
   def reporting_agency_search_selection
-    reporting_agency_entity = PlaceEntity.find(params[:id])
-    @reporting_agency = ReportingAgency.new
-    @reporting_agency.place_entity = reporting_agency_entity
-    render :partial => "events/reporting_agency", :layout => false, :locals => {:event_type => params[:event_type]}
+    if params[:event_id]
+      @event = Event.find(params[:event_id])
+    else
+      @event = params[:event_type].camelize.constantize.new
+    end
+
+    @event.build_reporting_agency(:secondary_entity => PlaceEntity.find(params[:id]))
+    render :layout => false
   end
 
   # This action is for development/testing purposes only.  This is not a "real" login action

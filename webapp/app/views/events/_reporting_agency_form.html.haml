@@ -21,11 +21,9 @@
 
   #reporting_agencies
     -core_section :reporting_agency_section, f do
-      - f.fields_for(:reporting_agency, :builder => ExtendedFormBuilder) do |ra|
-        - if ra.object.new_record?
-          - search_interface :reporting_agencies, :url => { :event_type => @event.type.underscore }
-        #reporting_agency
-          = render(:partial => 'events/reporting_agency', :locals => {:f => ra})
+      - search_interface :reporting_agencies, :url => { :event_type => @event.type.underscore }
+      #reporting_agency
+        = render_reporting_agency_form(@event)
 
     -core_section :reporter_section, f do
       = reporter_dropdown :id => 'reporter', :insertion => :replaceWith
