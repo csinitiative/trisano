@@ -27,4 +27,7 @@ class HospitalsParticipation < ActiveRecord::Base
 
   validates_length_of :medical_record_number, :maximum => 255, :allow_blank => true
 
+  def xml_fields
+    [:admission_date, :discharge_date, :medical_record_number]
+  end
 end

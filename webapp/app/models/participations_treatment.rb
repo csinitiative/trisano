@@ -27,4 +27,9 @@ class ParticipationsTreatment < ActiveRecord::Base
                                        :on_or_before => lambda { Date.today },
                                        :on_or_after => :treatment_date
 
+  def xml_fields
+    [[:treatment_id, {:rel => :treatment}],
+     :treatment_date,
+     :stop_treatment_date]
+  end
 end

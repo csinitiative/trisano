@@ -15,10 +15,16 @@
   = morb.link_to index_code_url(:code_name => 'race'), :rel => :race
   = morb.link_to index_code_url(:code_name => 'gender'), :rel => :gender
   = morb.link_to index_code_url(:code_name => 'language'), :rel => :language
+  = morb.link_to index_code_url(:code_name => 'telephonelocationtype'), :rel => :telephone_location_type
   -# TODO: place_type code resouce doesn't work yet.
   = morb.link_to index_code_url(:code_name => 'placetype'), :rel => :place_type
   = morb.link_to diseases_url, :rel => :disease
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
+  = morb.link_to places_url(:name => '', :place_type => 'H'), :rel => :hospitalization
+  - if morbidity_event.disease?
+    = morb.link_to disease_treatments_url(morbidity_event.disease_event.disease), :rel => :treatment
+  - else
+    = morb.link_to treatments_url, :rel => :treatment
 
   - morb.fields.each do |field|
     = morb.render *field
@@ -41,9 +47,18 @@
     = patient.xml_for :person_entity do |pe|
       - pe.fields.each do |field|
         = pe.render *field
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
+      = pe.xml_for :email_addresses do |email_addresses|
+        - email_addresses.fields.each do |field|
+          = email_addresses.render *field
       = pe.xml_for :person do |person|
         - person.fields.each do |field|
           = person.render *field
+    = patient.xml_for :treatments do |treatments|
+      - treatments.fields.each do |field|
+        =treatments.render *field
   
   = morb.xml_for :reporter do |reporter|
     = reporter.xml_for :person_entity do |pe|
@@ -60,3 +75,10 @@
   = morb.xml_for :notes do |notes|
     - notes.fields.each do |field|
       = notes.render *field
+
+  = morb.xml_for :hospitalization_facilities do |hf|
+    - hf.fields.each do |field|
+      = hf.render *field
+    = hf.xml_for :hospitals_participation do |hp|
+      - hp.fields.each do |field|
+        = hp.render *field

@@ -84,6 +84,17 @@ describe "/_morbidity_event.xml.haml" do
     assert_xml_field 'morbidity-event interested-party-attributes person-entity-attributes', :race_ids, 'https://wiki.csinitiative.com/display/tri/Relationship+-+Race'
   end
 
+  it "should have the patient's phone and email information" do
+    [%w(entity_location_type_id https://wiki.csinitiative.com/display/tri/Relationship+-+TelephoneLocationType),
+     :area_code,
+     :phone_number,
+     :extension
+    ].each do |field, rel|
+      assert_xml_field('morbidity-event interested-party-attributes person-entity-attributes telephones-attributes i0', field, rel)
+    end
+    assert_xml_field('morbidity-event interested-party-attributes person-entity-attributes email-addresses-attributes i0', 'email-address')
+  end
+
   it "should have reporter data" do
     [:last_name, :first_name].each do |field, rel|
       assert_xml_field('morbidity-event reporter-attributes person-entity-attributes person-attributes', field, rel)
@@ -101,6 +112,22 @@ describe "/_morbidity_event.xml.haml" do
   it "should have nested notes data" do
     [:note_type, :note].each do |field, rel|
       assert_xml_field('morbidity-event notes-attributes i0', field, rel)
+    end
+  end
+
+  it "should have hospitalization facility data" do
+    assert_xml_field('morbidity-event hospitalization-facilities-attributes i0', 'secondary_entity_id', 'https://wiki.csinitiative.com/display/tri/Relationship+-+Hospitalization')
+    [:admission_date, :discharge_date, :medical_record_number].each do |field, rel|
+      assert_xml_field('morbidity-event hospitalization-facilities-attributes i0 hospitals-participation-attributes', field, rel)
+    end
+  end
+
+  it "should have treatment data" do
+    [%w(treatment_id https://wiki.csinitiative.com/display/tri/Relationship+-+Treatment),
+     :treatment_date,
+     :stop_treatment_date
+    ].each do |field, rel|
+      assert_xml_field('morbidity-event interested-party-attributes treatments-attributes i0', field, rel)
     end
   end
 end

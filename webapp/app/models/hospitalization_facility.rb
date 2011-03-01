@@ -28,4 +28,7 @@ class HospitalizationFacility < Participation
     end
   end
   
+  def xml_fields
+    [[:secondary_entity_id, {:rel => :hospitalization}]]
+  end
 end

@@ -62,6 +62,15 @@ class Telephone < ActiveRecord::Base
 
   before_save :strip_dash_from_phone
 
+  def xml_fields
+    result = []
+    result << [:entity_location_type_id, {:rel => :telephone_location_type}]
+    result << :country_code if use?(:country_code)
+    result << :area_code if use?(:area_code)
+    result << :phone_number
+    result << :extension
+  end
+
   def simple_phone_number
     returning [] do |number|
       number << configurable_format(:country_code) if use?(:country_code)

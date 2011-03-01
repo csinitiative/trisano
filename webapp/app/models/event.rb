@@ -366,6 +366,10 @@ class Event < ActiveRecord::Base
     self.disease_event
   end
 
+  def disease?
+    !self.disease_event.try(:disease).nil?
+  end
+
   def add_note(message, *note_type_and_options)
     options = note_type_and_options.extract_options!
     note_type = note_type_and_options.first || 'administrative'

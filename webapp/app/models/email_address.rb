@@ -16,5 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EmailAddress < ActiveRecord::Base
+  def xml_fields
+    [:email_address]
+  end
 end
 
