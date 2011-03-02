@@ -25,6 +25,7 @@
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
   = morb.link_to places_url(:name => '', :place_type => 'H'), :rel => :hospitalization
   = morb.link_to places_url(:name => '', :place_type => 'L'), :rel => :lab
+  = morb.link_to places_url(:name => '', :place_type => 'DiagnosticFacility'), :rel => :diagnostic_facility
   - if morbidity_event.disease?
     = morb.link_to disease_treatments_url(morbidity_event.disease_event.disease), :rel => :treatment
   - else
@@ -105,6 +106,14 @@
     = hf.xml_for :hospitals_participation do |hp|
       - hp.fields.each do |field|
         = hp.render *field
+
+  = morb.xml_for :diagnostic_facilities do |df|
+    - df.fields.each do |field|
+      = df.render *field
+    = df.xml_for :place_entity do |pe|
+      = pe.xml_for :place do |place|
+        - place.fields.each do |field|
+          = place.render *field
 
   = morb.xml_for :labs do |labs|
     - labs.fields.each do |field|

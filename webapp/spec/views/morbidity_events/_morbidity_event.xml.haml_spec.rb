@@ -152,4 +152,13 @@ describe "/_morbidity_event.xml.haml" do
       assert_xml_field('morbidity-event labs-attributes i0 lab-results-attributes i0', field, rel)
     end
   end
+
+  it "should have diagnostic facilities data" do
+    assert_xml_field('morbidity-event diagnostic-facilities-attributes i0', 'secondary_entity_id', 'https://wiki.csinitiative.com/display/tri/Relationship+-+DiagnosticFacility')
+    [:name,
+     %w(place_type_ids https://wiki.csinitiative.com/display/tri/Relationship+-+PlaceType)
+    ].each do |field, rel|
+      assert_xml_field('morbidity-event diagnostic-facilities-attributes i0 place-entity-attributes place-attributes', field, rel)
+    end
+  end
 end
