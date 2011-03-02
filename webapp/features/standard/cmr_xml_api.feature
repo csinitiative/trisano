@@ -42,7 +42,7 @@ Feature: XML API for CMRs
 
   Scenario: Retrieve an edit_jurisdiction template
     Given a basic morbidity event exists
-    When I retrieve the edit_jurisdiction XML representation
+    When I retrieve the edit_jurisdiction CMR XML representation
     Then I should have an xml document
     And these xpaths should exist:
       | /routing/atom:link[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction']       |
@@ -51,7 +51,7 @@ Feature: XML API for CMRs
 
   Scenario: Route a CMR to a jurisdiction
     Given a basic morbidity event exists
-    When I retrieve the edit_jurisdiction XML representation
+    When I retrieve the edit_jurisdiction CMR XML representation
     And I replace jurisdiction-id with jurisdiction "Bear River"
     And I add the assignment note "Hello, Bear River"
     And I POST the XML to route a CMR to a jurisdiction

@@ -8,15 +8,27 @@ When /^I retrieve the event's XML representation$/ do
   @xml = Nokogiri::XML(response.body)
 end
 
+When /^I retrieve the contact event's XML representation$/ do
+  header "Accept", 'application/xml'
+  visit contact_event_path(@contact_event)
+  @xml = Nokogiri::XML(response.body)
+end
+
 When /^I retrieve a new CMR xml representation$/ do
   header "Accept", "application/xml"
   visit new_cmr_path
   @xml = Nokogiri::XML(response.body)
 end
 
-When /^I retrieve the edit_jurisdiction XML representation$/ do
+When /^I retrieve the edit_jurisdiction CMR XML representation$/ do
   header "Accept", "application/xml"
   visit edit_jurisdiction_cmr_path(@event)
+  @xml = Nokogiri::XML(response.body)
+end
+
+When /^I retrieve the edit_jurisdiction contact event XML representation$/ do
+  header "Accept", "application/xml"
+  visit edit_jurisdiction_contact_event_path(@contact_event)
   @xml = Nokogiri::XML(response.body)
 end
 
@@ -51,6 +63,11 @@ end
 
 When /^I POST the XML to route a CMR to a jurisdiction$/ do
   url = jurisdiction_cmr_url(@event)
+  post url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
+end
+
+When /^I POST the XML to route a contact event to a jurisdiction$/ do
+  url = jurisdiction_contact_event_url(@contact_event)
   post url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
 end
 
