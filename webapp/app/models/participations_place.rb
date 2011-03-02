@@ -19,4 +19,8 @@ class ParticipationsPlace < ActiveRecord::Base
   has_one :place_event
   validates_date :date_of_exposure, :allow_blank => true,
                                     :on_or_before => lambda { Date.today } # Date of exposure cannot be in the future
+
+  def xml_fields
+    [:date_of_exposure]
+  end
 end

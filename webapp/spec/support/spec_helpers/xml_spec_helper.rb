@@ -17,4 +17,17 @@ module XmlSpecHelper
       assert_xml_field(css_path, field, rel)
     end
   end
+
+  def assert_address_xml_at_css(css_path)
+    [['state_id',  'https://wiki.csinitiative.com/display/tri/Relationship+-+State'],
+     ['county_id', 'https://wiki.csinitiative.com/display/tri/Relationship+-+County'],
+     'unit_number',
+     'postal_code',
+     'street_name',
+     'street_number',
+     'city'
+    ].each do |field, rel|
+      assert_xml_field(css_path, field, rel)
+   end
+  end
 end

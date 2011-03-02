@@ -27,16 +27,7 @@ describe "/_morbidity_event.xml.haml" do
   end
 
   it "should have the patient's address" do
-    [['state_id',  'https://wiki.csinitiative.com/display/tri/Relationship+-+State'],
-     ['county_id', 'https://wiki.csinitiative.com/display/tri/Relationship+-+County'],
-     'unit_number',
-     'postal_code',
-     'street_name',
-     'street_number',
-     'city'
-    ].each do |field, rel|
-      assert_xml_field("morbidity-event address-attributes", field, rel)
-   end
+    assert_address_xml_at_css('morbidity-event address-attributes')
   end
 
   it "should have disease event data" do
@@ -160,5 +151,15 @@ describe "/_morbidity_event.xml.haml" do
     ].each do |field, rel|
       assert_xml_field('morbidity-event diagnostic-facilities-attributes i0 place-entity-attributes place-attributes', field, rel)
     end
+  end
+
+  it "should have child place event data" do
+    assert_xml_field('morbidity-event place-child-events-attributes i0 participations-place-attributes', 'date-of-exposure')
+    [:name,
+     %w(place_type_ids https://wiki.csinitiative.com/display/tri/Relationship+-+PlaceType)
+    ].each do |field, rel|
+      assert_xml_field('morbidity-event place-child-events-attributes i0 interested-place-attributes place-entity-attributes place-attributes', field, rel)
+    end
+    assert_address_xml_at_css('morbidity-event place-child-events-attributes i0 interested-place-attributes place-entity-attributes canonical-address-attributes')
   end
 end

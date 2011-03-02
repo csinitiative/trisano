@@ -121,3 +121,17 @@
     = labs.xml_for :lab_results do |results|
       - results.fields.each do |field|
         = results.render *field
+
+  = morb.xml_for :place_child_events do |place_events|
+    = place_events.xml_for :participations_place do |participation|
+      - participation.fields.each do |field|
+        = participation.render *field
+    = place_events.xml_for :interested_place do |ip|
+      = ip.xml_for :place_entity do |pe|
+        = pe.xml_for :place do |place|
+          - place.fields.each do |field|
+            = place.render *field
+        = pe.xml_for :canonical_address do |ca|
+          - ca.fields.each do |field|
+            = ca.render *field
+
