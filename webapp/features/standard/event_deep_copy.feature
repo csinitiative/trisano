@@ -14,7 +14,7 @@ Feature: Events can be deep copied
       And I should see a link to "Event 20071"
 
   Scenario: Copying an event, including notes
-    Given I am logged in as an investigator
+    Given I am logged in as a super user
       And a basic morbidity event exists
       And the event has a clinical note authored by "default_user"
      When I go to view the CMR

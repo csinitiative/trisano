@@ -74,7 +74,6 @@ describe ContactEventsController do
 
       before(:each) do
         @event = mock_event
-        @event.stubs(:add_note)
         Event.stubs(:find).returns(@event)
         @user.stubs(:is_entitled_to_in?).returns(false)
         @event.stubs(:read_attribute).returns('ContactEvent')
@@ -84,10 +83,9 @@ describe ContactEventsController do
         get :show, :id => "75"
       end
 
-      it "should log access and be successful" do
-        @event.expects(:add_note)
+      it "should redirect to the new event access view" do
         do_get
-        response.should be_success
+        response.should redirect_to(new_event_access_record_url(@event))
       end
 
       it "should find the event requested" do

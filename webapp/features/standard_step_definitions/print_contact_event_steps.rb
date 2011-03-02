@@ -16,7 +16,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^I have an existing contact event$/ do
-  @event = Factory.create(:contact_with_disease, :address => Factory.create(:address))
+  @event = Factory.build(:contact_event, :address => Factory.create(:address))
+  @event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id)
+  @event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => get_random_disease))
+  @event.save!
   @form =  Factory.build(:form)
   @form.save_and_initialize_form_elements
   @form.investigator_view_elements_container.add_child Factory.create(:view_element, :tree_id => @form.form_base_element.tree_id)

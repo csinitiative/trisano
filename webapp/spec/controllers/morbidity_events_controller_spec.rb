@@ -142,10 +142,9 @@ describe MorbidityEventsController do
       do_get
     end
 
-    it "should log access and be successful" do
-      @event.expects(:add_note)
+    it "should redirect to the new event access view" do
       do_get
-      response.should be_success
+      response.should redirect_to(new_event_access_record_url(@event))
     end
 
   end
