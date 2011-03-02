@@ -56,18 +56,8 @@ When /^I PUT the XML back/ do
   put url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
 end
 
-When /^I POST the XML to the collection$/ do
-  url = @xml.at_xpath("//atom:link[@rel='index']").attribute('href').value
-  post url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
-end
-
-When /^I POST the XML to route a CMR to a jurisdiction$/ do
-  url = jurisdiction_cmr_url(@event)
-  post url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
-end
-
-When /^I POST the XML to route a contact event to a jurisdiction$/ do
-  url = jurisdiction_contact_event_url(@contact_event)
+When /^I POST the XML to the "([^\"]*)" link$/ do |link_type|
+  url = @xml.at_xpath("//atom:link[@rel='#{link_type}']").attribute('href').value
   post url, @xml.to_xml, 'Accept' => 'application/xml', 'Content-Type' => 'application/xml'
 end
 

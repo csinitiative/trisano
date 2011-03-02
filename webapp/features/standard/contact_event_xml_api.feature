@@ -9,6 +9,7 @@ Feature: XML API for Contact Events
     When I retrieve the edit_jurisdiction contact event XML representation
     Then I should have an xml document
     And these xpaths should exist:
+      | /routing/atom:link[@rel='route'][contains(@href, 'contact_events')]                                    |
       | /routing/atom:link[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction']       |
       | /routing/jurisdiction-id[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction'] |
       | /routing/note                                                                                          |
@@ -19,7 +20,7 @@ Feature: XML API for Contact Events
     When I retrieve the edit_jurisdiction contact event XML representation
     And I replace jurisdiction-id with jurisdiction "Bear River"
     And I add the assignment note "Hello, Bear River"
-    And I POST the XML to route a contact event to a jurisdiction
+    And I POST the XML to the "route" link
     And I retrieve the contact event's XML representation
     Then these xpaths should exist:
       | //jurisdiction-attributes                     |

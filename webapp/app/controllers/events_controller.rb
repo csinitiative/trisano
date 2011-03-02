@@ -195,7 +195,6 @@ class EventsController < ApplicationController
           @routing = RoutingStruct.new
           @routing.jurisdiction_id = @event.jurisdiction.secondary_entity_id if @event.jurisdiction
           @routing.note = ''
-          render 'events/edit_jurisdiction.xml'
         rescue => errmsg
           # This should only happen if the specified ID is not found
           head :not_found
