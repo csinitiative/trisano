@@ -28,7 +28,7 @@ Feature: XML API for CMRs
      When I retrieve a new CMR xml representation
       And I replace the patient's last name with "Davis"
       And I replace the first reported to public health date with yesterday's date
-      And I POST the XML to the collection
+      And I POST the XML to the "index" link
      Then I should get a 201 response
       And the Location header should have a link to the new event
 
@@ -39,3 +39,26 @@ Feature: XML API for CMRs
     And I PUT the XML back
     And I go to the CMR show page
     Then I should see "Updated from the API"
+
+  Scenario: Retrieve an edit_jurisdiction template
+    Given a basic morbidity event exists
+    When I retrieve the edit_jurisdiction CMR XML representation
+    Then I should have an xml document
+    And these xpaths should exist:
+      | /routing/atom:link[@rel='route'][contains(@href, 'cmrs')]                                              |
+      | /routing/atom:link[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction']       |
+      | /routing/jurisdiction-id[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction'] |
+      | /routing/note                                                                                          |
+
+  Scenario: Route a CMR to a jurisdiction
+    Given a basic morbidity event exists
+    When I retrieve the edit_jurisdiction CMR XML representation
+    And I replace jurisdiction-id with jurisdiction "Bear River"
+    And I add the assignment note "Hello, Bear River"
+    And I POST the XML to the "route" link
+    And I retrieve the event's XML representation
+    Then these xpaths should exist:
+      | //jurisdiction-attributes                     |
+      | //jurisdiction-attributes/secondary-entity-id |
+    And I should see the new jurisdiction
+    And I should see "Hello, Bear River"

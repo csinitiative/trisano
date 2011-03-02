@@ -26,11 +26,13 @@ module ContactEventsHelper
     <<-SCRIPT
     <script type='text/javascript'>
     $j(function() {
-      $j('#new-contact-for-event').click(function() {
+      $j('#new-contact-for-event').click(function(evt) {
+        evt.preventDefault();
         $j("#contact-search").show();
       });
 
-      $j('#close-contact-search').click(function() {
+      $j('#close-contact-search').click(function(evt) {
+        evt.preventDefault();
         $j("#contact-search").hide();
       });
     });

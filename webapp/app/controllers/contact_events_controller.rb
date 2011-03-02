@@ -16,8 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ContactEventsController < EventsController
-
-  before_filter :load_parent, :only => [:new, :create]
+  before_filter :load_parent, :only => [ :new, :create ]
 
   def index
     render :text => t("contact_event_no_index"), :status => 405
@@ -50,9 +49,9 @@ class ContactEventsController < EventsController
         :layout => true,
         :status => 403 and return
     end
-    
+
     instantiate_contact
-    
+
     respond_to do |format|
       if @event.save
         @event.reload

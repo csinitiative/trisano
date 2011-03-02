@@ -133,6 +133,7 @@ ActionController::Routing::Routes.draw do |map|
     },
     :member => {
       :state => :post,
+      :edit_jurisdiction => :get,
       :jurisdiction => :post,
       :soft_delete => :post,
       :export_single => :post
@@ -147,6 +148,7 @@ ActionController::Routing::Routes.draw do |map|
       :soft_delete => :post,
       :event_type => :post,
       :copy_address => :get,
+      :edit_jurisdiction => :get,
       :jurisdiction => :post,
       :state => :post
     },

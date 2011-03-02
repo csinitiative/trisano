@@ -22,4 +22,30 @@ module PlaceEventsHelper
     event_tabs_for :place_event
   end
 
+  def place_edit_search_js
+    <<-SCRIPT
+    <script type='text/javascript'>
+    $j(function() {
+      $j('#new-place-for-event').click(function(evt) {
+        evt.preventDefault();
+        $j("#place-search").show();
+      });
+
+      $j('#close-place-search').click(function(evt) {
+        evt.preventDefault();
+        $j("#place-search").hide();
+      });
+    });
+    </script>
+    SCRIPT
+  end
+
+  def place_search_interface(event)
+    search_interface(:places, {
+      :label_name => :place_name,
+      :results_action => :new,
+      :parent_id => event.parent_id,
+      :with_types => 'place[place_type_ids][]'
+    })
+  end
 end

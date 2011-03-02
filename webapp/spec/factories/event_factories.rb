@@ -302,6 +302,8 @@ def add_place_to_event(event, name)
     child.attributes = { :interested_place_attributes => { :place_entity_attributes => { :place_attributes => { :name => name } } } }
     event.save!
     child.save
+    code = Code.placetypes.active.find_by_the_code('S')
+    child.interested_place.place_entity.place.place_types << code unless code.nil?
   end
 end
 

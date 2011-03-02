@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+RoutingStruct = Struct.new(:jurisdiction_id, :note)
+
 class EventsController < ApplicationController
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
   before_filter :can_new?, :only => [:new]
@@ -44,7 +46,7 @@ class EventsController < ApplicationController
     @clinician.person_entity = clinician_entity
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
-  
+
   def reporters_search_selection
     if params[:event_id]
       @event = Event.find(params[:event_id])
@@ -185,6 +187,21 @@ class EventsController < ApplicationController
     org_opts
   end
 
+  def edit_jurisdiction
+    respond_to do |format|
+      format.xml do
+        begin
+          @event = Event.find params[:id]
+          @routing = RoutingStruct.new
+          @routing.jurisdiction_id = @event.jurisdiction.secondary_entity_id if @event.jurisdiction
+          @routing.note = ''
+        rescue => errmsg
+          # This should only happen if the specified ID is not found
+          head :not_found
+        end
+      end
+    end
+  end
 
   # Route an event from one jurisdiction to another
   def jurisdiction
@@ -192,32 +209,52 @@ class EventsController < ApplicationController
     begin
       # Debt: be nice to have to only call one method to route
       Event.transaction do
-        @event.assign_to_lhd params[:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:note]
+        @event.assign_to_lhd params[:routing][:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:routing][:note]
         @event.reset_to_new if @event.primary_jurisdiction.is_unassigned_jurisdiction?
         @event.save!
       end
     rescue Exception => e
       # Debt: eh, this could be better
       if @event.halted? && @event.halted_because != :no_jurisdiction_change
-        render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true and return
+        respond_to do |format|
+          format.html do
+            render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true and return
+          end
+          format.xml { head :permission_denied }
+        end
       else
         if User.current_user.can_update?(@event)
-          flash.now[:error] = t("unable_to_route_cmr", :message => e.message)
-          render :action => :edit, :status => :bad_request
+          respond_to do |format|
+            format.html do
+              flash.now[:error] = t("unable_to_route_cmr", :message => e.message)
+              render :action => :edit, :status => :bad_request
+            end
+            format.xml { head :bad_request }
+          end
         else
-          flash[:error] = t(:unable_to_route_cmr_no_edit_priv, :message => e.message)
-          redirect_to :back
+          respond_to do |format|
+            format.html do
+              flash[:error] = t(:unable_to_route_cmr_no_edit_priv, :message => e.message)
+              redirect_to :back
+            end
+            format.xml { head :permission_denied }
+          end
         end
         return
       end
     end
-    if User.current_user.is_entitled_to_in?(:view_event, params[:jurisdiction_id]) or
-        User.current_user.is_entitled_to_in?(:view_event, params[:secondary_jurisdiction_ids])
-      flash[:notice] = t("event_successfully_routed")
-      redirect_to :back
-    else
-      flash[:notice] = t("event_successfully_routed_no_privs")
-      redirect_to :action => :index
+    respond_to do |format|
+      format.html do
+        if User.current_user.is_entitled_to_in?(:view_event, params[:routing][:jurisdiction_id]) or
+            User.current_user.is_entitled_to_in?(:view_event, params[:secondary_jurisdiction_ids])
+          flash[:notice] = t("event_successfully_routed")
+          redirect_to :back
+        else
+          flash[:notice] = t("event_successfully_routed_no_privs")
+          redirect_to :action => :index
+        end
+      end
+      format.xml { head :ok }
     end
   end
 

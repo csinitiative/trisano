@@ -380,8 +380,11 @@ module ApplicationHelper
     (expr) ? "<#{tag}>#{value}</#{tag}>" : "#{value}"
   end
 
-  def xml_for(record, options = {}, &block)
-    XmlBuilder.new(record, self, options, &block).build
+  def xml_for(*args, &block)
+    options = args.extract_options!
+    record = args.pop
+    name = args.pop
+    XmlBuilder.new(name, record, self, options, &block).build
   end
 
 end

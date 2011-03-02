@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class PlaceEventsController < EventsController
+  before_filter :load_parent, :only => [ :new, :create ]
+
   def index
     render :text => t("no_direct_place_event_access"), :status => 405
   end
@@ -28,7 +30,6 @@ class PlaceEventsController < EventsController
   end
 
   def new
-    @parent_event = MorbidityEvent.find(params[:parent_event_id])
     @event = PlaceEvent.new(:parent_id => @parent_event.id)
 
     respond_to do |format|
@@ -41,12 +42,11 @@ class PlaceEventsController < EventsController
   end
 
   def create
-    @parent_event = MorbidityEvent.find(params[:place_event][:parent_id])
-    @event = PlaceEvent.new(params[:place_event])
-
     unless User.current_user.can?(:create_event, @parent_event)
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
+
+    instantiate_place_event
 
     respond_to do |format|
       if @event.save
@@ -91,4 +91,22 @@ class PlaceEventsController < EventsController
     end
   end
 
+  private
+
+  def load_parent
+    @parent_event = MorbidityEvent.find(parent_id_from_params)
+  end
+
+  def parent_id_from_params
+    params[:parent_id].blank? ? params[:place_event][:parent_id] : params[:parent_id]
+  end
+
+  def instantiate_place_event
+    if params[:from_place]
+      @event = PlaceEvent.new(:parent_id => @parent_event.id)
+      @event.build_interested_place(:primary_entity_id => PlaceEntity.find(params[:from_place]).id)
+    else
+      @event = PlaceEvent.new(params[:place_event])
+    end
+  end
 end

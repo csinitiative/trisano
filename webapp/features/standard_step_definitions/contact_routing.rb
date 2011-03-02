@@ -6,7 +6,7 @@ When /^I create an event with a contact$/ do
 end
 
 When /^I route it to (.+)$/ do |jurisdiction|
-    select(jurisdiction, :from => "jurisdiction_id") 
+    select(jurisdiction, :from => "routing[jurisdiction_id]")
     click_button("route_event_btn")
 end
 

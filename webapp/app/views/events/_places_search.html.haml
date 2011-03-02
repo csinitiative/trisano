@@ -14,13 +14,16 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -# Display the search results of a places paginated search
+
+- results_action = params[:results_action].blank? ? 'add' : params[:results_action]
+
 - if flash[:error]
   #flash-message.error-message
     = flash[:error]
 
 %br
 -if places.empty?
-  %b=t(:no_results)
+  %div{ :style => 'font-weight: bold; clear: both;' }=t(:no_results)
 -else
   %table.list
     %tr
@@ -33,7 +36,18 @@
         %td=place.name
         %td=h preferred_address(place)
         %td=place.formatted_place_descriptions
-        %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'top', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
+        %td
+          -if results_action == 'new'
+            = link_to(I18n.t(:create_place_event_this_person), place_events_path(:from_place => place['entity_id'], :parent_id => params[:parent_id]), :method => :post)
+          - else
+            %td=link_to_remote(t(:add), :update => 'existing-places', :position => 'top', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => 'morbidity_event'}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
 
   %br
   = ajaxy_pagination(places, 'places')
+
+%br
+- if(results_action == 'new' && User.current_user.is_entitled_to?(:create_event))
+  = link_to(t("create_a_place"), new_place_event_path(:parent_id => params[:parent_id]), :id => "create_place")
+
+%br
+%br

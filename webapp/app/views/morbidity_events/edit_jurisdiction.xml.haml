@@ -1,0 +1,6 @@
+!!! XML
+= xml_for 'routing', @routing, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |routing|
+  = routing.link_to jurisdiction_cmr_path(@event), :rel => :route
+  = routing.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
+  = routing.render :jurisdiction_id, :rel => :jurisdiction
+  = routing.render :note

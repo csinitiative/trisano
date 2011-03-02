@@ -1,0 +1,10 @@
+- event = @event || event
+%div{ :id => "place-search", :style => 'display: none; position: relative;' }
+  %div{ :style => 'background-color: #fff; border: solid 2px; padding: 15px; border-color: #000' }
+    %h2 Place search
+    - form_for Place.new do |f|
+      %span#place_search_types.horiz
+        = epi_type_selector(f)
+      = place_search_interface(event)
+
+    %div{ :style => 'clear: both;' }= link_to(t('close'), '#', :id => 'close-place-search')

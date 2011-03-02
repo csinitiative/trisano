@@ -5,7 +5,7 @@ class XmlBuilder
     @template = args.pop
     @object = args.pop
     @current_object = @object
-    @name = args.empty? ? @object.class.name.underscore : args.pop
+    @name = args.pop || @object.class.name.underscore
     @proc = block
   end
 
@@ -53,7 +53,7 @@ class XmlBuilder
 
   def link_relation_for(rel)
     return rel.to_s if rel.to_s.starts_with? 'http'
-    understood = %w(self alternate bookmark edit related previous next first last up enclosure index)
+    understood = %w(self alternate bookmark edit related previous next first last up enclosure index route)
     understood.include?(rel.to_s) ? rel.to_s : "https://wiki.csinitiative.com/display/tri/Relationship+-+#{rel.to_s.camelize}"
   end
 

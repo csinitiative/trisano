@@ -33,7 +33,7 @@ module PlacesHelper
   end
 
   def render_type_selector(form, types)
-    render :partial => 'events/place_types', :locals => { :f => form, :types => types}
+    render :partial => 'events/place_types', :locals => { :f => form, :types => types }
   end
 
   def i18n_jurisdiction_short_name(raw_shortname)
