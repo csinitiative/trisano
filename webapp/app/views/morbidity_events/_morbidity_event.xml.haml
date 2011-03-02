@@ -23,6 +23,7 @@
   = morb.link_to index_code_url(:code_name => 'placetype'), :rel => :place_type
   = morb.link_to diseases_url, :rel => :disease
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
+  = morb.link_to edit_jurisdiction_cmr_url(morbidity_event),  :rel => :edit_jurisdiction unless morbidity_event.new_record?
   = morb.link_to places_url(:name => '', :place_type => 'H'), :rel => :hospitalization
   = morb.link_to places_url(:name => '', :place_type => 'L'), :rel => :lab
   = morb.link_to places_url(:name => '', :place_type => 'DiagnosticFacility'), :rel => :diagnostic_facility
