@@ -320,8 +320,7 @@ class EventsController < ApplicationController
     @display_view_warning = false
     reject_if_wrong_type(@event)
     unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
-      @display_view_warning = true
-      @event.add_note(I18n.translate("system_notes.extra_jurisdictional_view_only_access", :locale => I18n.default_locale))
+      log_access_or_prompt_for_reason
       return
     end
     stale?(:last_modified => @event.updated_at.utc, :etag => @event) if RAILS_ENV == 'production'
@@ -334,6 +333,14 @@ class EventsController < ApplicationController
         format.all { render :nothing => true, :status => 404 and return }
       end
     end
+  end
+
+  def log_access_or_prompt_for_reason
+      access_record = AccessRecord.find_by_user_id_and_event_id(User.current_user.id, @event.id)
+      redirect_to(new_event_access_record_path(@event)) and return if access_record.nil?
+      access_record.update_attribute(:access_count, access_record.access_count + 1)
+      @display_view_warning = true
+      @event.add_note(I18n.translate("system_notes.extra_jurisdictional_view_only_access", :locale => I18n.default_locale))
   end
 
   def set_tab_index

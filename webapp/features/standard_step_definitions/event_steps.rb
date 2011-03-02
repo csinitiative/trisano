@@ -218,7 +218,7 @@ Then /^place exposure "([^\"]*)" should appear deleted$/ do |place_name|
 end
 
 Then /^I should have a note that says "([^\"]*)"$/ do |text|
-  response.should have_xpath("//div[@id='existing-notes']//p[contains(text(), '#{text}')]")
+  response.should have_xpath("//div[@id='note-list']//p[contains(text(), '#{text}')]")
 end
 
 Then /^I should have a (.*) error message box$/i do |div_class|

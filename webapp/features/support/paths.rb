@@ -88,7 +88,7 @@ def path_to(page_name)
     encounter_event_path(@encounter)
 
   when /the contact show page/i
-    contact_event_path(@contact_event)
+    contact_event_path(@contact_event || @event)
 
   when /the first CMR contact\'s edit page/i
     edit_contact_event_path(@event.contact_child_events.first)

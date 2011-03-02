@@ -1,0 +1,24 @@
+
+- content_for :title do
+  =t('event_access_reason_title')
+
+- content_for :name do
+  = render(:partial => 'events/basic_event_info', :locals => { :event => @event })
+
+#new-access-record-form
+
+  %h3
+    =t('enter_access_reason')
+
+  = error_messages_for :access_record
+
+  - form_for(@access_record, :url => event_access_records_path(@event)) do |f|
+    = render :partial => "form", :locals => { :f => f }
+
+    %br{ :clear => 'all' }
+    %br
+    = f.submit t('submit'), :disable_with => t('submitting')
+
+
+
+

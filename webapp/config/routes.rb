@@ -192,6 +192,12 @@ ActionController::Routing::Routes.draw do |map|
   # An event's attachments
   map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments', :except => [:edit]
 
+  map.resources :access_records,
+                :path_prefix => '/events/:event_id',
+                :name_prefix => 'event_',
+                :controller => 'event_access_records',
+                :only => [:new, :create]
+
   map.resources :core_fields
 
   map.resources :csv_fields

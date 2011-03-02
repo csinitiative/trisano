@@ -29,6 +29,7 @@ en:
   avr: "AVR"
   admin: "ADMIN"
   submit: 'Submit'
+  submitting: 'Submitting...'
   submit_query: 'Submit Query'
   update: 'Update'
   back: 'Back'
@@ -51,6 +52,8 @@ en:
   jurisdictions_with_access: 'Jurisidctions with Access'
   permission_denied: "PERMISSION DENIED"
   out_of_jurisdiction_access: "You have accessed an out-of-jurisdiction event. {{link}} if access was unintentional.  Access has been logged."
+  event_access_reason_title: "Enter access reason"
+  enter_access_reason: "Enter a reason for accessing an out-of-jurisdiction event."
 
   event_tasks: "Event Tasks"
   tasks: "Tasks"
