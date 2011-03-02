@@ -59,18 +59,35 @@
     = patient.xml_for :treatments do |treatments|
       - treatments.fields.each do |field|
         =treatments.render *field
+
+  = morb.xml_for :clinicians do |clinicians|
+    = clinicians.xml_for :person_entity do |pe|
+      = pe.xml_for :person do |person|
+        = person.render :first_name
+        = person.render :middle_name
+        = person.render :last_name
+        = person.render :person_type
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
   
   = morb.xml_for :reporter do |reporter|
     = reporter.xml_for :person_entity do |pe|
       = pe.xml_for :person do |person|
         = person.render :first_name
         = person.render :last_name
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
 
   = morb.xml_for :reporting_agency do |agency|
     = agency.xml_for :place_entity do |pe|
       = pe.xml_for :place do |place|
         - place.fields.each do |field|
           = place.render *field
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
 
   = morb.xml_for :notes do |notes|
     - notes.fields.each do |field|

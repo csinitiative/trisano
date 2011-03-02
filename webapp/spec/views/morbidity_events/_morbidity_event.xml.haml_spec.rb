@@ -85,13 +85,7 @@ describe "/_morbidity_event.xml.haml" do
   end
 
   it "should have the patient's phone and email information" do
-    [%w(entity_location_type_id https://wiki.csinitiative.com/display/tri/Relationship+-+TelephoneLocationType),
-     :area_code,
-     :phone_number,
-     :extension
-    ].each do |field, rel|
-      assert_xml_field('morbidity-event interested-party-attributes person-entity-attributes telephones-attributes i0', field, rel)
-    end
+    assert_telephone_xml_at_css('morbidity-event interested-party-attributes person-entity-attributes telephones-attributes i0')
     assert_xml_field('morbidity-event interested-party-attributes person-entity-attributes email-addresses-attributes i0', 'email-address')
   end
 
@@ -99,6 +93,7 @@ describe "/_morbidity_event.xml.haml" do
     [:last_name, :first_name].each do |field, rel|
       assert_xml_field('morbidity-event reporter-attributes person-entity-attributes person-attributes', field, rel)
     end
+    assert_telephone_xml_at_css('morbidity-event reporter-attributes person-entity-attributes telephones-attributes i0')
   end
 
   it "should have reporting agency data" do
@@ -107,6 +102,7 @@ describe "/_morbidity_event.xml.haml" do
     ].each do |field, rel|
       assert_xml_field('morbidity-event reporting-agency-attributes place-entity-attributes place-attributes', field, rel)
     end
+    assert_telephone_xml_at_css('morbidity-event reporting-agency-attributes place-entity-attributes telephones-attributes i0')
   end
 
   it "should have nested notes data" do
@@ -129,5 +125,12 @@ describe "/_morbidity_event.xml.haml" do
     ].each do |field, rel|
       assert_xml_field('morbidity-event interested-party-attributes treatments-attributes i0', field, rel)
     end
+  end
+
+  it "should have clinician data" do
+    [:last_name, :first_name, :middle_name, :person_type].each do |field, rel|
+      assert_xml_field('morbidity-event clinicians-attributes i0 person-entity-attributes person-attributes', field, rel)
+    end
+    assert_telephone_xml_at_css('morbidity-event clinicians-attributes i0 person-entity-attributes telephones-attributes i0')
   end
 end

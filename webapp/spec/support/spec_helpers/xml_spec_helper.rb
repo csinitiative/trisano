@@ -8,4 +8,13 @@ module XmlSpecHelper
     end
   end
 
+  def assert_telephone_xml_at_css(css_path)
+    [%w(entity_location_type_id https://wiki.csinitiative.com/display/tri/Relationship+-+TelephoneLocationType),
+     :area_code,
+     :phone_number,
+     :extension
+    ].each do |field, rel|
+      assert_xml_field(css_path, field, rel)
+    end
+  end
 end
