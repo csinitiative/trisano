@@ -21,6 +21,10 @@ class CommonTestTypesController < AdminController
 
   def index
     @common_test_types = CommonTestType.find(:all, :order => 'common_name')
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @common_test_types }
+    end
   end
 
   def new

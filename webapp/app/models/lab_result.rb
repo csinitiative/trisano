@@ -43,6 +43,22 @@ class LabResult < ActiveRecord::Base
                                  :on_or_before => lambda { Date.today } , #Lab test date cannot be in the future
                                  :on_or_after => :collection_date # Lab test must come after collection date
 
+  def xml_fields
+    [[:specimen_sent_to_state_id, {:rel => :yesno}],
+     [:specimen_source_id, {:rel => :specimen_source}],
+     :reference_range,
+     :collection_date,
+     [:test_status_id, {:rel => :test_status}],
+     [:test_result_id, {:rel => :test_result}],
+     :lab_test_date,
+     [:test_type_id, {:rel => :test_type}],
+     :units,
+     :result_value,
+     [:organism_id, {:rel => :organism}],
+     :comment
+    ]
+  end
+
   def lab_name
     participation.secondary_entity.place.name unless participation.nil?
   end

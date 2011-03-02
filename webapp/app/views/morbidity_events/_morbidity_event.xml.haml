@@ -16,15 +16,21 @@
   = morb.link_to index_code_url(:code_name => 'gender'), :rel => :gender
   = morb.link_to index_code_url(:code_name => 'language'), :rel => :language
   = morb.link_to index_code_url(:code_name => 'telephonelocationtype'), :rel => :telephone_location_type
+  = morb.link_to index_code_url(:code_name => 'specimen'), :rel => :specimen_source
+  = morb.link_to index_code_url(:code_name => 'test_status'), :rel => :test_status
+  = morb.link_to index_code_url(:code_name => 'test_result'), :rel => :test_result
   -# TODO: place_type code resouce doesn't work yet.
   = morb.link_to index_code_url(:code_name => 'placetype'), :rel => :place_type
   = morb.link_to diseases_url, :rel => :disease
   = morb.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
   = morb.link_to places_url(:name => '', :place_type => 'H'), :rel => :hospitalization
+  = morb.link_to places_url(:name => '', :place_type => 'L'), :rel => :lab
   - if morbidity_event.disease?
     = morb.link_to disease_treatments_url(morbidity_event.disease_event.disease), :rel => :treatment
   - else
     = morb.link_to treatments_url, :rel => :treatment
+  = morb.link_to common_test_types_url, :rel => :test_type
+  = morb.link_to organisms_url, :rel => :organism
 
   - morb.fields.each do |field|
     = morb.render *field
@@ -99,3 +105,10 @@
     = hf.xml_for :hospitals_participation do |hp|
       - hp.fields.each do |field|
         = hp.render *field
+
+  = morb.xml_for :labs do |labs|
+    - labs.fields.each do |field|
+      = labs.render *field
+    = labs.xml_for :lab_results do |results|
+      - results.fields.each do |field|
+        = results.render *field

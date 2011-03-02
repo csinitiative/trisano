@@ -133,4 +133,23 @@ describe "/_morbidity_event.xml.haml" do
     end
     assert_telephone_xml_at_css('morbidity-event clinicians-attributes i0 person-entity-attributes telephones-attributes i0')
   end
+
+  it "should have lab data" do
+    assert_xml_field('morbidity-event labs-attributes i0', 'secondary-entity-id', 'https://wiki.csinitiative.com/display/tri/Relationship+-+Lab')
+    [%w(specimen_source_id https://wiki.csinitiative.com/display/tri/Relationship+-+SpecimenSource),
+     %w(specimen_sent_to_state_id https://wiki.csinitiative.com/display/tri/Relationship+-+Yesno),
+     :reference_range,
+     :collection_date,
+     %w(test_status_id https://wiki.csinitiative.com/display/tri/Relationship+-+TestStatus),
+     %w(test_result_id https://wiki.csinitiative.com/display/tri/Relationship+-+TestResult),
+     :lab_test_date,
+     %w(test_type_id https://wiki.csinitiative.com/display/tri/Relationship+-+TestType),
+     :units,
+     :result_value,
+     %w(organism_id https://wiki.csinitiative.com/display/tri/Relationship+-+Organism),
+     :comment
+    ].each do |field, rel|
+      assert_xml_field('morbidity-event labs-attributes i0 lab-results-attributes i0', field, rel)
+    end
+  end
 end

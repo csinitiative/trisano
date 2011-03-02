@@ -31,4 +31,8 @@ class Lab < Participation
 
   accepts_nested_attributes_for :place_entity,
     :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
+
+  def xml_fields
+    [[:secondary_entity_id, {:rel => :lab}]]
+  end
 end

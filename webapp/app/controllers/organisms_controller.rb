@@ -3,6 +3,10 @@ class OrganismsController < AdminController
 
   def index
     @organisms = Organism.all
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @organisms }
+    end
   end
 
   def show
