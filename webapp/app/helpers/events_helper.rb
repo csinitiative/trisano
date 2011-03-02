@@ -1582,15 +1582,12 @@ module EventsHelper
 
   def search_with_option(model, options)
     results_action = options[:results_action].blank? ? 'add' : options[:results_action].to_s
-    with_option = "'name=' + $('#{model}_search_name').value + '&results_action=#{results_action.to_s}"
+    with_option = "'name=' + $('#{model}_search_name').value + '&results_action=#{results_action.to_s}'"
 
-    with_option << "&parent_id=#{options[:parent_id]}" if options[:parent_id]
+    with_option << "+'&parent_id=#{options[:parent_id]}'" if options[:parent_id]
     if options[:with_types]
-      with_option << "&types='+$j.#{model}_search_types()"
-    else
-      with_option << "'"
+      with_option << "+'&types='+$j.#{model}_search_types()"
     end
-    with_option << "'" unless options[:parent_id] || options[:with_types]
     with_option
   end
 
