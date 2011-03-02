@@ -45,9 +45,9 @@ Feature: XML API for CMRs
     When I retrieve the edit_jurisdiction XML representation
     Then I should have an xml document
     And these xpaths should exist:
-      | /routing/atom:link       |
-      | /routing/jurisdiction-id |
-      | /routing/note            |
+      | /routing/atom:link[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction']       |
+      | /routing/jurisdiction-id[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction'] |
+      | /routing/note                                                                                          |
 
   Scenario: Route a CMR to a jurisdiction
     Given a basic morbidity event exists
