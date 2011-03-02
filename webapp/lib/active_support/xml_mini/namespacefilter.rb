@@ -32,9 +32,14 @@ module ActiveSupport
 
     def remove_empty_nested_attributes(result)
       result.each do |k, v|
-        result.delete(k) if k.to_s.ends_with?('-attributes') && v.values.all? { |v| v.blank? }
+        result.delete(k) if nested_attribute?(k) && v.values.all? { |v| v.blank? }
       end
     end
 
+    def nested_attribute?(attribute)
+      attribute.to_s.ends_with?('-attributes') ||
+        attribute.to_s.ends_with?('_attributes') ||
+        attribute.to_s =~ /^i\d+$/i
+    end
   end
 end
