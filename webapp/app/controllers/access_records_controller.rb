@@ -15,15 +15,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-Then /^the system should have a record of access for the user and event with an access count of (.+)$/ do |access_count|
-  AccessRecord.find_by_user_id_and_event_id(@current_user.id, @event.id).access_count.should == access_count.to_i
-end
+class AccessRecordsController < ApplicationController
 
-Then /^the record number of the event accessed should be visible$/ do
-  response.body.should =~ /#{@event.record_number}/m
-end
+  before_filter :check_role
 
-When /^I access the event by clicking the record number$/ do
-  click_link("#{@event.record_number}")
-end
+  def index
+    @access_records = AccessRecord.all( :order => "updated_at DESC" )
+  end
 
+  protected
+
+  def check_role
+    unless User.current_user.is_entitled_to?(:view_access_records)
+      render :partial => 'events/permission_denied',
+             :layout => true,
+             :locals => { :reason => t("no_view_access_records_privs") },
+             :status => 403 and return
+    end
+  end
+
+end

@@ -24,6 +24,9 @@ def path_to(page_name)
   when /the dashboard page/i
     home_path
 
+  when /the access records page/i
+    access_records_path
+
   when /the calendar page/i
     calendar_path(:year =>  Time.now.year, :month => Time.now.month)
 
