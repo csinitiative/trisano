@@ -53,7 +53,7 @@ en:
   permission_denied: "PERMISSION DENIED"
   out_of_jurisdiction_access: "You have accessed an out-of-jurisdiction event. {{link}} if access was unintentional.  Access has been logged."
   event_access_reason_title: "Enter access reason"
-  enter_access_reason: "Enter a reason for accessing an out-of-jurisdiction event."
+  enter_access_reason: "Enter a reason for accessing an out-of-jurisdiction event. {{link}} if access was unintentional."
 
   event_tasks: "Event Tasks"
   tasks: "Tasks"
