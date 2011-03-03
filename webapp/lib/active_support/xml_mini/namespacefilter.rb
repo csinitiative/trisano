@@ -16,7 +16,7 @@ module ActiveSupport
     def get_attributes(element)
       attributes = super
       remove_attributes_if(attributes) do |k, v|
-        k.starts_with("xmlns") or k == 'rel'
+        k.starts_with?("xmlns") or k == 'rel'
       end
     end
 
