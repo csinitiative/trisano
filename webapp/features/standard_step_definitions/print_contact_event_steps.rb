@@ -66,6 +66,7 @@ end
 
 Then /^I should see admin data$/ do
   response.should be_success
+  @event.reload
   @event.record_number.should_not be_nil
   response.should contain(@event.record_number)
 end

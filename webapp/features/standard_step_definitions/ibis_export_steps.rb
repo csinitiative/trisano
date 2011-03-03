@@ -36,7 +36,7 @@ end
 Given /^a morbidity event in "([^\"]*)" county, with disease "([^\"]*)" and "([^\"]*)" by the state$/ do |county_name, disease_name, status_description|
   disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)
- county = ExternalCode.find_by_code_name_and_code_description('county', county_name)
+  county = ExternalCode.find_by_code_name_and_code_description('county', county_name)
   @event_to_match = create_basic_event('morbidity', 'ibis_guy')
   @event_to_match.state_case_status = status
   @event_to_match.build_disease_event(:disease_id => disease.id)
@@ -65,13 +65,16 @@ When /^I set the "([^\"]*)" to "([^\"]*)"$/ do |field, date_expression|
 end
 
 Then /^I should receive the morbidity event as xml$/ do
+  @event_to_match.reload
   response.should have_xpath("//recordid[text()='#{@event_to_match.record_number}']")
 end
 
 Then /^I should receive the deleted morbidity event as xml$/ do
+  @event_to_match.reload
   response.should have_xpath("//recordid[text()='#{@event_to_match.record_number}']/../updateflag[text()='1']")
 end
 
 Then /^I should see "([^\"]*)" in the "([^\"]*)" node$/ do |value, node_name|
+  @event_to_match.reload
   response.should have_xpath("//recordid[text()='#{@event_to_match.record_number}']/../#{node_name.downcase}[text()='#{value}']")
 end

@@ -739,21 +739,21 @@ describe MorbidityEvent do
     describe "includes records" do
       it "created on the first day of the date range" do
         Event.exportable_ibis_records("2009-11-30", "2009-12-1").should be_empty
-        event.should_not be_nil
+        event.reload
         results = Event.exportable_ibis_records("2009-11-30", "2009-12-1")
         results.map(&:record_number).should == [event.record_number]
       end
 
       it "created on the last day of the date range" do
         Event.exportable_ibis_records("2009-11-29", "2009-11-30").should be_empty
-        event.should_not be_nil
+        event.reload
         results = Event.exportable_ibis_records("2009-11-29", "2009-11-30")
         results.map(&:record_number).should == [event.record_number]
       end
 
       it "created between the start and end dates" do
         Event.exportable_ibis_records("2009-11-15", "2009-12-15").should be_empty
-        event.should_not be_nil
+        event.reload
         results = Event.exportable_ibis_records("2009-11-15", "2009-12-15")
         results.map(&:record_number).should == [event.record_number]
       end
@@ -761,6 +761,7 @@ describe MorbidityEvent do
       it "ibis updated on the first day of the date range" do
         Event.exportable_ibis_records("2009-12-15", "2009-12-16").should be_empty
         event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        event.reload
         results = Event.exportable_ibis_records("2009-12-15", "2009-12-16")
         results.map(&:record_number).should == [event.record_number]
       end
@@ -768,6 +769,7 @@ describe MorbidityEvent do
       it "ibis updated on the last day of the date range" do
         Event.exportable_ibis_records("2009-12-14", "2009-12-15").should be_empty
         event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        event.reload
         results = Event.exportable_ibis_records("2009-12-14", "2009-12-15")
         results.map(&:record_number).should == [event.record_number]
       end
@@ -775,6 +777,7 @@ describe MorbidityEvent do
       it "ibis updated between the start and end dates" do
         Event.exportable_ibis_records("2009-12-01", "2009-12-31").should be_empty
         event.update_attributes!(:ibis_updated_at => '2009-12-15')
+        event.reload
         results = Event.exportable_ibis_records("2009-12-01", "2009-12-31")
         results.map(&:record_number).should == [event.record_number]
       end
@@ -783,12 +786,14 @@ describe MorbidityEvent do
         it "if deleted on the first day of the date range" do
           Event.exportable_ibis_records("2009-12-15", "2009-12-16").should == []
           event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
+          event.reload
           results = Event.exportable_ibis_records("2009-12-15", "2009-12-16")
           results.map(&:record_number).should == [event.record_number]
         end
 
         it "if deleted on the last day of the date range" do
           Event.exportable_ibis_records("2009-12-14", "2009-12-15").should == []
+          event.reload
           event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
           results = Event.exportable_ibis_records("2009-12-14", "2009-12-15")
           results.map(&:record_number).should == [event.record_number]
@@ -796,6 +801,7 @@ describe MorbidityEvent do
 
         it "if deleted between the date ranges" do
           Event.exportable_ibis_records("2009-12-01", "2009-12-31").should == []
+          event.reload
           event.update_attributes!(:sent_to_ibis => true, :deleted_at => "2009-12-15 15:00")
           results = Event.exportable_ibis_records("2009-12-01", "2009-12-31")
           results.map(&:record_number).should == [event.record_number]

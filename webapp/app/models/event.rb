@@ -21,7 +21,6 @@ class Event < ActiveRecord::Base
   include EventSearch
   include Export::Cdc::EventRules
 
-  before_create :set_record_number
   before_update :attempt_form_assignment_on_update, :force_save
   after_create :attempt_form_assignment_on_create
 
@@ -681,12 +680,6 @@ class Event < ActiveRecord::Base
       self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
     end
     return true
-  end
-
-  def set_record_number
-    customer_number_sequence = 'events_record_number_seq'
-    record_number = connection.select_value("select nextval('#{customer_number_sequence}')")
-    self.record_number = record_number
   end
 
   # We're doing this to force the event model to be saved even if nothing has changed on the model.
