@@ -61,7 +61,8 @@ Feature: XML API for CMRs
       | //jurisdiction-attributes                     |
       | //jurisdiction-attributes/secondary-entity-id |
     And I should see the new jurisdiction
-    And I should see "Hello, Bear River"
+    And these xpaths should exist:
+      | //note[text()='Hello, Bear River'] |
 
   Scenario: Route a CMR to an invalid jurisdiction
     Given a basic morbidity event exists
