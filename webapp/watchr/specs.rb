@@ -49,7 +49,7 @@ def run(cmd, output=true)
 end
 
 def cmd_for_files(*files)
-  %Q(ruby -- #{files.join(' ')} --backtrace)
+  %Q(ruby -Ispec -- #{files.join(' ')} --backtrace)
 end
 
 def run_spec_files(*files)
@@ -69,6 +69,7 @@ end
 
 watch('spec/.*/.*_spec\.rb')  { |m| run_spec_files m[0] }
 watch('^app/(.*)\.rb')        { |m| run_spec_files "spec/#{m[1]}_spec.rb" }
+watch('^lib/(.*)\.rb')        { |m| run_spec_files "spec/lib/#{m[1]}_spec.rb" }
 
 # Ctrl-\
 Signal.trap 'QUIT' do
