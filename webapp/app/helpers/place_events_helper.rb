@@ -35,6 +35,11 @@ module PlaceEventsHelper
         evt.preventDefault();
         $j("#place-search").hide();
       });
+
+      $j('#new_place').submit(function (evt) {
+        evt.preventDefault();
+        $j('#place_search').trigger('click');
+      });
     });
     </script>
     SCRIPT
