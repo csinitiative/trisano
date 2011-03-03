@@ -85,6 +85,15 @@ When /^I replace jurisdiction-id with jurisdiction "([^\"]*)"$/ do |jurisdiction
   end
 end
 
+When /^I invalidate the jurisdiction$/ do
+  value = PersonEntity.first.id
+  nodes = @xml.xpath('/routing/jurisdiction-id')
+  nodes.should_not be_empty
+  nodes.each do |element|
+    element.content = value
+  end
+end
+
 When /^I add the assignment note "([^\"]*)"$/ do |note|
   nodes = @xml.xpath('/routing/note')
   nodes.should_not be_empty

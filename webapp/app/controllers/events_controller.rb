@@ -190,15 +190,10 @@ class EventsController < ApplicationController
   def edit_jurisdiction
     respond_to do |format|
       format.xml do
-        begin
-          @event = Event.find params[:id]
-          @routing = RoutingStruct.new
-          @routing.jurisdiction_id = @event.jurisdiction.secondary_entity_id if @event.jurisdiction
-          @routing.note = ''
-        rescue => errmsg
-          # This should only happen if the specified ID is not found
-          head :not_found
-        end
+        @event = Event.find params[:id]
+        @routing = RoutingStruct.new
+        @routing.jurisdiction_id = @event.jurisdiction.secondary_entity_id if @event.jurisdiction
+        @routing.note = ''
       end
     end
   end
@@ -214,13 +209,32 @@ class EventsController < ApplicationController
         @event.save!
       end
     rescue Exception => e
-      # Debt: eh, this could be better
-      if @event.halted? && @event.halted_because != :no_jurisdiction_change
+      # DEBT: The :no_jurisdiction_change halted_because value is set
+      # at lib/routing/workflow_helper.rb:41. However, in some cases,
+      # this method is never called. For example, if the
+      # jurisdiction_id field is invalid (not a legitimate place
+      # entity), an exception is raised within the Workflow module
+      # before assign_to_lhd is called. We do not seem to have direct
+      # control over that field, which in that instance is a string
+      # like "Couldn't find PlaceEntity with ID=721." The exceptions
+      # are not distinguished by class either. The only immediate way
+      # to distinguish these cases is by parsing this string in one
+      # place or another.
+
+      if @event.halted? && @event.halted_because =~ /^Couldn't find PlaceEntity with ID=\d+$/
+        respond_to do |format|
+          # DEBT: Respond to HTML? This can't happen, since the user
+          # is given a drop-down list of place entities.
+          format.xml do
+            head :bad_request
+          end
+        end
+      elsif @event.halted? && @event.halted_because != :no_jurisdiction_change
         respond_to do |format|
           format.html do
-            render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true and return
+            render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true
           end
-          format.xml { head :permission_denied }
+          format.xml { head :forbidden }
         end
       else
         if User.current_user.can_update?(@event)
@@ -237,12 +251,13 @@ class EventsController < ApplicationController
               flash[:error] = t(:unable_to_route_cmr_no_edit_priv, :message => e.message)
               redirect_to :back
             end
-            format.xml { head :permission_denied }
+            format.xml { head :forbidden }
           end
         end
-        return
       end
+      return
     end
+
     respond_to do |format|
       format.html do
         if User.current_user.is_entitled_to_in?(:view_event, params[:routing][:jurisdiction_id]) or

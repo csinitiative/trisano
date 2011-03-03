@@ -62,3 +62,10 @@ Feature: XML API for CMRs
       | //jurisdiction-attributes/secondary-entity-id |
     And I should see the new jurisdiction
     And I should see "Hello, Bear River"
+
+  Scenario: Route a CMR to an invalid jurisdiction
+    Given a basic morbidity event exists
+    When I retrieve the edit_jurisdiction CMR XML representation
+    And I invalidate the jurisdiction
+    And I POST the XML to the "route" link
+    Then I should get a 400 response
