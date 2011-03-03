@@ -1,11 +1,11 @@
 !!! XML
-= xml_for morbidity_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |morb| 
-  - if morbidity_event.new_record? 
-    = morb.link_to cmrs_url, :rel => :index 
-    = morb.link_to new_cmr_url, :rel => :self 
-  - else 
-    = morb.link_to cmr_url(morbidity_event), :rel => :self 
-    = morb.link_to edit_cmr_url(morbidity_event), :rel => :edit 
+= xml_for morbidity_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |morb|
+  - if morbidity_event.new_record?
+    = morb.link_to cmrs_url, :rel => :index
+    = morb.link_to new_cmr_url, :rel => :self
+  - else
+    = morb.link_to cmr_url(morbidity_event), :rel => :self
+    = morb.link_to edit_cmr_url(morbidity_event), :rel => :edit
   = morb.link_to index_code_url(:code_name => 'imported'), :rel => :imported
   = morb.link_to index_code_url(:code_name => 'case'),   :rel => :case
   = morb.link_to index_code_url(:code_name => 'yesno'),  :rel => :yesno
@@ -33,6 +33,7 @@
     = morb.link_to treatments_url, :rel => :treatment
   = morb.link_to common_test_types_url, :rel => :test_type
   = morb.link_to organisms_url, :rel => :organism
+  = morb.link_to new_event_task_url(morbidity_event), :rel => :new_task
 
   - morb.fields.each do |field|
     = morb.render *field
@@ -78,7 +79,7 @@
       = pe.xml_for :telephones do |telephones|
         - telephones.fields.each do |field|
           = telephones.render *field
-  
+
   = morb.xml_for :reporter do |reporter|
     = reporter.xml_for :person_entity do |pe|
       = pe.xml_for :person do |person|

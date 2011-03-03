@@ -2,17 +2,17 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EventTasksController < ApplicationController
@@ -24,7 +24,7 @@ class EventTasksController < ApplicationController
   before_filter :can_view_event?, :only => [:index]
 
   after_filter TouchEventFilter, :only => [:create, :update]
-  
+
   def index
     respond_to do |format|
       format.html
@@ -37,6 +37,10 @@ class EventTasksController < ApplicationController
   def new
     @task = Task.new
     @task.event_id = @event.id
+    respond_to do |format|
+      format.html
+      format.xml
+    end
   end
 
   def edit
@@ -51,15 +55,17 @@ class EventTasksController < ApplicationController
     else
       @task.user_id = User.current_user.id
     end
-    
+
     respond_to do |format|
       if @task.save
         flash[:notice] = t("event_task_created")
         format.html { redirect_to event_tasks_path(@event) }
         format.js {}
+        format.xml { head :ok }
       else
         format.html { render :action => "new" }
         format.js { render :action => "new" }
+        format.xml { head :bad_request }
       end
     end
   end
@@ -67,7 +73,7 @@ class EventTasksController < ApplicationController
   def update
     @task = @event.tasks.find(params[:id])
     @task.user_id = params[:task][:user_id] unless params[:task][:user_id].blank?
-    
+
     respond_to do |format|
       if @task.update_attributes(params[:task])
         flash[:notice] = t("event_task_updated")
@@ -78,7 +84,7 @@ class EventTasksController < ApplicationController
         format.js { flash[:error] = t("could_not_update_task") }
       end
     end
-    
+
   end
 
 end
