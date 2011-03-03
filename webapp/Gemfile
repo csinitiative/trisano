@@ -35,6 +35,7 @@ group :test, :development do
   platforms :ruby_18, :ruby_19 do
     gem "unicorn"
   end
+  gem "watchr", :require => false
 end
 
 group :test, :uattest do

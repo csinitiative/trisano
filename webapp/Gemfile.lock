@@ -116,6 +116,7 @@ GEM
     unicorn (1.1.3)
       rack
     validates_timeliness (2.3.1)
+    watchr (0.7)
     weakling (0.0.4-java)
     webrat (0.7.2.pre)
       nokogiri (>= 1.2.0)
@@ -155,4 +156,5 @@ DEPENDENCIES
   sparrowhawk (= 0.9.5)
   unicorn
   validates_timeliness (>= 2.2.2)
+  watchr
   webrat (= 0.7.2.pre)
