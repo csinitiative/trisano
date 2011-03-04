@@ -20,10 +20,12 @@ Then /^the system should have a record of access for the user and event with an 
 end
 
 Then /^the record number of the event accessed should be visible$/ do
+  @event.reload
   response.body.should =~ /#{@event.record_number}/m
 end
 
 When /^I access the event by clicking the record number$/ do
+  @event.reload
   click_link("#{@event.record_number}")
 end
 
