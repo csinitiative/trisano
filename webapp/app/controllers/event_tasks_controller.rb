@@ -40,6 +40,7 @@ class EventTasksController < ApplicationController
     @task.event_id = @event.id
     respond_to do |format|
       format.html
+      format.js
       format.xml
     end
   end
