@@ -21,10 +21,6 @@ Given /^I have (.+) access records in the system$/ do |record_count|
   end
 end
 
-Then /^I should see pagination controls$/ do
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^the system should have a record of access for the user and event with an access count of (.+)$/ do |access_count|
   AccessRecord.find_by_user_id_and_event_id(@current_user.id, @event.id).access_count.should == access_count.to_i
 end
