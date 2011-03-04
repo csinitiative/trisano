@@ -20,7 +20,7 @@ class AccessRecordsController < ApplicationController
   before_filter :check_role
 
   def index
-    @access_records = AccessRecord.all( :order => "updated_at DESC" )
+    @access_records = AccessRecord.paginate( :order => "updated_at DESC", :page => params[:page] )
   end
 
   protected

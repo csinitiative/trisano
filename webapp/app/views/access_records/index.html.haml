@@ -16,7 +16,7 @@
 - content_for :title do
   =t('event_access_records')
 
-%table.list.sortable#access_records{:cellpadding => 0, :cellspacing => 0, :border => 0 }
+%table.list#access_records{:cellpadding => 0, :cellspacing => 0, :border => 0 }
   %thead
     %tr{:style => 'text-align: left'}
       %th=t('user')
@@ -35,3 +35,4 @@
         %td=h(access_record.created_at.to_date)
         %td=h(access_record.updated_at.to_date)
 
+= will_paginate(@access_records)
