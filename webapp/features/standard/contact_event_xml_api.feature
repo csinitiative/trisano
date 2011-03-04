@@ -6,7 +6,7 @@ Feature: XML API for Contact Events
 
   Scenario: Retrieve an edit_jurisdiction template
     Given there is a contact event
-    When I retrieve the contact event XML representation for edit_jurisdiction_cmr
+    When I retrieve the contact event XML representation for edit_jurisdiction_contact_event
     Then I should have an xml document
     And these xpaths should exist:
       | /routing/atom:link[@rel='route'][contains(@href, 'contact_events')]                                    |

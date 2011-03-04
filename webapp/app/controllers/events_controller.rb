@@ -221,7 +221,7 @@ class EventsController < ApplicationController
       # to distinguish these cases is by parsing this string in one
       # place or another.
 
-      if @event.halted? && @event.halted_because =~ /^Couldn't find PlaceEntity with ID=\d+$/
+      if @event.halted? && @event.halted_because =~ /^Couldn't find PlaceEntity with ID=/
         respond_to do |format|
           # DEBT: Respond to HTML? This can't happen, since the user
           # is given a drop-down list of place entities.
