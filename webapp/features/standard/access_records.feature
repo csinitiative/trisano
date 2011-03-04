@@ -55,3 +55,9 @@ Feature: Viewing access records
     And I follow "Event Access Records"
     When I access the event by clicking the record number
     Then I should be on the CMR show page
+
+  Scenario: Access records should be paginated
+    Given I have 31 access records in the system
+    And I am on the access records page
+    Then I should see "Next &raquo;"
+    
