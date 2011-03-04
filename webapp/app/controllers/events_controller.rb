@@ -226,7 +226,7 @@ class EventsController < ApplicationController
           # DEBT: Respond to HTML? This can't happen, since the user
           # is given a drop-down list of place entities.
           format.xml do
-            head :bad_request
+            head :unprocessable_entity
           end
         end
       elsif @event.halted? && @event.halted_because != :no_jurisdiction_change

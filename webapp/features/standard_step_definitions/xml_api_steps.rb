@@ -2,34 +2,28 @@ def lookup_jurisdiction(jurisdiction_name)
   Place.first(:conditions => { :short_name => jurisdiction_name })
 end
 
-When /^I retrieve the event's XML representation$/ do
-  header "Accept", 'application/xml'
+When /^I retrieve the CMR XML representation for (.*)$/ do |path|
+  header "Accept", "application/xml"
+  url = self.send "#{path}_path", @event
+  visit url
+  @xml = Nokogiri::XML(response.body)
+end
+
+When /^I retrieve the contact event XML representation for (.*)$/ do |path|
+  header "Accept", "application/xml"
+  url = self.send "#{path}_path", @contact_event
+  visit url
+  @xml = Nokogiri::XML(response.body)
+end
+
+When /^I view the HTML event page$/ do
+  header "Accept", "text/html"
   visit cmr_path(@event)
-  @xml = Nokogiri::XML(response.body)
 end
 
-When /^I retrieve the contact event's XML representation$/ do
-  header "Accept", 'application/xml'
+When /^I view the HTML contact event page$/ do
+  header "Accept", "text/html"
   visit contact_event_path(@contact_event)
-  @xml = Nokogiri::XML(response.body)
-end
-
-When /^I retrieve a new CMR xml representation$/ do
-  header "Accept", "application/xml"
-  visit new_cmr_path
-  @xml = Nokogiri::XML(response.body)
-end
-
-When /^I retrieve the edit_jurisdiction CMR XML representation$/ do
-  header "Accept", "application/xml"
-  visit edit_jurisdiction_cmr_path(@event)
-  @xml = Nokogiri::XML(response.body)
-end
-
-When /^I retrieve the edit_jurisdiction contact event XML representation$/ do
-  header "Accept", "application/xml"
-  visit edit_jurisdiction_contact_event_path(@contact_event)
-  @xml = Nokogiri::XML(response.body)
 end
 
 Then /^I should have an xml document$/ do
