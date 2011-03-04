@@ -31,6 +31,7 @@ class EventTasksController < ApplicationController
       format.js do
         render :partial => 'tasks/list.html.haml', :locals => { :task_owner => @event }
       end
+      format.xml
     end
   end
 
@@ -48,7 +49,12 @@ class EventTasksController < ApplicationController
   end
 
   def create
+    # This comes from a hidden field in the HTML form. We don't want to
+    # make web service clients fill this in when it's implicit from the
+    # URL.
+    params[:task][:event_id] = params[:event_id] if params[:task][:event_id].nil?
     @task = Task.new(params[:task])
+
 
     if !params[:task][:user_id].blank?
       @task.user_id = params[:task][:user_id]

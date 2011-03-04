@@ -1,0 +1,15 @@
+= xml_for task, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |t|
+  = t.link_to new_event_task_url(task.event), :rel => :self
+  = t.link_to event_tasks_url(task.event), :rel => :index
+  = t.link_to index_code_url(:code_name => 'task_category'), :rel => :task_category
+  - if User.current_user.is_entitled_to?(:assign_task_to_user)
+    = t.link_to users_url, :rel => :user
+  = t.render :name
+  = t.render :notes
+  = t.render :category_id, :rel => :task_category
+  = t.render :priority
+  = t.render :due_date
+  = t.render :repeating_interval
+  = t.render :until_date
+  - if User.current_user.is_entitled_to?(:assign_task_to_user)
+    = t.render :user_id, :rel => :user

@@ -24,5 +24,6 @@ Feature: Creating new place events
     When I am on the place event edit page
     And I click the "Create new place exposure" link and wait to see "Place search"
     And I fill in "place_search_name" with "Not The Shack"
-    And I press "Search" and wait to see "Create a new place exposure"
+    And I press enter
+    And I wait to see "Create a new place exposure"
     Then I should see "No results"

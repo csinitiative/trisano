@@ -6,7 +6,7 @@ Feature: XML API for Contact Events
 
   Scenario: Retrieve an edit_jurisdiction template
     Given there is a contact event
-    When I retrieve the edit_jurisdiction contact event XML representation
+    When I retrieve the contact event XML representation for edit_jurisdiction_cmr
     Then I should have an xml document
     And these xpaths should exist:
       | /routing/atom:link[@rel='route'][contains(@href, 'contact_events')]                                    |
@@ -14,16 +14,12 @@ Feature: XML API for Contact Events
       | /routing/jurisdiction-id[@rel='https://wiki.csinitiative.com/display/tri/Relationship+-+Jurisdiction'] |
       | /routing/note                                                                                          |
 
-  @pending
   Scenario: Route a contact event to a jurisdiction
     Given there is a contact event
-    When I retrieve the edit_jurisdiction contact event XML representation
+    When I retrieve the contact event XML representation for edit_jurisdiction_contact_event
     And I replace jurisdiction-id with jurisdiction "Bear River"
-    And I add the assignment note "Hello, Bear River"
+    And I add the assignment note "Routed in a cuke"
     And I POST the XML to the "route" link
-    And I retrieve the contact event's XML representation
-    Then these xpaths should exist:
-      | //jurisdiction-attributes                     |
-      | //jurisdiction-attributes/secondary-entity-id |
-    And I should see the new jurisdiction
-    And I should see "Hello, Bear River"
+    And I view the HTML contact event page
+    Then I should see "Bear River"
+    And I should see "Routed in a cuke"

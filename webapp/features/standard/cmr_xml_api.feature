@@ -6,26 +6,26 @@ Feature: XML API for CMRs
 
   Scenario: Accessing a CMR XML representation
     Given a basic morbidity event exists
-     When I retrieve the event's XML representation
+     When I retrieve the CMR XML representation for cmr
      Then I should have an xml document
      When I use xpath to find the patient's last name
      Then I should have 1 node
 
   Scenario: Putting a CMR back using the XML representation
     Given a basic morbidity event exists
-     When I retrieve the event's XML representation
+     When I retrieve the CMR XML representation for cmr
       And I PUT the XML back
      Then I should get a 200 response
 
   Scenario: Putting an invalid CMR should returns errors
     Given a basic morbidity event exists
-    When I retrieve the event's XML representation
+    When I retrieve the CMR XML representation for cmr
     And I make the XML invalid
     And I PUT the XML back
     Then I should get a 422 response
 
   Scenario: Creating a CMR from an XML representation
-     When I retrieve a new CMR xml representation
+     When I retrieve the CMR XML representation for new_cmr
       And I replace the patient's last name with "Davis"
       And I replace the first reported to public health date with yesterday's date
       And I POST the XML to the "index" link
@@ -34,7 +34,7 @@ Feature: XML API for CMRs
 
   Scenario: Adding a note to a CMR
     Given a basic morbidity event exists
-    When I retrieve the event's XML representation
+    When I retrieve the CMR XML representation for cmr
     And I add "Updated from the API" as an administrative note
     And I PUT the XML back
     And I go to the CMR show page
@@ -42,7 +42,7 @@ Feature: XML API for CMRs
 
   Scenario: Retrieve an edit_jurisdiction template
     Given a basic morbidity event exists
-    When I retrieve the edit_jurisdiction CMR XML representation
+    When I retrieve the CMR XML representation for edit_jurisdiction_cmr
     Then I should have an xml document
     And these xpaths should exist:
       | /routing/atom:link[@rel='route'][contains(@href, 'cmrs')]                                              |
@@ -52,11 +52,11 @@ Feature: XML API for CMRs
 
   Scenario: Route a CMR to a jurisdiction
     Given a basic morbidity event exists
-    When I retrieve the edit_jurisdiction CMR XML representation
+    When I retrieve the CMR XML representation for edit_jurisdiction_cmr
     And I replace jurisdiction-id with jurisdiction "Bear River"
-    And I add the assignment note "Hello, Bear River"
+    And I replace the assignment note with "Hello, Bear River"
     And I POST the XML to the "route" link
-    And I retrieve the event's XML representation
+    And I retrieve the CMR XML representation for cmr
     Then these xpaths should exist:
       | //jurisdiction-attributes                     |
       | //jurisdiction-attributes/secondary-entity-id |
@@ -66,7 +66,16 @@ Feature: XML API for CMRs
 
   Scenario: Route a CMR to an invalid jurisdiction
     Given a basic morbidity event exists
-    When I retrieve the edit_jurisdiction CMR XML representation
+    When I retrieve the CMR XML representation for edit_jurisdiction_cmr
     And I invalidate the jurisdiction
     And I POST the XML to the "route" link
-    Then I should get a 400 response
+    Then I should get a 422 response
+
+  Scenario: Add a task to a CMR
+    Given a basic morbidity event exists
+    When I retrieve the CMR XML representation for new_event_task
+    And I replace the task name with "follow up"
+    And I replace the task due date with tomorrow's date
+    And I POST the XML to the "index" link
+    And I view the HTML event page
+    Then I should see "follow up"
