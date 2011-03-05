@@ -36,7 +36,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def dropdown_code_field(attribute, code_name, options ={}, html_options ={}, event =nil)
     core_follow_up(attribute, html_options, event) do |attribute, html_options|
       options[:include_blank] = true unless options[:include_blank] == false
-      self.collection_select(attribute, codes(code_name), :id, :code_description, options, html_options)
+      self.collection_select(attribute, codes(code_name.to_s), :id, :code_description, options, html_options)
     end
   end
 
@@ -398,6 +398,41 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def export_conversion_value_id(event, question)
     answer = event.answers.find_by_question_id(question.id)
     answer.export_conversion_value_id unless answer.nil?
+  end
+
+  #### encapsulate some common form builder patterns ####
+  def core_text(name, grid_pos, options={})
+    @template.core_element(name, self, grid_pos) do
+      @template.concat label(name)
+      @template.concat core_text_field(name, options, event)
+    end
+  end
+
+  def code_field(field_name, code_name, grid_pos, options={})
+    @template.core_element(field_name, self, grid_pos) do
+      @template.concat label(field_name)
+      @template.concat dropdown_code_field(field_name, code_name, options, {}, event)
+    end
+  end
+
+  def diagnostic_type_selector
+    render_type_selector('diagnostic_types')
+  end
+
+  def epi_type_selector
+    render_type_selector('epi_types')
+  end
+
+  def agency_type_selector
+    render_type_selector('agency_types')
+  end
+
+  def exposed_type_selector
+    render_type_selector('exposed_types')
+  end
+
+  def render_type_selector(types)
+    @template.render :partial => 'events/place_types', :locals => { :f => self, :types => types }
   end
 
   def event

@@ -122,6 +122,11 @@ end
 Factory.define :address do |a|
   a.street_number { Factory.next(:street_number) }
   a.street_name   { Factory.next(:street_name) }
+  a.unit_number   { Factory.next(:unit_number) }
+  a.postal_code   { Factory.next(:postal_code) }
+  a.city          { Factory.next(:city) }
+  a.state_id      { ExternalCode.find_by_code_name('state').id }
+  a.county_id     { ExternalCode.find_by_code_name('county').id }
 end
 
 Factory.define :disease_event do |de|
@@ -193,6 +198,20 @@ Factory.define :telephone do |t|
 end
 
 Factory.define :diagnostic_facility do |df|
+  df.place_entity { Factory.build(:diagnostic_facility_entity) }
+end
+
+Factory.define :canonical_address, :parent => :address do |a|
+end
+
+Factory.define :diagnostic_facility_entity, :class => :place_entity do |dfe|
+  dfe.place { Factory.build(:hospital) }
+  dfe.association :canonical_address
+end
+
+Factory.define :hospital, :class => :place do |h|
+  h.place_types { [hospital_place_type] }
+  h.name { Factory.next(:place_name) }
 end
 
 Factory.define :hospitalization_facility do |hf|
@@ -237,6 +256,17 @@ Factory.sequence :street_name do |n|
   "street name #{n}"
 end
 
+Factory.sequence :unit_number do |n|
+  "unit#{n}"
+end
+
+Factory.sequence :postal_code do |n|
+  "99999-#{n.to_s.rjust(4, '0')[-4..-1]}"
+end
+
+Factory.sequence :city do |n|
+  "city#{n}"
+end
 Factory.sequence :email_address do |n|
   "person#{n}@example.com"
 end
@@ -463,4 +493,12 @@ def disease!(disease_name)
     disease = Factory.create(:disease, :disease_name => disease_name)
   end
   disease
+end
+
+def hospital_place_type
+  Code.find_or_create_by_the_code_and_code_name({
+    :the_code => 'H',
+    :code_name => 'placetype',
+    :code_description => 'Hospital'
+  })
 end

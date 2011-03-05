@@ -23,7 +23,7 @@
       -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
         #new_place_exposure
           %span{:class => 'horiz'}
-            = epi_type_selector(p)
+            = p.epi_type_selector
           %span{:class => 'horiz'}
             = p.label(:name)
             = p.text_field(:name, :size => 20, :maxlength => 255,:class => 'required_if_others')

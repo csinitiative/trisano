@@ -10,7 +10,7 @@
             =h(p.object.name)
         -core_element(:places_types, p, :horiz) do
           -if p.object.new_record?
-            =render_type_selector(p, "#{facility_type}_types")
+            =p.render_type_selector("#{facility_type}_types")
           -else
             =p.label(:places_types, t(:place_type))
             =h(p.object.formatted_place_descriptions)

@@ -16,25 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module PlacesHelper
-  def diagnostic_type_selector(form)
-    render_type_selector(form, 'diagnostic_types')
-  end
-
-  def epi_type_selector(form)
-    render_type_selector(form, 'epi_types')
-  end
-
-  def agency_type_selector(form)
-    render_type_selector(form, 'agency_types')
-  end
-
-  def exposed_type_selector(form)
-    render_type_selector(form, 'exposed_types')
-  end
-
-  def render_type_selector(form, types)
-    render :partial => 'events/place_types', :locals => { :f => form, :types => types }
-  end
 
   def i18n_jurisdiction_short_name(raw_shortname)
     if raw_shortname == "Unassigned"

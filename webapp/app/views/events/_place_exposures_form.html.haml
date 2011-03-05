@@ -21,9 +21,9 @@
   -# Handles pre- and post-questions and help for places as a whole
   - core_element :places, f, 'vert-break' do
 
-    - form_for Place.new do |pf|
+    - form_for Place.new, :builder => ExtendedFormBuilder do |pf|
       %span#place_search_types.horiz
-        = epi_type_selector(pf)
+        = pf.epi_type_selector
       - search_interface :places, :with_types => 'place[place_type_ids][]'
       %hr/
 

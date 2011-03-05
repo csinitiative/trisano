@@ -14,19 +14,11 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %div#diagnostic_facilities
-  - search_interface :diagnostic_facilities, :url => { :event_type => @event.type.underscore }
+  - search_interface :diagnostic_facilities, :url => { :event_type => event_form.object.type.underscore }
   %div#existing-facilities
-    - event_form.fields_for(:diagnostic_facilities, :builder => ExtendedFormBuilder) do |diagnostic_fields|
-      -# If this is a new record and we are not returning from a failed validation
-      - if diagnostic_fields.object.new_record? && diagnostic_fields.object.secondary_entity_id.nil?
-        = render :partial => 'events/diagnostic', :locals => { :f => diagnostic_fields }
-      - else
-        = render :partial => 'events/diagnostic_show', :locals => { :f => diagnostic_fields }
-
-  - blank_diagnostic = DiagnosticFacility.new
-  - blank_diagnostic.build_place_entity
-  - blank_diagnostic.place_entity.build_place
+    - event_form.fields_for(:diagnostic_facilities, :builder => ImmutableFormBuilder) do |diagnostic_fields|
+      = render :partial => 'events/diagnostic', :locals => { :f => diagnostic_fields }
 
   %p{:style => "clear: both;"}
     %br
-    = add_record_link event_form, :diagnostic_facilities, t("add_diagnostic_facility"), :object => blank_diagnostic, :partial => 'events/diagnostic'
+    = add_record_link event_form, :diagnostic_facilities, t("add_diagnostic_facility"), :object => DiagnosticFacility.blank, :partial => 'events/diagnostic'

@@ -55,7 +55,7 @@
 
           - core_element :place_type, p, 'vert-break' do
             - if p.object.new_record?
-              = agency_type_selector(p)
+              = p.agency_type_selector
             - else
               = label_tag t('activerecord.attributes.reporting_agency.agency_types')
               = h(p.object.formatted_place_descriptions)
