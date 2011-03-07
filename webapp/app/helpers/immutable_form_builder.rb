@@ -2,10 +2,10 @@
 class ImmutableFormBuilder < ExtendedFormBuilder
 
   def initialize(object_name, object, template, options, proc)
-    unless object.new_record?
+    super
+    unless @object.nil? || @object.new_record?
       extend(ImmutableMethods)
     end
-    super
   end
 
   module ImmutableMethods

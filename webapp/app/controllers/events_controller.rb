@@ -104,7 +104,7 @@ class EventsController < ApplicationController
     diagnostic_entity = PlaceEntity.find(params[:id])
     @diagnostic = DiagnosticFacility.new
     @diagnostic.place_entity = diagnostic_entity
-    render :partial => "events/diagnostic_show", :layout => false, :locals => {:event_type => params[:event_type]}
+    render :partial => "events/diagnostic", :layout => false, :locals => {:event_type => params[:event_type]}
   end
 
   def reporting_agencies_search

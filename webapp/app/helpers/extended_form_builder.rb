@@ -415,6 +415,13 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
+  def remove_check_box(grid_pos="horiz")
+    @template.haml_tag(:span, :class => grid_pos) do
+      @template.concat label(:_destroy)
+      @template.concat check_box(:_destroy)
+    end
+  end
+
   def diagnostic_type_selector
     render_type_selector('diagnostic_types')
   end
@@ -443,15 +450,20 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     event.try(:disease_event).try(:disease)
   end
 
+  def new_record?
+    @object.new_record?
+  end
+
   private
 
   # To avoid stubbing associations everywhere, we'll just instantiate a 
   # new instance of the correct type if the assocation is blank
   def fields_for_with_nested_attributes(association_name, args, block)
     unless args.first.respond_to?(:new_record?)
-      if @object.send(association_name).blank?
-        blank_instance = @object.class.reflections[association_name.to_sym].klass.new
-        args.unshift blank_instance
+      associated_object = @object.send(association_name)
+      if associated_object.blank?
+        associated_object = @object.class.reflections[association_name.to_sym].klass.new
+        args.unshift associated_object
       end
     end
     super
