@@ -28,7 +28,7 @@ Feature: Hep B specific pregnancy fields
       And I should not see actual delivery data
 
 
-  Scenario: Enetering expected delivery data
+  Scenario: Entering expected delivery data
     Given I am logged in as a super user
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
@@ -53,7 +53,7 @@ Feature: Hep B specific pregnancy fields
         | Area code | Phone number | Extension |
         | (123)     |     456-7890 |        88 |
 
-  Scenario: Enetering actual delivery data
+  Scenario: Entering actual delivery data
     Given I am logged in as a super user
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields

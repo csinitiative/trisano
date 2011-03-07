@@ -19,6 +19,7 @@
 		access_avr
 		manage_staged_message
 		write_staged_message
+    view_access_records
 ).each do |p|
   Privilege.create(:priv_name => p)
 end

@@ -1,0 +1,38 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- content_for :title do
+  =t('event_access_records')
+
+%table.list#access_records{:cellpadding => 0, :cellspacing => 0, :border => 0 }
+  %thead
+    %tr{:style => 'text-align: left'}
+      %th=t('user')
+      %th=t('event')
+      %th=t('reason')
+      %th=t('access_count')
+      %th=t('first_access')
+      %th=t('last_access')
+  %tbody
+    -@access_records.each do |access_record|
+      %tr.search-active.tabular
+        %td=h(access_record.user.best_name)
+        %td=link_to(h(access_record.event.record_number), self.send("#{event_to_path_name[access_record.event.class.name] || access_record.event.class.name.underscore}_path".to_sym, access_record.event))
+        %td=h(access_record.reason)
+        %td=h(access_record.access_count)
+        %td=h(access_record.created_at.to_date)
+        %td=h(access_record.updated_at.to_date)
+
+= will_paginate(@access_records)

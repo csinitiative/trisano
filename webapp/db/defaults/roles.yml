@@ -57,5 +57,6 @@ State Manager:
   - remove_form_from_event
   - access_avr
   - manage_entities
+  - view_access_records
 Read-only:
   - view_event

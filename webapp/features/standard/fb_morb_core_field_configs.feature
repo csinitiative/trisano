@@ -1,7 +1,7 @@
 Feature: Morbidity event form core field configs
 
   To allow for a more relevant event form
-  An investigator should see core field configs on a moridity form
+  An investigator should see core field configs on a morbidity form
 
   Scenario: Morbidity event core field configs
     Given I am logged in as a super user

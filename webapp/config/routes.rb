@@ -31,6 +31,7 @@ ActionController::Routing::Routes.draw do |map|
     }
   end
 
+  map.resources :access_records
   map.resources :event_queues
   map.resources :export_columns, :has_many => :export_conversion_values
 

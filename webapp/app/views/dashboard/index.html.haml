@@ -16,14 +16,14 @@
 - content_for :title do
   =t('welcome_message')
 
-/- content_for :name do
-
 #rot
   %script
     detect();
 
-%h2
-  =t('tasks')
+%br{ :clear => :all }
+
+%h2=t('tasks')
+
 %span{:style => "clear: both;"}
   = link_to_function(t('change_filter'), "Effect.toggle('task_view_settings')")
   &nbsp;|&nbsp;
@@ -33,6 +33,10 @@
   = render :partial => 'filter_tasks_form'
 #tasks{:style => "clear: both;"}
   = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
+
+- if User.current_user.is_entitled_to?(:view_access_records)
+  %h2=t('tools')
+  = link_to t('event_access_records'), access_records_path, :id => "access_records_tool"
 
 %br
 %br

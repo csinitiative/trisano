@@ -53,7 +53,7 @@ en:
   permission_denied: "PERMISSION DENIED"
   out_of_jurisdiction_access: "You have accessed an out-of-jurisdiction event. {{link}} if access was unintentional.  Access has been logged."
   event_access_reason_title: "Enter access reason"
-  enter_access_reason: "Enter a reason for accessing an out-of-jurisdiction event."
+  enter_access_reason: "Enter a reason for accessing an out-of-jurisdiction event. {{link}} if access was unintentional."
 
   event_tasks: "Event Tasks"
   tasks: "Tasks"
@@ -251,6 +251,7 @@ en:
   users_filter: 'Users Filter'
   jurisdictions_filter: 'Jurisdictions Filter'
   status_filter: 'Status Filter'
+  tools: 'Tools'
 #diseases
   cdc_netss_code: 'CDC/NETSS code'
   cdc_code: 'CDC code'
@@ -1066,7 +1067,18 @@ en:
       manage_staged_message: "Manage staged messages"
       write_staged_message: "Create staged messages"
       manage_entities: "Manage entities"
+      view_access_records: "View access records"
+      
       # Debt: move merge translations to plugin
       merge_people: "Merge people"
       merge_places: "Merge places"
+
+#Access records
+  event_access_records: 'Event Access Records'
+  event: 'Event'
+  access_count: 'Access count'
+  first_access: 'First access'
+  last_access: 'Last access'
+  reason: 'Reason'
+  no_view_access_records_privs: 'You do not have permission to view event access records'
 

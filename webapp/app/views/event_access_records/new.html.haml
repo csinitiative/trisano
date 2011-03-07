@@ -8,8 +8,8 @@
 #new-access-record-form
 
   %h3
-    =t('enter_access_reason')
-
+    =t('enter_access_reason', :link => link_to(t(:please_exit), home_path))
+    
   = error_messages_for :access_record
 
   - form_for(@access_record, :url => event_access_records_path(@event)) do |f|
