@@ -79,3 +79,13 @@ Feature: XML API for CMRs
     And I POST the XML to the "index" link
     And I view the HTML event page
     Then I should see "follow up"
+
+  Scenario: Add a task with an assigned user to a CMR as a privileged user
+    Given a basic morbidity event exists
+    And I am logged in as a super user
+    When I retrieve the CMR XML representation for new_event_task
+    And I replace the task name with "follow up"
+    And I replace the task due date with tomorrow's date
+    And I assign a user to the task
+    And I POST the XML to the "index" link
+    Then I should get a 200 response

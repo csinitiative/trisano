@@ -67,6 +67,23 @@ When /^I replace (.*) with "([^\"]*)"$/ do |xpath_name, value|
   end
 end
 
+When /^I assign a user to the task$/ do
+  jurisdictions = User.current_user.jurisdictions_for_privilege(:assign_task_to_user)
+  jurisdictions.should_not be_blank
+
+  assignees = User.task_assignees_for_jurisdictions jurisdictions
+  assignees.should_not be_blank
+
+  user = assignees.first
+  user.should_not == User.current_user
+
+  nodes = @xml.xpath('/task/user-id')
+  nodes.should_not be_empty
+  nodes.each do |element|
+    element.content = user.id
+  end
+end
+
 When /^I replace jurisdiction-id with jurisdiction "([^\"]*)"$/ do |jurisdiction_name|
   @jurisdiction = lookup_jurisdiction jurisdiction_name
   @jurisdiction.should_not be_blank
@@ -85,14 +102,6 @@ When /^I invalidate the jurisdiction$/ do
   nodes.should_not be_empty
   nodes.each do |element|
     element.content = value
-  end
-end
-
-When /^I add the assignment note "([^\"]*)"$/ do |note|
-  nodes = @xml.xpath('/routing/note')
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = note
   end
 end
 
