@@ -27,7 +27,7 @@ describe EventsController do
     it "renders diagnostic show partial" do
       get :diagnostics_search_selection, :id => @place_entity.id, :event_type => 'morbidity_event'
       response.should be_a_success
-      response.should render_template 'events/_diagnostic_show'
+      response.should render_template 'events/_diagnostic'
     end
   end
 

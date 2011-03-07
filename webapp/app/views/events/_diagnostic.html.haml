@@ -11,17 +11,27 @@
 -# See the GNU Affero General Public License for more details.
 -# 
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
--# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0
+
+-# DEBT: noodle the best way to factor this into a helper or something
+- df = nil
+- if defined? f
+  - df = f
+- else
+  - uniq_id = Time.now.to_i
+  - fields_for("#{event_type}[diagnostic_facilities_attributes][#{uniq_id}]", @diagnostic, :builder => ImmutableFormBuilder) do |f|
+    - df = f
 
 %div{:class => 'diagnostic', :style => "clear: both;"}
   %div{:class => 'new_diagnostic_facility' }
-    - f.fields_for(:place_entity) do |df|
-      - df.fields_for(:place) do |place_fields|
+    = df.hidden_field(:secondary_entity_id)
+    - df.fields_for(:place_entity) do |pe|
+      - pe.fields_for(:place) do |place_fields|
         = error_messages_for :object => place_fields.object
         - place_fields.core_text :name, :horiz, :size => 25, :maxlength => 255,:class => 'required_if_others'
         %span.horiz
           = place_fields.diagnostic_type_selector
-      - df.fields_for(:canonical_address) do |address|
+      - pe.fields_for(:canonical_address) do |address|
         - address.core_text :street_number, :horiz, :size => 10, :maxlength => 10
         - address.core_text :street_name, :horiz, :size => 50, :maxlength => 50
         - address.core_text :unit_number, :horiz, :size => 10, :malength => 10
@@ -29,4 +39,10 @@
         - address.code_field :state_id, :state, :horiz, :include_blank => true
         - address.code_field :county_id, :county, :horiz, :include_blank => true
         - address.core_text :postal_code, :horiz, :size => 7, :maxlength => 10
-  %hr
+      - if df.new_record?
+        &nbsp;
+        %br
+        = link_to_function(t("remove"), "this.up().remove()", :id => "remove_#{uniq_id}")
+      - else
+        = df.remove_check_box
+    %hr
