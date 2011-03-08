@@ -135,6 +135,11 @@ When(/^I save the event$/) do
   end
 end
 
+When /^I save the event and wait for the page to load$/ do
+  @browser.click("css=#save_and_exit_btn")
+  @browser.wait_for_page_to_load
+end
+
 When /^I save and continue$/ do
   @browser.click("//*[@id='save_and_continue_btn']")
   @browser.wait_for_page_to_load

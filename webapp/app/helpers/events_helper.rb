@@ -1467,7 +1467,7 @@ module EventsHelper
   def search_interface(table, options={}, &block)
     model = table.to_s.singularize
 
-    haml_tag 'span.horiz' do
+    haml_tag 'span', :class => 'horiz' do
       haml_tag(:label, :for => "#{model}_search_name") { haml_concat t(options.delete(:label_name) || :name) }
       haml_tag(:input, :type => 'text', :id => "#{model}_search_name")
       search_button_with_script_and_spinner table, options

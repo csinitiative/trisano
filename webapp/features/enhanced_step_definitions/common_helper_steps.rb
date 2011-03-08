@@ -145,6 +145,10 @@ Then /^I should not see "([^\"]*)"$/ do |text|
   @browser.get_body_text.should_not =~ /#{text}/i
 end
 
+Then /^I wait for ajax$/ do
+  @browser.wait_for_ajax
+end
+
 Before('@clean') do
   cleanable_classes.each(&:delete_all)
 end

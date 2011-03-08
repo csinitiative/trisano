@@ -684,8 +684,8 @@ module TrisanoHelper
     browser.click("//div[@id='diagnostic_facilities']//div[@class='diagnostic']//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
   end
 
-  def remove_diagnostic_facility(browser, index=1)
-    browser.click("//div[@id='diagnostic_facilities']//div[@class='existing_diagnostic'][#{index}]//input[contains(@id, '_destroy')]")
+  def remove_diagnostic_facility(browser, index=0, event_type="morbidity_event")
+    browser.click("css=##{event_type}_diagnostic_facilities_attributes_#{index}__destroy")
   end
 
   def add_hospital(browser, attributes, index = 1)

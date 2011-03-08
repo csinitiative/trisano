@@ -31,7 +31,9 @@ When(/^I click remove for that diagnosing facility$/) do
 end
 
 Then(/^I should not see the diagnosing facility$/) do
-  @browser.is_element_present("//div[@id='live_search_diagnostics']/div[@class='existing_diagnostic']").should be_false
+  script = "selenium.browserbot.getCurrentWindow().$j('#diagnostic_facilities span').text();"
+  text = @browser.get_eval(script)
+  text.should =~ /Beaver Valley Hospital/m
 end
 
 When(/^I add a new diagnosing facility$/) do
@@ -46,8 +48,10 @@ Then(/^I should see all added diagnosing facilities$/) do
   @browser.is_text_present("School").should be_true
 end
 
-When(/^I check a diagnostic facility to remove$/) do
-   remove_diagnostic_facility(@browser)
+When /^I remove all of the diagnostic facilities$/ do
+  script = %{selenium.browserbot.getCurrentWindow().$j('#diagnostic_facilities input[type="checkbox"]').click()}
+  @browser.get_eval(script)
+  When %{I save the event and wait for the page to load}
 end
 
 Then(/^I should not see the removed diagnostic facility$/) do
