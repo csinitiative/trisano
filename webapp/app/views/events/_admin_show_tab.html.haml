@@ -37,11 +37,11 @@
   -core_section :case_outbreak_section, event_form do
     - core_element_show :lhd_case_status_id, event_form, :horiz do
       = event_form.label :lhd_case_status_id
-      = h(l(@event.lhd_case_status)) || '&nbsp;'
+      = h(lookup_code(@event.lhd_case_status)) || '&nbsp;'
     = render(:partial => 'events/state_status_show.html.haml', :locals => { :f => event_form})
     - core_element_show :outbreak_associated_id, event_form, :horiz do
       = event_form.label :outbreak_associated_id
-      = h(l(@event.outbreak_associated)) || '&nbsp;'
+      = h(lookup_code(@event.outbreak_associated)) || '&nbsp;'
     - core_element_show :outbreak_name, event_form, :horiz do
       = event_form.label :outbreak_name
       = h(@event.outbreak_name) || '&nbsp;'

@@ -15,4 +15,4 @@
 
 - core_element_show :state_case_status_id, f, :horiz do
   = f.label :state_case_status_id
-  = h(l(@event.state_case_status))
+  = h(lookup_code(@event.state_case_status))

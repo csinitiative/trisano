@@ -31,13 +31,13 @@
         %span.data_city=h(address.city)
       -core_element_show :state_id, address_form, :horiz do
         =address_form.label(:state)
-        %span.data_state=h(l(address.state))
+        %span.data_state=h(lookup_code(address.state))
       -core_element_show :postal_code, address_form, :horiz do
         =address_form.label(:postal_code,t("zip"))
         %span.data_postal_code=h(address.postal_code)
       -core_element_show :county_id, address_form, :horiz do
         =address_form.label(:county)
-        %span.data_county=h(l(address.county))
+        %span.data_county=h(lookup_code(address.county))
       -core_element_show :district, address_form, :horiz do
         =address_form.label(:district)
           -if address.county && address.county.jurisdiction

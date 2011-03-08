@@ -95,6 +95,16 @@ class Address < ActiveRecord::Base
     result
   end
 
+  def preferred_format
+    result = []
+    result << street_number
+    result << street_name
+    result << city
+    result << county.try(:code_description)
+    result << postal_code
+    result.compact.join("\n")
+  end
+
   protected
 
   def validate

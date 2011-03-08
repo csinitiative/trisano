@@ -30,7 +30,7 @@
       %th= t :actions
     - for place in @places do
       %tr
-        %td=place.name 
+        %td=h place.name 
         %td=h preferred_address(place)
         %td=place.formatted_place_descriptions
         %td=link_to_remote(t(:add), :update => 'existing-facilities', :position => 'bottom', :url => { :action => :diagnostics_search_selection, :id => place.entity_id, :event_type => params['event_type'] })

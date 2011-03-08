@@ -65,9 +65,11 @@ module ApplicationHelper
     JS
   end
 
-  def l(lookup_field)
+  # DEPRECATED: use #try(:code_description) instead
+  def lookup_code(lookup_field)
     lookup_field.nil? ? nil : lookup_field.code_description
   end
+  alias l lookup_code
 
   def fml(pre, value_field, post)
     value_field.blank? ? nil : pre+value_field+post
