@@ -2,6 +2,14 @@ def lookup_jurisdiction(jurisdiction_name)
   Place.first(:conditions => { :short_name => jurisdiction_name })
 end
 
+def set_xpath_value(xpath, value)
+  nodes = @xml.xpath(xpath)
+  nodes.should_not be_empty
+  nodes.each do |element|
+    element.content = value
+  end
+end
+
 When /^I retrieve the CMR XML representation for (.*)$/ do |path|
   header "Accept", "application/xml"
   url = self.send "#{path}_path", @event
@@ -60,28 +68,31 @@ Then /^I should have (\d+) node$/ do |count|
 end
 
 When /^I replace (.*) with "([^\"]*)"$/ do |xpath_name, value|
-  nodes = @xml.xpath(xpath_to(xpath_name))
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = value
-  end
+  set_xpath_value(xpath_to(xpath_name), value)
 end
 
-When /^I assign a user to the task$/ do
+When /^I assign an assignable user to the task$/ do
   jurisdictions = User.current_user.jurisdictions_for_privilege(:assign_task_to_user)
   jurisdictions.should_not be_blank
-
   assignees = User.task_assignees_for_jurisdictions jurisdictions
   assignees.should_not be_blank
+  user = assignees.find{|u| u != User.current_user}
+  user.should_not be_nil
+  set_xpath_value('/task/user-id', user.id)
+end
 
-  user = assignees.first
-  user.should_not == User.current_user
+When /^I assign an unassignable user to the task$/ do
+  jurisdictions = User.current_user.jurisdictions_for_privilege(:assign_task_to_user)
+  assignees = User.task_assignees_for_jurisdictions jurisdictions
+  user = User.all.find{|u| not assignees.include?(u)}
+  user.should_not be_nil
+  set_xpath_value('/task/user-id', user.id)
+end
 
-  nodes = @xml.xpath('/task/user-id')
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = user.id
-  end
+When /^I assign any other user to the task$/ do
+  user = User.all.find{|u| u != User.current_user}
+  user.should_not be_nil
+  set_xpath_value('/task/user-id', user.id)
 end
 
 When /^I replace jurisdiction-id with jurisdiction "([^\"]*)"$/ do |jurisdiction_name|
@@ -89,29 +100,17 @@ When /^I replace jurisdiction-id with jurisdiction "([^\"]*)"$/ do |jurisdiction
   @jurisdiction.should_not be_blank
   value = @jurisdiction.entity_id
 
-  nodes = @xml.xpath('/routing/jurisdiction-id')
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = value
-  end
+  set_xpath_value('/routing/jurisdiction-id', value)
 end
 
 When /^I invalidate the jurisdiction$/ do
   value = PersonEntity.first.id
-  nodes = @xml.xpath('/routing/jurisdiction-id')
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = value
-  end
+  set_xpath_value('/routing/jurisdiction-id', value)
 end
 
 When /^I replace (.*) with (.*)'s date$/ do |xpath_name, date_word|
   date = DateTime.send(date_word).xmlschema
-  nodes = @xml.xpath(xpath_to(xpath_name))
-  nodes.should_not be_empty
-  nodes.each do |element|
-    element.content = date
-  end
+  set_xpath_value(xpath_to(xpath_name), date)
 end
 
 Then /^the Location header should have a link to the new event$/ do

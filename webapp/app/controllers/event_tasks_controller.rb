@@ -71,7 +71,7 @@ class EventTasksController < ApplicationController
       else
         format.html { render :action => "new" }
         format.js { render :action => "new" }
-        format.xml { head :bad_request }
+        format.xml { head :unprocessable_entity }
       end
     end
   end

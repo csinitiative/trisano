@@ -81,12 +81,33 @@ Feature: XML API for CMRs
     Then these xpaths should exist:
       | /event-tasks/tasks/i0/name[text()='follow up'] |
 
-  Scenario: Add a task with an assigned user to a CMR as a privileged user
+  Scenario: Add a task with an assignable user to a CMR as a privileged user
     Given a basic morbidity event exists
     And I am logged in as a super user
     When I retrieve the CMR XML representation for new_event_task
     And I replace the task name with "follow up"
     And I replace the task due date with tomorrow's date
-    And I assign a user to the task
+    And I assign an assignable user to the task
     And I POST the XML to the "index" link
     Then I should get a 200 response
+
+  Scenario: Add a task with an unassignable user to a CMR as a privileged user
+    Given a basic morbidity event exists
+    And I am logged in as a super user
+    When I retrieve the CMR XML representation for new_event_task
+    And I replace the task name with "follow up"
+    And I replace the task due date with tomorrow's date
+    And I assign an unassignable user to the task
+    And I POST the XML to the "index" link
+    Then I should get a 422 response
+
+  @pending
+  Scenario: Add a task with a user to a CMR as an unprivileged user
+    Given a basic morbidity event exists
+    And I am logged in as an investigator
+    When I retrieve the CMR XML representation for new_event_task
+    And I replace the task name with "follow up"
+    And I replace the task due date with tomorrow's date
+    And I assign any other user to the task
+    And I POST the XML to the "index" link
+    Then I should get a 422 response
