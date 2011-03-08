@@ -31,7 +31,9 @@ class EventTasksController < ApplicationController
       format.js do
         render :partial => 'tasks/list.html.haml', :locals => { :task_owner => @event }
       end
-      format.xml
+      format.xml do
+        render '/event_tasks/index.xml.haml', :locals => { :event => @event }
+      end
     end
   end
 

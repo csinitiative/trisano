@@ -77,8 +77,9 @@ Feature: XML API for CMRs
     And I replace the task name with "follow up"
     And I replace the task due date with tomorrow's date
     And I POST the XML to the "index" link
-    And I view the HTML event page
-    Then I should see "follow up"
+    And I retrieve the CMR XML representation for event_tasks
+    Then these xpaths should exist:
+      | /event-tasks/tasks/i0/name[text()='follow up'] |
 
   Scenario: Add a task with an assigned user to a CMR as a privileged user
     Given a basic morbidity event exists
