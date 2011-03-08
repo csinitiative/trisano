@@ -91,15 +91,6 @@ When /^I fill in "([^\"]*)" with "([^\"]*)"$/ do |field, text|
   @browser.type field_id, text
 end
 
-When /^I press enter$/ do
-  @browser.focus(@last_id)
-  @browser.key_press_native(10)
-end
-
-When /^I submit "([^\"]*)"$/ do |form|
-  @browser.submit(form)
-end
-
 When /^I wait to see "([^\"]*)"$/ do |text|
   @browser.wait_for_element "//*[contains(text(),'#{text}')]", :timeout_in_seconds => 3
 end
