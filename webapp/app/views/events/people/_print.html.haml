@@ -1,18 +1,18 @@
 -# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
--# 
+-#
 -# This file is part of TriSano.
--# 
--# TriSano is free software: you can redistribute it and/or modify it under the 
--# terms of the GNU Affero General Public License as published by the 
--# Free Software Foundation, either version 3 of the License, or 
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the
+-# terms of the GNU Affero General Public License as published by the
+-# Free Software Foundation, either version 3 of the License, or
 -# (at your option) any later version.
--# 
--# TriSano is distributed in the hope that it will be useful, but 
--# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
--# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License 
+-#
+-# TriSano is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
 -# for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along 
+-#
+-# You should have received a copy of the GNU Affero General Public License along
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
@@ -20,11 +20,19 @@
 
     %fieldset
       %legend=t('person_info')
+
+      - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
+        - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+          - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+            - core_element_print :first_reported_PH_date, event_form, :vert do
+              %span.print-label=ct('first_reported_to_public_health_date')
+              %span.print-value= ld(@event.first_reported_PH_date)
+
       = render :partial => 'events/people/name_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form }
       = render :partial => 'events/people/address_print.html.haml', :locals => {:address => @event.address, :f => event_form}
       = render :partial => 'events/people/age_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form}
       = render :partial => 'events/people/phones_print.html.haml', :locals => {:f => primary_form}
       = render :partial => 'events/people/demographics_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form}
 
-    
+
 
