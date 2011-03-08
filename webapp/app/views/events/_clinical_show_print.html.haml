@@ -29,10 +29,10 @@
     %span.print-value= ld(@event.disease.date_diagnosed) unless @event.disease.nil? || @event.disease.disease.nil?
   - core_element_print :hospitalized_id, d, :horiz do
     %span.print-label= ct 'hospitalized'
-    %span.print-value= h(l(@event.disease.hospitalized)) unless @event.disease.nil?
+    %span.print-value= h(lookup_code(@event.disease.hospitalized)) unless @event.disease.nil?
   - core_element_print :died_id, d, :horiz do
     %span.print-label= ct 'died'
-    %span.print-value= h(l(@event.disease.died)) unless @event.disease.nil?
+    %span.print-value= h(lookup_code(@event.disease.died)) unless @event.disease.nil?
 
 - event_form.fields_for(:interested_party, @event.interested_party, :builder => ExtendedFormBuilder) do |active_patient_form|
   - active_patient_form.fields_for(:person_entity, @event.interested_party.person_entity, :builder => ExtendedFormBuilder) do |primary_form|
@@ -45,7 +45,7 @@
   - patient_fields.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |risk_factor_form|
     - core_element_print :pregnant_id, risk_factor_form, :horiz do
       %span.print-label=ct 'pregnant'
-      %span.print-value= h(l(@event.safe_call_chain(:interested_party, :risk_factor, :pregnant)))
+      %span.print-value= h(lookup_code(@event.safe_call_chain(:interested_party, :risk_factor, :pregnant)))
     - core_element_print :pregnancy_due_date, risk_factor_form, :horiz do
       %span.print-label=ct('pregnancy_due_date', :scope => [:activerecord, :attributes, :participations_risk_factor])
       %span.print-value= ld(@event.safe_call_chain(:interested_party, :risk_factor, :pregnancy_due_date))
@@ -96,9 +96,9 @@
     .short
       %span.print-label=ct 'name'
     .short
-      %span.print-label=ct 'type'
+      %span.print-label=ct 'address'
     .short
-      %span.print-label &nbsp;
+      %span.print-label=ct 'type'
     %br
   - for diagnostic in @event.diagnostic_facilities
     .three-valued-row
@@ -107,10 +107,11 @@
           = h(diagnostic.place_entity.place.name)
       .short
         %span.print-value
-          = h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
+          = h(preferred_address(diagnostic.safe_call_chain(*%w(place_entity place))))
+          &nbsp;
       .short
         %span.print-value
-          &nbsp;
+          = h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
 
 %span.subsection-header
   =t 'treatments'
