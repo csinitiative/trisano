@@ -1,7 +1,10 @@
 !!! XML
 = xml_for 'event-tasks', event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |et|
   = et.link_to event_tasks_url(event), :rel => :self
-  = et.link_to cmr_url(event), :rel => :event
+  - if event.is_a? MorbidityEvent
+    = et.link_to cmr_url(event), :rel => :event
+  - else
+    = et.link_to contact_event_url(event), :rel => :event
   = et.link_to index_code_url(:code_name => 'task_category'), :rel => :task_category
   = et.link_to users_url, :rel => :user
 
