@@ -16,6 +16,4 @@
 - content_for :title do
   =t 'user_settings'
 
-%h2=t 'navigation'
-
-= link_to t('edit_keyboard_shortcuts'), shortcuts_edit_path
+- render_settings_menu

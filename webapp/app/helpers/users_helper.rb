@@ -70,4 +70,18 @@ module UsersHelper
     return items
   end
 
+  def render_settings_menu
+    settings_menu.each do |section|
+      haml_tag :h2 do
+        haml_concat t(*section.first)
+      end
+      section.last.each { |item| haml_concat item }
+    end
+  end
+
+  def settings_menu
+    [[:navigation,
+      [link_to(t(:edit_keyboard_shortcuts), shortcuts_edit_path)]]]
+  end
+
 end
