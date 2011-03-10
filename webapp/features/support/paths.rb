@@ -280,6 +280,9 @@ def path_to(page_name)
   when /the treatment show page/i
     treatment_path @treatment
 
+  when /the manage e-mail addresses page/i
+    email_addresses_path
+
   when /edit the core field/i
     edit_core_field_path @core_field
 
