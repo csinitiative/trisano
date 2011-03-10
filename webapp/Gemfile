@@ -17,6 +17,7 @@ gem "haml", "2.0.7"
 gem "validates_timeliness", ">= 2.2.2"
 gem "mislav-will_paginate"
 gem "rubyzip"
+gem "delayed_job", '~>2.0.4'
 
 gem "ruby-hl7", "1.0.3"
 

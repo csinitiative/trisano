@@ -23,6 +23,7 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'tasks/rails'
 require 'tasks/helpers'
+require 'delayed/tasks'
 
 include Tasks::Helpers::Commands
 
