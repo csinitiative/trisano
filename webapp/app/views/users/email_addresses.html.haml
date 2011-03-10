@@ -1,0 +1,21 @@
+- content_for :title do
+  = t :manage_email_addresses
+
+#email_addresses
+  - unless @email_addresses.empty?
+    %table
+      %h3 Current E-Mail Addresses
+      %tbody
+        - @email_addresses.each do |email_address|
+          %tr
+            %td
+              =email_address.email_address
+  - else
+    %em No e-mail addresses currently configured
+  %br/
+
+#email_address_form
+  - form_tag add_email_address_path do
+    = label_tag :email_address, t(:add_an_email_address)
+    = text_field_tag :email_address
+    = submit_tag 'Add'

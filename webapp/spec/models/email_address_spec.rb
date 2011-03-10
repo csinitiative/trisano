@@ -15,11 +15,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class EmailAddress < ActiveRecord::Base
-  belongs_to :owner, :polymorphic => true
+require File.dirname(__FILE__) + '/../spec_helper'
 
-  def xml_fields
-    [:email_address]
+describe 'EmailAddress' do
+  context 'polymorphic owner association' do
+    it 'can be associated with a user' do
+      user = Factory :user
+      lambda { user.email_addresses.build :email_address => 'user@example.com' }.should_not raise_error
+      email = user.email_addresses.first
+      email.owner_type.should == 'User'
+      email.owner.should be_a(User)
+    end
+
+    it 'can be associated with an entity' do
+      entity = Factory :place_entity
+      lambda { entity.email_addresses.build :email_address => 'user@example.com' }.should_not raise_error
+      email = entity.email_addresses.first
+      email.owner_type.should == 'Entity'
+      email.owner.should be_an(Entity)
+    end
   end
 end
-

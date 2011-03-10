@@ -924,6 +924,9 @@ en:
   update_shortcuts: "Update Shortcuts"
   navigation: "Navigation"
   edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
+  manage_email_addresses: "Manage E-Mail Addresses"
+  added_email_address: "E-mail address successfully added"
+  error_adding_email_address: "Error adding e-mail address"
   user_settings: "User Settings"
   priority: "Priority"
 
@@ -1068,7 +1071,7 @@ en:
       write_staged_message: "Create staged messages"
       manage_entities: "Manage entities"
       view_access_records: "View access records"
-      
+
       # Debt: move merge translations to plugin
       merge_people: "Merge people"
       merge_places: "Merge places"

@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
   has_many :roles, :through => :role_memberships, :uniq => true
 
   has_many :tasks, :order => 'due_date ASC'
+  has_many :email_addresses, :order => "updated_at", :as => :owner
 
   validates_associated :role_memberships
   validates_presence_of :uid, :user_name, :status

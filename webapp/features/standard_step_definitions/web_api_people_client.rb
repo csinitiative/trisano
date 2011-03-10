@@ -32,7 +32,7 @@ Given /^I have a known person entity$/ do
   @person_entity.canonical_address.city = 'Arlington'
   @person_entity.canonical_address.state_id = ExternalCode.find_by_code_description('Utah').id
   @person_entity.canonical_address.county_id = ExternalCode.find_by_code_description('Beaver').id
-  @person_entity.email_addresses << EmailAddress.new(:email_address => 'foo@bar.com')
+  @person_entity.email_addresses.build :email_address => 'foo@bar.com'
   @person_entity.telephones << Telephone.new(:area_code => '555', :phone_number => '555-5555')
   @person_entity.person.save!
   @person_entity.save!

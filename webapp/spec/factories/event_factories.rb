@@ -83,6 +83,9 @@ end
 
 Factory.define :email_address do |ea|
   ea.email_address { Factory.next(:email_address) }
+  # DEBT: FG ought to be able to figure this out. Review polymorphic
+  # ass'ns with FG.
+  ea.owner_type 'Entity'
 end
 
 Factory.define :place_entity do |pe|

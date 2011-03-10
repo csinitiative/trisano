@@ -2,22 +2,22 @@
 #
 # This file is part of TriSano.
 #
-# TriSano is free software: you can redistribute it and/or modify it under the 
-# terms of the GNU Affero General Public License as published by the 
-# Free Software Foundation, either version 3 of the License, 
+# TriSano is free software: you can redistribute it and/or modify it under the
+# terms of the GNU Affero General Public License as published by the
+# Free Software Foundation, either version 3 of the License,
 # or (at your option) any later version.
 #
-# TriSano is distributed in the hope that it will be useful, but 
-# WITHOUT ANY WARRANTY; without even the implied warranty of 
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# TriSano is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU Affero General Public License 
+# You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class UsersController < AdminController
   skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
-  
+
   def index
     @users = User.all :order => {
       'uid ASC'        => 'uid ASC',
@@ -76,14 +76,14 @@ class UsersController < AdminController
     response.headers['X-JSON'] = @user.shortcut_settings.to_json
     head :ok
   end
-  
+
   def shortcuts_edit
     @user = User.current_user
     respond_to do |format|
       format.html
     end
   end
-  
+
   def shortcuts_update
     @user = User.current_user
 
@@ -100,6 +100,24 @@ class UsersController < AdminController
   def settings
     respond_to do |format|
       format.html
+    end
+  end
+
+  def email_addresses
+    @email_addresses = User.current_user.email_addresses
+  end
+
+  def add_email_address
+    email_address = params[:email_address]
+    respond_to do |format|
+      format.html do
+        if User.current_user.email_addresses.create :email_address => email_address
+          flash[:notice] = I18n.translate :added_email_address
+        else
+          flash[:error] = I18n.translate :error_adding_email_address
+        end
+        redirect_to email_addresses_path
+      end
     end
   end
 

@@ -19,7 +19,7 @@ class Entity < ActiveRecord::Base
   set_inheritance_column :entity_type
 
   has_many :telephones, :order => "updated_at"
-  has_many :email_addresses, :order => "updated_at"
+  has_many :email_addresses, :order => "updated_at", :as => :owner
   has_many :addresses
 
   has_one :canonical_address, :foreign_key => "entity_id", :class_name => "Address", :conditions => {:event_id => nil}
