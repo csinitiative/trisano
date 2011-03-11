@@ -226,7 +226,7 @@ class EventsController < ApplicationController
           # DEBT: Respond to HTML? This can't happen, since the user
           # is given a drop-down list of place entities.
           format.xml do
-            head :unprocessable_entity
+            render :xml => @event.errors, :status => :unprocessable_entity
           end
         end
       elsif @event.halted? && @event.halted_because != :no_jurisdiction_change
@@ -234,7 +234,7 @@ class EventsController < ApplicationController
           format.html do
             render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => @event }, :status => 403, :layout => true
           end
-          format.xml { head :forbidden }
+          format.xml { render :xml => @event.errors, :status => :forbidden }
         end
       else
         if User.current_user.can_update?(@event)
@@ -243,7 +243,7 @@ class EventsController < ApplicationController
               flash.now[:error] = t("unable_to_route_cmr", :message => e.message)
               render :action => :edit, :status => :bad_request
             end
-            format.xml { head :bad_request }
+            format.xml { render :xml => @event.errors, :status => :bad_request }
           end
         else
           respond_to do |format|
@@ -251,7 +251,7 @@ class EventsController < ApplicationController
               flash[:error] = t(:unable_to_route_cmr_no_edit_priv, :message => e.message)
               redirect_to :back
             end
-            format.xml { head :forbidden }
+            format.xml { render :xml => @event.errors, :status => :forbidden }
           end
         end
       end
