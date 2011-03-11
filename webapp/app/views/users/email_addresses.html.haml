@@ -2,11 +2,12 @@
   = t :manage_email_addresses
 
 #email_addresses
-  - unless @email_addresses.empty?
+  - email_addresses = User.current_user.email_addresses
+  - unless email_addresses.empty?
     %table
       %h3 Current E-Mail Addresses
       %tbody
-        - @email_addresses.each do |email_address|
+        - email_addresses.each do |email_address|
           %tr
             %td
               =email_address.email_address
@@ -16,7 +17,7 @@
   %br/
 
 #email_address_form
-  - form_tag add_email_address_path do
+  - form_tag email_addresses_path do
     = label_tag :email_address, t(:add_an_email_address)
     = text_field_tag :email_address
     = submit_tag 'Add'
