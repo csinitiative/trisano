@@ -19,6 +19,7 @@ class EmailAddress < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
 
   validates_presence_of :email_address
+  validates_uniqueness_of :email_address
   validates_format_of :email_address, :with => /@/, :allow_blank => false
 
   def xml_fields

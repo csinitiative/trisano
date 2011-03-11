@@ -921,7 +921,7 @@ es:
   configure_shortcuts: "Configurar Accesos Directos"
   keyboard_shortcuts: "Accesos Directos del Teclado"
   update_shortcuts: "Actualizar Accesos Directos"
-  navigation: "Navegación"
+  general: "General"
   edit_keyboard_shortcuts: "Editar Accesos Directos del Teclado"
   manage_email_addresses: "Manage E-Mail Addresses"
   added_email_address: "E-mail address successfully added"

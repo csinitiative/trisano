@@ -114,7 +114,7 @@ class UsersController < AdminController
           flash[:error] = I18n.translate :error_adding_email_address
           User.current_user.email_addresses.delete new_address
         end
-        render :action => :email_addresses
+        redirect_to email_addresses_path
       end
     end
   end

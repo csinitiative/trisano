@@ -922,7 +922,7 @@ en:
   configure_shortcuts: "Configure Shortcuts"
   keyboard_shortcuts: "Keyboard Shortcuts"
   update_shortcuts: "Update Shortcuts"
-  navigation: "Navigation"
+  general: "General"
   edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
   manage_email_addresses: "Manage E-Mail Addresses"
   added_email_address: "E-mail address successfully added"
