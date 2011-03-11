@@ -17,7 +17,24 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe 'EmailAddress' do
+describe EmailAddress do
+  context 'general' do
+    it { should validate_presence_of(:email_address) }
+
+    it 'should not allow duplicate e-mail addresses' do
+      EmailAddress.create! :email_address => 'user@example.com'
+      lambda { EmailAddress.create! :email_address => 'user@example.com' }.should raise_error
+    end
+
+    it 'should not allow a blank e-mail address' do
+      lambda { EmailAddress.create! :email_address => '' }.should raise_error
+    end
+
+    it 'should not allow an invalid e-mail address' do
+      lambda { EmailAddress.create! :email_address => 'xyz' }.should raise_error
+    end
+  end
+
   context 'polymorphic owner association' do
     it 'can be associated with a user' do
       user = Factory :user
