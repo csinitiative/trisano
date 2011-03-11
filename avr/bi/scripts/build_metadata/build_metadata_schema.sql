@@ -454,9 +454,9 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 DROP TABLE IF EXISTS trisano.core_relationships;
 
 CREATE TABLE trisano.core_relationships (
-    from_column NAME NOT NULL,
+    from_column TEXT NOT NULL,
     from_table TEXT NOT NULL,
-    to_column NAME NOT NULL,
+    to_column TEXT NOT NULL,
     to_table TEXT NOT NULL,
     relation_type TEXT DEFAULT '0:N',
     join_order TEXT NOT NULL DEFAULT 'zzzzzzzzz'
