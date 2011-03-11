@@ -70,6 +70,7 @@ Feature: XML API for CMRs
     And I invalidate the jurisdiction
     And I POST the XML to the "route" link
     Then I should get a 422 response
+    And I should see "Couldn't find PlaceEntity"
 
   Scenario: Add a task to a CMR
     Given a basic morbidity event exists
