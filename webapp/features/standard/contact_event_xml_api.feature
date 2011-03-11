@@ -52,6 +52,7 @@ Feature: XML API for Contact Events
     And I assign an unassignable user to the task
     And I POST the XML to the "index" link
     Then I should get a 422 response
+    And I should see "Insufficient privileges"
 
   @pending
   Scenario: Add a task with a user to a contact as an unprivileged user
