@@ -24,7 +24,7 @@
 - unless @task.new_record?
   %span{ :class => "vert" }
     = f.label(:status)
-    = f.select(:status, Task.status_array, {:include_blank => true})
+    = f.select(:status, Task.status_array)
 
 %span{ :class => "vert" }
   = f.label(:category)
