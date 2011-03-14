@@ -107,12 +107,11 @@ class UsersController < AdminController
     email_address = params[:email_address]
     respond_to do |format|
       format.html do
-        new_address = User.current_user.email_addresses.create :email_address => email_address
-        if new_address.valid?
+        new_address = User.current_user.email_addresses.build :email_address => email_address
+        if new_address.save
           flash[:notice] = I18n.translate :added_email_address
         else
           flash[:error] = I18n.translate :error_adding_email_address
-          User.current_user.email_addresses.delete new_address
         end
         redirect_to email_addresses_path
       end
