@@ -14,6 +14,8 @@ base:
   # Only v2 is currently supported
   # google_api_version: 2
   default_admin_uid: trisano_admin # the initial user that has admin privileges
+  # used when generating urls in mailings. 
+  host: "localhost:3000"
 
   # Configuration options for HL7 ACK^R01^ACK messages
   hl7:
