@@ -32,7 +32,7 @@
 
 %span{ :class => "vert" }
   = f.label(:priority)
-  = f.select(:priority, [[t('low'), "low"], [t('medium'), "medium"], [t('high'), "high"]], {:include_blank => true})
+  = f.select(:priority, Task.priority_array, {:include_blank => @task.new_record?})
 
 %span{ :class => "vert" }
   = f.label(:due_date)

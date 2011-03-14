@@ -22,7 +22,7 @@ describe EmailAddress do
     it { should validate_presence_of(:email_address) }
 
     it 'should not allow duplicate e-mail addresses' do
-      lambda { EmailAddress.create! :email_address => 'user@example.com' }.should raise_error
+      lambda { 2.times { EmailAddress.create! :email_address => 'user@example.com' } }.should raise_error
     end
 
     it 'should not allow a blank e-mail address' do

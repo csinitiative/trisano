@@ -24,6 +24,18 @@ class Task < ActiveRecord::Base
   has_many   :repeating_tasks, :class_name => 'Task',  :foreign_key => :repeating_task_id
 
   class << self
+    def priority_array
+      [
+        [I18n.t('low')   , "low"   ],
+        [I18n.t('medium'), "medium"],
+        [I18n.t('high')  , "high"  ]
+      ]
+    end
+
+    def valid_priorities
+      @valid_priorities ||= priority_array.map { |priority| priority.last }
+    end
+
     def status_array
       [
         [I18n.t('task_statuses.pending'), "pending"],
@@ -53,12 +65,14 @@ class Task < ActiveRecord::Base
   validates_presence_of :user_id, :name
   validates_length_of :name, :maximum => 255, :allow_blank => true
   validates_inclusion_of :status, :in => self.valid_statuses, :message => :is_not_valid
-  validates_date  :due_date, 
+  validates_inclusion_of :priority, :in => self.valid_priorities, :message => :is_not_valid
+  validates_date  :due_date,
                   :on_or_before => lambda { 2.years.from_now.to_date },
                   :on_or_before_message => :due_date_range
   validates_date :until_date, :allow_blank => true
 
   before_validation :set_status
+  before_validation :set_priority
   before_save :create_note
   after_create :create_repeating_tasks
 
@@ -102,7 +116,7 @@ class Task < ActiveRecord::Base
     if new_record?
       if !child_task && !self.notes.blank?
         note = I18n.translate("system_notes.task_created", :name => self.name, :notes => self.notes, :locale => I18n.default_locale)
-        
+
         if should_repeat?
           note << "\n\n"
           note << I18n.translate("system_notes.task_repeats",
@@ -111,7 +125,7 @@ class Task < ActiveRecord::Base
             :locale => I18n.default_locale
           )
         end
-        
+
         self.event.add_note(note, "clinical")
       end
     else
@@ -129,6 +143,10 @@ class Task < ActiveRecord::Base
 
   def set_status
     self.status = "pending" if new_record?
+  end
+
+  def set_priority
+    self.priority = "medium" if self.priority.blank?
   end
 
   def create_repeating_tasks
@@ -171,5 +189,5 @@ class Task < ActiveRecord::Base
       end
     end
   end
-  
+
 end
