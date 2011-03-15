@@ -20,3 +20,11 @@ end
 Then /^I should not see any tasks$/ do
   response.should_not have_xpath("//table[@id='task-list']")
 end
+
+Then /^I should not see a blank Status option$/ do
+  response.should_not have_xpath("//select[@id='task_status']/option[text()='']")
+end
+
+Then /^I should see a Status option labeled "([^\"]*)"$/ do |label|
+  response.should have_xpath("//select[@id='task_status']/option[text()='#{label}']")
+end

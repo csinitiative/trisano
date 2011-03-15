@@ -283,6 +283,9 @@ def path_to(page_name)
   when /the manage e-mail addresses page/i
     email_addresses_path
 
+  when /the edit task page/i
+    edit_event_task_path @event, @event.tasks.first
+
   when /edit the core field/i
     edit_core_field_path @core_field
 
