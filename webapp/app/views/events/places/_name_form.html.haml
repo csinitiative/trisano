@@ -26,7 +26,7 @@
         =h(p.object.name)
     -core_element :place_type_id, p, :horiz do
       - if p.object.new_record?
-        = exposed_type_selector(p)
+        = p.exposed_type_selector
       - else
         =p.label(:place_type_ids)
         =h(p.object.formatted_place_descriptions)
