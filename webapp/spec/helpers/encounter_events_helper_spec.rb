@@ -56,13 +56,9 @@ describe EncounterEventsHelper do
 
       User.stubs(:current_user).returns(users(:default_user))
 
-      # Debt: Test exhibits knowledge of the internals. Need some more fixture/mock work to beef this up.
-      # The following just does a sanity check to make sure that the base search for users in the method
-      # under test does not return any users.
-      users =  User.investigators_for_jurisdictions(User.current_user.jurisdictions_for_privilege(:update_event))
-      users.should be_empty
+      encounter_event = Factory.create(:encounter_event)
 
-      users = helper.users_for_investigation_select
+      users = helper.users_for_investigation_select(encounter_event)
       users.size.should == 1
       users[0].user_name.should == users(:default_user).user_name
     end

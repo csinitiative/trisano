@@ -1,5 +1,8 @@
 Feature: Logging access and reasons for accessing out-of-jurisdiction events
 
+  Background:
+    Given I am logged in as a super user
+
   Scenario: Users should be prompted to enter a reason when accessing an out-of-jurisdiction morbidity event
     Given a morbidity event exists in Out of state with the disease African Tick Bite Fever
     And I am logged in as an investigator

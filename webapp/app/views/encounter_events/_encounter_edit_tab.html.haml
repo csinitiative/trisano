@@ -26,7 +26,7 @@
 
       -core_element(:user_id, pe_fields, :horiz) do
         =pe_fields.label(:user_id)
-        =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name, {}, {:class => 'required'})
+        =pe_fields.collection_select(:user_id, users_for_investigation_select(f.object), :id, :best_name, {}, {:class => 'required'})
 
       -core_element(:encounter_date, pe_fields, :horiz) do
         =pe_fields.label(:encounter_date)

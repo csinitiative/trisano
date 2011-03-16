@@ -6,8 +6,10 @@ Factory.define :user do |u|
 end
 
 Factory.define :privileged_user, :parent => :user do |u|
-  u.after_build   { |user| Factory(:privileged_role_membership, :user => user) }
-  u.after_create  { |user| user.reload }
+  u.after_create  do |user|
+    Factory(:privileged_role_membership, :user => user)
+    user.reload
+  end
 end
 
 Factory.define :privileged_role, :class => 'role' do |sr|

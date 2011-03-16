@@ -23,6 +23,10 @@ Given /^a ([^\"]*) event in jurisdiction "([^\"]*)" assigned to "([^\"]*)" queue
   @event.save!
 end
 
+Given /^a ([^\"]*) event exists in jurisdiction "([^\"]*)"$/ do |type, jurisdiction|
+  @event = create_basic_event(type, get_random_word, "African Tick Bite Fever", jurisdiction)
+end
+
 Given /^a ([^\"]*) event with record number "([^\"]*)"$/ do |type, record_number|
   @event = create_basic_event(type, get_random_word, "African Tick Bite Fever", "Unassigned")
   @event.save!

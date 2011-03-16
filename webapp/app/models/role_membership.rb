@@ -23,7 +23,8 @@ class RoleMembership < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
   has_many :privileges_roles, :uniq => true, :foreign_key => [:role_id]
 
-
+  validates_presence_of :jurisdiction_id
+  validates_presence_of :role_id
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
     :message => I18n.translate('role_membership_already_assigned')
 

@@ -67,10 +67,10 @@ class User < ActiveRecord::Base
     def set_default_admin_uid(uid, options={})
       reset_column_information
       admin_role = Role.find_by_role_name("Administrator")
-      options = options.merge(:role_membership_attributes => [{ :role_id => admin_role.id, :jurisdiction_id => Place.unassigned_jurisdiction.entity_id }])
-      user = User.find_or_create_by_uid(uid)
-      user.user_name = uid
-      user.update_attributes!(options)
+      unassigned_jurisdiction = Place.unassigned_jurisdiction.entity
+      user = User.find_or_create_by_uid(:uid => uid, :user_name => uid)
+      RoleMembership.create(:user => user, :role => admin_role, :jurisdiction => unassigned_jurisdiction)
+      user.update_attributes(options)
     end
 
     def load_default_users(users)

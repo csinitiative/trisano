@@ -24,7 +24,7 @@
       %span.horiz
         =pe_fields.label(:user_id)
         -options = f.object.new_record? ? {:selected => User.current_user.id} : {}
-        =pe_fields.collection_select(:user_id, users_for_investigation_select, :id, :best_name, options, { :class => "required_if_others" })
+        =pe_fields.collection_select(:user_id, users_for_investigation_select(f.object), :id, :best_name, options, { :class => "required_if_others" })
 
       %span.horiz
         =pe_fields.label(:encounter_date)

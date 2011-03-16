@@ -15,13 +15,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe EmailAddress do
   context 'general' do
     it { should validate_presence_of(:email_address) }
 
     it 'should not allow duplicate e-mail addresses' do
+      EmailAddress.create! :email_address => 'user@example.com'
       lambda { EmailAddress.create! :email_address => 'user@example.com' }.should raise_error
     end
 

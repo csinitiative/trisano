@@ -46,6 +46,11 @@ class EncounterEvent < HumanEvent
     self.soft_delete
   end
 
+  # Encounter investigator is in a different place, so we're going to step on the events investigator
+  def investigator
+    self.participations_encounter.try(:user)
+  end
+
   private
 
   def validate

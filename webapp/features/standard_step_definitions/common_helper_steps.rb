@@ -43,6 +43,10 @@ Given(/^I am logged in as a data entry tech/) do
   log_in_as("data_entry_tech")
 end
 
+Given /^I am logged in as "(.*)"$/ do |uid|
+  log_in_as(uid)
+end
+
 #
 # Basic moving around helpers
 #

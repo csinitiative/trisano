@@ -25,9 +25,12 @@ module EncounterEventsHelper
   # Builds a list of users for use in the investigator drop down for encounter events. It
   # adds the current user to the front of the list if the current user isn't included in the
   # results pulled back based on permissions.
-  def users_for_investigation_select
-    users =  User.investigators_for_jurisdictions(User.current_user.jurisdictions_for_privilege(:update_event))
+  def users_for_investigation_select(encounter)
+    users = User.investigators_for_jurisdictions(encounter.primary_jurisdiction)
     users.unshift(User.current_user) unless users.include?(User.current_user)
+    if encounter.investigator && !users.include?(encounter.investigator)
+      users.unshift(encounter.investigator)
+    end
     users
   end
 

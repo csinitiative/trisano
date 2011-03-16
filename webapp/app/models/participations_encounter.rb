@@ -38,6 +38,7 @@ class ParticipationsEncounter < ActiveRecord::Base
     end
   end
 
+  validates_presence_of :user_id
   validates_presence_of :encounter_date, :user, :encounter_location_type
   validates_date :encounter_date, :on_or_before => lambda { Date.today }
   validates_inclusion_of :encounter_location_type, :in => self.valid_location_types, :message => "is not valid"
