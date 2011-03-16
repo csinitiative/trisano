@@ -63,6 +63,21 @@ describe Task do
     end
   end
 
+  it 'should not allow an update with an invalid priority' do
+    @task.save!
+    @task.priority = 'not_a_real_priority'
+    @task.save.should be_false
+    @task.errors.on(:priority).should == "is not valid"
+  end
+
+  it 'should allow updates with valid priorities' do
+    @task.save!
+    Task.valid_priorities.each do |priority|
+      @task.priority = priority
+      @task.save.should be_true
+    end
+  end
+
   describe 'working with categories' do
 
     it 'should return its category name' do

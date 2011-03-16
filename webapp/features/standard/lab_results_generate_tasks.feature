@@ -20,7 +20,7 @@ Feature: Adding Lab Results to an Event Generates a Task
     Then I should be on the show CMR page
      And I should see the following tasks:
        | Due date | Name                        | Description | Category | Priority | Assigned to  | Status  |
-       | Today    | New lab result added: Lumpy |             |          |          | default_user | Pending |
+       | Today    | New lab result added: Lumpy |             |          | Medium   | default_user | Pending |
 
   Scenario: Lab result entered by investigator who is responsible for the event
     Given I am logged in as a super user
@@ -58,7 +58,7 @@ Feature: Adding Lab Results to an Event Generates a Task
       And I should see a note for the assigned lab
       And I should see the following tasks:
         | Due date | Name                           | Description | Category | Priority | Assigned to  | Status  |
-        | Today    | New lab result added: Hep-B Ag |             |          |          | investigator | Pending |
+        | Today    | New lab result added: Hep-B Ag |             |          | Medium   | investigator | Pending |
 
   Scenario: ELR assigned to event by user who is responsible for the event
     Given I am logged in as a super user
