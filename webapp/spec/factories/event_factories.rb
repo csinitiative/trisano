@@ -163,6 +163,7 @@ end
 Factory.define :question do |q|
   q.question_text { Factory.next(:question_text) }
   q.short_name    { Factory.next(:short_name) }
+  q.data_type     'single_line_text'
 end
 
 Factory.define :question_single_line_text, :parent => :question do |q|

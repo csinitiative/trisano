@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Answer do
   
-  before(:each) do 
+  before(:each) do
     question = Question.new :short_name => 'short_name_01'
     @answer = Answer.new :question => question
     @answer.text_answer = 's' * 2000    
@@ -74,6 +74,21 @@ describe Answer do
     @answer.text_answer = '01-21-2009'
     @answer.save!
     @answer.text_answer.should == '2009-01-21'
+  end
+
+  describe "constraints" do
+
+    it "should only allow one answer per question per event" do
+      event = Factory.create(:morbidity_event)
+      question = Factory.create(:question)
+      original_answer = Factory.build(:answer, :question_id => question.id, :event_id => event.id)
+      duplicate_answer = Factory.build(:answer, :question_id => question.id, :event_id => event.id)
+      
+      original_answer.save.should be_true
+      duplicate_answer.save.should be_false
+      duplicate_answer.errors.on(:question_id).should == "has already been taken"
+    end
+
   end
 
 end

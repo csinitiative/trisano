@@ -35,6 +35,7 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  validates_uniqueness_of :question_id, :scope => :event_id
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
