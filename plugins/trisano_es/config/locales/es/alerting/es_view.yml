@@ -1,0 +1,23 @@
+en:
+
+  alerting:
+    CmrCreatedSubscription: 'CMR Created (EN)'
+    manage_alerts: Manage Alert Subscriptions (EN)
+    alerts: Alerts (EN)
+    cmr_created: CMR Created Alerts(EN)
+    subject: 'Subject(EN)'
+    deliver_to: Deliver to(EN)
+    send_to: Send to(EN)
+    to_dashboard: 'Dashboard(EN)'
+    subscriptions: Alert Subscriptions(EN)
+    no_subscription_destination: 'Please select a destination for alerts(EN)'
+    subscribe:
+      cmr_created: 'Subscribe to CMR Created Alerts(EN)'
+      button: Subscribe(EN)
+      success: '{{type}} subscription successful!(EN)'
+
+  activerecord:
+    attributes:
+      alert_subscription:
+        subject: Subject(EN)
+        to_dashboard: 'Dashboard (EN)'
