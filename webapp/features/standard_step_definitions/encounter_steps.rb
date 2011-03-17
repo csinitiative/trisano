@@ -11,15 +11,3 @@ Given /the encounter investigator is "(.*)"$/ do |uid|
     @encounter.update_attributes!(:participations_encounter => @participations_encounter)
   end
 end
-
-Then /^I should see "(.+)" in the encounters table$/ do |expected|
-  response.should have_tag('table#encounters') do
-    with_tag("td", expected)
-  end
-end
-
-Then /^I should not see "(.+)" in the encounters table$/ do |expected|
-  response.should have_tag('table#encounters') do
-    without_tag("td", expected)
-  end
-end

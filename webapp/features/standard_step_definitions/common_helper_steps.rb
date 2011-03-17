@@ -194,6 +194,15 @@ Then /^I should see the following:$/ do |values|
   end
 end
 
+Then /^I should see "([^\"]*)" in the (.+) table$/ do |text, table|
+    response.should have_xpath("//*[@id='#{table}']//td[contains(text(),'#{text}')]")
+end
+
+Then /^I should not see "([^\"]*)" in the (.+) table$/ do |text, table|
+    response.should_not have_xpath("//*[@id='#{table}']//td[contains(text(),'#{text}')]")
+end
+
+
 #
 # define tag behavior
 #
