@@ -15,19 +15,26 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+\set ON_ERROR_STOP 1
+
 BEGIN;
+DROP SCHEMA IF EXISTS trisano CASCADE;
 CREATE SCHEMA trisano;
 ALTER SCHEMA trisano OWNER TO trisano_su;
 COMMIT;
 
 BEGIN;
+DROP SCHEMA IF EXISTS population CASCADE;
 CREATE SCHEMA population;
 ALTER SCHEMA population OWNER TO trisano_su;
 COMMIT;
 
 BEGIN;
+\set ON_ERROR_STOP 0
 CREATE LANGUAGE plpgsql;
 COMMIT;
+
+\set ON_ERROR_STOP 1
 
 BEGIN;
 -- Running this bit on an already initialized database will result in errors.
