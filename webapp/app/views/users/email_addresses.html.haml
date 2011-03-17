@@ -1,6 +1,8 @@
 - content_for :title do
   = t :manage_email_addresses
 
+= link_to t(:back_to, :name => t(:user_settings)), settings_path
+
 #email_addresses
   - email_addresses = User.current_user.email_addresses
   - unless email_addresses.empty?
