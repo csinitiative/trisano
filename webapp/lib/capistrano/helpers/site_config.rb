@@ -8,6 +8,7 @@ module Capistrano::Helpers
       config = config.merge google_api_config
       config = config.merge telephone_config
       config = config.merge locale_config
+      config = config.merge mailer_config
       config.each { |key, value| config.delete(key) if value.nil? }
       config
     end
@@ -73,6 +74,12 @@ module Capistrano::Helpers
       config = {}
       config['allow_switching'] = locale_switching if exists? :locale_switching
       config.empty? ? {} : { 'locale' => config }
+    end
+
+    def mailer_config
+      config = {}
+      config['mailer'] = safe_fetch :mailer || {}
+      config
     end
 
     # shortcut for: value if exists? :value

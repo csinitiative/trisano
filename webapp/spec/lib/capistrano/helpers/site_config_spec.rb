@@ -130,5 +130,20 @@ module Capistrano::Helpers
     it "defaults the default_admin uid to trisano_admin" do
       generate_site_config['default_admin_uid'].should == 'trisano_admin'
     end
+
+    it "sets the smtp mailer options" do
+      set :mailer, :smtp => {
+        :address => 'localhost',
+        :port => 587, 
+        :user_name => 'joe@localhost',
+        :password => 'password',
+        :enable_starttls_auto => true
+      }
+      generate_site_config['mailer'][:smtp][:address].should == 'localhost'
+      generate_site_config['mailer'][:smtp][:port].should == 587
+      generate_site_config['mailer'][:smtp][:user_name].should == 'joe@localhost'
+      generate_site_config['mailer'][:smtp][:password].should == 'password'
+      generate_site_config['mailer'][:smtp][:enable_starttls_auto].should == true
+    end
   end
 end

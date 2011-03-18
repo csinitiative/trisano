@@ -46,3 +46,13 @@ set :form_builder_phone, "^\d{3}-\d{3}-\d{4}$"
 
 ## Locale configuration
 set :locale_switching, false
+
+## Set mailer behavior
+set :mailer, :smtp => {
+  :address => 'localhost',
+  :port => 587,
+  :user_name => 'joe@localhost',
+  :password => 'password',
+  :enable_starttls_auto => true
+}
+

@@ -16,6 +16,31 @@ base:
   default_admin_uid: trisano_admin # the initial user that has admin privileges
   # used when generating urls in mailings. 
   host: "localhost:3000"
+  # Configures the mailer. 
+  mailer:
+    ## uncomment smtp block to use an smtp server for mailing
+    #smtp:    
+    #  # Set ip or url of the smtp server
+    #  address: localhost
+    #  # set the port, if it doesn't run on 25
+    #  port: 25
+    #  # The HELO domain (the domain you're sending mail from)
+    #  domain: mail.from.domain
+    #  # The username for authentication
+    #  user_name: your_name
+    #  # And the password
+    #  password: your_password
+    #  # The type of authentication. Options are plain, login, or cram_md5
+    #  authentication: plain
+    #  # enable TLS
+    #  enable_starttls_auto: true
+    ## uncomment the sendmail block to use a sendmail binary
+    #sendmail:
+    #  # the path to the sendmail executable
+    #  location: /usr/sbin/sendmail
+    #  # command line arguments for sendmail
+    #  arguments: -i -t
+
 
   # Configuration options for HL7 ACK^R01^ACK messages
   hl7:
@@ -62,6 +87,7 @@ test:
   auth_src_env: TRISANO_UID
   auth_allow_user_switch: true
   max_search_results: 50
+  mailer: test
 
 feature:
   inherit: test
