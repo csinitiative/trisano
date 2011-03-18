@@ -104,5 +104,4 @@ describe MorbidityEvent do
       event.jurisdiction.should be_nil
     end
   end
-
 end

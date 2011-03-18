@@ -305,8 +305,12 @@ class HumanEvent < Event
     )
   end
 
-  def definitive_lab_collection_date
-    labs.collect{|l| l.lab_results.collect{|r| r.collection_date}}.flatten.compact.sort.first
+  def definitive_lab_date
+    labs.collect do |l|
+      l.lab_results.collect do |r|
+        r.collection_date || r.lab_test_date
+      end
+    end.flatten.compact.sort.first
   end
 
   def set_primary_entity_on_secondary_participations
@@ -857,7 +861,7 @@ class HumanEvent < Event
   def resolve_onset_date
     safe_call_chain(:disease_event, :disease_onset_date) ||
       safe_call_chain(:disease_event, :date_diagnosed)   ||
-      definitive_lab_collection_date ||
+      definitive_lab_date ||
       self.first_reported_PH_date   ||
       self.created_at.try(:to_date) ||
       Date.today

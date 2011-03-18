@@ -227,7 +227,7 @@ class MorbidityEvent < HumanEvent
     mmwr = Mmwr.new({
         :onsetdate => disease.try(:disease_onset_date),
         :diagnosisdate => disease.try(:date_diagnosed),
-        :labresultdate => definitive_lab_collection_date,
+        :labresultdate => definitive_lab_date,
         :firstreportdate => self.first_reported_PH_date,
         :event_created_date => new_record? ? Date.today : self.created_at.to_date
       })
