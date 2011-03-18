@@ -65,6 +65,8 @@
           = ca.label(:postal_code)
           = ca.text_field(:postal_code, {:size => 7, :maxlength=> 10})
 
+        =render_extensions :address_extension_renderers, :address_form => ca
+
     %tr
       %th.forminformation
         =t "edit_phone"
