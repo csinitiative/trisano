@@ -19,15 +19,14 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <fieldset>
   <div id="reporting_agencies">
-    <% core_section :reported_dates_section, f do %>
+    <fieldset class="form">
+      <legend><%= t(:reported_dates) %></legend>
       <div id="reported_dates">
         <span class="vert-break"></span>
-        <% core_element :first_reported_PH_date, f, :horiz do %>
-          <%= f.label(:first_reported_PH_date) %>
-          <%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now, :class => 'required') %>
-        <% end %>
+        <%= f.label(:first_reported_PH_date) %>
+        <%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now, :class => 'required') %>
       </div>
-    <% end %>
+    </fieldset>
   </div>
   <%= render :partial => 'events/people/person_legend' %>
   <div id='person_form'>
