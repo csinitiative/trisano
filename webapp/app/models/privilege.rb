@@ -19,6 +19,8 @@ class Privilege < ActiveRecord::Base
   has_many :privileges_roles
   has_many :roles, :through => :privileges_roles
 
+  validates_uniqueness_of :priv_name
+
   class << self
     def investigate_event
       find_by_priv_name('investigate_event')

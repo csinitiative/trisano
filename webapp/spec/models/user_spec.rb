@@ -136,7 +136,8 @@ describe User, "Setting role memberships and entitlements via User attributes" d
 
       before(:each) do
         @admin_role =Factory.create(:role, :role_name => "Administrator")
-        @administer_privilege = Factory.create(:privilege, :priv_name => "administer")
+        @administer_privilege = Privilege.find_by_priv_name('administer')
+        @administer_privilege = Factory.create(:privilege, :priv_name => "administer") if @administer_privilege.nil?
         add_privilege_to_role_in_all_jurisdictions(@administer_privilege, @admin_role)
 
         @user.attributes = {
@@ -155,7 +156,7 @@ describe User, "Setting role memberships and entitlements via User attributes" d
       end
 
       it "should be an admin" do
-        @user.save
+        @user.save!
         @user.is_admin?.should be_true
       end
 
@@ -340,7 +341,9 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @state_manager_role =Factory.create(:role, :role_name => "State Manager")
 
         ["view_event", "create_event", "update_event", "approve_event_at_state", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @state_manager_role)
+          privilege = Privilege.find_by_priv_name(priv_name)
+          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
+          add_privilege_to_role_in_all_jurisdictions(privilege, @state_manager_role)
         end
         
         @user.attributes = {
@@ -437,7 +440,9 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @lhd_manager_role =Factory.create(:role, :role_name => "LHD Manager")
 
         ["view_event", "create_event", "update_event", "approve_event_at_state", "approve_event_at_lhd", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @lhd_manager_role)
+          privilege = Privilege.find_by_priv_name(priv_name)
+          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
+          add_privilege_to_role_in_all_jurisdictions(privilege, @lhd_manager_role)
         end
         
         @user.attributes = {
@@ -529,7 +534,9 @@ describe User, "Setting role memberships and entitlements via User attributes" d
         @surveillance_manager_role =Factory.create(:role, :role_name => "Surveillance Manager")
 
         ["view_event", "create_event", "update_event", "accept_event_for_lhd", "route_event_to_investigator", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          add_privilege_to_role_in_all_jurisdictions(Factory(:privilege, :priv_name => priv_name), @surveillance_manager_role)
+          privilege = Privilege.find_by_priv_name(priv_name)
+          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
+          add_privilege_to_role_in_all_jurisdictions(privilege, @surveillance_manager_role)
         end
 
         @user.attributes = {
