@@ -30,4 +30,4 @@
       =t 'edit_privileges'
     %th
   - Privilege.all.sort_by(&:name).each do |privilege|
-    = render :partial => 'privilege', :locals => { :f => f, :role => @role, :privilege => privilege }
+    = render :partial => 'privilege', :locals => { :role => @role, :privilege => privilege }
