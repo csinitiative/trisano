@@ -262,6 +262,9 @@ def path_to(page_name)
   when /the AVR group edit page/
     edit_avr_group_path(@avr_group)
 
+  when /the roles page/i
+    roles_path
+
   when /the edit "([^\"]*)" role page/i
     edit_role_path(Role.find_by_role_name($1))
 

@@ -29,9 +29,5 @@
     %th.forminformation
       =t 'edit_privileges'
     %th
-  %tr#add_privileges_roles
-    %td
-      .tools
-        = add_privilege_link t("add_privilege")
-    %td
-  = render :partial => 'privilege', :collection => @role.privileges_roles
+  - Privilege.all.sort_by(&:name).each do |privilege|
+    = render :partial => 'privilege', :locals => { :f => f, :role => @role, :privilege => privilege }

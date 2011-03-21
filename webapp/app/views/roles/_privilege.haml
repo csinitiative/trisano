@@ -15,21 +15,7 @@
 
 
 %tr.privileges_role
+  %td.formname
+    = check_box_tag("role[privileges_role_attributes][][privilege_id]", privilege.id, role.privilege_ids.include?(privilege.id), :id => "privilege_id_#{privilege.id}")
+    = label_tag("privilege_id_#{privilege.id}", privilege.name, :style => 'display: inline;')
   %td
-    .formname
-      - fields_for "role[privileges_role_attributes][]", privilege do |pr_form|
-        - unless privilege.new_record?
-          .tools
-            = h(privilege.privilege.name)
-
-          -# Make existing records look new
-          - privilege.id = nil
-
-          = pr_form.hidden_field(:privilege_id)
-        - else
-          = pr_form.label(:privilege_id)
-          = pr_form.collection_select(:privilege_id, Privilege.find(:all).sort_by(&:name), :id, :name)
-
-  %td
-    .tools
-      = link_to_function t("remove"), "$(this).up('.privileges_role').remove()", {:style => "position: absolute; right: 15px;", :id => "remove_privilege_role_link"}
