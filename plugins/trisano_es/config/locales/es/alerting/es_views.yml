@@ -1,5 +1,10 @@
 es:
 
+  trisano:
+    privileges:
+      manage_alert_subscriptions: Manage alert subscriptions (EN)
+      manage_alert_subscriptions_for_others: Manage alert subscriptions for others (EN)
+
   alerting:
     CmrCreatedSubscription: 'CMR Created (EN)'
     manage_alerts: Manage Alert Subscriptions (EN)
