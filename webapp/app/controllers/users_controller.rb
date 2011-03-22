@@ -118,6 +118,11 @@ class UsersController < AdminController
     end
   end
 
+  def destroy_email_address
+    EmailAddress.find(params[:email_address_id]).destroy
+    redirect_to email_addresses_path
+  end
+
   def update
     params[:user][:role_membership_attributes] ||= {}
     @user = User.find(params[:id])
