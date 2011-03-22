@@ -134,4 +134,11 @@ describe ApplicationHelper do
 
   end
 
+  describe "underscore_form_object_name" do
+    it "should replace open brackets with underscores and remove closing brackets" do
+      form_object_name = "morbidity_event[diagnostic_facilities_attributes][0][place_entity_attributes][canonical_address_attributes][street_number]"
+      helper.underscore_form_object_name(form_object_name).should == "morbidity_event_diagnostic_facilities_attributes_0_place_entity_attributes_canonical_address_attributes_street_number"
+    end
+  end
+
 end
