@@ -39,10 +39,12 @@
         - address.code_field :state_id, :state, :horiz, :include_blank => true
         - address.code_field :county_id, :county, :horiz, :include_blank => true
         - address.core_text :postal_code, :horiz, :size => 7, :maxlength => 10
-      - if df.new_record?
-        &nbsp;
-        %br
-        = link_to_function(t("remove"), "this.up().remove()", :id => "remove_#{uniq_id}")
-      - else
-        = df.remove_check_box
+
+        - if df.new_record?
+          &nbsp;
+          %br
+          = render_extensions :address_extension_renderers, :address_form => address
+          = link_to_function(t("remove"), "this.up().remove()", :id => "remove_#{uniq_id}")
+        - else
+          = df.remove_check_box
     %hr
