@@ -202,6 +202,10 @@ Then /^I should not see "([^\"]*)" in the (.+) table$/ do |text, table|
     response.should_not have_xpath("//*[@id='#{table}']//td[contains(text(),'#{text}')]")
 end
 
+Then /^I should not see errors on the "([^\"]*)" field$/ do |text|
+  response.should have_tag('label', text)
+  response.should_not have_tag('div.fieldWithErrors label', text)
+end
 
 #
 # define tag behavior

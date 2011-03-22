@@ -271,6 +271,9 @@ def path_to(page_name)
   when /the CMR search page/i
     search_cmrs_path
 
+  when /edit the person "(.+)"/i
+    edit_person_path(Person.find_by_first_name_and_last_name(*$1.split(' ')).entity_id)
+
   when /the people search page/i
     people_path
 

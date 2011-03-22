@@ -39,10 +39,6 @@ class PeopleController < ApplicationController
 
   def new
     @person = PersonEntity.new
-    @person.person = Person.new
-    @person.canonical_address = Address.new
-    @person.telephones << Telephone.new
-    @person.email_addresses << EmailAddress.new
 
     respond_to do |format|
       format.html
@@ -52,30 +48,15 @@ class PeopleController < ApplicationController
 
   def edit
     @person = PersonEntity.find(params[:id])
-
-    if @person.canonical_address.nil?
-      @person.canonical_address = Address.new
-    end
-
-    if @person.telephones.empty?
-      @person.telephones << Telephone.new
-    end
-
-    if @person.email_addresses.empty?
-      @person.email_addresses << EmailAddress.new
-    end
-
   end
 
   def create
     go_back = params.delete(:return)
 
     @person = PersonEntity.new
-    @person.person = Person.new
-    @person.update_attributes(params[:person_entity])
 
     respond_to do |format|
-      if @person.save
+      if @person.update_attributes(params[:person_entity])
         flash[:notice] = t("person_created")
         format.html {
           if go_back
@@ -86,9 +67,6 @@ class PeopleController < ApplicationController
         }
         format.xml  { render :xml => @person, :status => :created, :location => @person }
       else
-        @person.canonical_address = Address.new
-        @person.telephones << Telephone.new
-        @person.email_addresses << EmailAddress.new
         format.html { render :action => "new" }
         format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
       end
