@@ -296,6 +296,30 @@ Then /^I should see the mortality data in the right place$/ do
   end
 end
 
+When /^I enter a diagnostic facility name and type$/ do
+  When %{I fill in "Name" with "Zed's Lab" within ".new_diagnostic_facility"}
+  When %{I check "Laboratory" within ".new_diagnostic_facility"}
+end
+
+When /^I enter a place exposure's name and type$/ do
+  When %{I fill in "Name" with "Olive Guardian" within "#new_place_exposure"}
+  When %{I check "Correctional Facility" within "#new_place_exposure"}
+end
+
+When /^I enter a diagnostic facility address$/ do
+  When %{I fill in "Street number" with "1" within ".new_diagnostic_facility"}
+  When %{I fill in "Street name" with "Happy" within ".new_diagnostic_facility"}
+  When %{I select "Utah" from "State" within ".new_diagnostic_facility"}
+  When %{I fill in "Zip code" with "55555" within ".new_diagnostic_facility"}
+end
+
+When /^I enter the place exposure's address$/ do
+  When %{I fill in "Street number" with "1" within "#new_place_exposure"}
+  When %{I fill in "Street name" with "Happy" within "#new_place_exposure"}
+  When %{I select "Utah" from "State" within "#new_place_exposure"}
+  When %{I fill in "Zip code" with "55555" within "#new_place_exposure"}
+end
+
 # Local Variables:
 # mode: ruby
 # tab-width: 2

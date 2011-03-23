@@ -66,7 +66,7 @@ class HumanEvent < Event
     :reject_if => proc { |attrs| attrs.has_key?("person_entity_attributes") && attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| if v == 'clinician' then true else v.blank? end } }
   accepts_nested_attributes_for :diagnostic_facilities,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs.has_key?("place_entity_attributes") && attrs["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? } }
+    :reject_if => :place_and_canonical_address_blank?
   accepts_nested_attributes_for :labs,
     :allow_destroy => true,
     :reject_if => proc { |attrs| reject_or_rewrite_attrs(attrs) }
@@ -400,39 +400,6 @@ class HumanEvent < Event
   end
 
   def update_from_params(event_params)
-=begin
-    labs_attributes = event_params['labs_attributes']
-
-    if labs_attributes
-      i = 0
-
-      loop do
-        lab_attributes = labs_attributes[i.to_s]
-        break unless lab_attributes
-        place_entity_attributes = lab_attributes['place_entity_attributes']
-        place_attributes = place_entity_attributes['place_attributes']
-
-        new_lab_name = place_attributes['name']
-
-        old_place = Place.find place_attributes['id']
-
-        if new_lab_name != old_place.name and
-          (new_place=Place.find_by_name(new_lab_name))
-          # This exists, just associate this PlaceEntity instead of
-          # the old one.
-          place_attributes['id'] = new_place.id
-          place_entity_attributes['id'] = new_place.entity.id
-
-          lab = Lab.find lab_attributes['id']
-          lab.secondary_entity_id = new_place.entity.id
-          lab.save!
-        end
-
-        i += 1
-      end
-    end
-
-=end
     self.attributes = event_params
   end
 
@@ -938,4 +905,5 @@ class HumanEvent < Event
       base_errors.values.each { |msg| self.errors.add(:base, *msg) }
     end
   end
+
 end

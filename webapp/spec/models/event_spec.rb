@@ -150,8 +150,11 @@ describe MorbidityEvent do
         end
 
         it "should reject place exposures with no information" do
-          @event.place_child_events_attributes = [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "" } } },
-              "participations_place_attributes" => {} } ]
+          @event.place_child_events_attributes = [ { "interested_place_attributes" => {
+            "place_entity_attributes" => {
+              "place_attributes" => {
+                "name" => "" } } },
+            "participations_place_attributes" => {} } ]
           @event.place_child_events.should be_empty
         end
 

@@ -17,7 +17,7 @@
 
 class DiagnosticFacility < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
-  accepts_nested_attributes_for :place_entity, :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :place_entity, :reject_if => :place_and_canonical_address_blank?
 
   class << self
     def blank

@@ -97,13 +97,14 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     require 'rails_inheritable_attributes_manager'
     require 'validates_timeliness_formats'
-    require "active_record/errors.rb"
-    require "active_record/scopes.rb"
-    require "active_record/rollback_transactions.rb"
-    require "attachment_fu/attachment_fu_validation_patch.rb"
-    require "mmwr/mmwr.rb"
-    require "blankable.rb"
-    require "extend_better_nested_set.rb"
+    require "active_record/errors"
+    require "active_record/scopes"
+    require "active_record/rollback_transactions"
+    require "active_record/nested_attributes_helper"
+    require "attachment_fu/attachment_fu_validation_patch"
+    require "mmwr/mmwr"
+    require "blankable"
+    require "extend_better_nested_set"
     require 'export/cdc'
     require 'utilities'
     require 'will_paginate'
@@ -116,7 +117,7 @@ Rails::Initializer.run do |config|
     require 'name_and_birthdate_search'
     require 'new_cmr_search_results'
     require 'routing/workflow_helper'
-    require 'hl7/extensions.rb'
+    require 'hl7/extensions'
     require 'postgres_fu'
     require 'menu_array'
     require 'i18n_logger'

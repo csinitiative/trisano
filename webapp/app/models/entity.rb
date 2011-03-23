@@ -26,9 +26,9 @@ class Entity < ActiveRecord::Base
   has_one :place
   has_one :person
 
-  accepts_nested_attributes_for :canonical_address, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
-  accepts_nested_attributes_for :addresses, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
-  accepts_nested_attributes_for :telephones, :email_addresses, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
+  accepts_nested_attributes_for :canonical_address, :reject_if => :nested_attributes_blank?
+  accepts_nested_attributes_for :addresses, :reject_if => :nested_attributes_blank?, :allow_destroy => true
+  accepts_nested_attributes_for :telephones, :email_addresses, :reject_if => :nested_attributes_blank?, :allow_destroy => true
 
   attr_protected :entity_type
 
@@ -49,4 +49,5 @@ class Entity < ActiveRecord::Base
   def validate
     errors.add(:base, :incomplete) if (person.nil? and place.nil?)
   end
+
 end

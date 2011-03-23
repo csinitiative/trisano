@@ -36,12 +36,24 @@ When /^I follow "(.*)"$/ do |link|
   click_link(link)
 end
 
-When /^I fill in "(.*)" with "(.*)"$/ do |field, value|
+When /^I fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
 
-When /^I select "(.*)" from "(.*)"$/ do |value, field|
+When /^I fill in "([^"]*)" with "([^"]*)" within "([^"]*)"$/ do |field, value, selector|
+  within(selector) do
+    fill_in(field, :with => value)
+  end
+end
+
+When /^I select "([^"]*)" from "([^"]*)"$/ do |value, field|
   select(value, :from => field)
+end
+
+When /^I select "([^"]*)" from "([^"]*)" within "([^"]*)"$/ do |value, field, selector|
+  within(selector) do
+    select(value, :from => field)
+  end
 end
 
 # Use this step in conjunction with Rail's datetime_select helper. For example:
@@ -91,12 +103,18 @@ When /^I select "(.*)" as the "(.*)" date$/ do |date, date_label|
   select_date(date, :from => date_label)
 end
 
-When /^I check "(.*)"$/ do |field|
+When /^I check "([^"]*)"$/ do |field|
   check(field)
 end
 
 When /^I uncheck "(.*)"$/ do |field|
   uncheck(field)
+end
+
+When /^I check "([^"]*)" within "([^"]*)"$/ do |field, selector|
+  within(selector) do
+    check(field)
+  end
 end
 
 When /^I choose "(.*)"$/ do |field|

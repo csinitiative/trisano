@@ -120,7 +120,7 @@ class Event < ActiveRecord::Base
     :reject_if => proc { |attrs| check_contact_attrs(attrs) }
   accepts_nested_attributes_for :place_child_events,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| check_place_attrs(attrs) }
+    :reject_if => :place_exposure_blank?
   accepts_nested_attributes_for :encounter_child_events,
     :allow_destroy => true,
     :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
@@ -141,11 +141,10 @@ class Event < ActiveRecord::Base
     (person_empty && phones_empty && disposition_empty) ? true : false
   end
 
-  def self.check_place_attrs(attrs)
-    place_empty = attrs["interested_place_attributes"]["primary_entity_id"].nil? && attrs["interested_place_attributes"]["place_entity_attributes"]["place_attributes"].all? { |k, v| v.blank? }
-    exposure_empty = attrs["participations_place_attributes"].all? { |k, v| v.blank? }
-
-    (place_empty && exposure_empty) ? true : false
+  def place_exposure_blank?(attrs)
+    attrs["interested_place_attributes"]["primary_entity_id"].nil? && 
+      place_and_canonical_address_blank?(attrs["interested_place_attributes"]) &&
+      nested_attributes_blank?(attrs["participations_place_attributes"])
   end
 
   def self.check_encounter_attrs(attrs)
