@@ -7,13 +7,16 @@
 #email_addresses
   - email_addresses = User.current_user.email_addresses
   - unless email_addresses.empty?
-    %table
-      %h3 Current E-Mail Addresses
+    %table.list
+      %h3
+        =t :current_email_addresses
       %tbody
         - email_addresses.each do |email_address|
           %tr
             %td
-              =email_address.email_address
+              &= email_address.email_address
+            %td
+              =link_to t(:delete), email_address, :method => :delete, :confirm => t(:are_you_sure)
   - else
     %em
       = t :no_email_addresses
@@ -23,4 +26,4 @@
   - form_tag email_addresses_path do
     = label_tag :email_address, t(:add_an_email_address)
     = text_field_tag :email_address
-    = submit_tag 'Add'
+    = submit_tag t :add

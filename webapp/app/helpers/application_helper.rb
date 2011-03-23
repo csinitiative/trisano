@@ -319,7 +319,7 @@ module ApplicationHelper
     returning "" do |result|
       args.each do |meth|
         send(meth).each do |partial_def|
-          partial_def[:locals] = locals.merge(partial_def[:locals] || {})
+          partial_def[:locals] = (partial_def[:locals] || {}).merge(locals)
           result << render(partial_def)
         end
       end
@@ -387,6 +387,10 @@ module ApplicationHelper
     record = args.pop
     name = args.pop
     XmlBuilder.new(name, record, self, options, &block).build
+  end
+
+  def underscore_form_object_name(object_name)
+    object_name.gsub('[', '_').gsub(']', '')
   end
 
 end
