@@ -16,12 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class PeopleController < ApplicationController
+  before_filter :check_role
 
   def index
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs") }, :layout => true, :status => 403 and return
-    end
-
     return unless index_processing
 
     respond_to do |format|
@@ -34,10 +31,6 @@ class PeopleController < ApplicationController
   def show
     @person = PersonEntity.find(params[:id])
 
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
-    end
-
     respond_to do |format|
       format.html
       format.xml  { render :xml => @person }
@@ -46,14 +39,6 @@ class PeopleController < ApplicationController
 
   def new
     @person = PersonEntity.new
-    @person.person = Person.new
-    @person.canonical_address = Address.new
-    @person.telephones << Telephone.new
-    @person.email_addresses << EmailAddress.new
-
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
-    end
 
     respond_to do |format|
       format.html
@@ -63,37 +48,15 @@ class PeopleController < ApplicationController
 
   def edit
     @person = PersonEntity.find(params[:id])
-
-    if @person.canonical_address.nil?
-      @person.canonical_address = Address.new
-    end
-
-    if @person.telephones.empty?
-      @person.telephones << Telephone.new
-    end
-
-    if @person.email_addresses.empty?
-      @person.email_addresses << EmailAddress.new
-    end
-
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
-    end
   end
 
   def create
     go_back = params.delete(:return)
 
     @person = PersonEntity.new
-    @person.person = Person.new
-    @person.update_attributes(params[:person_entity])
-
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
-    end
 
     respond_to do |format|
-      if @person.save
+      if @person.update_attributes(params[:person_entity])
         flash[:notice] = t("person_created")
         format.html {
           if go_back
@@ -104,9 +67,6 @@ class PeopleController < ApplicationController
         }
         format.xml  { render :xml => @person, :status => :created, :location => @person }
       else
-        @person.canonical_address = Address.new
-        @person.telephones << Telephone.new
-        @person.email_addresses << EmailAddress.new
         format.html { render :action => "new" }
         format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
       end
@@ -117,10 +77,6 @@ class PeopleController < ApplicationController
     go_back = params.delete(:return)
 
     @person = PersonEntity.find(params[:id])
-
-    unless User.current_user.is_entitled_to?(:manage_entities)
-      render :partial => "people/permission_denied", :locals => { :reason => t("no_people_management_privs"), :person => @person }, :layout => true, :status => 403 and return
-    end
 
     respond_to do |format|
       if @person.update_attributes(params[:person_entity])
@@ -172,4 +128,9 @@ class PeopleController < ApplicationController
     return true
   end
 
+  def check_role
+    unless User.current_user.is_entitled_to?(:manage_entities)
+      render :file => static_error_page_path(403), :layout => true, :status => 403 and return
+    end
+  end
 end

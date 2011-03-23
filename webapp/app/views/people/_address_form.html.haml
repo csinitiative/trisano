@@ -56,7 +56,7 @@
             =a.core_text_field(:postal_code, {:size => 7, :maxlength=> 10}, event)
         -core_element :district, a, :horiz do
           =a.label :district
-        -address = event.nil? ? @person.canonical_address : event.address
+        -address = f.object.send(address_type)
         -if address.county && address.county.jurisdiction
           %span.data_jurisdiction_name
             =h(address.county.jurisdiction.name)

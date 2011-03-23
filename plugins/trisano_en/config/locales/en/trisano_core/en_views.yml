@@ -925,6 +925,7 @@ en:
   general: "General"
   edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
   manage_email_addresses: "Manage E-Mail Addresses"
+  current_email_addresses: "Current E-Mail Addresses"
   added_email_address: "E-mail address successfully added"
   error_adding_email_address: "Error adding e-mail address"
   no_email_addresses: "No e-mail addresses currently configured"

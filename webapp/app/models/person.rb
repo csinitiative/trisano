@@ -120,6 +120,11 @@ class Person < ActiveRecord::Base
   end
 
   class << self
+    def create_with_entity!(options = {})
+      place_entity = PersonEntity.create!(:person_attributes => options)
+      place_entity.place
+    end
+
     # Defaults to not showing deleted people. Override by providing the option:
     #   :show_deleted => true
     def find_all_for_filtered_view(options = {})

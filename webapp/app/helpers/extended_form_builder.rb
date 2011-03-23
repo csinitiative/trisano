@@ -462,7 +462,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     unless args.first.respond_to?(:new_record?)
       associated_object = @object.send(association_name)
       if associated_object.blank?
-        associated_object = @object.class.reflections[association_name.to_sym].klass.new
+        reflection = @object.class.reflections[association_name.to_sym]
+        if reflection.collection?
+          associated_object = @object.send(association_name).build
+        else
+          associated_object = @object.send("build_#{association_name}")
+        end
         args.unshift associated_object
       end
     end

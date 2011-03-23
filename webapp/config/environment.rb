@@ -101,6 +101,7 @@ Rails::Initializer.run do |config|
     require "active_record/scopes"
     require "active_record/rollback_transactions"
     require "active_record/nested_attributes_helper"
+    require "active_record/reflection_ext"
     require "attachment_fu/attachment_fu_validation_patch"
     require "mmwr/mmwr"
     require "blankable"
