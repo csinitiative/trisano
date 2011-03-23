@@ -38,13 +38,13 @@ module DashboardHelper
         "&nbsp;|&nbsp;" +
         link_to(I18n.t('view_on_calendar'), calendar_path(:month => Time.now.month, :year => Time.now.year))
       )
+    end
 
-      haml_tag :div, :id => 'task_view_settings', :style => 'display: none;' do
-        haml_concat(render :partial => 'filter_tasks_form')
-      end
-      haml_tag :div, :id => 'tasks', :style => 'clear: both;' do
-        haml_concat(render :partial => 'tasks/list', :locals => { :task_owner => User.current_user })
-      end
+    haml_tag :div, :id => 'task_view_settings', :style => 'display: none;' do
+      haml_concat(render :partial => 'filter_tasks_form')
+    end
+    haml_tag :div, :id => 'tasks', :style => 'clear: both;' do
+      haml_concat(render :partial => 'tasks/list', :locals => { :task_owner => User.current_user })
     end
   end
 
