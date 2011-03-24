@@ -14,12 +14,12 @@ base:
   # Only v2 is currently supported
   # google_api_version: 2
   default_admin_uid: trisano_admin # the initial user that has admin privileges
-  # used when generating urls in mailings. 
+  # used when generating urls in mailings.
   host: "localhost:3000"
-  # Configures the mailer. 
+  # Configures the mailer.
   mailer:
     ## uncomment smtp block to use an smtp server for mailing
-    #smtp:    
+    #smtp:
     #  # Set ip or url of the smtp server
     #  address: localhost
     #  # set the port, if it doesn't run on 25

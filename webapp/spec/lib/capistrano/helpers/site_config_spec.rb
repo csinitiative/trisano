@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../../../spec_helper'
 
 module Capistrano::Helpers
 
@@ -23,7 +23,7 @@ module Capistrano::Helpers
       end
       value
     end
-    
+
     before do
       @values = {}
     end
@@ -31,7 +31,7 @@ module Capistrano::Helpers
     after do
       @values.keys.each { |key| self.class.send(:remove_method, key) }
     end
-    
+
     it "only generates default values, when nothing is set" do
       generate_site_config.size.should == 1
     end
@@ -80,7 +80,7 @@ module Capistrano::Helpers
       set :default_admin_id, 'trisano_admin'
       generate_site_config['default_admin_id'].should == 'trisano_admin'
     end
-    
+
     it "sets the receiving faciltiy name for hl7 messages" do
       set :recv_facility, "CSI Dept. of TriSano, Bureau of Informatics^2.16.840.9.886571.2.99.8^ISO"
       generate_site_config['hl7']['recv_facility'].should == "CSI Dept. of TriSano, Bureau of Informatics^2.16.840.9.886571.2.99.8^ISO"
@@ -94,7 +94,7 @@ module Capistrano::Helpers
     it "doesn't create an hl7 key if none of the values are set" do
       generate_site_config.keys.should_not include('hl7')
     end
-    
+
     it "sets the login timeout" do
       set :auth_login_timeout, 30
       generate_site_config['trisano_auth']['login_timeout'].should == 30
@@ -116,7 +116,7 @@ module Capistrano::Helpers
       set :form_builder_phone, 'some regex'
       generate_site_config['answer']['phone'].should == 'some regex'
     end
-  
+
     it "turns the locale witching on" do
       set :locale_switching, true
       generate_site_config['locale']['allow_switching'].should == true
@@ -132,18 +132,24 @@ module Capistrano::Helpers
     end
 
     it "sets the smtp mailer options" do
-      set :mailer, :smtp => {
-        :address => 'localhost',
-        :port => 587, 
-        :user_name => 'joe@localhost',
-        :password => 'password',
-        :enable_starttls_auto => true
-      }
-      generate_site_config['mailer'][:smtp][:address].should == 'localhost'
-      generate_site_config['mailer'][:smtp][:port].should == 587
-      generate_site_config['mailer'][:smtp][:user_name].should == 'joe@localhost'
-      generate_site_config['mailer'][:smtp][:password].should == 'password'
-      generate_site_config['mailer'][:smtp][:enable_starttls_auto].should == true
+      set :mailer                      , "smtp"
+      set :mailer_host                 , 'test-host'
+      set :mailer_address              , 'test-address'
+      set :mailer_port                 , 90210
+      set :mailer_domain               , 'test-domain'
+      set :mailer_user_name            , 'test-username'
+      set :mailer_password             , 'test-password'
+      set :mailer_authentication       , 'test-auth'
+      set :mailer_enable_starttls_auto , true
+
+      generate_site_config['host'].should == 'test-host'
+      generate_site_config['mailer']['smtp']['address'].should == 'test-address'
+      generate_site_config['mailer']['smtp']['port'].should == 90210
+      generate_site_config['mailer']['smtp']['domain'].should == 'test-domain'
+      generate_site_config['mailer']['smtp']['user_name'].should == 'test-username'
+      generate_site_config['mailer']['smtp']['password'].should == 'test-password'
+      generate_site_config['mailer']['smtp']['authentication'].should == 'test-auth'
+      generate_site_config['mailer']['smtp']['enable_starttls_auto'].should == true
     end
   end
 end

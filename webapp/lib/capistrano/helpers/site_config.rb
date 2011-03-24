@@ -21,7 +21,7 @@ module Capistrano::Helpers
       config['help_url'] = safe_fetch :help_url
       config
     end
-    
+
     def auth_config
       config = {}
       config['default_admin_uid'] = fetch :default_admin_uid, 'trisano_admin'
@@ -36,7 +36,7 @@ module Capistrano::Helpers
       config
     end
 
-    def hl7_config 
+    def hl7_config
       hl7_config = {}
       hl7_config['recv_facility'] = safe_fetch :recv_facility
       hl7_config['processing_id'] = safe_fetch :processing_id
@@ -77,9 +77,21 @@ module Capistrano::Helpers
     end
 
     def mailer_config
+      mailer_host = safe_fetch(:mailer_host) || 'localhost'
+
       config = {}
-      config['mailer'] = safe_fetch :mailer || {}
-      config
+      mailer_config = {}
+      mailer_config['address'] = safe_fetch :mailer_address
+      mailer_config['port'] = safe_fetch :mailer_port
+      mailer_config['domain'] = safe_fetch :mailer_domain
+      mailer_config['user_name'] = safe_fetch :mailer_user_name
+      mailer_config['password'] = safe_fetch :mailer_password
+      mailer_config['authentication'] = safe_fetch :mailer_authentication
+      mailer_config['enable_starttls_auto'] = safe_fetch :mailer_enable_starttls_auto
+      mailer_config.reject! { |k, v| v.nil? }
+      config[(safe_fetch(:mailer) || 'smtp')] = mailer_config
+
+      (mailer_config.empty?) ? {} : { 'host' => mailer_host, 'mailer' => config }
     end
 
     # shortcut for: value if exists? :value
