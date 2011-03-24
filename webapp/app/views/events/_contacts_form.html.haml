@@ -41,7 +41,8 @@
             - else
               = render :partial => "events/contact_show", :locals => { :f => c }
 
-          %p{:style => 'clear: both;'}= add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => "events/contact"
+          %p{:style => 'clear: both;'}
+            = add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => "events/contact"
           =render_extensions :cmr_contacts_extension_renderers
 
         - unless @event.morbidity_child_events.empty?
