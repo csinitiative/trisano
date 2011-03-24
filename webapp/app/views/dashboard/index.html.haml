@@ -22,21 +22,7 @@
 
 %br{ :clear => :all }
 
-%h2=t('tasks')
-
-%span{:style => "clear: both;"}
-  = link_to_function(t('change_filter'), "Effect.toggle('task_view_settings')")
-  &nbsp;|&nbsp;
-  = link_to(t('view_on_calendar'), calendar_path(:month => Time.now.month, :year => Time.now.year))
-
-#task_view_settings{:style => 'display: none;'}
-  = render :partial => 'filter_tasks_form'
-#tasks{:style => "clear: both;"}
-  = render :partial => 'tasks/list', :locals => {:task_owner => User.current_user}
-
-- if User.current_user.is_entitled_to?(:view_access_records)
-  %h2=t('tools')
-  = link_to t('event_access_records'), access_records_path, :id => "access_records_tool"
+- render_dashboard_sections
 
 %br
 %br
