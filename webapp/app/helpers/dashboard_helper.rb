@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 module DashboardHelper
+  extensible_helper
 
   def render_dashboard_sections
     dashboard_sections.each do |method|
