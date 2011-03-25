@@ -1,8 +1,7 @@
 ActionMailer::Base.default_url_options[:host] ||= config_options[:host]
 ActionMailer::Base.default_content_type = "text/html"
 
-# if there is a mailer configuration in site_config
-if ActionMailer::Base.delivery_method.nil? && mailer_opts = config_options['mailer']
+if ActionMailer::Base.delivery_method != :test && mailer_opts = config_options['mailer']
   if options = mailer_opts['smtp']
     ActionMailer::Base.delivery_method = :smtp
     ActionMailer::Base.smtp_settings = {
