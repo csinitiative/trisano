@@ -307,7 +307,10 @@ describe EventQueuesController do
   describe "handling DELETE /event_queues/1" do
 
     before(:each) do
-      EventQueue.delete_all
+      DiseaseEvent.delete_all
+      HospitalsParticipation.delete_all
+      Participation.delete_all
+      Event.delete_all
       @event_queue = Factory.create(:event_queue)
       EventQueue.stubs(:find).returns(@event_queue)
     end
