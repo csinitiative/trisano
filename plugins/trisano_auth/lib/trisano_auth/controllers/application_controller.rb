@@ -52,6 +52,10 @@ module TrisanoAuth
           return false
         end
       end
+
+      def single_access_allowed?
+        true
+      end
     end
 
   end
