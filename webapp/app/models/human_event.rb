@@ -422,9 +422,9 @@ class HumanEvent < Event
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == self.jurisdiction.secondary_entity_id
-        proposed_jurisdiction = PlaceEntity.find(jurisdiction_id) # Will raise an exception if record not found
-        raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless Place.jurisdictions.include?(proposed_jurisdiction.place)
-        self.jurisdiction.update_attribute("secondary_entity_id", jurisdiction_id)
+        proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id) 
+        raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
+        self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
         self.add_note note
         primary_changed = true
       end

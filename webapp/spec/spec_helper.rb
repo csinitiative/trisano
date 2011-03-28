@@ -10,6 +10,10 @@ require 'nokogiri'
 require 'validates_timeliness/matcher'
 require 'factory_girl'
 
+if User.column_names.include?("crypted_password")
+  require 'authlogic/test_case'
+end
+
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|

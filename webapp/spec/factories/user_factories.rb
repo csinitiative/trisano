@@ -2,6 +2,10 @@ Factory.define :user do |u|
   u.uid { Factory.next(:uid) }
   u.user_name { Factory.next(:user_name) }
   u.status 'active'
+  if User.column_names.include?("crypted_password")
+    u.password "changeme"
+    u.password_confirmation { |u| u.password }
+  end
   u.after_build { |user| User.current_user = user }
 end
 

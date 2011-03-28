@@ -18,11 +18,18 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe EncounterEventsHelper do
+  before do
+    @user = Factory(:user)
+    @role = Factory(:role)
+    @priv = Privilege.find_by_priv_name('update_event') || Factory(:privilege, :priv_name => 'update_event')
+    @role.privileges << @priv
+  end
 
   describe "basic controls helpers" do
     before(:each) do
-      mock_user
       @encounter_event = Factory.create(:encounter_event)
+      @jurisdiction = @encounter_event.jurisdiction.secondary_entity
+      @user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
     end
 
     it 'should draw basic controls without show' do
@@ -50,17 +57,9 @@ describe EncounterEventsHelper do
 
   describe "building a list of users for the investigator drop down" do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles
-
     it 'should add the current user to the list of users' do
-
-      User.stubs(:current_user).returns(users(:default_user))
-
       encounter_event = Factory.create(:encounter_event)
-
-      users = helper.users_for_investigation_select(encounter_event)
-      users.size.should == 1
-      users[0].user_name.should == users(:default_user).user_name
+      helper.users_for_investigation_select(encounter_event).should == [@user]
     end
 
   end

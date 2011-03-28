@@ -223,6 +223,9 @@ Factory.define :hospitalization_facility do |hf|
   hf.hospitals_participation { Factory.build(:hospitals_participation) }
 end
 
+Factory.define :hospitalization_facility_entity, :parent => :diagnostic_facility_entity do |fe|
+end
+
 Factory.define :hospitals_participation do |hp|
   hp.admission_date Date.today - 5.days
   hp.discharge_date Date.today - 1.days
