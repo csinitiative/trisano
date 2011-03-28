@@ -18,6 +18,7 @@
 # TrisanoAuth
 require 'trisano_auth/models/user'
 require 'trisano_auth/controllers/application_controller'
+require 'trisano_auth/controllers/users_controller'
 require 'trisano_auth/helpers/layout_helper'
 require 'trisano_auth/helpers/users_helper'
 

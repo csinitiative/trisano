@@ -2,6 +2,8 @@ es:
   trisano_auth:
     login: "Ingresar"
     logout: "SALIR"
+    api_key: "API key (EN)"
+    api_key_message: This is your super secret api token. Do not give it to anyone or they can pretend to be you.(EN)
     username: "Usuario"
     password: "Contraseña"
     submit: "Enviar"

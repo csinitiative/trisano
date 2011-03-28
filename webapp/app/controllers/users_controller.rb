@@ -139,7 +139,6 @@ class UsersController < AdminController
     end
   end
 
-
   def destroy
     head :method_not_allowed
   end
