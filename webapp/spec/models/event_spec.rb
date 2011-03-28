@@ -68,10 +68,9 @@ describe MorbidityEvent do
       it { should accept_nested_attributes_for(:address) }
 
       describe "destruction is allowed properly" do
-        fixtures :events
 
         before(:each) do
-          mock_user
+          Factory(:user)
           @event = MorbidityEvent.new( :first_reported_PH_date => Date.yesterday.to_s(:db) )
         end
 
@@ -119,7 +118,6 @@ describe MorbidityEvent do
       end
 
       describe "empty attributes are handled correctly" do
-        fixtures :events, :entities, :places, :places_types
 
         before(:each) do
           @event = Event.new
@@ -174,14 +172,12 @@ describe MorbidityEvent do
   describe "Managing associations." do
 
     describe "Handling notes" do
-      fixtures :users
 
       describe "adding notes through add_note" do
 
         before(:each) do
           @event = MorbidityEvent.new()
-          @user = users(:default_user)
-          User.stubs(:current_user).returns(@user)
+          @user = Factory(:user)
           @event.save
         end
 
@@ -210,11 +206,9 @@ describe MorbidityEvent do
   end
 
   describe "Handling tasks" do
-    fixtures :users
 
     before(:each) do
-      @user = users(:default_user)
-      User.stubs(:current_user).returns(@user)
+      @user = Factory(:user)
       @event = MorbidityEvent.new(:first_reported_PH_date => Date.yesterday.to_s(:db))
       @event.save!
     end
@@ -263,25 +257,23 @@ describe MorbidityEvent do
   end
 
   describe "Routing an event" do
-    fixtures :events, :participations, :entities, :addresses, :telephones, :people, :places, :places_types, :users, :participations_places, :hospitals_participations
 
     before(:each) do
-      @user = users(:default_user)
-      User.stubs(:current_user).returns(@user)
-      @event = MorbidityEvent.find(events(:marks_cmr).id)
+      @user = Factory(:user)
+      @event = Factory(:morbidity_event)
     end
 
     describe "with legitimate parameters" do
+      before { @jurisdiction = create_jurisdiction_entity }
 
       it "should not raise an exception" do
-        lambda { @event.route_to_jurisdiction(entities(:Davis_County)) }.should_not raise_error()
+        lambda { @event.route_to_jurisdiction(@jurisdiction) }.should_not raise_error()
       end
 
       it "should change the jurisdiction and event state" do
         @event.jurisdiction.stubs(:allows_current_user_to?).returns(true)
-        @event.jurisdiction.place_entity.place.name.should == places(:Southeastern_District).name
-        @event.assign_to_lhd(entities(:Davis_County), [], nil)
-        @event.jurisdiction.place_entity.place.name.should == places(:Davis_County).name
+        @event.assign_to_lhd(@jurisdiction, [], nil)
+        @event.jurisdiction.place_entity.should == @jurisdiction
         @event.current_state.name.should == :assigned_to_lhd
       end
     end
@@ -296,14 +288,13 @@ describe MorbidityEvent do
       end
     end
 
-    describe "that has been invalidated by a code change" do
+    describe "that has been invalidated" do
       before do
-        DiseaseEvent.update_all("disease_onset_date = '#{Date.today + 1.month}'",
-          ['event_id = ?', @event.id])
+        @event.stubs(:valid?).returns(false)
       end
 
       it "should not route event in an invalid state" do
-        @event.route_to_jurisdiction(entities(:Davis_County)).should == false
+        @event.route_to_jurisdiction(create_jurisdiction_entity).should == false
       end
     end
 
@@ -313,41 +304,33 @@ describe MorbidityEvent do
 
         it "should add the jurisdictions as secondary jurisdictions and not change state" do
           cur_state = @event.state
-          @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Davis_County).id, entities(:Summit_County).id])
-          @event.secondary_jurisdictions.length.should == 2
-          @event.secondary_jurisdictions.include?(places(:Davis_County)).should be_true
-          @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
+          secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
+          @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
+          @event.secondary_jurisdictions.map(&:entity_id).should == secondary_jurisdictions
           @event.state.should == cur_state
         end
       end
 
       describe "removing jurisdictions" do
         it "should remove the secondary jurisdictions" do
-          @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Davis_County).id, entities(:Summit_County).id])
+          secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
+          @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
           @event.secondary_jurisdictions.length.should == 2
 
-          @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Summit_County).id])
-          @event.secondary_jurisdictions(true).length.should == 1
-          @event.secondary_jurisdictions.include?(places(:Davis_County)).should_not be_true
-          @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
+          @event.route_to_jurisdiction(@event.jurisdiction.place_entity, [secondary_jurisdictions.first])
+          @event.secondary_jurisdictions(true).map(&:entity_id).should == [secondary_jurisdictions.first]
         end
       end
 
       describe "adding some, removing others" do
         it "should add some and remove others" do
-          # Start with summit and Southeastern
-          @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Summit_County).id, entities(:Southeastern_District).id])
-          @event.secondary_jurisdictions(true).length.should == 2
-          @event.secondary_jurisdictions.include?(places(:Southeastern_District)).should be_true
-          @event.secondary_jurisdictions.include?(places(:Summit_County)).should be_true
-          @event.secondary_jurisdictions.include?(places(:Davis_County)).should_not be_true
+          secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
+          @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
+          @event.secondary_jurisdictions(true).map(&:entity_id).should == secondary_jurisdictions
 
-          # Remove Southeastern, add Davis, Leave Summit alone
-          @event.route_to_jurisdiction(entities(:Southeastern_District).id, [entities(:Davis_County).id, entities(:Summit_County).id])
-          @event.secondary_jurisdictions.length.should == 2
-          @event.secondary_jurisdictions(true).include?(places(:Davis_County)).should be_true
-          @event.secondary_jurisdictions(true).include?(places(:Summit_County)).should be_true
-          @event.secondary_jurisdictions(true).include?(places(:Southeastern_District)).should_not be_true
+          new_secondary_jurisdictions = [secondary_jurisdictions.first, create_jurisdiction_entity.id]
+          @event.route_to_jurisdiction(@event.jurisdiction.place_entity, new_secondary_jurisdictions)
+          @event.secondary_jurisdictions(true).map(&:entity_id).should == new_secondary_jurisdictions
         end
       end
 
@@ -387,8 +370,7 @@ describe MorbidityEvent do
     end
 
     it 'should set completed by state date automatically' do
-      require File.join(RAILS_ROOT, 'features', 'support', 'trisano')
-      event = create_basic_event 'morbidity', 'Jack'
+      event = Factory(:morbidity_event)
       event.workflow_state = 'approved_by_lhd'
       event.save!
       event = Event.find(event.id)
@@ -400,7 +382,7 @@ describe MorbidityEvent do
     end
   end
 
-  describe "Saving an event" do
+  describe "saving an event" do
     it "should generate an event onset date set to today" do
       event = MorbidityEvent.new(:first_reported_PH_date => Date.today.to_s(:db))
       event.save.should be_true
@@ -673,7 +655,7 @@ describe MorbidityEvent do
   describe 'checking CDC and IBIS export' do
 
     before :each do
-      mock_user
+      @user = Factory(:user)
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -721,13 +703,12 @@ describe MorbidityEvent do
     end
 
     it 'should set cdc and ibis update when event deleted' do
-      with_event do |event|
-        event.sent_to_cdc = event.sent_to_ibis = true
-        event.soft_delete
-        event.save.should be_true
-        event.cdc_updated_at.should == Date.today
-        event.ibis_updated_at.should == Date.today
-      end
+      event = Factory(:morbidity_event)
+      event.sent_to_cdc = event.sent_to_ibis = true
+      event.soft_delete
+      event.save.should be_true
+      event.cdc_updated_at.should == Date.today
+      event.ibis_updated_at.should == Date.today
     end
   end
 
@@ -827,16 +808,13 @@ describe MorbidityEvent do
 
   describe 'when executing a view-filtering search' do
 
-    fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :diseases, :disease_events, :places, :places_types, :participations, :event_queues, :people
-
     before :each do
 
-      jurisdiction_id = role_memberships(:default_user_admin_role_southeastern_district).jurisdiction_id
+      @jurisdiction_id = create_jurisdiction_entity.id
 
-      @user = users(:default_user)
-      @user.stubs(:jurisdiction_ids_for_privilege).returns([jurisdiction_id])
-      User.stubs(:current_user).returns(@user)
-      MorbidityEvent.stubs(:get_allowed_queues).returns([[1], ["Speedy-BearRiver"]])
+      @user = Factory(:user)
+      @user.stubs(:jurisdiction_ids_for_privilege).returns([@jurisdiction_id])
+      @queue = Factory(:event_queue, :jurisdiction_id => @jurisdiction_id)
 
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
@@ -849,27 +827,24 @@ describe MorbidityEvent do
           }
         },
         "jurisdiction_attributes" => {
-          "secondary_entity_id" => jurisdiction_id
+          "secondary_entity_id" => @jurisdiction_id
         }
       }
     end
 
-    # The following specs add a couple more events in addition to what is in the fixtures. If the results are off,
-    # take a look at the events bootstrapped here, and what is set up in the fixtures, paying attention too, to
-    # the jurisdiction_id, which is included in the search criteria.
-
     it 'should filter by disease and the other attributes' do
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
+      disease_id = Factory(:disease).id
+      @event_hash['disease_event_attributes'] = {'disease_id' => disease_id }
       MorbidityEvent.create(@event_hash)
 
-      @event_hash['event_queue_id'] = 1
+      @event_hash['event_queue_id'] = @queue.id
       MorbidityEvent.create(@event_hash)
 
       a = MorbidityEvent.create(@event_hash)
       a.workflow_state = 'closed'
       a.save!
 
-      @event_hash['investigator_id'] = 1
+      @event_hash['investigator_id'] = @user.id
       m = MorbidityEvent.create(@event_hash)
       m.workflow_state = 'closed'
       m.save!
@@ -877,12 +852,11 @@ describe MorbidityEvent do
       # make sure EncounterEvent doesn't show up.
       EncounterEvent.create(:parent_id => m.id)
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 6
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1]}).size.should == 5
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['accepted_by_lhd']}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :queues => [1], :states => ['closed'], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id]}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['accepted_by_lhd']}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['closed'], :investigators => [@user.id]}).size.should == 1
     end
 
     it 'should filter by state and the other attributes' do
@@ -890,55 +864,63 @@ describe MorbidityEvent do
       a.workflow_state = 'closed'
       a.save!
 
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
+      disease_id = Factory(:disease).id
+      @event_hash['disease_event_attributes'] = {'disease_id' => disease_id }
       b = MorbidityEvent.create(@event_hash)
       b.workflow_state = 'closed'
       b.save!
 
-      @event_hash['event_queue_id'] = 1
+      @event_hash['event_queue_id'] = @queue.id
       c = MorbidityEvent.create(@event_hash)
       c.workflow_state = 'closed'
       c.save!
 
-      @event_hash['investigator_id'] = 1
+      @event_hash['investigator_id'] = @user.id
       d = MorbidityEvent.create(@event_hash)
       d.workflow_state = 'closed'
       d.save!
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 6
+      MorbidityEvent.find_all_for_filtered_view.size.should == 4
       MorbidityEvent.find_all_for_filtered_view({:states => ['closed']}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed'], :queues => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [1], :states => ['closed'], :queues => [1], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed'], :queues => [@queue.queue_name]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed'], :queues => [@queue.queue_name], :investigators => [@user.id]}).size.should == 1
     end
 
     it 'should filter by queue and the other attributes' do
-      @event_hash['event_queue_id'] = 1
+      @event_hash['event_queue_id'] = @queue.id
       MorbidityEvent.create(@event_hash)
 
       a = MorbidityEvent.create(@event_hash)
       a.workflow_state = 'closed'
       a.save!
 
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
+      disease_id = Factory(:disease).id
+      @event_hash['disease_event_attributes'] = {'disease_id' => disease_id }
       b = MorbidityEvent.create(@event_hash)
       b.workflow_state = 'closed'
       b.save!
 
-      @event_hash['investigator_id'] = 1
+      @event_hash['investigator_id'] = @user.id
       c = MorbidityEvent.create(@event_hash)
       c.workflow_state = 'closed'
       c.save!
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 6
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed'], :diseases => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:queues => [1], :states => ['closed'], :diseases => [1], :investigators => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({:queues => [@queue.queue_name]}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:queues => [@queue.queue_name], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({
+        :queues => [@queue.queue_name],
+        :states => ['closed'],
+        :diseases => [disease_id]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({
+        :queues => [@queue.queue_name],
+        :states => ['closed'],
+        :diseases => [disease_id],
+        :investigators => [@user.id]}).size.should == 1
     end
 
     it "should filter by investigator and the other attributes" do
-      @event_hash['investigator_id'] = 1
+      @event_hash['investigator_id'] = @user.id
       MorbidityEvent.create(@event_hash)
 
       @event_hash['workflow_state'] = 'closed'
@@ -946,68 +928,80 @@ describe MorbidityEvent do
       a.workflow_state = 'closed'
       a.save!
 
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
+      disease_id = Factory(:disease).id
+      @event_hash['disease_event_attributes'] = {'disease_id' => disease_id }
       b = MorbidityEvent.create(@event_hash)
       b.workflow_state = 'closed'
       b.save!
 
-      @event_hash['event_queue_id'] = 1
+      @event_hash['event_queue_id'] = @queue.id
       c = MorbidityEvent.create(@event_hash)
       c.workflow_state = 'closed'
       c.save!
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 6
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed'], :diseases => [1]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [1], :states => ['closed'], :diseases => [1], :queues => [1]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view.size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id]}).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed']}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed'], :diseases => [disease_id]}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed'], :diseases => [disease_id], :queues => [@queue.queue_name]}).size.should == 1
     end
 
     it "should not show deleted records if told so" do
-      @event_hash['investigator_id'] = 1
-      MorbidityEvent.create(@event_hash)
+      @event_hash['investigator_id'] = @user.id
+      MorbidityEvent.create!(@event_hash)
 
-      me = MorbidityEvent.create(@event_hash)
+      me = MorbidityEvent.create!(@event_hash)
       me.workflow_state = 'closed'
       me.save!
 
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
-      b = MorbidityEvent.create(@event_hash)
+      disease_id = Factory(:disease).id
+      @event_hash['disease_event_attributes'] = {'disease_id' => disease_id }
+      b = MorbidityEvent.create!(@event_hash)
       b.workflow_state = 'closed'
       b.save!
 
-      @event_hash['event_queue_id'] = 1
+      @event_hash['event_queue_id'] = @queue.id
       a = MorbidityEvent.create(@event_hash)
       a.workflow_state = 'closed'
       a.soft_delete
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 6
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1]}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed'], :diseases => [1]}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [1], :states => ['closed'], :diseases => [1], :queues => [1]}).size.should == 0
+      MorbidityEvent.find_all_for_filtered_view.size.should == 4
+      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [@user.id]}).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view({
+        :do_not_show_deleted => [1],
+        :investigators => [@user.id],
+        :states => ['closed']}).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view({
+        :do_not_show_deleted => [1], 
+        :investigators => [@user.id], 
+        :states => ['closed'], 
+        :diseases => [disease_id]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view({
+        :do_not_show_deleted => [1], 
+        :investigators => [@user.id], 
+        :states => ['closed'], 
+        :diseases => [disease_id], 
+        :queues => [@queue.queue_name]}).size.should == 0
     end
 
     it "should sort appropriately" do
-      @user.stubs(:jurisdiction_ids_for_privilege).returns([places(:Southeastern_District).entity_id,
-          places(:Davis_County).entity_id,
-          places(:Summit_County).entity_id])
+      jurisdiction_ids = [create_jurisdiction_entity.id, create_jurisdiction_entity.id, create_jurisdiction_entity.id]
+      @user.stubs(:jurisdiction_ids_for_privilege).returns(jurisdiction_ids)
 
       @event_hash['workflow_state'] = 'new'
-      @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:chicken_pox).id }
+      @event_hash['disease_event_attributes'] = {'disease_id' => Factory(:disease).id }
       MorbidityEvent.create(@event_hash)
 
       @event_hash['workflow_state'] = 'closed'
-      @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:anthrax).id }
+      @event_hash['disease_event_attributes'] = {'disease_id' => Factory(:disease).id }
       @event_hash.merge!("interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Zulu" } } } )
-      @event_hash.merge!("jurisdiction_attributes" => {"secondary_entity_id" => places(:Davis_County).entity_id})
+      @event_hash.merge!("jurisdiction_attributes" => {"secondary_entity_id" => jurisdiction_ids.first})
       MorbidityEvent.create(@event_hash)
 
       @event_hash['workflow_state'] = 'under_investigation'
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1 }
-      @event_hash['disease_event_attributes'] = {'disease_id' => diseases(:tuberculosis).id }
+      @event_hash['disease_event_attributes'] = {'disease_id' => Factory(:disease).id }
       @event_hash.merge!("interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Lima" } } } )
-      @event_hash.merge!("jurisdiction_attributes" => {"secondary_entity_id" => places(:Summit_County).entity_id})
+      @event_hash.merge!("jurisdiction_attributes" => {"secondary_entity_id" => jurisdiction_ids.second})
       MorbidityEvent.create(@event_hash)
 
       events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'patient')
@@ -1028,26 +1022,28 @@ describe MorbidityEvent do
     end
 
     it 'should set the query string on the user if the view change is to be the default' do
-      @event_hash['event_queue_id'] = 1
-      MorbidityEvent.create(@event_hash)
+      no_queue = MorbidityEvent.create!(@event_hash)
+      @event_hash['event_queue_id'] = @queue.id
+      in_queue = MorbidityEvent.create!(@event_hash)
 
-      HumanEvent.find_all_for_filtered_view.size.should == 3
+      HumanEvent.find_all_for_filtered_view.sort_by(&:id).should == [no_queue, in_queue]
       @user.expects(:update_attribute)
-      HumanEvent.find_all_for_filtered_view({:queues => ["Enterics-BearRiver"], :set_as_default_view => "1"}).size.should == 1
+      HumanEvent.find_all_for_filtered_view({:queues => [@queue.queue_name], :set_as_default_view => "1"}).should == [in_queue]
     end
 
   end
 
   describe 'form builder cdc export fields' do
-    fixtures :diseases, :export_conversion_values, :export_columns
 
     before(:each) do
       @question = Question.create(:data_type => 'radio_button', :question_text => 'Contact?', :short_name => "contact" )
       @question_element = QuestionElement.create(:question => @question)
+      @export_column = Factory(:export_column, :start_position => 69, :length_to_output => 1)
+      @export_conversion_value = Factory(:export_conversion_value, :value_from => "Unknown", :value_to => "9", :export_column => @export_column)
       @event = MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } },
-          "disease_event_attributes"        => { "disease_id" => diseases(:hep_a).id },
+          "disease_event_attributes"        => { "disease_id" => Factory(:disease).id },
           "event_name"     => "CdcExportHepA",
-          "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => export_conversion_values(:jaundiced_unknown).id } }
+          "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => @export_conversion_value.id } }
         } )
     end
 
@@ -1110,7 +1106,6 @@ describe MorbidityEvent do
   end
 
   describe "forms assignment during event creation" do
-    fixtures :diseases, :entities
 
     before(:each) do
       @event_hash = {
@@ -1124,20 +1119,22 @@ describe MorbidityEvent do
         }
       }
 
+      @disease_id = Factory(:disease).id
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "disease_ids"=>[@disease_id],
         "jurisdiction_id"=>""
       }
+      @jurisdiction_id = create_jurisdiction_entity.id
 
     end
 
     it 'should assign available forms at creation time when the event has a jurisdiction and a disease' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
-        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_id })
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id })
         @event = MorbidityEvent.new(@event_hash)
         @event.form_references.size.should == 0
         @event.save!
@@ -1149,7 +1146,7 @@ describe MorbidityEvent do
 
     it 'should not assign forms at creation time when the event has no disease' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id })
         @event = MorbidityEvent.new(@event_hash)
         @event.form_references.size.should == 0
         @event.save!
@@ -1161,7 +1158,7 @@ describe MorbidityEvent do
 
     it 'should not assign forms at creation time when the event has no jurisdiction' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_id })
         @event = MorbidityEvent.new(@event_hash)
         @event.jurisdiction = nil
         @event.form_references.size.should == 0
@@ -1173,8 +1170,8 @@ describe MorbidityEvent do
     end
 
     it 'should not assign forms at creation time when there are no forms for the disease' do
-      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
-      @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_id })
+      @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id })
       @event = MorbidityEvent.new(@event_hash)
       @event.form_references.size.should == 0
       @event.save!
@@ -1184,8 +1181,8 @@ describe MorbidityEvent do
 
     it 'should still mark the event as having gone through form assignment even when there are no forms for the disease' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
-        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id })
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_id })
+        @event_hash = @event_hash.merge("jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id })
         @event = MorbidityEvent.new(@event_hash)
         @event.save!
         @event.undergone_form_assignment.should be_true
@@ -1195,9 +1192,9 @@ describe MorbidityEvent do
   end
 
   describe "forms assignment during event updates" do
-    fixtures :diseases, :entities
 
     before(:each) do
+      @jurisdiction_id = create_jurisdiction_entity.id
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -1207,14 +1204,15 @@ describe MorbidityEvent do
             }
           }
         },
-        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+        "jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id }
       }
       
+      @disease_id = Factory(:disease).id
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "disease_ids"=>[@disease_id],
         "jurisdiction_id"=>""
       }
 
@@ -1227,7 +1225,7 @@ describe MorbidityEvent do
         @event.reload
         @event.form_references.size.should == 0
         @event.undergone_form_assignment.should be_false
-        @event.update_attributes("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event.update_attributes("disease_event_attributes" => { "disease_id" => @disease_id })
         @event.reload
         @event.form_references.size.should == 1
         @event.undergone_form_assignment.should be_true
@@ -1235,7 +1233,7 @@ describe MorbidityEvent do
     end
 
     it 'should not assign additional forms at update time when the event has a jurisdiction and a disease but has previously gone through form assignment' do
-      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+      @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_id })
       @event = MorbidityEvent.new(@event_hash)
       @event.save!
       @event.reload
@@ -1254,9 +1252,9 @@ describe MorbidityEvent do
   end
 
   describe "forms assignment during routing" do
-    fixtures :diseases, :entities
 
     before(:each) do
+      @jurisdiction_id = create_jurisdiction_entity.id
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -1266,30 +1264,31 @@ describe MorbidityEvent do
             }
           }
         },
-        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+        "jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id }
       }
 
+      @disease_id = Factory(:disease).id
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "disease_ids"=>[@disease_id],
         "jurisdiction_id"=>""
       }
     end
 
     it 'should receive a applicable new form if the disease changed before routing' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:no_forms_disease).id })
+        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => Factory(:disease).id})
         @event = MorbidityEvent.new(@event_hash)
         @event.save!
         @event.reload
         @event.undergone_form_assignment.should be_true
         @event.form_references.size.should == 0
-        @event.update_attributes("disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id })
+        @event.update_attributes("disease_event_attributes" => { "disease_id" => @disease_id})
         @event.reload
         @event.form_references.size.should == 0 # Changing disease doesn't trigger forms assignment
-        @event.route_to_jurisdiction(entities(:Davis_County).id)
+        @event.route_to_jurisdiction(@jurisdiction_id)
         @event.form_references.size.should == 1 # Pick up the new form through routing
       end
     end
@@ -1361,10 +1360,12 @@ describe MorbidityEvent do
     end
 
     describe "argument handling" do
-      fixtures :events, :forms
 
       before(:each) do
-        @event = events(:marks_cmr)
+        @event = Factory(:morbidity_event)
+        @template = Factory.build(:form)
+        @template.save_and_initialize_form_elements
+        @form = @template.publish
       end
 
       it "should raise an error if form does not exist" do
@@ -1372,20 +1373,21 @@ describe MorbidityEvent do
       end
 
       it "should accept a single non-array element" do
-        lambda { @event.add_forms(forms(:anthrax_form_all_jurisdictions_1).id) }.should_not raise_error()
+        lambda { @event.add_forms(@form.id) }.should_not raise_error()
       end
 
       it "should accept forms and not just form IDs" do
-        lambda { @event.add_forms(forms(:anthrax_form_all_jurisdictions_1)) }.should_not raise_error()
+        lambda { @event.add_forms(@form) }.should_not raise_error()
       end
     end
 
   end
 
   describe "removing forms from an event" do
-    fixtures :diseases, :entities
 
     before(:each) do
+      @disease_id = Factory(:disease).id
+      @jurisdiction_id = create_jurisdiction_entity.id
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -1395,8 +1397,8 @@ describe MorbidityEvent do
             }
           }
         },
-        "disease_event_attributes" => { "disease_id" => diseases(:form_assignment_disease).id },
-        "jurisdiction_attributes" => { "secondary_entity_id" => entities(:Southeastern_District).id }
+        "disease_event_attributes" => { "disease_id" => @disease_id },
+        "jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id }
       }
 
       @event = MorbidityEvent.new(@event_hash)
@@ -1405,7 +1407,7 @@ describe MorbidityEvent do
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[diseases(:form_assignment_disease).id],
+        "disease_ids"=>[@disease_id],
         "jurisdiction_id"=>""
       }
     end
@@ -1451,11 +1453,9 @@ describe MorbidityEvent do
   end
 
   describe "when soft deleting" do
-    fixtures :users
 
     before(:each) do
-      @user = users(:default_user)
-      User.stubs(:current_user).returns(@user)
+      @user = Factory(:user)
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -1499,9 +1499,9 @@ describe MorbidityEvent do
   end
 
   describe 'find by criteria' do
-    fixtures :entities, :places
 
     before(:each) do
+      @jurisdiction_id = create_jurisdiction_entity.id
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -1512,35 +1512,34 @@ describe MorbidityEvent do
           }
         },
         "jurisdiction_attributes" => {
-          "secondary_entity_id" => entities(:Davis_County).id
+          "secondary_entity_id" => @jurisdiction_id
         }
       }
     end
 
     describe 'searching for cases by disease' do
-      fixtures :diseases
       before(:each) do
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:chicken_pox).id }))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:tuberculosis).id}))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => diseases(:anthrax).id}))
+        @disease_ids = [Factory(:disease).id, Factory(:disease).id, Factory(:disease).id]
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.first }))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.second }))
+        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.third }))
       end
 
       it 'should be done with a single disease' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 1
+        Event.find_by_criteria(:diseases => [@disease_ids.first], :jurisdiction_ids => [@jurisdiction_id]).size.should == 1
       end
 
       it 'should be done with multiple diseases' do
-        Event.find_by_criteria(:diseases => [diseases(:chicken_pox).id, diseases(:tuberculosis).id], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 2
+        Event.find_by_criteria(:diseases => @disease_ids[0, 2], :jurisdiction_ids => [@jurisdiction_id]).size.should == 2
       end
 
       it 'should ignore empty disease arrays' do
-        Event.find_by_criteria(:diseases => [], :jurisdiction_ids => [entities(:Davis_County).id]).size.should == 3
+        Event.find_by_criteria(:diseases => [], :jurisdiction_ids => [@jurisdiction_id]).size.should == 3
       end
     end
 
     describe "finding by criteria" do
-      before { login_as_super_user }
-      after  { logout }
+      before { Factory(:user) }
 
       it "should accept a limit for returned results" do
         11.times { searchable_event!(:morbidity_event, 'Jones') }
@@ -1589,10 +1588,11 @@ describe Event, 'declarative task, attachment support' do
 end
 
 describe Event, 'cloning an event' do
-  fixtures :users, :places, :places_types, :diseases, :entities
 
   before :each do
-    User.stubs(:current_user).returns(users(:default_user))
+    @user = Factory(:user)
+    @jurisdiction_place = create_jurisdiction_entity.place
+    @user.stubs(:jurisdictions_for_privilege).with(:create_event).returns([@jurisdiction_place])
 
     @event_hash = {
       "first_reported_PH_date" => Date.yesterday.to_s(:db),
@@ -1621,7 +1621,7 @@ describe Event, 'cloning an event' do
     
     it "should copy over demographic information only" do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
-      @new_event.primary_jurisdiction.name.should == "Unassigned"
+      @new_event.primary_jurisdiction.name.should == @jurisdiction_place.name
       @new_event.should be_new
 
       # Only interested party and jurisdiction, nothing else
@@ -1650,14 +1650,13 @@ describe Event, 'cloning an event' do
   end
 
   describe "deep clone" do
-    fixtures :common_test_types
 
     it "should first do a shallow clone" do
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event
 
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
-      @new_event.primary_jurisdiction.name.should == "Unassigned"
+      @new_event.primary_jurisdiction.name.should == @jurisdiction_place.name
       @new_event.should be_new
     end
 
@@ -1671,7 +1670,7 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over disease information, but not the actual disease" do
-      @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id,
+      @event_hash["disease_event_attributes"] = {:disease_id => Factory(:disease).id,
         :hospitalized_id => external_codes(:yesno_yes).id,
         :died_id => external_codes(:yesno_no).id,
         :disease_onset_date => Date.today - 1,
@@ -1689,8 +1688,8 @@ describe Event, 'cloning an event' do
 
     it "should copy over hospitalization data even if there are no additional attributes beyond a hospital" do
       @event_hash["hospitalization_facilities_attributes"] = [
-        { :secondary_entity_id => entities(:AVH).id },
-        { :secondary_entity_id => entities(:BRVH).id }
+        { "secondary_entity_id" => Factory(:hospitalization_facility_entity).id },
+        { "secondary_entity_id" => Factory(:hospitalization_facility_entity).id }
       ]
       @org_event = MorbidityEvent.create(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
@@ -1703,9 +1702,10 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over hospitalization data" do
+      facility_entities = [Factory(:hospitalization_facility_entity).id, Factory(:hospitalization_facility_entity).id]
       @event_hash["hospitalization_facilities_attributes"] = [
         {
-          :secondary_entity_id => entities(:AVH).id,
+          :secondary_entity_id => facility_entities.first,
           :hospitals_participation_attributes => {
             :admission_date => Date.today - 4,
             :discharge_date => Date.today - 3,
@@ -1713,7 +1713,7 @@ describe Event, 'cloning an event' do
           }
         },
         {
-          :secondary_entity_id => entities(:BRVH).id,
+          :secondary_entity_id => facility_entities.second,
           :hospitals_participation_attributes => {
             :admission_date => Date.today - 2,
             :discharge_date => Date.today - 1,
@@ -1726,11 +1726,11 @@ describe Event, 'cloning an event' do
 
       @new_event.hospitalization_facilities.size.should == 2
       @new_event.hospitalization_facilities.each do |h|
-        if h.secondary_entity_id == entities(:AVH).id
+        if h.secondary_entity_id == facility_entities.first
           h.hospitals_participation.admission_date.should == Date.today - 4
           h.hospitals_participation.discharge_date.should == Date.today - 3
           h.hospitals_participation.medical_record_number == "1234"
-        elsif h.secondary_entity_id == entities(:BRVH).id
+        elsif h.secondary_entity_id == facility_entities.second
           h.hospitals_participation.admission_date.should == Date.today - 2
           h.hospitals_participation.discharge_date.should == Date.today - 1
           h.hospitals_participation.medical_record_number == "5678"
@@ -1854,7 +1854,7 @@ describe Event, 'cloning an event' do
               "collection_date" => Date.today,
               "lab_test_date" => Date.today,
               "specimen_sent_to_state_id" => external_codes(:yesno_yes).id,
-              "test_type" => common_test_types(:blood_test),
+              "test_type" => Factory(:common_test_type),
               "test_result_id" => external_codes(:state_alaska).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "test_status_id" => external_codes(:state_alabama).id, # It's not really important what it is, just that it's there.  Tired of adding fixtures.
               "result_value" => "one",
@@ -1913,14 +1913,15 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over forms and answers" do
-      @event_hash["disease_event_attributes"] = {:disease_id => diseases(:chicken_pox).id}
-      @event_hash["jurisdiction_attributes"] = {:secondary_entity_id => entities(:Davis_County).id}
+      disease_id = Factory(:disease).id
+      @event_hash["disease_event_attributes"] = {:disease_id => disease_id}
+      @event_hash["jurisdiction_attributes"] = {:secondary_entity_id => create_jurisdiction_entity.id}
 
       form = Form.new
       form.event_type = "morbidity_event"
       form.name = "AIDS Form"
       form.short_name = 'event_spec_aids'
-      form.disease_ids = [diseases(:chicken_pox).id]
+      form.disease_ids = [disease_id]
       form.save_and_initialize_form_elements.should_not be_nil
       form.form_base_element.children_count.should == 3
       question_element = QuestionElement.new(

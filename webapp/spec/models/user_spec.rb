@@ -17,12 +17,15 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe User, "loaded from fixtures" do
-
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles
+describe User do
 
   before(:each) do
-    @user = users(:default_user)
+    @user = Factory(:user)
+    @role = Factory(:role)
+    @priv = Privilege.find_by_priv_name("administer") || Factory(:privilege, :priv_name => 'administer')
+    @role.privileges << @priv
+    @jurisdiction = create_jurisdiction_entity
+    @user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
   end
 
   it "should be valid" do
@@ -98,651 +101,48 @@ describe User, "loaded from fixtures" do
   end
 
   describe "getting potential task assignees" do
+    before do
+      assignee = Factory(:user)
+      priv = Privilege.find_by_priv_name("update_event") || Factory(:privilege, :priv_name => "update_event")
+      role = Factory(:role)
+      role.privileges << priv
+      assignee.role_memberships.create(:role => role, :jurisdiction => @jurisdiction)
+
+      assigner = Factory(:user)
+      priv = Privilege.find_by_priv_name("assign_task_to_user") || Factory(:privilege, :priv_name => "assign_task_to_user")
+      role = Factory(:role)
+      role.privileges << priv
+      assigner.role_memberships.create(:role => role, :jurisdiction => @jurisdiction)
+    end
+
     it "should find users with update event in the provided jurisdiction" do
-      assignees = User.task_assignees_for_jurisdictions(entities(:Southeastern_District).id)
+      assignees = User.task_assignees_for_jurisdictions(@jurisdiction.id)
       assignees.size.should == 1
 
-      assignees = User.task_assignees_for_jurisdictions(entities(:Summit_County).id)
+      assignees = User.task_assignees_for_jurisdictions(create_jurisdiction_entity.id)
       assignees.size.should == 0
     end
 
-    describe 'using default rules for task assignees' do
-      before(:each) do
-        @user = users :update_cmr_user
-        User.current_user = @user
-      end
 
-      it 'should return users in jurisdiction where current user has assign_task_to_user rights' do
-        User.default_task_assignees.size.should == 1
-      end
+    it 'should return users in jurisdiction where current user has assign_task_to_user rights' do
+      User.default_task_assignees.size.should == 1
     end
   end
 
+  context "is_entitled_to? accepts arrays of jurisdiction ids" do
 
-end
-
-describe User, "Setting role memberships and entitlements via User attributes" do
-
-  fixtures :users, :role_memberships, :roles, :entities, :privileges, :privileges_roles, :entities, :places, :places_types
-
-  describe "on a new user" do
     before(:each) do
-      @user = User.new(Factory.attributes_for(:user))
-      @user.user_name = "Joe"
-      @user.uid = "joe" 
+      priv = Privilege.find_by_priv_name("update_event") || Factory("privilege", :priv_name => "update_event")
+      @role.privileges << priv
     end
 
-    describe "assigning one admin role in the Southeastern District" do
-
-      before(:each) do
-        @admin_role =Factory.create(:role, :role_name => "Administrator")
-        @administer_privilege = Privilege.find_by_priv_name('administer')
-        @administer_privilege = Factory.create(:privilege, :priv_name => "administer") if @administer_privilege.nil?
-        add_privilege_to_role_in_all_jurisdictions(@administer_privilege, @admin_role)
-
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @admin_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
-          ]
-        }
-      end
-
-      it "should have one role_membership of administrator in the southeastern district" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
-        @user.roles.length.should == 1
-        @user.roles.first.role_name.should == @admin_role.role_name
-        @user.role_memberships.length.should == 1
-        @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
-      end
-
-      it "should be an admin" do
-        @user.save!
-        @user.is_admin?.should be_true
-      end
-
-      it "should have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should not have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should not have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should not have a juridiction in the Southeastern District for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(0)
-      end
-
-      it "should have no jurisdiction id for view privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(0)
-      end
-
-      it "should have no jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(0)
-      end
-
-      it "should have one jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(1)
-      end
-
-      it "should be possible to call is_entitled_to? with an array and get the right answer" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, [entities(:Southeastern_District).id, entities(:Davis_County).id]).should be_false
-        @user.is_entitled_to_in?(:update_event, [entities(:Davis_County).id, entities(:Davis_County).id]).should be_false
-      end
-    end
-
-    describe "assigning one admin role and one investigator role in the Southeastern District" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => roles(:administrator).id, :jurisdiction_id => entities(:Southeastern_District).id },
-            { :role_id => roles(:investigator).id, :jurisdiction_id => entities(:Southeastern_District).id }
-          ]
-        }
-      end
-
-      it "should have 2 roles in the southeastern district" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(3)
-        @user.roles.length.should == 2
-        @user.role_memberships.length.should == 2
-        @user.role_memberships[0].jurisdiction_id.should == entities(:Southeastern_District).id
-        @user.role_memberships[1].jurisdiction_id.should == entities(:Southeastern_District).id
-      end
-
-      it "should be an admin" do
-        @user.save
-        @user.is_admin?.should be_true
-      end
-
-      it "should have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have a juridiction in the Southeastern District for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(1)
-        @user.jurisdictions_for_privilege(:view_event).first.name.should eql(places(:Southeastern_District).name)
-      end
-
-      it "should have one jurisdiction id for view privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(1)
-      end
-
-      it "should have one jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
-      end
-
-      it "should have one jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(1)
-      end
-    end
-
-    describe "assigning one admin role in the Southeastern District and an investigator role in Davis County" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => roles(:administrator).id, :jurisdiction_id => entities(:Southeastern_District).id },
-            { :role_id => roles(:investigator).id, :jurisdiction_id => entities(:Davis_County).id }
-          ]
-        }
-      end
-
-      it "should save properly" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(3)
-        @user.roles.length.should == 2
-        @user.role_memberships.length.should == 2
-        rm_ids = @user.role_memberships.collect { |rm| rm.jurisdiction_id }
-        rm_ids.include?(entities(:Southeastern_District).id).should be_true
-        rm_ids.include?(entities(:Davis_County).id).should be_true
-      end
-
-      it "should be an admin" do
-        @user.save
-        @user.is_admin?.should be_true
-      end
-
-      it "should have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should not have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Davis_County).id).should_not be_true
-      end
-
-      it "should have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should have view privileges in Davis County" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Davis_County).id).should be_true
-      end
-
-      it "should have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should have update privileges in Davis County" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Davis_County).id).should be_true
-      end
-
-      it "should have one juridiction for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(1)
-        juris = @user.jurisdictions_for_privilege(:view_event).collect { |juri| juri.name }
-        juris.include?(places(:Southeastern_District).name).should be_false
-        juris.include?(places(:Davis_County).name).should be_true
-      end
-
-      it "should have two jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
-      end
-
-      it "should have one jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(1)
-      end
-    end
-
-    describe "assigning one state manager role in the Southeastern District" do
-
-      before(:each) do
-        @state_manager_role =Factory.create(:role, :role_name => "State Manager")
-
-        ["view_event", "create_event", "update_event", "approve_event_at_state", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          privilege = Privilege.find_by_priv_name(priv_name)
-          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
-          add_privilege_to_role_in_all_jurisdictions(privilege, @state_manager_role)
-        end
-        
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @state_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
-          ]
-        }
-      end
-
-      it "should have one role_membership of state manager in the southeastern district" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
-        @user.roles.length.should == 1
-        @user.roles.first.role_name.should == @state_manager_role.role_name
-        @user.role_memberships.length.should == 1
-        @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
-      end
-
-      it "should not be an admin" do
-        @user.save
-        @user.is_admin?.should be_false
-      end
-
-      it "should not have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have create privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:create_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have approve_event_at_state privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:approve_event_at_state, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have route_event_to_any_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:route_event_to_any_lhd, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have route_event_to_any_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:assign_task_to_user, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have assign_task_to_user privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:assign_task_to_user, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have a juridiction in the Southeastern District for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(1)
-      end
-
-      it "should have a jurisdiction id for view privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(1)
-      end
-
-      it "should have a jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
-      end
-
-      it "should have no jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(0)
-      end
-
-      it "should be possible to call is_entitled_to? with an array and get the right answer" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, [entities(:Southeastern_District).id, entities(:Davis_County).id]).should be_true
-        @user.is_entitled_to_in?(:update_event, [entities(:Davis_County).id, entities(:Davis_County).id]).should be_false
-      end
-
-    end
-
-    describe "assigning one LHD manager role in the Southeastern District" do
-
-      before(:each) do
-        @lhd_manager_role =Factory.create(:role, :role_name => "LHD Manager")
-
-        ["view_event", "create_event", "update_event", "approve_event_at_state", "approve_event_at_lhd", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          privilege = Privilege.find_by_priv_name(priv_name)
-          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
-          add_privilege_to_role_in_all_jurisdictions(privilege, @lhd_manager_role)
-        end
-        
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @lhd_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
-          ]
-        }
-      end
-
-      it "should have one role_membership of LHD manager in the southeastern district" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
-        @user.roles.length.should == 1
-        @user.roles.first.role_name.should == @lhd_manager_role.role_name
-        @user.role_memberships.length.should == 1
-        @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
-      end
-
-      it "should not be an admin" do
-        @user.save
-        @user.is_admin?.should be_false
-      end
-
-      it "should not have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have create privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:create_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have approve_event_at_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:approve_event_at_lhd, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have route_event_to_any_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:route_event_to_any_lhd, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have assign_task_to_user privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:assign_task_to_user, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have a juridiction in the Southeastern District for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(1)
-      end
-
-      it "should have a jurisdiction id for view privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(1)
-      end
-
-      it "should have a jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
-      end
-
-      it "should have no jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(0)
-      end
-
-      it "should be possible to call is_entitled_to? with an array and get the right answer" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, [entities(:Southeastern_District).id, entities(:Davis_County).id]).should be_true
-        @user.is_entitled_to_in?(:update_event, [entities(:Davis_County).id, entities(:Davis_County).id]).should be_false
-      end
-
-    end
-
-    describe "assigning one surveillance manager role in the Southeastern District" do
-
-      before(:each) do
-        @surveillance_manager_role =Factory.create(:role, :role_name => "Surveillance Manager")
-
-        ["view_event", "create_event", "update_event", "accept_event_for_lhd", "route_event_to_investigator", "route_event_to_any_lhd", "assign_task_to_user"].each do |priv_name|
-          privilege = Privilege.find_by_priv_name(priv_name)
-          privilege = Factory(:privilege, :priv_name => priv_name) if privilege.nil?
-          add_privilege_to_role_in_all_jurisdictions(privilege, @surveillance_manager_role)
-        end
-
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @surveillance_manager_role.id, :jurisdiction_id => entities(:Southeastern_District).id }
-          ]
-        }
-      end
-
-      it "should have one role_membership of LHD manager in the southeastern district" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
-        @user.roles.length.should == 1
-        @user.roles.first.role_name.should == @surveillance_manager_role.role_name
-        @user.role_memberships.length.should == 1
-        @user.role_memberships.first.jurisdiction_id.should == entities(:Southeastern_District).id
-      end
-
-      it "should not be an admin" do
-        @user.save
-        @user.is_admin?.should be_false
-      end
-
-      it "should not have administrator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:administer, entities(:Southeastern_District).id).should be_false
-      end
-
-      it "should have view privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:view_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have update privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have create privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:create_event, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have accept_event_for_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:accept_event_for_lhd, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have route_event_to_any_lhd privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:route_event_to_any_lhd, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have route_event_to_investigator privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:route_event_to_investigator, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have assign_task_to_user privileges in Southeastern District" do
-        @user.save
-        @user.is_entitled_to_in?(:assign_task_to_user, entities(:Southeastern_District).id).should be_true
-      end
-
-      it "should have a juridiction in the Southeastern District for privilege view" do
-        @user.save
-        @user.jurisdictions_for_privilege(:view_event).length.should eql(1)
-      end
-
-      it "should have a jurisdiction id for view privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:view_event).size.should eql(1)
-      end
-
-      it "should have a jurisdiction id for update privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:update_event).size.should eql(1)
-      end
-
-      it "should have no jurisdiction id for administer privilege" do
-        @user.save
-        @user.jurisdiction_ids_for_privilege(:administer).size.should eql(0)
-      end
-
-      it "should be possible to call is_entitled_to? with an array and get the right answer" do
-        @user.save
-        @user.is_entitled_to_in?(:update_event, [entities(:Southeastern_District).id, entities(:Davis_County).id]).should be_true
-        @user.is_entitled_to_in?(:update_event, [entities(:Davis_County).id, entities(:Davis_County).id]).should be_false
-      end
-
-      describe "encapsulated privilege checking" do
-        before do
-          @event = Factory.build(:morbidity_event)
-          @event.jurisdiction.build(:secondary_entity_id => entities(:Southeastern_District).id)
-          @event.save!
-          @user.save
-        end
-
-        it "can update events in the South Eastern District" do
-          @user.can_update?(@event).should be_true
-        end
-      end
-
-    end
-
-    describe "assigning the same role and jurisdiction twice" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => roles(:administrator).id, :jurisdiction_id => entities(:Davis_County).id },
-            { :role_id => roles(:administrator).id, :jurisdiction_id => entities(:Davis_County).id }
-          ]
-        }
-      end
-
-      it "should save properly" do
-        lambda {@user.save}.should change {RoleMembership.count + User.count}.by(2)
-        @user.roles.length.should == 1
-        @user.role_memberships.length.should == 1
-        @user.role_memberships[0].jurisdiction_id.should == entities(:Davis_County).id
-      end
+    it "and returns true the user has the privilege in one of the jurisdictions" do
+      @user.is_entitled_to_in?(:update_event, [@jurisdiction.id, create_jurisdiction_entity.id]).should be_true
+      @user.is_entitled_to_in?(:update_event, [create_jurisdiction_entity.id, create_jurisdiction_entity.id]).should be_false
     end
   end
 
-  describe "on an existing user" do
-    before(:each) do
-      @user = users(:default_user)
-    end
-
-    describe "adding a new role in a new jurisdiction" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @user.role_memberships.first.role_id, :jurisdiction_id => @user.role_memberships.first.jurisdiction_id},
-            { :role_id => roles(:investigator).id, :jurisdiction_id => entities(:Davis_County).id }
-          ]
-        }
-      end
-
-      it "should save properly" do
-        @user.save
-        @user.role_memberships.length.should == 2
-        rm_ids = @user.role_memberships.collect { |rm| rm.jurisdiction_id }
-        rm_ids.include?(entities(:Southeastern_District).id).should be_true
-        rm_ids.include?(entities(:Davis_County).id).should be_true
-      end
-    end
-
-    describe "removing all existing roles" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => {}
-        }
-      end
-
-      it "should save properly" do
-        @user.roles.length.should == 0
-        @user.role_memberships.length.should == 0
-      end
-    end
-
-    describe "removing one of two roles" do
-      before(:each) do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => @user.role_memberships.first.role_id, :jurisdiction_id => @user.role_memberships.first.jurisdiction_id},
-            { :role_id => roles(:investigator).id, :jurisdiction_id => entities(:Davis_County).id }
-          ]
-        }
-        @user.save
-      end
-
-      it "should first have two roles" do
-        @user.roles.length.should == 2
-        @user.role_memberships.length.should == 2
-      end
-
-      it "should have one role after deleting the other" do
-        @user.attributes = {
-          :role_membership_attributes => [
-            { :role_id => roles(:investigator).id, :jurisdiction_id => entities(:Davis_County).id }
-          ]
-        }
-        @user.save
-        @user.roles.length.should == 1
-        @user.role_memberships.length.should == 1
-      end
-    end
-  end
-end
-
-describe User, 'task view settings' do
-
-  before(:each) do
-    @user = Factory.create(:user, :uid => 'tu', :user_name => 'taskowner', :status => 'active')
-  end
-
-  it 'should default to showing only today\'s tasks' do
-    @user.task_view_settings.should == {:look_back => 0, :look_ahead => 0}
-  end
-
-  it 'should store :days_back settings' do
-    @user.task_view_settings = {:days_back => 3}
-    @user.save!
-    @user.task_view_settings.should == {:days_back => 3}
-  end
-
-  describe '#store_as_task_view_settings' do
+  context '#store_as_task_view_settings' do
     it 'should reset to default settings w/  nil' do
       @user.store_as_task_view_settings(nil)
       @user.reload
@@ -772,39 +172,54 @@ describe User, 'task view settings' do
     end
   end
 
-end
+  context "state manager scopes" do
 
-describe User do
+    before(:each) do
+      create_role_with_privileges!('State Manager', :approve_event_at_state)
+      create_user_in_role!('State Manager', 'Spongebob Squarepants')
+      create_user_in_role!('State Manager', 'Patrick Star').disable
+    end
 
-  before(:each) do
-    create_role_with_privileges!('State Manager', :approve_event_at_state)
-    create_user_in_role!('State Manager', 'Spongebob Squarepants')
-    create_user_in_role!('State Manager', 'Patrick Star').disable
+    it "should find all state managers" do
+      results = User.state_managers
+      assert(results.map(&:best_name).include?('Spongebob Squarepants'),
+             "'Spongebob' should have been included in state managers")
+      assert(results.map(&:best_name).include?('Patrick Star'),
+             "'Patrick Star' should have been included in state managers")
+
+      non_managers = results.reject(&:state_manager?)
+      non_managers.each {|nm| p nm.privs}
+      assert(non_managers.empty?,
+             "Expected zero non-managers, but received #{non_managers.inspect}")
+    end
+
+    it "should find active state managers" do
+      results = User.state_managers.active
+      assert(results.map(&:best_name).include?('Spongebob Squarepants'),
+             "'Spongebob' should have been included in active state managers")
+      assert(!results.map(&:best_name).include?('Patrick Star'),
+             "'Patrick Star' should not have been included in active state managers")
+
+      non_managers = results.reject(&:state_manager?)
+      non_managers.each {|nm| p nm.privs}
+      assert(non_managers.empty?,
+             "Expected zero non-managers, but received #{non_managers.inspect}")
+    end
   end
 
-  it "should find all state managers" do
-    results = User.state_managers
-    assert(results.map(&:best_name).include?('Spongebob Squarepants'),
-           "'Spongebob' should have been included in state managers")
-    assert(results.map(&:best_name).include?('Patrick Star'),
-           "'Patrick Star' should have been included in state managers")
+  context "encapsulated privilege checking" do
+    before do
+      @event = Factory.build(:morbidity_event)
+      @event.jurisdiction.build(:secondary_entity_id => @jurisdiction.id)
+      @event.save!
 
-    non_managers = results.reject(&:state_manager?)
-    non_managers.each {|nm| p nm.privs}
-    assert(non_managers.empty?,
-           "Expected zero non-managers, but received #{non_managers.inspect}")
+      priv = Privilege.find_by_priv_name("update_event") || Factory(:privilege, :priv_name => "update_event")
+      @role.privileges << priv
+    end
+
+    it "checks user privileges against the event" do
+      @user.can_update?(@event).should be_true
+    end
   end
 
-  it "should find active state managers" do
-    results = User.state_managers.active
-    assert(results.map(&:best_name).include?('Spongebob Squarepants'),
-           "'Spongebob' should have been included in active state managers")
-    assert(!results.map(&:best_name).include?('Patrick Star'),
-           "'Patrick Star' should not have been included in active state managers")
-
-    non_managers = results.reject(&:state_manager?)
-    non_managers.each {|nm| p nm.privs}
-    assert(non_managers.empty?,
-           "Expected zero non-managers, but received #{non_managers.inspect}")
-  end
 end
