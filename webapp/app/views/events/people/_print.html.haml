@@ -19,14 +19,12 @@
   - active_patient_form.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |primary_form|
 
     %fieldset
-      %legend=t('person_info')
+      %legend=t(:person_info)
 
-      - event_form.fields_for(:reporter, :builder => ExtendedFormBuilder) do |r|
-        - r.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
-          - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-            - core_element_print :first_reported_PH_date, event_form, :vert do
-              %span.print-label=ct('first_reported_to_public_health_date')
-              %span.print-value= ld(@event.first_reported_PH_date)
+      %span.subsection-header= t(:reported_dates)
+      %span.vert
+        %span.print-label= ct('first_reported_to_public_health_date')
+        %span.print-value= ld(@event.first_reported_PH_date)
 
       = render :partial => 'events/people/name_print.html.haml', :locals => {:person => entity_data.person, :f => primary_form }
       = render :partial => 'events/people/address_print.html.haml', :locals => {:address => @event.address, :f => event_form}
