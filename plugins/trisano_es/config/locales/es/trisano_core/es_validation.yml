@@ -44,7 +44,7 @@ es:
         is_not_valid: "no es válido/a"
         precede_birth_date: "{{thing}} la(s) fecha(s) precede(n) la fecha de nacimiento"
         cannot_precede_birth_date: "no puede ser antes de la fecha de nacimiento"
-        merge_race_errors: "se ha fusionado a otra entidad y ya no está disponible para usarse en eventos. Se puede tomar las siguientes acciones: Intentar eliminar la entidad o cambiar al modo mostrador para ver la entidad sustitutiva."
+        merge_race_error: "se ha fusionado a otra entidad y ya no está disponible para usarse en eventos. Se puede tomar las siguientes acciones: Intentar eliminar la entidad o cambiar al modo mostrador para ver la entidad sustitutiva."
 
       models:
         # Overrides default messages

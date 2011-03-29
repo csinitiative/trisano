@@ -66,10 +66,10 @@ class Participation < ActiveRecord::Base
 
   def add_place_specific_merge_error(base_message)
     if self.place_entity.place.nil?
-        errors.add(:base, base_message)
-      else
-        errors.add("#{self.place_entity.place.name}", base_message)
-      end
+      errors.add(:base, base_message)
+    else
+      errors.add("#{self.place_entity.place.name}", base_message)
+    end
   end
 
 end

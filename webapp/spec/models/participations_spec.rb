@@ -15,12 +15,21 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
-describe Participation, 'associations' do
-  # TGRII: Not working for reasons unknown
-  # it { should have_one(:event) }
-  # it { should have_one(:primary_entity) }
-  # it { should have_one(:secondary_entity) }
+describe Participation do
+  before do
+    @event = Factory(:morbidity_event)
+  end
+
+  it "should not allow a participation to be built w/ a deleted entity" do
+    deleted_place_entity = Factory(:place_entity, :deleted_at => DateTime.now)
+    participation = Participation.new(:event => @event,
+                                      :primary_entity => @event.interested_party.person_entity,
+                                      :secondary_entity => deleted_place_entity)
+    participation.should_not be_valid
+    participation.errors.size.should == 1
+    participation.errors.full_messages.first.should =~ /has been merged into another entity/i
+  end
 end
     
