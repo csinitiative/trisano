@@ -1,0 +1,11 @@
+- content_for :title do
+  = t :manage_email_addresses
+
+- content_for :tools do
+  = link_to t(:back_to, :name => t(:manage_email_addresses)), email_addresses_path
+  
+#email_address_form
+  - form_for @email_address do |f|
+    = f.label :email_address
+    = f.text_field :email_address
+    = f.submit t :update

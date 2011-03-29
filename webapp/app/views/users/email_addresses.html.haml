@@ -16,6 +16,7 @@
             %td
               &= email_address.email_address
             %td
+              =link_to t(:edit), email_address_edit_path(email_address)
               =link_to t(:delete), email_address, :method => :delete, :confirm => t(:are_you_sure)
   - else
     %em

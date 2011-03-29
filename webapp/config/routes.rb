@@ -65,6 +65,8 @@ ActionController::Routing::Routes.draw do |map|
   map.email_addresses 'users/email_addresses', :controller => 'users', :action => 'create_email_address', :conditions => { :method => :post }
   map.email_addresses 'users/email_addresses', :controller => 'users', :action => 'email_addresses'
   map.email_address 'users/email_addresses/:email_address_id', :controller => 'users', :action => 'destroy_email_address', :conditions => { :method => :delete }
+  map.email_address_edit 'users/email_addresses/:email_address_id/edit', :controller => 'users', :action => 'edit_email_address', :conditions => { :method => :get }
+  map.email_address_update 'users/email_addresses/:email_address_id', :controller => 'users', :action => 'update_email_address', :conditions => { :method => :put }
 
   map.admin 'admin', :controller => 'admin'
   map.analysis 'analysis', :controller => 'analysis'

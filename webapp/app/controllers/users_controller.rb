@@ -16,7 +16,17 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class UsersController < AdminController
-  skip_before_filter :check_role, :only => [:shortcuts, :shortcuts_edit, :shortcuts_update, 'settings']
+  skip_before_filter :check_role, :only => [
+    :shortcuts,
+    :shortcuts_edit,
+    :shortcuts_update,
+    :settings,
+    :email_addresses,
+    :create_email_address,
+    :edit_email_address,
+    :update_email_address,
+    :destroy_email_address
+  ]
 
   def index
     @users = User.all :order => {
@@ -93,7 +103,7 @@ class UsersController < AdminController
       else
         flash[:error] = t("shortcuts_update_failed")
       end
-    format.html { render :action => "shortcuts_edit" }
+      format.html { render :action => "shortcuts_edit" }
     end
   end
 
@@ -115,6 +125,24 @@ class UsersController < AdminController
         end
         redirect_to email_addresses_path
       end
+    end
+  end
+
+  def email_addresses
+  end
+
+  def edit_email_address
+    @email_address = User.current_user.email_addresses.find(params[:email_address_id])
+  end
+
+  def update_email_address
+    @email_address = User.current_user.email_addresses.find(params[:email_address_id])
+    if @email_address.update_attributes(params[:email_address])
+      flash[:notice] = I18n.translate :updated_email_address
+      redirect_to email_addresses_path
+    else
+      flash[:error] = I18n.translate :error_updating_email_address
+      render :action => :edit_email_address
     end
   end
 

@@ -38,3 +38,22 @@ Feature: Managing user e-mail addresses
     When I click the "Delete" link
     Then I should be on the manage e-mail addresses page
     And I should not see "foo@bar.com"
+
+  Scenario: Editing an existing e-mail address
+    When I follow "Edit"
+    And I fill in "Email address" with "edited_email@email.com"
+    And I press "Update"
+    Then I should be on the manage e-mail addresses page
+    And I should see "E-mail address successfully updated"
+
+  Scenario: Editing an existing e-mail address with an invalid e-mail address
+    When I follow "Edit"
+    And I fill in "Email address" with "frmp"
+    And I press "Update"
+    Then I should see "Error updating e-mail address"
+    
+    When I fill in "Email address" with "edited_email@email.com"
+    And I press "Update"
+    Then I should be on the manage e-mail addresses page
+    And I should see "E-mail address successfully updated"
+
