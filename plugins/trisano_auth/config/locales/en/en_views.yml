@@ -7,7 +7,7 @@ en:
     login: "Log in"
     logout: "LOG OUT"
     api_key: 'API key'
-    api_key_message: This is your super secret api token. Do not give it to anyone or they can pretend to be you.
+    api_key_message: This is your secret api token. Do not give it to anyone or they can pretend to be you.
     username: "User Name"
     password: "Password"
     submit: "Submit"

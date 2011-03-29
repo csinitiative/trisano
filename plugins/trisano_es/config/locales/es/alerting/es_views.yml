@@ -20,6 +20,11 @@ es:
       cmr_created: 'Subscribe to CMR Created Alerts(EN)'
       button: Subscribe(EN)
       success: '{{type}} subscription successful!(EN)'
+    statuses:
+      new: New (EN)
+      read: Read (EN)
+    dashboard:
+      rjs_error: "There was an error updating your alert. Please refresh the dashboard and try again. (EN)"
 
   activerecord:
     attributes:

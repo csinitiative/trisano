@@ -225,10 +225,14 @@ module ApplicationHelper
       #{auto_complete_stylesheet}
       #{form.label(method_name, label)}
       #{form.text_field(method_name, tag_options)}
-      #{image_tag 'redbox_spinner.gif', :id => "#{tf_id}_lab_spinner", :alt => 'Working...', :style => 'display: none;', :size => '16x16'}
+      #{spinner_image("#{tf_id}_lab_spinner")}
       #{content_tag("div", "", :id => "#{tf_id}_auto_complete", :class => "auto_complete")}
       #{auto_complete_field tf_id, completion_options}
     HTML
+  end
+
+  def spinner_image(id)
+    image_tag 'redbox_spinner.gif', :id => id, :alt => 'Working...', :style => 'display: none;', :size => '16x16'
   end
 
   def get_form_id(event)
