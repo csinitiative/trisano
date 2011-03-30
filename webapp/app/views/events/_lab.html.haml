@@ -28,7 +28,7 @@
 
   - core_element(:secondary_entity_id, lab_form, :horiz) do
     = lab_form.label :secondary_entity_id
-    = lab_form.collection_select(:secondary_entity_id, PlaceEntity.labs, :id, :name, { :include_blank => true }, { :class => 'required_if_others' })
+    = lab_form.collection_select(:secondary_entity_id, PlaceEntity.labs.active, :id, :name, { :include_blank => true }, { :class => 'required_if_others' })
 
   - if defined?(f) && !f.object.new_record?
     %span.horiz
