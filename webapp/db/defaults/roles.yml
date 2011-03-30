@@ -58,5 +58,6 @@ State Manager:
   - access_avr
   - manage_entities
   - view_access_records
+  - access_sensitive_diseases
 Read-only:
   - view_event

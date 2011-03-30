@@ -1079,6 +1079,7 @@ en:
       write_staged_message: "Create staged messages"
       manage_entities: "Manage entities"
       view_access_records: "View access records"
+      access_sensitive_diseases: "Access sensitive diseases"
 
       # Debt: move merge translations to plugin
       merge_people: "Merge people"
