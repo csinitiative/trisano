@@ -272,6 +272,10 @@ en:
   active: 'Active'
   active?: 'Active?'
   inactive: 'Inactive'
+  sensitive: 'Sensitive'
+  sensitive_disease: 'Sensitive disease'
+  sensitive?: 'Sensitive?'
+  not_sensitive: 'Not sensitive'
   edit_disease: Edit disease
   cdc_send_case: 'CDC/NETSS export disease when case is:'
 #Treatments

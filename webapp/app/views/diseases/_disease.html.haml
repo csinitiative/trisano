@@ -17,6 +17,8 @@
   %td.forminformation
     .formname
       = h(disease.disease_name)
+      - if disease.sensitive?
+        %i= "-- #{t('sensitive_disease')} --"
 
     %span{ :class => "horiz" }
       %b

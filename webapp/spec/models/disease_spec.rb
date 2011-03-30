@@ -52,6 +52,16 @@ describe Disease do
     @disease.should be_active
   end
 
+  it "should not be sensitive" do
+    @disease.should_not be_sensitive
+  end
+
+  it "can be made sensitive" do
+    @disease.sensitive = true
+    @disease.save.should be_true
+    @disease.should be_sensitive
+  end
+
   it '#find_active should not return inactive diseases' do
     @disease.save.should be_true
     Disease.find(:all).size.should >= 1

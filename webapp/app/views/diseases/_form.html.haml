@@ -28,6 +28,9 @@
         %label{:for => 'disease_active', :style => 'display: inline'}
           = f.check_box(:active)
           =t('active?')
+        %label{:for => 'disease_sensitive', :style => 'display: inline'}
+          = f.check_box(:sensitive)
+          =t('sensitive?')
 
       %span.vert-break
         = f.label(:contact_lead_in)

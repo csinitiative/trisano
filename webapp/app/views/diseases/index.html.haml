@@ -37,6 +37,8 @@
         %td.forminformation
           .formname
             = link_to h(disease.disease_name), disease
+            - if disease.sensitive?
+              %i= "-- #{t('sensitive_disease')} --"
             .tools
               = disease.active? ? t('active') :  t('inactive')
         %td

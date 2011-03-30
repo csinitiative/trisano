@@ -14,6 +14,17 @@ Feature: Updating diseases
     Then I should see "Disease was successfully updated"
       And I should see "Inactive"
 
+  Scenario: Make disease sensitive
+    Given I am logged in as a super user
+      And the following active diseases:
+        | Disease name |
+        | The Trots    |
+    When I go to edit the disease named "The Trots"
+      And I check "Sensitive?"
+      And I press "Update"
+    Then I should see "Disease was successfully updated"
+      And I should see "Sensitive"
+
   Scenario: Set disease export status
     Given I am logged in as a super user
       And the following active diseases:
