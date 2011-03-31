@@ -753,7 +753,7 @@ class TriSanoWebApiCmr < TriSanoWebApi
     end
     if !@options.clinician_telephone_entity_location_type.nil?
       found = false
-      form.field('morbidity_event[clinicians_attributes][1][person_entity_attributes][telephones_attributes][0][entity_location_type_id]').options.each do |s|
+      form.field('morbidity_event[clinicians_attributes][0][person_entity_attributes][telephones_attributes][0][entity_location_type_id]').options.each do |s|
         if s.text == @options.clinician_telephone_entity_location_type
           found = true
           s.select
