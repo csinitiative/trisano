@@ -67,6 +67,12 @@ describe ValueSetElement do
       @question_element.children.size.should == 1
 
     end
+
+    it "can be added (with it's children) to the library" do
+      @value_set_element.save_and_add_to_form
+      @value_set_element.stubs(:children).returns [Factory(:value_element)]
+      @value_set_element.add_to_library.should be_true
+    end
   end
 
   describe "when updated" do

@@ -51,13 +51,8 @@ class ValueElement < FormElement
     @question = question
   end
 
-  # when copying value elements, it's faster just to have the copy
-  # operation set the question, rather then try to look it up
   def copy(options = {})
-    returning super do |e|
-      if options[:question_element]
-        question = options[:question_element].question.dup
-      end
-    end
+    return unless valid?
+    super
   end
 end

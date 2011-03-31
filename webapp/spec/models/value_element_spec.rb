@@ -15,15 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe ValueElement do
-  before(:each) do
-    @value_element = ValueElement.new
-  end
-
   it "should be valid" do
-    @value_element.should be_valid
+    ValueElement.new.should be_valid
   end
 
   describe "with a blank value" do
@@ -49,6 +45,27 @@ describe ValueElement do
     it "is valid if question type is drop down" do
       @question.data_type = :drop_down
       @value_element.should be_valid
+    end
+
+    it "should not copy itself if target question is a radio button" do
+      question = Question.new
+      question.data_type = :radio_button
+      value_element = ValueElement.new(:question => question)
+      value_element.copy.should be_nil
+    end
+
+    it "should not copy itself if target question is a list of check boxes" do
+      question = Question.new
+      question.data_type = :check_box
+      value_element = ValueElement.new(:question => question)
+      value_element.copy.should be_nil
+    end
+
+    it "should copy itself if target question is a drop down select" do
+      question = Question.new
+      question.data_type = :drop_down
+      value_element = ValueElement.new(:question => question)
+      value_element.copy.should_not be_nil
     end
   end
 

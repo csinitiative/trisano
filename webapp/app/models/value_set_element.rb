@@ -24,6 +24,9 @@ class ValueSetElement < FormElement
 
   validates_presence_of :name
 
+  # mask has_one, since we don't want any db side effects
+  attr_accessor :question
+
   def save_and_add_to_form
     begin
       parent_element = FormElement.find(parent_element_id)
@@ -39,4 +42,10 @@ class ValueSetElement < FormElement
     super
   end
 
+  def copy_children(options={})
+    children.each do |child|
+      child.question = self.question.try :clone
+      child.copy_with_children(options)
+    end
+  end
 end

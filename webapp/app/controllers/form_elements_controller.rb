@@ -63,16 +63,17 @@ class FormElementsController <  AdminController
   end
 
   def filter_elements
-    begin
-      @reference_element = FormElement.find(params[:reference_element_id])
-      direction = params[:direction]
-      @library_elements = FormElement.filter_library(:direction => direction, :filter_by => params[:filter_by], :type => params[:type].to_sym)
-      render :partial => "forms/library_elements", :locals => {:direction => direction.to_sym, :type => params[:type].to_sym}
-    rescue Exception => ex
-     logger.debug ex
-      flash[:error] = t("error_during_filtering")
-      render :template => 'rjs-error'
-    end
+    @reference_element = FormElement.find(params[:reference_element_id])
+    direction = params[:direction]
+    @library_elements = FormElement.filter_library(:direction => direction,
+                                                   :filter_by => params[:filter_by],
+                                                   :type => params[:type].to_sym)
+    render :partial => "forms/library_elements",
+           :locals => {:direction => direction.to_sym, :type => params[:type].to_sym}
+  rescue Exception => ex
+    logger.debug ex
+    flash[:error] = t("error_during_filtering")
+    render :template => 'rjs-error'
   end
 
   def update_export_column

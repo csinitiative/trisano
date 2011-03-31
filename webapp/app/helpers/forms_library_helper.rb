@@ -24,6 +24,7 @@ module FormsLibraryHelper
     result = ""
     result << render_library_no_group(library_element_cache, type, direction)
     result << render_library_groups(library_element_cache, type, direction)
+    result
   end
 
   private
