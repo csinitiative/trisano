@@ -22,8 +22,10 @@ class FormElement < ActiveRecord::Base
 
   acts_as_nested_set :scope => :tree_id
   belongs_to :form
-  has_one :question
   belongs_to :export_column
+
+  # sucks, but here so we can load the entire form tree as objects in one go
+  has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
 
   named_scope :library_roots, :conditions => {
     :parent_id => nil,
@@ -142,7 +144,13 @@ class FormElement < ActiveRecord::Base
     end
   end
 
-  # use this instaead of cloning to spawn new nodes from old nodes
+  # use this instead of cloning to spawn new nodes from old nodes
+  # The contract works like this:
+  #
+  # 1. Everything is cool, return the copied element
+  # 2. Not copiable. Return nil. Nothing copied, move along.
+  # 3. Something went terribly wrong. Raise exception.
+  #
   def copy(options = {})
     options.symbolize_keys!
     returning self.class.new do |e|
@@ -164,11 +172,12 @@ class FormElement < ActiveRecord::Base
     if options[:parent] and options[:parent].tree_id != options[:tree_id]
       raise("tree_id must match the parent element's tree_id, if parent element is not nil")
     end
-    e = copy(options)
-    e.save!
-    options[:parent].add_child(e) if options[:parent]
-    copy_children(options.merge(:parent => e))
-    e
+    if e = copy(options)
+      e.save!
+      options[:parent].add_child(e) if options[:parent]
+      copy_children(options.merge(:parent => e))
+      e
+    end
   end
 
   def copy_children(options)

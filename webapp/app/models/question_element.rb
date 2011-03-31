@@ -18,7 +18,6 @@
 class QuestionElement < FormElement
   include Trisano::FormElement::ShortName
 
-  has_one :question, :foreign_key => "form_element_id", :dependent => :destroy
   has_one :value_set_element, :class_name => "ValueSetElement", :foreign_key => 'parent_id', :include => [:value_elements], :dependent => :destroy
   belongs_to :export_column
 
@@ -134,6 +133,11 @@ class QuestionElement < FormElement
     return true
   end
 
+  def copy_from_library(library_element, options = {})
+    library_element.question = self.question.clone
+    super
+  end
+
   def copy(options = {})
     dupe = super(options)
     dupe.question = question.clone
@@ -145,9 +149,11 @@ class QuestionElement < FormElement
     dupe
   end
 
-  def copy_with_children(options)
-    options[:question_element] = self
-    super(options)
+  def copy_children(options={})
+    children.each do |child|
+      child.question = self.question.clone
+      child.copy_with_children(options)
+    end
   end
 
   def can_receive_value_set?
