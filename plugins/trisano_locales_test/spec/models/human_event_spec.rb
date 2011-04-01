@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "Finding translated gender" do
 
   before :all do
+    ParticipationsRiskFactor.delete_all
     HospitalsParticipation.delete_all
     Participation.delete_all
     DiseaseEvent.delete_all

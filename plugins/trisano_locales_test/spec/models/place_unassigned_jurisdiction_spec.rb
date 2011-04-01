@@ -21,6 +21,7 @@ describe Place, "when working with the unassigned jurisdiction" do
   include PlaceSpecHelper
 
   before :all do
+    ParticipationsRiskFactor.delete_all
     HospitalsParticipation.delete_all
     Participation.delete_all
     RoleMembership.delete_all

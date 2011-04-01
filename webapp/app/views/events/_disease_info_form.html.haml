@@ -28,7 +28,7 @@
       - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
         - core_element :disease_id, d, :horiz do
           = d.label(:disease_id)
-          = d.collection_select(:disease_id, Disease.diseases_for_event(@event), :id, :disease_name, {:include_blank => true})
+          = d.collection_select(:disease_id, Disease.diseases_for_event(@event).sensitive(User.current_user, @event), :id, :disease_name, {:include_blank => true})
         - core_element :disease_onset_date, d, :horiz do
           = d.label(:disease_onset_date)
           = d.calendar_date_select(:disease_onset_date, :year_range => 100.years.ago..0.years.from_now)

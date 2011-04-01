@@ -56,6 +56,21 @@ class Disease < ActiveRecord::Base
     WHERE diseases_loinc_codes.disease_id = #{id} OR common_test_types_diseases.disease_id = #{id}
   }
 
+  named_scope :diseases_for_event, lambda { |event|
+    conditions = ['active = ?', true]
+    if event.disease_event.try(:disease_id)
+      conditions.first << ' OR id = ?'
+      conditions << event.disease_event.disease_id
+    end
+    { :conditions => conditions, :order => 'disease_name' }
+  }
+
+  named_scope :sensitive, lambda { |user, event|
+    unless user.can_access_sensitive_diseases?(event)
+      { :conditions => { :sensitive => false } }
+    end
+  }
+
   class << self
 
     def find_active(*args)
@@ -92,16 +107,6 @@ class Disease < ActiveRecord::Base
     def with_invalid_case_status_clause
       diseases = collect_diseases(&:invalid_case_status_where_clause)
       "(#{diseases.join(' OR ')})" unless diseases.compact!.empty?
-    end
-
-    def diseases_for_event(event)
-      diseases = find_active(:all, :order => 'disease_name ASC')
-
-      if (event.disease_event.try(:disease).try(:active) == false)
-        diseases << event.disease_event.disease
-        diseases = diseases.sort_by {|disease| disease.disease_name }
-      end
-      diseases
     end
 
     def load_from_yaml(str_or_readable)

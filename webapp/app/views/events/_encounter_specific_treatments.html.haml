@@ -14,7 +14,7 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -core_section :encounter_specific_treatments_section, f do
-  - unless event.encounter_child_events.first.new_record?
+  - unless event.encounter_child_events.first.try :new_record?
 
     - for encounter in event.encounter_child_events
       - pe = encounter.participations_encounter

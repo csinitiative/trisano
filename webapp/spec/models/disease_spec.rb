@@ -20,15 +20,27 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Disease do
   include DiseaseSpecHelper
 
-  before(:each) do
-    @disease = Disease.new(:disease_name => "The Pops")
+  before :all do
+    ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns")
+    ExportConversionValue.delete_all
+    ExportColumn.delete_all
+    LoincCode.delete_all
+    DiseaseEvent.delete_all
+    Disease.delete_all
   end
+
+  after :all do
+    Fixtures.reset_cache
+  end
+
+  let(:new_disease) { Disease.new(:disease_name => "The Pops") }
 
   it { should have_many(:organisms) }
   it { should have_many(:core_fields_diseases) }
   it { should have_many(:core_fields) }
   it { should have_many(:treatments) }
   it { should have_many(:disease_specific_treatments) }
+  it { should have_and_belong_to_many(:export_columns) }
 
   it "should have many exportable statuses" do
     should have_and_belong_to_many(:cdc_disease_export_statuses)
@@ -39,38 +51,38 @@ describe Disease do
   end
 
   it "should be valid" do
-    @disease.should be_valid
+    new_disease.should be_valid
   end
 
   it "should not be active" do
-    @disease.should_not be_active
+    new_disease.should_not be_active
   end
 
   it "can be made active" do
-    @disease.active = true
-    @disease.save.should be_true
-    @disease.should be_active
+    new_disease.active = true
+    new_disease.save.should be_true
+    new_disease.should be_active
   end
 
   it "should not be sensitive" do
-    @disease.should_not be_sensitive
+    new_disease.should_not be_sensitive
   end
 
   it "can be made sensitive" do
-    @disease.sensitive = true
-    @disease.save.should be_true
-    @disease.should be_sensitive
+    new_disease.sensitive = true
+    new_disease.save.should be_true
+    new_disease.should be_sensitive
   end
 
   it '#find_active should not return inactive diseases' do
-    @disease.save.should be_true
+    new_disease.save.should be_true
     Disease.find(:all).size.should >= 1
     Disease.find_active(:all).size.should == 0
   end
 
   it '#find_active should return active diseases' do
-    @disease.active = true
-    @disease.save.should be_true
+    new_disease.active = true
+    new_disease.save.should be_true
     Disease.find_active(:all).size.should == 1
   end
 
@@ -78,7 +90,7 @@ describe Disease do
     Factory.create(:disease, :active => true)
     Factory.create(:disease, :active => true)
     Factory.create(:disease, :active => false)
-    event = Factory.create(:morbidity_event_with_disease)
+    event = Factory.create(:morbidity_event)
     diseases = Disease.diseases_for_event(event)
     diseases.size.should == 2
   end
@@ -95,30 +107,54 @@ describe Disease do
     diseases.detect {|disease| disease.disease_name == deactivated_disease.disease_name }.should_not be_nil
   end
 
+  context "filtering for sensitive diseases" do
+    before(:all)  do
+      @user = Factory.build(:user)
+      @disease = Factory.create(:disease)
+      @sensitive_disease = Factory.create(:disease, :sensitive => true)
+      @event = Factory.build(:morbidity_event)
+    end 
+
+    it "should not return sensitive diseases if user doesn't have the privilege" do
+      @user.stubs(:can_access_sensitive_diseases?).returns(false)
+      Disease.sensitive(@user, @event).should == [@disease]
+    end
+
+    it "returns all diseases including sensitive if user is permitted to see sensitive diseases" do
+      @user.stubs(:can_access_sensitive_diseases?).returns(true)
+      Disease.sensitive(@user, @event).should == [@disease, @sensitive_disease]
+    end
+  end
+
   it "should return its live forms" do
-    @disease.save.should be_true
+    new_disease.save.should be_true
 
     form = Form.new({
         :name => "Test Form",
         :event_type => "morbidity_event",
-        :disease_ids => [@disease.id],
+        :disease_ids => [new_disease.id],
         :short_name => 'disease_spec_short'
       }
     )
 
     form.save_and_initialize_form_elements
-    @disease.live_forms.should be_empty
+    new_disease.live_forms.should be_empty
     published_form = form.publish
     published_form.should_not be_nil
-    live_forms = @disease.live_forms
+    live_forms = new_disease.live_forms
     live_forms.should_not be_empty
     live_forms[0].id.should eql(published_form.id)
-    live_forms = @disease.live_forms("PlaceEvent")
+    live_forms = new_disease.live_forms("PlaceEvent")
     live_forms.should be_empty
   end
 
   describe "loading from a YAML file" do
-    fixtures :loinc_codes
+    before :all do
+      scale = ExternalCode.find_by_code_name_and_the_code('loinc_scale', 'Ord') || Factory(:scale_code)
+      Factory(:loinc_code, :loinc_code => '10007-0', :scale => scale)
+      Factory(:loinc_code, :loinc_code => '20002-0', :scale => scale)
+      Factory(:loinc_code, :loinc_code => '20001-0', :scale => scale)
+    end
 
     before do
       Disease.create! :disease_name => 'Already here'
@@ -182,7 +218,7 @@ describe Disease do
 
   describe 'export statuses' do
     it 'should initialize w/ zero export statuses' do
-      @disease.cdc_disease_export_statuses.should be_empty
+      new_disease.cdc_disease_export_statuses.should be_empty
     end
 
     describe 'associating cases' do
@@ -190,16 +226,15 @@ describe Disease do
       it 'should add export case status' do
         codes = ExternalCode.find_cases(:all).select {|s| %w(Probable Suspect).include?(s.code_description)}
         codes.length.should == 2
-        @disease.update_attributes('cdc_disease_export_status_ids' => codes.map(&:id))
-        @disease.save!
-        @disease.cdc_disease_export_statuses.length.should == 2
+        new_disease.update_attributes('cdc_disease_export_status_ids' => codes.map(&:id))
+        new_disease.save!
+        new_disease.cdc_disease_export_statuses.length.should == 2
       end
     end
 
   end
 
   describe 'diseases w/ no export status' do
-    fixtures :diseases, :external_codes, :cdc_disease_export_statuses
 
     it 'should only return diseases with no specified cdc export status' do
       Disease.with_no_export_status.each do |disease|
@@ -211,37 +246,20 @@ describe Disease do
 
   describe 'diseases w/a CDC export code' do
 
-    fixtures :export_columns
-
     it 'it should create and update corresponding conversion values on save' do
-      export_column = ExportColumn.find_by_export_column_name("EVENT")
+      export_column = Factory(:export_column, :export_column_name => "EVENT")
 
-      @disease.cdc_code = "123456"
-      @disease.save.should be_true
-      export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from(export_column.id, @disease.disease_name)
+      new_disease.cdc_code = "123456"
+      new_disease.save.should be_true
+      export_conversion_value = ExportConversionValue.find_by_export_column_id_and_value_from(export_column.id, new_disease.disease_name)
       export_conversion_value.should_not be_nil
-      export_conversion_value.value_to.should eql(@disease.cdc_code)
+      export_conversion_value.value_to.should eql(new_disease.cdc_code)
 
-      @disease.cdc_code = "654321"
-      @disease.save.should be_true
+      new_disease.cdc_code = "654321"
+      new_disease.save.should be_true
       export_conversion_value.reload
-      export_conversion_value.value_to.should eql(@disease.cdc_code)
+      export_conversion_value.value_to.should eql(new_disease.cdc_code)
 
-    end
-  end
-
-  describe 'export conversion value ids' do
-    fixtures :diseases, :export_conversion_values, :export_columns, :diseases_export_columns
-
-    before :each do
-      @disease = diseases(:hep_a)
-    end
-
-    it 'should ids for export conversion values related to this disease' do
-      @disease.export_columns.length.should == 1
-      @disease.export_columns[0].export_conversion_values.length.should == 1
-      @disease.export_conversion_value_ids.length.should == 1
-      @disease.export_conversion_value_ids[0].should == 11
     end
   end
 

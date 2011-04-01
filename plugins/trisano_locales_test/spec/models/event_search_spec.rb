@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "Finding translated codes" do
 
   before :all do
+    ParticipationsRiskFactor.delete_all
     DiseaseEvent.delete_all
     ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns;")
     Disease.delete_all

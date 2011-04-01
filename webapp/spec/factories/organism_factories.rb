@@ -20,8 +20,6 @@ require 'faker'
 
 Factory.define(:loinc_code) do |lc|
   lc.loinc_code "13954-3"
-  # lc.scale { |scale| scale.association(:scale_code) }
-  lc.organisms { |org| [org.association(:organism)] }
 end
 
 Factory.define(:organism) do |o|

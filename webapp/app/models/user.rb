@@ -131,7 +131,8 @@ class User < ActiveRecord::Base
     self.update_attribute(:status, 'disabled')
   end
 
-  def is_entitled_to_in?(privilege, jurisdiction_ids)
+  def is_entitled_to_in?(privilege, jurisdiction_ids, reload=false)
+    @privs = nil if reload
     # jurisdiction_ids may be an array or a single ID.  Convert them all to ints just to be sure.
     j_ids = Set.new([jurisdiction_ids].flatten.map(&:to_i))
     !(privs[privilege.to_sym] & j_ids).empty?
@@ -270,15 +271,20 @@ class User < ActiveRecord::Base
     is_entitled_to?(:create_event)
   end
 
-  def can_update?(event)
-    can?(:update_event, event)
+  def can_update?(event, reload=false)
+    can?(:update_event, event, reload)
   end
 
-  def can_view?(event)
-    can?(:view_event, event)
+  def can_view?(event, reload=false)
+    can?(:view_event, event, reload)
   end
 
-  def can?(priv, event)
+  def can_access_sensitive_diseases?(event, reload=false)
+    can?(:access_sensitive_diseases, event, reload)
+  end
+
+  def can?(priv, event, reload=false)
+    @privs = nil if reload
     !(privs[priv] & event.jurisdiction_entity_ids).empty?
   end
 
