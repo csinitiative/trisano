@@ -91,14 +91,17 @@ describe MorbidityEvent do
 
   describe "#initialization" do
     it "assigns event to unassigned jurisdiction, if available" do
-      given_an_unassigned_jurisdiction
+      Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
       event = MorbidityEvent.new
-      event.jurisdiction.place_entity.place.should == Place.unassigned_jurisdiction
+      event.jurisdiction.place_entity.place.should == Place.unassigned_jurisdiction(true)
     end
 
     it "does not assign a jurisdiction if unassigned jurisdiction can't be found" do
       # Fixtures
-      Place.unassigned_jurisdiction.try(:delete)
+      PlaceEntity.jurisdictions.each do |entity|
+        entity.destroy
+      end
+      Place.unassigned_jurisdiction(true)
 
       event = MorbidityEvent.new
       event.jurisdiction.should be_nil

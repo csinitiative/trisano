@@ -939,7 +939,6 @@ describe 'When added to an event using an existing person entity' do
 
   before(:each) do
     @user = Factory.create(:user)
-    User.stubs(:current_user).returns(@user)
     @person_entity = Factory.create(:person_entity)
     @person_event_hash = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :primary_entity_id => "#{@person_entity.id}" } }
   end
@@ -947,7 +946,7 @@ describe 'When added to an event using an existing person entity' do
   it "should receive the person entity's canonical address if one exists" do
     canonical_address = Factory.create(:address, :entity_id => @person_entity.id)
     event = MorbidityEvent.new(@person_event_hash)
-    event.save
+    event.save!
     event.reload
     new_person_address = event.address
     new_person_address.should_not be_nil

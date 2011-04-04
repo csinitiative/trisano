@@ -222,9 +222,7 @@ describe Place do
       PlaceEntity.delete_all
       ActiveRecord::Base.connection.execute("DELETE FROM places_types;")
 
-      @unassigned = create_jurisdiction_entity(:place_attributes => {
-                                                 :name => 'Unassigned',
-                                                 :short_name => 'Unassigned'})
+      Place.unassigned_jurisdiction || create_unassigned_jurisdiction_entity
     end
 
     after { Fixtures.reset_cache }

@@ -37,7 +37,7 @@ class InterestedParty < Participation
 
   def validate
     super
-    if self.person_entity.person.nil?
+    if self.person_entity.try(:person).nil?
       errors.add :base, :nil_person
     end
   end

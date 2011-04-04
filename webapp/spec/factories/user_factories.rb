@@ -112,6 +112,10 @@ def create_jurisdiction_entity(options = {})
   end
 end
 
+def create_unassigned_jurisdiction_entity
+  create_jurisdiction_entity(:place_attributes => { :name => "Unassigned" })
+end
+
 def login_as_super_user
   @current_user = Factory(:user)
   create_super_role

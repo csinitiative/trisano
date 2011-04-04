@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe User do
 
@@ -221,11 +221,17 @@ describe User do
       @user.can_update?(@event).should be_true
     end
 
-    it "varifies is a user can access sensitive diseases" do
+    it "verifies is a user can access sensitive diseases" do
       @user.can_access_sensitive_diseases?(@event).should be_false
 
       @role.privileges << (Privilege.find_by_priv_name("access_sensitive_diseases") || Factory(:privilege, :priv_name => "access_sensitive_diseases"))
       @user.can_access_sensitive_diseases?(@event, true).should be_true
+    end
+
+    it "if the event has no jurisdiction, look for the privilege in any jurisdiction" do
+      @role.privileges << (Privilege.find_by_priv_name("access_sensitive_diseases") || Factory(:privilege, :priv_name => "access_sensitive_diseases"))
+      @event.stubs(:jurisdiction_entity_ids).returns([])
+      @user.can_access_sensitive_diseases?(@event).should be_true
     end
   end
 

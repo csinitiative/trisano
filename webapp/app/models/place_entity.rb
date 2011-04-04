@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class PlaceEntity < Entity
-  has_one :place, :foreign_key => "entity_id", :class_name => "Place"
+  has_one :place, :foreign_key => "entity_id", :class_name => "Place", :dependent => :destroy
   accepts_nested_attributes_for :place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
 
   named_scope :jurisdictions,

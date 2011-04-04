@@ -15,13 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe MorbidityEvent do
 
   def with_event(event_hash=@event_hash)
-    event = MorbidityEvent.new(event_hash)
-    event.save!
+    event = Factory(:morbidity_event, event_hash)
     event.reload
     yield event if block_given?
   end
@@ -71,7 +70,8 @@ describe MorbidityEvent do
 
         before(:each) do
           Factory(:user)
-          @event = MorbidityEvent.new( :first_reported_PH_date => Date.yesterday.to_s(:db) )
+          #@event = MorbidityEvent.new( :first_reported_PH_date => Date.yesterday.to_s(:db) )
+          @event = Factory(:morbidity_event)
         end
 
         it "Should not allow the primary jurisdiction to be deleted via a nested attribute" do
@@ -209,8 +209,7 @@ describe MorbidityEvent do
 
     before(:each) do
       @user = Factory(:user)
-      @event = MorbidityEvent.new(:first_reported_PH_date => Date.yesterday.to_s(:db))
-      @event.save!
+      @event = Factory(:morbidity_event)
     end
 
     it "should create a new clinical note linked to the event if task notes are populated" do
@@ -341,12 +340,12 @@ describe MorbidityEvent do
   describe "Under investigation" do
 
     it "should not be under investigation if it is new" do
-      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      event = Factory(:morbidity_event)
       event.should_not be_open_for_investigation
     end
 
     it "should be under investigation if set to under investigation" do
-      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      event = Factory(:morbidity_event)
       event.workflow_state = 'under_investigation'
       event.save!
       event = Event.find(event.id)
@@ -354,7 +353,7 @@ describe MorbidityEvent do
     end
 
     it "should be under investigation if reopened by manager" do
-      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      event = Factory(:morbidity_event)
       event.workflow_state = 'reopened_by_manager'
       event.save!
       event = Event.find(event.id)
@@ -362,7 +361,7 @@ describe MorbidityEvent do
     end
 
     it "should be under investigation if investigation is complete" do
-      event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      event = Factory(:morbidity_event)
       event.workflow_state = 'investigation_complete'
       event.save!
       event = Event.find(event.id)
@@ -384,7 +383,7 @@ describe MorbidityEvent do
 
   describe "saving an event" do
     it "should generate an event onset date set to today" do
-      event = MorbidityEvent.new(:first_reported_PH_date => Date.today.to_s(:db))
+      event = Factory.build(:morbidity_event, :first_reported_PH_date => Date.today)
       event.save.should be_true
       event.event_onset_date.should == Date.today
     end
@@ -392,7 +391,7 @@ describe MorbidityEvent do
 
   describe "event transitions (events)" do
     it "should show the proper states that can be transitioned to when the current state is re-opened by manager" do
-      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      @event = Factory(:morbidity_event)
       @event.workflow_state = 'reopened_by_manager'
       @event.save!
       @event = Event.find @event.id
@@ -402,7 +401,7 @@ describe MorbidityEvent do
 
   describe "state description" do
     before(:each) do
-      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      @event = Factory(:morbidity_event)
       @event.workflow_state = 'accepted_by_lhd'
       @event.save!
       @event = Event.find(@event.id)
@@ -424,7 +423,7 @@ describe MorbidityEvent do
     end
 
     before(:each) do
-      @event = MorbidityEvent.create(:first_reported_PH_date => Date.yesterday.to_s(:db))
+      @event = Factory(:morbidity_event)
       @permissive_jurisdiction = Factory.build(:jurisdiction)
       @permissive_jurisdiction.stubs(:allows_current_user_to?).returns(true)
       User.stubs(:current_user).returns(nil) #just in case some old stubbin' is around
@@ -451,9 +450,10 @@ describe MorbidityEvent do
     end
 
     it 'should use \'new\' as the first state' do
-      @event.workflow_state.should == 'new'
-      @event.current_state.should == @event.states(:new)
-      @event.current_state.events.should == [:assign_to_lhd, :reset_to_new]
+      event = MorbidityEvent.new
+      event.workflow_state.should == 'new'
+      event.current_state.should == event.states(:new)
+      event.current_state.events.should == [:assign_to_lhd, :reset_to_new]
     end
 
     it 'should be able to transition from :new to :assigned_to_lhd' do
@@ -531,9 +531,6 @@ describe MorbidityEvent do
   describe 'with age info is already set' do
     before :each do
       @event_hash = {
-        "first_reported_PH_date" => Date.today,
-        "age_at_onset" => 14,
-        "age_type_id" => 2300,
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -546,11 +543,11 @@ describe MorbidityEvent do
     end
 
     it 'should aggregate onset age and age type in age info' do
-      with_event do |event|
-        event.age_info.should_not be_nil
-        event.age_info.age_at_onset.should == 14
-        event.age_info.age_type.code_description.should == 'years'
-      end
+      event = Factory.build(:morbidity_event)
+      event.update_attributes(@event_hash)
+      event.age_info.should_not be_nil
+      event.age_info.age_at_onset.should == 14
+      event.age_info.age_type.code_description.should == 'years'
     end
 
   end
@@ -558,7 +555,6 @@ describe MorbidityEvent do
   describe 'just created' do
     before :each do
       @event_hash = {
-        "first_reported_PH_date" => Date.today,
         "interested_party_attributes" => {
           "person_entity_attributes" => {
             "person_attributes" => {
@@ -568,24 +564,21 @@ describe MorbidityEvent do
           }
         }
       }
+      @event = Factory.build(:morbidity_event)
     end
 
     it 'should not generate an age at onset if the birthdate is unknown' do
-      @event_hash['interested_party_attributes']['person_entity_attributes']['person_attributes']['birth_date'] = nil
-      with_event do |event|
-        event.age_info.should_not be_nil
-        event.age_info.age_type.code_description.should == 'unknown'
-        event.age_info.age_at_onset.should be_nil
-      end
+      @event.age_info.should_not be_nil
+      @event.age_info.age_type.code_description.should == 'unknown'
+      @event.age_info.age_at_onset.should be_nil
     end
 
     it 'should generate an age at onset if the birthday is known' do
-      with_event do |event|
-        event.interested_party.person_entity.person.birth_date.should_not be_nil
-        event.event_onset_date.should_not be_nil
-        event.age_info.age_at_onset.should == 14
-        event.age_info.age_type.code_description.should == 'years'
-      end
+      @event.interested_party.person_entity.person.birth_date = Date.today.years_ago(14) - 5.days
+      @event.save!
+      @event.event_onset_date.should_not be_nil
+      @event.age_info.age_at_onset.should == 14
+      @event.age_info.age_type.code_description.should == 'years'
     end
 
     describe 'generating age at onset from earliest encounter date' do
@@ -593,28 +586,25 @@ describe MorbidityEvent do
       it 'should use the disease onset date' do
         onset = Date.today.years_ago(3)
         @event_hash['disease_event_attributes'] = {'disease_onset_date' => onset }
-        with_event do |event|
-          event.age_info.age_at_onset.should == 11
-          event.age_info.age_type.code_description.should == 'years'
-        end
+        @event.update_attributes(@event_hash)
+        @event.age_info.age_at_onset.should == 11
+        @event.age_info.age_type.code_description.should == 'years'
       end
 
       it 'should use the date the disease was diagnosed' do
         date_diagnosed = Date.today.years_ago(3)
         @event_hash['disease_event_attributes'] = {'date_diagnosed' => date_diagnosed }
-        with_event do |event|
-          event.age_info.age_at_onset.should == 11
-          event.age_info.age_type.code_description.should == 'years'
-        end
+        @event.update_attributes(@event_hash)
+        @event.age_info.age_at_onset.should == 11
+        @event.age_info.age_type.code_description.should == 'years'
       end
 
       it 'should use the lab collection date' do
         @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
             "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] } ]
-        with_event do |event|
-          event.labs.count.should == 1
-          event.age_info.age_at_onset.should == 13
-        end
+        @event.update_attributes(@event_hash)
+        @event.labs.count.should == 1
+        @event.age_info.age_at_onset.should == 13
       end
 
       it 'should use the earliest lab collection date' do
@@ -622,10 +612,9 @@ describe MorbidityEvent do
             "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] },
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
             "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.months_ago(18) } ] } ]
-        with_event do |event|
-          event.labs.count.should == 2
-          event.age_info.age_at_onset.should == 12
-        end
+        @event.update_attributes(@event_hash)
+        @event.labs.count.should == 2
+        @event.age_info.age_at_onset.should == 12
       end
 
       it 'should use the earliest lab collection date' do
@@ -635,17 +624,15 @@ describe MorbidityEvent do
           { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
             "lab_results_attributes" => [ { "test_type_id" => 1,
                 "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
-        with_event do |event|
-          event.labs.count.should == 2
-          event.age_info.age_at_onset.should == 11
-        end
+        @event.update_attributes(@event_hash)
+        @event.labs.count.should == 2
+        @event.age_info.age_at_onset.should == 11
       end
 
       it 'should use the first reported public health date (if its the earliest)' do
         @event_hash['first_reported_PH_date'] = Date.today.months_ago(6)
-        with_event do |event|
-          event.age_info.age_at_onset.should == 13
-        end
+        @event.update_attributes(@event_hash)
+        @event.age_info.age_at_onset.should == 13
       end
 
     end
@@ -1040,11 +1027,17 @@ describe MorbidityEvent do
       @question_element = QuestionElement.create(:question => @question)
       @export_column = Factory(:export_column, :start_position => 69, :length_to_output => 1)
       @export_conversion_value = Factory(:export_conversion_value, :value_from => "Unknown", :value_to => "9", :export_column => @export_column)
-      @event = MorbidityEvent.create( { "first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"CdcExportHep", } } },
-          "disease_event_attributes"        => { "disease_id" => Factory(:disease).id },
-          "event_name"     => "CdcExportHepA",
-          "new_radio_buttons" => { @question.id.to_s => {:radio_button_answer => ['Unknown'], :export_conversion_value_id => @export_conversion_value.id } }
-        } )
+      @event = Factory.build(:morbidity_event)
+      @event.update_attributes({
+        "disease_event_attributes" => {
+          "disease_id" => Factory(:disease).id },
+        "event_name" => "CdcExportHepA",
+        "new_radio_buttons" => {
+          @question.id.to_s => {
+            :radio_button_answer => ['Unknown'],
+            :export_conversion_value_id => @export_conversion_value.id }
+        }
+      })
     end
 
     it "should have one answer" do
@@ -1074,34 +1067,19 @@ describe MorbidityEvent do
 
   describe 'updating longitudinal data' do
     before :each do
-      @event_hash = {
-        "first_reported_PH_date" => Date.yesterday.to_s(:db),
-        "address_attributes" => { "street_name" => "Example Lane" },
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Biel",
-            }
-          }
-        }
-      }
+      @event = Factory.build(:morbidity_event)
     end
 
     it 'should associate address with interested party\'s person_entity on create' do
-      with_event do |event|
-        event.interested_party.person_entity.person.last_name.should == 'Biel'
-        event.interested_party.primary_entity_id.should_not be_nil
-        event.address.entity_id.should_not be_nil
-        event.address.entity.person.last_name.should == "Biel"
-      end
+      @event.address_attributes = { :street_name => "Example Lane" }
+      @event.save!
+      @event.address.entity_id.should_not be_nil
     end
 
     it 'should associate address with interested party\'s person_entity on save' do
-      @event_hash.delete("address_attributes")
-      with_event do |event|
-        event.update_attributes("address_attributes" => { "street_name" => 'freshy' })
-        event.address.entity_id.should_not be_nil
-      end
+      @event.save!
+      @event.update_attributes("address_attributes" => { "street_name" => 'freshy' })
+      @event.address.entity_id.should_not be_nil
     end
   end
 
@@ -1471,7 +1449,8 @@ describe MorbidityEvent do
         "place_child_events_attributes"   => [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "Red" } } },
             "participations_place_attributes" => {} } ]
       }
-      @event = MorbidityEvent.new(@event_hash)
+      @event = Factory.build(:morbidity_event)
+      @event.update_attributes(@event_hash)
     end
 
     it "should give an active event a deleted_at time" do
@@ -1502,27 +1481,16 @@ describe MorbidityEvent do
 
     before(:each) do
       @jurisdiction_id = create_jurisdiction_entity.id
-      @event_hash = {
-        "first_reported_PH_date" => Date.yesterday.to_s(:db),
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Green"
-            }
-          }
-        },
-        "jurisdiction_attributes" => {
-          "secondary_entity_id" => @jurisdiction_id
-        }
-      }
     end
 
     describe 'searching for cases by disease' do
       before(:each) do
         @disease_ids = [Factory(:disease).id, Factory(:disease).id, Factory(:disease).id]
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.first }))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.second }))
-        with_event(@event_hash.merge("disease_event_attributes" => { "disease_id" => @disease_ids.third }))
+        @disease_ids.each do |did|
+          event = Factory.build(:morbidity_event)
+          event.update_attributes(:disease_event_attributes => { :disease_id => did },
+                                  :jurisdiction_attributes => { :secondary_entity_id => @jurisdiction_id } )
+        end
       end
 
       it 'should be done with a single disease' do
@@ -1542,7 +1510,7 @@ describe MorbidityEvent do
       before { Factory(:user) }
 
       it "should accept a limit for returned results" do
-        11.times { searchable_event!(:morbidity_event, 'Jones') }
+        11.times { Factory(:morbidity_event) }
         results = Event.find_by_criteria(:event_type => 'MorbidityEvent', :limit => "10")
         results.size.should == 10
       end
@@ -1593,23 +1561,12 @@ describe Event, 'cloning an event' do
     @user = Factory(:user)
     @jurisdiction_place = create_jurisdiction_entity.place
     @user.stubs(:jurisdictions_for_privilege).with(:create_event).returns([@jurisdiction_place])
-
-    @event_hash = {
-      "first_reported_PH_date" => Date.yesterday.to_s(:db),
-      "interested_party_attributes" => {
-        "person_entity_attributes" => {
-          "person_attributes" => {
-            "last_name"=>"Biel",
-          }
-        }
-      }
-    }
   end
 
   describe "shallow clone" do
     before :each do
-      @event_hash["address_attributes"] = { "street_name" => "Example Lane" }
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory(:morbidity_event)
+      @org_event.update_attributes(:address_attributes => { :street_name => 'Example Lane' })
       @new_event = @org_event.clone_event
     end
 
@@ -1652,7 +1609,7 @@ describe Event, 'cloning an event' do
   describe "deep clone" do
 
     it "should first do a shallow clone" do
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory(:morbidity_event)
       @new_event = @org_event.clone_event
 
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
@@ -1661,7 +1618,7 @@ describe Event, 'cloning an event' do
     end
 
     it "the new event should be persistable without a first reported date" do
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory(:morbidity_event)
       @new_event = @org_event.clone_event
 
       @new_event.first_reported_PH_date.should be_nil
@@ -1670,13 +1627,14 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over disease information, but not the actual disease" do
-      @event_hash["disease_event_attributes"] = {:disease_id => Factory(:disease).id,
+      @event_hash = { "disease_event_attributes" => {:disease_id => Factory(:disease).id,
         :hospitalized_id => external_codes(:yesno_yes).id,
         :died_id => external_codes(:yesno_no).id,
         :disease_onset_date => Date.today - 1,
         :date_diagnosed => Date.today
-      }
-      @org_event = MorbidityEvent.create(@event_hash)
+      }}
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.disease_event.disease_id.should be_blank
@@ -1687,11 +1645,12 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over hospitalization data even if there are no additional attributes beyond a hospital" do
-      @event_hash["hospitalization_facilities_attributes"] = [
+      @event_hash = { "hospitalization_facilities_attributes" => [
         { "secondary_entity_id" => Factory(:hospitalization_facility_entity).id },
         { "secondary_entity_id" => Factory(:hospitalization_facility_entity).id }
-      ]
-      @org_event = MorbidityEvent.create(@event_hash)
+      ]}
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.hospitalization_facilities.size.should == 2
@@ -1703,7 +1662,7 @@ describe Event, 'cloning an event' do
 
     it "should copy over hospitalization data" do
       facility_entities = [Factory(:hospitalization_facility_entity).id, Factory(:hospitalization_facility_entity).id]
-      @event_hash["hospitalization_facilities_attributes"] = [
+      @event_hash = { "hospitalization_facilities_attributes" => [
         {
           :secondary_entity_id => facility_entities.first,
           :hospitals_participation_attributes => {
@@ -1720,8 +1679,9 @@ describe Event, 'cloning an event' do
             :medical_record_number => "5678"
           }
         }
-      ]
-      @org_event = MorbidityEvent.create(@event_hash)
+      ]}
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.hospitalization_facilities.size.should == 2
@@ -1745,7 +1705,7 @@ describe Event, 'cloning an event' do
       @leeches_treatment = Factory.create(:treatment, :treatment_name => "Leeches")
       @maggots_treatment = Factory.create(:treatment, :treatment_name => "Maggots")
 
-      @event_hash["interested_party_attributes"]["treatments_attributes"] =
+      @event_hash = { "treatments_attributes" =>
         [
         {
           :treatment_given_yn_id => external_codes(:yesno_no).id,
@@ -1759,8 +1719,9 @@ describe Event, 'cloning an event' do
           :stop_treatment_date => Date.today - 1,
           :treatment_id => @maggots_treatment.id
         }
-      ]
-      @org_event = MorbidityEvent.create(@event_hash)
+      ]}
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.interested_party.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.interested_party.treatments.size.should == 2
@@ -1781,7 +1742,7 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over risk factor data" do
-      @event_hash["interested_party_attributes"]["risk_factor_attributes"] =
+      @event_hash = { "risk_factor_attributes" =>
         {
         :food_handler_id => external_codes(:yesno_no).id,
         :healthcare_worker_id => external_codes(:yesno_yes).id,
@@ -1792,9 +1753,10 @@ describe Event, 'cloning an event' do
         :risk_factors => "Smokes",
         :risk_factors_notes => "A lot",
         :occupation => "Smoker"
-      }
+      }}
 
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.interested_party.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       org_rf = @org_event.interested_party.risk_factor
@@ -1811,38 +1773,33 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over clinician data" do
-      @event_hash["clinicians_attributes"] = [
+      @event_hash = { "clinicians_attributes" => [
         "person_entity_attributes" => {
           "person_attributes" => {
             "last_name"=>"Bombay",
             "person_type" => 'clinician'
           }
         }
-      ]
+      ]}
 
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @org_event.clinicians.first.secondary_entity_id.should == @new_event.clinicians.first.secondary_entity_id
     end
 
     it "should copy over diagnostic data" do
-      @event_hash["diagnostic_facilities_attributes"] = [
-        "place_entity_attributes" => {
-          "place_attributes" => {
-            "name"=>"DiagOne",
-          }
-        }
-      ]
-
-      @org_event = MorbidityEvent.create(@event_hash)
+      @event_hash = { "diagnostic_facilities_attributes" => [{"place_entity_attributes" => {"place_attributes" => {"name"=>"DiagOne"}}}]}
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['clinical'])
 
       @org_event.diagnostic_facilities.first.secondary_entity_id.should == @new_event.diagnostic_facilities.first.secondary_entity_id
     end
 
     it "should copy over lab data" do
-      @event_hash["labs_attributes"] = [
+      @event_hash = { "labs_attributes" => [
         {
           "place_entity_attributes" => {
             "place_attributes" => {
@@ -1864,9 +1821,10 @@ describe Event, 'cloning an event' do
             }
           ]
         }
-      ]
+      ]}
 
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['lab'])
 
       @org_event.labs.first.secondary_entity_id.should == @new_event.labs.first.secondary_entity_id
@@ -1888,24 +1846,25 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over reporting data" do
-      @event_hash["reporting_agency_attributes"] =
-        {
-        "place_entity_attributes" => {
-          "place_attributes" => {
-            "name"=>"AgencyOne",
+      @event_hash = {
+        "reporting_agency_attributes" => {
+          "place_entity_attributes" => {
+            "place_attributes" => {
+              "name"=>"AgencyOne",
+            }
           }
-        }
-      }
-      @event_hash["reporter_attributes"] =
-        {
-        "person_entity_attributes" => {
-          "person_attributes" => {
-            "last_name"=>"Starr",
-          }
+        },
+        "reporter_attributes" => {
+          "person_entity_attributes" => {
+            "person_attributes" => {
+              "last_name"=>"Starr"
+            }
+          }  
         }
       }
 
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @new_event = @org_event.clone_event(['reporting'])
 
       @org_event.reporting_agency.secondary_entity_id.should == @new_event.reporting_agency.secondary_entity_id
@@ -1914,8 +1873,8 @@ describe Event, 'cloning an event' do
 
     it "should copy over forms and answers" do
       disease_id = Factory(:disease).id
-      @event_hash["disease_event_attributes"] = {:disease_id => disease_id}
-      @event_hash["jurisdiction_attributes"] = {:secondary_entity_id => create_jurisdiction_entity.id}
+      @event_hash = { "disease_event_attributes" => {:disease_id => disease_id},
+                      "jurisdiction_attributes" => {:secondary_entity_id => create_jurisdiction_entity.id} }
 
       form = Form.new
       form.event_type = "morbidity_event"
@@ -1933,8 +1892,8 @@ describe Event, 'cloning an event' do
       question_element.save_and_add_to_form.should_not be_nil
       form.publish
 
-      @org_event = MorbidityEvent.new(@event_hash)
-      @org_event.save
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(@event_hash)
       @org_event.answers = { "1" => { :question_id => question_element.question.id, :text_answer => "Nothin'"} }
       @org_event.save
 
@@ -1948,9 +1907,8 @@ describe Event, 'cloning an event' do
     end
 
     it "should copy over clinical notes" do
-      @event_hash["notes_attributes"] = [ { "note" => "note 1", "note_type" => "clinical" }, { "note" => "note 2", "note_type" => "administrative" } ]
-
-      @org_event = MorbidityEvent.create(@event_hash)
+      @org_event = Factory.build(:morbidity_event)
+      @org_event.update_attributes(:notes_attributes => [ { "note" => "note 1", "note_type" => "clinical" }, { "note" => "note 2", "note_type" => "administrative" } ])
       @new_event = @org_event.clone_event(['notes'])
 
       new_notes = @new_event.notes.size.should == 1
@@ -2026,4 +1984,5 @@ describe Event, "jurisdiction entity ids" do
     @event.associated_jurisdictions.build :place_entity => create_jurisdiction_entity
     @event.jurisdiction_entity_ids.to_a.should == [@event.jurisdiction.secondary_entity_id, @event.associated_jurisdictions.map(&:secondary_entity_id)].flatten
   end
+
 end

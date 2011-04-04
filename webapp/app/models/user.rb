@@ -280,7 +280,11 @@ class User < ActiveRecord::Base
   end
 
   def can_access_sensitive_diseases?(event, reload=false)
-    can?(:access_sensitive_diseases, event, reload)
+    if event.jurisdiction_entity_ids.empty?
+      is_entitled_to?(:access_sensitive_diseases)
+    else
+      can?(:access_sensitive_diseases, event, reload)
+    end
   end
 
   def can?(priv, event, reload=false)

@@ -73,6 +73,8 @@ class HumanEvent < Event
   accepts_nested_attributes_for :participations_contact, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
   accepts_nested_attributes_for :participations_encounter, :reject_if => proc { |attrs| attrs.all? { |k, v| ((k == "user_id") ||  (k == "encounter_location_type")) ? true : v.blank? } }
 
+  after_save :associate_longitudinal_data
+
   class << self
     # Lab participations will either receive a place entity hash or a secondary_entity_id.
     #
@@ -906,4 +908,9 @@ class HumanEvent < Event
     end
   end
 
+  def associate_longitudinal_data
+    if address
+      address.update_attributes(:entity_id => interested_party.primary_entity_id)
+    end
+  end
 end
