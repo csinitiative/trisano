@@ -71,6 +71,8 @@ class Disease < ActiveRecord::Base
     end
   }
 
+  named_scope :active, { :conditions => { :active => true }}
+
   class << self
 
     def find_active(*args)

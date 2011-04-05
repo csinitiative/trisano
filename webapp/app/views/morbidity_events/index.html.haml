@@ -53,7 +53,7 @@
     - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
     = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true, :id => "investigators_selector")
     %label=t 'diseases'
-    = select_tag("diseases[]", options_from_collection_for_select(Disease.find(:all, :conditions => ["active = ?", true], :order => "disease_name ASC"), :id, :disease_name), :size => 5, :multiple => true, :id => "diseases_selector")
+    = select_tag("diseases[]", options_from_collection_for_select(Disease.active.sensitive(User.current_user, nil).all(:order => 'disease_name'), :id, :disease_name), :size => 5, :multiple => true, :id => "diseases_selector")
     %label=t 'items_per_page'
     - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{h(c)}</option>"}.join
     = select_tag('per_page', page_options)

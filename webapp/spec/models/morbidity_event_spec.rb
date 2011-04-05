@@ -92,8 +92,8 @@ describe MorbidityEvent do
   describe "#initialization" do
     before :all do
       Participation.delete_all
-      PlaceEntity.delete_all
       Place.delete_all
+      PlaceEntity.delete_all
     end
 
     after :all do
