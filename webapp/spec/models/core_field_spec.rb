@@ -19,10 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CoreField do
   before :all do
-    if defined? CoreFieldTranslation
-      CoreFieldTranslation.delete_all
-    end
-    CoreField.delete_all  # There's been fixutures spotted around these parts.
+    destroy_fixture_data
   end
 
   after :all do

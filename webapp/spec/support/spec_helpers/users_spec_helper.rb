@@ -34,17 +34,30 @@ module UsersSpecHelper
   def create_jurisdiction_entity(options = {})
     place_attributes = options.delete(:place_attributes) || {}
     returning(Factory(:place_entity, options)) do |entity|
-      place_type = Code.jurisdiction_place_type(true) || Factory.create(:place_type, :the_code => 'J')
-      if place_type
-        entity.place.place_type_ids = [place_type.id]
-        entity.place.short_name = entity.place.name
-        entity.place.update_attributes!(place_attributes)
-      end
+      entity.place.place_type_ids = [create_jurisdiction_place_type.id]
+      entity.place.short_name = entity.place.name
+      entity.place.update_attributes!(place_attributes)
     end
   end
 
   def create_unassigned_jurisdiction_entity
-    create_jurisdiction_entity(:place_attributes => { :name => "Unassigned" })
+    begin
+      place_entity = Place.unassigned_jurisdiction(true).entity
+      raise if place_entity.nil?
+      return place_entity
+    rescue
+      create_jurisdiction_entity(:place_attributes => { :name => "Unassigned" })
+    end
+  end
+
+  def create_jurisdiction_place_type
+    begin
+      place_type_code = Code.jurisdiction_place_type(true)
+      raise if place_type_code.nil?
+      place_type_code
+    rescue
+      Factory.create(:place_type, :the_code => 'J')
+    end
   end
 
   def login_as_super_user
@@ -125,4 +138,52 @@ module UsersSpecHelper
     user
   end
 
+  def mock_user
+    @jurisdiction = Factory.build(:place_entity)
+    @place = Factory.build(:place)
+
+    @user = Factory.build(:user)
+    User.stubs(:find_by_uid).returns(@user)
+    User.stubs(:current_user).returns(@user)
+    @user.stubs(:id).returns(1)
+    @user.stubs(:uid).returns("default")
+    @user.stubs(:user_name).returns("default_user")
+    @user.stubs(:first_name).returns("Johnny")
+    @user.stubs(:last_name).returns("Johnson")
+    @user.stubs(:given_name).returns("Johnny")
+    @user.stubs(:initials).returns("JJ")
+    @user.stubs(:generational_qualifer).returns("")
+    @user.stubs(:is_admin?).returns(true)
+    @user.stubs(:jurisdictions_for_privilege).returns([@place])
+    @user.stubs(:is_entitled_to?).returns(true)
+    @user.stubs(:event_view_settings).returns(nil)
+    @user.stubs(:best_name).returns("Johnny Johnson")
+    @user.stubs(:disabled?).returns(false)
+    @user.stubs(:destroyed?).returns(false)
+    @user.stubs(:can?).returns(true)
+
+    @role_membership = Factory.build(:role_membership)
+    @role = Factory.build(:role)
+
+    @role.stubs(:role_name).returns("administrator")
+    @role_membership.stubs(:role).returns(@role)
+    @role_membership.stubs(:jurisdiction).returns(@jurisdiction)
+    @role_membership.stubs(:role_id).returns("1")
+    @role_membership.stubs(:jurisdiction_id).returns("75")
+    @role_membership.stubs(:should_destroy).returns(0)
+    @role_membership.stubs(:is_admin?).returns(true)
+    @role_membership.stubs(:id=).returns(1)
+    @jurisdiction.stubs(:places).returns([@place])
+    @jurisdiction.stubs(:place).returns(@place)
+    @place.stubs(:name).returns("Southeastern District")
+    @place.stubs(:entity_id).returns("1")
+
+    @user.stubs(:role_memberships).returns([@role_membership])
+    @user.stubs(:admin_jurisdiction_ids).returns([75])
+    @user.stubs(:is_entitled_to_in?).returns(true)
+    @user.stubs(:new_record?).returns(false)
+
+    @user
+  end
+    
 end

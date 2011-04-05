@@ -37,14 +37,16 @@ describe Place do
     end
 
     describe "as a jurisdiction" do
+      before(:each) do
+        @jurisdiction_place_type = create_jurisdiction_place_type
+        @place.place_types << @jurisdiction_place_type
+      end
 
       it "should be invalid without a short name" do
-        @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
         @place.should_not be_valid
       end
 
       it "should be valid with a short name" do
-        @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
         @place.short_name = "whatever"
         @place.should_not be_valid
       end
@@ -190,7 +192,7 @@ describe Place do
       @place_type2.code_translations.build(:locale => 'test', :code_description => 'Dead')
       @place_type2.save!
 
-      @place = Factory.build(:place)
+      @place = Factory.build(:place, :short_name => 'not blank')
       @place.place_types << @place_type1
       @place.place_types << @place_type2
       @place.save!
@@ -212,16 +214,8 @@ describe Place do
 
   describe "'Unassigned' is special for jurisdiction places" do
     before do
-      HospitalsParticipation.delete_all
-      ParticipationsRiskFactor.delete_all
-      Participation.delete_all
-      RoleMembership.delete_all
-      PrivilegesRole.delete_all
-      Place.delete_all
-      PlaceEntity.delete_all
-      ActiveRecord::Base.connection.execute("DELETE FROM places_types;")
-
-      Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
+      destroy_fixture_data
+      create_unassigned_jurisdiction_entity
     end
 
     after { Fixtures.reset_cache }

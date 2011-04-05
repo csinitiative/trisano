@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SearchController do
 
   before :all do
-    Disease.delete_all
+    destroy_fixture_data
   end
 
   after :all do

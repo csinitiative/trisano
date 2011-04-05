@@ -20,8 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CoreFieldElement do
 
   before(:each) do
-    CoreFieldTranslation.delete_all
-    CoreField.delete_all
+    destroy_fixture_data
     @form = Form.new(:name => 'Test form', :event_type => 'morbidity_event', :short_name => 'cfespec')
     @form.save_and_initialize_form_elements
     @core_field_element = CoreFieldElement.new
@@ -31,6 +30,10 @@ describe CoreFieldElement do
     Factory.create(:cmr_core_field, :key => 'morbidity_event[acuity]',       :fb_accessible => false)
 
     @core_field_element.core_path = 'morbidity_event[places]'
+  end
+
+  after(:all) do
+    Fixtures.reset_cache
   end
 
   it "should be valid" do

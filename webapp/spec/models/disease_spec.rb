@@ -20,12 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Disease do
 
   before :all do
-    ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns")
-    ExportConversionValue.delete_all
-    ExportColumn.delete_all
-    LoincCode.delete_all
-    DiseaseEvent.delete_all
-    Disease.delete_all
+    destroy_fixture_data
   end
 
   after :all do

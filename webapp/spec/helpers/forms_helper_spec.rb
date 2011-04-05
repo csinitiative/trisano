@@ -21,8 +21,7 @@ require RAILS_ROOT + '/app/helpers/application_helper'
 describe FormsHelper do
 
   before(:all) do
-    CoreFieldTranslation.delete_all
-    CoreField.delete_all
+    destroy_fixture_data
   end
 
   after :all do

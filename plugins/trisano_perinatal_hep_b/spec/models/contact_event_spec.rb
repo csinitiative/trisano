@@ -19,10 +19,6 @@
 require 'spec_helper'
 
 describe ContactEvent, "in the Perinatal Hep B plugin" do
-  include PerinatalHepBSpecHelper
-  include DiseaseSpecHelper
-  include EventsSpecHelper
-  include CodeSpecHelper
 
   before(:all) do
     given_a_disease_named('Hepatitis B Pregnancy Event')

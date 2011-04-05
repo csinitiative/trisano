@@ -3,12 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe "searching" do
 
   before :all do
-    DiseaseEvent.delete_all
-    HospitalsParticipation.delete_all
-    Participation.delete_all
-    Event.delete_all
-    Person.delete_all
-    PersonEntity.delete_all
+    destroy_fixture_data
   end
 
   after :all do

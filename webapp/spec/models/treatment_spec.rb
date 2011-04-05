@@ -20,7 +20,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Treatment do
 
   before(:all) do
-    Treatment.delete_all
+    destroy_fixture_data
+  end
+
+  after(:all) do
+    Fixtures.reset_cache
   end
 
   it { should have_many(:diseases) }

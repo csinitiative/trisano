@@ -306,11 +306,16 @@ describe EventQueuesController do
 
   describe "handling DELETE /event_queues/1" do
 
+    before(:all) do
+      destroy_fixture_data
+    end
+
+    after(:all) do
+      Fixtures.reset_cache
+    end
+
     before(:each) do
-      DiseaseEvent.delete_all
-      HospitalsParticipation.delete_all
-      Participation.delete_all
-      Event.delete_all
+      destroy_fixture_data
       @event_queue = Factory.create(:event_queue)
       EventQueue.stubs(:find).returns(@event_queue)
     end

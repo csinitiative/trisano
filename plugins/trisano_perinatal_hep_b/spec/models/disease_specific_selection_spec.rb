@@ -18,9 +18,6 @@
 require 'spec_helper'
 
 describe DiseaseSpecificSelection, "in the Perinatal Hep B plugin" do
-  include PerinatalHepBSpecHelper
-  include DiseaseSpecHelper
-  include CodeSpecHelper
 
   before do
     given_a_disease_named('Hepatitis B Pregnancy Event')
