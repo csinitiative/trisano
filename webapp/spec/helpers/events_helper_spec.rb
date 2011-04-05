@@ -19,9 +19,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
 
 describe EventsHelper do
-  include ApplicationHelper
-  include EventsHelperSpecHelper
-  include EventsSpecHelper
 
   describe "jurisdiction routing controls" do
 

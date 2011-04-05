@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Disease do
-  include DiseaseSpecHelper
 
   before :all do
     ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns")
@@ -264,7 +263,6 @@ describe Disease do
   end
 
   describe "applying core fields to another disease" do
-    include CoreFieldSpecHelper
 
     before do
       given_core_fields_loaded

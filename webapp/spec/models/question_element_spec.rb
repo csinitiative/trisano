@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe QuestionElement do
-  include QuestionElementSpecHelper
 
   before(:each) do
     @question = Question.create({:question_text => "?", :data_type => "single_line_text", :short_name => "q"})
@@ -721,7 +720,6 @@ describe QuestionElement do
   end
 
   describe "copying from element library" do
-    include LibrarySpecHelper
 
     before do
       # build library

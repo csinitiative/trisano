@@ -18,10 +18,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Place do
-  include PlaceSpecHelper
 
   fixtures :places, :entities, :places_types
-
 
   before(:each) do
     @place = Place.new

@@ -4,7 +4,6 @@ require 'trisano/deployment'
 include Trisano
 
 describe Deployment do
-  include DeploymentsSpecHelper
 
   it "should create vendor/trisano, if it doesn't exist" do
     given_no_trisano_plugin_dir

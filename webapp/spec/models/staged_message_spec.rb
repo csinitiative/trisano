@@ -19,7 +19,6 @@ require 'trisano'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe StagedMessage do
-  include StagedMessageSpecHelper
   fixtures :users, :places, :places_types, :entities, :codes
 
   before(:each) do

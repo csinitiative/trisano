@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CodeName do
-  include CodeSpecHelper
 
   before(:each) do
     @code_name = CodeName.new

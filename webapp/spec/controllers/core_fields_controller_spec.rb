@@ -47,7 +47,6 @@ describe CoreFieldsController do
   end
 
   describe "copying core field associations from one disease to another" do
-    include DiseaseSpecHelper
 
     before do
       @lycanthropy = given_a_disease_named('Lycanthropy')
@@ -77,8 +76,6 @@ describe CoreFieldsController do
   end
 
   describe "update /core_fields/:id" do
-    include DiseaseSpecHelper
-    include CoreFieldSpecHelper
 
     before :all do
       given_core_fields_loaded_for :morbidity_event

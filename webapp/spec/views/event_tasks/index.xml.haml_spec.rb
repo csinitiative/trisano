@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "/event_tasks/index.xml.haml" do
-  include XmlSpecHelper
   before do
     @event = Factory.create(:event_with_task)
     render '/event_tasks/index.xml.haml', :locals => { :event => @event }

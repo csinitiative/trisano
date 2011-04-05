@@ -1,4 +1,4 @@
-module CodeSpecHelper
+module CodesSpecHelper
 
   def given_external_codes(code_name, the_codes, options={})
     given_code_name(code_name, true)

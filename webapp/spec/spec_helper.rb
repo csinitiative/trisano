@@ -25,6 +25,11 @@ Dir[File.join(File.dirname(__FILE__), '..', '{spec,vendor/trisano/*/spec}', 'fac
   require File.expand_path(f)
 end
 
+# Include all the spec helper methods
+Dir[File.join(File.dirname(__FILE__), 'support', 'spec_helpers', '*.rb')].each do |f|
+  include self.class.const_get(File.basename(f).gsub('.rb','').split("_").map{ |word| word.capitalize }.to_s)
+end
+
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
   # lines, delete config/database.yml and disable :active_record
@@ -284,9 +289,10 @@ end
 
 require File.join(File.dirname(__FILE__), 'rails_ext') unless ActiveRecord::Base.respond_to? :_find_by_sql_with_capture
 
-# now look for trisano plugin spec helpers
+# now look for trisano plugin spec helpers and require them
 Dir[File.join(RAILS_ROOT, 'vendor', 'trisano', '*', 'spec', 'spec_helpers', '*.rb')].each do |f|
   require f
+  include self.class.const_get(File.basename(f).gsub('.rb','').split("_").map {|word| word.capitalize }.to_s)
 end
 
 I18n.load_path << File.join(File.dirname(__FILE__), 'fixtures', 'files', 'test_translations.yml')

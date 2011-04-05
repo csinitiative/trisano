@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe DiseasesHelper do
-  include HtmlSpecHelper
 
   before(:all) do
     DiseaseEvent.delete_all

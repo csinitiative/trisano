@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/core_fields/index.html.haml" do
-  include CoreFieldSpecHelper
 
   describe "with no @disease" do
 

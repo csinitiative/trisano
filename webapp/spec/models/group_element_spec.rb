@@ -18,8 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe GroupElement do
-  include QuestionElementSpecHelper
-  include LibrarySpecHelper
 
   before(:each) do
     @group_element = GroupElement.new

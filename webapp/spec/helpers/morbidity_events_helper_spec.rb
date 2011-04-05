@@ -18,9 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEventsHelper do
-  include EventsSpecHelper
-  include DiseaseSpecHelper
-  include CoreFieldSpecHelper
 
   describe "tabs helper" do
     before do

@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe MorbidityEvent do
-  include PlaceSpecHelper
 
   before(:each) do
     @event = Factory.build(:morbidity_event)

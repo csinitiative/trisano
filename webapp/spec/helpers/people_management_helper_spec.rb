@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe PeopleManagementHelper do
-  include HtmlSpecHelper
 
   before do
     @event = searchable_event!(:morbidity_event, 'Jones')

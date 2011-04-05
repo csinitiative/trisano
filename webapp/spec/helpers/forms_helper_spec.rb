@@ -19,7 +19,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
 
 describe FormsHelper do
-  include HtmlSpecHelper
 
   before(:all) do
     CoreFieldTranslation.delete_all

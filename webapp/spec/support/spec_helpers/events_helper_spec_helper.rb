@@ -1,7 +1,6 @@
 require RAILS_ROOT + '/spec/support/spec_helpers/html_spec_helper'
 
 module EventsHelperSpecHelper
-  include HtmlSpecHelper
 
   def assert_event_links(type, show_link, edit_link)
     event = Factory.create(type)

@@ -491,7 +491,6 @@ describe "when executing an operation that requires form element structure valid
   end
 
   describe "copying" do
-    include FormElementsSpecHelper
 
     before do
       @form = Factory.build(:form)

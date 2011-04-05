@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "/tasks/_task.xml.haml" do
-  include XmlSpecHelper
   before do
     @event = Factory.create(:event_with_task)
     @task = @event.tasks.first

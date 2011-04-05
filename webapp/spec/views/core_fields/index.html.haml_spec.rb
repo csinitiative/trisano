@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe "/core_fields/index.html.haml" do
-  include CoreFieldSpecHelper
 
   before :all do
     given_core_fields_loaded_for(:morbidity_event)

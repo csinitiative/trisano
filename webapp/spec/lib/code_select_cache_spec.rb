@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CodeSelectCache do
-  include CodeSpecHelper
 
   before do
     given_external_codes 'fakeext', %w(Y N UNK)

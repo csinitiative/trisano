@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "/_morbidity_event.xml.haml" do
-  include XmlSpecHelper
 
   before do
     event = Factory.create(:morbidity_event)

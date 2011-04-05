@@ -1,8 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe CoreFieldsDisease do
-  include DiseaseSpecHelper
-  include CoreFieldSpecHelper
 
   it { should belong_to(:disease) }
   it { should belong_to(:core_field) }

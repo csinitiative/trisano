@@ -18,7 +18,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Export::Csv do
-  include CsvSpecHelper
 
   before :all do
     file = File.join(File.dirname(__FILE__), '../../../plugins/trisano_en/config/misc/en_csv_fields.yml')
