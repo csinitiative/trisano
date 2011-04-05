@@ -32,9 +32,6 @@ class SearchController < ApplicationController
     error_details = []
 
     @jurisdictions = User.current_user.jurisdictions_for_privilege(:view_event)
-    if @jurisdictions.nil?
-      error_details << t("no_view_event_privs_in_any_jurisdiction")
-    end
 
     @first_name = ""
     @middle_name = ""
@@ -43,7 +40,7 @@ class SearchController < ApplicationController
     @event_types = [[I18n.t(:event_search_type_morb), "MorbidityEvent"],
                     [I18n.t(:event_search_type_contact), "ContactEvent"]]
 
-    @diseases = Disease.find(:all, :order => "disease_name")
+    @diseases = Disease.sensitive(User.current_user, nil).all(:order => "disease_name")
 
     @genders = ExternalCode.active.find(:all, :select => "id, code_description", :conditions => "code_name = 'gender'")
     @genders << Struct.new(:id, :code_description).new('Unspecified', t(:unspecified))
