@@ -80,4 +80,21 @@ module CodesSpecHelper
     contact_types = YAML::load_file(File.dirname(__FILE__) + '/../../../vendor/trisano/trisano_en/config/misc/en_contact_types.yml')
     codes + contact_types
   end
+
+  def external_code!(code_name, the_code, options={})
+    code = ExternalCode.find_by_code_name_and_the_code(code_name, the_code)
+    unless code
+      code = Factory.create(:external_code, :code_name => code_name, :the_code => the_code)
+    end
+    code.update_attributes!(options)
+    code
+  end
+
+  def code!(code_name, the_code)
+    code = Code.find_by_code_name_and_the_code(code_name, the_code)
+    unless code
+      code = Factory.create(:code, :code_name => code_name, :the_code => the_code)
+    end
+    code
+  end
 end
