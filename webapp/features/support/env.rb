@@ -61,6 +61,12 @@ Dir[File.join(File.dirname(__FILE__), '..', '..', '{spec,vendor/trisano/*/spec}'
   require File.expand_path(f)
 end
 
+# Load up spec helpers
+Dir[File.join(File.dirname(__FILE__), '..', '..', '{spec,vendor/trisano/*/spec}', 'support', 'spec_helpers', '*.rb')].each do |f|
+  require File.expand_path(f)
+  include self.class.const_get(File.basename(f).gsub('.rb','').split("_").map{ |word| word.capitalize }.to_s)
+end
+
 require 'factory_girl/step_definitions'
 
 # explicitly load support files
