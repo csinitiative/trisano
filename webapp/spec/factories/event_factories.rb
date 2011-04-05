@@ -475,16 +475,15 @@ def human_event_with_demographic_info!(type, demographic_info={ :last_name => Fa
 end
 
 def searchable_event!(type, last_name)
-  event = Factory.build(:morbidity_event)
-  jurisdiction_id = Place.unassigned_jurisdiction_entity_id(true)|| create_unassigned_jurisdiction_entity.id 
-  event.update_attributes!({
-    :jurisdiction_attributes => {
-      :secondary_entity_id => jurisdiction_id },
-    :interested_party_attributes => {
-      :person_entity_attributes => {
-        :person_attributes => {
-          :last_name => last_name}}}})
-  event
+  returning Factory.build(type) do |event|
+    event.update_attributes!({
+        :jurisdiction_attributes => {
+          :secondary_entity_id => Place.unassigned_jurisdiction.try(:entity_id)},
+        :interested_party_attributes => {
+          :person_entity_attributes => {
+            :person_attributes => {
+              :last_name => last_name}}}})
+  end
 end
 
 def searchable_person!(last_name)

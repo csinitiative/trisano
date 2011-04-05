@@ -72,7 +72,7 @@ end
 def add_privileges_for(user, privs = nil)
   if privs
     privs.each do |priv|
-      p = Privilege.find_by_priv_name(priv)
+      p = Privilege.find_by_priv_name(priv.to_s)
       PrivilegesRole.create(:role => user.roles.first, :jurisdiction => user.role_memberships.first.jurisdiction, :privilege => p)
     end
 
@@ -182,7 +182,7 @@ def create_user_in_role!(role_name, user_name)
   user = Factory.create(:user, {
                           :first_name => name.first,
                           :last_name => name.last,
-                          :uid => name.join('_')
+                          :uid => name.join('_').downcase
                         })
   role = create_role!(role_name)
   Place.jurisdictions.each do |j|
