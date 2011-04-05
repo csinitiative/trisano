@@ -215,6 +215,7 @@ describe Place do
   describe "'Unassigned' is special for jurisdiction places" do
     before do
       HospitalsParticipation.delete_all
+      ParticipationsRiskFactor.delete_all
       Participation.delete_all
       RoleMembership.delete_all
       PrivilegesRole.delete_all
@@ -222,7 +223,7 @@ describe Place do
       PlaceEntity.delete_all
       ActiveRecord::Base.connection.execute("DELETE FROM places_types;")
 
-      Place.unassigned_jurisdiction || create_unassigned_jurisdiction_entity
+      Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
     end
 
     after { Fixtures.reset_cache }

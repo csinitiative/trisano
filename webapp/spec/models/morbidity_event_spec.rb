@@ -90,6 +90,16 @@ describe MorbidityEvent do
   end
 
   describe "#initialization" do
+    before :all do
+      Participation.delete_all
+      PlaceEntity.delete_all
+      Place.delete_all
+    end
+
+    after :all do
+      Fixtures.reset_cache
+    end
+
     it "assigns event to unassigned jurisdiction, if available" do
       Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
       event = MorbidityEvent.new

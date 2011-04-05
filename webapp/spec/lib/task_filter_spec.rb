@@ -15,16 +15,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe TaskFilter do
-  fixtures :diseases, :users, :events, :disease_events, :participations, :entities, :places, :places_types
+  before :all do
+    @user = Factory(:user)
+  end
 
   before(:each) do
-    @user = User.find(1)
-    User.stubs(:current_user).returns(@user)
-    @chicken_pox_event = Event.find(1)
-    @anthrax_event     = Event.find(5)
+    User.current_user = @user
+    @chicken_pox_event = Factory(:morbidity_event)
+    @anthrax_event     = Factory(:morbidity_event)
   end
 
   def create_task(custom_settings={})
@@ -122,14 +123,14 @@ describe TaskFilter do
 
   describe 'with disease filter applied' do
     before(:each) do
-      @chicken_pox_task = create_task(:event => @chicken_pox_event)
-      @anthrax_task     = create_task(:event => @anthrax_event)
+      @events = [Factory(:morbidity_event_with_disease), Factory(:morbidity_event_with_disease)]
+      @disease_ids = @events.map { |e| e.disease_event.disease_id.to_s }
+      @tasks = @events.map { |e| create_task(:event => e) }
     end
 
     it 'should only show tasks for disease that matches the filter' do
-      tasks = @user.filter_tasks(:disease_filter => ['1'])
-      tasks.pop.should == @chicken_pox_task
-      tasks.should be_empty
+      tasks = @user.filter_tasks(:disease_filter => @disease_ids[0,1])
+      tasks.should == @tasks[0,1]
     end
   end
 
@@ -167,28 +168,21 @@ describe TaskFilter do
   describe 'with jurisdiction filter applied' do
 
     before(:each) do
-      @jurisdiction_one = mock('jurisdiction 1')
-      @jurisdiction_one.expects(:id).returns(73)
-      User.current_user.stubs(:jurisdictions_for_privilege).with(:assign_task_to_user).returns([])
-      @jurisdiction_one_task = create_task(:event => @chicken_pox_event)
-      @jurisdiction_two_task = create_task(:event => Event.find(1001))
+      @events = [Factory(:morbidity_event), Factory(:morbidity_event)]
+      @jurisdictions = @events.map { |e| e.jurisdiction.secondary_entity.place }
+      @tasks = [create_task(:event => @events.first), create_task(:event => @events.second)]
     end
 
     it 'should show all tasks in filtered jurisdictions' do
-      jurisdiction_two = mock('jurisdiction 2')
-      jurisdiction_two.expects(:id).returns(101)
-      User.current_user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns([@jurisdiction_one, jurisdiction_two])
-      tasks = @user.filter_tasks(:jurisdictions => ['73', '101'])
-      tasks.include?(@jurisdiction_one_task).should be_true
-      tasks.include?(@jurisdiction_two_task).should be_true
-      tasks.size.should == 2
+      @user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns(@jurisdictions)
+      tasks = @user.filter_tasks(:jurisdictions => @jurisdictions.map(&:id))
+      tasks.sort_by(&:id).should == @tasks.sort_by(&:id)
     end
 
     it 'should only show tasks in jurisdictions the current user has state approval rights' do
-      User.current_user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns([@jurisdiction_one])
-      tasks = @user.filter_tasks(:jurisdictions => ['73', '101'])
-      tasks.pop.should == @jurisdiction_one_task
-      tasks.should be_empty
+      @user.expects(:jurisdictions_for_privilege).with(:approve_event_at_state).returns([@jurisdictions.first])
+      tasks = @user.filter_tasks(:jurisdictions => @jurisdictions.map(&:id))
+      tasks.should == @tasks[0,1]
     end
   end
 

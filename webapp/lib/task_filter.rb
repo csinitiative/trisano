@@ -71,8 +71,7 @@ module TaskFilter
     if options[:jurisdictions]
       jurisdictions = options[:jurisdictions].collect(&:to_i)
       allowed_jurisdictions = User.current_user.jurisdictions_for_privilege(:approve_event_at_state).collect(&:id)
-      viewable_jurisdictions = jurisdictions.select {|j| allowed_jurisdictions.include?(j)}
-      ['places.id IN (?)', [viewable_jurisdictions.uniq]]
+      ['places.id IN (?)', [jurisdictions & allowed_jurisdictions]]
     else
       [nil, nil]
     end
