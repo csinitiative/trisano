@@ -36,6 +36,7 @@ test:
         precede_birth_date: "x{{thing}} date(s) precede birth date"
         cannot_precede_birth_date: "xcannot be earlier than birth date"
         merge_race_errors: "xhas been merged into another entity and is no longer available for use on events. Actions you can take: Attempt to remove the entity or switch to show mode to view the replacement entity."
+        record_invalid: xrecord invalid
 
       models:
         # Overrides default messages

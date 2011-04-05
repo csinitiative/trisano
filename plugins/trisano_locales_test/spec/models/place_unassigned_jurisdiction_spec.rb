@@ -96,7 +96,7 @@ describe Place, "when working with the unassigned jurisdiction" do
 
   it "should be able to place 'xUnassigned' at the top of the list in the test locale" do
     create_jurisdiction_entity
-    create_jurisdiction_entity(:place_attributes => { :name => "Unassigned", :short_name => "Unassigned" })
+    Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
     I18n.locale = :test
     jurisdictions = put_unassigned_at_the_bottom(Place.jurisdictions)
     Place.pull_unassigned_and_put_it_on_top(jurisdictions).first.name.should == "xUnassigned"
