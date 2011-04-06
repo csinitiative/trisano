@@ -68,11 +68,11 @@ end
 # Sequences
 #
 Factory.sequence :user_name do |n|
-  "#{Faker::Name.first_name} #{n}"
+  "#{Faker::Name.first_name}#{n}"
 end
 
 Factory.sequence :uid do |n|
-  "#{n}"
+  "#{Faker::Lorem.words(2)}#{n}"
 end
 
 Factory.sequence :role_name do |n|

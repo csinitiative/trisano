@@ -21,11 +21,14 @@ require 'spec_helper'
 describe ContactEvent, "in the Perinatal Hep B plugin" do
 
   before(:all) do
+    destroy_fixture_data
     given_a_disease_named('Hepatitis B Pregnancy Event')
     given_hep_b_external_codes_loaded
     given_p_hep_b_disease_specific_callbacks_loaded
     given_p_hep_b_treatments_loaded
   end
+
+  after(:all) { Fixtures.reset_cache }
 
 
   describe "generating tasks for an investigator" do

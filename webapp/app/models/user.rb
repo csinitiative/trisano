@@ -271,25 +271,25 @@ class User < ActiveRecord::Base
     is_entitled_to?(:create_event)
   end
 
-  def can_update?(event, reload=false)
+  def can_update?(event=nil, reload=false)
     can?(:update_event, event, reload)
   end
 
-  def can_view?(event, reload=false)
+  def can_view?(event=nil, reload=false)
     can?(:view_event, event, reload)
   end
 
-  def can_access_sensitive_diseases?(event, reload=false)
-    if event.nil? || event.jurisdiction_entity_ids.empty?
-      is_entitled_to?(:access_sensitive_diseases)
-    else
-      can?(:access_sensitive_diseases, event, reload)
-    end
+  def can_access_sensitive_diseases?(event=nil, reload=false)
+    can?(:access_sensitive_diseases, event, reload)
   end
 
   def can?(priv, event, reload=false)
     @privs = nil if reload
-    !(privs[priv] & event.jurisdiction_entity_ids).empty?
+    if event.nil? || event.jurisdiction_entity_ids.empty?
+      is_entitled_to?(priv)
+    else
+      !(privs[priv] & event.jurisdiction_entity_ids).empty?
+    end
   end
 
   protected
