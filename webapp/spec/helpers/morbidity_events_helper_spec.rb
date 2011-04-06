@@ -30,8 +30,8 @@ describe MorbidityEventsHelper do
     end
 
     it "only shows tabs enabled on the current event" do
-      disease = given_a_disease_named('The Trots')
-      assigns[:event] = given_a_morb_with_disease disease
+      disease = create_disease('The Trots')
+      assigns[:event] = create_morbidity_event(:disease => disease)
       hide_morbidity_event_tabs(:lab_info_tab, :contacts_tab, :encounters_tab, :investigation_tab, :on_disease => disease)
       helper.morbidity_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab epi_tab reporting_tab notes_tab administrative_tab)
     end

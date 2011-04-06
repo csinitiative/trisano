@@ -27,7 +27,7 @@ describe Export::Csv do
     destroy_fixture_data
     disease_name = 'Hepatitis B Pregnancy Event'
 
-    given_a_disease_named(disease_name)
+    create_disease(disease_name)
     given_core_fields_loaded
     given_csv_fields_loaded
 

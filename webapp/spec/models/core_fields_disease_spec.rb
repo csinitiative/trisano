@@ -19,7 +19,7 @@ describe CoreFieldsDisease do
 
     before do
       @disease_name = "African Tick Bite Fever"
-      given_a_disease_named(@disease_name)
+      create_disease(@disease_name)
       given_core_fields_loaded
       @fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../db/defaults/core_fields.yml'))
     end

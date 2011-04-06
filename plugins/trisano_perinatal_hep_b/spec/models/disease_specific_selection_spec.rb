@@ -20,7 +20,7 @@ require 'spec_helper'
 describe DiseaseSpecificSelection, "in the Perinatal Hep B plugin" do
 
   before do
-    given_a_disease_named('Hepatitis B Pregnancy Event')
+    create_disease('Hepatitis B Pregnancy Event')
     given_contact_disposition_type_codes_loaded
     given_contact_type_codes_loaded
     given_race_codes_loaded

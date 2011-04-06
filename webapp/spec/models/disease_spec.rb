@@ -262,13 +262,13 @@ describe Disease do
     before do
       given_core_fields_loaded
 
-      @lycanthropy = given_a_disease_named('Lycanthropy')
+      @lycanthropy = create_disease('Lycanthropy')
       @lycanthropy.core_fields_diseases.create( {
         :core_field => CoreField.last,
         :rendered => true
       } )
 
-      @vampirism = given_a_disease_named('Vampirism')
+      @vampirism = create_disease('Vampirism')
       @vampirism.core_fields_diseases.create( {
         :core_field => CoreField.first,
         :rendered => false

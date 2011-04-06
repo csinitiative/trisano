@@ -23,7 +23,7 @@ describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
 
   describe "creating default associations" do
     before do
-      given_a_disease_named('Hepatitis B Pregnancy Event')
+      create_disease('Hepatitis B Pregnancy Event')
       given_p_hep_b_core_fields_loaded
       given_ce_core_fields_to_replace_loaded
     end

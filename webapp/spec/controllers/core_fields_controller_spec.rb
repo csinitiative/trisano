@@ -49,8 +49,8 @@ describe CoreFieldsController do
   describe "copying core field associations from one disease to another" do
 
     before do
-      @lycanthropy = given_a_disease_named('Lycanthropy')
-      @vampirism = given_a_disease_named('Vampirism')
+      @lycanthropy = create_disease('Lycanthropy')
+      @vampirism = create_disease('Vampirism')
       mock_user
     end
 
@@ -82,7 +82,7 @@ describe CoreFieldsController do
     end
 
     before do
-      @lycanthropy = given_a_disease_named('Lycanthropy')
+      @lycanthropy = create_disease('Lycanthropy')
       @core_field = CoreField.find_by_key('morbidity_event[parent_guardian]')
       mock_user
     end

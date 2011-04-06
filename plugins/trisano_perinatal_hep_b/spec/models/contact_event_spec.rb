@@ -22,7 +22,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
 
   before(:all) do
     destroy_fixture_data
-    given_a_disease_named('Hepatitis B Pregnancy Event')
+    create_disease('Hepatitis B Pregnancy Event')
     given_hep_b_external_codes_loaded
     given_p_hep_b_disease_specific_callbacks_loaded
     given_p_hep_b_treatments_loaded
@@ -40,7 +40,7 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
     before(:each) do
       given_task_category_codes_loaded
       @disease = Disease.find_by_disease_name('Hepatitis B Pregnancy Event')
-      @morbidity_event = given_a_morb_with_disease(@disease)
+      @morbidity_event = create_morbidity_event(:disease => @disease)
 
       @morbidity_event = Factory.create(:morbidity_event,
         :disease_event => Factory.create(:disease_event, :disease => @disease),

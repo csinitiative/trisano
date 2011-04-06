@@ -1,22 +1,47 @@
 module EventsSpecHelper
 
-  def given_a_morb_with_disease(disease)
-    Factory.create(:morbidity_event, :disease_event => Factory.create(:disease_event, :disease => disease))
+  # Create a morbitity event for use in tests. Options:
+  #
+  #  * :patient       - Accepts either a last name or a person entity
+  #  * :disease       - Accepts either a disease name or a disease
+  #  * :jurisdiction  - Accepts either a jurisdiction name or a place entity
+  #
+  # Returns the morbidity event
+  def create_morbidity_event(options = {})
+    create_human_event(:morbidity_event, options)
   end
 
-  def given_a_contact_for_morb(morb, options={})
-    returning Factory.create(:contact_event, options) do |contact|
-      contact.update_attributes!(:parent_event => morb)
+  # Create a contact event for use in tests. See create_morbidity_event for options.
+  #
+  # Returns the contact event
+  def create_contact_event(options = {})
+    create_human_event(:contact_event, options)
+  end
+
+  # Returns a subclass of a human event. See create_morbidity_event for options.
+  def create_human_event(type, options = {})
+    raise "The type received was not a HumanEevent" unless type.to_s.camelcase.constantize.new.is_a? HumanEvent
+    
+    if patient = options[:patient]
+      patient = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => patient)) if patient.is_a?(String)
+    end
+
+    if disease = options[:disease]
+      disease = Factory.create(:disease, :disease_name => disease) if disease.is_a?(String)
+    end
+
+    if jurisdiction = options[:jurisdiction]
+      jurisdiction = create_jurisdiction_entity(:place_attributes => { :name => jurisdiction } ) if jurisdiction.is_a?(String)
+    end
+
+    returning Factory.create(type) do |event|
+      event.build_interested_party(:person_entity => patient) if patient
+      event.build_disease_event(:disease => disease) if disease
+      event.build_jurisdiction(:secondary_entity => jurisdiction) if jurisdiction
+      event.save!
     end
   end
 
-  def given_a_contact_with_disease(disease)
-    morb = given_a_morb_with_disease disease
-    contact = given_a_contact_for_morb morb
-    contact.create_disease_event :disease => disease
-    contact
-  end
-  
   def add_contact_to_event(event, contact_last_name)
     returning event.contact_child_events.build do |child|
       child.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => contact_last_name } } } }
@@ -354,5 +379,5 @@ module EventsSpecHelper
     entity.stubs(:race_ids).returns([201])
     entity
   end
-  
+
 end
