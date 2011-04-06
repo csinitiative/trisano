@@ -15,67 +15,54 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe Export::Csv do
 
   before :all do
     file = File.join(File.dirname(__FILE__), '../../../plugins/trisano_en/config/misc/en_csv_fields.yml')
     CsvField.load_csv_fields(YAML.load_file(file))
+    @events = [
+      Factory(:morbidity_event, :first_reported_PH_date => Date.yesterday),
+      Factory(:morbidity_event, :first_reported_PH_date => Date.yesterday),
+      Factory(:morbidity_event, :first_reported_PH_date => Date.yesterday, :deleted_at => DateTime.parse('2008-01-01T12:00:00'))
+    ]
   end
 
   after(:all) { CsvField.destroy_all }
 
   before(:each) do
-    @event_hash = {
-      :first_reported_PH_date => Date.yesterday.to_s(:db),
-      :interested_party_attributes => {
-        :person_entity_attributes => {
-          :person_attributes => {
-            :last_name =>"Green"
-          }
-        }
-      }
-    }
     # There are 7 races
     ExternalCode.stubs(:count).returns(7)
   end
   
   it "should expose an export method that takes an event or a list of events and an optional proc" do
-    lambda { Export::Csv.export(   MorbidityEvent.create(@event_hash)   )    }.should_not raise_error()
-    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] )    }.should_not raise_error()
-    lambda { Export::Csv.export( [ MorbidityEvent.create(@event_hash) ] ) { MorbidityEvent.create(@event_hash) } }.should_not raise_error()
+    lambda { Export::Csv.export(@events.first) }.should_not raise_error()
+    lambda { Export::Csv.export(@events[0,1])  }.should_not raise_error()
+    lambda { Export::Csv.export(@events[0,1]) { @events.first }}.should_not raise_error()
   
     lambda { Export::Csv.export( Object.new) }.should raise_error(ArgumentError)
   end
   
   describe "when passed a single simple event" do
     it "should output event, contact, place, treatment, and lab result HEADERS on one line" do
-      to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash), :export_options => %w(labs treatments places contacts hospitalization_facilities) ) ).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
+      to_arry(Export::Csv.export(@events.first, :export_options => %w(labs treatments places contacts hospitalization_facilities))).first.should == event_header(:morbidity) + "," + lab_header + "," + treatment_header + "," + event_header(:place) + "," + event_header(:contact)
     end
   
     it "should output content for a simple event" do
-      a = to_arry( Export::Csv.export( MorbidityEvent.create(@event_hash) ) )
+      event = @events.first
+      a = to_arry( Export::Csv.export(event) )
       a.size.should == 2
-      a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
+      a[1].include?(event.interested_party.person_entity.person.last_name).should be_true
     end
   end
   
   describe "when passed multiple simple events" do
     it "should iterate over each event" do
-      second_person = "White"
-      deleted_person = 'Gone'
-      eh = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => second_person } } } }
-      dh = { :first_reported_PH_date => Date.yesterday.to_s(:db), :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => deleted_person } } }, :deleted_at => DateTime.parse('2008-01-01T12:00:00')}
-  
-      e1 = MorbidityEvent.create(@event_hash)
-      e2 = MorbidityEvent.create( eh )
-      e3 = MorbidityEvent.create( dh )
-  
-      a = to_arry( Export::Csv.export( [e1, e3, e2] ) )
+      a = to_arry( Export::Csv.export(@events) )
       a.size.should == 3
-      a[1].include?(@event_hash[:interested_party_attributes][:person_entity_attributes][:person_attributes][:last_name]).should be_true
-      a[2].include?(second_person).should be_true
+      a[1].include?(@events.first.interested_party.person_entity.person.last_name).should be_true
+      a[2].include?(@events.second.interested_party.person_entity.person.last_name).should be_true
     end
   end
   
@@ -91,7 +78,7 @@ describe Export::Csv do
   
   describe "when passed an event w/ a contact" do
     before do
-      @morbidity_event = Factory.create(:morbidity_event)
+      @morbidity_event = @events.first
       @contact_event   = Factory.create(:contact_with_disease)
       @contact_event.parent_event = @morbidity_event
       @contact_event.save!
@@ -130,7 +117,7 @@ describe Export::Csv do
         :county => @county,
         :postal_code => nil
       }
-      @event = Factory.create(:morbidity_event)
+      @event = @events.first
     end
   
     it 'should return county code, not name' do
