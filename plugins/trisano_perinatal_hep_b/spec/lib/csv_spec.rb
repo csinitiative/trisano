@@ -24,6 +24,7 @@ describe Export::Csv do
   include PerinatalHepBSpecHelper
 
   before :all do
+    destroy_fixture_data
     disease_name = 'Hepatitis B Pregnancy Event'
 
     given_a_disease_named(disease_name)
@@ -40,8 +41,7 @@ describe Export::Csv do
   end
 
   after(:all) do
-    CoreFieldsDisease.destroy_all
-    CsvField.destroy_all
+    Fixtures.reset_cache
   end
 
   before(:each) do

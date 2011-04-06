@@ -81,7 +81,10 @@ end
 
 def destroy_fixture_data
   CoreFieldTranslation.delete_all if defined? CoreFieldTranslation
+  CsvField.delete_all
+  CoreFieldsDisease.delete_all
   CoreField.delete_all
+  DiseaseSpecificCallback.delete_all
   DiseaseEvent.delete_all
   ActiveRecord::Base.connection.execute("DELETE FROM diseases_export_columns")
   Disease.delete_all
