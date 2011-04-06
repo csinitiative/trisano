@@ -23,9 +23,14 @@ describe CsvField, "in the Perinatal Hep B plugin" do
     include PerinatalHepBSpecHelper
 
     before(:all) do
+      destroy_fixture_data
       given_p_hep_b_core_fields_loaded
       @csv_fields = YAML::load_file(File.join(File.dirname(__FILE__), '../../config/misc/en_csv_fields.yml'))
       CsvField.load_csv_fields(@csv_fields)
+    end
+
+    after(:all) do
+      Fixtures.reset_cache
     end
 
     it "should associate p-hep-b csv fields with core fields" do

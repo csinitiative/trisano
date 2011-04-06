@@ -22,10 +22,19 @@ describe CoreFieldsDisease, "in the Perinatal Hep B plugin" do
   include PerinatalHepBSpecHelper
 
   describe "creating default associations" do
-    before do
+
+    before(:all) do
+      destroy_fixture_data
+    end
+
+    before(:each) do
       create_disease('Hepatitis B Pregnancy Event')
       given_p_hep_b_core_fields_loaded
       given_ce_core_fields_to_replace_loaded
+    end
+
+    after(:all) do
+      Fixtures.reset_cache
     end
 
     it "should associate hep b core fields w/ acute Hep B" do
