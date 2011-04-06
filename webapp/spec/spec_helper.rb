@@ -80,7 +80,7 @@ Spec::Runner.configure do |config|
 end
 
 def destroy_fixture_data
-  CoreFieldTranslation.delete_all if defined? CoreFieldTranslation
+  CoreFieldTranslation.delete_all
   CsvField.delete_all
   CoreFieldsDisease.delete_all
   CoreField.delete_all

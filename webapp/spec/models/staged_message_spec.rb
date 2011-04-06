@@ -19,7 +19,14 @@ require 'trisano'
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe StagedMessage do
-  fixtures :users, :places, :places_types, :entities, :codes
+
+  before(:all) do
+    destroy_fixture_data
+  end
+
+  after(:all) do
+    Fixtures.reset_cache
+  end
 
   before(:each) do
     @user = users(:default_user)
@@ -29,6 +36,8 @@ describe StagedMessage do
       :hl7_message => hl7_messages[:arup_1]
     }
   end
+
+  fixtures :users
 
   it "should create a new instance given valid attributes" do
     m = StagedMessage.new(@valid_attributes)
@@ -349,6 +358,7 @@ describe StagedMessage do
     fixtures :loinc_codes, :common_test_types
 
     before :each do
+      create_unassigned_jurisdiction_entity
       @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
     end
 
@@ -394,6 +404,10 @@ describe StagedMessage do
   end
 
   describe "instantiating an event based on message" do
+
+    before(:each) do
+      create_unassigned_jurisdiction_entity
+    end
 
     describe "with a valid, complete record" do
       before :each do
