@@ -1,3 +1,3 @@
-$j(function() {
-  $j('table.sortable').tablesorter({ textExtraction: 'complex' });
+$j('table.sortable').livequery(function() {
+  $j(this).tablesorter({ textExtraction: 'complex' });
 });
