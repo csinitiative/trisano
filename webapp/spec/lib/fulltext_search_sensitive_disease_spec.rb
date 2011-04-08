@@ -30,26 +30,10 @@ describe "searching with sensitive diseases" do
   describe "excluding sensitive diseases based on role" do
     
     before(:each) do
-      @sensitive_disease_jurisdiction = create_jurisdiction_entity(:place => Factory.create(:place, :name => 'Bear Cub River'))
-      @sensitive_disease_role = create_role_with_privileges!('sensitive_disease_role', :access_sensitive_diseases)
-      @sensitive_disease_user = create_user_in_role!(@sensitive_disease_role.role_name, 'Bobby Johanssenson')
-      @sensitive_disease_user.reload
-
-      @not_sensitive_disease_user = Factory.create(:user)
-
-      @sensitive_disease = Factory.create(:disease, :disease_name => 'AIDS', :sensitive => true)
-      @not_sensitive_disease = Factory.create(:disease, :disease_name => 'African Tick Bite Fever', :sensitive => false)
-      @not_sensitive_event = searchable_event!(:morbidity_event, 'James')
-      
-      @sensitive_event = create_morbidity_event(
-        :patient => "James",
-        :disease => @sensitive_disease,
-        :jurisdiction => @sensitive_disease_jurisdiction
-      )
+      create_starter_sensitive_disease_test_scenario
     end
 
-    it "should include all events for a user with sensitive disease privileges" do
-      User.current_user = @sensitive_disease_user
+    it "should include all events except for the sensitive event in David County for a Bear Cub River user with sensitive disease privileges" do
     end
 
   end

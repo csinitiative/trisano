@@ -2009,3 +2009,36 @@ describe Event, "filtering sensitive diseases" do
   end
 
 end
+
+describe Event do
+
+  describe "#is_sensitive?" do
+
+    it "should return true if it has a sensitive disease associated" do
+      event = create_morbidity_event(:disease => Factory.create(:disease, :disease_name => 'AIDS', :sensitive => true))
+      event.sensitive?.should be_true
+    end
+
+    it "should return false if it does not have a sensitive disease associated" do
+      event = create_morbidity_event(:disease => Factory.create(:disease, :disease_name => 'The Pops', :sensitive => false))
+      event.sensitive?.should be_false
+    end
+
+    it "should return false if there is no disease event associated" do
+      event = create_morbidity_event
+      event.disease_event = nil
+      event.save!
+      event.sensitive?.should be_false
+    end
+
+    it "should return false if there is no disease associated" do
+      event = create_morbidity_event
+      event.disease_event = Factory.create(:disease_event)
+      event.disease_event.disease = nil
+      event.save!
+      event.sensitive?.should be_false
+    end
+
+  end
+
+end
