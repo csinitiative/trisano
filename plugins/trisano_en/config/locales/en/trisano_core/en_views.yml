@@ -807,6 +807,7 @@ en:
   add_an_email_address: "Add an Email Address"
   edit_person: "Edit Person"
   person_detail: "Person Detail"
+  owner: "Owner"
 
   #Place events
   view_place_event: "View Place Event"

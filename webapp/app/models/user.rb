@@ -249,6 +249,14 @@ class User < ActiveRecord::Base
     [:users, :look_ahead, :look_back, :disease_filter, :task_statuses, :tasks_ordered_by]
   end
 
+  def owns?(thing)
+    if thing.respond_to?(:owner_id)
+      thing.owner_id == self.id
+    else
+      false
+    end
+  end
+
   def role_membership_attributes=(rm_attributes)
     role_memberships.clear
 

@@ -801,6 +801,7 @@ es:
   add_an_email_address: "Agregar Dirección de Correo Electrónico"
   edit_person: "Editar Persona"
   person_detail: "Detalle de Persona"
+  owner: "Owner (EN)"
 
   #Place events
   view_place_event: "Ver Evento de Lugar"

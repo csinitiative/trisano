@@ -100,6 +100,13 @@ describe User do
     @user.should be_disabled
   end
 
+  it "should be able to check if it 'owns' a thing" do
+    @user = Factory(:user)
+    @email_address = Factory(:email_address)
+    @user.email_addresses << @email_address
+    @user.owns?(@email_address).should be_true
+  end
+
   describe "getting potential task assignees" do
     before do
       assignee = Factory(:user)
