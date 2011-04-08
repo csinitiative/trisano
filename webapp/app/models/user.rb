@@ -158,6 +158,10 @@ class User < ActiveRecord::Base
     @admin_jurisdiction_ids ||= jurisdiction_ids_for_privilege(:administer)
   end
 
+  def sensitive_disease_jurisdiction_ids
+    @sensitive_disease_jurisdiction_ids ||= jurisdiction_ids_for_privilege(:access_sensitive_diseases)
+  end
+
   def self.investigators_for_jurisdictions(jurisdictions)
     jurisdictions = [jurisdictions] unless jurisdictions.respond_to?("each")
     investigators = User.find_by_sql([<<-SQL, jurisdictions])

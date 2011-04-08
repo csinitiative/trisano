@@ -108,6 +108,11 @@ class Event < ActiveRecord::Base
     end
   }
 
+  named_scope :for_jurisdictions, lambda { |jurisdiction_ids|
+    { :conditions => { :participations => { :secondary_entity_id => jurisdiction_ids } },
+      :include => :all_jurisdictions }
+  }
+
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
@@ -360,7 +365,7 @@ class Event < ActiveRecord::Base
         associated_jurisdictions.map(&:secondary_entity_id)
       ].flatten.compact.uniq
     else
-      Set.new(eager_jurisdictions.map(&:secondary_entity_id))
+      Set.new(all_jurisdictions.map(&:secondary_entity_id))
     end
   end
 
@@ -378,6 +383,10 @@ class Event < ActiveRecord::Base
 
   def disease?
     !self.disease_event.try(:disease).nil?
+  end
+
+  def sensitive?
+    self.disease_event.try(:disease).try(:sensitive)
   end
 
   def add_note(message, *note_type_and_options)
