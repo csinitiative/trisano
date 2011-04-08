@@ -99,6 +99,15 @@ class Event < ActiveRecord::Base
     :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)],
     :order => "created_at ASC"
 
+  named_scope :sensitive, lambda { |user|
+    unless user.is_entitled_to? :access_sensitive_diseases
+      {
+        :joins => "LEFT JOIN disease_events de ON events.id = de.event_id LEFT JOIN diseases d ON de.disease_id = d.id",
+        :conditions => "d.sensitive IS NULL OR d.sensitive = false"
+      }
+    end
+  }
+
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
@@ -142,7 +151,7 @@ class Event < ActiveRecord::Base
   end
 
   def place_exposure_blank?(attrs)
-    attrs["interested_place_attributes"]["primary_entity_id"].nil? && 
+    attrs["interested_place_attributes"]["primary_entity_id"].nil? &&
       place_and_canonical_address_blank?(attrs["interested_place_attributes"]) &&
       nested_attributes_blank?(attrs["participations_place_attributes"])
   end

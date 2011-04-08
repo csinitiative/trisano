@@ -706,7 +706,7 @@ describe MorbidityEvent do
         :created_at => DateTime.parse("2009-11-30 13:30")
       })
     end
-      
+
     describe "includes records" do
       it "created on the first day of the date range" do
         Event.exportable_ibis_records("2009-11-30", "2009-12-1").should be_empty
@@ -959,15 +959,15 @@ describe MorbidityEvent do
         :investigators => [@user.id],
         :states => ['closed']}).size.should == 2
       MorbidityEvent.find_all_for_filtered_view({
-        :do_not_show_deleted => [1], 
-        :investigators => [@user.id], 
-        :states => ['closed'], 
+        :do_not_show_deleted => [1],
+        :investigators => [@user.id],
+        :states => ['closed'],
         :diseases => [disease_id]}).size.should == 1
       MorbidityEvent.find_all_for_filtered_view({
-        :do_not_show_deleted => [1], 
-        :investigators => [@user.id], 
-        :states => ['closed'], 
-        :diseases => [disease_id], 
+        :do_not_show_deleted => [1],
+        :investigators => [@user.id],
+        :states => ['closed'],
+        :diseases => [disease_id],
         :queues => [@queue.queue_name]}).size.should == 0
     end
 
@@ -1184,7 +1184,7 @@ describe MorbidityEvent do
         },
         "jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id }
       }
-      
+
       @disease_id = Factory(:disease).id
       @form_hash = {
         "name"=>"Form Assignment Form",
@@ -1575,7 +1575,7 @@ describe Event, 'cloning an event' do
       @new_event.save.should be_true
       @new_event.errors.empty?.should be_true
     end
-    
+
     it "should copy over demographic information only" do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
       @new_event.primary_jurisdiction.name.should == @jurisdiction_place.name
@@ -1595,7 +1595,7 @@ describe Event, 'cloning an event' do
       @another_event = @org_event.clone_event
       @another_event.address.street_name = 'Doit St.'
       @another_event.save!
-      
+
       @yet_another_event = @org_event.clone_event
       @yet_another_event.address.street_name = 'Lala Ln.'
       @yet_another_event.save!
@@ -1654,7 +1654,7 @@ describe Event, 'cloning an event' do
       @new_event = @org_event.clone_event(['clinical'])
 
       @new_event.hospitalization_facilities.size.should == 2
-      
+
       @new_event.hospitalization_facilities.each do |h|
         h.hospitals_participation.should be_nil
       end
@@ -1859,7 +1859,7 @@ describe Event, 'cloning an event' do
             "person_attributes" => {
               "last_name"=>"Starr"
             }
-          }  
+          }
         }
       }
 
@@ -1983,6 +1983,29 @@ describe Event, "jurisdiction entity ids" do
   it "are collected from jurisdiction and associated jursidictions on new records" do
     @event.associated_jurisdictions.build :place_entity => create_jurisdiction_entity
     @event.jurisdiction_entity_ids.to_a.should == [@event.jurisdiction.secondary_entity_id, @event.associated_jurisdictions.map(&:secondary_entity_id)].flatten
+  end
+
+end
+
+describe Event, "filtering sensitive diseases" do
+  before :each do
+    sensitive_disease = Factory(:disease, :sensitive => true)
+    disease_event = Factory(:disease_event, :disease => sensitive_disease)
+    @sensitive_event = Factory(:morbidity_event_with_disease, :disease_event => disease_event)
+    @nonsensitive_event = Factory(:morbidity_event_with_disease)
+    @event_without_disease = Factory(:morbidity_event)
+
+    create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
+    @privileged_user = create_user_in_role! 'Sensitive', 'sensitive'
+    @unprivileged_user = Factory(:user)
+  end
+
+  it "shows all events to a privileged user" do
+    Event.sensitive(@privileged_user).count.should == 3
+  end
+
+  it "does not show sensitive events to an unprivileged user" do
+    Event.sensitive(@unprivileged_user).count.should == 2
   end
 
 end
