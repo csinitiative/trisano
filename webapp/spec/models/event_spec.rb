@@ -2008,6 +2008,15 @@ describe Event, "filtering sensitive diseases" do
     Event.sensitive(@unprivileged_user).count.should == 2
   end
 
+  it "does not show a privileged user extrajurisdictional sensitive events" do
+    role = @privileged_user.roles.find_by_role_name('Sensitive')
+    role.should_not be_nil
+    jurisdiction = @sensitive_event.jurisdiction.secondary_entity
+    jurisdiction.should_not be_nil
+    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(role.id, jurisdiction.id).destroy
+    Event.sensitive(@privileged_user).count.should == 2
+  end
+
 end
 
 describe Event do

@@ -100,12 +100,13 @@ class Event < ActiveRecord::Base
     :order => "created_at ASC"
 
   named_scope :sensitive, lambda { |user|
-    unless user.is_entitled_to? :access_sensitive_diseases
-      {
-        :joins => "LEFT JOIN disease_events de ON events.id = de.event_id LEFT JOIN diseases d ON de.disease_id = d.id",
-        :conditions => "d.sensitive IS NULL OR d.sensitive = false"
-      }
-    end
+    {
+      :joins => "LEFT JOIN disease_events de ON events.id = de.event_id
+        LEFT JOIN diseases d ON de.disease_id = d.id
+        JOIN participations j ON j.event_id = events.id AND j.type = 'Jurisdiction'",
+      :conditions => [ "d.sensitive IS NULL OR d.sensitive = false OR j.secondary_entity_id IN (?)",
+        user.jurisdiction_ids_for_privilege(:access_sensitive_diseases) ]
+    }
   }
 
   named_scope :for_jurisdictions, lambda { |jurisdiction_ids|
