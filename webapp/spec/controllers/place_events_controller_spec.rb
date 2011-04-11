@@ -15,16 +15,18 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe PlaceEventsController do
   before(:each) do
-    mock_user
+    @user = Factory(:user)
+    User.stubs(:current_user).returns(@user)
   end
 
   describe "handling GET /events" do
 
     before(:each) do
+      @user.stubs(:can_view?).returns(true)
     end
 
     def do_get
@@ -41,7 +43,7 @@ describe PlaceEventsController do
       before(:each) do
         @event = mock_event
         Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+        @user.stubs(:can_view?).returns(true)
         @event.stubs(:read_attribute).returns('PlaceEvent')
       end
 
@@ -73,10 +75,9 @@ describe PlaceEventsController do
     describe "handling GET /events/1 without view entitlement" do
 
       before(:each) do
-        @event = mock_event
+        @event = Factory(:place_event)
         Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).returns(false)
-        @event.stubs(:read_attribute).returns('PlaceEvent')
+        @user.stubs(:can_view?).returns(false)
       end
 
       def do_get
@@ -100,7 +101,7 @@ describe PlaceEventsController do
         mock_user
         @event = mock_event
         Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
+        @user.stubs(:can_view?).returns(true)
         @event.stubs(:read_attribute).returns('MorbidityEvent')
       end
 
@@ -133,7 +134,7 @@ describe PlaceEventsController do
 
         Event.stubs(:find).returns(@event)
         @event.stubs(:get_investigation_forms).returns([@form])
-        @user.stubs(:is_entitled_to_in?).with(:update_event, 75).returns(true)
+        @user.stubs(:can_update?).returns(true)
         @event.stubs(:read_attribute).returns('PlaceEvent')
       end
 
@@ -230,10 +231,8 @@ describe PlaceEventsController do
   describe "handling POST /place_events/1/soft_delete without update entitlement" do
 
     before(:each) do
-      mock_user
-      @event = mock_event
+      @event = Factory(:place_event)
       Event.stubs(:find).returns(@event)
-      @event.stubs(:read_attribute).returns("PlaceEvent")
       @user.stubs(:is_entitled_to_in?).returns(false)
       @event.stubs(:add_note).returns(true)
     end

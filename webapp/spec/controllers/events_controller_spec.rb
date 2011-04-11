@@ -15,12 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe EventsController do
+  before do
+    @user = Factory(:user)
+    User.stubs(:current_user).returns(@user)
+  end
+
   context "Adding a diagnostic facility search result to a cmr" do
     before do
-      mock_user
       @place_entity = Factory.create(:place_entity)
     end
 
@@ -32,20 +36,15 @@ describe EventsController do
   end
 
   context "Using ajax to search for diagnosic facilities" do
-    before do
-      mock_user
-    end
-
     it "should render the diagnostics search partial" do
       get :diagnostic_facilities_search, :name => 'Example'
       response.should be_a_success
       response.should render_template('events/_diagnostics_search')
     end
-    end
+  end
 
   context "Adding a reporting agency search result to a cmr" do
     before do
-      mock_user
       @place_entity = Factory.create(:place_entity)
     end
 
@@ -57,14 +56,11 @@ describe EventsController do
   end
 
   context "Using ajax to search for reporting agencies" do
-    before do
-      mock_user
-    end
-
     it "should render the reporting agency search partial" do
       get :reporting_agencies_search, :name => 'Example'
       response.should be_a_success
       response.should render_template('events/_reporting_agencies_search')
     end
   end
+
 end

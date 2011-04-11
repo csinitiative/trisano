@@ -279,8 +279,8 @@ class User < ActiveRecord::Base
     is_entitled_to?(:approve_event_at_state)
   end
 
-  def can_create?
-    is_entitled_to?(:create_event)
+  def can_create?(event=nil, reload=false)
+    can?(:create_event, event, reload)
   end
 
   def can_update?(event=nil, reload=false)

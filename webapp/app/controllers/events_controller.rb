@@ -22,6 +22,7 @@ class EventsController < ApplicationController
   before_filter :can_new?, :only => [:new]
   before_filter :can_view?, :only => [:show, :export_single]
   before_filter :can_index?, :only => [:index, :export]
+  before_filter :can_access_sensitive?, :only => [:edit, :show, :update, :destroy, :soft_delete]
   before_filter :set_tab_index
 
   def contacts_search
@@ -313,33 +314,40 @@ class EventsController < ApplicationController
 
   def can_update?
     @event ||= Event.find(params[:id])
-    unless User.current_user.is_entitled_to_in?(:update_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    unless User.current_user.can_update?(@event)
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_update_privs_for_jurisdiction"), :event => @event }, :status => 403 and return
     end
     reject_if_wrong_type(@event)
   end
 
   def can_new?
-    unless User.current_user.is_entitled_to?(:create_event)
+    unless User.current_user.can_create?
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_create_privs") }, :status => 403 and return
     end
   end
 
   def can_index?
-    unless User.current_user.is_entitled_to?(:view_event)
+    unless User.current_user.can_view?
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return
     end
   end
 
   def can_view?
-    @event = Event.find(params[:id])
+    @event ||= Event.find(params[:id])
     @display_view_warning = false
     reject_if_wrong_type(@event)
-    unless User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
+    unless User.current_user.can_view?(@event)
       log_access_or_prompt_for_reason
       return
     end
     stale?(:last_modified => @event.updated_at.utc, :etag => @event) if RAILS_ENV == 'production'
+  end
+
+  def can_access_sensitive?
+    @event ||= Event.find(params[:id])
+    if @event.sensitive? && !User.current_user.can_access_sensitive_diseases?(@event)
+      render :file => static_error_page_path(403), :layout => 'application', :status => 403 and return
+    end
   end
 
   def reject_if_wrong_type(event)
@@ -352,11 +360,11 @@ class EventsController < ApplicationController
   end
 
   def log_access_or_prompt_for_reason
-      access_record = AccessRecord.find_by_user_id_and_event_id(User.current_user.id, @event.id)
-      redirect_to(new_event_access_record_path(@event)) and return if access_record.nil?
-      access_record.update_attribute(:access_count, access_record.access_count + 1)
-      @display_view_warning = true
-      @event.add_note(I18n.translate("system_notes.extra_jurisdictional_view_only_access", :locale => I18n.default_locale))
+    access_record = AccessRecord.find_by_user_id_and_event_id(User.current_user.id, @event.id)
+    redirect_to(new_event_access_record_path(@event)) and return if access_record.nil?
+    access_record.update_attribute(:access_count, access_record.access_count + 1)
+    @display_view_warning = true
+    @event.add_note(I18n.translate("system_notes.extra_jurisdictional_view_only_access", :locale => I18n.default_locale))
   end
 
   def set_tab_index

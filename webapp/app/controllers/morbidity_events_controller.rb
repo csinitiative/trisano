@@ -73,7 +73,7 @@ class MorbidityEventsController < EventsController
       @event.attributes = params[:morbidity_event]
     end
 
-    unless User.current_user.can?(:create_event, @event)
+    unless User.current_user.can_create?(@event)
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
 

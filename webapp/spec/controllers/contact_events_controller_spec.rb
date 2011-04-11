@@ -19,13 +19,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ContactEventsController do
   before(:each) do
-    mock_user
+    @user = Factory(:user)
+    @user.stubs(:can_view?).returns(true)
+    @user.stubs(:can_update?).returns(true)
+    @user.stubs(:can_create?).returns(true)
+    User.stubs(:current_user).returns(@user)
   end
 
   describe "handling GET /events" do
-
-    before(:each) do
-    end
 
     def do_get
       get :index
@@ -73,14 +74,12 @@ describe ContactEventsController do
     describe "handling GET /events/1 without view entitlement" do
 
       before(:each) do
-        @event = mock_event
-        Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).returns(false)
-        @event.stubs(:read_attribute).returns('ContactEvent')
+        @event = Factory(:contact_event)
+        @user.stubs(:can_view?).returns(false)
       end
 
       def do_get
-        get :show, :id => "75"
+        get :show, :id => @event.id
       end
 
       it "should redirect to the new event access view" do
@@ -88,17 +87,11 @@ describe ContactEventsController do
         response.should redirect_to(new_event_access_record_url(@event))
       end
 
-      it "should find the event requested" do
-        Event.expects(:find).with("75").returns(@event)
-        do_get
-      end
-
     end
 
     describe "handling GETting a real event of the wrong type" do
 
       before(:each) do
-        mock_user
         @event = mock_event
         Event.stubs(:find).returns(@event)
         @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
@@ -169,7 +162,6 @@ describe ContactEventsController do
   describe "handling successful POST /contact_events/1/soft_delete with update entitlement" do
 
     before(:each) do
-      mock_user
       @event = mock_event
       Event.stubs(:find).returns(@event)
       @event.stubs(:read_attribute).returns("ContactEvent")
@@ -198,7 +190,6 @@ describe ContactEventsController do
   describe "handling failed POST /contact_events/1/soft_delete with update entitlement" do
 
     before(:each) do
-      mock_user
       @event = mock_event
       Event.stubs(:find).returns(@event)
       @event.stubs(:read_attribute).returns("ContactEvent")
@@ -233,17 +224,13 @@ describe ContactEventsController do
   describe "handling POST /contact_events/1/soft_delete without update entitlement" do
 
     before(:each) do
-      mock_user
-      @event = mock_event
-      Event.stubs(:find).returns(@event)
-      @event.stubs(:read_attribute).returns("ContactEvent")
-      @user.stubs(:is_entitled_to_in?).returns(false)
-      @event.stubs(:add_note).returns(true)
+      @event = Factory(:contact_event)
+      @user.stubs(:can_update?).returns(false)
     end
 
     def do_post
       request.env['HTTP_REFERER'] = "/some_path"
-      post :soft_delete, :id => "1"
+      post :soft_delete, :id => @event.id
     end
 
     it "should be be a 403" do
@@ -281,31 +268,30 @@ describe ContactEventsController do
       response.headers["X-JSON"].should == "{street_number: \"555\", street_name: \"Happy St.\", unit_number: \"\", city: \"Provo\", state_id: \"1\", county_id: \"2\", postal_code: \"99999\"}"
     end
   end
-end
 
-describe ContactEventsController, "contact_events/1/update with redirect_to option" do
-  before do
-    @parent_event = Factory.create(:morbidity_event)
-    @contact_event = Factory.create(:contact_event, :parent_event => @parent_event)
-    login_as_super_user
-  end
+  describe "contact_events/1/update with redirect_to option" do
+    before do
+      @parent_event = Factory.create(:morbidity_event)
+      @contact_event = Factory.create(:contact_event, :parent_event => @parent_event)
+    end
 
-  it "redirects to specified url if 'Save & Exit' clicked" do
-    put(:update, {
-          :id => @contact_event.id,
-          :redirect_to => '/sample/url'
-        },
-        :user_id => @current_user.uid)
-    response.should redirect_to('/sample/url')
-  end
+    it "redirects to specified url if 'Save & Exit' clicked" do
+      put(:update, {
+            :id => @contact_event.id,
+            :redirect_to => '/sample/url'
+          },
+          :user_id => @user.uid)
+      response.should redirect_to('/sample/url')
+    end
 
-  it "does not redirect if 'Save & Continue' clicked" do
-    put(:update, {
-          :id => @contact_event.id,
-          :redirect_to => '/sample/url',
-          :return => 1
-        },
-        :user_id => @current_user.uid)
-    response.should redirect_to(edit_contact_event_url(@contact_event))
+    it "does not redirect if 'Save & Continue' clicked" do
+      put(:update, {
+            :id => @contact_event.id,
+            :redirect_to => '/sample/url',
+            :return => 1
+          },
+          :user_id => @user.uid)
+      response.should redirect_to(edit_contact_event_url(@contact_event))
+    end
   end
 end

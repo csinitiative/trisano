@@ -20,12 +20,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe EncounterEventsController do
   
   before(:each) do
-    mock_user
+    @user = Factory(:user)
+    User.stubs(:current_user).returns(@user)
   end
 
   describe "handling GET /encounter_events" do
 
     before(:each) do
+      @user.stubs(:can_view?).returns(true)
     end
   
     def do_get
@@ -74,45 +76,26 @@ describe EncounterEventsController do
     describe "handling GET /encounter_events/1 without view entitlement" do
 
       before(:each) do
-        @event = mock_event
-        Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).returns(false)
-        @event.stubs(:read_attribute).returns('EncounterEvent')
+        @event = Factory(:encounter_event)
+        @user.stubs(:can_view?).returns(false)
       end
   
-      def do_get
-        get :show, :id => "75"
-      end
-
       it "should redirect to the new event access view" do
-        do_get
+        get :show, :id => @event.id
         response.should redirect_to(new_event_access_record_url(@event))
       end
 
-      it "should find the event requested" do
-        Event.expects(:find).with("75").returns(@event)
-        do_get
-      end
-  
     end
 
     describe "handling GETting a real event of the wrong type" do
 
       before(:each) do
-        mock_user
-        @event = mock_event
-        Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).with(:view_event, 75).returns(true)
-        @event.stubs(:read_attribute).returns('MorbidityEvent') 
+        @event = Factory(:morbidity_event)
+        @user.stubs(:can_view?).returns(true)
       end
   
       def do_get
-        get :show, :id => "75"
-      end
-
-      it "should find the event requested" do
-        Event.expects(:find).with("75").returns(@event)
-        do_get
+        get :show, :id => @event.id
       end
 
       it "should return a 404" do
@@ -128,13 +111,14 @@ describe EncounterEventsController do
     end
 
     describe "handling GET /encounter_events/new" do
-  
-      def do_get
-        get :new
+      before do
+        @user.stubs(:can_view?).returns(true)
+        @user.stubs(:can_create?).returns(true)
+        @user.stubs(:can_update?).returns(true)
       end
   
       it "should return a 405" do
-        do_get
+        get :new
         response.code.should == "405"
       end
   
@@ -143,15 +127,12 @@ describe EncounterEventsController do
     describe "handling GET /encounter_events/1/edit with update entitlement" do
 
       before(:each) do
-        @event = mock_event
-
-        Event.stubs(:find).returns(@event)
-        @user.stubs(:is_entitled_to_in?).with(:update_event, 75).returns(true)
-        @event.stubs(:read_attribute).returns('EncounterEvent')
+        @event = Factory(:encounter_event)
+        @user.stubs(:can_update?).returns(true)
       end
   
       def do_get
-        get :edit, :id => "75"
+        get :edit, :id => @event.id
       end
 
       it "should be successful" do
@@ -164,14 +145,9 @@ describe EncounterEventsController do
         response.should render_template('edit')
       end
   
-      it "should find the event requested" do
-        Event.expects(:find).returns(@event)
-        do_get
-      end
-  
       it "should assign the found EncounterEvent for the view" do
         do_get
-        assigns[:event].should equal(@event)
+        assigns[:event].should == @event
       end
     end
 
@@ -244,17 +220,13 @@ describe EncounterEventsController do
   describe "handling POST /encounter_events/1/soft_delete without update entitlement" do
     
     before(:each) do
-      mock_user
-      @event = mock_event
-      Event.stubs(:find).returns(@event)
-      @event.stubs(:read_attribute).returns("EncounterEvent")
-      @user.stubs(:is_entitled_to_in?).returns(false)
-      @event.stubs(:add_note).returns(true)
+      @event = Factory(:encounter_event)
+      @user.stubs(:can_update?).returns(false)
     end
     
     def do_post
       request.env['HTTP_REFERER'] = "/some_path"
-      post :soft_delete, :id => "1"
+      post :soft_delete, :id => @event.id
     end
 
     it "should be be a 403" do
