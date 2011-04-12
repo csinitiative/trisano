@@ -101,9 +101,10 @@ class Event < ActiveRecord::Base
 
   named_scope :sensitive, lambda { |user|
     {
-      :joins => "LEFT JOIN disease_events de ON events.id = de.event_id
-        LEFT JOIN diseases d ON de.disease_id = d.id
-        JOIN participations j ON j.event_id = events.id AND j.type = 'Jurisdiction'",
+      :select => "DISTINCT ON(events.id) events.*",
+      :joins => [ "LEFT JOIN disease_events de ON events.id = de.event_id",
+        "LEFT JOIN diseases d ON de.disease_id = d.id",
+        "JOIN participations j ON events.id = j.event_id AND (j.type = 'Jurisdiction' OR j.type = 'AssociatedJurisdiction')" ],
       :conditions => [ "d.sensitive IS NULL OR d.sensitive = false OR j.secondary_entity_id IN (?)",
         user.jurisdiction_ids_for_privilege(:access_sensitive_diseases) ]
     }

@@ -1995,26 +1995,61 @@ describe Event, "filtering sensitive diseases" do
     @nonsensitive_event = Factory(:morbidity_event_with_disease)
     @event_without_disease = Factory(:morbidity_event)
 
-    create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
+    @sensitive_role = create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
     @privileged_user = create_user_in_role! 'Sensitive', 'sensitive'
     @unprivileged_user = Factory(:user)
   end
 
   it "shows all events to a privileged user" do
-    Event.sensitive(@privileged_user).count.should == 3
+    Event.sensitive(@privileged_user).length.should == 3
   end
 
   it "does not show sensitive events to an unprivileged user" do
-    Event.sensitive(@unprivileged_user).count.should == 2
+    Event.sensitive(@unprivileged_user).length.should == 2
   end
 
   it "does not show a privileged user extrajurisdictional sensitive events" do
-    role = @privileged_user.roles.find_by_role_name('Sensitive')
-    role.should_not be_nil
-    jurisdiction = @sensitive_event.jurisdiction.secondary_entity
-    jurisdiction.should_not be_nil
-    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(role.id, jurisdiction.id).destroy
-    Event.sensitive(@privileged_user).count.should == 2
+    primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
+    primary_jurisdiction_id.should_not be_nil
+    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
+    Event.sensitive(@privileged_user).length.should == 2
+  end
+
+  it "shows a privileged user events by secondary jurisdiction" do
+    # take away the user's right to see sensitive diseases in the
+    # sensitive event's primary jurisdiction
+    primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
+    primary_jurisdiction_id.should_not be_nil
+    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
+
+    # find another jurisdiction in which the user is entitled to see
+    # sensitive diseases
+    jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
+    jurisdictions.should_not be_nil
+    jurisdictions.count.should > 1
+    secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
+
+    # associate that other jurisdiction as a secondary jurisdiction
+    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
+
+    # verify that the user can still see the event
+    Event.sensitive(@privileged_user).length.should == 3
+  end
+
+  it "returns one object per event (as opposed to one per jurisdiction)" do
+    # find another jurisdiction in which the user is entitled to see
+    # sensitive diseases
+    jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
+    jurisdictions.should_not be_nil
+    jurisdictions.count.should > 1
+    secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
+
+    # associate that other jurisdiction as a secondary jurisdiction
+    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
+
+    # verify that the user can still see the event (once)
+    events = Event.sensitive(@privileged_user)
+    events.length.should == 3
   end
 
 end

@@ -122,6 +122,10 @@ Factory.define :jurisdiction do |j|
   j.place_entity { create_jurisdiction_entity }
 end
 
+Factory.define :associated_jurisdiction do |aj|
+  aj.place_entity { create_jurisdiction_entity }
+end
+
 Factory.define :address do |a|
   a.street_number { Factory.next(:street_number) }
   a.street_name   { Factory.next(:street_name) }

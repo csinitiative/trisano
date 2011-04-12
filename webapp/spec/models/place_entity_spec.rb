@@ -178,12 +178,12 @@ describe PlaceEntity do
   end
 
   describe "using lab named scope" do
-    
+
     before(:each) do
       @lab_name_array = ['ARUP', 'BRUP', 'CRUP', 'DRUP']
       @lab_name_array.each { |lab_name| create_place_entity!(lab_name, 'L') }
 
-      @pool = create_place_entity!('A Pool', 'P')
+      @pool = create_place_entity!('B Pool', 'P')
       @school = create_place_entity!('A School', 'S')
 
       @hospital_slash_lab = create_place_entity!('Hospital Lab', 'L')
@@ -207,11 +207,11 @@ describe PlaceEntity do
 
   describe "using place name convenience method" do
     before(:each) do
-      @place_entity = create_place_entity!('A Pool', 'P')
+      @place_entity = create_place_entity!('C Pool', 'P')
     end
 
     it "should return the name of the place" do
-      @place_entity.name.should == 'A Pool'
+      @place_entity.name.should == 'C Pool'
     end
 
     it "should return nil if there isn't a place associated with the place entity" do
