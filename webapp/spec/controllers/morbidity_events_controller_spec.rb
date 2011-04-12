@@ -455,6 +455,40 @@ describe MorbidityEventsController do
     end
   end
 
+  describe "POST /cmrs" do
+    before do
+      @event_attributes = { "first_reported_PH_date" => Date.yesterday }
+      @event_attributes["interested_party_attributes"] = {
+        "person_entity_attributes" => {
+          "person_attributes" => {
+            "last_name" => "Lester"
+          }
+        }
+      }
+      @disease = Factory.create(:disease)
+      @event_attributes["disease_event_attributes"] = { "disease_id" => @disease.id }
+      @jurisdiction = create_jurisdiction_entity
+      @event_attributes["jurisdiction_attributes"] = { "secondary_entity_id" => @jurisdiction.id }
+    end
+
+    def do_post(event_attributes)
+      post :create, :morbidity_event => event_attributes
+    end
+
+    it "should forbid users from creating events if they don't have create privileges" do
+      @user.stubs(:can_create?).returns(false)
+      do_post(@event_attributes)
+      response.code.should == "403"
+    end
+
+    it "should forbid users from creating sensitve events if they don't have senstive disease privileges" do
+      @disease.update_attribute("sensitive", true)
+      @user.stubs(:can_create?).returns(true)
+      @user.stubs(:can_access_sensitive_diseases?).returns(false)
+      do_post(@event_attributes)
+      response.code.should == "403"
+    end
+  end
 end
 
 describe MorbidityEventsController, "cmrs/1/update with redirect_to option" do

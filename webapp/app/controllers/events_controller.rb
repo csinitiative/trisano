@@ -350,6 +350,10 @@ class EventsController < ApplicationController
     end
   end
 
+  def can_create?
+    User.current_user.can_create?(@event) && (@event.sensitive? ? User.current_user.can_access_sensitive_diseases?(@event) : true)
+  end
+
   def reject_if_wrong_type(event)
     if event.read_attribute('type') != controller_name.classify
       respond_to do |format|

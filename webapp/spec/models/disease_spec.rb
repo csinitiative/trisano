@@ -102,7 +102,7 @@ describe Disease do
   end
 
   context "filtering for sensitive diseases" do
-    before(:all)  do
+    before  do
       @user = Factory.build(:user)
       @disease = Factory.create(:disease)
       @sensitive_disease = Factory.create(:disease, :sensitive => true)

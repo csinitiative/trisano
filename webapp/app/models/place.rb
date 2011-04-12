@@ -189,9 +189,8 @@ class Place < ActiveRecord::Base
       end
     end
 
-    def unassigned_jurisdiction(reload = false)
-      return @unassigned_jurisdiction unless reload || @unassigned_jurisdiction.nil?
-      @unassigned_jurisdiction = self.first({
+    def unassigned_jurisdiction
+      self.first({
           :joins => [:place_types, :entity],
           :conditions => ["name = ? AND codes.the_code = ? AND codes.code_name = ?",
             "Unassigned",
@@ -200,8 +199,8 @@ class Place < ActiveRecord::Base
         })
     end
 
-    def unassigned_jurisdiction_entity_id(reload=false)
-      unassigned_jurisdiction(reload).try(:entity_id)
+    def unassigned_jurisdiction_entity_id
+      unassigned_jurisdiction.try(:entity_id)
     end
 
     def pull_unassigned_and_put_it_on_top(jurisdictions)

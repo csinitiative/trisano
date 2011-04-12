@@ -180,7 +180,7 @@ module EventsSpecHelper
 
   def human_event_with_demographic_info!(type, demographic_info={ :last_name => Factory.next(:last_name) })
     returning Factory.build(type) do |event|
-      unassigned_jurisdiction_entity_id = Place.unassigned_jurisdiction(true).try(:entity_id) || create_unassigned_jurisdiction_entity.id
+      unassigned_jurisdiction_entity_id = Place.unassigned_jurisdiction.try(:entity_id) || create_unassigned_jurisdiction_entity.id
       event.update_attributes!({
                                  :jurisdiction_attributes => {
                                    :secondary_entity_id => unassigned_jurisdiction_entity_id
@@ -194,7 +194,7 @@ module EventsSpecHelper
 
   def searchable_event!(type, last_name)
     returning Factory.build(type) do |event|
-      unassigned_jurisdiction_entity_id = Place.unassigned_jurisdiction(true).try(:entity_id) || create_unassigned_jurisdiction_entity.id
+      unassigned_jurisdiction_entity_id = Place.unassigned_jurisdiction.try(:entity_id) || create_unassigned_jurisdiction_entity.id
       event.update_attributes!({
                                  :jurisdiction_attributes => {
                                    :secondary_entity_id => unassigned_jurisdiction_entity_id

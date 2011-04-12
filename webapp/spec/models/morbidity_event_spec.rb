@@ -15,9 +15,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe MorbidityEvent do
+  before :all do
+    destroy_fixture_data
+  end
+
+  after :all do
+    Fixtures.reset_cache
+  end
 
   before(:each) do
     @event = Factory.build(:morbidity_event)
@@ -88,30 +95,4 @@ describe MorbidityEvent do
 
   end
 
-  describe "#initialization" do
-    before :all do
-      destroy_fixture_data
-    end
-
-    after :all do
-      Fixtures.reset_cache
-    end
-
-    it "assigns event to unassigned jurisdiction, if available" do
-      Place.unassigned_jurisdiction(true) || create_unassigned_jurisdiction_entity
-      event = MorbidityEvent.new
-      event.jurisdiction.place_entity.place.should == Place.unassigned_jurisdiction(true)
-    end
-
-    it "does not assign a jurisdiction if unassigned jurisdiction can't be found" do
-      # Fixtures
-      PlaceEntity.jurisdictions.each do |entity|
-        entity.destroy
-      end
-      Place.unassigned_jurisdiction(true)
-
-      event = MorbidityEvent.new
-      event.jurisdiction.should be_nil
-    end
-  end
 end

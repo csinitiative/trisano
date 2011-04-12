@@ -228,14 +228,14 @@ describe User do
       @user.can_update?(@event).should be_true
     end
 
-    it "verifies is a user can access sensitive diseases" do
+    it "verifies if a user can access sensitive diseases" do
       @user.can_access_sensitive_diseases?(@event).should be_false
 
       @role.privileges << (Privilege.find_by_priv_name("access_sensitive_diseases") || Factory(:privilege, :priv_name => "access_sensitive_diseases"))
       @user.can_access_sensitive_diseases?(@event, true).should be_true
     end
 
-    it "if the event has no jurisdiction or is nil, look for the privilege in any jurisdiction" do
+    it "if the event has no jurisdiction or is nil, look for the sensitive disease privilege in any jurisdiction" do
       @role.privileges << (Privilege.find_by_priv_name("access_sensitive_diseases") || Factory(:privilege, :priv_name => "access_sensitive_diseases"))
       @event.stubs(:jurisdiction_entity_ids).returns([])
       @user.can_access_sensitive_diseases?(@event).should be_true

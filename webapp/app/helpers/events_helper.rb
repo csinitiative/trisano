@@ -631,8 +631,6 @@ module EventsHelper
   end
 
   def setup_human_event_tree(event)
-    # On Rails Edge as of 02-11-09 you can't use #first on one-to-many association proxies
-
     event.build_interested_party unless event.interested_party
     event.interested_party.build_person_entity unless event.interested_party.person_entity
     event.interested_party.person_entity.build_person unless event.interested_party.person_entity.person

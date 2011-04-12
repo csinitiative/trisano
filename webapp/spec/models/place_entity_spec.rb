@@ -154,7 +154,7 @@ describe PlaceEntity do
     before(:each) do
       @jurisdiction_one = create_jurisdiction_entity(:place_attributes => {:name => 'JurisOne'})
       @jurisdiction_two = create_jurisdiction_entity(:place_attributes => {:name => 'JurisTwo'})
-      @jurisdiction_unassigned = Place.unassigned_jurisdiction(true).try(:entity) || create_unassigned_jurisdiction_entity
+      @jurisdiction_unassigned = Place.unassigned_jurisdiction.try(:entity) || create_unassigned_jurisdiction_entity
       @jurisdiction_deleted = create_jurisdiction_entity(:deleted_at => Time.now, :place_attributes => {:name => 'Baleted'})
     end
 

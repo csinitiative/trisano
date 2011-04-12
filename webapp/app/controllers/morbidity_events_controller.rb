@@ -73,7 +73,7 @@ class MorbidityEventsController < EventsController
       @event.attributes = params[:morbidity_event]
     end
 
-    unless User.current_user.can_create?(@event)
+    unless can_create?
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
 
@@ -182,7 +182,6 @@ class MorbidityEventsController < EventsController
     @event.interested_party.person_entity.person.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
     @event.address.city = params[:city]
     @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
-    @event.jurisdiction.secondary_entity_id = params[:jurisdiction_id] unless params[:jurisdiction_id].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
   end
 

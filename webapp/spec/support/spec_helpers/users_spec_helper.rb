@@ -42,7 +42,7 @@ module UsersSpecHelper
 
   def create_unassigned_jurisdiction_entity
     begin
-      place_entity = Place.unassigned_jurisdiction(true).entity
+      place_entity = Place.unassigned_jurisdiction.entity
       raise if place_entity.nil?
       return place_entity
     rescue
