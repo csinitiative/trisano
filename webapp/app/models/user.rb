@@ -295,7 +295,7 @@ class User < ActiveRecord::Base
     can?(:access_sensitive_diseases, event, reload)
   end
 
-  def can?(priv, event, reload=false)
+  def can?(priv, event=nil, reload=false)
     @privs = nil if reload
     if event.nil? || event.jurisdiction_entity_ids.empty?
       is_entitled_to?(priv)

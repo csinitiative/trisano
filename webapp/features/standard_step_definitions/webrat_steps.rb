@@ -32,8 +32,14 @@ When /^I press "(.*)"$/ do |button|
   click_button(button)
 end
 
-When /^I follow "(.*)"$/ do |link|
+When /^I follow "([^"]*)"$/ do |link|
   click_link(link)
+end
+
+When /^I follow "([^"]*)" within "([^"]*)"$/ do |link, selector|
+  within(selector) do
+    click_link(link)
+  end
 end
 
 When /^I fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
