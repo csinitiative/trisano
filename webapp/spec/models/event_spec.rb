@@ -993,6 +993,34 @@ describe MorbidityEvent do
 
   end
 
+  describe "filtering sensitive events" do
+    before do
+      @event = Factory(:morbidity_event_with_disease)
+      @event.disease_event.disease.update_attribute(:sensitive, true)
+      @primary_jurisdiction = @event.jurisdiction.secondary_entity_id
+      @secondary_jurisdiction = create_jurisdiction_entity.id
+      @event.associated_jurisdictions.create(:secondary_entity_id => @secondary_jurisdiction)
+    end
+
+    it "should not return sensitive events, if the user doesn't have that privilege" do
+      MorbidityEvent.find_all_for_filtered_view(:view_jurisdiction_ids => [@primary_jurisdiction]).size.should == 0
+    end
+
+    it "should return senstive events if the user has that privilege in the event's primary jurisdiction" do
+      MorbidityEvent.find_all_for_filtered_view({
+        :view_jurisdiction_ids => [@primary_jurisdiction],
+        :access_sensitive_jurisdiction_ids => [@primary_jurisdiction]
+      }).size.should == 1
+    end
+
+    it "should return senstive events if the user has that privilege in one of the event's secondary jurisdictions" do
+      MorbidityEvent.find_all_for_filtered_view({
+        :view_jurisdiction_ids => [@primary_jurisdiction],
+        :access_sensitive_jurisdiction_ids => [@secondary_jurisdiction]
+      }).size.should == 1
+    end
+  end
+
   describe 'form builder cdc export fields' do
 
     before(:each) do

@@ -138,7 +138,12 @@ class HumanEvent < Event
       users_view_jurisdictions = options[:view_jurisdiction_ids] || []
       return [] if users_view_jurisdictions.empty?
 
-      where_clause = "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
+      where_clause = <<-SQL
+        (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent') AND
+        (NOT diseases.sensitive OR diseases.sensitive IS NULL OR
+         jurisdictions.secondary_entity_id || secondary_jurisdiction_ids
+           && ARRAY[#{(options[:access_sensitive_jurisdiction_ids] || []).join(',')}]::integer[])
+      SQL
 
       states = options[:states] || []
       if states.empty?
@@ -233,9 +238,23 @@ class HumanEvent < Event
             INNER JOIN places AS jurisdiction_places ON jurisdiction_places.entity_id = jurisdiction_entities.id
 
             LEFT JOIN (
+              SELECT
+                event_id,
+                CASE
+                  WHEN secondary_jurisdiction_names_inner IS DISTINCT FROM ARRAY[NULL]::varchar[]
+                    THEN secondary_jurisdiction_names_inner
+                  ELSE ARRAY[]::varchar[]
+                END AS secondary_jurisdiction_names,
+                CASE
+                  WHEN secondary_jurisdiction_ids_inner IS DISTINCT FROM ARRAY[NULL]::integer[]
+                    THEN secondary_jurisdiction_ids_inner
+                  ELSE ARRAY[]::integer[]
+                END AS secondary_jurisdiction_ids
+              FROM (
                 SELECT
                     events.id AS event_id,
-                    ARRAY_ACCUM(places.short_name) AS secondary_jurisdiction_names
+                    ARRAY_ACCUM(places.short_name) AS secondary_jurisdiction_names_inner,
+                    ARRAY_ACCUM(pe.id) AS secondary_jurisdiction_ids_inner
                 FROM
                     events
                     LEFT JOIN participations p
@@ -245,6 +264,7 @@ class HumanEvent < Event
                     LEFT JOIN places
                         ON places.entity_id = pe.id
                 GROUP BY events.id
+              ) sec_juris_inner
             ) sec_juris ON (sec_juris.event_id = events.id)
 
             LEFT JOIN users ON users.id = events.investigator_id
@@ -267,6 +287,26 @@ class HumanEvent < Event
 
             LEFT JOIN users ON users.id = events.investigator_id
             LEFT JOIN event_queues ON event_queues.id = events.event_queue_id
+
+            LEFT JOIN (
+              SELECT
+                event_id,
+                CASE
+                  WHEN secondary_jurisdiction_ids_inner IS DISTINCT FROM ARRAY[NULL]::integer[]
+                    THEN secondary_jurisdiction_ids_inner
+                  ELSE ARRAY[]::integer[]
+                END AS secondary_jurisdiction_ids
+              FROM (
+                SELECT
+                    events.id AS event_id,
+                    ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_ids_inner
+                FROM
+                    events
+                    LEFT JOIN participations p
+                        ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
+                GROUP BY events.id
+              ) sec_juris_inner
+            ) sec_juris ON (sec_juris.event_id = events.id)
 
       SQL
 

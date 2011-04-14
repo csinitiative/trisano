@@ -206,6 +206,7 @@ class MorbidityEventsController < EventsController
 
       @events = MorbidityEvent.find_all_for_filtered_view(query_options.merge({
         :view_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:view_event),
+        :access_sensitive_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:access_sensitive_diseases),
         :order_by => params[:sort_order],
         :page => params[:page]
       }))
