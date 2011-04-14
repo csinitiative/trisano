@@ -84,16 +84,27 @@ module NameAndBirthdateSearch
 
   def secondary_jurisdictions_join
     %Q[ LEFT JOIN (
-          SELECT
-            events.id AS event_id,
-            ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_entity_ids
-          FROM
-            events
-            LEFT JOIN participations p
-                ON (p.event_id = events.id AND p.type = 'AssociatedJurisdiction')
-          GROUP BY events.id
-      ) sec_juris
-          ON (sec_juris.event_id = events.id)
+          SELECT event_id,
+            CASE
+              WHEN secondary_jurisdiction_inner IS DISTINCT FROM ARRAY[NULL]::integer[]
+                THEN secondary_jurisdiction_inner
+              ELSE ARRAY[]::integer[]
+            END AS secondary_jurisdiction_entity_ids
+            FROM (
+              SELECT
+                events.id AS event_id,
+                ARRAY_ACCUM(p.secondary_entity_id) AS secondary_jurisdiction_inner
+              FROM
+                events
+                LEFT JOIN participations p
+                  ON (
+                    p.event_id = events.id AND p.type = 'AssociatedJurisdiction'
+                  )
+                GROUP BY
+                  events.id
+            ) sec_juris_inner
+          ) sec_juris
+        ON (sec_juris.event_id = events.id)
     ]
   end
 
