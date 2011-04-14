@@ -194,18 +194,23 @@ class MorbidityEventsController < EventsController
     begin
       @export_options = params[:export_options]
 
-      @events = MorbidityEvent.find_all_for_filtered_view(
+      query_options = {
         :states => params[:states],
         :queues => params[:queues],
         :investigators => params[:investigators],
         :diseases => params[:diseases],
-        :order_by => params[:sort_order],
         :order_direction => params[:sort_direction],
         :do_not_show_deleted => params[:do_not_show_deleted],
-        :set_as_default_view => params[:set_as_default_view],
-        :page => params[:page],
         :per_page => params[:per_page]
-      )
+      }
+
+      @events = MorbidityEvent.find_all_for_filtered_view(query_options.merge({
+        :view_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:view_event),
+        :order_by => params[:sort_order],
+        :page => params[:page]
+      }))
+
+      User.current_user.update_attribute('event_view_settings', query_options) if params[:set_as_default_view] == "1"
     rescue
       render :file => static_error_page_path(404), :layout => 'application', :status => 404
       return false

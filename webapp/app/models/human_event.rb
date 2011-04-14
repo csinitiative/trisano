@@ -117,10 +117,10 @@ class HumanEvent < Event
       end
     end
 
-    def get_allowed_queues(query_queues)
-      system_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-      queue_ids = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.id : nil }.compact
-      queue_names = system_queues.collect { |system_queue| query_queues.include?(system_queue.queue_name) ? system_queue.queue_name : nil }.compact
+    def get_allowed_queues(queues, jurisdiction_ids)
+      system_queues = EventQueue.queues_for_jurisdictions(jurisdiction_ids)
+      queue_ids = system_queues.map { |sq| sq.id if queues.include?(sq.queue_name) }.compact
+      queue_names = system_queues.map { |sq| sq.queue_name if queues.include?(sq.queue_name) }.compact
       return queue_ids, queue_names
     end
 
@@ -134,7 +134,10 @@ class HumanEvent < Event
       I18n.translate(state, :scope => [:workflow])
     end
 
-    def find_all_for_filtered_view(options = {})
+    def find_all_for_filtered_view(options)
+      users_view_jurisdictions = options[:view_jurisdiction_ids] || []
+      return [] if users_view_jurisdictions.empty?
+
       where_clause = "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
 
       states = options[:states] || []
@@ -153,7 +156,7 @@ class HumanEvent < Event
       end
 
       if options[:queues]
-        queue_ids, queue_names = get_allowed_queues(options[:queues])
+        queue_ids, queue_names = get_allowed_queues(options[:queues], users_view_jurisdictions)
 
         if queue_ids.empty?
           raise(I18n.translate('no_queue_ids_returned'))
@@ -184,15 +187,8 @@ class HumanEvent < Event
         "events.updated_at DESC"
       end
 
-      users_view_jurisdictions = User.current_user.jurisdiction_ids_for_privilege(:view_event)
-      users_view_jurisdictions << "NULL" if users_view_jurisdictions.empty?
-
-      query_options = options.reject { |k, v| [:page, :order_by, :set_as_default_view].include?(k) }
-      User.current_user.update_attribute('event_view_settings', query_options) if options[:set_as_default_view] == "1"
-
-      users_view_jurisdictions_sanitized = []
-      users_view_jurisdictions.each do |j|
-        users_view_jurisdictions_sanitized << sanitize_sql_for_conditions(["%d", j]).untaint
+      users_view_jurisdictions_sanitized = users_view_jurisdictions.map do |j|
+        sanitize_sql_for_conditions(["%d", j]).untaint
       end
 
       # Hard coding the query to wring out some speed.

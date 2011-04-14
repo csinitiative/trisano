@@ -796,13 +796,15 @@ describe MorbidityEvent do
   describe 'when executing a view-filtering search' do
 
     before :each do
-
       @jurisdiction_id = create_jurisdiction_entity.id
 
       @user = Factory(:user)
-      @user.stubs(:jurisdiction_ids_for_privilege).returns([@jurisdiction_id])
+      # decouple find_all_for_filtered_view from current_user
+      User.stubs(:current_user).returns(nil)
+
       @queue = Factory(:event_queue, :jurisdiction_id => @jurisdiction_id)
 
+      @search_hash = { :view_jurisdiction_ids => [@jurisdiction_id] }
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
@@ -839,11 +841,11 @@ describe MorbidityEvent do
       # make sure EncounterEvent doesn't show up.
       EncounterEvent.create(:parent_id => m.id)
 
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['accepted_by_lhd']}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :queues => [@queue.queue_name], :states => ['closed'], :investigators => [@user.id]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name], :states => ['accepted_by_lhd'])).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => nil, :investigators => nil)).size.should == 2
     end
 
     it 'should filter by state and the other attributes' do
@@ -867,11 +869,11 @@ describe MorbidityEvent do
       d.workflow_state = 'closed'
       d.save!
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:states => ['closed']}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed'], :queues => [@queue.queue_name]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:diseases => [disease_id], :states => ['closed'], :queues => [@queue.queue_name], :investigators => [@user.id]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
     end
 
     it 'should filter by queue and the other attributes' do
@@ -893,17 +895,10 @@ describe MorbidityEvent do
       c.workflow_state = 'closed'
       c.save!
 
-      MorbidityEvent.find_all_for_filtered_view({:queues => [@queue.queue_name]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:queues => [@queue.queue_name], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({
-        :queues => [@queue.queue_name],
-        :states => ['closed'],
-        :diseases => [disease_id]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({
-        :queues => [@queue.queue_name],
-        :states => ['closed'],
-        :diseases => [disease_id],
-        :investigators => [@user.id]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
     end
 
     it "should filter by investigator and the other attributes" do
@@ -926,11 +921,11 @@ describe MorbidityEvent do
       c.workflow_state = 'closed'
       c.save!
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id]}).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed']}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed'], :diseases => [disease_id]}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({:investigators => [@user.id], :states => ['closed'], :diseases => [disease_id], :queues => [@queue.queue_name]}).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 1
     end
 
     it "should not show deleted records if told so" do
@@ -952,23 +947,11 @@ describe MorbidityEvent do
       a.workflow_state = 'closed'
       a.soft_delete
 
-      MorbidityEvent.find_all_for_filtered_view.size.should == 4
-      MorbidityEvent.find_all_for_filtered_view({:do_not_show_deleted => [1], :investigators => [@user.id]}).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view({
-        :do_not_show_deleted => [1],
-        :investigators => [@user.id],
-        :states => ['closed']}).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view({
-        :do_not_show_deleted => [1],
-        :investigators => [@user.id],
-        :states => ['closed'],
-        :diseases => [disease_id]}).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view({
-        :do_not_show_deleted => [1],
-        :investigators => [@user.id],
-        :states => ['closed'],
-        :diseases => [disease_id],
-        :queues => [@queue.queue_name]}).size.should == 0
+      MorbidityEvent.find_all_for_filtered_view(@search_hash).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:do_not_show_deleted => [1], :investigators => [@user.id]})).size.should == 3
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:states => ['closed']})).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:diseases => [disease_id]})).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:queues => [@queue.queue_name]})).size.should == 0
     end
 
     it "should sort appropriately" do
@@ -1006,16 +989,6 @@ describe MorbidityEvent do
       events = MorbidityEvent.find_all_for_filtered_view(:order_by => 'status')
       states = events.collect { |event| event.workflow_state }
       states.should == states.sort
-    end
-
-    it 'should set the query string on the user if the view change is to be the default' do
-      no_queue = MorbidityEvent.create!(@event_hash)
-      @event_hash['event_queue_id'] = @queue.id
-      in_queue = MorbidityEvent.create!(@event_hash)
-
-      HumanEvent.find_all_for_filtered_view.sort_by(&:id).should == [no_queue, in_queue]
-      @user.expects(:update_attribute)
-      HumanEvent.find_all_for_filtered_view({:queues => [@queue.queue_name], :set_as_default_view => "1"}).should == [in_queue]
     end
 
   end
