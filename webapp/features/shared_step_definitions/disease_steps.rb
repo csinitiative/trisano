@@ -12,7 +12,7 @@ Given /^the disease "([^\"]*)" exports to CDC when state is "([^\"]*)"$/ do |dis
 end
 
 Given /^I have an active disease named "([^\"]*)"$/ do |disease_name|
-  @disease = Factory.create(:disease, :disease_name => disease_name)
+  @disease = Factory.create(:disease, :disease_name => disease_name, :active => true)
 end
 
 Given /^the following active diseases:$/ do |table|
