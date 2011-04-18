@@ -415,7 +415,7 @@ describe FormsController do
     end
 
     def do_post
-      post :order_section_children, :id => "3", 'parents-children' => @reorder_list
+      post :order_section_children, :id => "3", 'question' => @reorder_list
     end
 
     it "should be successful" do

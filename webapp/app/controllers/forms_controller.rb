@@ -226,9 +226,7 @@ class FormsController < AdminController
 
   def order_section_children
     @section = FormElement.find(params[:id])
-    section_name, section_items = params.find { |k, v| k =~ /children$/ }
-    reorder_ids = section_items.collect {|id| id.to_i}
-
+    reorder_ids = params[:question].collect {|id| id.to_i}
     if @section.reorder_element_children(reorder_ids)
       @form = Form.find(@section.form_id)
     else

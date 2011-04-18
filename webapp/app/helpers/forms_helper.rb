@@ -18,47 +18,26 @@
 module FormsHelper
   extensible_helper
 
-  def render_admin_elements(container_element, include_children=true)
-    form_elements_cache = container_element.form.form_element_cache
-
-    result = ""
-
-    form_elements_cache.children(container_element).each do |child|
-      result << render_element(form_elements_cache, child, include_children)
-    end
-
-    result
+  # Converts a class name (of a form element type) into the render_* helper method that
+  # renders it.
+  def render_method(class_name)
+    ('render_' << class_name.underscore.gsub('_element', '')).to_sym
   end
 
   def render_element(form_elements_cache, element, include_children=true)
-
-    case element.class.name
-    when "ViewElement"
-      render_view(form_elements_cache, element, include_children)
-    when "CoreViewElement"
-      render_core_view(form_elements_cache, element, include_children)
-    when "CoreFieldElement"
-      render_core_field(form_elements_cache, element, include_children)
-    when "BeforeCoreFieldElement"
-      render_before_core_field(form_elements_cache, element, include_children)
-    when "AfterCoreFieldElement"
-      render_after_core_field(form_elements_cache, element, include_children)
-    when "SectionElement"
-      render_section(form_elements_cache, element, include_children)
-    when "GroupElement"
-      render_group(form_elements_cache, element, include_children)
-    when "QuestionElement"
-      render_question(form_elements_cache, element, include_children)
-    when "FollowUpElement"
-      render_follow_up(form_elements_cache, element, include_children)
-    when "ValueSetElement"
-      render_value_set(form_elements_cache, element, include_children)
-    when "ValueElement"
-      render_value(form_elements_cache, element, include_children)
-    end
-
+    send(render_method(element.class.name), form_elements_cache, element, include_children)
   end
 
+  def render_admin_elements(container_element, include_children=true)
+    form_elements_cache = container_element.form.form_element_cache
+
+    returning "" do |result|
+      form_elements_cache.children(container_element).each do |child|
+        result << render_element(form_elements_cache, child, include_children)
+      end
+    end
+  end
+  
   def render_view(form_elements_cache, element, include_children=true)
     begin
       result = "<li id='view_#{element.id}' class='sortable fb-tab'>"
@@ -405,8 +384,23 @@ module FormsHelper
   end
 
   def sortable_fb_element(html_id, element, options = {})
-    options = {:handle => '.question', :constraint => :vertical, :url => order_section_children_path(element)}.merge(options)
-    sortable_element(h(html_id), options)
+    %Q{<script>
+      $j("##{h(html_id)}").sortable({
+        update: function(event, ui) {
+          $j.ajax({
+            type: 'put',
+            data: $j('##{h(html_id)}').sortable('serialize'),
+            complete: function(request){
+              $j('##{h(html_id)}').effect('highlight');
+            },
+            url: "#{order_section_children_path(element)}"
+          })
+        }
+      });
+
+      $j("##{h(html_id)}").disableSelection();
+    </script>
+    }
   end
 
   def order_section_children_path(element)
