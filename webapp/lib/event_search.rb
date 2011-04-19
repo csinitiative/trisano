@@ -134,6 +134,7 @@ module EventSearch
         where << city_conditions(options)
         where << county_conditions(options)
         where << jurisdiction_conditions(options)
+        where << sensitive_disease_conditions(options)
         where << birth_date_conditions(options)
         where << entered_on_conditions(options)
         where << first_reported_conditions(options)
@@ -203,6 +204,17 @@ module EventSearch
           SQL
         end
       end
+      sanitize_sql_for_conditions(conditions)
+    end
+
+    def sensitive_disease_conditions(options)
+      allowed_ids = options[:access_sensitive_jurisdiction_ids]
+      allowed_ids ||= User.current_user.jurisdiction_ids_for_privilege(:access_sensitive_diseases) if User.current_user
+      conditions = [ <<-SQL, allowed_ids, allowed_ids ]
+        (diseases.sensitive IS NULL OR NOT diseases.sensitive OR
+         jurisdictions_events.secondary_entity_id IN (?)
+         OR associated_jurisdictions_events.secondary_entity_id IN (?))
+      SQL
       sanitize_sql_for_conditions(conditions)
     end
 

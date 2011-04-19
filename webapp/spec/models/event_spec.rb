@@ -2053,6 +2053,36 @@ describe Event, "filtering sensitive diseases" do
     events.length.should == 3
   end
 
+  it 'does not show an unprivileged user sensitive events' do
+    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name).count.should == 0
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
+  end
+
+  it 'shows a privileged user an event by primary jurisdiction' do
+    allowed_ids = [ @sensitive_event.jurisdiction.secondary_entity_id ]
+
+    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+  end
+
+  it 'shows a privileged user an event by secondary jurisdiction' do
+    associated_jurisdiction = create_jurisdiction_entity
+    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => associated_jurisdiction)
+    allowed_ids = [ associated_jurisdiction.id ]
+
+    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+  end
+
 end
 
 describe Event do
