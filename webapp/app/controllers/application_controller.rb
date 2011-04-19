@@ -78,8 +78,13 @@ class ApplicationController < ActionController::Base
   def find_event
     begin
       @event = Event.find(params[:event_id])
-    rescue
-      render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
+    rescue => error
+      respond_to do |format|
+        format.html do
+          render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
+        end
+        format.xml { head :not_found }
+      end
     end
   end
 

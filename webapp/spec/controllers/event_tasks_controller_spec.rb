@@ -408,4 +408,15 @@ describe EventTasksController do
     end
   end
 
+  context "handling an XML request" do
+    it "should return a head 404 response to an XML request" do
+      login_as_super_user
+      request.env['HTTP_ACCEPT'] = 'application/xml'
+      Event.stubs(:find).raises("no such event")
+      get :new, :event_id => 1
+      response.status.should == "404 Not Found"
+      response.body.should be_blank
+    end
+  end
+
 end
