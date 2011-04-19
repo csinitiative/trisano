@@ -113,6 +113,7 @@ module NameAndBirthdateSearch
       conditions << "pplentities.deleted_at IS NULL"
       conditions << name_conditions(options, :last_name, :first_name, :use_starts_with_search)
       conditions << bdate_conditions(options)
+      conditions << sensitive_disease_conditions
     end.compact
   end
 
@@ -124,6 +125,33 @@ module NameAndBirthdateSearch
       sql = "birth_date = ?"
     end
     sanitize_sql_for_conditions([sql, options[:birth_date]])
+  end
+
+  def sensitive_disease_conditions
+    %Q[
+      (
+        diseases.sensitive IS NULL
+        OR
+        NOT diseases.sensitive
+        OR
+        secondary_jurisdiction_entity_ids || jurispart.secondary_entity_id &&
+            ARRAY(
+                SELECT
+                    DISTINCT rm.jurisdiction_id
+                FROM
+                    privileges p
+                    JOIN privileges_roles pr
+                        ON (pr.privilege_id = p.id)
+                    JOIN role_memberships rm
+                        USING (role_id)
+                    JOIN users u
+                        ON (u.id = rm.user_id)
+                WHERE
+                    priv_name = 'access_sensitive_diseases' AND
+                    u.id = #{User.current_user.id}
+            )
+    )
+    ]
   end
 
   def name_and_bdate_order(options)

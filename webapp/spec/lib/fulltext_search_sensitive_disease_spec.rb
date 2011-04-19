@@ -28,14 +28,42 @@ describe "searching with sensitive diseases" do
   end
 
   describe "excluding sensitive diseases based on role" do
-    
+
     before(:each) do
       create_starter_sensitive_disease_test_scenario
     end
 
-    it "should include all events except for the sensitive event in David County for a Bear Cub River user with sensitive disease privileges" do
+    context "for the sensitive disease user" do
+      it "should include all events except for the sensitive event in David County for a Bear Cub River user with sensitive disease privileges" do
+        User.current_user = @sensitive_disease_user
+        events = HumanEvent.find_by_name_and_bdate(:last_name => 'James')
+
+        # The events that should be returned
+        events.detect { |event| event.id == @sensitive_event.id }.should_not be_nil
+        events.detect { |event| event.id == @sensitive_event_secondary.id }.should_not be_nil
+        events.detect { |event| event.id == @not_sensitive_event.id }.should_not be_nil
+        events.detect { |event| event.id == @event_without_a_disease.id }.should_not be_nil
+
+        # The events that shouldn't be returned
+        events.detect { |event| event.id == @sensitive_event_out_of_jurisdiction.id }.should be_nil
+      end
     end
 
+    context "for the not sensitive disease user" do
+      it "should not include any of the sensitive disease events" do
+        User.current_user = @not_sensitive_disease_user
+        events = HumanEvent.find_by_name_and_bdate(:last_name => 'James')
+
+        # The events that should be returned
+        events.detect { |event| event.id == @not_sensitive_event.id }.should_not be_nil
+        events.detect { |event| event.id == @event_without_a_disease.id }.should_not be_nil
+        
+        # The events that shouldn't be returned
+        events.detect { |event| event.id == @sensitive_event.id }.should be_nil
+        events.detect { |event| event.id == @sensitive_event_secondary.id }.should be_nil
+        events.detect { |event| event.id == @sensitive_event_out_of_jurisdiction.id }.should be_nil
+      end
+    end
   end
 
 end
