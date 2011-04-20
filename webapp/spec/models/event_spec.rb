@@ -39,6 +39,13 @@ describe MorbidityEvent do
     yield published_form if block_given?
   end
 
+  it "should validate date format of results reported to clinician date" do
+    event = Event.new
+    event.update_attribute(:results_reported_to_clinician_date, 'not a date string')
+    event.should_not be_valid
+    event.errors.on(:results_reported_to_clinician_date).should_not be_nil
+  end
+
   describe "associations" do
     it { should have_one(:jurisdiction) }
     it { should have_many(:associated_jurisdictions) }

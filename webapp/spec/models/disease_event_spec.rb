@@ -1,9 +1,15 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe DiseaseEvent do
 
-  before(:each) do
+  before do
     @de = DiseaseEvent.create
+  end
+
+  it "validates the onset date" do
+    @de.update_attribute(:disease_onset_date, 'not a date string')
+    @de.should_not be_valid
+    @de.errors.on(:disease_onset_date).should_not be_nil
   end
 
   describe "date diagnosed" do

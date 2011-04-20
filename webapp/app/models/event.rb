@@ -175,6 +175,7 @@ class Event < ActiveRecord::Base
     encounter_empty ? true : false
   end
 
+  validates_date :results_reported_to_clinician_date, :allow_blank => true
   validates_existence_of :investigator, :allow_nil => true
   validates_numericality_of :acuity, :only_integer => true, :less_than => 100, :allow_nil => true
   validates_length_of :event_name, :maximum => 100, :allow_blank => true
