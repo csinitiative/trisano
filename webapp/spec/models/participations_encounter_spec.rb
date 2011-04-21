@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe ParticipationsEncounter do
 
@@ -58,7 +58,7 @@ describe ParticipationsEncounter do
     @pe.user = users(:default_user)
     @pe.encounter_location_type = "clinic"
     @pe.should_not be_valid
-    @pe.errors.on(:encounter_date).should_not be_nil
+    @pe.errors.on(:encounter_date).should == "is not a valid date"
   end
 
   it 'should not allow an update with an invalid location' do
