@@ -21,7 +21,7 @@ class Event < ActiveRecord::Base
   include EventSearch
   include Export::Cdc::EventRules
 
-  before_update :attempt_form_assignment_on_update, :force_save
+  before_update :attempt_form_assignment_on_update
   after_create :attempt_form_assignment_on_create
 
   if RAILS_ENV == "production"
@@ -703,12 +703,6 @@ class Event < ActiveRecord::Base
       self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
     end
     return true
-  end
-
-  # We're doing this to force the event model to be saved even if nothing has changed on the model.
-  # This allows for conditional GETs to work.
-  def force_save
-    self.updated_at = Time.new
   end
 
   # This method can be invoked by sub-classes before_create hooks in order to set

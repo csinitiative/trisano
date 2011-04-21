@@ -12,4 +12,21 @@ describe EncounterEvent do
     ee.participations_encounter.errors.on(:encounter_date).should == "cannot be earlier than birth date"
   end
 
+  it "generates a note when created" do
+    event = Factory.create :encounter_event
+    event.notes.size.should == 1
+  end
+
+  it "generate a note when edited" do
+    event = Factory.create :encounter_event
+    event.update_attribute :participations_encounter_attributes, :description => "updated"
+    event.notes.size.should == 2
+  end
+
+  it "should not add a not if the event or participation isn't dirty" do
+    event = Factory.create :encounter_event
+    event.save!
+    event.notes.size.should == 1
+  end
+
 end
