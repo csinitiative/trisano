@@ -19,3 +19,19 @@ $j('.sort_link').livequery(function() {
     });
   });
 });
+
+// Handle pagination links with the 'ajaxy' class
+$j('.pagination.ajaxy > a').livequery(function() {
+  $j(this).click(function(evt) {
+    evt.preventDefault();
+
+    // locate the target element (where the newly loaded data goes)
+    var target = $j(evt.target).parents('#' + $j(evt.target).parent().attr('data-replace'));
+    target.html('').siblings('#loader').show();
+
+    // load the new data and insert it in the target
+    $j.get($j(evt.target).attr('href'), null, function(data, status, xhr) {
+      target.html(data).siblings('#loader').hide();
+    });
+  });
+});
