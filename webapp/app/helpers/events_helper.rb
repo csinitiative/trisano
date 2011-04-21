@@ -1613,4 +1613,11 @@ module EventsHelper
     haml_concat(button_to_remote(t('search_button'), { :method => :get, :url => {:controller => "events", :action => "#{table}_search"}.merge(url_options), :with => search_with_option(model, options), :update => "#{model}_search_results", :loading => "$('#{model}-search-spinner').show();", :complete => "$('#{model}-search-spinner').hide();" }, :id => "#{model}_search"))
     haml_concat(image_tag('redbox_spinner.gif', :id => "#{model}-search-spinner", :style => "height: 16px; width: 16px; display: none;"))
   end
+
+  def multiple_reorder_controls
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-n', :onclick => "moveMultiple(this, 'top');"
+    haml_tag 'br'
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-s', :onclick => "moveMultiple(this, 'bottom');"
+  end
+
 end

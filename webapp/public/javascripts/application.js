@@ -438,3 +438,15 @@ document.observe('trisano:dom:loaded', function() {
     $('flash-message').fade({ delay: 3.0 });
   }
 });
+
+function moveMultiple(item, where) {
+  liAncestor = $j(item).closest('li');
+  ulAncestor = $j(liAncestor).closest('ul');
+  (where == 'top') ? liAncestor.remove().prependTo(ulAncestor) : liAncestor.remove().appendTo(ulAncestor);
+  setMultiplesPositionAttributes(ulAncestor);
+  return false;
+}
+
+function setMultiplesPositionAttributes(ul) {
+  ul.find("li > input[name*='position']").each(function (index, element) { element.value = index+1; });
+}

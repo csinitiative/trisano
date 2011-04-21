@@ -35,10 +35,11 @@
       = f.label :_destroy
       = f.check_box :_destroy
 
-  - lab_form.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result_fields|
-    = render :partial => "events/lab_result", :locals => { :f => lab_result_fields }
+  %ul{ :id => "lab-list-#{lab_id}" }
+    - lab_form.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result_fields|
+      = render :partial => "events/lab_result", :locals => { :f => lab_result_fields, :lab_id => lab_id }
 
-  %div{:id => "new_lab_result_holder_#{lab_id}"}
+    %div{:id => "new_lab_result_holder_#{lab_id}"}
 
   %p{:style => "clear: both; margin-left: 20px"}
     = add_lab_result_link t('add_new_lab_result'), lab_form.object_name, lab_id

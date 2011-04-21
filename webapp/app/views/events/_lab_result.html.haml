@@ -12,63 +12,72 @@
 -# get the lab result
 - lab_result = lab_result_form.object
 
-%div{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
 
-  -# For use in limiting the test_type and organism dropdowns depending on disease.
-  -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
-  -# @disease is set by the Ajax controller actions to the currently selected disease, if any
-  - disease = @disease || @event.try(:disease_event).try(:disease)
 
-  - core_element("test_type", lab_result_form, :horiz) do
-    = lab_result_form.label(:test_type)
-    = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "getLabOptions(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
+%li{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
+  = lab_result_form.hidden_field(:position)
+  
+  %table
+    %tr
+      %td{ :valign => 'top' }
+        = multiple_reorder_controls
 
-  - core_element("organism", lab_result_form, :horiz) do
-    = lab_result_form.label(:organism)
-    = lab_result_form.collection_select(:organism_id, organism_options(@event, disease, lab_result), :id, :organism_name, {:include_blank => true}, {:onchange => "getLabOptions(this, '#{url_for(:action => 'organism_options', :controller => 'events')}');"})
+      %td
+        -# For use in limiting the test_type and organism dropdowns depending on disease.
+        -# @event will be nil if this partial is being rendered from an Ajax call: i.e., 'Add a new lab' or 'Add a new lab result to this lab'
+        -# @disease is set by the Ajax controller actions to the currently selected disease, if any
+        - disease = @disease || @event.try(:disease_event).try(:disease)
 
-  - core_element("test_result", lab_result_form, :horiz) do
-    = lab_result_form.label(:test_result)
-    = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
-    &nbsp;&nbsp;
-    =t('or')
-  - core_element("result_value", lab_result_form, :horiz) do
-    = lab_result_form.label(:result_value)
-    = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
-  - core_element("units", lab_result_form, :horiz) do
-    = lab_result_form.label(:units)
-    = lab_result_form.text_field(:units, :size => 20, :maxlength => 50)
-  - core_element("reference_range", lab_result_form, :vert) do
-    = lab_result_form.label(:reference_range)
-    = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
-  - core_element("test_status", lab_result_form, :horiz) do
-    = lab_result_form.label(:test_status_id)
-    = lab_result_form.dropdown_code_field(:test_status_id, "test_status", {})
-  - core_element("specimen_source", lab_result_form, :horiz) do
-    = lab_result_form.label(:specimen_source_id)
-    = lab_result_form.dropdown_code_field(:specimen_source_id, "specimen", {})
-  - core_element("collection_date", lab_result_form, :horiz) do
-    = lab_result_form.label(:collection_date)
-    = lab_result_form.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
-  - core_element("lab_test_date", lab_result_form, :horiz) do
-    = lab_result_form.label(:lab_test_date)
-    = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
-  - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
-    = lab_result_form.label(:specimen_sent_to_state_id)
-    = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})
-  %span.vert
-  - core_element("comment", lab_result_form, :horiz) do
-    = lab_result_form.label(:comment)
-    = lab_result_form.text_area(:comment, :rows => 2, :cols => 100)
+        - core_element("test_type", lab_result_form, :horiz) do
+          = lab_result_form.label(:test_type)
+          = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "getLabOptions(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
 
-  - if lab_result.try(:staged_message)
-    %span.horiz
-      %label=t 'original_report'
-      = link_to t('electronic_lab_report'), staged_message_path(lab_result.staged_message)
+        - core_element("organism", lab_result_form, :horiz) do
+          = lab_result_form.label(:organism)
+          = lab_result_form.collection_select(:organism_id, organism_options(@event, disease, lab_result), :id, :organism_name, {:include_blank => true}, {:onchange => "getLabOptions(this, '#{url_for(:action => 'organism_options', :controller => 'events')}');"})
 
-  - if defined?(f) && !f.object.new_record?
-    %span.vert
-      = lab_result_form.label :_destroy
-      = lab_result_form.check_box :_destroy
+        - core_element("test_result", lab_result_form, :horiz) do
+          = lab_result_form.label(:test_result)
+          = lab_result_form.dropdown_code_field(:test_result_id, "test_result", {})
+          &nbsp;&nbsp;
+          =t('or')
+        - core_element("result_value", lab_result_form, :horiz) do
+          = lab_result_form.label(:result_value)
+          = lab_result_form.text_field(:result_value, :size => 20, :maxlength => 255)
+        - core_element("units", lab_result_form, :horiz) do
+          = lab_result_form.label(:units)
+          = lab_result_form.text_field(:units, :size => 20, :maxlength => 50)
+        - core_element("reference_range", lab_result_form, :vert) do
+          = lab_result_form.label(:reference_range)
+          = lab_result_form.text_field(:reference_range, :size => 20, :maxlength => 255)
+        - core_element("test_status", lab_result_form, :horiz) do
+          = lab_result_form.label(:test_status_id)
+          = lab_result_form.dropdown_code_field(:test_status_id, "test_status", {})
+        - core_element("specimen_source", lab_result_form, :horiz) do
+          = lab_result_form.label(:specimen_source_id)
+          = lab_result_form.dropdown_code_field(:specimen_source_id, "specimen", {})
+        - core_element("collection_date", lab_result_form, :horiz) do
+          = lab_result_form.label(:collection_date)
+          = lab_result_form.calendar_date_select(:collection_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+        - core_element("lab_test_date", lab_result_form, :horiz) do
+          = lab_result_form.label(:lab_test_date)
+          = lab_result_form.calendar_date_select(:lab_test_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+        - core_element("specimen_sent_to_state", lab_result_form, :horiz) do
+          = lab_result_form.label(:specimen_sent_to_state_id)
+          = lab_result_form.dropdown_code_field(:specimen_sent_to_state_id, "yesno", {})
+        %span.vert
+        - core_element("comment", lab_result_form, :horiz) do
+          = lab_result_form.label(:comment)
+          = lab_result_form.text_area(:comment, :rows => 2, :cols => 100)
 
-  %hr{:style => "position: relative; top: 5px"}
+        - if lab_result.try(:staged_message)
+          %span.horiz
+            %label=t 'original_report'
+            = link_to t('electronic_lab_report'), staged_message_path(lab_result.staged_message)
+
+        - if defined?(f) && !f.object.new_record?
+          %span.vert
+            = lab_result_form.label :_destroy
+            = lab_result_form.check_box :_destroy
+
+      %hr{:style => "position: relative; top: 5px"}
