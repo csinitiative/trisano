@@ -24,6 +24,7 @@ class EventsController < ApplicationController
   before_filter :can_index?, :only => [:index, :export]
   before_filter :can_access_sensitive?, :only => [:edit, :show, :update, :destroy, :soft_delete]
   before_filter :set_tab_index
+  before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
 
   def contacts_search
     page = params[:page] ? params[:page] : 1
@@ -49,12 +50,12 @@ class EventsController < ApplicationController
   end
 
   def reporters_search_selection
-    if params[:event_id]
-      @event = Event.find(params[:event_id])
+    if @event.reporter.nil?
+      @event.build_reporter :secondary_entity_id => params[:entity_id]
     else
-      @event = params[:event_type].camelize.constantize.new
+      @event.reporter.secondary_entity_id = params[:entity_id]
     end
-    @event.build_reporter(:secondary_entity => Entity.find(params[:entity_id]))
+
     render :layout => false
   end
 
@@ -123,13 +124,11 @@ class EventsController < ApplicationController
   end
 
   def reporting_agency_search_selection
-    if params[:event_id]
-      @event = Event.find(params[:event_id])
+    if @event.reporting_agency.nil?
+      @event.build_reporting_agency :secondary_entity_id => params[:id]
     else
-      @event = params[:event_type].camelize.constantize.new
+      @event.reporting_agency.secondary_entity_id = params[:id]
     end
-
-    @event.build_reporting_agency(:secondary_entity => PlaceEntity.find(params[:id]))
     render :layout => false
   end
 
@@ -388,5 +387,13 @@ class EventsController < ApplicationController
       :order => "LOWER(TRIM(name)) ASC",
       :limit => 20
     )
+  end
+
+  def find_or_build_event
+    if params[:event_id]
+      @event = Event.find(params[:event_id])
+    else
+      @event = params[:event_type].camelize.constantize.new
+    end
   end
 end

@@ -17,7 +17,8 @@ end
 When /^I search for a reporting agency named "([^\"]*)"$/ do |name|
   visit url_for({ :controller => :morbidity_events,
                   :action => :reporting_agencies_search,
-                  :place_name => name })
+                  :place_name => name,
+                  :event_type => 'morbidity_event' })
 end
 
 When /^I search for a contact named "([^\"]*)"$/ do |arg1|

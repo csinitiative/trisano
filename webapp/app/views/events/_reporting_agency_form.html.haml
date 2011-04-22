@@ -21,7 +21,7 @@
 
   #reporting_agencies
     -core_section :reporting_agency_section, f do
-      - search_interface :reporting_agencies, :url => { :event_type => @event.type.underscore }
+      - search_interface :reporting_agencies, :url => { :event_type => @event.type.underscore, :event_id => @event.id }
       #reporting_agency
         = render_reporting_agency_form(@event)
 

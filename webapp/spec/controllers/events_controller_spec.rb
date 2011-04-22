@@ -57,7 +57,7 @@ describe EventsController do
 
   context "Using ajax to search for reporting agencies" do
     it "should render the reporting agency search partial" do
-      get :reporting_agencies_search, :name => 'Example'
+      get :reporting_agencies_search, :name => 'Example', :event_type => 'morbidity_event'
       response.should be_a_success
       response.should render_template('events/_reporting_agencies_search')
     end

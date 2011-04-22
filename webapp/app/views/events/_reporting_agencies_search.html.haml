@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 - if flash[:error]
@@ -32,7 +32,7 @@
         %td=place.name
         %td=h preferred_address(place)
         %td=place.formatted_place_descriptions
-        %td=link_to_remote(t(:add), :update => 'reporting_agency', :url => { :action => :reporting_agency_search_selection, :id => place.entity_id, :event_type => params['event_type'] })
+        %td=link_to_remote(t(:add), :update => 'reporting_agency', :url => { :action => :reporting_agency_search_selection, :id => place.entity_id, :event_id => @event.id, :event_type => params['event_type'] })
 
   %br
   = ajaxy_pagination(@places, 'reporting_agencies')
