@@ -26,11 +26,12 @@
 
       #treatments
 
-        -person_form.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form|
-          =render :partial => "events/treatment", :locals => { :f => treatment_form }
+        %ul{ :id => "treatment-list" }
+          -person_form.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form|
+            =render :partial => "events/treatment", :locals => { :f => treatment_form }
 
       %p{ :style => "clear: both;" }
-        =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment')
+        =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment', :insert => 'treatment-list')
 
 -if @event.is_a?(MorbidityEvent)
   =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }

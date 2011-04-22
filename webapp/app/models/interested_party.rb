@@ -28,7 +28,7 @@ class InterestedParty < Participation
     :foreign_key => :participation_id,
     :class_name => 'ParticipationsTreatment',
     :dependent => :destroy,
-    :order => 'created_at ASC'
+    :order => 'position, created_at ASC'
 
   belongs_to :human_event, :foreign_key => :event_id
 
