@@ -1,6 +1,9 @@
 -f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |person_form|
   #treatments
-    -person_form.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form|
-      =render :partial => "events/p_hep_b_treatment", :locals => { :f => treatment_form }
+
+    %ul{ :id => "treatment-list" }
+      -person_form.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form|
+        =render :partial => "events/p_hep_b_treatment", :locals => { :f => treatment_form }
+        
   %p{ :style => "clear: both;" }
-    =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/p_hep_b_treatment')
+    =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/p_hep_b_treatment', :insert => 'treatment-list')
