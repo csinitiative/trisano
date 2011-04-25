@@ -47,7 +47,7 @@ describe 'Managing event queues' do
     @browser.wait_for_page_to_load($load_time)
 
     @browser.is_text_present('Event queue was successfully created.').should be_true
-    @browser.is_text_present(make_queue_name(@queue_name_1, "Utah County")).should be_true
+    @browser.is_text_present(@queue_name_1).should be_true
     @browser.is_text_present('Utah County Health Department').should be_true
   end
 
@@ -59,14 +59,14 @@ describe 'Managing event queues' do
     @browser.wait_for_page_to_load($load_time)
    
     @browser.is_text_present('Event queue was successfully updated.').should be_true
-    @browser.is_text_present(make_queue_name(@queue_name_2, "Utah County")).should be_true
+    @browser.is_text_present(@queue_name_2).should be_true
   end
 
   it "should allow deleting an event queue" do
     @browser.click "link=Delete"
     @browser.wait_for_page_to_load($load_time)
    
-    @browser.is_text_present(make_queue_name(@queue_name_2, "Utah County")).should_not be_true
+    @browser.is_text_present(@queue_name_2).should_not be_true
     @browser.is_text_present('Utah County Health Department').should_not be_true
   end
 
@@ -75,9 +75,5 @@ describe 'Managing event queues' do
     @browser.is_text_present('You do not have administrative rights').should be_true
   end
     
-end
-
-def make_queue_name(queue, jurisdiction)
-  queue.strip.downcase.gsub(/\s+/, "_").camelize + "-" + jurisdiction.strip.downcase.gsub(/\s+/, "_").camelize
 end
 

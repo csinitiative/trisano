@@ -18,6 +18,8 @@
 class MorbidityEventsController < EventsController
   include EventsHelper
 
+  before_filter :load_event_queues, :only => [:index]
+
   def index
     return unless index_processing
 
@@ -219,4 +221,7 @@ class MorbidityEventsController < EventsController
     return true
   end
 
+  def load_event_queues
+    @event_queues = EventQueue.queues_for_jurisdictions User.current_user.jurisdiction_ids_for_privilege(:view_event)
+  end
 end

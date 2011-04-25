@@ -146,7 +146,7 @@ Factory.define :disease do |d|
 end
 
 Factory.define :lab do |l|
-  l.secondary_entity { Factory.build(:place_entity) }
+  l.secondary_entity { Factory(:place_entity) }
   l.lab_results { |lr| [lr.association(:lab_result)] }
 end
 

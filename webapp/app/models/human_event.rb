@@ -118,10 +118,7 @@ class HumanEvent < Event
     end
 
     def get_allowed_queues(queues, jurisdiction_ids)
-      system_queues = EventQueue.queues_for_jurisdictions(jurisdiction_ids)
-      queue_ids = system_queues.map { |sq| sq.id if queues.include?(sq.queue_name) }.compact
-      queue_names = system_queues.map { |sq| sq.queue_name if queues.include?(sq.queue_name) }.compact
-      return queue_ids, queue_names
+      EventQueue.queues_for_jurisdictions(jurisdiction_ids).all(:conditions => {:id => queues})
     end
 
     def get_states_and_descriptions
@@ -161,12 +158,12 @@ class HumanEvent < Event
       end
 
       if options[:queues]
-        queue_ids, queue_names = get_allowed_queues(options[:queues], users_view_jurisdictions)
+        queues = get_allowed_queues(options[:queues], users_view_jurisdictions)
 
-        if queue_ids.empty?
+        if queues.empty?
           raise(I18n.translate('no_queue_ids_returned'))
         else
-          where_clause << " AND event_queue_id IN (#{ queue_ids.map { |q| sanitize_sql_for_conditions(["'%s'", q]).untaint }.join(',') })"
+          where_clause << " AND event_queue_id IN (#{ queues.map(&:id).join(',') })"
         end
       end
 

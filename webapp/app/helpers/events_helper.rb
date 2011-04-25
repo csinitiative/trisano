@@ -302,7 +302,7 @@ module EventsHelper
         when :assign_to_queue
           event_queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:route_event_to_investigator))
           controls << "<div>#{ct(:assign_to_queue)}&nbsp;"
-          controls << select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :queue_name, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
+          controls << select_tag("morbidity_event[event_queue_id]", "<option value=""></option>" + options_from_collection_for_select(event_queues, :id, :name_and_jurisdiction, event['event_queue_id']), :id => 'morbidity_event__event_queue_id', :onchange => state_routing_js(:value => transition.to_s), :style => "display: inline") + "</div>"
         when :assign_to_investigator
           investigators = User.investigators_for_jurisdictions(event.jurisdiction.place_entity.place)
           controls << "<div>#{ct(:assign_to_investigator)}&nbsp;"

@@ -47,8 +47,7 @@
       = select_tag("states[]", options_from_collection_for_select(events, :workflow_state, :description), :size => 5, :multiple => true, :id => "states_selector")
     %span.horiz
       %label=t 'queues'
-      - queues = EventQueue.queues_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
-      = select_tag("queues[]", options_from_collection_for_select(queues, :queue_name, :queue_name), :size => 5, :multiple => true, :id => "queues_selector")
+      = select_tag("queues[]", options_from_collection_for_select(@event_queues, :id, :name_and_jurisdiction), :size => 5, :multiple => true, :id => "queues_selector")
     %label=t 'investigators'
     - investigators = User.investigators_for_jurisdictions(User.current_user.jurisdiction_ids_for_privilege(:view_event))
     = select_tag("investigators[]", options_from_collection_for_select(investigators, :id, :best_name), :size => 5, :multiple => true, :id => "investigators_selector")

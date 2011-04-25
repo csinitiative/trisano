@@ -16,9 +16,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe EventQueue do
-  before(:each) do
-  end
-
   it "should be valid with queue name and jurisdiction" do
     @event_queue = EventQueue.new( :queue_name => 'Enterics', :jurisdiction_id => 1 )
     @event_queue.should be_valid
@@ -34,17 +31,9 @@ describe EventQueue do
     @event_queue.should_not be_valid
   end
 
-  fixtures :event_queues, :entities, :places, :places_types
-
-  it "should be associated with a jurisdiction" do
-    event_queues(:enterics_queue).jurisdiction.place.name.should == "Southeastern District"
-  end
-
-  # Just one test here for the before_save.  Underscore method tested in lib/utilities_spec.rb
-  it "should append short jurisidction name to queue name, remove surrounding whitespace, and replace internal whitespace with underscores" do
-    @event_queue = EventQueue.new( :queue_name => 'Enterics Group', :jurisdiction_id => 102 )
-    @event_queue.save
-    @event_queue.queue_name.should == "EntericsGroup-DavisCounty"
+  it "should provide a text representation of the name and jurisdiction" do
+    event_queue = Factory.create :event_queue, :queue_name => 'Enterics Group'
+    event_queue.name_and_jurisdiction.should == ["Enterics Group", event_queue.jurisdiction.place.short_name].join(' - ')
   end
 
   describe "deleting an event queue" do

@@ -18,6 +18,13 @@
 require 'spec_helper'
 
 describe MorbidityEvent do
+  before do
+    destroy_fixture_data
+  end
+
+  after do
+    Fixtures.reset_cache
+  end
 
   def with_event(event_hash=@event_hash)
     event = Factory(:morbidity_event, event_hash)
@@ -561,17 +568,8 @@ describe MorbidityEvent do
 
   describe 'just created' do
     before :each do
-      @event_hash = {
-        "interested_party_attributes" => {
-          "person_entity_attributes" => {
-            "person_attributes" => {
-              "last_name"=>"Biel",
-              "birth_date" => Date.today.years_ago(14)-5.days
-            }
-          }
-        }
-      }
-      @event = Factory.build(:morbidity_event)
+      @event = Factory(:morbidity_event)
+      @event.interested_party.person_entity.person.update_attribute :birth_date, (Date.today.years_ago(14) - 5.days)
     end
 
     it 'should not generate an age at onset if the birthdate is unknown' do
@@ -592,7 +590,7 @@ describe MorbidityEvent do
 
       it 'should use the disease onset date' do
         onset = Date.today.years_ago(3)
-        @event_hash['disease_event_attributes'] = {'disease_onset_date' => onset }
+        @event_hash = { 'disease_event_attributes' => {'disease_onset_date' => onset } }
         @event.update_attributes(@event_hash)
         @event.age_info.age_at_onset.should == 11
         @event.age_info.age_type.code_description.should == 'years'
@@ -600,44 +598,44 @@ describe MorbidityEvent do
 
       it 'should use the date the disease was diagnosed' do
         date_diagnosed = Date.today.years_ago(3)
-        @event_hash['disease_event_attributes'] = {'date_diagnosed' => date_diagnosed }
+        @event_hash = { 'disease_event_attributes' => {'date_diagnosed' => date_diagnosed } }
         @event.update_attributes(@event_hash)
         @event.age_info.age_at_onset.should == 11
         @event.age_info.age_type.code_description.should == 'years'
       end
 
       it 'should use the lab collection date' do
-        @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] } ]
-        @event.update_attributes(@event_hash)
+        @event.labs << Factory(:lab)
+        @event.labs.first.lab_results.first.update_attributes(:collection_date => Date.today.years_ago(1))
+        @event.save!
         @event.labs.count.should == 1
         @event.age_info.age_at_onset.should == 13
       end
 
       it 'should use the earliest lab collection date' do
-        @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.years_ago(1) } ] },
-          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1, "collection_date" => Date.today.months_ago(18) } ] } ]
-        @event.update_attributes(@event_hash)
+        @event.labs << Factory(:lab)
+        @event.labs.first.lab_results.first.update_attributes(:collection_date => Date.today.years_ago(1))
+        @event.labs << Factory(:lab)
+        @event.labs.last.lab_results.first.update_attributes(:collection_date => Date.today.months_ago(18))
+        @event.save!
         @event.labs.count.should == 2
         @event.age_info.age_at_onset.should == 12
       end
 
-      it 'should use the earliest lab collection date' do
-        @event_hash["labs_attributes"] = [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1,
-                "collection_date" => Date.today.years_ago(1), "lab_test_date" => Date.today.years_ago(1) } ] },
-          { "place_entity_attributes" => { "place_attributes" => { "name" => "Merck" } },
-            "lab_results_attributes" => [ { "test_type_id" => 1,
-                "collection_date" => Date.today.years_ago(3), "lab_test_date" => Date.today.months_ago(18) } ] } ]
-        @event.update_attributes(@event_hash)
+      it 'should use the earliest lab test date' do
+        @event.labs << Factory(:lab)
+        @event.labs.first.lab_results.first.update_attributes(:collection_date => Date.today.years_ago(1),
+                                                              :lab_test_date => Date.today.years_ago(1))
+        @event.labs << Factory(:lab)
+        @event.labs.last.lab_results.first.update_attributes(:collection_date => Date.today.years_ago(3),
+                                                             :lab_test_date => Date.today.months_ago(18))
+        @event.save!
         @event.labs.count.should == 2
         @event.age_info.age_at_onset.should == 11
       end
 
       it 'should use the first reported public health date (if its the earliest)' do
-        @event_hash['first_reported_PH_date'] = Date.today.months_ago(6)
+        @event_hash = { 'first_reported_PH_date' => Date.today.months_ago(6) }
         @event.update_attributes(@event_hash)
         @event.age_info.age_at_onset.should == 13
       end
@@ -849,7 +847,7 @@ describe MorbidityEvent do
       EncounterEvent.create(:parent_id => m.id)
 
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 4
-      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name], :states => ['accepted_by_lhd'])).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.id], :states => ['accepted_by_lhd'])).size.should == 1
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 2
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => nil, :investigators => nil)).size.should == 2
@@ -879,7 +877,7 @@ describe MorbidityEvent do
       MorbidityEvent.find_all_for_filtered_view(@search_hash).size.should == 4
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 4
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 3
-      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 2
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.id])).size.should == 2
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
     end
 
@@ -902,7 +900,7 @@ describe MorbidityEvent do
       c.workflow_state = 'closed'
       c.save!
 
-      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 4
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.id])).size.should == 4
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 3
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 2
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 1
@@ -932,7 +930,7 @@ describe MorbidityEvent do
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:investigators => [@user.id])).size.should == 4
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:states => ['closed'])).size.should == 3
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:diseases => [disease_id])).size.should == 2
-      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.queue_name])).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:queues => [@queue.id])).size.should == 1
     end
 
     it "should not show deleted records if told so" do
@@ -958,7 +956,7 @@ describe MorbidityEvent do
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:do_not_show_deleted => [1], :investigators => [@user.id]})).size.should == 3
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:states => ['closed']})).size.should == 2
       MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:diseases => [disease_id]})).size.should == 1
-      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:queues => [@queue.queue_name]})).size.should == 0
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!({:queues => [@queue.id]})).size.should == 0
     end
 
     it "should sort appropriately" do
@@ -1993,103 +1991,103 @@ describe Event, "jurisdiction entity ids" do
     @event.jurisdiction_entity_ids.to_a.should == [@event.jurisdiction.secondary_entity_id, @event.associated_jurisdictions.map(&:secondary_entity_id)].flatten
   end
 
-end
+  describe "filtering sensitive diseases" do
+    before do
+      destroy_fixture_data
+      sensitive_disease = Factory(:disease, :sensitive => true)
+      disease_event = Factory(:disease_event, :disease => sensitive_disease)
+      @sensitive_event = Factory(:morbidity_event_with_disease, :disease_event => disease_event)
+      @nonsensitive_event = Factory(:morbidity_event_with_disease)
+      @event_without_disease = Factory(:morbidity_event)
 
-describe Event, "filtering sensitive diseases" do
-  before :each do
-    sensitive_disease = Factory(:disease, :sensitive => true)
-    disease_event = Factory(:disease_event, :disease => sensitive_disease)
-    @sensitive_event = Factory(:morbidity_event_with_disease, :disease_event => disease_event)
-    @nonsensitive_event = Factory(:morbidity_event_with_disease)
-    @event_without_disease = Factory(:morbidity_event)
+      @sensitive_role = create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
+      @privileged_user = create_user_in_role! 'Sensitive', 'sensitive'
+      @unprivileged_user = Factory(:user)
+    end
 
-    @sensitive_role = create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
-    @privileged_user = create_user_in_role! 'Sensitive', 'sensitive'
-    @unprivileged_user = Factory(:user)
+    it "shows all events to a privileged user" do
+      Event.sensitive(@privileged_user).length.should == 3
+    end
+
+    it "does not show sensitive events to an unprivileged user" do
+      Event.sensitive(@unprivileged_user).length.should == 2
+    end
+
+    it "does not show a privileged user extrajurisdictional sensitive events" do
+      primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
+      primary_jurisdiction_id.should_not be_nil
+      @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
+      Event.sensitive(@privileged_user).length.should == 2
+    end
+
+    it "shows a privileged user events by secondary jurisdiction" do
+      # take away the user's right to see sensitive diseases in the
+      # sensitive event's primary jurisdiction
+      primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
+      primary_jurisdiction_id.should_not be_nil
+      @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
+
+      # find another jurisdiction in which the user is entitled to see
+      # sensitive diseases
+      jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
+      jurisdictions.should_not be_nil
+      jurisdictions.count.should > 1
+      secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
+
+      # associate that other jurisdiction as a secondary jurisdiction
+      Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
+
+      # verify that the user can still see the event
+      Event.sensitive(@privileged_user).length.should == 3
+    end
+
+    it "returns one object per event (as opposed to one per jurisdiction)" do
+      # find another jurisdiction in which the user is entitled to see
+      # sensitive diseases
+      jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
+      jurisdictions.should_not be_nil
+      jurisdictions.count.should > 1
+      secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
+
+      # associate that other jurisdiction as a secondary jurisdiction
+      Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
+
+      # verify that the user can still see the event (once)
+      events = Event.sensitive(@privileged_user)
+      events.length.should == 3
+    end
+
+    it 'does not show an unprivileged user sensitive events' do
+      Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name).count.should == 0
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
+    end
+
+    it 'shows a privileged user an event by primary jurisdiction' do
+      allowed_ids = [ @sensitive_event.jurisdiction.secondary_entity_id ]
+
+      Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    end
+
+    it 'shows a privileged user an event by secondary jurisdiction' do
+      associated_jurisdiction = create_jurisdiction_entity
+      Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => associated_jurisdiction)
+      allowed_ids = [ associated_jurisdiction.id ]
+
+      Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+      Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
+        :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
+    end
+
   end
-
-  it "shows all events to a privileged user" do
-    Event.sensitive(@privileged_user).length.should == 3
-  end
-
-  it "does not show sensitive events to an unprivileged user" do
-    Event.sensitive(@unprivileged_user).length.should == 2
-  end
-
-  it "does not show a privileged user extrajurisdictional sensitive events" do
-    primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
-    primary_jurisdiction_id.should_not be_nil
-    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
-    Event.sensitive(@privileged_user).length.should == 2
-  end
-
-  it "shows a privileged user events by secondary jurisdiction" do
-    # take away the user's right to see sensitive diseases in the
-    # sensitive event's primary jurisdiction
-    primary_jurisdiction_id = @sensitive_event.jurisdiction.secondary_entity_id
-    primary_jurisdiction_id.should_not be_nil
-    @privileged_user.role_memberships.find_by_role_id_and_jurisdiction_id(@sensitive_role.id, primary_jurisdiction_id).destroy
-
-    # find another jurisdiction in which the user is entitled to see
-    # sensitive diseases
-    jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
-    jurisdictions.should_not be_nil
-    jurisdictions.count.should > 1
-    secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
-
-    # associate that other jurisdiction as a secondary jurisdiction
-    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
-
-    # verify that the user can still see the event
-    Event.sensitive(@privileged_user).length.should == 3
-  end
-
-  it "returns one object per event (as opposed to one per jurisdiction)" do
-    # find another jurisdiction in which the user is entitled to see
-    # sensitive diseases
-    jurisdictions = @privileged_user.jurisdictions_for_privilege(:access_sensitive_diseases).map(&:entity)
-    jurisdictions.should_not be_nil
-    jurisdictions.count.should > 1
-    secondary_jurisdiction = jurisdictions.find { |j| j != @sensitive_event.jurisdiction.place_entity }
-
-    # associate that other jurisdiction as a secondary jurisdiction
-    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => secondary_jurisdiction)
-
-    # verify that the user can still see the event (once)
-    events = Event.sensitive(@privileged_user)
-    events.length.should == 3
-  end
-
-  it 'does not show an unprivileged user sensitive events' do
-    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name).count.should == 0
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name).count.should == 1
-  end
-
-  it 'shows a privileged user an event by primary jurisdiction' do
-    allowed_ids = [ @sensitive_event.jurisdiction.secondary_entity_id ]
-
-    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-  end
-
-  it 'shows a privileged user an event by secondary jurisdiction' do
-    associated_jurisdiction = create_jurisdiction_entity
-    Factory(:associated_jurisdiction, :event_id => @sensitive_event.id, :place_entity => associated_jurisdiction)
-    allowed_ids = [ associated_jurisdiction.id ]
-
-    Event.find_by_criteria(:sw_last_name => @sensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-    Event.find_by_criteria(:sw_last_name => @nonsensitive_event.interested_party.person_entity.person.last_name,
-      :access_sensitive_jurisdiction_ids => allowed_ids).count.should == 1
-  end
-
 end
 
 describe Event do

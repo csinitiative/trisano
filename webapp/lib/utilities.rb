@@ -1,17 +1,5 @@
 class Utilities
   class << self
-    def model_empty?(model)
-      model.nil? or model.attributes.all? {|k, v| v.blank?}
-    end
-
-    def underscore(string)
-      string.strip.gsub(/\s+/, "_")
-    end
-
-    def make_queue_name(string)
-      string.strip.downcase.gsub(/\s+/, "_").camelize
-    end
-
     def parse_phone(phone_no)
       digits = phone_no.gsub(/\D/, '')
       area_code = number = extension = nil
@@ -31,9 +19,6 @@ class Utilities
       return area_code, number, extension
     end
 
-    def sanitize_for_tsquery(string)
-      string.gsub(/[\(\);]/, '')
-    end
   end
 end
 

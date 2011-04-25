@@ -16,22 +16,19 @@
 class EventQueue < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
   validates_presence_of :queue_name, :jurisdiction_id
-  before_save :replace_white_space
+  validates_length_of :queue_name, :maximum => 100, :allow_blank => true
   before_destroy :fix_up_events
   after_destroy :fix_up_views
 
-  class << self
-    def queues_for_jurisdictions(jurisdiction_ids)
-      jurisdiction_ids = jurisdiction_ids.to_a
-      find(:all, :conditions => ["jurisdiction_id IN (?)", jurisdiction_ids])
-    end
+  named_scope :queues_for_jurisdictions, lambda { |jurisdiction_ids|
+    { :conditions => { :jurisdiction_id => jurisdiction_ids } }
+  }
+
+  def name_and_jurisdiction join_char=' - '
+    [self.queue_name, self.jurisdiction.place.short_name].join join_char
   end
 
   private
-
-  def replace_white_space
-    self.queue_name = Utilities::make_queue_name(self.queue_name) + "-" + Utilities::make_queue_name(jurisdiction.place.short_name)
-  end
 
   def fix_up_events
     Event.find(:all, :conditions => "event_queue_id = #{self.id}").each do |event|

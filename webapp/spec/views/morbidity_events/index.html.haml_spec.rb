@@ -29,6 +29,7 @@ describe "morbidity_events/index.html.haml" do
     before do
       User.current_user = @user
       assigns[:events] = [].paginate(:page => 1, :per_page => 10)
+      assigns[:event_queues] = []
     end
 
     it "should not show sensitive diseases to users who don't have that privilege" do
@@ -45,6 +46,15 @@ describe "morbidity_events/index.html.haml" do
       response.should have_tag('#change_view') do
         with_tag('option', @normal_disease.disease_name)
         with_tag('option', @sensitive_disease.disease_name)
+      end
+    end
+
+    it "should show event queues for filtering" do
+      event_queue = Factory :event_queue
+      assigns[:event_queues] << event_queue
+      render "morbidity_events/index.html.haml"
+      response.should have_tag('#change_view') do
+        with_tag 'option', event_queue.name_and_jurisdiction
       end
     end
   end

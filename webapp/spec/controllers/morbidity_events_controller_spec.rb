@@ -72,6 +72,10 @@ describe MorbidityEventsController do
       assigns[:events].should == [@event]
     end
 
+    it "should load event queues" do
+      do_get
+      assigns[:event_queues].should == []
+    end
 
  end
 
