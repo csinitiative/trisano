@@ -15,8 +15,11 @@
 
 class EventQueue < ActiveRecord::Base
   belongs_to :jurisdiction, :class_name => 'PlaceEntity', :foreign_key => :jurisdiction_id
+
   validates_presence_of :queue_name, :jurisdiction_id
   validates_length_of :queue_name, :maximum => 100, :allow_blank => true
+  validates_uniqueness_of :queue_name, :scope => :jurisdiction_id
+
   before_destroy :fix_up_events
   after_destroy :fix_up_views
 

@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License along with TriSano. 
 # If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 describe EventQueue do
   it "should be valid with queue name and jurisdiction" do
@@ -34,6 +34,13 @@ describe EventQueue do
   it "should provide a text representation of the name and jurisdiction" do
     event_queue = Factory.create :event_queue, :queue_name => 'Enterics Group'
     event_queue.name_and_jurisdiction.should == ["Enterics Group", event_queue.jurisdiction.place.short_name].join(' - ')
+  end
+
+  it "names should be unique per the jurisdiction" do
+    jurisdiction_ids = 2.times.map { create_jurisdiction_entity.id }
+    EventQueue.create(:queue_name => 'My Queue', :jurisdiction_id => jurisdiction_ids.first).should be_valid
+    EventQueue.create(:queue_name => 'My Queue', :jurisdiction_id => jurisdiction_ids.last).should be_valid
+    EventQueue.create(:queue_name => 'My Queue', :jurisdiction_id => jurisdiction_ids.first).should_not be_valid
   end
 
   describe "deleting an event queue" do
