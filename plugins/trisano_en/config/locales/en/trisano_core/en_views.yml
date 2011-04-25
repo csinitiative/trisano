@@ -10,6 +10,7 @@ en:
   analysis: "Analysis"
   edit: "Edit"
   show: "Show"
+  show_event: 'Show&nbsp;event'
   delete: 'Delete'
   edit_thing: 'Edit {{name}}'
   add_thing: 'Add {{name}}'
