@@ -15,47 +15,54 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-.place_exposure
+%li.place_exposure{:style => 'margin-top: 20px; clear: both;'}
   = error_messages_for :object => f.object.participations_place
-  - f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
-    = error_messages_for :object => ip.object
-    -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
-      -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
-        #new_place_exposure
-          %span{:class => 'horiz'}
-            = p.epi_type_selector
-          %span{:class => 'horiz'}
-            = p.label(:name)
-            = p.text_field(:name, :size => 20, :maxlength => 255,:class => 'required_if_others')
+  = f.hidden_field(:position)
 
-          - f.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pp_form|
-            %span.horiz
-              =pp_form.label(:date_of_exposure)
-              =pp_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now, :size => 15)
+  %table
+    %tr
+      %td{ :valign => 'top' }
+        = multiple_reorder_controls
+      %td
+        - f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
+          = error_messages_for :object => ip.object
+          -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+            -pe.fields_for(:place, :builder => ExtendedFormBuilder) do |p|
+              #new_place_exposure
+                %span{:class => 'horiz'}
+                  = p.epi_type_selector
+                %span{:class => 'horiz'}
+                  = p.label(:name)
+                  = p.text_field(:name, :size => 20, :maxlength => 255,:class => 'required_if_others')
 
-          - f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
-            -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
-              - pe.fields_for(:canonical_address, :builder => ExtendedFormBuilder) do |a|
-                %span.horiz
-                  = a.label(:street_number)
-                  = a.text_field(:street_number, {:size => 5, :maxlength=> 10})
-                %span.horiz
-                  = a.label(:street_name)
-                  = a.text_field(:street_name, {:size => 20, :maxlength=> 50})
-                %span.horiz
-                  = a.label(:unit_number)
-                  = a.text_field(:unit_number, {:size => 4, :maxlength=> 10})
-                %span.horiz
-                  = a.label(:city)
-                  = a.text_field(:city, {:size => 20, :maxlength=> 255})
-                %span.horiz
-                  = a.label(:state_id)
-                  = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {})
-                %span.horiz
-                  = a.label(:county_id)
-                  = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {})
-                %span.horiz
-                  = a.label(:postal_code)
-                  = a.text_field(:postal_code, {:size => 7, :maxlength=> 10})
+                - f.fields_for(:participations_place, :builder => ExtendedFormBuilder) do |pp_form|
+                  %span.horiz
+                    =pp_form.label(:date_of_exposure)
+                    =pp_form.calendar_date_select(:date_of_exposure, :year_range => 5.years.ago..0.years.from_now, :size => 15)
+
+                - f.fields_for(:interested_place, :builder => ExtendedFormBuilder) do |ip|
+                  -ip.fields_for(:place_entity, :builder => ExtendedFormBuilder) do |pe|
+                    - pe.fields_for(:canonical_address, :builder => ExtendedFormBuilder) do |a|
+                      %span.horiz
+                        = a.label(:street_number)
+                        = a.text_field(:street_number, {:size => 5, :maxlength=> 10})
+                      %span.horiz
+                        = a.label(:street_name)
+                        = a.text_field(:street_name, {:size => 20, :maxlength=> 50})
+                      %span.horiz
+                        = a.label(:unit_number)
+                        = a.text_field(:unit_number, {:size => 4, :maxlength=> 10})
+                      %span.horiz
+                        = a.label(:city)
+                        = a.text_field(:city, {:size => 20, :maxlength=> 255})
+                      %span.horiz
+                        = a.label(:state_id)
+                        = a.dropdown_code_field(:state_id, 'state', {:include_blank => true}, {})
+                      %span.horiz
+                        = a.label(:county_id)
+                        = a.dropdown_code_field(:county_id, 'county', {:include_blank => true}, {})
+                      %span.horiz
+                        = a.label(:postal_code)
+                        = a.text_field(:postal_code, {:size => 7, :maxlength=> 10})
 
   %hr

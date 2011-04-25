@@ -35,14 +35,14 @@
       - blank_place.interested_place.place_entity.build_place
       - blank_place.interested_place.place_entity.build_canonical_address
 
-      = add_record_link(f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure", :insertion_point => 'top')
+      = add_record_link(f, :place_child_events, t("add_place_exposure"), :object => blank_place, :partial => "events/place_exposure", :insertion_point => 'top', :insert => 'existing-place-list' )
       -# bah, this is ugly
       -extensions = render_extensions :cmr_place_exposure_extensions
       =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"
     
     #place_child_events
 
-      #existing-places
+      %ul{ :id => "existing-place-list" }
         -# Currently we don't allow editing place information (because changing it for one event will change it for all).
         -# This will change soon, and when it does we can undo this.
         - f.fields_for(:place_child_events, :builder => ExtendedFormBuilder) do |place_form|

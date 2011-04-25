@@ -59,12 +59,15 @@ class Event < ActiveRecord::Base
 
   has_many :participations
 
-  has_many :place_child_events, :class_name => 'PlaceEvent', :foreign_key => 'parent_id' do
+  has_many :place_child_events,
+           :class_name => 'PlaceEvent',
+           :foreign_key => 'parent_id',
+           :order => "position, created_at ASC" do
     def active(reload=false)
       @active_places = nil if reload
       @active_places ||= PlaceEvent.find(:all,
         :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
-        :order => "created_at ASC"
+        :order => "position, created_at ASC"
       )
     end
   end

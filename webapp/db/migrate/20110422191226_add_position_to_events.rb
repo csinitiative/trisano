@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class AddPositionToParticipationsTreatments < ActiveRecord::Migration
+class AddPositionToEvents < ActiveRecord::Migration
   def self.up
-    add_column :participations_treatments, :position, :integer
+    add_column :events, :position, :integer
   end
 
   def self.down
-    remove_column :participations_treatments, :position
+    remove_column :events, :position
   end
 end
