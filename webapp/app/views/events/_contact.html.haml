@@ -13,56 +13,61 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
-  - ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+-# Filter out soft-deleted records
+- next if f.object.deleted_at
 
-    -# Filter out soft-deleted records
-    - next if f.object.deleted_at
+%li.contact{:style => 'margin-top: 20px; clear: both;'}
+  = f.hidden_field(:position)
+  - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
+    - ip.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+      %table
+        %tr
+          %td{ :valign => 'top' }
+            = multiple_reorder_controls
+          %td
+            - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
+              = error_messages_for :object => p.object
+              %span.horiz
+                = p.label(:last_name)
+                = p.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')
+              %span.horiz
+                = p.label(:first_name)
+                = p.text_field(:first_name, :size => 20, :maxlength => 25)
 
-    %div{:class => 'contact', :style => "clear: both;"}
-      - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |p|
-        = error_messages_for :object => p.object
-        %span.horiz
-          = p.label(:last_name)
-          = p.text_field(:last_name, :size => 20, :maxlength => 25, :class => 'required_if_others')
-        %span.horiz
-          = p.label(:first_name)
-          = p.text_field(:first_name, :size => 20, :maxlength => 25)
+            - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+              %span.horiz
+                = pc_fields.label(:disposition_id)
+                = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+              %span.horiz
+                = pc_fields.label(:disposition_date)
+                = pc_fields.calendar_date_select(:disposition_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+              %span.horiz
+                = pc_fields.label(:contact_type_id)
+                = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
 
-      - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
-        %span.horiz
-          = pc_fields.label(:disposition_id)
-          = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
-        %span.horiz
-          = pc_fields.label(:disposition_date)
-          = pc_fields.calendar_date_select(:disposition_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
-        %span.horiz
-          = pc_fields.label(:contact_type_id)
-          = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+              - unless f.object.new_record?
+                %span.horiz
+                  = f.label :_delete
+                  = f.check_box :_destroy
 
-        - unless f.object.new_record?
-          %span.horiz
-            = f.label :_delete
-            = f.check_box :_destroy
-
-      - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |tel_form|
-        %span.vert
-          = error_messages_for :object => tel_form.object
-          - core_element :entity_location_type_id, tel_form, :horiz do
-            = tel_form.label(:entity_location_type_id)
-            = tel_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
-          -if Telephone.use?(:country_code)
-            %span.horiz
-              = tel_form.label(:country_code)
-              = tel_form.core_text_field(:country_code, {:size => 3})
-          -if Telephone.use?(:area_code)
-            %span.horiz
-              = tel_form.label(:area_code)
-              = tel_form.core_text_field(:area_code, {:size => 3})
-          %span.horiz
-            = tel_form.label(:phone_number)
-            = tel_form.core_text_field(:phone_number, {:size => 8})
-          %span.horiz
-            = tel_form.label(:extension)
-            = tel_form.core_text_field(:extension, {:size => 6})
-      %hr
+            - pe.fields_for(:telephones, :builder => ExtendedFormBuilder) do |tel_form|
+              %span.vert
+                = error_messages_for :object => tel_form.object
+                - core_element :entity_location_type_id, tel_form, :horiz do
+                  = tel_form.label(:entity_location_type_id)
+                  = tel_form.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+                -if Telephone.use?(:country_code)
+                  %span.horiz
+                    = tel_form.label(:country_code)
+                    = tel_form.core_text_field(:country_code, {:size => 3})
+                -if Telephone.use?(:area_code)
+                  %span.horiz
+                    = tel_form.label(:area_code)
+                    = tel_form.core_text_field(:area_code, {:size => 3})
+                %span.horiz
+                  = tel_form.label(:phone_number)
+                  = tel_form.core_text_field(:phone_number, {:size => 8})
+                %span.horiz
+                  = tel_form.label(:extension)
+                  = tel_form.core_text_field(:extension, {:size => 6})
+            %hr

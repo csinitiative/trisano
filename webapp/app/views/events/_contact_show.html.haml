@@ -15,45 +15,51 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-.contact{ :style => 'clear: both;' }
-  - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
-    = ip.hidden_field(:primary_entity_id)
+%li.contact{:style => 'margin-top: 20px; clear: both;'}
+  = f.hidden_field(:position)
+  %table
+    %tr
+      %td{ :valign => 'top' }
+        = multiple_reorder_controls
+      %td
+        - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |ip|
+          = ip.hidden_field(:primary_entity_id)
 
-    - contact_entity = ip.object.person_entity
-    - person = contact_entity.person
-    - contact_phone = contact_entity.primary_phone
+          - contact_entity = ip.object.person_entity
+          - person = contact_entity.person
+          - contact_phone = contact_entity.primary_phone
 
-    %div.horiz{:style => 'width: 15%'}
-      %span.horiz
-        = label_tag t("name")
-        = h(person.last_comma_first)
-      %span.horiz
-        = label_tag t("phone")
-        -unless contact_phone.nil?
-          %span= h(contact_phone.simple_format)
+          %div.horiz{:style => 'width: 15%'}
+            %span.horiz
+              = label_tag t("name")
+              = h(person.last_comma_first)
+            %span.horiz
+              = label_tag t("phone")
+              -unless contact_phone.nil?
+                %span= h(contact_phone.simple_format)
 
-  - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
-    %div{:style => 'width: 84%'}
-      %span.horiz
-        = pc_fields.label(:disposition_id)
-        = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
-      %span.horiz
-        = pc_fields.label(:disposition_date)
-        = pc_fields.calendar_date_select(:disposition_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
-      %span.horiz
-        = pc_fields.label(:contact_type_id)
-        = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
-      - if f.object.new_record?
-        -# This place was added via live search. Provide a mechanism for removing the place before saving.
-        %span.horiz
-          &nbsp;
-          %br
-          = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
-      - else
-        %span.horiz
-          = f.label :_delete
-          = f.check_box :_destroy
+        - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
+          %div{:style => 'width: 84%'}
+            %span.horiz
+              = pc_fields.label(:disposition_id)
+              = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+            %span.horiz
+              = pc_fields.label(:disposition_date)
+              = pc_fields.calendar_date_select(:disposition_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+            %span.horiz
+              = pc_fields.label(:contact_type_id)
+              = pc_fields.dropdown_code_field(:contact_type_id, 'contact_type')
+            - if f.object.new_record?
+              -# This place was added via live search. Provide a mechanism for removing the place before saving.
+              %span.horiz
+                &nbsp;
+                %br
+                = link_to_function("Remove", "this.up().up().remove()", :id => "remove_#{uniq_id}")
+            - else
+              %span.horiz
+                = f.label :_delete
+                = f.check_box :_destroy
 
-      = f.label('&nbsp;')
-      = show_and_edit_event_links(f.object)
-    %hr
+            = f.label('&nbsp;')
+            = show_and_edit_event_links(f.object)
+          %hr

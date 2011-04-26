@@ -72,12 +72,15 @@ class Event < ActiveRecord::Base
     end
   end
 
-  has_many :contact_child_events, :class_name => 'ContactEvent', :foreign_key => 'parent_id' do
+  has_many :contact_child_events,
+           :class_name => 'ContactEvent',
+           :foreign_key => 'parent_id',
+           :order => 'position, created_at ASC' do
     def active(reload=false)
       @active_contacts = nil if reload
       @active_contacts ||= ContactEvent.find(:all,
         :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
-        :order => "created_at ASC"
+        :order => "position, created_at ASC"
       )
     end
   end
@@ -103,13 +106,10 @@ class Event < ActiveRecord::Base
     :order => "created_at ASC"
 
   named_scope :sensitive, lambda { |user|
+    jurisdiction_ids = user.jurisdiction_ids_for_privilege(:access_sensitive_diseases)
+    jurisdiction_ids << "NULL" if jurisdiction_ids.empty?
     {
-      :select => "DISTINCT ON(events.id) events.*",
-      :joins => [ "LEFT JOIN disease_events de ON events.id = de.event_id",
-        "LEFT JOIN diseases d ON de.disease_id = d.id",
-        "JOIN participations j ON events.id = j.event_id AND (j.type = 'Jurisdiction' OR j.type = 'AssociatedJurisdiction')" ],
-      :conditions => [ "d.sensitive IS NULL OR d.sensitive = false OR j.secondary_entity_id IN (?)",
-        user.jurisdiction_ids_for_privilege(:access_sensitive_diseases) ]
+      :joins => "JOIN (SELECT a.event_id FROM participations a LEFT JOIN disease_events b on b.event_id = a.event_id LEFT JOIN diseases c ON disease_id = c.id WHERE (c.sensitive IS NULL or c.sensitive = false) OR ((a.type = 'Jurisdiction' OR a.type = 'AssociatedJurisdiction') AND a.secondary_entity_id IN (#{jurisdiction_ids.join(',')})) GROUP BY a.event_id) j ON events.id = j.event_id"
     }
   }
 
