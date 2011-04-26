@@ -223,16 +223,16 @@ CREATE TABLE dw_morbidity_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
-    ppl.id AS dw_patients_id,
+    CASE WHEN ds.sensitive THEN -100 ELSE ppl.id END AS dw_patients_id,
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
     primary_language_ec.code_description AS primary_language,        -- code_description?
-    pplpart.primary_entity_id AS patient_entity_id,
-    ppl.first_name,
-    ppl.middle_name,
-    ppl.last_name,
-    upsert_date(ppl.birth_date) AS birth_date,
-    upsert_date(ppl.date_of_death) AS date_of_death,
+    CASE WHEN ds.sensitive THEN -100 ELSE pplpart.primary_entity_id END AS patient_entity_id,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.birth_date)) ELSE upsert_date(ppl.birth_date) END AS birth_date,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.date_of_death)) ELSE upsert_date(ppl.date_of_death) END AS date_of_death,
 
     ds.id AS disease_id,
     ds.disease_name,
@@ -267,19 +267,19 @@ SELECT
     trisano.get_age_in_years(events.age_at_onset, agetypeec.code_description) AS age_in_years,
     ppl.approximate_age_no_birthday AS estimated_age_at_onset,
     est_ec.code_description AS estimated_age_type,
-    events.parent_guardian,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.parent_guardian END AS parent_guardian,
 
     fhec.code_description AS food_handler,
     hcwec.code_description AS healthcare_worker,
     glec.code_description AS group_living,
     dcaec.code_description AS day_care_association,
     pregec.code_description AS pregnant,
-    upsert_date(prf.pregnancy_due_date) AS pregnancy_due_date,
-    prf.risk_factors AS additional_risk_factors,
-    prf.risk_factors_notes AS risk_factor_details,
-    prf.occupation,
-    events.other_data_1,
-    events.other_data_2,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', prf.pregnancy_due_date)) ELSE upsert_date(prf.pregnancy_due_date) END AS pregnancy_due_date,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors END AS additional_risk_factors,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors_notes END AS risk_factor_details,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.occupation END AS occupation,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_1 END AS other_data_1,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_2 END AS other_data_2,
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     oaci.code_description AS outbreak_associated_code,    -- code_description?
@@ -290,10 +290,10 @@ SELECT
     events.event_queue_id,
     events.acuity,
 
-    pataddr.id AS pataddr_id,
-    pataddr.street_number,
-    pataddr.street_name,
-    pataddr.unit_number,
+    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
     pataddr.city,
     jorec.code_description AS county,
     stateec.code_description AS state,
@@ -562,18 +562,18 @@ CREATE TABLE dw_contact_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
-    events.record_number,
-    ppl.id AS dw_patients_id,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.record_number END AS record_number,
+    CASE WHEN ds.sensitive THEN -100 ELSE ppl.id END AS dw_patients_id,
     ppl.entity_id,            -- Keeping this just in case
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
     primary_language_ec.code_description AS primary_language,        -- code_description?
     pplpart.primary_entity_id AS patient_entity_id,
-    ppl.first_name,
-    ppl.middle_name,
-    ppl.last_name,
-    upsert_date(ppl.birth_date) AS birth_date,
-    upsert_date(ppl.date_of_death) AS date_of_death,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.birth_date)) ELSE upsert_date(ppl.birth_date) END AS birth_date,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.date_of_death)) ELSE upsert_date(ppl.date_of_death) END AS date_of_death,
 
     ds.id AS disease_id,
     ds.disease_name,
@@ -598,22 +598,22 @@ SELECT
     glec.code_description AS group_living,
     dcaec.code_description AS day_care_association,
     pregec.code_description AS pregnant,
-    prf.pregnancy_due_date,
-    prf.risk_factors AS additional_risk_factors,
-    prf.risk_factors_notes AS risk_factor_details,
+    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', prf.pregnancy_due_date)) ELSE prf.pregnancy_due_date END AS pregnancy_due_date,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors END AS additional_risk_factors,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors_notes END AS risk_factor_details,
     prf.occupation,
-    events.other_data_1,
-    events.other_data_2,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_1 END AS other_data_1,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_2 END AS other_data_2,
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     -- events.event_status,                    -- Change this from a code to a text value?
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,                    -- do something w/ event queues?
 
-    pataddr.id AS pataddr_id,
-    pataddr.street_number,
-    pataddr.street_name,
-    pataddr.unit_number,
+    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
     pataddr.city,
     jorec.code_description AS county,
     stateec.code_description AS state,
@@ -1351,7 +1351,7 @@ FROM
 
 CREATE TABLE dw_email_addresses AS
 SELECT
-    entity_id,
+    owner_id AS entity_id,
     email_address
 FROM
     email_addresses e;
