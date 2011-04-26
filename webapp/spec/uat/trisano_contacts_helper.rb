@@ -35,13 +35,13 @@ module TrisanoContactsHelper
     click_core_tab(browser, CONTACTS)
     browser.click "link=Add a contact"
     sleep(1)
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
-    browser.select("//div[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
+    browser.type("//li[@class='contact'][#{index}]//input[contains(@id, 'last_name')]", contact_attributes[:last_name])
+    browser.type("//li[@class='contact'][#{index}]//input[contains(@id, 'first_name')]", contact_attributes[:first_name])
+    browser.select("//li[@class='contact'][#{index}]//select[contains(@id, 'disposition')]", "label=#{contact_attributes[:disposition]}")
     
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_area_code')]", contact_attributes[:area_code])
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_phone_number')]", contact_attributes[:phone_number])
-    browser.type("//div[@class='contact'][#{index}]//input[contains(@id, '_extension')]", contact_attributes[:extension])
+    browser.type("//li[@class='contact'][#{index}]//input[contains(@id, '_area_code')]", contact_attributes[:area_code])
+    browser.type("//li[@class='contact'][#{index}]//input[contains(@id, '_phone_number')]", contact_attributes[:phone_number])
+    browser.type("//li[@class='contact'][#{index}]//input[contains(@id, '_extension')]", contact_attributes[:extension])
   end
 
   def save_contact_event(browser)
@@ -60,7 +60,7 @@ module TrisanoContactsHelper
   end
 
   def remove_contact(browser, index=1)
-    browser.click("//div[@id='contact_child_events']//div[@class='contact'][#{index}]//input[contains(@id, '_destroy')]")
+    browser.click("//div[@id='contact_child_events']//li[@class='contact'][#{index}]//input[contains(@id, '_destroy')]")
   end
   
 end

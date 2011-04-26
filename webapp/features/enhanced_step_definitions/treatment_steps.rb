@@ -24,7 +24,7 @@ Then /^I should see the following associated treatments:$/ do |table|
 end
 
 When /^I select treatment "([^\"]*)"$/ do |treatment_name|
-  @browser.select "//div[@id='treatments']/div[@class='treatment'][last()]//select[contains(@name, 'treatment_id')]", treatment_name
+  @browser.select "//div[@id='treatments']//li[@class='treatment'][last()]//select[contains(@name, 'treatment_id')]", treatment_name
 end
 
 When /^I add treatment "([^\"]*)"$/ do |treatment_name|

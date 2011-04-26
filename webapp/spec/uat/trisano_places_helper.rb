@@ -21,8 +21,8 @@ module TrisanoPlacesHelper
     click_core_tab(browser, EPI)
     browser.click "link=Add a place exposure"
     sleep(1)
-    browser.type("//div[@id='place_child_events']//div[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", attributes[:name])
-    browser.click("//div[@id='place_child_events']//div[@class='place_exposure'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
+    browser.type("//div[@id='place_child_events']//li[@class='place_exposure'][#{index}]//input[contains(@id, 'name')]", attributes[:name])
+    browser.click("//div[@id='place_child_events']//li[@class='place_exposure'][#{index}]//input[contains(@id, '_place_attributes_place_type_#{attributes[:place_type]}')]") if attributes[:place_type]
   end
 
   def save_place_event(browser)
@@ -46,7 +46,7 @@ module TrisanoPlacesHelper
   end
 
   def remove_place_exposure(browser, index=1)
-    browser.click("//div[@id='place_child_events']//div[@class='existing_place'][#{index}]//input[contains(@id, '_destroy')]")
+    browser.click("//div[@id='place_child_events']//li[@class='existing_place'][#{index}]//input[contains(@id, '_destroy')]")
   end
   
 end
