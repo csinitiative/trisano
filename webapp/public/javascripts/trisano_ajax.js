@@ -79,3 +79,24 @@ Trisano.Ajax = {
                        });
   }
 };
+
+// Prototype is lame. JQuery bits
+$j('a.ajaxy.delete').livequery(function() {
+  $j(this).click(function(evt) {
+    evt.preventDefault();
+    if ($j(evt.target).attr('data-confirm') != undefined && confirm($j(evt.target).attr('data-confirm'))) {
+      $j($j(evt.target).attr('data-spinner')).show();
+      $j.ajax({
+        url: this.href,
+        data: { _method: 'delete' },
+        success: function() { $j($j(evt.target).attr('data-remove')).remove() },
+        error: function() {
+          $j($j(evt.target).attr('data-message-box')).text($j(evt.target).attr('data-error-message'))
+        },
+        complete: function() { $j($j(evt.target).attr('data-spinner')).hide() },
+        type: "POST",
+        dataType: "script"
+      });
+    }
+  });
+});
