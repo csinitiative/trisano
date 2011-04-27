@@ -442,7 +442,26 @@ document.observe('trisano:dom:loaded', function() {
 function moveMultiple(item, where) {
   liAncestor = $j(item).closest('li');
   ulAncestor = $j(liAncestor).closest('ul');
-  (where == 'top') ? liAncestor.remove().prependTo(ulAncestor) : liAncestor.remove().appendTo(ulAncestor);
+
+  switch(where) {
+    case 'top':
+      liAncestor.remove().prependTo(ulAncestor);
+      break;
+    case 'bottom':
+      liAncestor.remove().appendTo(ulAncestor);
+      break;
+    case 'up':
+      previousLi = liAncestor.prevAll('li:first');
+      if (previousLi.size() != 0) { liAncestor.insertBefore(previousLi); }
+      break;
+    case 'down':
+      nextLi = liAncestor.nextAll('li:first');
+      if (nextLi.size() != 0) { liAncestor.insertAfter(nextLi); }
+      break;
+    default:
+      // no-op
+  }
+  
   setMultiplesPositionAttributes(ulAncestor);
   return false;
 }
