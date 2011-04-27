@@ -7,7 +7,7 @@ module NameAndBirthdateSearch
     unless options[:use_starts_with_search]
       options[:fulltext_terms] ||= "#{options.delete(:last_name)} #{options.delete(:first_name)}".strip
     end
-    results = find_or_paginate_by_sql(create_name_and_bdate_sql(options), options)
+    find_or_paginate_by_sql(create_name_and_bdate_sql(options), options)
   end
 
   def validate_bdate(bdate)
@@ -140,7 +140,6 @@ module NameAndBirthdateSearch
   end
 
   def sensitive_disease_conditions
-    [
     %Q[
       (
         diseases.sensitive IS NULL
@@ -165,7 +164,6 @@ module NameAndBirthdateSearch
             )
     )
     ]
-    ]
   end
 
   def name_and_bdate_order(options)
@@ -174,7 +172,7 @@ module NameAndBirthdateSearch
       order << bdate_order(options)
       order << fulltext_order(options)
       order << "people.entity_id"
-      order << "visible_events.event_id DESC"
+      order << "events.id DESC"
     end.flatten.compact
   end
 
