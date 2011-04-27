@@ -7,7 +7,7 @@ module NameAndBirthdateSearch
     unless options[:use_starts_with_search]
       options[:fulltext_terms] ||= "#{options.delete(:last_name)} #{options.delete(:first_name)}".strip
     end
-    find_or_paginate_by_sql(create_name_and_bdate_sql(options), options)
+    results = find_or_paginate_by_sql(create_name_and_bdate_sql(options), options)
   end
 
   def validate_bdate(bdate)
@@ -44,11 +44,11 @@ module NameAndBirthdateSearch
       fields << "people.first_name"
       fields << "people.birth_date"
       fields << "external_codes.code_description AS birth_gender"
-      fields << "events.id AS id"
+      fields << "events.id"
       fields << "events.id AS event_id"
       fields << "events.type AS event_type"
       fields << "events.event_onset_date"
-      fields << "diseases.disease_name AS disease_name"
+      fields << "diseases.disease_name"
       fields << "jurisplace.short_name AS jurisdiction_short_name"
       fields << "jurispart.secondary_entity_id AS jurisdiction_entity_id"
       fields << "sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions"
@@ -65,7 +65,6 @@ module NameAndBirthdateSearch
         result << "INNER JOIN people ON search_result_id = people.id AND rank > 0.2"
       end
     end
-
   end
 
   def name_and_bdate_joins(options)
@@ -73,13 +72,27 @@ module NameAndBirthdateSearch
       joins << "INNER JOIN entities pplentities ON pplentities.id = people.entity_id"
       joins << "LEFT JOIN external_codes ON external_codes.id = people.birth_gender_id"
       joins << "INNER JOIN participations pplpart ON (pplpart.type = 'InterestedParty' AND pplpart.primary_entity_id = people.entity_id)"
-      joins << "LEFT JOIN events ON (events.id = pplpart.event_id AND events.type in ('MorbidityEvent', 'ContactEvent'))"
-      joins << "LEFT JOIN participations jurispart ON (jurispart.type = 'Jurisdiction' AND jurispart.event_id = pplpart.event_id)"
-      joins << "LEFT JOIN places jurisplace ON (jurisplace.entity_id = jurispart.secondary_entity_id)"
+      joins << "LEFT JOIN #{event_subselect} visible_events USING (event_id)"
+      joins << "LEFT JOIN events ON (visible_events.event_id = events.id AND events.type IN ('MorbidityEvent','ContactEvent'))"
       joins << "LEFT JOIN disease_events ON disease_events.event_id = events.id"
       joins << "LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
+      joins << "LEFT JOIN participations jurispart ON (events.id = jurispart.event_id AND jurispart.type = 'Jurisdiction')"
+      joins << "LEFT JOIN places jurisplace ON (jurispart.secondary_entity_id = jurisplace.entity_id)"
       joins << secondary_jurisdictions_join
     end.compact
+  end
+
+  def event_subselect
+    %Q{
+      (SELECT events.id AS event_id FROM events
+        INNER JOIN participations jurispart ON (jurispart.type = 'Jurisdiction' AND jurispart.event_id = events.id)
+        INNER JOIN places jurisplace ON (jurisplace.entity_id = jurispart.secondary_entity_id)
+        #{secondary_jurisdictions_join}
+        LEFT JOIN disease_events ON (disease_events.event_id = events.id)
+        LEFT JOIN diseases ON (disease_events.disease_id = diseases.id)
+        WHERE #{sensitive_disease_conditions}
+        GROUP BY events.id)
+    }
   end
 
   def secondary_jurisdictions_join
@@ -113,7 +126,6 @@ module NameAndBirthdateSearch
       conditions << "pplentities.deleted_at IS NULL"
       conditions << name_conditions(options, :last_name, :first_name, :use_starts_with_search)
       conditions << bdate_conditions(options)
-      conditions << sensitive_disease_conditions
     end.compact
   end
 
@@ -128,6 +140,7 @@ module NameAndBirthdateSearch
   end
 
   def sensitive_disease_conditions
+    [
     %Q[
       (
         diseases.sensitive IS NULL
@@ -152,6 +165,7 @@ module NameAndBirthdateSearch
             )
     )
     ]
+    ]
   end
 
   def name_and_bdate_order(options)
@@ -160,7 +174,7 @@ module NameAndBirthdateSearch
       order << bdate_order(options)
       order << fulltext_order(options)
       order << "people.entity_id"
-      order << "events.id DESC"
+      order << "visible_events.event_id DESC"
     end.flatten.compact
   end
 
@@ -180,6 +194,12 @@ module NameAndBirthdateSearch
 
   def bdate_order(options)
     "birth_date" unless options[:birth_date].blank?
+  end
+
+  def having(conditions)
+    unless conditions.empty?
+      "HAVING #{conditions.join("\nAND\n")}"
+    end
   end
 
   def where(conditions)
