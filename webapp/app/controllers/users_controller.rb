@@ -122,7 +122,7 @@ class UsersController < AdminController
           flash[:notice] = I18n.translate :added_email_address
           redirect_to email_addresses_path
         else
-          flash[:error] = I18n.translate :error_adding_email_address
+          flash.now[:error] = I18n.translate :error_adding_email_address
           render :action => :email_addresses
         end
       end
