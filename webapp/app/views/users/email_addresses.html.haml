@@ -6,25 +6,28 @@
 
 #email_addresses
   - email_addresses = User.current_user.email_addresses
-  - unless email_addresses.empty?
+  - unless email_addresses.all?{|a|a.new_record?}
     %table.list
       %h3
         =t :current_email_addresses
       %tbody
         - email_addresses.each do |email_address|
-          %tr
-            %td
-              &= email_address.email_address
-            %td
-              =link_to t(:edit), email_address_edit_path(email_address)
-              =link_to t(:delete), email_address, :method => :delete, :confirm => t(:are_you_sure)
+          - unless email_address.new_record?
+            %tr
+              %td
+                &= email_address.email_address
+              %td
+                =link_to t(:edit), email_address_edit_path(email_address)
+                |
+                =link_to t(:delete), email_address, :method => :delete, :confirm => t(:are_you_sure)
   - else
     %em
       = t :no_email_addresses
   %br/
 
 #email_address_form
-  - form_tag email_addresses_path do
-    = label_tag :email_address, t(:add_an_email_address)
-    = text_field_tag :email_address
-    = submit_tag t :add
+  = error_messages_for :email_address
+  - form_for @email_address do |f|
+    = f.label :email_address, t(:add_an_email_address)
+    = f.text_field :email_address
+    = f.submit t(:add)

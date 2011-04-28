@@ -5,6 +5,7 @@
   = link_to t(:back_to, :name => t(:manage_email_addresses)), email_addresses_path
   
 #email_address_form
+  = error_messages_for :email_address
   - form_for @email_address do |f|
     = f.label :email_address
     = f.text_field :email_address

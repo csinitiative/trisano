@@ -11,7 +11,7 @@ Feature: Managing user e-mail addresses
     When I go to the manage e-mail addresses page
 
   Scenario: Adding an e-mail address
-    When I fill in "email_address" with "user@example.com"
+    When I fill in "Add an Email Address" with "user@example.com"
     And I press "Add"
     Then I should be on the manage e-mail addresses page
     And I should see "user@example.com"
@@ -20,19 +20,21 @@ Feature: Managing user e-mail addresses
     When I press "Add"
     Then I should be on the manage e-mail addresses page
     And I should see "Error adding e-mail address"
+    And I should see "Email address can't be blank"
 
   Scenario: Attempting to add an invalid e-mail address
-    When I fill in "email_address" with "xyz"
+    When I fill in "Add an Email Address" with "xyz"
     And I press "Add"
     Then I should be on the manage e-mail addresses page
     And I should see "Error adding e-mail address"
-    And I should not see "xyz"
+    And I should see "Email address format is invalid"
 
   Scenario: Attempting to add a duplicate e-mail address
-    When I fill in "email_address" with "foo@bar.com"
+    When I fill in "Add an Email Address" with "foo@bar.com"
     And I press "Add"
     Then I should be on the manage e-mail addresses page
     And I should see "Error adding e-mail address"
+    And I should see "Email address has already been taken"
 
   Scenario: Deleting an e-mail address
     When I click the "Delete" link
@@ -51,7 +53,8 @@ Feature: Managing user e-mail addresses
     And I fill in "Email address" with "frmp"
     And I press "Update"
     Then I should see "Error updating e-mail address"
-    
+    And I should see "Email address format is invalid"
+
     When I fill in "Email address" with "edited_email@email.com"
     And I press "Update"
     Then I should be on the manage e-mail addresses page

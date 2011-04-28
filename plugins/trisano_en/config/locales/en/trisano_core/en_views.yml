@@ -937,6 +937,7 @@ en:
   error_adding_email_address: "Error adding e-mail address"
   error_updating_email_address: "Error updating e-mail address"
   no_email_addresses: "No e-mail addresses currently configured"
+  invalid_email_format: "format is invalid"
   user_settings: "User Settings"
   priority: "Priority"
 

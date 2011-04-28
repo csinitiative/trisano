@@ -929,6 +929,7 @@ es:
   added_email_address: "E-mail address successfully added"
   error_adding_email_address: "Error adding e-mail address"
   no_email_addresses: "No e-mail addresses currently configured"
+  invalid_email_format: "format is invalid"
   user_settings: "Ajustes de Usuario"
   priority: "Prioridad"
 

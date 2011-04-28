@@ -20,7 +20,7 @@ class EmailAddress < ActiveRecord::Base
 
   validates_presence_of :email_address
   validates_uniqueness_of :email_address
-  validates_format_of :email_address, :with => /@/, :allow_blank => false
+  validates_format_of :email_address, :with => /@/, :message => I18n.t(:invalid_email_format)
 
   def xml_fields
     [:email_address]
