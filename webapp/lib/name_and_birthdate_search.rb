@@ -71,9 +71,8 @@ module NameAndBirthdateSearch
     returning [] do |joins|
       joins << "INNER JOIN entities pplentities ON pplentities.id = people.entity_id"
       joins << "LEFT JOIN external_codes ON external_codes.id = people.birth_gender_id"
-      joins << "INNER JOIN participations pplpart ON (pplpart.type = 'InterestedParty' AND pplpart.primary_entity_id = people.entity_id)"
-      joins << "LEFT JOIN #{event_subselect} visible_events USING (event_id)"
-      joins << "LEFT JOIN events ON (visible_events.event_id = events.id AND events.type IN ('MorbidityEvent','ContactEvent'))"
+      joins << "LEFT JOIN #{participation_subselect} visible_participations ON people.entity_id = visible_participations.primary_entity_id"
+      joins << "LEFT JOIN events ON visible_participations.event_id = events.id"
       joins << "LEFT JOIN disease_events ON disease_events.event_id = events.id"
       joins << "LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
       joins << "LEFT JOIN participations jurispart ON (events.id = jurispart.event_id AND jurispart.type = 'Jurisdiction')"
@@ -82,16 +81,19 @@ module NameAndBirthdateSearch
     end.compact
   end
 
-  def event_subselect
+  def participation_subselect
     %Q{
-      (SELECT events.id AS event_id FROM events
+      (SELECT DISTINCT ON (participations.id) participations.primary_entity_id, participations.event_id FROM participations
+        INNER JOIN events ON events.id = participations.event_id
         INNER JOIN participations jurispart ON (jurispart.type = 'Jurisdiction' AND jurispart.event_id = events.id)
         INNER JOIN places jurisplace ON (jurisplace.entity_id = jurispart.secondary_entity_id)
         #{secondary_jurisdictions_join}
         LEFT JOIN disease_events ON (disease_events.event_id = events.id)
         LEFT JOIN diseases ON (disease_events.disease_id = diseases.id)
-        WHERE #{sensitive_disease_conditions}
-        GROUP BY events.id)
+        WHERE participations.type = 'InterestedParty' AND
+          events.type IN ('MorbidityEvent','ContactEvent') AND
+          #{sensitive_disease_conditions}
+      )
     }
   end
 
