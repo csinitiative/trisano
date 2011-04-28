@@ -294,4 +294,23 @@ describe ContactEventsController do
       response.should redirect_to(edit_contact_event_url(@contact_event))
     end
   end
+
+  describe "contact_events/1/event_type" do
+    before do
+      @event = Factory :contact_event
+    end
+
+    it "should not allow access to users who can't create events" do
+      User.current_user.stubs(:can_create?).with(@event).returns(false)
+      post :event_type, :id => @event.id
+      response.code.should == "403"
+    end
+
+    it "should redirect to a cmr path and present a success message" do
+      User.current_user.stubs(:can_create?).with(@event).returns(true)
+      post :event_type, :id => @event.id
+      response.should redirect_to("/cmrs/#{@event.id}")
+      flash[:notice].should == "Contact successfully promoted"
+    end
+  end
 end

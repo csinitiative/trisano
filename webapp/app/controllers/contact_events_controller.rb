@@ -17,6 +17,7 @@
 
 class ContactEventsController < EventsController
   before_filter :load_parent, :only => [ :new, :create ]
+  before_filter :can_promote?, :only => :event_type
 
   def index
     render :text => t("contact_event_no_index"), :status => 405
@@ -90,7 +91,9 @@ class ContactEventsController < EventsController
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
-        format.js   { render :inline => t("contact_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity }
+        format.js   do
+          render :inline => t("contact_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity 
+        end
       end
     end
   end
@@ -143,6 +146,15 @@ class ContactEventsController < EventsController
       @event.build_interested_party(:primary_entity_id => person_entity.id)
     else
       @event = ContactEvent.new(params[:contact_event])
+    end
+  end
+
+  def can_promote?
+    unless User.current_user.can_create?(@event)
+      render(:partial => 'events/permission_denied',
+             :layout => true,
+             :locals => { :reason => t("no_event_create_privs") },
+             :status => 403) and return
     end
   end
 end

@@ -493,88 +493,87 @@ describe MorbidityEventsController do
       response.code.should == "403"
     end
   end
-end
 
-describe MorbidityEventsController, "cmrs/1/update with redirect_to option" do
-  before do
-    @parent_event = Factory.create(:morbidity_event)
-    @promoted_event = Factory.create(:contact_event, :parent_event => @parent_event)
-    login_as_super_user
-    @promoted_event.promote_to_morbidity_event
-  end
-
-  it "redirects to specified url if 'Save & Exit' clicked" do
-    put(:update, {
-          :id => @promoted_event.id,
-          :redirect_to => '/sample/url',
-          :morbidity_event => {
-            :first_reported_PH_date => Date.yesterday
-          }
-        },
-        :user_id => @current_user.uid)
-    response.should redirect_to('/sample/url')
-  end
-
-  it "does not redirect if 'Save & Continue' clicked" do
-    put(:update, {
-          :id => @promoted_event.id,
-          :redirect_to => '/sample/url',
-          :return => 1,
-          :morbidity_event => {
-            :first_reported_PH_date => Date.yesterday
-          }
-        },
-        :user_id => @current_user.uid)
-    response.should redirect_to(edit_cmr_url(@promoted_event))
-  end
-end
-
-describe MorbidityEventsController, "xml api" do
-  before do
-    @event = Factory.create(:morbidity_event)
-    @user = Factory(:user)
-    @user.stubs(:can_view?).returns(true)
-    @user.stubs(:can_update?).returns(true)
-    @user.stubs(:can_create?).returns(true)
-    User.stubs(:current_user).returns(@user)
-  end
-
-  it "returns xml for the event" do
-    request.env['HTTP_ACCEPT'] = 'application/xml'
-    get :show, :id => @event
-    response.should be_success
-    response.content_type.should == 'application/xml'
-  end
-
-  context "for creating events" do
-
+  describe "cmrs/1/update with redirect_to option" do
     before do
-      @xml = <<-XML
-        <morbidity-event>
-        <first-reported-PH-date>#{Date.today.xmlschema}</first-reported-PH-date>
-        <interested-party-attributes>
-        <person-entity-attributes>
-        <race_ids>#{ExternalCode.find_by_code_description_and_code_name('White', 'race').id}</race_ids>
-        <race_ids>#{ExternalCode.find_by_code_description_and_code_name('Asian', 'race').id}</race_ids>
-        <person-attributes><last-name>Smoker</last-name></person-attributes>
-        </person-entity-attributes></interested-party-attributes>
-        <jurisdiction-attributes>
-        <secondary-entity-id>#{create_jurisdiction_entity.id}</secondary-entity-id>
-        </jurisdiction-attributes>
-        </morbidity-event>
-      XML
+      @parent_event = Factory.create(:morbidity_event)
+      @promoted_event = Factory.create(:contact_event, :parent_event => @parent_event)
+      User.stubs(:current_user).returns(Factory(:user))
+      User.current_user.stubs(:can_update?).returns(true)
+      @promoted_event.promote_to_morbidity_event
     end
 
-    it "can create events for patients w/ multiple races" do
-      User.stubs(:find_by_uid).returns(@user)
+    it "redirects to specified url if 'Save & Exit' clicked" do
+      put(:update, {
+            :id => @promoted_event.id,
+            :redirect_to => '/sample/url',
+            :morbidity_event => {
+              :first_reported_PH_date => Date.yesterday
+            }
+          })
+      response.should redirect_to('/sample/url')
+    end
+
+    it "does not redirect if 'Save & Continue' clicked" do
+      put(:update, {
+            :id => @promoted_event.id,
+            :redirect_to => '/sample/url',
+            :return => 1,
+            :morbidity_event => {
+              :first_reported_PH_date => Date.yesterday
+            }
+          })
+      response.should redirect_to(edit_cmr_url(@promoted_event))
+    end
+  end
+
+  describe "xml api" do
+    before do
+      @event = Factory.create(:morbidity_event)
+      @user = Factory(:user)
+      @user.stubs(:can_view?).returns(true)
+      @user.stubs(:can_update?).returns(true)
       @user.stubs(:can_create?).returns(true)
-      @event.stubs(:add_note).returns(true)
+      User.stubs(:current_user).returns(@user)
+    end
+
+    it "returns xml for the event" do
       request.env['HTTP_ACCEPT'] = 'application/xml'
-      post :create, Hash.from_xml(@xml)
-      response.code.should == "201"
-      response.headers['Location'].should =~ %r{/cmrs/\d+}
-      assigns[:event].should_not be_nil
-      assigns[:event].safe_call_chain(*%w(interested_party person_entity race_ids size)).should == 2
+      get :show, :id => @event
+      response.should be_success
+      response.content_type.should == 'application/xml'
+    end
+
+    context "for creating events" do
+
+      before do
+        @xml = <<-XML
+          <morbidity-event>
+          <first-reported-PH-date>#{Date.today.xmlschema}</first-reported-PH-date>
+          <interested-party-attributes>
+          <person-entity-attributes>
+          <race_ids>#{ExternalCode.find_by_code_description_and_code_name('White', 'race').id}</race_ids>
+          <race_ids>#{ExternalCode.find_by_code_description_and_code_name('Asian', 'race').id}</race_ids>
+          <person-attributes><last-name>Smoker</last-name></person-attributes>
+          </person-entity-attributes></interested-party-attributes>
+          <jurisdiction-attributes>
+          <secondary-entity-id>#{create_jurisdiction_entity.id}</secondary-entity-id>
+          </jurisdiction-attributes>
+          </morbidity-event>
+        XML
+      end
+
+      it "can create events for patients w/ multiple races" do
+        User.stubs(:find_by_uid).returns(@user)
+        @user.stubs(:can_create?).returns(true)
+        @event.stubs(:add_note).returns(true)
+        request.env['HTTP_ACCEPT'] = 'application/xml'
+        post :create, Hash.from_xml(@xml)
+        response.code.should == "201"
+        response.headers['Location'].should =~ %r{/cmrs/\d+}
+        assigns[:event].should_not be_nil
+        assigns[:event].safe_call_chain(*%w(interested_party person_entity race_ids size)).should == 2
+      end
     end
   end
 end

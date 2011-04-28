@@ -49,15 +49,9 @@ module Routing
 
     def promote_to_cmr
       event :promote_as_new, :transitions_to => :new, :meta => {:priv_required => :create_event} do
-        unless self.jurisdiction.allows_current_user_to? :create_event
-          halt!(I18n.translate("insufficient_privileges_for_change"))
-        end
         add_note I18n.translate("system_notes.event_promoted_from_contact", :locale => I18n.default_locale)
       end
       event :promote_as_accepted, :transitions_to => :accepted_by_lhd, :meta => {:priv_required => :create_event} do
-        unless self.jurisdiction.allows_current_user_to? :create_event
-          halt!(I18n.translate("insufficient_privileges_for_change"))
-        end
         add_note I18n.translate("system_notes.event_promoted_from_contact", :locale => I18n.default_locale)
       end
     end

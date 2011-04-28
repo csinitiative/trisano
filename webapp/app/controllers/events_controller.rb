@@ -19,7 +19,7 @@ RoutingStruct = Struct.new(:jurisdiction_id, :note)
 
 class EventsController < ApplicationController
   before_filter :can_update?, :only => [:edit, :update, :destroy, :soft_delete, :event_type]
-  before_filter :can_new?, :only => [:new]
+  before_filter :can_new?, :only => [:new, :create]
   before_filter :can_view?, :only => [:show, :export_single]
   before_filter :can_index?, :only => [:index, :export]
   before_filter :can_access_sensitive?, :only => [:edit, :show, :update, :destroy, :soft_delete]
