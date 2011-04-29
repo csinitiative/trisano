@@ -22,15 +22,23 @@ describe EmailAddress do
     it { should validate_presence_of(:email_address) }
 
     it 'should not allow duplicate e-mail addresses' do
-      lambda { 2.times { EmailAddress.create! :email_address => 'user@example.com' } }.should raise_error
+      lambda { 2.times { Factory :email_address, :email_address => 'user@example.com' } }.should raise_error
+    end
+
+    it 'should ignore leading and trailing whitespace' do
+      Factory :email_address, :email_address => 'user@example.com'
+      lambda do
+        Factory :email_address, :email_address => ' user@example.com '
+      end.should raise_error
+      Factory.build(:email_address, :email_address => ' user@example.com ').should_not be_valid
     end
 
     it 'should not allow a blank e-mail address' do
-      lambda { EmailAddress.create! :email_address => '' }.should raise_error
+      lambda { Factory :email_address, :email_address => '' }.should raise_error
     end
 
     it 'should not allow an invalid e-mail address' do
-      lambda { EmailAddress.create! :email_address => 'xyz' }.should raise_error
+      lambda { Factory :email_address, :email_address => 'xyz' }.should raise_error
     end
   end
 

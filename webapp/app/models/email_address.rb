@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EmailAddress < ActiveRecord::Base
+  before_validation :strip_whitespace
   belongs_to :owner, :polymorphic => true
 
   validates_presence_of :email_address
@@ -24,6 +25,12 @@ class EmailAddress < ActiveRecord::Base
 
   def xml_fields
     [:email_address]
+  end
+
+  private
+
+  def strip_whitespace
+    email_address.strip! if email_address
   end
 end
 
