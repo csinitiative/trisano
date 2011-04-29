@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+# Path to JAVA_HOME
+export JAVA_HOME=/usr/lib/java
+
 # Path on the file system where the BI server was installed
 export BI_SERVER_PATH=/usr/local/pentaho/server/biserver-ce
 
@@ -52,5 +55,11 @@ export PENTAHO_SECURITY_FILE=
 # for some things.
 cd $BI_SERVER_PATH/pentaho-solutions/TriSano
 
-java -cp jruby-complete-1.5.2.jar org.jruby.Main \
+CLASSPATH=$CLASSPATH:$BI_SERVER_PATH/tomcat/webapps/pentaho/WEB-INF/lib/jruby-complete-1.5.2.jar
+
+for i in $BI_SERVER_PATH/tomcat/lib/*; do
+    CLASSPATH=$CLASSPATH:$i
+done
+
+$JAVA_HOME/bin/java -cp $CLASSPATH org.jruby.Main \
     $BI_SERVER_PATH/pentaho-solutions/TriSano/build_metadata.rb
