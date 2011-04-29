@@ -24,6 +24,7 @@ class EventsController < ApplicationController
   before_filter :can_index?, :only => [:index, :export]
   before_filter :can_access_sensitive?, :only => [:edit, :show, :update, :destroy, :soft_delete]
   before_filter :set_tab_index
+  before_filter :update_last_modified_date, :only => [:update]
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
 
   def contacts_search
@@ -395,5 +396,9 @@ class EventsController < ApplicationController
     else
       @event = params[:event_type].camelize.constantize.new
     end
+  end
+
+  def update_last_modified_date
+    @event.updated_at = DateTime.now
   end
 end

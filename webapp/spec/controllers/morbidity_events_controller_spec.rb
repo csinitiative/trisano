@@ -494,36 +494,46 @@ describe MorbidityEventsController do
     end
   end
 
-  describe "cmrs/1/update with redirect_to option" do
+  describe "PUT cmrs/1" do
     before do
-      @parent_event = Factory.create(:morbidity_event)
-      @promoted_event = Factory.create(:contact_event, :parent_event => @parent_event)
+      @cmr = Factory.create(:morbidity_event)
+      @promoted_event = Factory.create(:contact_event, :parent_event => @cmr)
       User.stubs(:current_user).returns(Factory(:user))
       User.current_user.stubs(:can_update?).returns(true)
       @promoted_event.promote_to_morbidity_event
     end
 
-    it "redirects to specified url if 'Save & Exit' clicked" do
-      put(:update, {
-            :id => @promoted_event.id,
-            :redirect_to => '/sample/url',
-            :morbidity_event => {
-              :first_reported_PH_date => Date.yesterday
-            }
-          })
-      response.should redirect_to('/sample/url')
+    context "with a redirect option" do
+      it "redirects to specified url if 'Save & Exit' clicked" do
+        put(:update, {
+              :id => @promoted_event.id,
+              :redirect_to => '/sample/url',
+              :morbidity_event => {
+                :first_reported_PH_date => Date.yesterday
+              }
+            })
+        response.should redirect_to('/sample/url')
+      end
+
+      it "does not redirect if 'Save & Continue' clicked" do
+        put(:update, {
+              :id => @promoted_event.id,
+              :redirect_to => '/sample/url',
+              :return => 1,
+              :morbidity_event => {
+                :first_reported_PH_date => Date.yesterday
+              }
+            })
+        response.should redirect_to(edit_cmr_url(@promoted_event))
+      end
     end
 
-    it "does not redirect if 'Save & Continue' clicked" do
-      put(:update, {
-            :id => @promoted_event.id,
-            :redirect_to => '/sample/url',
-            :return => 1,
-            :morbidity_event => {
-              :first_reported_PH_date => Date.yesterday
-            }
-          })
-      response.should redirect_to(edit_cmr_url(@promoted_event))
+    it "should always update the event's last modified date, even if the event data doesn't change" do
+      lambda do
+        sleep 1
+        put :update, :id => @cmr.id
+        @cmr.reload
+      end.should change(@cmr, :updated_at)
     end
   end
 
