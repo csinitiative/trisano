@@ -29,6 +29,13 @@ describe Treatment do
 
   it { should have_many(:diseases) }
   it { should have_many(:disease_specific_treatments) }
+  it { should validate_presence_of(:treatment_name) }
+
+  it "validates uniqueness of the treatment name" do
+    Factory(:treatment, :treatment_name => 'lobotomy')
+    lambda { Factory(:treatment, :treatment_name => 'lobotomy') }.should raise_error
+    Factory.build(:treatment, :treatment_name => 'lobotomy').should_not be_valid
+  end
 
   describe "returning treatments" do
 

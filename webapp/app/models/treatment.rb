@@ -21,6 +21,7 @@ class Treatment < ActiveRecord::Base
   has_many :diseases, :through => :disease_specific_treatments
 
   validates_presence_of :treatment_name
+  validates_uniqueness_of :treatment_name
 
   named_scope :active,
     :conditions => ["active = ?", true],
