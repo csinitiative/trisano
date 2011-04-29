@@ -1615,13 +1615,13 @@ module EventsHelper
   end
 
   def multiple_reorder_controls
-    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-n', :onclick => "moveMultiple(this, 'top');"
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-n top', :onclick => "moveMultiple(this, 'top');"
     haml_tag 'br'
-    haml_tag 'span', :class => 'ui-icon ui-icon-arrow-1-n', :onclick => "moveMultiple(this, 'up');"
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrow-1-n up', :onclick => "moveMultiple(this, 'up');"
     haml_tag 'br'
-    haml_tag 'span', :class => 'ui-icon ui-icon-arrow-1-s', :onclick => "moveMultiple(this, 'down');"
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrow-1-s down', :onclick => "moveMultiple(this, 'down');"
     haml_tag 'br'
-    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-s', :onclick => "moveMultiple(this, 'bottom');"
+    haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-s bottom', :onclick => "moveMultiple(this, 'bottom');"
   end
 
 end
