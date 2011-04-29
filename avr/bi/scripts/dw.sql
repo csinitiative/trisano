@@ -227,7 +227,7 @@ SELECT
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
     primary_language_ec.code_description AS primary_language,        -- code_description?
-    CASE WHEN ds.sensitive THEN -100 ELSE pplpart.primary_entity_id END AS patient_entity_id,
+    pplpart.primary_entity_id AS patient_entity_id,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
@@ -236,6 +236,7 @@ SELECT
 
     ds.id AS disease_id,
     ds.disease_name,
+    ds.sensitive AS sensitive_disease,
     ds.contact_lead_in,
     ds.place_lead_in,
     ds.treatment_lead_in,
@@ -274,12 +275,12 @@ SELECT
     glec.code_description AS group_living,
     dcaec.code_description AS day_care_association,
     pregec.code_description AS pregnant,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', prf.pregnancy_due_date)) ELSE upsert_date(prf.pregnancy_due_date) END AS pregnancy_due_date,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors END AS additional_risk_factors,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors_notes END AS risk_factor_details,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.occupation END AS occupation,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_1 END AS other_data_1,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_2 END AS other_data_2,
+    prf.pregnancy_due_date,
+    prf.risk_factors AS additional_risk_factors,
+    prf.risk_factors_notes AS risk_factor_details,
+    prf.occupation AS occupation,
+    events.other_data_1 AS other_data_1,
+    events.other_data_2 AS other_data_2,
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     oaci.code_description AS outbreak_associated_code,    -- code_description?
@@ -294,10 +295,10 @@ SELECT
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
-    pataddr.city,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.city END AS city,
     jorec.code_description AS county,
     stateec.code_description AS state,
-    pataddr.postal_code,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.postal_code END AS postal_code,
 
     disev.disease_onset_date AS date_disease_onset,
     CASE
@@ -562,7 +563,7 @@ CREATE TABLE dw_contact_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.record_number END AS record_number,
+    events.record_number AS record_number,
     CASE WHEN ds.sensitive THEN -100 ELSE ppl.id END AS dw_patients_id,
     ppl.entity_id,            -- Keeping this just in case
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
@@ -577,6 +578,7 @@ SELECT
 
     ds.id AS disease_id,
     ds.disease_name,
+    ds.sensitive AS sensitive_disease,
     ds.contact_lead_in,
     ds.place_lead_in,
     ds.treatment_lead_in,
@@ -598,12 +600,12 @@ SELECT
     glec.code_description AS group_living,
     dcaec.code_description AS day_care_association,
     pregec.code_description AS pregnant,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', prf.pregnancy_due_date)) ELSE prf.pregnancy_due_date END AS pregnancy_due_date,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors END AS additional_risk_factors,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE prf.risk_factors_notes END AS risk_factor_details,
+    prf.pregnancy_due_date AS pregnancy_due_date,
+    prf.risk_factors AS additional_risk_factors,
+    prf.risk_factors_notes AS risk_factor_details,
     prf.occupation,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_1 END AS other_data_1,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.other_data_2 END AS other_data_2,
+    events.other_data_1 AS other_data_1,
+    events.other_data_2 AS other_data_2,
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     -- events.event_status,                    -- Change this from a code to a text value?
@@ -614,7 +616,7 @@ SELECT
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
-    pataddr.city,
+    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.city END AS city,
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
@@ -1366,6 +1368,91 @@ ANALYZE;
 
 DELETE FROM trisano.etl_success WHERE operation = 'Data Sync Subprocess - Structure Modification';
 INSERT INTO trisano.etl_success (success, operation) VALUES (TRUE, 'Data Sync Subprocess - Structure Modification');
+
+-- Obfuscate sensitive data in underlying tables
+-- street number, street name, unit number, city, zip code, latitude, longitude,
+-- telephone/email
+
+UPDATE addresses
+    SET
+        street_number = '(Obfusc.)',
+        street_name = '(Obfuscated)',
+        unit_number = '(Obfusc.)',
+        postal_code = '(Obfusc.)',
+        city = '(Obfuscated)',
+        latitude = NULL,
+        longitude = NULL
+    FROM
+        dw_morbidity_events dme
+    WHERE
+        dme.sensitive_disease AND
+        addresses.event_id = dme.id;
+
+UPDATE addresses
+    SET
+        street_number = '(Obfusc.)',
+        street_name = '(Obfuscated)',
+        unit_number = '(Obfusc.)',
+        postal_code = '(Obfusc.)',
+        city = '(Obfuscated)',
+        latitude = NULL,
+        longitude = NULL
+    FROM
+        dw_contact_events dme
+    WHERE
+        dme.sensitive_disease AND
+        addresses.event_id = dme.id;
+
+UPDATE events
+    SET
+        parent_guardian = '(Obfuscated)'
+    FROM
+        diseases d, disease_events de
+    WHERE
+        d.id = de.disease_id AND
+        de.event_id = events.id AND
+        d.sensitive;
+
+UPDATE people
+    SET
+        first_name = '(Obfuscated)',
+        last_name = '(Obfuscated)',
+        middle_name = '(Obfuscated)',
+        birth_date = date_trunc('month', people.birth_date),
+        date_of_death = date_trunc('month', people.date_of_death)
+    FROM
+        dw_morbidity_events dme
+    WHERE
+        dme.sensitive_disease AND
+        dme.patient_entity_id = people.entity_id;
+
+DELETE FROM notes
+    USING dw_morbidity_events dme
+    WHERE
+        dme.sensitive_disease AND
+        dme.id = notes.event_id;
+
+UPDATE people
+    SET
+        first_name = '(Obfuscated)',
+        last_name = '(Obfuscated)',
+        middle_name = '(Obfuscated)',
+        birth_date = date_trunc('month', people.birth_date),
+        date_of_death = date_trunc('month', people.date_of_death)
+    FROM
+        dw_contact_events dme
+    WHERE
+        dme.sensitive_disease AND
+        dme.patient_entity_id = people.entity_id;
+
+DELETE FROM notes
+    USING dw_contact_events dme
+    WHERE
+        dme.sensitive_disease AND
+        dme.id = notes.event_id;
+
+UPDATE dw_morbidity_events SET patient_entity_id = -100 WHERE sensitive_disease;
+UPDATE dw_contact_events SET patient_entity_id = -100 WHERE sensitive_disease;
 
 COMMIT;
 
