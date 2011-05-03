@@ -231,8 +231,8 @@ SELECT
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.birth_date)) ELSE upsert_date(ppl.birth_date) END AS birth_date,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.date_of_death)) ELSE upsert_date(ppl.date_of_death) END AS date_of_death,
+    ppl.birth_date,
+    ppl.date_of_death,
 
     ds.id AS disease_id,
     ds.disease_name,
@@ -573,8 +573,8 @@ SELECT
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
     CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.birth_date)) ELSE upsert_date(ppl.birth_date) END AS birth_date,
-    CASE WHEN ds.sensitive THEN upsert_date(date_trunc('month', ppl.date_of_death)) ELSE upsert_date(ppl.date_of_death) END AS date_of_death,
+    ppl.birth_date,
+    ppl.date_of_death,
 
     ds.id AS disease_id,
     ds.disease_name,
@@ -1418,8 +1418,6 @@ UPDATE people
         first_name = '(Obfuscated)',
         last_name = '(Obfuscated)',
         middle_name = '(Obfuscated)',
-        birth_date = date_trunc('month', people.birth_date),
-        date_of_death = date_trunc('month', people.date_of_death)
     FROM
         dw_morbidity_events dme
     WHERE
@@ -1437,8 +1435,6 @@ UPDATE people
         first_name = '(Obfuscated)',
         last_name = '(Obfuscated)',
         middle_name = '(Obfuscated)',
-        birth_date = date_trunc('month', people.birth_date),
-        date_of_death = date_trunc('month', people.date_of_death)
     FROM
         dw_contact_events dme
     WHERE
