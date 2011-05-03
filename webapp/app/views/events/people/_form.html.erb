@@ -25,6 +25,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <span class="vert-break"></span>
         <%= f.label(:first_reported_PH_date) %>
         <%= f.calendar_date_select(:first_reported_PH_date, :year_range => 5.years.ago..0.years.from_now, :class => 'required') %>
+        <%= render_core_field_help_text(:first_reported_PH_date, f, event) %>
       </div>
     </fieldset>
   </div>
