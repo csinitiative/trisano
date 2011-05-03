@@ -147,6 +147,48 @@ describe "searching" do
     end
   end
 
+  context "filtering out clinicians and reporters" do
+    before :each do
+      @event = searchable_event! :morbidity_event, 'Smith'
+      @interested_party = @event.interested_party.person_entity
+    end
+
+    it "does not include clinicians or reporters" do
+      create_clinician! 'Kevorkian'
+      create_reporter! 'Cronkite'
+
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Kevorkian').count.should == 0
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Crier').count.should == 0
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Smith').count.should == 1
+    end
+
+    it "does not create additional rows if the clinician and reporter are the same as the patient" do
+      @event.clinicians << Clinician.new(:person_entity => @interested_party)
+      @event.save!
+      Factory :reporter, :secondary_entity => @interested_party, :primary_entity => @interested_party, :event => @event
+
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Smith').count.should == 1
+    end
+
+    it "does not create additional rows if the patient is a clinician in multiple events" do
+      another_event = Factory :morbidity_event
+      @event.clinicians << Clinician.new(:person_entity => @interested_party)
+      @event.save!
+      another_event.clinicians << Clinician.new(:person_entity => @interested_party)
+      another_event.save!
+
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Smith').count.should == 1
+    end
+
+    it "does not create additional rows if the patient is a reporter in multiple events" do
+      another_event = Factory :morbidity_event
+      Factory :reporter, :event => @event, :primary_entity => @interested_party, :secondary_entity => @interested_party
+      Factory :reporter, :event => another_event, :primary_entity => @interested_party, :secondary_entity => @interested_party
+
+      HumanEvent.find_by_name_and_bdate(:last_name => 'Smith').count.should == 1
+    end
+  end
+
 end
 
 
