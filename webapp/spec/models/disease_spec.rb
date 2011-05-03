@@ -107,7 +107,7 @@ describe Disease do
       @disease = Factory.create(:disease)
       @sensitive_disease = Factory.create(:disease, :sensitive => true)
       @event = Factory.build(:morbidity_event)
-    end 
+    end
 
     it "should not return sensitive diseases if user doesn't have the privilege" do
       @user.stubs(:can_access_sensitive_diseases?).returns(false)
@@ -117,6 +117,41 @@ describe Disease do
     it "returns all diseases including sensitive if user is permitted to see sensitive diseases" do
       @user.stubs(:can_access_sensitive_diseases?).returns(true)
       Disease.sensitive(@user, @event).should == [@disease, @sensitive_disease]
+    end
+  end
+
+  context "testing sensitive disease visibility" do
+    before :each do
+      @sensitive_role = create_role_with_privileges! 'Sensitive', :access_sensitive_diseases
+      @privileged_user = create_user_in_role! 'Sensitive', 'Privileged User'
+    end
+
+    let(:unprivileged_user) { Factory :user }
+    let(:nonsensitive_disease) { Factory :disease }
+    let(:sensitive_disease) { Factory :disease, :sensitive => true }
+
+    it "does not show sensitive diseases to unprivileged users" do
+      sensitive_disease.is_visible_to?(unprivileged_user).should_not be_true
+    end
+
+    it "shows non-sensitive diseases to unprivileged users" do
+      nonsensitive_disease.is_visible_to?(unprivileged_user).should be_true
+    end
+
+    it "shows sensitive diseases to privileged users" do
+      sensitive_disease.is_visible_to?(@privileged_user).should be_true
+    end
+
+    it "shows non-sensitive diseases to privileged users" do
+      nonsensitive_disease.is_visible_to?(@privileged_user).should be_true
+    end
+
+    it "accounts for the privilege by jurisdiction" do
+      jurisdiction_ids = [ create_jurisdiction_entity.id ]
+      sensitive_disease.is_visible_to_in?(@privileged_user, jurisdiction_ids).should_not be_true
+
+      jurisdiction_ids << @sensitive_role.role_memberships.first.jurisdiction_id
+      sensitive_disease.is_visible_to_in?(@privileged_user, jurisdiction_ids).should be_true
     end
   end
 
