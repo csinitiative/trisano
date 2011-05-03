@@ -1624,4 +1624,44 @@ module EventsHelper
     haml_tag 'span', :class => 'ui-icon ui-icon-arrowthickstop-1-s bottom', :onclick => "moveMultiple(this, 'bottom');"
   end
 
+  def private_cell(event, methods, opts={}, &block)
+    opts = {
+      :alternative => :private,
+      :ifnil => '',
+      :strong => false,
+      :escape => true,
+      :object => event,
+      :permission => :update_event
+    }.merge(opts)
+
+    unless block.nil?
+      inner_content = (block_is_haml?(block)) ? capture_haml { block.call } : block.call
+    else
+      inner_content = ''
+    end
+
+    jurisdictions = event.all_jurisdictions.map(&:secondary_entity_id)
+
+    if User.current_user.is_entitled_to_in?(opts[:permission], jurisdictions)
+      value = case methods
+        when Proc: methods.call(opts[:object])
+        when Array: methods.inject(opts[:object]) { |obj, method| obj.try(method) }
+        when Symbol: opts[:object].try(methods)
+        else methods
+      end
+      if value.nil?
+        value = opts[:ifnil]
+      else
+        value = h(value) if opts[:escape]
+      end
+
+      content = wrap_if(opts[:strong], 'strong'){ value }
+      cssClass = 'nodata' if value.blank? && inner_content.blank?
+    else
+      content = "<em>#{t(opts[:alternative])}</em>#{inner_content}"
+      cssClass = 'noodata'
+    end
+
+    "<td class=\"#{cssClass}\">#{content}#{inner_content}</td>"
+  end
 end
