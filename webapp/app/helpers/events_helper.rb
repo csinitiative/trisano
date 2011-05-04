@@ -1640,9 +1640,7 @@ module EventsHelper
       inner_content = ''
     end
 
-    jurisdictions = event.all_jurisdictions.map(&:secondary_entity_id)
-
-    if User.current_user.is_entitled_to_in?(opts[:permission], jurisdictions)
+    if User.current_user.can?(opts[:permission], event)
       value = case methods
         when Proc: methods.call(opts[:object])
         when Array: methods.inject(opts[:object]) { |obj, method| obj.try(method) }
