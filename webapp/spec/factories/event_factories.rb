@@ -145,15 +145,6 @@ Factory.define :disease do |d|
   d.cdc_code     { Factory.next(:cdc_code) }
 end
 
-Factory.define :lab do |l|
-  l.secondary_entity { Factory(:place_entity) }
-  l.lab_results { |lr| [lr.association(:lab_result)] }
-end
-
-Factory.define :lab_result do |lr|
-  lr.test_type { |ctt| ctt.association(:common_test_type) }
-end
-
 Factory.define :answer do |a|
   a.question { |q| q.association(:question_single_line_text) }
   a.text_answer { Factory.next(:answer_text) }

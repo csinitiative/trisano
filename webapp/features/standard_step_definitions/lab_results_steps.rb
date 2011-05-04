@@ -34,17 +34,6 @@ Given /^the following disease to common test types mapping exists$/ do |disease_
   end
 end
 
-Given /^the following organisms exist$/ do |organisms|
-  organisms.raw.each do |organism|
-    Organism.create(:organism_name => organism.first)
-  end
-end
-
-
-Given /^I have a lab result$/ do
-  @lab_result = Factory.create(:lab_result)
-end
-
 Given /^the lab result references the common test type$/ do
   @lab_result.test_type = @common_test_type
   @lab_result.save!

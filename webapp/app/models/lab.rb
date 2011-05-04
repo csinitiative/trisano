@@ -27,7 +27,7 @@ class Lab < Participation
 
   accepts_nested_attributes_for :lab_results,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+    :reject_if => proc { |attrs| attrs.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
 
   accepts_nested_attributes_for :place_entity,
     :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }

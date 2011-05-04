@@ -1,11 +1,3 @@
-Given /^I have a lab result$/ do
-  @lab_result = Factory.create(:lab_result)
-end
-
-Given /^the lab result references the common test type$/ do
-  @lab_result.update_attribute(:test_type_id, @common_test_type.id)
-end
-
 Given /^no other common test types exist$/ do
   CommonTestType.all.each { |tt| tt.destroy unless tt == @lab_result.test_type }
 end

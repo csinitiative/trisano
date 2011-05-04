@@ -23,40 +23,39 @@ Then /^the (.+) should be ordered (.+)$/ do |entity_plural, names|
   assert_entity_order(entity_plural, names)
 end
 
+Given /^I click the arrows on an empty lab result$/ do
+  browser_eval_script %Q{ $j("span:contains('Test type')").closest('li').find('span.top').click(); }
+end
+
 def move_entity(entity, name, movement)
   movement = movement.split(' ').last
 
-  script = case entity
-             when 'treatment'
-               %Q{ $j("option:contains('#{name}'):selected").closest('li').find('span.#{movement}').click(); }
-             when 'contact'
-               %Q{ $j("span:contains('#{name}')").closest('li').find('span.#{movement}').click(); }
-             when 'place'
-               %Q{ $j("span:contains('#{name}')").closest('li').find('span.#{movement}').click(); }
-             else raise
-           end
-
-  browser_eval_script(script)
+  if (entity == 'treatment' || entity == 'lab result')
+    browser_eval_script %Q{ $j("option:contains('#{name}'):selected").closest('li').find('span.#{movement}').click(); }
+  elsif (entity == 'contact' || entity == 'place')
+    browser_eval_script %Q{ $j("span:contains('#{name}')").closest('li').find('span.#{movement}').click(); }
+  else
+    raise
+  end
 end
 
 def assert_entity_order(entity_plural, names)
   names = names.split(", ")
-
+  
   names.size.times do |index|
-    script = case entity_plural
-               when 'treatments'
-                 %Q{ $j("option:contains('#{names[index]}'):selected").closest('li').index(); }
-               when 'contacts'
-                 %Q{ $j("span:contains('#{names[index]}')").closest('li').index(); }
-               when 'place'
-                 %Q{ $j("span:contains('#{names[index]}')").closest('li').index(); }
-               else raise
-             end
-
-    li_index = browser_eval_script(script)
     # This is times two because there are hidden elements floating with the LIs.
     # Some more creative jQuerying could possibly elimiate this
-    li_index.to_i.should == 2*(index)
+    li_index(entity_plural, names, index).to_i.should == 2*(index)
+  end
+end
+
+def li_index(entity_plural, names, index)
+  if (entity_plural == 'treatments' || entity_plural == 'lab results')
+    return browser_eval_script %Q{ $j("option:contains('#{names[index]}'):selected").closest('li').index(); }
+  elsif (entity_plural == 'contacts' || entity_plural == 'places')
+    return browser_eval_script %Q{ $j("span:contains('#{names[index]}')").closest('li').index(); }
+  else
+    raise
   end
 end
 

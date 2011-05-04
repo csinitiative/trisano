@@ -18,6 +18,24 @@
 require 'factory_girl'
 require 'faker'
 
+Factory.define :lab do |l|
+  l.secondary_entity { Factory(:lab_place_entity) }
+  l.lab_results { |lr| [lr.association(:lab_result)] }
+end
+
+Factory.define :lab_place_entity, :class => :place_entity do |lpe|
+  lpe.place { Factory.build(:lab_place) }
+end
+
+Factory.define :lab_place, :class => :place do |lp|
+  lp.place_types { [lab_place_type] }
+  lp.name { Factory.next(:place_name) }
+end
+
+Factory.define :lab_result do |lr|
+  lr.test_type { |ctt| ctt.association(:common_test_type) }
+end
+
 Factory.define(:common_test_type) do |ctt|
   ctt.common_name { Factory.next(:common_name) }
 end
@@ -28,5 +46,13 @@ end
 
 Factory.sequence(:common_name) do |n|
   "common_name_#{n}"
+end
+
+def lab_place_type
+  Code.find_or_create_by_the_code_and_code_name({
+                                                  :the_code => 'L',
+                                                  :code_name => 'placetype',
+                                                  :code_description => 'Laboratory'
+                                                })
 end
 

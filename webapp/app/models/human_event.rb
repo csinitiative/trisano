@@ -101,7 +101,7 @@ class HumanEvent < Event
     end
 
     def lab_result_attributes_blank?(attrs)
-      attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+      attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
     end
     
     def rewrite_attributes_to_reuse_place_entities(attrs)
