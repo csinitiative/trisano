@@ -22,6 +22,7 @@ class DiseaseEvent < ActiveRecord::Base
   belongs_to :event
   belongs_to :disease
 
+  validates_uniqueness_of :event_id
   validates_date :disease_onset_date, :allow_blank => true
   validates_date :date_diagnosed, :allow_blank => true,
                                   :on_or_before => lambda { Date.today },

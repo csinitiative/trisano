@@ -38,6 +38,7 @@ class Event < ActiveRecord::Base
   belongs_to :outbreak_associated, :class_name => 'ExternalCode'
 
   has_one :jurisdiction, :dependent => :destroy
+  alias primary_jurisdiction jurisdiction # fixes csv exports
 
   has_many :associated_jurisdictions,
     :order => 'created_at ASC',
@@ -340,28 +341,8 @@ class Event < ActiveRecord::Base
     form_references.reject {|ref| ref.form.has_investigator_view_elements?}
   end
 
-  def primary_jurisdiction
-    if new_record?
-      self.jurisdiction.try(:place_entity).try(:place)
-    else
-      eager_jurisdictions.select do |j|
-        j['type'] == 'Jurisdiction'
-      end.first.try(:place_entity).try(:place)
-    end
-  end
-
-  def secondary_jurisdictions(reload = false)
-    if new_record?
-      self.associated_jurisdictions.map {|j| j.try(:place_entity).try(:place)}
-    else
-      eager_jurisdictions(reload).select{|j| j['type'] == 'AssociatedJurisdiction'}.map do |j|
-        j.place_entity.try(:place)
-      end
-    end
-  end
-
   def jurisdiction_of_investigation
-    primary_jurisdiction
+    jurisdiction
   end
 
   def jurisdiction_entity_ids
@@ -373,13 +354,6 @@ class Event < ActiveRecord::Base
     else
       Set.new(all_jurisdictions.map(&:secondary_entity_id))
     end
-  end
-
-  def eager_jurisdictions(reload = false)
-    if reload || @eager_jurisdictions.nil?
-      @eager_jurisdictions = all_jurisdictions(:include => {:place_entity => :place})
-    end
-    @eager_jurisdictions
   end
 
   # wow. wish this didn't return the disease_event.
@@ -575,7 +549,7 @@ class Event < ActiveRecord::Base
     new_event.event_name = "#{I18n.translate('copy_of', :locale => I18n.default_locale)} #{self.event_name}" unless self.event_name.blank?
     new_event.build_jurisdiction
     new_event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
-    new_event.workflow_state = 'accepted_by_lhd' unless new_event.primary_jurisdiction.is_unassigned_jurisdiction?
+    new_event.workflow_state = 'accepted_by_lhd' unless new_event.jurisdiction.place.is_unassigned_jurisdiction?
     new_event.acuity = self.acuity
 
     if event_components.include?("clinical")

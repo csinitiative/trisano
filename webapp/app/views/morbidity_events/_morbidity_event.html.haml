@@ -41,7 +41,7 @@
         - if (view_mode == :index)
           = h(pg_array(morbidity_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', '))
         - else
-          = h(morbidity_event.secondary_jurisdictions.map { |j| j.short_name }.join(", "))
+          = h(morbidity_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
     %b= h(morbidity_event.state_description)
 

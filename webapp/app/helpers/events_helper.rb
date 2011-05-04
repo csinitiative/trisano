@@ -336,7 +336,7 @@ module EventsHelper
 
   def jurisdiction_routing_control(event)
     returning "" do |controls|
-      if User.current_user.is_entitled_to_in?(:route_event_to_any_lhd, event.primary_jurisdiction.entity_id)
+      if User.current_user.can_route_to_any_lhd?(event)
         controls << link_to_function(t('route_to_local'), nil) do |page|
           page["routing_controls_#{h(event.id)}"].visual_effect :appear, :duration => 0.5
         end
@@ -347,13 +347,21 @@ module EventsHelper
         controls << routing_form_tag(:jurisdiction, event) do
           returning "" do |form|
             form << "<span>#{ct(:investigating_jurisdiction)} &nbsp;</span>"
-            form << select_tag("routing[jurisdiction_id]", options_from_collection_for_select(jurisdictions, :entity_id, :short_name, event.primary_jurisdiction.entity_id)).untaint
-
+            form << select_tag("routing[jurisdiction_id]",
+                               options_from_collection_for_select(jurisdictions,
+                                                                  :entity_id,
+                                                                  :short_name,
+                                                                  event.jurisdiction.secondary_entity_id))
             form << "<br />#{ct(:also_grant_access)}"
             form << "<div style='width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'>"
             form << "<div style='background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'>"
             jurisdictions.each do | jurisdiction |
-              form << "<label>" + check_box_tag("secondary_jurisdiction_ids[]", h(jurisdiction.entity_id), event.secondary_jurisdictions.include?(jurisdiction), :id => h(jurisdiction.short_name.tr(" ", "_"))) + h(jurisdiction.short_name) + "</label>"
+              form << check_box_tag("secondary_jurisdiction_ids[]",
+                                    jurisdiction.entity_id,
+                                    event.associated_jurisdictions.map(&:place_entity).include?(jurisdiction),
+                                    :id => h(jurisdiction.short_name.tr(" ", "_")),
+                                    :style => "layout: inline")
+              form << label_tag(h(jurisdiction.short_name.tr(" ", "_")), h(jurisdiction.short_name))
             end
             form << "</div></div>"
 

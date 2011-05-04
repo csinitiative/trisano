@@ -319,7 +319,7 @@ describe MorbidityEvent do
           cur_state = @event.state
           secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
           @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
-          @event.secondary_jurisdictions.map(&:entity_id).should == secondary_jurisdictions
+          @event.associated_jurisdictions.map(&:secondary_entity_id).should == secondary_jurisdictions
           @event.state.should == cur_state
         end
       end
@@ -328,10 +328,10 @@ describe MorbidityEvent do
         it "should remove the secondary jurisdictions" do
           secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
           @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
-          @event.secondary_jurisdictions.length.should == 2
+          @event.associated_jurisdictions.length.should == 2
 
           @event.route_to_jurisdiction(@event.jurisdiction.place_entity, [secondary_jurisdictions.first])
-          @event.secondary_jurisdictions(true).map(&:entity_id).should == [secondary_jurisdictions.first]
+          @event.associated_jurisdictions(true).map(&:secondary_entity_id).should == [secondary_jurisdictions.first]
         end
       end
 
@@ -339,11 +339,11 @@ describe MorbidityEvent do
         it "should add some and remove others" do
           secondary_jurisdictions = [create_jurisdiction_entity.id, create_jurisdiction_entity.id]
           @event.route_to_jurisdiction(@event.jurisdiction.place_entity, secondary_jurisdictions)
-          @event.secondary_jurisdictions(true).map(&:entity_id).should == secondary_jurisdictions
+          @event.associated_jurisdictions(true).map(&:secondary_entity_id).should == secondary_jurisdictions
 
           new_secondary_jurisdictions = [secondary_jurisdictions.first, create_jurisdiction_entity.id]
           @event.route_to_jurisdiction(@event.jurisdiction.place_entity, new_secondary_jurisdictions)
-          @event.secondary_jurisdictions(true).map(&:entity_id).should == new_secondary_jurisdictions
+          @event.associated_jurisdictions(true).map(&:secondary_entity_id).should == new_secondary_jurisdictions
         end
       end
 
@@ -482,7 +482,6 @@ describe MorbidityEvent do
     it 'should be able to move between states, as allowed by transitions' do
       @event.stubs(:jurisdiction).returns @permissive_jurisdiction
       @event.stubs(:route_to_jurisdiction).returns true
-      @event.stubs(:primary_jurisdiction).returns nil
       @event.assign_to_lhd(nil, nil, nil)
       @event.current_state.name.should == :assigned_to_lhd
       @event.reset_to_new
@@ -1584,7 +1583,7 @@ describe Event, 'cloning an event' do
 
     it "should copy over demographic information only" do
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
-      @new_event.primary_jurisdiction.name.should == @jurisdiction_place.name
+      @new_event.jurisdiction.name.should == @jurisdiction_place.name
       @new_event.should be_new
 
       # Only interested party and jurisdiction, nothing else
@@ -1619,7 +1618,7 @@ describe Event, 'cloning an event' do
       @new_event = @org_event.clone_event
 
       @new_event.interested_party.secondary_entity_id.should == @org_event.interested_party.secondary_entity_id
-      @new_event.primary_jurisdiction.name.should == @jurisdiction_place.name
+      @new_event.jurisdiction.name.should == @jurisdiction_place.name
       @new_event.should be_new
     end
 

@@ -25,11 +25,11 @@ class ContactEvent < HumanEvent
 
   workflow do
     state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
-      :note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
+      :note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
       promote_to_cmr
       assign_to_lhd
     end
-    state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
+    state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
       assign_to_lhd
     end
     state :assigned_to_lhd, :meta => {:description => I18n.translate('workflow.assigned_to_lhd')} do
@@ -154,7 +154,7 @@ class ContactEvent < HumanEvent
 
     # In case the contact is in a state that doesn't exist for a morb
     if self.not_routed?
-      if self.primary_jurisdiction.is_unassigned_jurisdiction?
+      if self.jurisdiction.place.is_unassigned_jurisdiction?
         self.promote_as_new
       else
         self.promote_as_accepted

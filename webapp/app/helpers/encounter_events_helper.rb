@@ -26,7 +26,7 @@ module EncounterEventsHelper
   # adds the current user to the front of the list if the current user isn't included in the
   # results pulled back based on permissions.
   def users_for_investigation_select(encounter)
-    users = User.investigators_for_jurisdictions(encounter.primary_jurisdiction)
+    users = User.investigators_for_jurisdictions(encounter.jurisdiction.try(:place_entity))
     users.unshift(User.current_user) unless users.include?(User.current_user)
     if encounter.investigator && !users.include?(encounter.investigator)
       users.unshift(encounter.investigator)
@@ -35,11 +35,10 @@ module EncounterEventsHelper
   end
 
   def basic_encounter_event_controls(event, with_show=true)
-    can_update =  User.current_user.is_entitled_to_in?(:update_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
     controls = ""
     controls << link_to_function(t('show'), "send_url_with_tab_index('#{encounter_event_path(event)}')") if with_show
 
-    if can_update
+    if User.current_user.can_update? event
       controls <<  " | "  if with_show
       controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_encounter_event_path(event)}')")
       if event.deleted_at.nil?

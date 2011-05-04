@@ -206,7 +206,7 @@ class EventsController < ApplicationController
       # Debt: be nice to have to only call one method to route
       Event.transaction do
         @event.assign_to_lhd params[:routing][:jurisdiction_id], params[:secondary_jurisdiction_ids] || [], params[:routing][:note]
-        @event.reset_to_new if @event.primary_jurisdiction.is_unassigned_jurisdiction?
+        @event.reset_to_new if @event.jurisdiction.place.is_unassigned_jurisdiction?
         @event.save!
       end
     rescue Exception => e

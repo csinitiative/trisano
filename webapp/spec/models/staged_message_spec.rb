@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'trisano'
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 describe StagedMessage do
 
@@ -446,7 +446,7 @@ describe StagedMessage do
         t.extension.should == extension
         t.entity_location_type_id.should == ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id
 
-        @event.primary_jurisdiction.name.should == "Unassigned"
+        @event.jurisdiction.name.should == "Unassigned"
       end
     end
 
