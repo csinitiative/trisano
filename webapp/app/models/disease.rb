@@ -210,11 +210,11 @@ class Disease < ActiveRecord::Base
     false
   end
 
-  def is_visible_to_in?(user, jurisdiction_ids, reload=false)
+  def visible_to_in?(user, jurisdiction_ids, reload=false)
     not sensitive or user.is_entitled_to_in?(:access_sensitive_diseases, jurisdiction_ids, reload)
   end
 
-  def is_visible_to?(user)
+  def visible_to?(user)
     not sensitive or user.is_entitled_to?(:access_sensitive_diseases)
   end
 

@@ -131,27 +131,27 @@ describe Disease do
     let(:sensitive_disease) { Factory :disease, :sensitive => true }
 
     it "does not show sensitive diseases to unprivileged users" do
-      sensitive_disease.is_visible_to?(unprivileged_user).should_not be_true
+      sensitive_disease.should_not be_visible_to(unprivileged_user)
     end
 
     it "shows non-sensitive diseases to unprivileged users" do
-      nonsensitive_disease.is_visible_to?(unprivileged_user).should be_true
+      nonsensitive_disease.should be_visible_to(unprivileged_user)
     end
 
     it "shows sensitive diseases to privileged users" do
-      sensitive_disease.is_visible_to?(@privileged_user).should be_true
+      sensitive_disease.should be_visible_to(@privileged_user)
     end
 
     it "shows non-sensitive diseases to privileged users" do
-      nonsensitive_disease.is_visible_to?(@privileged_user).should be_true
+      nonsensitive_disease.should be_visible_to(@privileged_user)
     end
 
     it "accounts for the privilege by jurisdiction" do
       jurisdiction_ids = [ create_jurisdiction_entity.id ]
-      sensitive_disease.is_visible_to_in?(@privileged_user, jurisdiction_ids).should_not be_true
+      sensitive_disease.should_not be_visible_to_in(@privileged_user, jurisdiction_ids)
 
       jurisdiction_ids << @sensitive_role.role_memberships.first.jurisdiction_id
-      sensitive_disease.is_visible_to_in?(@privileged_user, jurisdiction_ids).should be_true
+      sensitive_disease.should be_visible_to_in(@privileged_user, jurisdiction_ids)
     end
   end
 

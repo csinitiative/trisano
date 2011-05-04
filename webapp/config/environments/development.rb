@@ -23,7 +23,7 @@ config.action_mailer.raise_delivery_errors = true
 
 require 'logging'
 
-# Logging.init is required to avoid 
+# Logging.init is required to avoid
 #   unknown level was given 'info' (ArgumentError)
 # or
 #   uninitialized constant Logging::MAX_LEVEL_LENGTH (NameError)
