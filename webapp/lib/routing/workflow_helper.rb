@@ -62,7 +62,7 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_accepted_by",
-            :jurisdiction_name => self.primary_jurisdiction.try(:name),
+            :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
             :locale => I18n.default_locale)
         )
@@ -75,7 +75,7 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_rejected_by",
-            :jurisdiction_name => self.primary_jurisdiction.try(:name),
+            :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
             :locale => I18n.default_locale)
         )
@@ -88,7 +88,7 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_approved_at",
-            :jurisdiction_name => self.primary_jurisdiction.try(:name),
+            :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
             :locale => I18n.default_locale)
         )
@@ -176,7 +176,7 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_reopened_by",
-            :jurisdiction_name => self.primary_jurisdiction.try(:name),
+            :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
             :locale => I18n.default_locale)
         )
@@ -214,7 +214,7 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_approved_at",
-            :jurisdiction_name => self.primary_jurisdiction.try(:name),
+            :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
             :locale => I18n.default_locale)
         )

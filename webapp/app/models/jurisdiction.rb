@@ -25,6 +25,18 @@ class Jurisdiction < Participation
     User.current_user.is_entitled_to_in?(privilege, secondary_entity_id)
   end
 
+  def place
+    place_entity.try :place
+  end
+
+  def name
+    place.try :name
+  end
+
+  def short_name
+    place.try :short_name
+  end
+
   def xml_fields
     [[:secondary_entity_id, {:rel => :jurisdiction}]]
   end

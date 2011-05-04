@@ -36,7 +36,7 @@ class MorbidityEvent < HumanEvent
 
   workflow do
     # on_entry evaluated at wrong time, so note is attached to meta for :new
-    state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.primary_jurisdiction.name}."'} do
+    state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
       assign_to_lhd
     end
     state :assigned_to_lhd, :meta => {:description => I18n.translate('workflow.assigned_to_lhd')} do

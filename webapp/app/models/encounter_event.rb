@@ -19,10 +19,7 @@ class EncounterEvent < HumanEvent
 
   after_create do |encounter|
     parent_event = encounter.parent_event
-    encounter.build_disease_event(parent_event.disease_event.attributes) unless parent_event.disease_event.nil?
-    encounter.build_jurisdiction(parent_event.jurisdiction.attributes) unless parent_event.jurisdiction.nil?
     encounter.build_interested_party(parent_event.interested_party.attributes) unless parent_event.interested_party.nil?
-    encounter.build_disease_event(parent_event.disease_event.attributes) unless parent_event.disease_event.nil?
     encounter.add_note(I18n.translate("system_notes.encounter_event_created", :locale => I18n.default_locale))
   end
 
@@ -32,7 +29,45 @@ class EncounterEvent < HumanEvent
     end
   end
 
+  has_one :disease_event, {
+    :foreign_key => :event_id,
+    :primary_key => :parent_id,
+    :readonly => true,
+    :autosave => false,
+    :validate => false
+  }
+
+  has_one :jurisdiction, {
+    :foreign_key => :event_id,
+    :primary_key => :parent_id,
+    :readonly => true,
+    :autosave => false,
+    :validate => false
+  }
+
+  has_many :associated_jurisdictions, {
+    :order => "created_at ASC",
+    :primary_key => :parent_id,
+    :foreign_key => :event_id,
+    :readonly => true,
+    :autosave => false,
+    :validate => false
+  }
+
+  # ugh. I dislike all_jurisdictions
+  has_many :all_jurisdictions, {
+    :order => "created_at ASC",
+    :class_name => "Participation",
+    :conditions => { :type => ['Jurisdiction', 'AssociatedJurisdiction'] },
+    :foreign_key => :event_id,
+    :primary_key => :parent_id,
+    :readonly => true,
+    :autosave => false,
+    :validate => false
+  }
+
   class << self
+
     def core_views
       [
         [I18n.t('core_views.encounter'), "Encounter"],
@@ -70,5 +105,14 @@ class EncounterEvent < HumanEvent
     unless base_errors.empty?
       base_errors.values.each { |msg| self.errors.add_to_base(msg) }
     end
+  end
+
+  def validate_associated_records_for_disease_event
+  end
+
+  def validate_associated_records_for_jurisdiction
+  end
+
+  def validate_associated_records_for_interested_party
   end
 end

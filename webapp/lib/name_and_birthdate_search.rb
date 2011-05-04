@@ -71,8 +71,8 @@ module NameAndBirthdateSearch
     returning [] do |joins|
       joins << "INNER JOIN entities pplentities ON pplentities.id = people.entity_id"
       joins << "LEFT JOIN external_codes ON external_codes.id = people.birth_gender_id"
-      joins << "LEFT JOIN #{participation_subselect} visible_participations ON people.entity_id = visible_participations.primary_entity_id"
-      joins << "LEFT JOIN events ON visible_participations.event_id = events.id"
+      joins << "LEFT JOIN #{interested_party_subselect} interested_parties ON people.entity_id = interested_parties.primary_entity_id"
+      joins << "LEFT JOIN events ON interested_parties.event_id = events.id"
       joins << "LEFT JOIN disease_events ON disease_events.event_id = events.id"
       joins << "LEFT JOIN diseases ON disease_events.disease_id = diseases.id"
       joins << "LEFT JOIN participations jurispart ON (events.id = jurispart.event_id AND jurispart.type = 'Jurisdiction')"
@@ -81,9 +81,12 @@ module NameAndBirthdateSearch
     end.compact
   end
 
-  def participation_subselect
+  # This subselect returns id, primary_entity_id and event_id from all
+  # InterestedParty participations that the current user can see (with
+  # participations for sensitive events filtered out).
+  def interested_party_subselect
     %Q{
-      (SELECT DISTINCT ON (participations.id) participations.primary_entity_id, participations.event_id FROM participations
+      (SELECT DISTINCT ON (participations.id) participations.id, participations.primary_entity_id, participations.event_id FROM participations
         INNER JOIN events ON events.id = participations.event_id
         INNER JOIN participations jurispart ON (jurispart.type = 'Jurisdiction' AND jurispart.event_id = events.id)
         INNER JOIN places jurisplace ON (jurisplace.entity_id = jurispart.secondary_entity_id)
@@ -126,6 +129,7 @@ module NameAndBirthdateSearch
   def name_and_bdate_conditions(options)
     returning [] do |conditions|
       conditions << "pplentities.deleted_at IS NULL"
+      conditions << interested_party_filter_conditions
       conditions << name_conditions(options, :last_name, :first_name, :use_starts_with_search)
       conditions << bdate_conditions(options)
     end.compact
@@ -166,6 +170,20 @@ module NameAndBirthdateSearch
             )
     )
     ]
+  end
+
+  def interested_party_filter_conditions
+    <<-SQL
+      (
+        interested_parties.id IS NOT NULL OR
+        NOT EXISTS
+        (
+          SELECT id FROM participations
+            WHERE type IN ('Clinician','Reporter')
+            AND secondary_entity_id = people.entity_id
+        )
+      )
+    SQL
   end
 
   def name_and_bdate_order(options)

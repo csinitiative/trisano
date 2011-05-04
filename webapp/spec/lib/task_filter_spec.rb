@@ -136,29 +136,32 @@ describe TaskFilter do
 
   describe 'with user filter applied' do
     before(:each) do
-      #need all users for assignment
-      users = [User.find(1), User.find(2), User.find(3)]
+      @user_one = Factory.create(:user)
+      @user_two = Factory.create(:user)
+      @user_three = Factory.create(:user)
+      
+      users = [@user_one, @user_two, @user_three]
       User.expects(:default_task_assignees).at_least(1).returns(users)
-      @user_one_task   = create_task(:user => users[0])
-      @user_two_task   = create_task(:user => users[1])
-      @user_three_task = create_task(:user => users[2])
+      @user_one_task   = create_task(:user => @user_one)
+      @user_two_task   = create_task(:user => @user_two)
+      @user_three_task = create_task(:user => @user_three)
       #now whack one to test user filtering
       users.pop
     end
 
     it 'should show tasks for only user ids in filter' do
-      tasks = @user.filter_tasks(:users => ['1'])
+      tasks = @user.filter_tasks(:users => [@user_one.id])
       tasks.include?(@user_one_task).should be_true
       tasks.size.should == 1
 
-      tasks = @user.filter_tasks(:users => ['1', '2'])
+      tasks = @user.filter_tasks(:users => [@user_one.id, @user_two.id])
       tasks.include?(@user_one_task).should be_true
       tasks.include?(@user_two_task).should be_true
       tasks.size.should == 2
     end
 
     it 'should show tasks of users that can be assigned to by current user' do
-      tasks = @user.filter_tasks(:users => ['1', '2', '3'])
+      tasks = @user.filter_tasks(:users => [@user_one.id, @user_two.id, @user_three.id])
       tasks.include?(@user_one_task).should be_true
       tasks.include?(@user_two_task).should be_true
       tasks.size.should == 2

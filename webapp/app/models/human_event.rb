@@ -101,7 +101,7 @@ class HumanEvent < Event
     end
 
     def lab_result_attributes_blank?(attrs)
-      attrs["lab_results_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
+      attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
     end
     
     def rewrite_attributes_to_reuse_place_entities(attrs)
@@ -492,7 +492,7 @@ class HumanEvent < Event
     current_state.events.select do |event|
       priv_required = current_state.events(event).meta[:priv_required]
       next if priv_required.nil?
-      j_id = primary_jurisdiction.entity_id
+      j_id = jurisdiction.secondary_entity_id
       User.current_user.is_entitled_to_in?(priv_required, j_id)
     end
   end

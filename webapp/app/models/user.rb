@@ -295,6 +295,15 @@ class User < ActiveRecord::Base
     can?(:access_sensitive_diseases, event, reload)
   end
 
+  def can_route_to_any_lhd?(event=nil, reload=false)
+    @privs = nil if reload
+    if event.nil?
+      is_entitled_to?(:route_event_to_any_lhd)
+    else
+      privs[:route_event_to_any_lhd].include? event.jurisdiction.secondary_entity_id
+    end
+  end
+
   def can?(priv, event=nil, reload=false)
     @privs = nil if reload
     if event.nil? || event.jurisdiction_entity_ids.empty?

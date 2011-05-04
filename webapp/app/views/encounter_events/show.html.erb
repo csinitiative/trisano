@@ -40,7 +40,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= h(@event.safe_call_chain(:disease_event, :disease, :disease_name)) %>
       </td>
       <td>
-        <b><%= h(@event.primary_jurisdiction.short_name) %></b>
+        <b><%= h(@event.jurisdiction.try(:short_name)) %></b>
       </td>
       <td>
         <%= original_patient_controls(@event) %>

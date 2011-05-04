@@ -57,3 +57,8 @@ end
 at_exit do
   browser.close rescue nil
 end
+
+def browser_eval_script(script)
+  script = %Q{ selenium.browserbot.getCurrentWindow().#{script.strip} }
+  @browser.get_eval(script)
+end

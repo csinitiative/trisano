@@ -49,7 +49,7 @@
         - if (view_mode == :index)
           = pg_array(contact_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', ')
         - else
-          = h(contact_event.secondary_jurisdictions.map { |j| j.short_name }.join(", "))
+          = h(contact_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
     %b= h(contact_event.state_description)
 
