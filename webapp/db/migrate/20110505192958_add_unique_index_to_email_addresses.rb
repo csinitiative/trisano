@@ -15,22 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-class EmailAddress < ActiveRecord::Base
-  before_validation :strip_whitespace
-  belongs_to :owner, :polymorphic => true
-
-  validates_presence_of :email_address
-  validates_uniqueness_of :email_address, :case_sensitive => false
-  validates_format_of :email_address, :with => /@/, :message => I18n.t(:invalid_email_format)
-
-  def xml_fields
-    [:email_address]
+class AddUniqueIndexToEmailAddresses < ActiveRecord::Migration
+  def self.up
+    execute "CREATE UNIQUE INDEX index_email_addresses_on_email_address ON email_addresses (LOWER(email_address))"
   end
 
-  private
-
-  def strip_whitespace
-    email_address.strip! if email_address
+  def self.down
+    execute "DROP INDEX index_email_addresses_on_email_address"
   end
 end
-

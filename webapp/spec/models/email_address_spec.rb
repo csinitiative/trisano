@@ -25,6 +25,13 @@ describe EmailAddress do
       lambda { 2.times { Factory :email_address, :email_address => 'user@example.com' } }.should raise_error
     end
 
+    it 'should ignore case' do
+      Factory :email_address, :email_address => 'user@example.com'
+      lambda do
+        Factory :email_address, :email_address => 'USER@eXaMpLe.coM'
+      end.should raise_error
+    end
+
     it 'should ignore leading and trailing whitespace' do
       Factory :email_address, :email_address => 'user@example.com'
       lambda do
