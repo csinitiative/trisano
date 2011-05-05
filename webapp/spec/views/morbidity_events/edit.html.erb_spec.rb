@@ -15,15 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require File.dirname(__FILE__) + '/../../spec_helper'
+require 'spec_helper'
 
 describe "/cmrs/:id/edit" do
 
   before :all do
     given_core_fields_loaded_for :morbidity_event
-  end
-
-  before do
   end
 
   it "renders a cmr in edit mode" do
@@ -51,7 +48,12 @@ describe "/cmrs/:id/edit" do
     it "displays a link to the parent event" do
       response.should have_tag('a[href=?]', edit_cmr_path(@parent))
     end
-
   end
 
+  it "should render an event w/ associated jurisdictions" do
+    user = Factory.create :user
+    assigns[:event] = Factory.create :morbidity_event
+    assigns[:event].associated_jurisdictions.create(:secondary_entity_id => create_jurisdiction_entity.id)
+    render "/morbidity_events/edit.html.erb"
+  end
 end

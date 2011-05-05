@@ -18,5 +18,17 @@
 class AssociatedJurisdiction < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   accepts_nested_attributes_for :place_entity, :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
+
+  def place
+    place_entity.try :place
+  end
+
+  def name
+    place.try :name
+  end
+
+  def short_name
+    place.try :short_name
+  end
 end
 
