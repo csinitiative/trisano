@@ -385,6 +385,8 @@ module Export
       end
 
       def convert_single_line_text(answer, length)
+        answer.gsub!(/^"(.*?)"$/,'\1')
+
         if answer.strip =~ /^[\d+]{4}$/ && length == 2 # really just trying to catch years
           DEFAULT_LOGGER.debug("CDC Export: Treating a text field as a two digit year - Event #{record_number}")
           answer.rjust(length, ' ')[-length, length]
