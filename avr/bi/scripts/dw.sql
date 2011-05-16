@@ -1417,7 +1417,7 @@ UPDATE people
     SET
         first_name = '(Obfuscated)',
         last_name = '(Obfuscated)',
-        middle_name = '(Obfuscated)',
+        middle_name = '(Obfuscated)'
     FROM
         dw_morbidity_events dme
     WHERE
