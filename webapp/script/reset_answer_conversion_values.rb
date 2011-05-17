@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 joins = 'join questions q on answers.question_id = q.id join form_elements fe on q.form_element_id = fe.id join export_columns ec on fe.export_column_id = ec.id'
-conditions = "fe.export_column_id is not null and ec.data_type = 'radio_button'"
+conditions = "fe.export_column_id is not null"
 includes_option = { :question => { :question_element => :export_column }}
 
 batch_count = 0
@@ -36,8 +36,16 @@ Answer.find_in_batches( :batch_size => 2000,
 
   answers.each do |answer|
     answer_export_column = answer.question.question_element.export_column
-    if (conversion_value = answer_export_column.export_conversion_values.detect { |ecv| ecv.value_from == answer.text_answer })
-      answer.update_attribute(:export_conversion_value_id, conversion_value.id)
+
+    if (answer_export_column.data_type == 'radio_button')
+      if (conversion_value = answer_export_column.export_conversion_values.detect { |ecv| ecv.value_from == answer.text_answer })
+        answer.update_attribute(:export_conversion_value_id, conversion_value.id)
+      end
+    else
+      first_answer_conversion_value = answer_export_column.export_conversion_values.first
+      unless first_answer_conversion_value.nil?
+        answer.update_attribute(:export_conversion_value_id, first_answer_conversion_value.id)
+      end
     end
   end
 end
