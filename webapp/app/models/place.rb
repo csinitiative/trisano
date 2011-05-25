@@ -226,7 +226,7 @@ class Place < ActiveRecord::Base
   # we have overriden the name getter to go to the locale configs for the
   # correct translation to display.
   def name
-    if is_unassigned_jurisdiction?
+    if read_attribute(:name) == 'Unassigned'
       I18n.translate('unassigned_jurisdiction_name')
     else
       read_attribute(:name)
