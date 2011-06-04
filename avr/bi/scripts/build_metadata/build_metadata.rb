@@ -532,7 +532,7 @@ def add_single_physical_column(pt, id, desc, data_type, target_column, formula)
     pc.field_type = Java::OrgPentahoPmsSchemaConceptTypesFieldtype::FieldTypeSettings::DIMENSION
     pc.table = pt
     pc.formula = target_column
-    pc.set_relative_size -1
+#    pc.set_relative_size -1
     pc.set_aggregation_type AggregationSettings.new(0)
     pc.set_hidden false
     if not formula.nil? then
@@ -577,7 +577,7 @@ def add_single_physical_table(tname, tid, tdesc, ttargtable, ttargnsp, meta, con
     pt.set_database_meta meta.find_database 'TriSano'
     pt.set_target_table ttargtable
     pt.set_target_schema ttargnsp
-    pt.set_relative_size -1
+#    pt.set_relative_size -1
     pt.set_table_type TableTypeSettings.new(0)
     add_physical_columns pt, conn
     meta.add_table pt
