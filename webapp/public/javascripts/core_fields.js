@@ -9,6 +9,7 @@ $j(function() {
       context: $j(this).parents('li').first(),
       url: url,
       data: {
+        '_method': 'PUT',
         core_field: {
           rendered_attributes: {
             rendered: rendered
@@ -16,7 +17,7 @@ $j(function() {
         }
       },
       dataType: 'script',
-      type: 'PUT',
+      type: 'POST',
       success: function(data, status, xhr) {
         $j(this).replaceWith(data);
       }
