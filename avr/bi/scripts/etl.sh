@@ -200,7 +200,7 @@ if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISAN
         fi
     done
 else
-    echo "The environment variable TRISANO_PLUGIN_DIRECTORY is set to \"$TRISANO_PLUGIN_DIRECTORY\", which not a readable directory. Skipping post-swap plugins."
+    echo "The environment variable TRISANO_PLUGIN_DIRECTORY is set to \"$TRISANO_PLUGIN_DIRECTORY\", which is not a readable directory. Skipping post-swap plugins."
 fi
 
 echo "Fixing PostgreSQL verbosity"
