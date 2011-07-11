@@ -3,14 +3,14 @@
 -# This file is part of TriSano.
 -#
 -# TriSano is free software: you can redistribute it and/or modify it under the terms of the
--# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# GNU Affero General Public License as published by the Free Software Foundation, either
 -# version 3 of the License, or (at your option) any later version.
 -#
--# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
--# 
--# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 %fieldset
@@ -20,12 +20,12 @@
     %span{:id => 'investigate_info_show', :onClick => "Element.show('investigate_info'); Element.hide('investigate_info_show'); Element.show('investigate_info_hide'); return false;", :style => "display: none;"}=show
 
   %div{:id => "investigate_info"}
-    
+
     %fieldset.list-of-forms.form
       %legend
         =t 'forms_in_use'
       - if @event.investigation_form_references.empty? && @event.core_only_form_references.empty?
-        %p 
+        %p
           %em=t 'none'
       - else
         %ul{:id => "investigation_form_list", :style => 'margin-bottom: 10px'}
@@ -33,7 +33,8 @@
           - for form_reference in @event.investigation_form_references
             - form_count += 1
             - if(form_count == 1)
-              %input{:type => 'hidden', :id => 'active_form', :name => 'active_form', :value => "#{h(form_reference.form.id)}"}
+              %li
+                %input{:type => 'hidden', :id => 'active_form', :name => 'active_form', :value => "#{h(form_reference.form.id)}"}
             %li
               = link_to_function "#{h(form_reference.form.name)}", "toggle_investigator_forms(\"#{h(form_reference.form.id)}\")"
           - for form_reference in @event.core_only_form_references

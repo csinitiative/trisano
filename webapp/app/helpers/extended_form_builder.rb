@@ -104,10 +104,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       field_name = @object_name
       field_index = @object.new_record? ? "" : index.to_s
       field_id = @object.new_record? ? question.id.to_s : index.to_s
-      
+
       select_list = ""
       selected_code = ""
-      
+
       html_options[:onclick] = select_answer_event if follow_ups
       select_values = []
       get_values(form_elements_cache, question_element).each do |value_hash|
@@ -422,24 +422,24 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     end
   end
 
-  def diagnostic_type_selector
-    render_type_selector('diagnostic_types')
+  def diagnostic_type_selector(options={})
+    render_type_selector('diagnostic_types', options)
   end
 
-  def epi_type_selector
-    render_type_selector('epi_types')
+  def epi_type_selector(options={})
+    render_type_selector('epi_types', options)
   end
 
-  def agency_type_selector
-    render_type_selector('agency_types')
+  def agency_type_selector(options={})
+    render_type_selector('agency_types', options)
   end
 
-  def exposed_type_selector
-    render_type_selector('exposed_types')
+  def exposed_type_selector(options={})
+    render_type_selector('exposed_types', options)
   end
 
-  def render_type_selector(types)
-    @template.render :partial => 'events/place_types', :locals => { :f => self, :types => types }
+  def render_type_selector(types, options={})
+    @template.render :partial => 'events/place_types', :locals => { :f => self, :types => types, :options => options }
   end
 
   def event
@@ -456,7 +456,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   private
 
-  # To avoid stubbing associations everywhere, we'll just instantiate a 
+  # To avoid stubbing associations everywhere, we'll just instantiate a
   # new instance of the correct type if the assocation is blank
   def fields_for_with_nested_attributes(association_name, args, block)
     unless args.first.respond_to?(:new_record?)

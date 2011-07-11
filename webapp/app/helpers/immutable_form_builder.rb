@@ -13,7 +13,7 @@ class ImmutableFormBuilder < ExtendedFormBuilder
       @template.send(:h, @object.send(method))
     end
 
-    def render_type_selector(types)
+    def render_type_selector(types, options={})
       result = label(:place_types, @template.t(:place_type))
       result << @object.formatted_place_descriptions
       result

@@ -21,9 +21,9 @@
   -# Handles pre- and post-questions and help for places as a whole
   - core_element :places, f, 'vert-break' do
 
-    - form_for Place.new, :builder => ExtendedFormBuilder do |pf|
+    - f.fields_for Place.new, :builder => ExtendedFormBuilder do |pf|
       %span#place_search_types.horiz
-        = pf.epi_type_selector
+        = pf.epi_type_selector(:name => 'place[place_type_ids][]')
       - search_interface :places, :with_types => 'place[place_type_ids][]'
       %hr/
 
@@ -39,7 +39,7 @@
       -# bah, this is ugly
       -extensions = render_extensions :cmr_place_exposure_extensions
       =extensions.blank? ? '' : "&nbsp;|&nbsp;#{extensions}"
-    
+
     #place_child_events
 
       %ul{ :id => "existing-place-list" }
