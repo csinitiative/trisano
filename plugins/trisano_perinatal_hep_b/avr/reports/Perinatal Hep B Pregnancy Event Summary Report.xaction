@@ -86,7 +86,10 @@
       </action-outputs>
       <component-definition>
         <jndi><![CDATA[TriSano]]></jndi>
-        <query><![CDATA[select
+        <query><![CDATA[
+select 'All jurisdictions' as name
+union
+select
     distinct p.name
 from
     places_view p
@@ -95,7 +98,8 @@ from
     join codes_view c
         on (c.id = pt.type_id)
 where
-    c.code_description = 'Jurisdiction' order by 1 asc]]></query>
+    c.code_description = 'Jurisdiction' order by 1 asc
+        ]]></query>
         <live><![CDATA[true]]></live>
       </component-definition>
     </action-definition>
@@ -153,7 +157,9 @@ where
 FROM
     phepb_reports.report2
 WHERE
-    actual_delivery_date BETWEEN trisano.make_date('{PREPARE:start_date}', current_date) AND trisano.make_date('{PREPARE:end_date}', current_date) AND investigating_jurisdiction = '{PREPARE:jurisdiction}'
+    actual_delivery_date BETWEEN trisano.make_date('{PREPARE:start_date}', current_date) AND
+    trisano.make_date('{PREPARE:end_date}', current_date) AND
+    ( investigating_jurisdiction = '{PREPARE:jurisdiction}' OR '{PREPARE:jurisdiction}' = 'All jurisdictions' )
 GROUP BY year]]></query>  
         <live><![CDATA[true]]></live> 
       </component-definition> 
