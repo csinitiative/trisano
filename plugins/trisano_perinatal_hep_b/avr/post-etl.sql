@@ -333,6 +333,8 @@ CREATE TABLE report4 AS
                     dme.investigating_jurisdiction,
                     dme.actual_delivery_date,
                     1 AS total,
+                    contact_type,
+                    disposition,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_pos,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Adopted' THEN 1 ELSE 0 END AS infant_adopted,
