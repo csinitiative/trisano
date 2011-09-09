@@ -603,6 +603,9 @@ CREATE TABLE report4 AS
                         ) THEN 1 ELSE 0
                     END AS neither_12m,
 
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL THEN 1 ELSE 0 END AS one_dose,
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE 0 END AS two_dose,
+                    CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE 0 END AS three_dose,
                     CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL THEN 1 ELSE 0 END AS four_dose,
                     CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL THEN 1 ELSE 0 END AS five_dose,
                     CASE WHEN contact_type = 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL AND hepb_dose4_date IS NOT NULL AND hepb_dose5_date IS NOT NULL AND hepb_dose6_date IS NOT NULL THEN 1 ELSE 0 END AS six_dose,
