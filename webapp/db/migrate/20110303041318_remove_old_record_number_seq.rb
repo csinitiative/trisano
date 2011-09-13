@@ -52,6 +52,6 @@ class RemoveOldRecordNumberSeq < ActiveRecord::Migration
 
   def self.new_seq_exists?
     rs = execute("SELECT * FROM pg_class WHERE relname='events_caseid_seq'")
-    rs.num_tuples > 0
+    rs and rs.num_tuples > 0
   end
 end
