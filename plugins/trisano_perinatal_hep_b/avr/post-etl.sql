@@ -144,12 +144,14 @@ CREATE TABLE report3 AS
                         SELECT
                             id,
                             COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name,
-                            COALESCE(dme.street_number || ' ', '') ||
-                            COALESCE(dme.street_name || ' ', '') ||
-                            COALESCE(dme.unit_number, '') ||
-                            COALESCE(dme.city || ', ', '') ||
-                            COALESCE(dme.state || ' ', '') ||
-                            COALESCE(dme.postal_code, '') AS address,
+                            trim(' ' from
+                                COALESCE(dme.street_number || ' ', '') ||
+                                COALESCE(dme.street_name || ' ', '') ||
+                                COALESCE(dme.unit_number || ' ', '') ||
+                                COALESCE(dme.city || ', ', '') ||
+                                COALESCE(dme.state || ' ', '') ||
+                                COALESCE(dme.postal_code, '')
+                            ) AS address,
                             trisano.text_join_agg(
                                 CASE WHEN dt.area_code IS NULL OR dt.area_code = '' THEN '' ELSE dt.area_code || '-' END
                                     ||
@@ -169,7 +171,7 @@ CREATE TABLE report3 AS
                         GROUP BY
                             id, name, address, investigating_jurisdiction
                     ) name_addr
-                    LEFT JOIN (
+                    JOIN (
                         SELECT
                             parent_id,
                             contact_type,
