@@ -110,12 +110,12 @@ CREATE TABLE report2 AS
                     END AS retrospective_infants,
                     (
                         SELECT count(*) FROM trisano.dw_contact_events_view c
-                        WHERE dmev.id = c.id AND contact_type = 'Infant'
+                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
                     ) AS contact_infants,
                     (
                         SELECT count(*) FROM trisano.dw_contact_events_view c
-                        WHERE dmev.id = c.id AND contact_type = 'Infant'
-                        AND c.disposition IS NULL
+                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
+                        AND (c.disposition IS NULL OR c.disposition = 'Active follow up')
                     ) AS currently_active
                 FROM
                     trisano.dw_morbidity_events_view dmev
