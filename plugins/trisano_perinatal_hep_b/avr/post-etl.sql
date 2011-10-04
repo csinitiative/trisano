@@ -262,6 +262,7 @@ CREATE TABLE report3 AS
                                                     WHEN hepb_dose3_date IS NULL AND hepb_comvax4_date IS NULL THEN
                                                         5 -- fdd = COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 3"
                                                     WHEN
+                                                        hepb_dose3_date IS NULL AND hepb_comvax4_date IS NULL AND
                                                         COALESCE(  -- between 9 and 18 months old
                                                             (now() - COALESCE(dce.birth_date, dme_2.actual_delivery_date)) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
                                                             dce.age_in_years BETWEEN .6 AND 1.5
@@ -323,6 +324,8 @@ CREATE TABLE report3 AS
                                     GROUP BY 1
                                 ) treatments_agg
                                     ON (treatments_agg.contact_event_id = dce.id)
+                            WHERE
+                                disposition = 'Active follow up' OR disposition IS NULL
                         ) foo
                         WHERE fdd_act_code != -1
                     ) contact_stuff
@@ -331,9 +334,9 @@ CREATE TABLE report3 AS
 
 CREATE TABLE report4 AS
                 SELECT
-                    dme.id,
+                    dme.id, dce.id AS contact_id, dce.record_number,
                     dme.investigating_jurisdiction,
-                    dme.actual_delivery_date,
+                    COALESCE(dce.birth_date, dme.actual_delivery_date) AS actual_delivery_date,
                     1 AS total,
                     contact_type,
                     disposition,
@@ -459,7 +462,7 @@ CREATE TABLE report4 AS
                             hepb_comvax1_date <= dce.birth_date + interval '2 months'
                         ) AND
                         hbig_vacc_date <= dce.birth_date + INTERVAL '2 months' THEN 1 ELSE 0
-                    END AS both_2m,
+                    END AS both_3m,
                     CASE WHEN
                         contact_type = 'Infant' AND
                         (
@@ -564,11 +567,23 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type = 'Infant' AND treatments_agg.total_doses >= 5 THEN 1 ELSE 0 END AS five_dose,
                     CASE WHEN contact_type = 'Infant' AND treatments_agg.total_doses >= 6 THEN 1 ELSE 0 END AS six_dose,
                     CASE WHEN contact_type = 'Infant' AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS recvd_hbig,
-                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, NULL)).lab_test_date <= dce.birth_date + INTERVAL '12 months' AND (trisano.get_contact_antihb_after(dce.id, NULL)).lab_test_date <= dce.birth_date + INTERVAL '12 months' THEN 1 ELSE 0 END AS serotest_12m,
-                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, NULL)).lab_test_date <= dce.birth_date + INTERVAL '15 months' AND (trisano.get_contact_antihb_after(dce.id, NULL)).lab_test_date <= dce.birth_date + INTERVAL '15 months' THEN 1 ELSE 0 END AS serotest_15m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (trisano.get_contact_hbsag_before(dce.id, NULL)).lab_test_date <=
+                            dce.birth_date + INTERVAL '12 months' AND
+                        (trisano.get_contact_antihb_after(dce.id, NULL)).lab_test_date <=
+                            dce.birth_date + INTERVAL '12 months'
+                    THEN 1 ELSE 0 END AS serotest_12m,
+                    CASE WHEN
+                        contact_type = 'Infant' AND
+                        (trisano.get_contact_hbsag_before(dce.id, NULL)).lab_test_date <=
+                            dce.birth_date + INTERVAL '15 months' AND
+                        (trisano.get_contact_antihb_after(dce.id, NULL)).lab_test_date <=
+                            dce.birth_date + INTERVAL '15 months'
+                    THEN 1 ELSE 0 END AS serotest_15m,
                     CASE WHEN contact_type = 'Infant' AND ((trisano.get_contact_hbsag_after(dce.id, NULL)).lab_test_date IS NOT NULL OR (trisano.get_contact_antihb_after(dce.id, NULL)).lab_test_date IS NOT NULL) THEN 1 ELSE 0 END AS total_serotest,
-                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, NULL)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_antihb,
-                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_antihb_after(dce.id, NULL)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS positive_hbsag,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_antihb_after(dce.id, NULL)).test_result ~ 'Positive / Reactive' THEN 1 ELSE 0 END AS positive_antihb,
+                    CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, NULL)).test_result ~ 'Positive / Reactive' THEN 1 ELSE 0 END AS positive_hbsag,
                     CASE
                         WHEN contact_type = 'Infant' AND
                             hepb_comvax1_date IS NOT NULL OR
@@ -586,12 +601,21 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Unable to locate' THEN 1 ELSE 0 END AS unable_to_locate_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition IS NULL THEN 1 ELSE 0 END AS disposition_blank_hs,
-                    CASE WHEN contact_type != 'Infant' AND ((trisano.get_contact_hbsag_before(dce.id, current_date)).test_result IS NOT NULL AND (trisano.get_contact_antihb_before(dce.id, current_date)).test_result IS NOT NULL) THEN 1 ELSE 0 END AS total_hs_tested,
-                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, current_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS hbsag_pos_hs,
-                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_antihb_before(dce.id, current_date)).test_result ~ 'Positive' THEN 1 ELSE 0 END AS antihb_pos_hs,
-                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hs,
-                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL THEN 1 ELSE 0 END AS dose2_hs,
-                    CASE WHEN contact_type != 'Infant' AND hepb_dose1_date IS NOT NULL AND hepb_dose2_date IS NOT NULL AND hepb_dose3_date IS NOT NULL THEN 1 ELSE 0 END AS dose3_hs,
+                    CASE WHEN
+                        contact_type != 'Infant' AND
+                        (
+                            (trisano.get_contact_hbsag_before(dce.id, NULL)).test_result IS NOT NULL AND
+                            (trisano.get_contact_antihb_before(dce.id, NULL)).test_result IS NOT NULL
+                        )
+                        THEN 1 ELSE 0 END AS total_hs_tested,
+                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_hbsag_before(dce.id, NULL)).test_result ~ 'Positive / Reactive' THEN 1 ELSE 0 END AS hbsag_pos_hs,
+                    CASE WHEN contact_type != 'Infant' AND (trisano.get_contact_antihb_before(dce.id, NULL)).test_result ~ 'Positive / Reactive' THEN 1 ELSE 0 END AS antihb_pos_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 1 THEN 1 ELSE 0 END AS dose1_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 2 THEN 1 ELSE 0 END AS dose2_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 3 THEN 1 ELSE 0 END AS dose3_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 4 THEN 1 ELSE 0 END AS dose4_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 5 THEN 1 ELSE 0 END AS dose5_hs,
+                    CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 6 THEN 1 ELSE 0 END AS dose6_hs,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
                     CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
@@ -675,7 +699,7 @@ CREATE TABLE report4 AS
                         ON (treatments_agg.contact_event_id = dce.id)
                 WHERE
                     dce.disease_name = 'Hepatitis B Pregnancy Event' AND
-                    dme.actual_delivery_date IS NOT NULL;
+                    dce.birth_date IS NOT NULL;
 ;
 
 CREATE TABLE morb_sec_juris AS
