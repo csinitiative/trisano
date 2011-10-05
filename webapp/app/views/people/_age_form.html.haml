@@ -25,7 +25,10 @@
       -core_element :approximate_age_no_birthday, p, :horiz do
         =p.label :approximate_age_no_birthday
         %span.data_approximate_age_no_birthday
-          =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event_form.try(:object))
+          -if p.object.birth_date.blank?
+            =p.core_text_field(:approximate_age_no_birthday, {:size => 3}, event_form.try(:object))
+          -else
+            =h(calculate_age(p.object.birth_date).to_s + " years")
       -if event_form
         -core_element :age_at_onset, p, :horiz do
           =event_form.label :age_at_onset

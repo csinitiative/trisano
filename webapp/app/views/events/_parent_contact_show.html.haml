@@ -1,0 +1,29 @@
+%table.list
+  %tr
+    %th= t 'name'
+    %th= t 'disposition'
+    %th= t 'disposition_date'
+    %th= t 'contact_type'
+    %th= t 'phone'
+    %th
+
+  - person_entity = parent.interested_party.person_entity
+  - person = person_entity.person
+  - phone  = person_entity.primary_phone
+  - contact_event_data = ParticipationsContact.find(contact.id)
+  - if parent.deleted_at
+    - style = {:class => 'struck-through'}
+  - else
+    - style = {}
+  %tr
+    %td{style}= h(person.last_comma_first)
+    %td{style}= h(contact_event_data.disposition.code_description) if contact_event_data and contact_event_data.disposition
+    %td{style}= ld(contact_event_data.disposition_date) if contact_event_data
+    %td{style}= h(contact_event_data.contact_type.code_description) if contact_event_data and contact_event_data.contact_type
+
+    %td{style} 
+      -unless phone.nil? 
+        = h(phone.simple_format)
+    %td
+      .tools
+        = show_and_edit_event_links(parent)
