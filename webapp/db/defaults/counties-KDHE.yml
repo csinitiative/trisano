@@ -1,0 +1,526 @@
+  ### COUNTIES ### 
+ 
+- code_name: "county"
+  the_code: "AL"
+  code_description: "Allen"
+  sort_order: 5
+
+- code_name: "county"
+  the_code: "AN"
+  code_description: "Anderson"
+  sort_order: 10
+
+- code_name: "county"
+  the_code: "AT"
+  code_description: "Atchison"
+  sort_order: 15
+
+- code_name: "county"
+  the_code: "BA"
+  code_description: "Barber"
+  sort_order: 20
+
+- code_name: "county"
+  the_code: "BT"
+  code_description: "Barton"
+  sort_order: 25
+
+- code_name: "county"
+  the_code: "BB"
+  code_description: "Bourbon"
+  sort_order: 30
+
+- code_name: "county"
+  the_code: "BR"
+  code_description: "Brown"
+  sort_order: 35
+
+- code_name: "county"
+  the_code: "BU"
+  code_description: "Butler"
+  sort_order: 40
+
+- code_name: "county"
+  the_code: "CS"
+  code_description: "Chase"
+  sort_order: 45
+
+- code_name: "county"
+  the_code: "CQ"
+  code_description: "Chautauqua"
+  sort_order: 50
+
+- code_name: "county"
+  the_code: "CK"
+  code_description: "Cherokee"
+  sort_order: 55
+
+- code_name: "county"
+  the_code: "CN"
+  code_description: "Cheyenne"
+  sort_order: 60
+
+- code_name: "county"
+  the_code: "CA"
+  code_description: "Clark"
+  sort_order: 65
+
+- code_name: "county"
+  the_code: "CY"
+  code_description: "Clay"
+  sort_order: 70
+
+- code_name: "county"
+  the_code: "CD"
+  code_description: "Cloud"
+  sort_order: 75
+
+- code_name: "county"
+  the_code: "CF"
+  code_description: "Coffey"
+  sort_order: 80
+
+- code_name: "county"
+  the_code: "CM"
+  code_description: "Comanche"
+  sort_order: 85
+
+- code_name: "county"
+  the_code: "CL"
+  code_description: "Cowley"
+  sort_order: 90
+
+- code_name: "county"
+  the_code: "CR"
+  code_description: "Crawford"
+  sort_order: 95
+
+- code_name: "county"
+  the_code: "DC"
+  code_description: "Decatur"
+  sort_order: 100
+
+- code_name: "county"
+  the_code: "DK"
+  code_description: "Dickinson"
+  sort_order: 105
+
+- code_name: "county"
+  the_code: "DP"
+  code_description: "Doniphan"
+  sort_order: 110
+
+- code_name: "county"
+  the_code: "DG"
+  code_description: "Douglas"
+  sort_order: 115
+
+- code_name: "county"
+  the_code: "ED"
+  code_description: "Edwards"
+  sort_order: 120
+
+- code_name: "county"
+  the_code: "EK"
+  code_description: "Elk"
+  sort_order: 125
+
+- code_name: "county"
+  the_code: "EL"
+  code_description: "Ellis"
+  sort_order: 130
+
+- code_name: "county"
+  the_code: "EW"
+  code_description: "Ellsworth"
+  sort_order: 135
+
+- code_name: "county"
+  the_code: "FI"
+  code_description: "Finney"
+  sort_order: 140
+
+- code_name: "county"
+  the_code: "FO"
+  code_description: "Ford"
+  sort_order: 145
+
+- code_name: "county"
+  the_code: "FR"
+  code_description: "Franklin"
+  sort_order: 150
+
+- code_name: "county"
+  the_code: "GE"
+  code_description: "Geary"
+  sort_order: 155
+
+- code_name: "county"
+  the_code: "GO"
+  code_description: "Gove"
+  sort_order: 160
+
+- code_name: "county"
+  the_code: "GH"
+  code_description: "Graham"
+  sort_order: 165
+
+- code_name: "county"
+  the_code: "GT"
+  code_description: "Grant"
+  sort_order: 170
+
+- code_name: "county"
+  the_code: "GY"
+  code_description: "Gray"
+  sort_order: 175
+
+- code_name: "county"
+  the_code: "GL"
+  code_description: "Greeley"
+  sort_order: 180
+
+- code_name: "county"
+  the_code: "GW"
+  code_description: "Greenwood"
+  sort_order: 185
+
+- code_name: "county"
+  the_code: "HM"
+  code_description: "Hamilton"
+  sort_order: 190
+
+- code_name: "county"
+  the_code: "HP"
+  code_description: "Harper"
+  sort_order: 195
+
+- code_name: "county"
+  the_code: "HV"
+  code_description: "Harvey"
+  sort_order: 200
+
+- code_name: "county"
+  the_code: "HS"
+  code_description: "Haskell"
+  sort_order: 205
+
+- code_name: "county"
+  the_code: "HG"
+  code_description: "Hodgeman"
+  sort_order: 210
+
+- code_name: "county"
+  the_code: "JA"
+  code_description: "Jackson"
+  sort_order: 215
+
+- code_name: "county"
+  the_code: "JF"
+  code_description: "Jefferson"
+  sort_order: 220
+
+- code_name: "county"
+  the_code: "JW"
+  code_description: "Jewell"
+  sort_order: 225
+
+- code_name: "county"
+  the_code: "JO"
+  code_description: "Johnson"
+  sort_order: 230
+
+- code_name: "county"
+  the_code: "KE"
+  code_description: "Kearny"
+  sort_order: 235
+
+- code_name: "county"
+  the_code: "KM"
+  code_description: "Kingman"
+  sort_order: 240
+
+- code_name: "county"
+  the_code: "KW"
+  code_description: "Kiowa"
+  sort_order: 245
+
+- code_name: "county"
+  the_code: "LB"
+  code_description: "Labette"
+  sort_order: 250
+
+- code_name: "county"
+  the_code: "LE"
+  code_description: "Lane"
+  sort_order: 255
+
+- code_name: "county"
+  the_code: "LV"
+  code_description: "Leavenworth"
+  sort_order: 260
+
+- code_name: "county"
+  the_code: "LC"
+  code_description: "Lincoln"
+  sort_order: 265
+
+- code_name: "county"
+  the_code: "LN"
+  code_description: "Linn"
+  sort_order: 270
+
+- code_name: "county"
+  the_code: "LG"
+  code_description: "Logan"
+  sort_order: 275
+
+- code_name: "county"
+  the_code: "LY"
+  code_description: "Lyon"
+  sort_order: 280
+
+- code_name: "county"
+  the_code: "MN"
+  code_description: "Marion"
+  sort_order: 285
+
+- code_name: "county"
+  the_code: "MS"
+  code_description: "Marshall"
+  sort_order: 290
+
+- code_name: "county"
+  the_code: "MP"
+  code_description: "McPherson"
+  sort_order: 295
+
+- code_name: "county"
+  the_code: "ME"
+  code_description: "Meade"
+  sort_order: 300
+
+- code_name: "county"
+  the_code: "MI"
+  code_description: "Miami"
+  sort_order: 305
+
+- code_name: "county"
+  the_code: "MC"
+  code_description: "Mitchell"
+  sort_order: 310
+
+- code_name: "county"
+  the_code: "MG"
+  code_description: "Montgomery"
+  sort_order: 315
+
+- code_name: "county"
+  the_code: "MR"
+  code_description: "Morris"
+  sort_order: 320
+
+- code_name: "county"
+  the_code: "MT"
+  code_description: "Morton"
+  sort_order: 325
+
+- code_name: "county"
+  the_code: "NM"
+  code_description: "Nemaha"
+  sort_order: 330
+
+- code_name: "county"
+  the_code: "NO"
+  code_description: "Neosho"
+  sort_order: 335
+
+- code_name: "county"
+  the_code: "NS"
+  code_description: "Ness"
+  sort_order: 340
+
+- code_name: "county"
+  the_code: "NT"
+  code_description: "Norton"
+  sort_order: 345
+
+- code_name: "county"
+  the_code: "OS"
+  code_description: "Osage"
+  sort_order: 350
+
+- code_name: "county"
+  the_code: "OB"
+  code_description: "Osborne"
+  sort_order: 355
+
+- code_name: "county"
+  the_code: "OT"
+  code_description: "Ottawa"
+  sort_order: 360
+
+- code_name: "county"
+  the_code: "PN"
+  code_description: "Pawnee"
+  sort_order: 365
+
+- code_name: "county"
+  the_code: "PL"
+  code_description: "Phillips"
+  sort_order: 370
+
+- code_name: "county"
+  the_code: "PT"
+  code_description: "Pottawatomie"
+  sort_order: 375
+
+- code_name: "county"
+  the_code: "PR"
+  code_description: "Pratt"
+  sort_order: 380
+
+- code_name: "county"
+  the_code: "RA"
+  code_description: "Rawlins"
+  sort_order: 385
+
+- code_name: "county"
+  the_code: "RN"
+  code_description: "Reno"
+  sort_order: 390
+
+- code_name: "county"
+  the_code: "RP"
+  code_description: "Republic"
+  sort_order: 395
+
+- code_name: "county"
+  the_code: "RC"
+  code_description: "Rice"
+  sort_order: 400
+
+- code_name: "county"
+  the_code: "RL"
+  code_description: "Riley"
+  sort_order: 405
+
+- code_name: "county"
+  the_code: "RO"
+  code_description: "Rooks"
+  sort_order: 410
+
+- code_name: "county"
+  the_code: "RH"
+  code_description: "Rush"
+  sort_order: 415
+
+- code_name: "county"
+  the_code: "RS"
+  code_description: "Russell"
+  sort_order: 420
+
+- code_name: "county"
+  the_code: "SA"
+  code_description: "Saline"
+  sort_order: 425
+
+- code_name: "county"
+  the_code: "SC"
+  code_description: "Scott"
+  sort_order: 430
+
+- code_name: "county"
+  the_code: "SG"
+  code_description: "Sedgwick"
+  sort_order: 435
+
+- code_name: "county"
+  the_code: "SW"
+  code_description: "Seward"
+  sort_order: 440
+
+- code_name: "county"
+  the_code: "SN"
+  code_description: "Shawnee"
+  sort_order: 445
+
+- code_name: "county"
+  the_code: "SD"
+  code_description: "Sheridan"
+  sort_order: 450
+
+- code_name: "county"
+  the_code: "SH"
+  code_description: "Sherman"
+  sort_order: 455
+
+- code_name: "county"
+  the_code: "SM"
+  code_description: "Smith"
+  sort_order: 460
+
+- code_name: "county"
+  the_code: "SF"
+  code_description: "Stafford"
+  sort_order: 465
+
+- code_name: "county"
+  the_code: "ST"
+  code_description: "Stanton"
+  sort_order: 470
+
+- code_name: "county"
+  the_code: "SV"
+  code_description: "Stevens"
+  sort_order: 475
+
+- code_name: "county"
+  the_code: "SU"
+  code_description: "Sumner"
+  sort_order: 480
+
+- code_name: "county"
+  the_code: "TH"
+  code_description: "Thomas"
+  sort_order: 485
+
+- code_name: "county"
+  the_code: "TR"
+  code_description: "Trego"
+  sort_order: 490
+
+- code_name: "county"
+  the_code: "WB"
+  code_description: "Wabaunsee"
+  sort_order: 495
+
+- code_name: "county"
+  the_code: "WA"
+  code_description: "Wallace"
+  sort_order: 500
+
+- code_name: "county"
+  the_code: "WS"
+  code_description: "Washington"
+  sort_order: 505
+
+- code_name: "county"
+  the_code: "WH"
+  code_description: "Wichita"
+  sort_order: 510
+
+- code_name: "county"
+  the_code: "WL"
+  code_description: "Wilson"
+  sort_order: 515
+
+- code_name: "county"
+  the_code: "WO"
+  code_description: "Woodson"
+  sort_order: 520
+
+- code_name: "county"
+  the_code: "WY"
+  code_description: "Wyandotte"
+  sort_order: 525
