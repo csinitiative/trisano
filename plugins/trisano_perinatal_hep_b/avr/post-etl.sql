@@ -16,6 +16,7 @@
 -- along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 BEGIN;
+
 -- Functions used by perinatal hep b reports (eventually move this to plugin-specific stuff)
 CREATE OR REPLACE FUNCTION trisano.get_contact_lab_before(INTEGER, TEXT, DATE)
     RETURNS trisano.dw_contact_lab_results_view LANGUAGE sql STABLE
@@ -79,6 +80,31 @@ GRANT USAGE ON SCHEMA phepb_reports TO trisano_ro;
 
 SET SEARCH_PATH = phepb_reports;
 
+-- Canonical list of contact dispositions
+CREATE TABLE dispositions (
+    disposition TEXT,
+    ordering INTEGER
+);
+
+INSERT INTO dispositions VALUES
+    ('<None>', 1),
+    ('Active follow-up', 2),
+    ('Completed', 3),
+    ('Unable to locate', 4),
+    ('False positive mother', 5),
+    ('Refused to participate', 6),
+    ('Noncompliance', 7),
+    ('Transferred to another state', 8),
+    ('Left state (unable to transfer)', 9),
+    ('Moved out of country', 10),
+    ('Infant adopted', 11),
+    ('Infant died', 12),
+    ('Miscarriage/terminated', 13),
+    ('Other', 14)
+;
+
+
+-- Delivery action report
 CREATE TABLE report1 AS
                 SELECT
                     id,
@@ -95,6 +121,7 @@ CREATE TABLE report1 AS
                     actual_delivery_date IS NULL
                     ;
 
+-- Event Summary report
 CREATE TABLE report2 AS
                 SELECT
                     id, investigating_jurisdiction,
@@ -115,7 +142,7 @@ CREATE TABLE report2 AS
                     (
                         SELECT count(*) FROM trisano.dw_contact_events_view c
                         WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
-                        AND (c.disposition IS NULL OR c.disposition = 'Active follow up')
+                        AND c.disposition = 'Active follow up'
                     ) AS currently_active
                 FROM
                     trisano.dw_morbidity_events_view dmev
@@ -126,6 +153,7 @@ CREATE TABLE report2 AS
                     actual_delivery_date IS NOT NULL
 ;
 
+-- Event Action report
 CREATE TABLE report3 AS
                 SELECT
                     name_addr.id,
@@ -356,6 +384,7 @@ CREATE TABLE report3 AS
                         ON (name_addr.id = contact_stuff.parent_id)
 ;
 
+-- Program report
 CREATE TABLE report4 AS
                 SELECT
                     dme.id, dce.id AS contact_id, dce.record_number,
@@ -486,7 +515,7 @@ CREATE TABLE report4 AS
                             hepb_comvax1_date <= dce.birth_date + interval '2 months'
                         ) AND
                         hbig_vacc_date <= dce.birth_date + INTERVAL '2 months' THEN 1 ELSE 0
-                    END AS both_3m,
+                    END AS both_2m,
                     CASE WHEN
                         contact_type = 'Infant' AND
                         (
