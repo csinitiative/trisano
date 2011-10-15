@@ -122,7 +122,7 @@ CREATE TABLE report2 AS
                 WHERE
                     -- This again may not be what we want
                     disease_name = 'Hepatitis B Pregnancy Event' AND
-                    pregnant = 'Yes' AND
+                    -- pregnant = 'Yes' AND
                     actual_delivery_date IS NOT NULL
 ;
 
@@ -166,7 +166,7 @@ CREATE TABLE report3 AS
                                 ON (dme.patient_entity_id = dt.entity_id)
                         WHERE
                             dme.disease_name = 'Hepatitis B Pregnancy Event' AND
-                            dme.pregnant = 'Yes' AND
+                            -- dme.pregnant = 'Yes' AND
                             EXISTS (SELECT 1 FROM trisano.dw_contact_events_view WHERE parent_id = dme.id)
                         GROUP BY
                             id, name, address, investigating_jurisdiction
@@ -187,6 +187,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 6 THEN birth_date + INTERVAL '9 months'
                                 WHEN fdd_act_code = 7 THEN NULL
                                 WHEN fdd_act_code = 8 THEN NULL
+                                WHEN fdd_act_code = 9 THEN NULL
                             END AS first_due_date,
                             CASE
                                 WHEN fdd_act_code = 1 THEN 'Needs HBIG and Hepatitis B Dose 1'
@@ -197,6 +198,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 6 THEN 'Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4'
                                 WHEN fdd_act_code = 7 THEN 'Check vaccination history; Test or Vaccinate'
                                 WHEN fdd_act_code = 8 THEN 'Enter Infant''s Date of Birth'
+                                WHEN fdd_act_code = 9 THEN 'Close Contact'
                             END AS action
                         FROM (
                             SELECT
@@ -240,7 +242,7 @@ CREATE TABLE report3 AS
                                 END AS age,
                                 -- fdd_act_code values are described in
                                 -- comments inline. The current maximum value
-                                -- is 8
+                                -- is 9
                                 CASE
                                     WHEN dce.contact_type = 'Infant' THEN
                                         CASE
@@ -251,7 +253,11 @@ CREATE TABLE report3 AS
                                                     WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
                                                         1 -- fdd = dob, act = "Needs HBIG and Hepatitis B Dose 1"
                                                     ELSE
-                                                        2 -- fdd = dob, act = "Needs HBIG"
+                                                        CASE WHEN CURRENT_DATE - dce.birth_date < 7 THEN
+                                                            2 -- fdd = dob, act = "Needs HBIG"
+                                                        ELSE
+                                                            4 -- fdd = COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 2"
+                                                        END
                                                 END
                                             ELSE -- hbig is not null
                                                 CASE
@@ -275,8 +281,26 @@ CREATE TABLE report3 AS
                                         END    
                                     ELSE -- Not an 'Infant' type
                                         CASE
-                                            WHEN hepb_dose1_date IS NULL AND hepb_dose2_date IS NULL AND hepb_dose3_date IS NULL THEN
-                                                7 -- fdd = report date, act = "Check vaccination history; Test or Vaccinate"
+                                           -- WHEN
+                                           --     (
+                                           --         COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive' OR
+                                           --         COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive'
+                                           --     ) 
+                                           --     THEN
+                                           --         9 -- fdd = report date, act = 'Close Contact'
+                                            WHEN
+                                                (hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL) OR
+                                                (hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL) OR
+                                                (hepb_dose3_date IS NULL AND hepb_comvax3_date IS NULL) OR
+                                                (
+                                                    (
+                                                        COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') != 'Positive / Reactive' OR
+                                                        COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') != 'Positive / Reactive'
+                                                    ) AND
+                                                    hepb_dose6_date IS NULL
+                                                )
+                                                THEN
+                                                    7 -- fdd = report date, act = "Check vaccination history; Test or Vaccinate"
                                             ELSE -1 -- Don't show this contact
                                         END
                                 END AS fdd_act_code
@@ -325,7 +349,7 @@ CREATE TABLE report3 AS
                                 ) treatments_agg
                                     ON (treatments_agg.contact_event_id = dce.id)
                             WHERE
-                                disposition = 'Active follow up' OR disposition IS NULL
+                                disposition = 'Active follow up'
                         ) foo
                         WHERE fdd_act_code != -1
                     ) contact_stuff
