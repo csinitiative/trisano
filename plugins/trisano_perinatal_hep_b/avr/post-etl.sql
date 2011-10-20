@@ -89,18 +89,18 @@ CREATE TABLE dispositions (
 INSERT INTO dispositions VALUES
     ('<None>', 1),
     ('Active follow-up', 2),
-    ('Completed', 3),
-    ('Unable to locate', 4),
-    ('False positive mother', 5),
-    ('Refused to participate', 6),
-    ('Noncompliance', 7),
-    ('Transferred to another state', 8),
-    ('Left state (unable to transfer)', 9),
-    ('Moved out of country', 10),
-    ('Infant adopted', 11),
-    ('Infant died', 12),
-    ('Miscarriage/terminated', 13),
-    ('Other', 14)
+    ('Closed: Completed', 3),
+    ('Closed: Unable to locate', 4),
+    ('Closed: False positive mother', 5),
+    ('Closed: Refused to participate', 6),
+    ('Closed: Noncompliance', 7),
+    ('Closed: Transferred to another state', 8),
+    ('Closed: Left state (unable to transfer)', 9),
+    ('Closed: Moved out of country', 10),
+    ('Closed: Infant adopted', 11),
+    ('Closed: Infant died', 12),
+    ('Closed: Miscarriage/terminated', 13),
+    ('Closed: Other', 14)
 ;
 
 
@@ -157,6 +157,7 @@ CREATE TABLE report2 AS
 CREATE TABLE report3 AS
                 SELECT
                     name_addr.id,
+                    name_addr.record_number,
                     name_addr.name,
                     name_addr.address,
                     name_addr.phone,
@@ -171,6 +172,7 @@ CREATE TABLE report3 AS
                     (
                         SELECT
                             id,
+                            record_number,
                             COALESCE(dme.first_name || ' ', '') || COALESCE(dme.last_name, '') AS name,
                             trim(' ' from
                                 COALESCE(dme.street_number || ' ', '') ||
@@ -197,7 +199,7 @@ CREATE TABLE report3 AS
                             -- dme.pregnant = 'Yes' AND
                             EXISTS (SELECT 1 FROM trisano.dw_contact_events_view WHERE parent_id = dme.id)
                         GROUP BY
-                            id, name, address, investigating_jurisdiction
+                            id, record_number, name, address, investigating_jurisdiction
                     ) name_addr
                     JOIN (
                         SELECT
@@ -774,5 +776,6 @@ GRANT SELECT ON report3 TO trisano_ro;
 GRANT SELECT ON report4 TO trisano_ro;
 GRANT SELECT ON morb_sec_juris TO trisano_ro;
 GRANT SELECT ON juris TO trisano_ro;
+GRANT SELECT ON dispositions TO trisano_ro;
 
 COMMIT;
