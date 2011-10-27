@@ -311,27 +311,22 @@ CREATE TABLE report3 AS
                                         END    
                                     ELSE -- Not an 'Infant' type
                                         CASE
-                                           -- WHEN
-                                           --     (
-                                           --         COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive' OR
-                                           --         COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive'
-                                           --     ) 
-                                           --     THEN
-                                           --         9 -- fdd = report date, act = 'Close Contact'
                                             WHEN
-                                                (hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL) OR
-                                                (hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL) OR
-                                                (hepb_dose3_date IS NULL AND hepb_comvax3_date IS NULL) OR
+                                                COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive' OR
+                                                COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive'
+                                                THEN 9 -- fdd = report date, act = 'Close Contact'
+                                            WHEN
                                                 (
-                                                    (
-                                                        COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') != 'Positive / Reactive' OR
-                                                        COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') != 'Positive / Reactive'
-                                                    ) AND
-                                                    hepb_dose6_date IS NULL
-                                                )
+                                                    (hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL) OR
+                                                    (hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL) OR
+                                                    (hepb_dose3_date IS NULL AND hepb_comvax3_date IS NULL)
+                                                ) AND hepb_dose6_date IS NULL
                                                 THEN
                                                     7 -- fdd = report date, act = "Check vaccination history; Test or Vaccinate"
-                                            ELSE -1 -- Don't show this contact
+                                            ELSE 
+                                                CASE WHEN disposition = 'Closed: Completed' THEN -1 -- Don't show this contact
+                                                ELSE 9 -- fdd = report date, act = 'Close contact'
+                                                END
                                         END
                                 END AS fdd_act_code
                             FROM
@@ -394,7 +389,11 @@ CREATE TABLE report4 AS
                     contact_type,
                     disposition,
                     -- XXX Should this be changed to support other dispositions? Probably...
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' THEN 1 ELSE 0 END AS out_of_jurisdiction,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) THEN 1 ELSE 0 END AS out_of_jurisdiction,
                     CASE WHEN contact_type = 'Infant' THEN 1 ELSE 0 END AS infant_contacts,
 
                     -- Here, "24 hours" means the same day. If a dose is given
@@ -651,7 +650,11 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type != 'Infant' THEN 1 ELSE 0 END AS total_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Completed' THEN 1 ELSE 0 END AS completed_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'False positive mother/case' THEN 1 ELSE 0 END AS false_positive_hs,
-                    CASE WHEN contact_type != 'Infant' AND disposition = 'Moved' THEN 1 ELSE 0 END AS out_of_jurisdiction_hs,
+                    CASE WHEN contact_type != 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) THEN 1 ELSE 0 END AS out_of_jurisdiction_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition IN ('Provider refusal', 'Mother/family refusal') THEN 1 ELSE 0 END AS refused_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Unable to locate' THEN 1 ELSE 0 END AS unable_to_locate_hs,
                     CASE WHEN contact_type != 'Infant' AND disposition = 'Other' THEN 1 ELSE 0 END AS other_hs,
@@ -671,12 +674,32 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 4 THEN 1 ELSE 0 END AS dose4_hs,
                     CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 5 THEN 1 ELSE 0 END AS dose5_hs,
                     CASE WHEN contact_type != 'Infant' AND treatments_agg.total_doses >= 6 THEN 1 ELSE 0 END AS dose6_hs,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
-                    CASE WHEN contact_type = 'Infant' AND disposition = 'Moved' AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS neither_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS dose1_hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NOT NULL THEN 1 ELSE 0 END AS hbig_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) AND (hepb_dose1_date IS NOT NULL OR hepb_comvax1_date IS NOT NULL) AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS dose1_trans,
+                    CASE WHEN contact_type = 'Infant' AND disposition IN (
+                        'Closed: Transferred to another state',
+                        'Closed: Left state (unable to transfer)',
+                        'Closed: Moved out of country'
+                    ) AND hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL AND hbig_vacc_date IS NULL THEN 1 ELSE 0 END AS neither_trans,
                     CASE WHEN contact_type = 'Infant' AND
-                        disposition = 'Moved' AND
+                        disposition IN (
+                            'Closed: Transferred to another state',
+                            'Closed: Left state (unable to transfer)',
+                            'Closed: Moved out of country'
+                        ) AND
                         (hepb_dose1_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '8 months') AND
                         (hepb_dose2_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '8 months') AND
                         (hepb_dose3_date <= dce.birth_date + INTERVAL '8 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '8 months') AND
@@ -684,7 +707,11 @@ CREATE TABLE report4 AS
                         THEN 1 ELSE 0
                     END AS all_8m_trans,
                     CASE WHEN contact_type = 'Infant' AND
-                        disposition = 'Moved' AND
+                        disposition IN (
+                            'Closed: Transferred to another state',
+                            'Closed: Left state (unable to transfer)',
+                            'Closed: Moved out of country'
+                        ) AND
                         (hepb_dose1_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax1_date <= dce.birth_date + INTERVAL '12 months') AND
                         (hepb_dose2_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax2_date <= dce.birth_date + INTERVAL '12 months') AND
                         (hepb_dose3_date <= dce.birth_date + INTERVAL '12 months' OR hepb_comvax4_date <= dce.birth_date + INTERVAL '12 months') AND
@@ -751,7 +778,7 @@ CREATE TABLE report4 AS
                     ) treatments_agg
                         ON (treatments_agg.contact_event_id = dce.id)
                 WHERE
-                    dce.disease_name = 'Hepatitis B Pregnancy Event' AND
+                    dme.disease_name = 'Hepatitis B Pregnancy Event' AND
                     (
                         dce.birth_date IS NOT NULL OR
                         dce.contact_type != 'Infant'
