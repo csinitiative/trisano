@@ -782,7 +782,7 @@ CREATE TABLE report4 AS
                     (
                         dce.birth_date IS NOT NULL OR
                         dce.contact_type != 'Infant'
-                    );
+                    )
 ;
 
 CREATE TABLE morb_sec_juris AS
