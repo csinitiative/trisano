@@ -790,7 +790,14 @@ FROM events
     ) formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
 WHERE
-    events.type = 'ContactEvent' AND
+    (
+        events.type = 'ContactEvent' OR
+        -- Include Contacts that were promoted to CMRs
+        (
+            events.type = 'MorbidityEvent' AND 
+            events.participations_contact_id IS NOT NULL
+        )
+    ) AND
     events.deleted_at IS NULL
 ;
 
