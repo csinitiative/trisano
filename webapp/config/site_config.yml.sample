@@ -1,5 +1,6 @@
 base:
   bi_server_url: http://localhost:18080/pentaho/Home
+  support_url: http://connect.csinitiative.com
   # Help url is optional, but can be used to link to custom help documentation.
   #help_url: https://wiki.csinitiative.com/display/tri30/Help
   auth_allow_user_switch: false
