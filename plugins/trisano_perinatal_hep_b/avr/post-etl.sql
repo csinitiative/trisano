@@ -429,9 +429,9 @@ CREATE TABLE report4 AS
                     CASE WHEN
                         contact_type = 'Infant' AND
                         (
-                            (hepb_dose1_date IS NULL OR hepb_dose1_date > dce.birth_date + interval '1 day') AND
-                            (hepb_comvax1_date IS NULL OR hepb_comvax1_date > dce.birth_date + interval '1 day') AND
-                            (hbig_vacc_date IS NULL OR hbig_vacc_date > dce.birth_date + interval '1 day')
+                            (hepb_dose1_date IS NULL OR hepb_dose1_date != dce.birth_date) AND
+                            (hepb_comvax1_date IS NULL OR hepb_comvax1_date != dce.birth_date) AND
+                            (hbig_vacc_date IS NULL OR hbig_vacc_date != dce.birth_date)
                         ) THEN 1 ELSE 0
                     END AS neither_24,
 
@@ -640,10 +640,12 @@ CREATE TABLE report4 AS
                     CASE WHEN contact_type = 'Infant' AND (trisano.get_contact_hbsag_after(dce.id, NULL)).test_result ~ 'Positive / Reactive' THEN 1 ELSE 0 END AS positive_hbsag,
                     CASE
                         WHEN contact_type = 'Infant' AND
+                        (
                             hepb_comvax1_date IS NOT NULL OR
                             hepb_comvax2_date IS NOT NULL OR
                             hepb_comvax3_date IS NOT NULL OR
                             hepb_comvax4_date IS NOT NULL
+                        )
                         THEN 1
                         ELSE 0
                     END AS received_comvax,
