@@ -10,7 +10,7 @@
   - person_entity = parent.interested_party.person_entity
   - person = person_entity.person
   - phone  = person_entity.primary_phone
-  - contact_event_data = ParticipationsContact.find(contact.id)
+  - contact_event_data = contact.participations_contact
   - if parent.deleted_at
     - style = {:class => 'struck-through'}
   - else
