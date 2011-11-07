@@ -18,6 +18,7 @@ module Capistrano::Helpers
     def external_resources_config
       config = {}
       config['bi_server_url'] = safe_fetch :bi_server_url
+      config['support_url'] = safe_fetch :support_url
       config['help_url'] = safe_fetch :help_url
       config
     end
