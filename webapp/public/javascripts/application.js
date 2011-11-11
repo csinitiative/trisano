@@ -437,6 +437,7 @@ document.observe('trisano:dom:loaded', function() {
   if ($('flash-message')) {
     $('flash-message').fade({ delay: 3.0 });
   }
+
 });
 
 function moveMultiple(item, where) {

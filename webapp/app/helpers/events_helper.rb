@@ -80,7 +80,7 @@ module EventsHelper
 
   def core_tab(attribute, form_builder, &block)
     rendering_core_field(attribute, form_builder) do |cf|
-      concat "<div id=\"#{attribute.to_s}\">"
+      concat "<div id=\"#{attribute.to_s}\" class=\"tab\">"
       concat_block_or_replacement cf, form_builder, &block
       concat "<br clear=\"all\"/>"
       concat link_to_top
