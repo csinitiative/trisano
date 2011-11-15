@@ -124,9 +124,11 @@ CREATE TABLE report1 AS
 -- Event Summary report
 CREATE TABLE report2 AS
                 SELECT
-                    id, investigating_jurisdiction,
-                    actual_delivery_date,
-                    extract(year from actual_delivery_date)::INTEGER AS year,
+                    id, investigating_jurisdiction, record_number,
+                    contacts.contact_birth_date AS actual_delivery_date,
+                    EXTRACT(year FROM
+                        COALESCE(contacts.contact_birth_date, actual_delivery_date)
+                    )::INTEGER AS year,
                     CASE
                         WHEN pregnancy_due_date IS NOT NULL THEN 1
                         ELSE 0
@@ -135,22 +137,48 @@ CREATE TABLE report2 AS
                         WHEN pregnancy_due_date IS NULL THEN 1
                         ELSE 0
                     END AS retrospective_infants,
-                    (
-                        SELECT count(*) FROM trisano.dw_contact_events_view c
-                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
-                    ) AS contact_infants,
-                    (
-                        SELECT count(*) FROM trisano.dw_contact_events_view c
-                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
-                        AND c.disposition = 'Active follow up'
-                    ) AS currently_active
+                    COALESCE(contact_infants, 0) AS contact_infants,
+--                    (
+--                        SELECT count(*) FROM trisano.dw_contact_events_view c
+--                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
+--                    ) AS contact_infants,
+                    COALESCE(currently_active, 0) AS currently_active
+--                    (
+--                        SELECT count(*) FROM trisano.dw_contact_events_view c
+--                        WHERE dmev.id = c.parent_id AND contact_type = 'Infant'
+--                        AND (
+--                            c.disposition = 'Active follow up' OR
+--                            c.disposition IS NULL
+--                        )
+--                    ) AS currently_active
                 FROM
                     trisano.dw_morbidity_events_view dmev
+                    INNER JOIN (
+                        SELECT
+                            parent_id,
+                            MIN(birth_date) AS contact_birth_date,
+                            SUM(
+                                CASE WHEN contact_type = 'Infant' THEN 1 ELSE 0 END
+                            ) AS contact_infants,
+                            SUM(
+                                CASE WHEN contact_type = 'Infant' AND
+                                    (
+                                        disposition = 'Active follow up' OR
+                                        disposition IS NULL
+                                    ) THEN 1
+                                ELSE 0 END
+                            ) AS currently_active
+                        FROM trisano.dw_contact_events_view
+                        WHERE birth_date IS NOT NULL
+                        GROUP BY parent_id
+                    ) contacts
+                        ON (contacts.parent_id = dmev.id)
                 WHERE
                     -- This again may not be what we want
                     disease_name = 'Hepatitis B Pregnancy Event' AND
                     -- pregnant = 'Yes' AND
-                    actual_delivery_date IS NOT NULL
+                    actual_delivery_date IS NOT NULL AND
+                    lhd_case_status_code NOT IN ('Discarded', 'Not a Case')
 ;
 
 -- Event Action report
