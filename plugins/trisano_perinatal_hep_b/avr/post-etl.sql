@@ -240,12 +240,17 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 1 THEN birth_date
                                 WHEN fdd_act_code = 2 THEN birth_date
                                 WHEN fdd_act_code = 3 THEN birth_date
-                                WHEN fdd_act_code = 4 THEN COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months'
-                                WHEN fdd_act_code = 5 THEN COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months'
+                                WHEN fdd_act_code = 4 THEN dose1_recvd + INTERVAL '6 months'
+                                WHEN fdd_act_code = 5 THEN dose2_recvd + INTERVAL '6 months'
                                 WHEN fdd_act_code = 6 THEN birth_date + INTERVAL '9 months'
                                 WHEN fdd_act_code = 7 THEN NULL
                                 WHEN fdd_act_code = 8 THEN NULL
                                 WHEN fdd_act_code = 9 THEN NULL
+                                WHEN fdd_act_code = 10 THEN dose4_recvd + INTERVAL '1 month'
+                                WHEN fdd_act_code = 11 THEN dose4_recvd + INTERVAL '6 months'
+                                WHEN fdd_act_code = 12 THEN COALESCE(dose8_recvd, COALESCE(dose7_recvd, dose6_recvd)) + INTERVAL '1 month'
+                                WHEN fdd_act_code = 13 THEN NULL
+                                WHEN fdd_act_code = 14 THEN NULL
                             END AS first_due_date,
                             CASE
                                 WHEN fdd_act_code = 1 THEN 'Needs HBIG and Hepatitis B Dose 1'
@@ -253,10 +258,15 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 3 THEN 'Needs Hepatitis B Dose 1'
                                 WHEN fdd_act_code = 4 THEN 'Needs Hepatitis B Dose 2'
                                 WHEN fdd_act_code = 5 THEN 'Needs Hepatitis B Dose 3'
-                                WHEN fdd_act_code = 6 THEN 'Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4'
+                                WHEN fdd_act_code = 6 THEN 'Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 3'
                                 WHEN fdd_act_code = 7 THEN 'Check vaccination history; Test or Vaccinate'
                                 WHEN fdd_act_code = 8 THEN 'Enter Infant''s Date of Birth'
                                 WHEN fdd_act_code = 9 THEN 'Close Contact'
+                                WHEN fdd_act_code = 10 THEN 'Needs Hepatitis B Dose 5'
+                                WHEN fdd_act_code = 11 THEN 'Needs Hepatitis B Dose 6'
+                                WHEN fdd_act_code = 12 THEN 'Needs serology after final dose of 2nd Hepatitis B series'
+                                WHEN fdd_act_code = 13 THEN 'Needs to complete 2nd Hepatits B series'
+                                WHEN fdd_act_code = 14 THEN 'Close contact after completion of 2nd Hepatits B series'
                             END AS action
                         FROM (
                             SELECT
@@ -270,6 +280,9 @@ CREATE TABLE report3 AS
                                 hepb_dose2_date::TIMESTAMPTZ,
                                 hepb_comvax1_date::TIMESTAMPTZ,
                                 hepb_comvax2_date::TIMESTAMPTZ,
+                                dose1_recvd, dose2_recvd, dose3_recvd,
+                                dose4_recvd, dose5_recvd, dose6_recvd,
+                                dose7_recvd, dose8_recvd,
                                 CASE
                                     WHEN dce.birth_date IS NOT NULL THEN
                                         CASE
@@ -302,60 +315,50 @@ CREATE TABLE report3 AS
                                 -- comments inline. The current maximum value
                                 -- is 9
                                 CASE
+                                    WHEN dce.disposition LIKE 'Closed: %' THEN -1
+                                    WHEN (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result = 'Positive / Reactive' THEN 9
                                     WHEN dce.contact_type = 'Infant' THEN
                                         CASE
-                                            WHEN dce.birth_date IS NULL AND dme_2.actual_delivery_date IS NULL THEN 
-                                                8 -- fdd = report date, act = "Enter Infant's Date of Birth"
-                                            WHEN hbig IS NULL THEN
-                                                CASE
-                                                    WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
-                                                        1 -- fdd = dob, act = "Needs HBIG and Hepatitis B Dose 1"
-                                                    ELSE
-                                                        CASE WHEN CURRENT_DATE - dce.birth_date < 7 THEN
-                                                            2 -- fdd = dob, act = "Needs HBIG"
-                                                        ELSE
-                                                            4 -- fdd = COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 2"
-                                                        END
-                                                END
-                                            ELSE -- hbig is not null
-                                                CASE
-                                                    WHEN hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL THEN
-                                                        3 -- fdd = dob, act = "Needs Hepatitis B Dose 1"
-                                                    WHEN hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL THEN
-                                                        4 -- fdd = COALESCE(hepb_dose1_date, hepb_comvax1_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 2"
-                                                    WHEN hepb_dose3_date IS NULL AND hepb_comvax4_date IS NULL THEN
-                                                        5 -- fdd = COALESCE(hepb_dose2_date, hepb_comvax2_date) + INTERVAL '6 months', act = "Needs Hepatitis B Dose 3"
-                                                    WHEN
-                                                        hepb_dose3_date IS NULL AND hepb_comvax4_date IS NULL AND
-                                                        COALESCE(  -- between 9 and 18 months old
-                                                            (now() - COALESCE(dce.birth_date, dme_2.actual_delivery_date)) BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18),
-                                                            dce.age_in_years BETWEEN .6 AND 1.5
-                                                        ) AND
-                                                        (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL AND
-                                                        (trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result IS NULL THEN
-                                                        6 -- fdd = dob + INTERVAL '9 months', act = "Needs Serology 3 months after Hepatitis B Dose 3 / Hepatitis B – Comvax Dose 4"
-                                                    ELSE -1 -- don't show this contact
-                                                END
-                                        END    
-                                    ELSE -- Not an 'Infant' type
-                                        CASE
+                                            WHEN dce.birth_date IS NULL THEN 8 -- Enter date of birth
+                                            WHEN hbig IS NULL AND CURRENT_DATE - dce.birth_date < 7 THEN 2 -- "Needs HBIG"
+                                            WHEN dose1_recvd IS NULL THEN 3 -- Needs dose1
+                                            WHEN dose2_recvd IS NULL THEN 4 -- Needs dose2
+                                            WHEN dose3_recvd IS NULL THEN 5 -- Needs dose3
+                                            WHEN 
+                                                now() - dce.birth_date BETWEEN (interval '30 days' * 9) AND (interval '30 days' * 18) AND (
+                                                    (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL OR
+                                                    (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result IS NULL
+                                                ) THEN 6 -- Needs serology
+                                            WHEN (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 7 -- Check serology and vaccinate
+                                            WHEN dose4_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 10 -- Needs dose 5
+                                            WHEN dose5_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 11 -- Needs dose 6
                                             WHEN
-                                                COALESCE((trisano.get_contact_hbsag_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive' OR
-                                                COALESCE((trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result, 'dummy') = 'Positive / Reactive'
-                                                THEN 9 -- fdd = report date, act = 'Close Contact'
+                                                COALESCE(dose8_recvd, COALESCE(dose7_recvd, dose6_recvd)) IS NOT NULL AND (
+                                                    (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL OR
+                                                    (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).collection_date - COALESCE(dose8_recvd, COALESCE(dose7_recvd, dose6_recvd)) >= 30 --days
+                                                ) THEN 12 -- Needs Serology after Final Dose of 2nd Hepatitis B Series
                                             WHEN
-                                                (
-                                                    (hepb_dose1_date IS NULL AND hepb_comvax1_date IS NULL) OR
-                                                    (hepb_dose2_date IS NULL AND hepb_comvax2_date IS NULL) OR
-                                                    (hepb_dose3_date IS NULL AND hepb_comvax3_date IS NULL)
-                                                ) AND hepb_dose6_date IS NULL
-                                                THEN
-                                                    7 -- fdd = report date, act = "Check vaccination history; Test or Vaccinate"
-                                            ELSE 
-                                                CASE WHEN disposition = 'Closed: Completed' THEN -1 -- Don't show this contact
-                                                ELSE 9 -- fdd = report date, act = 'Close contact'
-                                                END
+                                                dose6_recvd IS NOT NULL AND 
+                                                (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).collection_date - dose6_recvd >= 30 -- days
+                                                THEN 9
+                                            ELSE -1
                                         END
+                                    WHEN
+                                        COALESCE(dose1_recvd, COALESCE(dose2_recvd, dose3_recvd)) IS NULL OR
+                                        (
+                                            dose3_recvd IS NOT NULL AND
+                                            (
+                                                (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).collection_date IS NULL OR
+                                                (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).collection_date < dose3_recvd
+                                            )
+                                        ) THEN 7 -- Check history. test or vaccinate
+                                    WHEN
+                                        dose3_recvd IS NOT NULL AND dose6_recvd IS NULL AND
+                                        (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' AND
+                                        (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).collection_date > dose3_recvd
+                                        THEN 13 -- Complete 2nd Hep B series
+                                    WHEN dose6_recvd IS NOT NULL THEN 14 -- Close after completing 2nd
+                                    ELSE -1
                                 END AS fdd_act_code
                             FROM
                                 trisano.dw_contact_events_view dce
@@ -371,12 +374,24 @@ CREATE TABLE report3 AS
                                         trisano.earliest_date(trisano.array_accum(hepb_dose4_date)) AS hepb_dose4_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose5_date)) AS hepb_dose5_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_dose6_date)) AS hepb_dose6_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose7_date)) AS hepb_dose7_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_dose8_date)) AS hepb_dose8_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_comvax1_date)) AS hepb_comvax1_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_comvax2_date)) AS hepb_comvax2_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_comvax3_date)) AS hepb_comvax3_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_comvax4_date)) AS hepb_comvax4_date,
                                         trisano.earliest_date(trisano.array_accum(hepb_comvax5_date)) AS hepb_comvax5_date,
-                                        trisano.earliest_date(trisano.array_accum(hepb_comvax6_date)) AS hepb_comvax6_date
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax6_date)) AS hepb_comvax6_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax7_date)) AS hepb_comvax7_date,
+                                        trisano.earliest_date(trisano.array_accum(hepb_comvax8_date)) AS hepb_comvax8_date,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose1_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax1_date))) AS dose1_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose2_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax2_date))) AS dose2_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose3_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax3_date))) AS dose3_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose4_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax4_date))) AS dose4_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose5_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax5_date))) AS dose5_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose6_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax6_date))) AS dose6_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose7_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax7_date))) AS dose7_recvd,
+                                        COALESCE(trisano.earliest_date(trisano.array_accum(hepb_dose8_date)), trisano.earliest_date(trisano.array_accum(hepb_comvax8_date))) AS dose8_recvd
                                     FROM (
                                         SELECT
                                             dw_contact_events_id,
@@ -387,20 +402,26 @@ CREATE TABLE report3 AS
                                             CASE WHEN treatment_name = 'Hepatitis B Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_dose4_date,
                                             CASE WHEN treatment_name = 'Hepatitis B Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_dose5_date,
                                             CASE WHEN treatment_name = 'Hepatitis B Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_dose6_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 7' THEN date_of_treatment ELSE NULL END AS hepb_dose7_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B Dose 8' THEN date_of_treatment ELSE NULL END AS hepb_dose8_date,
                                             CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 1' THEN date_of_treatment ELSE NULL END AS hepb_comvax1_date,
                                             CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 2' THEN date_of_treatment ELSE NULL END AS hepb_comvax2_date,
                                             CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 3' THEN date_of_treatment ELSE NULL END AS hepb_comvax3_date,
                                             CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 4' THEN date_of_treatment ELSE NULL END AS hepb_comvax4_date,
                                             CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 5' THEN date_of_treatment ELSE NULL END AS hepb_comvax5_date,
-                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_comvax6_date
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 6' THEN date_of_treatment ELSE NULL END AS hepb_comvax6_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 7' THEN date_of_treatment ELSE NULL END AS hepb_comvax7_date,
+                                            CASE WHEN treatment_name = 'Hepatitis B - Comvax Dose 8' THEN date_of_treatment ELSE NULL END AS hepb_comvax8_date
                                         FROM
                                             trisano.dw_contact_treatments_events_view dct
                                     ) treatments_split
                                     GROUP BY 1
                                 ) treatments_agg
                                     ON (treatments_agg.contact_event_id = dce.id)
-                            WHERE
-                                disposition = 'Active follow up'
+-- XXX
+--                            WHERE
+--                                disposition NOT LIKE 'Closed:%'
+                                -- disposition = 'Active follow up'
                         ) foo
                         WHERE fdd_act_code != -1
                     ) contact_stuff
