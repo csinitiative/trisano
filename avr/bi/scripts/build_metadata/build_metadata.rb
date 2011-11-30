@@ -203,15 +203,30 @@ def secure(obj)
   obj.concept.add_property Java::OrgPentahoPmsSchemaConceptTypesSecurity::ConceptPropertySecurity.new('security', security)
 end
 
-def pentaho_roles(meta)
-  puts "Getting Pentaho's roles"
-  secserv = meta.securityReference.securityService
-  res = secserv.getRoles
-  raise "Couldn't get Pentaho's roles. Perhaps Pentaho isn't running?" if res.nil?
-  return res
+def pentaho_roles(conn)
+#  puts "Getting Pentaho's roles"
+#  secserv = meta.securityReference.securityService
+#  res = secserv.getRoles
+#  raise "Couldn't get Pentaho's roles. Perhaps Pentaho isn't running?" if res.nil?
+
+# These need to come from the list of available jurisdictions, as follows:
+  
+  res = []
+  query_string = %{ 
+    SELECT DISTINCT p.name FROM
+    trisano.places_view p
+      JOIN trisano.places_types_view pt 
+        ON pt.place_id = p.id
+      JOIN trisano.codes_view c
+        ON c.id = pt.type_id AND c.code_description = 'Jurisdiction'
+  }
+  get_query_results(query_string, conn).each do |rs|
+    res << rs['name']
+  end
+  res
 end
 
-def setup_role_security(model, dg, meta, juris)
+def setup_role_security(model, dg, meta, juris, conn)
   puts "Setting up role-based security"
   rbsm = model.rowLevelSecurity.getRoleBasedConstraintMap
 
@@ -226,7 +241,7 @@ def setup_role_security(model, dg, meta, juris)
 
   rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, 'Admin'), "1 = 1")
 
-  pentaho_roles(meta).each do |rolename|
+  pentaho_roles(conn).each do |rolename|
     puts "Checking out pentaho role #{rolename}"
     if juris[rolename] != nil then
       puts "  Found role match on #{rolename}"
@@ -478,7 +493,7 @@ def create_models(dg, dg_id, meta, conn)
   model.set_root_category root_bc
   add_business_tables model, meta, dg, "dg#{dg_id}", conn
   create_relationships model, "dg#{dg_id}", conn
-  setup_role_security model, "dg#{dg_id}", meta, jurisdiction_hash(conn)
+  setup_role_security model, "dg#{dg_id}", meta, jurisdiction_hash(conn), conn
   meta.add_model(model)
 end
 
