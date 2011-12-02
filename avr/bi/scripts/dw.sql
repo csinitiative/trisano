@@ -946,6 +946,7 @@ SELECT
     trec.code_description AS test_result,
     lr.result_value,
     lr.units,
+    lr.accession_no,
     tsec.code_description AS test_status,
     lr.comment,
     places.name,
