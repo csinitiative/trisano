@@ -572,11 +572,6 @@ class HumanEvent < Event
 
       @per_request_comments = per_message_comments.clone
 
-      unless obr.filler_order_number.blank?
-        @per_request_comments += ", " unless @per_request_comments.blank?
-        @per_request_comments += "#{I18n.translate :accession_no}: #{obr.filler_order_number}"
-      end
-
       unless obr.specimen_id.blank?
         @per_request_comments += ", " unless @per_request_comments.blank?
         @per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
@@ -762,6 +757,11 @@ class HumanEvent < Event
         "loinc_code"         => @loinc_code,
         "comment"            => comments
       }.merge!(result_hash)
+
+      unless obr.filler_order_number.blank?
+        lab_hash["accession_no"] = obr.filler_order_number
+      end
+
       @lab_attributes["lab_results_attributes"][i.to_s] = lab_hash
     rescue Exception => error
       raise StagedMessage::BadMessageFormat, error.message

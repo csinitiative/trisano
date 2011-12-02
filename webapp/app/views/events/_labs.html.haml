@@ -43,6 +43,10 @@
                 %br
                 =ct('organism')
                 %b= h(lab_result.organism.try(:organism_name))
+                - unless lab_result.accession_no.nil?
+                  %br
+                  =ct('accession_no')
+                  %b= h(lab_result.accession_no)
               %td
                 - no_result = true
                 - unless lab_result.test_result.blank?
