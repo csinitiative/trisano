@@ -251,6 +251,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 12 THEN COALESCE(dose8_recvd, COALESCE(dose7_recvd, dose6_recvd)) + INTERVAL '1 month'
                                 WHEN fdd_act_code = 13 THEN NULL
                                 WHEN fdd_act_code = 14 THEN NULL
+                                WHEN fdd_act_code = 15 THEN NULL
                             END AS first_due_date,
                             CASE
                                 WHEN fdd_act_code = 1 THEN 'Needs HBIG and Hepatitis B Dose 1'
@@ -267,6 +268,7 @@ CREATE TABLE report3 AS
                                 WHEN fdd_act_code = 12 THEN 'Needs serology after final dose of 2nd Hepatitis B series'
                                 WHEN fdd_act_code = 13 THEN 'Needs to complete 2nd Hepatits B series'
                                 WHEN fdd_act_code = 14 THEN 'Close contact after completion of 2nd Hepatits B series'
+                                WHEN fdd_act_code = 15 THEN 'Needs Hepatitis B Dose 4'
                             END AS action
                         FROM (
                             SELECT
@@ -329,9 +331,9 @@ CREATE TABLE report3 AS
                                                     (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL OR
                                                     (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result IS NULL
                                                 ) THEN 6 -- Needs serology
-                                            WHEN (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 7 -- Check serology and vaccinate
-                                            WHEN dose4_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 10 -- Needs dose 5
-                                            WHEN dose5_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 11 -- Needs dose 6
+                                            WHEN dose4_recvd IS NULL (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 15 -- Needs dose 4
+                                            WHEN dose5_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 10 -- Needs dose 5
+                                            WHEN dose6_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 11 -- Needs dose 6
                                             WHEN
                                                 COALESCE(dose8_recvd, COALESCE(dose7_recvd, dose6_recvd)) IS NOT NULL AND (
                                                     (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL OR
