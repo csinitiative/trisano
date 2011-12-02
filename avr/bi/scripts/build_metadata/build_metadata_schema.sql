@@ -231,7 +231,7 @@ INSERT INTO trisano.core_columns (target_table, target_column, column_name, colu
 ('trisano.dw_encounter_patients_races_view',          'id',                                 'id',                                 '',                          false),
 ('trisano.dw_encounter_patients_races_view',          'person_id',                          'person_id',                          '',                          false),
 ('trisano.dw_encounter_patients_races_view',          'race',                               'race',                               'EP Race',                   true),
-('trisano.dw_encounters_lab_results_view',            'accession_no',9                      'accession_no',                       'ELR Acc Nbr',               true),
+('trisano.dw_encounters_lab_results_view',            'accession_no',                       'accession_no',                       'ELR Acc Nbr',               true),
 ('trisano.dw_encounters_lab_results_view',            'collection_date',                    'collection_date',                    'ELR Clct Dt',               true),
 ('trisano.dw_encounters_lab_results_view',            'comment',                            'comment',                            'ELR Cmt',                   true),
 ('trisano.dw_encounters_lab_results_view',            'dw_contact_events_id',               'dw_contact_events_id',               '',                          false),
