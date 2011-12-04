@@ -35,3 +35,4 @@ avr/mdr.*
 /webapp/unicron-conf.rb
 /webapp/unicorn-conf.rb
 /webapp/bin/*
+.idea
