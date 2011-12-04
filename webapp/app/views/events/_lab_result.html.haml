@@ -29,7 +29,7 @@
         - disease = @disease || @event.try(:disease_event).try(:disease)
 
         - core_element("accession_no", lab_result_form, :horiz) do
-          = lab_result_form.label(:accession_no)
+          = lab_result_form.label(:accession_number)
           = lab_result_form.text_field(:accession_no, :size => 20, :maxlength => 20)
 
         - core_element("test_type", lab_result_form, :horiz) do

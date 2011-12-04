@@ -199,6 +199,7 @@ es:
         lab_results:
           organism: Resultados de laboratorio | Organismo
           comment: Resultados de laboratorio | Comentario
+          accession_no: Resultados de laboratorio | Accession number
           test_type: Resultados de laboratorio | Tipo de prueba
           test_status: Resultados de laboratorio | Estado de prueba
           test_result: Resultados de laboratorio | Resultado de prueba

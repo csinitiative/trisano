@@ -269,7 +269,6 @@ en:
 
   # For items in comments field assigned by human_event
   country: "Country"
-  accession_no: "Accession no"
   abnormal_flags: "Abnormal flags"
   specimen_id: "Specimen ID"
 

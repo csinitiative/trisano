@@ -1001,6 +1001,15 @@ csv_field_00150:
   short_name: 
   use_code: 
   event_type: morbidity_event
+csv_field_accession_no:
+  sort_order: 19
+  export_group: lab
+  long_name: lab_accession_number
+  use_description: try(:accession_no)
+  short_name:
+  use_code:
+  event_type:
+  collection: lab_results
 csv_field_00067: 
   sort_order: 20
   export_group: lab

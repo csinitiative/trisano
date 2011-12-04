@@ -487,6 +487,7 @@ es:
   colon_after: "{{text}}:"
   no_result: "No resultado"
   organism: "Organismo"
+  accession_no: "Accession number"
   result_value: "Valor de resultado"
   units: "Unidades"
   reference_range: "Rango de referencia"

@@ -27,6 +27,10 @@
           %span.print-label=ct('lab_name')
           %span.print-value
           = h(lab.place_entity.place.name)
+        .left
+          %span.print-label=ct('accession_no')
+          %span.print-value
+            = lab_result.accession_no.blank? ? 'none' : h(lab_result.accession_no)
         .three-valued-row
           .left
             %span.print-label=ct('test_type')
