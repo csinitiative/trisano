@@ -86,6 +86,7 @@ es:
         lab_results:
           comment: Resultados de laboratorio | Comentario
           organism: Resultados de laboratorio | Organismo
+          accession_no: Resultados de laboratorio | Accession number
           test_type: Resultados de laboratorio | Tipo de prueba
           test_status: Resultados de laboratorio | Estado de prueba
           test_result: Resultados de laboratorio | Resultado de prueba
@@ -220,7 +221,6 @@ es:
       notes_tab: Notes (EN)
       encounter_section: Encounter (EN)
       labs_section: Labs (EN)
-      labs: Encounter labs (EN)
       treatments_section: Treatments (EN)
       treatments: Encounter treatments (EN)
       event_notes_section: Event Notes (EN)
@@ -229,6 +229,23 @@ es:
         encounter_date: Encounter date (EN)
         encounter_location_type: Encounter location type (EN)
         description: Encounter description (EN)
+      labs:
+        name: Labs (EN)
+        secondary_entity_id: Resultados de laboratorio | Lab (EN)
+        lab_results:
+          organism: Resultados de laboratorio | Organism (EN)
+          comment: Resultados de laboratorio | Comment (EN)
+          accession_no: Resultados de laboratorio | Accession number (EN)
+          test_type: Resultados de laboratorio | Test type (EN)
+          test_status: Resultados de laboratorio | Test status (EN)
+          test_result: Resultados de laboratorio | Test result (EN)
+          units: Resultados de laboratorio | Units (EN)
+          collection_date: Resultados de laboratorio | Collection date (EN)
+          result_value: Resultados de laboratorio | Result value (EN)
+          reference_range: Resultados de laboratorio | Reference range (EN)
+          specimen_sent_to_state: Resultados de laboratorio | Specimen sent to state lab (EN)
+          lab_test_date: Resultados de laboratorio | Lab Test date (EN)
+          specimen_source: Resultados de laboratorio | Specimen source (EN)
     person_entity:
       name_section: Name (EN)
       age_section: Age (EN)

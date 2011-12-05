@@ -1599,6 +1599,16 @@
 - help_text:
   fb_accessible: false
   can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[labs][lab_results][accession_no]
+  code_name: lab_accession_no
+  parent_key: contact_event[labs_section]
+  required_for_section: false
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_type]
@@ -1994,6 +2004,16 @@
   key: encounter_event[labs][secondary_entity_id]
   parent_key: encounter_event[labs_section]
   required_for_section: true
+
+- help_text:
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: encounter_event
+  key: encounter_event[labs][lab_results][accession_no]
+  code_name: lab_accession_no
+  parent_key: encounter_event[labs_section]
+  required_for_section: false
 
 - help_text:
   fb_accessible: false

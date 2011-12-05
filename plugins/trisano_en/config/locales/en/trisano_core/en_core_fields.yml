@@ -108,6 +108,7 @@ en:
         lab_results:
           comment: Lab results | Comment
           organism: Lab results | Organism
+          accession_no: Lab results | Accession number
           test_type: Lab results | Test type
           test_status: Lab results | Test status
           test_result: Lab results | Test result
@@ -277,6 +278,7 @@ en:
         lab_results:
           organism: Lab results | Organism
           comment: Lab results | Comment
+          accession_no: Lab results | Accession number
           test_type: Lab results | Test type
           test_status: Lab results | Test status
           test_result: Lab results | Test result
