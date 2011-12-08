@@ -37,6 +37,7 @@
                         LPAD(date_disease_diagnosed_day::text, 2, '0')
                     </SQL></OrdinalExpression>
                 </Level>
+                <Level name="Date" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed" description="Date the disease was diagnosed"> </Level>
             </Hierarchy>
         </Dimension>
         <Dimension type="TimeDimension" name="Disease onset date" description="Date of onset of disease symptoms">
@@ -54,6 +55,7 @@
                         LPAD(date_disease_onset_day::text, 2, '0')
                     </SQL></OrdinalExpression>
                 </Level>
+                <Level name="Date" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset" description="Date of onset of disease symptoms"> </Level>
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" name="Jurisdiction" description="Health department and investigator in charge of investigation">
