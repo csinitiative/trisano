@@ -371,6 +371,10 @@ function focus_first() {
     } catch(error) {
       // no-op, the element cannot receive focus. Catch to allow further JS to not be interfered with on IE8
     }
+
+    // focusing on an element that is far down the page may scroll the page in some browsers,
+    // so ensure we are at the top
+    jQuery('html, body').animate({ scrollTop: 0 }, 0);
 }
 
 function focus_init() {
