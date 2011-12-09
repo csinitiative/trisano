@@ -76,19 +76,19 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
         <%= f.core_text_field(:acuity, {:size => 2, :maxlength => 2}, @event) %>
       <% end -%>
 
-      <% core_element_show :workflow_state, f, :vert do -%>
+      <% core_element :workflow_state, f, :vert do -%>
         <%= f.label(:workflow_state) %>
         <%= h(f.object.state_description) %>
       <% end -%>
-      <% core_element_show :investigation_started_date, f, :horiz do -%>
+      <% core_element :investigation_started_date, f, :horiz do -%>
         <%= f.label(:investigation_started_date) %>
         <%= ld(f.object.investigation_started_date) %>
       <% end -%>
-      <% core_element_show :investigation_completed_LHD_date, f, :horiz do -%>
+      <% core_element :investigation_completed_LHD_date, f, :horiz do -%>
         <%= f.label(:investigation_completed_LHD_date) %>
         <%= ld(f.object.investigation_completed_LHD_date) %>
       <% end -%>
-      <% core_element_show :review_completed_by_state_date, f, :horiz do -%>
+      <% core_element :review_completed_by_state_date, f, :horiz do -%>
         <%= f.label(:review_completed_by_state_date) %>
         <%= ld(f.object.review_completed_by_state_date) %>
       <% end -%>
