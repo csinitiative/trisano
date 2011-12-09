@@ -101,8 +101,14 @@
           = yield :tools
     #main-content
       %script
+        function setMainContentTopMargin() {
         header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
         Element.setStyle('main-content', {top: header_height})
+        }
+        setMainContentTopMargin();
+        jQuery(window).resize(function() {
+        setMainContentTopMargin();
+        });
       .container
         = yield
       .container
