@@ -36,9 +36,13 @@ module EventsSpecHelper
 
     returning Factory.create(type) do |event|
       event.build_interested_party(:person_entity => patient) if patient
-      event.build_disease_event(:disease => disease) if disease
       event.build_jurisdiction(:secondary_entity => jurisdiction) if jurisdiction
       event.save!
+
+      if disease
+        event.build_disease_event(:disease => disease)
+        event.save!
+      end
     end
   end
 

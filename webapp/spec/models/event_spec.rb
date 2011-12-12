@@ -1262,13 +1262,16 @@ describe MorbidityEvent do
 
     it 'should receive a applicable new form if the disease changed before routing' do
       with_published_form(@form_hash) do |form|
-        @event_hash = @event_hash.merge("disease_event_attributes" => { "disease_id" => Factory(:disease).id})
         @event = MorbidityEvent.new(@event_hash)
+        @event.build_disease_event(:disease_id => Factory(:disease).id)
         @event.save!
         @event.reload
         @event.undergone_form_assignment.should be_true
         @event.form_references.size.should == 0
-        @event.update_attributes("disease_event_attributes" => { "disease_id" => @disease_id})
+        @event.save!
+        @event.reload
+        @event.disease_event.disease_id = @disease_id
+        @event.save!
         @event.reload
         @event.form_references.size.should == 0 # Changing disease doesn't trigger forms assignment
         @event.route_to_jurisdiction(@jurisdiction_id)
@@ -1993,9 +1996,7 @@ describe Event, "jurisdiction entity ids" do
   describe "filtering sensitive diseases" do
     before do
       destroy_fixture_data
-      sensitive_disease = Factory(:disease, :sensitive => true)
-      disease_event = Factory(:disease_event, :disease => sensitive_disease)
-      @sensitive_event = Factory(:morbidity_event_with_disease, :disease_event => disease_event)
+      @sensitive_event = Factory(:morbidity_event_with_sensitive_disease)
       @nonsensitive_event = Factory(:morbidity_event_with_disease)
       @event_without_disease = Factory(:morbidity_event)
 
@@ -2112,7 +2113,7 @@ describe Event do
 
     it "should return false if there is no disease associated" do
       event = create_morbidity_event
-      event.disease_event = Factory.create(:disease_event)
+      event.disease_event = Factory.create(:disease_event, :event => event)
       event.disease_event.disease = nil
       event.save!
       event.sensitive?.should be_false

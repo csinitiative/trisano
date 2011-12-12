@@ -78,11 +78,15 @@ describe ContactEvent do
 
         contact_hash = { :contact_child_events_attributes => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
                   "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-              "participations_contact_attributes" => {} } ],
-          :disease_event_attributes => {:disease_id => diseases(:chicken_pox).id} }
+              "participations_contact_attributes" => {} } ] }
 
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
-        event.save
+        disease_event = DiseaseEvent.new(:disease_id => diseases(:chicken_pox).id)
+        #event.save!
+        event.build_disease_event(disease_event.attributes)
+        event.save!
+        event.reload
+
         @contact_event = event.contact_child_events[0]
       end
 

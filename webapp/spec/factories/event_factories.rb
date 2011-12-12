@@ -33,6 +33,16 @@ Factory.define :morbidity_event_with_disease, :parent => :morbidity_event do |ev
   end
 end
 
+Factory.define :morbidity_event_with_sensitive_disease, :parent => :morbidity_event do |event|
+  event.after_build do |event|
+    event.save!
+    sensitive_disease = Factory(:disease, :sensitive => true)
+    Factory(:disease_event, :event => event, :disease => sensitive_disease)
+    event.save!
+    event.reload
+  end
+end
+
 Factory.define :contact_event do |e|
   e.association :interested_party
   e.association :jurisdiction
