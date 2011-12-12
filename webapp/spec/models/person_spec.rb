@@ -258,7 +258,7 @@ describe Person do
       @event.interested_party.person_entity = @entity
       @event.interested_party.save
 
-      @disease_event = Factory.create(:disease_event)
+      @disease_event = Factory.create(:disease_event, :event => @event)
       @event.disease_event = @disease_event
       @event.save
     end
@@ -284,7 +284,7 @@ describe Person do
       new_event.interested_party.person_entity = @entity
       new_event.interested_party.save
 
-      new_disease_event = Factory.create(:disease_event)
+      new_disease_event = Factory.create(:disease_event, :event => new_event)
       new_event.disease_event = new_disease_event
       new_event.save
 
