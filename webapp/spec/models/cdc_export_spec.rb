@@ -18,10 +18,15 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
 
-  def with_cdc_records(event_hash = @event_hash)
-    event = MorbidityEvent.new(event_hash)
-    event.save!
-    event.reload
+  def with_cdc_records(event = nil)
+    if (event.nil?)
+      event = MorbidityEvent.new(@event_hash)
+      disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+      event.save!
+      event.build_disease_event(disease_event.attributes)
+      event.save!
+      event.reload
+    end
 
     start_mmwr = Mmwr.new(Date.today - 7)
     end_mmwr = Mmwr.new
@@ -30,9 +35,9 @@ describe CdcExport do
     yield records if block_given?
   end
 
-  def with_sent_events(event_hash = @event_hash)
+  def with_sent_events(event = nil)
     records = []
-    with_cdc_records do |records|
+    with_cdc_records(event) do |records|
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
       Event.reset_ibis_status(samples)
@@ -47,8 +52,9 @@ describe CdcExport do
 
   def delete_a_record(event_hash = @event_hash)
     with_sent_events do |events|
-      event_hash['disease_event_attributes']['disease_id'] = diseases(:chicken_pox).id
-      events[0].update_attributes(event_hash)
+      events[0].disease_event.disease_id = diseases(:chicken_pox).id
+      events[0].save!
+      events[0].reload
     end
   end
 
@@ -64,10 +70,6 @@ describe CdcExport do
       "first_reported_PH_date" => Date.yesterday.to_s(:db),
       "imported_from_id" => external_codes(:imported_from_utah).id,
       "state_case_status_id" => external_codes(:case_status_probable).id,
-      "disease_event_attributes" => {
-        "disease_id" => diseases(:aids).id,
-        "disease_onset_date" => Date.yesterday
-      },
       "interested_party_attributes" => {
         "person_entity_attributes" => {
           "race_ids" => [external_codes(:race_white).id],
@@ -314,7 +316,8 @@ describe CdcExport do
           events[0].should be_sent_to_cdc
           events[0].should be_sent_to_ibis
           events[0].ibis_updated_at.should be_nil
-          events[0].update_attributes({'disease_event_attributes' => {'disease_id' => diseases(:anthrax).id}})
+          events[0].disease_event.disease_id = diseases(:anthrax).id
+          events[0].save!
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc
@@ -562,9 +565,15 @@ describe CdcExport do
 
     before :each do
       with_sent_events
-      @event_hash['disease_event_attributes']['disease_id'] = diseases(:hep_a).id
-      with_sent_events
-      with_sent_events
+      2.times {
+        event = MorbidityEvent.new(@event_hash)
+        disease_event = DiseaseEvent.new(:disease_id => diseases(:hep_a).id, :disease_onset_date => Date.yesterday)
+        event.save!
+        event.build_disease_event(disease_event.attributes)
+        event.save!
+        event.reload
+        with_sent_events(event)
+      }
     end
 
     it "should display two verification records" do
@@ -622,7 +631,10 @@ describe CdcExport do
       describe 'and one contact event' do
         before :each do
           @contact_event = Factory.build :contact_event
-          @contact_event.build_disease_event(:disease_id => @morbidity_event.disease_event.disease_id)
+          @contact_event.save!
+          disease_event = DiseaseEvent.new(:disease_id => @morbidity_event.disease_event.disease_id)
+          @contact_event.build_disease_event(disease_event.attributes)
+          @contact_event.reload
           @contact_event.MMWR_year = Mmwr.new.mmwr_year
           @contact_event.state_case_status_id = external_codes(:case_status_probable).id
           @contact_event.save!
@@ -651,10 +663,12 @@ describe CdcExport do
 
         @confirmed_event = Factory.build :morbidity_event
         @confirmed_event.state_case_status_id = external_codes(:case_status_confirmed).id
-        @confirmed_event.build_disease_event(:disease_id => @probable_event.disease_event.disease_id)
         @confirmed_event.workflow_state = 'assigned_to_lhd'
         @confirmed_event.save!
-
+        disease_event = DiseaseEvent.new(:disease_id => @probable_event.disease_event.disease_id)
+        @confirmed_event.build_disease_event(disease_event.attributes)
+        @confirmed_event.save!
+        @confirmed_event.reload
       end
 
       it 'should show one verification record' do

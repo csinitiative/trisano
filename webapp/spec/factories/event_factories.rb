@@ -25,7 +25,12 @@ Factory.define :morbidity_event do |e|
 end
 
 Factory.define :morbidity_event_with_disease, :parent => :morbidity_event do |event|
-  event.association :disease_event
+  event.after_build do |event|
+    event.save!
+    Factory(:disease_event, :event => event)
+    event.save!
+    event.reload
+  end
 end
 
 Factory.define :contact_event do |e|
