@@ -32,6 +32,7 @@ group :development do
   gem "hirb"
   gem "capistrano"
   gem "capistrano-ext"
+  gem "ruby-debug"
 end
 
 group :test, :development do
