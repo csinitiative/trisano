@@ -333,7 +333,7 @@ describe HumanEvent, 'adding staged messages' do
     it 'should set comments from PID-11.6, OBR-3, SPM-2 and OBX-8' do
       with_human_event do |event|
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
-        event.labs.first.lab_results.first.comment.should == "Country: USA, Accession no: 9700123, Specimen ID: 23456, Abnormal flags: H"
+        event.labs.first.lab_results.first.comment.should == "Country: USA, Specimen ID: 23456, Abnormal flags: H"
       end
     end
 
@@ -733,8 +733,10 @@ describe HumanEvent, 'adding staged messages' do
     end
 
     it "should not assign disease if disease already assigned" do
-      @event_hash['disease_event_attributes'] = {'disease_id' => 1}
       with_human_event do |event|
+        event.build_disease_event(:disease_id => 1)
+        event.save!
+        event.reload
         msg = set_loinc_code(hl7_messages[:arup_1], loinc_codes(:one_disease).loinc_code)
         staged_message = StagedMessage.new(:hl7_message => msg)
         event.add_labs_from_staged_message(staged_message)

@@ -51,7 +51,12 @@ Factory.define :contact_event do |e|
 end
 
 Factory.define :contact_with_disease, :parent => :contact_event do |e|
-  e.association :disease_event
+  e.after_build do |event|
+    event.save!
+    Factory(:disease_event, :event => event)
+    event.save!
+    event.reload
+  end
 end
 
 Factory.define :encounter_event do |e|
@@ -61,8 +66,14 @@ end
 Factory.define :place_event do |e|
   e.association :interested_place
   e.association :jurisdiction
-  e.association :disease_event
   e.association :parent_event, :factory => :morbidity_event
+
+  e.after_build do |event|
+    event.save!
+    Factory(:disease_event, :event => event)
+    event.save!
+    event.reload
+  end
 end
 
 Factory.define :form do |f|
