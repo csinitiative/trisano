@@ -36,7 +36,7 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
     end
 
     it "only generate a task if disease is Hepatitis B Pregnancy Event" do
-      @event.build_disease_event(:disease => disease!('The Trots'))
+      @event.disease_event.disease = disease!('The Trots')
       lambda { @event.save! }.should_not change(Task, :count)
     end
 
@@ -101,7 +101,7 @@ describe MorbidityEvent, "in the Perinatal Hep B plugin" do
     end
 
     it "only generates a task if disease is Hepatitis B Pregnancy Event" do
-      @event.build_disease_event(:disease => disease!('The Trots'))
+      @event.disease_event.disease = disease!('The Trots')
       lambda { @event.save! }.should_not change(Task, :count)
     end
 
