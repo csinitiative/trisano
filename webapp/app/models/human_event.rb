@@ -636,13 +636,13 @@ class HumanEvent < Event
         ExternalCode.no
       end
 
-      self.disease_event.update_attribute :died_id, code.id
+      self.disease_event.died_id = code.id
     end
 
     unless disease_event.nil? or staged_message.pv1.blank? or
       staged_message.pv1.hospitalized_id.nil?
       hospitalized_id = staged_message.pv1.hospitalized_id
-      self.disease_event.update_attribute :hospitalized_id, hospitalized_id
+      self.disease_event.hospitalized_id = hospitalized_id
 
       if hospitalized_id == ExternalCode.yes.id
         facility_name = staged_message.pv2.facility_name if staged_message.pv2
