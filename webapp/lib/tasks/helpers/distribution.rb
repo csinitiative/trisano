@@ -63,47 +63,47 @@ module Tasks::Helpers
     end
 
     def create_db_permissions 
-      system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'GRANT ALL ON SCHEMA public TO #{trisano_uname}'") and
-        system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f #{distro_dir}/database/load_grant_function.sql") and
-        system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -c \"SELECT pg_grant('#{trisano_uname}', 'all', '%', 'public')\"") or
+      system("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -c 'GRANT ALL ON SCHEMA public TO #{trisano_uname}'") and
+        system("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f #{distro_dir}/database/load_grant_function.sql") and
+        system("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -e -c \"SELECT pg_grant('#{trisano_uname}', 'all', '%', 'public')\"") or
         raise "Failed to grant permissions for #{trisano_uname}"
     end
 
     def create_db 
-      system( "#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c \"CREATE DATABASE #{database} ENCODING='UTF8'\"") or
+      system( "#{psql} -X -U #{priv_uname} -h #{host} -p #{port} postgres -e -c \"CREATE DATABASE #{database} ENCODING='UTF8'\"") or
         raise "Failed to create database"
     end
 
     def load_db_schema
-      system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f #{distro_dir('database/trisano_schema.sql')}") or
+      system("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -e -f #{distro_dir('database/trisano_schema.sql')}") or
         raise "Failed to load database" 
     end
 
     def load_dump
       dumpfile = File.expand_path dump_file_name, distro_dir('dump')
-      sh("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} < #{dumpfile}") do |ok, res|
+      sh("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} < #{dumpfile}") do |ok, res|
         raise "Failed importing dumpfile: #{dump_file} into database #{database} with error #{res.exitstatus}" unless ok
       end
     end
 
     def create_db_user
       unless db_user_exists?
-        system("#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c \"CREATE USER #{trisano_uname} ENCRYPTED PASSWORD '#{trisano_user_passwd}'\"")
+        system("#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -c \"CREATE USER #{trisano_uname} ENCRYPTED PASSWORD '#{trisano_user_passwd}'\"")
       end
     end
 
     def db_user_exists?
-      %x[#{psql} -U #{priv_uname} -h #{host} -p #{port} #{database} -c "SELECT usename FROM pg_user WHERE usename = '#{trisano_uname}'"] =~ /1 row/
+      %x[#{psql} -X -U #{priv_uname} -h #{host} -p #{port} #{database} -c "SELECT usename FROM pg_user WHERE usename = '#{trisano_uname}'"] =~ /1 row/
     end
 
     def drop_db
-      unless system "#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'DROP DATABASE IF EXISTS #{database}'"
+      unless system "#{psql} -X -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'DROP DATABASE IF EXISTS #{database}'"
         raise "Failed to drop database"
       end
     end
 
     def drop_db_user
-      unless system "#{psql} -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'DROP USER IF EXISTS #{trisano_uname}'"
+      unless system "#{psql} -X -U #{priv_uname} -h #{host} -p #{port} postgres -e -c 'DROP USER IF EXISTS #{trisano_uname}'"
         raise "Failed to drop user"
       end
     end
