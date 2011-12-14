@@ -53,9 +53,9 @@ namespace :db do
     ar_config = YAML::load_file('config/database.yml')[rails_env]
     if File.exists? "db/#{rails_env}_data.sql"
       %x{export PGPASSWORD=#{ar_config['password']} &&
-         psql -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} -c "DROP DATABASE IF EXISTS #{ar_config['database']}" template1 &&
+         psql -X -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} -c "DROP DATABASE IF EXISTS #{ar_config['database']}" template1 &&
          createdb -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} #{ar_config['database']} &&
-         psql -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} #{ar_config['database']} < db/#{rails_env}_data.sql}
+         psql -X -U #{ar_config['username']} -h #{ar_config['host']} -p #{ar_config['port']} #{ar_config['database']} < db/#{rails_env}_data.sql}
       raise "Error restoring database" if $?.exitstatus == 1
     else
       puts "Dump isn't available. Skipping."
@@ -93,7 +93,7 @@ namespace :db do
       ENV['PGHOST'] = ar_configs['feature']['host'] if ar_configs['feature']['host']
       ENV['PGPORT'] = ar_configs['feature']['port'].to_s if ar_configs['feature']['port']
       ENV['PGPASSWORD'] = ar_configs['feature']['password'].to_s if ar_configs['feature']['password']
-      `psql -U "#{ar_configs['feature']['username']}" -f #{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql #{ar_configs['feature']['database']}`
+      `psql -X -U "#{ar_configs['feature']['username']}" -f #{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql #{ar_configs['feature']['database']}`
     end
 
     task :purge => [:environment] do
