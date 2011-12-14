@@ -48,6 +48,7 @@ module CsvSpecHelper
   def lab_header
     %w(lab_record_id
   lab_name
+  lab_accession_number
   lab_test_type
   lab_organism
   lab_test_result
@@ -303,6 +304,7 @@ module CsvSpecHelper
     out = ""
     out << '"",' # @lab_result.id
     out << "#{@lab_result.lab_name},"
+    out << "#{@lab_result.accession_no},"
     out << "#{@lab_result.test_type.common_name},"
     out << "#{@lab_result.organism.organism_name},"
     out << "#{@lab_result.test_result.code_description},"
@@ -437,6 +439,7 @@ module CsvSpecHelper
 
     @lab_result = Factory.build(:lab_result)
     @lab_result.stubs(:lab_name).returns("LabName")
+    @lab_result.stubs(:accession_no).returns("09078102377")
     @lab_result.stubs(:test_type).returns(@common_test_type)
     @lab_result.stubs(:organism).returns(@organism)
     @lab_result.stubs(:test_result).returns(simple_reference)
