@@ -43,9 +43,10 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       @morbidity_event = create_morbidity_event(:disease => @disease)
 
       @morbidity_event = Factory.create(:morbidity_event,
-        :disease_event => Factory.create(:disease_event, :disease => @disease),
         :investigator => Factory.create(:user)
       )
+      Factory.create(:disease_event, :event => @morbidity_event, :disease => @disease)
+      @morbidity_event.reload
 
       @actual_delivery_facility = add_actual_delivery_facility_to_event(@morbidity_event, "Allen Hospital")
 
@@ -58,9 +59,9 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
 
       @contact_event = Factory.create(:contact_event,
         :participations_contact => @participations_contact,
-        :parent_event => @morbidity_event,
-        :disease_event => Factory.create(:disease_event, :disease => @disease)
+        :parent_event => @morbidity_event
       )
+
       @contact_event.interested_party.treatments.create!(:treatment_id => Factory.create(:treatment).id)
 
       @dsc = Factory.create(:disease_specific_callback,
@@ -256,13 +257,15 @@ describe ContactEvent, "in the Perinatal Hep B plugin" do
       end
 
       it "should not generate a task when the disease is nil" do
-        @contact_event.disease.update_attributes!(:disease => nil)
+        @contact_event.disease.disease = nil
+        @contact_event.save!
         change_treatment_to_trigger_callback(@treatment)
         lambda { @contact_event.save! }.should change(Task, :count).by(0)
       end
 
       it "should not generate a task when the disease is not a match" do
-        @contact_event.update_attributes!(:disease_event => Factory.create(:disease_event))
+        @contact_event.disease_event.disease = nil
+        @contact_event.save!
         change_treatment_to_trigger_callback(@treatment)
         lambda { @contact_event.save! }.should change(Task, :count).by(0)
       end
