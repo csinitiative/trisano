@@ -296,7 +296,8 @@ Factory.sequence :city do |n|
   "city#{n}"
 end
 Factory.sequence :email_address do |n|
-  "person#{n}@example.com"
+  # DEBT: Added Time.now to ensure uniqueness because sometimes this ends up repeating and causes duplicate email addresses
+  "person#{Time.now.to_i.to_s + n.to_s}@example.com"
 end
 
 Factory.sequence :disease_name do |n|
