@@ -435,7 +435,13 @@ class HumanEvent < Event
   end
 
   def update_from_params(event_params)
+
+    if !self.try(:disease_event).nil? and event_params.has_key?('disease_event_attributes')
+      event_params['disease_event_attributes']['id'] = self.disease_event.id
+    end
+
     self.attributes = event_params
+
   end
 
   def state_description
