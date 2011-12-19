@@ -1,4 +1,4 @@
-Feature: Staging Electronic Messages
+ should see "Country: USA, Specimen ID: 23456" on the Laboratory tabFeature: Staging Electronic Messages
 
   To process electonically submitted messages
   A user needs to be able to view messages and assign them to CMRs
@@ -330,7 +330,7 @@ Feature: Staging Electronic Messages
     And I follow "Similar Events"
     And I create a new CMR from the message
     And I visit the assigned-to event
-    Then I should see "Country: USA, Accession no: 9700123, Specimen ID: 23456" on the Laboratory tab
+    Then I should see "Country: USA, Specimen ID: 23456" on the Laboratory tab
 
   Scenario: Assigning a staged message with a dead patient
     Given I am logged in as a super user
