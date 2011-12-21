@@ -331,7 +331,7 @@ CREATE TABLE report3 AS
                                                     (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).lab_test_date IS NULL OR
                                                     (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result IS NULL
                                                 ) THEN 6 -- Needs serology
-                                            WHEN dose4_recvd IS NULL (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 15 -- Needs dose 4
+                                            WHEN dose4_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 15 -- Needs dose 4
                                             WHEN dose5_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 10 -- Needs dose 5
                                             WHEN dose6_recvd IS NULL AND (trisano.get_contact_antihb_before(dce.id, CURRENT_DATE)).test_result = 'Negative / Non-reactive' THEN 11 -- Needs dose 6
                                             WHEN
