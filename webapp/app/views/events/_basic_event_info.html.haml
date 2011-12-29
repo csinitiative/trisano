@@ -36,7 +36,7 @@
         =ld(event.event_onset_date)
     %td
       %b
-        = h(event.primary_jurisdiction.short_name)
+        = h(event.jurisdiction.short_name)
       %div{:id => 'secondary_jurisdictions'}
         %small
           = event.associated_jurisdictions.map { |j| h(j.short_name) }.join(", ")
