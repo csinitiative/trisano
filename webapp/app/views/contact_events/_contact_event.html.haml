@@ -65,8 +65,9 @@
         %small
           Investigator:&nbsp;
           %b= h(inv_name)
-  %td
-    = ld(contact_event.event_onset_date)
 
     .tools
       = state_controls(contact_event)
+
+  %td
+    = ld(contact_event.event_onset_date)
