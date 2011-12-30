@@ -32,8 +32,7 @@
         = h(contact_event.interested_party.person_entity.person.last_comma_first)
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
-        = t("contact_event") |
-        = ld(contact_event.event_onset_date)
+        = t("contact_event")
     .tools
       = basic_contact_event_controls(contact_event, view_mode)
       = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }
@@ -66,6 +65,8 @@
         %small
           Investigator:&nbsp;
           %b= h(inv_name)
+  %td
+    = ld(contact_event.event_onset_date)
 
     .tools
       = state_controls(contact_event)
