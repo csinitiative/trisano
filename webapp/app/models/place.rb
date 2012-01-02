@@ -138,7 +138,7 @@ class Place < ActiveRecord::Base
     end
 
     def diagnostic_type_codes
-      %w(H L C O S OOS)
+      %w(H L C O S CF PUB OOS)
     end
 
     def epi_type_codes
