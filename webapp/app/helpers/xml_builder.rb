@@ -59,10 +59,12 @@ class XmlBuilder
 
   def cast(value)
     case value
-    when Date
-      value.xmlschema
-    else
-      @template.send(:h, value)
+      when Date
+        value.xmlschema
+      when Time
+        value.xmlschema
+      else
+        @template.send(:h, value)
     end
   end
 
