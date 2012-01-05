@@ -210,6 +210,7 @@ class MorbidityEvent < HumanEvent
      'outbreak_name',
      ['investigator_id', {:rel => :investigator}],
      'workflow_state',
+     'investigation_started_date',
      'investigation_completed_LHD_date',
      'created_at',
      'parent_guardian',
