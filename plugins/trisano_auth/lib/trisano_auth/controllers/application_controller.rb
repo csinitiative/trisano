@@ -46,6 +46,11 @@ module TrisanoAuth
       end
       
       def require_no_user
+
+        # Without this, processes can still have previous request's User.current_user for actions
+        # that do not use :load_user
+        User.current_user = nil
+
         if current_user
           flash[:notice] = "You must be logged out to access this page"
           redirect_to home_url
