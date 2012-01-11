@@ -27,9 +27,20 @@ module Technoweenie # :nodoc:
           # Saves the data to the DbFile model
           def save_to_storage
             if save_attachment?
-              (db_file || build_db_file).data = temp_data
-              db_file.save!
-              self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
+              # NOTE there seems to be a problem with the PostgreSQL gem. Storing data manually on Create/Update.
+              if self.connection.class == ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+                unless db_file
+                  build_db_file
+                  db_file.save!
+                  self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
+                end
+                # NOTE Use a slightly adjusted SQL call than Rails would use with ::bytea
+                self.connection.update_sql "UPDATE \"db_files\" SET \"data\" = '#{ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_binary(temp_data)}'::bytea, \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
+              else
+                (db_file || build_db_file).data = temp_data
+                db_file.save!
+                self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
+              end
             end
             true
           end
