@@ -15,11 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-require 'Attachment'
-
 class ConvertAttachmentsBase64 < ActiveRecord::Migration
 
   def self.up
+    Attachment.id
     transaction do
       DbFile.all.each do |file|
         file.data = Base64.encode64(file.data)
