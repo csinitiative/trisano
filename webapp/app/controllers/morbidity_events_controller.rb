@@ -118,7 +118,7 @@ class MorbidityEventsController < EventsController
     @event.eager_load_answers
     respond_to do |format|
       if @event.save
-        # Debt:  There's gotta be a beter place for this.  Doesn't work on after_save of events.
+        # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end

@@ -4,7 +4,6 @@
 
 class UserSession < Authlogic::Session::Base
   reloadable!
-  logout_on_timeout true
   single_access_allowed_request_types :all
   params_key "api_key"
 end
