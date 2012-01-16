@@ -87,6 +87,24 @@
                 </Level>
             </Hierarchy>
         </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Year" description="MMWR Year">
+            <Hierarchy name="MMWR Year" allMemberName="All MMWR Years" hasAll="true" description="MMWR Year">
+                <Level name="MMWR Year" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Year">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN mmwr_year IS NULL THEN 'Unknown' ELSE mmwr_year END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Week" description="MMWR Week">
+            <Hierarchy name="MMWR Week" allMemberName="All MMWR Weeks" hasAll="true" description="MMWR Week">
+                <Level name="MMWR Week" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Week">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN mmwr_week IS NULL THEN 'Unknown' ELSE mmwr_week END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
         <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id" description="Patient race">
             <Hierarchy hasAll="true" primaryKey="person_id">
                 <Table name="dw_morbidity_patients_races_view" schema="trisano" />
@@ -392,6 +410,20 @@
             <Hierarchy name="Disease" hasAll="true" primaryKey="id" allMemberName="All Diseases">
                 <Table name="diseases_view" schema="trisano"></Table>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Year" description="MMWR Year">
+            <Hierarchy name="MMWR Year" allMemberName="All MMWR Years" hasAll="true" description="MMWR Year">
+                <Level name="MMWR Year" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Year">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN mmwr_year IS NULL THEN 'Unknown' ELSE mmwr_year END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Week" description="MMWR Week">
+            <Hierarchy name="MMWR Week" allMemberName="All MMWR Weeks" hasAll="true" description="MMWR Week">
+                <Level column="mmwr_week" name="MMWR Week" type="Integer" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Week" />
             </Hierarchy>
         </Dimension>
         <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id">
