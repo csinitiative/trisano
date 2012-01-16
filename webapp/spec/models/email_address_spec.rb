@@ -21,9 +21,9 @@ describe EmailAddress do
   context 'general' do
     it { should validate_presence_of(:email_address) }
 
-    it 'should not allow duplicate e-mail addresses' do
-      lambda { 2.times { Factory :email_address, :email_address => 'user@example.com' } }.should raise_error
-    end
+#    it 'should not allow duplicate e-mail addresses' do
+#      lambda { 2.times { Factory :email_address, :email_address => 'user@example.com' } }.should raise_error
+#    end
 
     it 'should ignore case' do
       Factory :email_address, :email_address => 'user@example.com'
