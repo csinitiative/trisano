@@ -20,7 +20,7 @@ class EmailAddress < ActiveRecord::Base
   belongs_to :owner, :polymorphic => true
 
   validates_presence_of :email_address
-  validates_uniqueness_of :email_address, :case_sensitive => false
+  #validates_uniqueness_of :email_address, :case_sensitive => false
   validates_format_of :email_address, :with => /@/, :message => I18n.t(:invalid_email_format)
 
   def xml_fields
