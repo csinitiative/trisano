@@ -29,13 +29,6 @@ Feature: Managing user e-mail addresses
     And I should see "Error adding e-mail address"
     And I should see "Email address format is invalid"
 
-  Scenario: Attempting to add a duplicate e-mail address
-    When I fill in "Add an Email Address" with "foo@bar.com"
-    And I press "Add"
-    Then I should be on the manage e-mail addresses page
-    And I should see "Error adding e-mail address"
-    And I should see "Email address has already been taken"
-
   Scenario: Deleting an e-mail address
     When I click the "Delete" link
     Then I should be on the manage e-mail addresses page

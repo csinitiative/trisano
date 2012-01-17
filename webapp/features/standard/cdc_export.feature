@@ -11,7 +11,7 @@ Feature: Exporting reportable diseases for the CDC
       And the morbidity event state case status is "Confirmed"
     When I go to the CDC export for the current week
     Then I should see "V491002000001"
-     And I should see "M 49#{Time.now.strftime('%g')}0(.*)10020"
+     And I should see "M 49120(.*)10020"
 
   @pending
   Scenario: Exporting a deleted record that's already been sent to the CDC
