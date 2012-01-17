@@ -44,32 +44,35 @@ class EventAttachmentsController < ApplicationController
 
   def create
 
-    # This uploaded file switch to base64 is here due to issues saving files
-    # to PostgreSQL 9.1 where it sometimes has an error around invalid UTF8 characters.
-    attachment = params[:attachment]["uploaded_data"]
-    attachment_path = attachment.path
+    begin
+      # This uploaded file switch to base64 is here due to issues saving files
+      # to PostgreSQL 9.1 where it sometimes has an error around invalid UTF8 characters.
+      attachment = params[:attachment]["uploaded_data"]
+      attachment_path = attachment.path
 
-    content_type = attachment.content_type
-    original_filename = attachment.original_filename
+      content_type = attachment.content_type
+      original_filename = attachment.original_filename
 
-    data_b64 = Base64.encode64(attachment.read)
-    File.open(attachment_path + ".base64", "w") {|f| f.write data_b64}
+      data_b64 = Base64.encode64(attachment.read)
+      File.open(attachment_path + ".base64", "w") {|f| f.write data_b64}
 
-    attachment_b64 = File.open(attachment_path + ".base64", "r")
+      attachment_b64 = File.open(attachment_path + ".base64", "r")
 
-    def attachment_b64.size
-      File.size(self.path)
+      def attachment_b64.size
+        File.size(self.path)
+      end
+
+      attachment_b64.metaclass.send(:define_method, 'content_type') do
+        content_type
+      end
+
+      attachment_b64.metaclass.send(:define_method, 'original_filename') do
+        original_filename
+      end
+
+      params[:attachment]["uploaded_data"] = attachment_b64
+    rescue
     end
-
-    attachment_b64.metaclass.send(:define_method, 'content_type') do
-      content_type
-    end
-
-    attachment_b64.metaclass.send(:define_method, 'original_filename') do
-      original_filename
-    end
-
-    params[:attachment]["uploaded_data"] = attachment_b64
 
     @attachment = Attachment.new(params[:attachment])
 
