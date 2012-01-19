@@ -911,8 +911,6 @@ describe HumanEvent, 'validating out of state patients' do
   it 'should not be valid to have an out of state patient with a case status of confirmed' do
     @event.address.county = external_codes(:county_oos)
     @event.lhd_case_status = external_codes(:case_status_confirmed)
-    @event.should_not be_valid
-    @event.lhd_case_status = nil
     @event.state_case_status = external_codes(:case_status_confirmed)
     @event.should_not be_valid
     @event.errors.on(:base).should == "Local or state case status must be 'Out of state' or blank for an event with a county of 'Out of state'"
