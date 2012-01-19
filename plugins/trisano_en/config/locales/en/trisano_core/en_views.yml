@@ -114,6 +114,10 @@ en:
   disease_forms: 'Disease Specific Forms'
   manage_forms: 'Manage Forms'
   manage_form_library: 'Manage Form Library'
+  customize_user_interface: 'Customize User Interface'
+  change_logo: 'Change Logo'
+  logo: 'Logo'
+  logo_created: 'Logo Created'
 #AVR groups
   show_avr_group: 'Show AVR Group'
   back_to_avr_groups: '< Back to AVR Groups'

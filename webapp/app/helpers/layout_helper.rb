@@ -96,7 +96,13 @@ module LayoutHelper
   end
 
   def main_logo_path
-    "logo.png"
+    logo = Logo.last
+
+    if logo.nil?
+      'logo.png'
+    else
+      logo_path(logo)
+    end
   end
 
   def render_main_menu

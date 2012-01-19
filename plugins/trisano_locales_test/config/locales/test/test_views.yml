@@ -101,6 +101,10 @@ test:
   disease_forms: 'xDisease Specific Forms'
   manage_forms: 'xManage Forms'
   manage_form_library: 'xManage Form Library'
+  customize_user_interface: 'xCustomize User Interface'
+  change_logo: 'xChange Logo'
+  logo: 'xLogo'
+  logo_created: 'xLogo Created'
 #AVR groups
   show_avr_group: 'xShow AVR Group'
   back_to_avr_groups: 'x< Back to AVR Groups'

@@ -114,6 +114,10 @@ es:
   disease_forms: 'Formularios Especificos de Enfermedad'
   manage_forms: 'Gestionar Formularios'
   manage_form_labrary: 'Gestionar Biblioteca de Formularios'
+  customize_user_interface: 'Customize User Interface'
+  change_logo: 'Change Logo'
+  logo: 'Logo'
+  logo_created: 'Logo Created'
 #AVR groups
   show_avr_group: 'Mostrar Grupo AVR'
   back_to_avr_groups: '< Regresar a Grupos AVR'
