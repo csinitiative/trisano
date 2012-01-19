@@ -896,16 +896,19 @@ describe HumanEvent, 'validating out of state patients' do
     @event.should be_valid
   end
 
-  it 'should be valid to have an out of state patient with a case status of out of state' do
+  it 'should be valid to have an out of state patient with a LHD case status of out of state' do
     @event.address.county = external_codes(:county_oos)
     @event.lhd_case_status = external_codes(:case_status_oos)
     @event.should be_valid
-    @event.lhd_case_status = nil
+  end
+
+  it 'should be valid to have an out of state patient with a state case status of out of state' do
+    @event.address.county = external_codes(:county_oos)
     @event.state_case_status = external_codes(:case_status_oos)
     @event.should be_valid
   end
 
-  it 'should not be valid to have an out of state patient with a case status of out of state' do
+  it 'should not be valid to have an out of state patient with a case status of confirmed' do
     @event.address.county = external_codes(:county_oos)
     @event.lhd_case_status = external_codes(:case_status_confirmed)
     @event.should_not be_valid
