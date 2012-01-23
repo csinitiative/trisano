@@ -23,7 +23,7 @@ class AdminController < ApplicationController
   helper_method :system_configuration_links
 
   def index
-    # Nothing to do at the moment as the dashboard is static
+    @custom_footer_id = ManagedContents.find_by_name('footer').id
   end
 
   protected

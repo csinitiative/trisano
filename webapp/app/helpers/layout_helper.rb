@@ -27,6 +27,13 @@ module LayoutHelper
   def render_footer
     result = ""
 
+    managed_footer = managed_content('footer')
+
+    if !managed_footer.blank?
+      result << managed_footer
+      result << "<hr/>"
+    end
+
     result << "<div class='footlogo'>"
     result << image_tag("foot.png", :border => 0)
     result << "</div>"

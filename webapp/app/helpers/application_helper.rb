@@ -397,4 +397,8 @@ module ApplicationHelper
     object_name.gsub('[', '_').gsub(']', '')
   end
 
+  def managed_content(name)
+    ManagedContents.find_by_name(name).content
+  end
+
 end

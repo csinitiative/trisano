@@ -66,3 +66,5 @@
 
 %h2=t('customize_user_interface')
 = link_to t('change_logo'), new_logo_path, :id => "admin_logo"
+%br
+= link_to t('custom_footer'), edit_managed_content_path(@custom_footer_id), :id => "custom_footer"

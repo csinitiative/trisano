@@ -105,6 +105,8 @@ test:
   change_logo: 'xChange Logo'
   logo: 'xLogo'
   logo_created: 'xLogo Created'
+  custom_footer: 'xCustom Footer'
+  custom_footer_updated: 'xCustom Footer Updated'
 #AVR groups
   show_avr_group: 'xShow AVR Group'
   back_to_avr_groups: 'x< Back to AVR Groups'

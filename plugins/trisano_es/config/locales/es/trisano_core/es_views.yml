@@ -118,6 +118,8 @@ es:
   change_logo: 'Change Logo'
   logo: 'Logo'
   logo_created: 'Logo Created'
+  custom_footer: 'Custom Footer'
+  custom_footer_updated: 'Custom Footer Updated'
 #AVR groups
   show_avr_group: 'Mostrar Grupo AVR'
   back_to_avr_groups: '< Regresar a Grupos AVR'
