@@ -23,7 +23,7 @@ class AdminController < ApplicationController
   helper_method :system_configuration_links
 
   def index
-    @custom_footer_id = ManagedContents.find_by_name('footer').id
+    @custom_footer_id = ManagedContents.find_or_create_by_name('footer').id
   end
 
   protected

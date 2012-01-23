@@ -398,7 +398,7 @@ module ApplicationHelper
   end
 
   def managed_content(name)
-    ManagedContents.find_by_name(name).content
+    ManagedContents.find_or_create_by_name(name).content
   end
 
 end
