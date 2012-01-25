@@ -4,7 +4,7 @@ class AddManagedContentsTable < ActiveRecord::Migration
   def self.up
     create_table :managed_contents do |t|
       t.string :name
-      t.string :content
+      t.string :content, :limit => 10000000
       t.timestamps
     end
 
