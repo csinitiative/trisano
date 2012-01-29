@@ -73,6 +73,18 @@ class LogosController < ApplicationController
     render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return
   end
 
+  def delete
+
+    begin
+      Logo.delete_all
+    rescue Exception => ex
+      logger.debug ex
+      flash[:error] = ex.message
+    end
+
+    redirect_to new_logo_url
+  end
+
   protected
 
   def check_role

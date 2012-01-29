@@ -18,6 +18,13 @@
 
 /- content_for :name do
 
+- content_for :tools do
+  = link_to t('back_to', :name => t('admin')), admin_path
+  %p
+
+- content_for :tools_two do
+  = button_to(t("revert_to_default_logo"), {:action => "delete"}, { :method => :post })
+
 #new-logo-form
 
   %h2

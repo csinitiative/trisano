@@ -77,7 +77,7 @@ ActionController::Routing::Routes.draw do |map|
   map.order_section_children 'forms/order_section_children/:id', :controller => 'forms', :action => 'order_section_children'
   map.toggle_value 'value_set_elements/toggle_value/:value_element_id', :controller => 'value_set_elements', :action => 'toggle_value'
 
-  map.resources :logos, :only => [:new, :create, :show]
+  map.resources :logos, :only => [:new, :create, :show, :delete]
 
   # Debt: Move to forms members
   map.builder 'forms/builder/:id', :controller => 'forms', :action => 'builder'
