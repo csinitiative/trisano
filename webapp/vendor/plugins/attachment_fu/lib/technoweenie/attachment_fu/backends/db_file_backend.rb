@@ -15,7 +15,12 @@ module Technoweenie # :nodoc:
         
         # Gets the current data from the database
         def current_data
-          Base64.decode64(db_file.data)
+          # Old attachments weren't base64'ed
+          if db_file.created_at < Date.new(2012, 1, 30)
+            db_file.data
+          else
+            Base64.decode64(db_file.data)
+          end
         end
         
         protected
