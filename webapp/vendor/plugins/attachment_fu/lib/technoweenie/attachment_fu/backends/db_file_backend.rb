@@ -35,7 +35,6 @@ module Technoweenie # :nodoc:
                   self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
                 end
                 encoded = Base64.encode64(temp_data)
-                raise encoded
                 self.connection.update_sql "UPDATE \"db_files\" SET \"data\" = '#{encoded}', \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
               else
                 (db_file || build_db_file).data = Base64.encode64(temp_data)
