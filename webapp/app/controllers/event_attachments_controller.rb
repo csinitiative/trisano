@@ -29,7 +29,7 @@ class EventAttachmentsController < ApplicationController
   def show
     @attachment = @event.attachments.find(params[:id])
     
-    send_data(@attachment.current_data,
+    send_data(Base64.decode64(@attachment.current_data),
       :type  => @attachment.content_type,
       :filename => @attachment.filename,
       :disposition => 'attachment')
@@ -43,8 +43,6 @@ class EventAttachmentsController < ApplicationController
   end
 
   def create
-
-    begin
 
     @attachment = Attachment.new(params[:attachment])
 
