@@ -26,32 +26,32 @@ class LogosController < ApplicationController
 
   def create
 
-    # This uploaded file switch to base64 is here due to issues saving files
-    # to PostgreSQL 9.1 where it sometimes has an error around invalid UTF8 characters.
-    logo = params[:logo]["uploaded_data"]
-    logo_path = logo.path
-
-    content_type = logo.content_type
-    original_filename = logo.original_filename
-
-    data_b64 = Base64.encode64(logo.read)
-    File.open(logo_path + ".base64", "w") {|f| f.write data_b64}
-
-    logo_b64 = File.open(logo_path + ".base64", "r")
-
-    def logo_b64.size
-      File.size(self.path)
-    end
-
-    logo_b64.metaclass.send(:define_method, 'content_type') do
-      content_type
-    end
-
-    logo_b64.metaclass.send(:define_method, 'original_filename') do
-      original_filename
-    end
-
-    params[:logo]["uploaded_data"] = logo_b64
+    ## This uploaded file switch to base64 is here due to issues saving files
+    ## to PostgreSQL 9.1 where it sometimes has an error around invalid UTF8 characters.
+    #logo = params[:logo]["uploaded_data"]
+    #logo_path = logo.path
+    #
+    #content_type = logo.content_type
+    #original_filename = logo.original_filename
+    #
+    #data_b64 = Base64.encode64(logo.read)
+    #File.open(logo_path + ".base64", "w") {|f| f.write data_b64}
+    #
+    #logo_b64 = File.open(logo_path + ".base64", "r")
+    #
+    #def logo_b64.size
+    #  File.size(self.path)
+    #end
+    #
+    #logo_b64.metaclass.send(:define_method, 'content_type') do
+    #  content_type
+    #end
+    #
+    #logo_b64.metaclass.send(:define_method, 'original_filename') do
+    #  original_filename
+    #end
+    #
+    #params[:logo]["uploaded_data"] = logo_b64
 
 
     @logo = Logo.new(params[:logo])
@@ -66,7 +66,7 @@ class LogosController < ApplicationController
   def show
     logo = Logo.find(params[:id])
 
-    send_data(Base64.decode64(logo.current_data),
+    send_data(logo.current_data,
       :type  => logo.content_type,
       :filename => logo.filename)
   rescue

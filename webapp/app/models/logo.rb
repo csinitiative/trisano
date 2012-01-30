@@ -26,6 +26,6 @@ class Logo < ActiveRecord::Base
     'image/png'
   ]
 
-  validates_attachment :size         => "The file you uploaded was larger than the maximum size of 2MB"
+  validates_attachment :size => "The file you uploaded was larger than the maximum size of 2MB"
 
 end

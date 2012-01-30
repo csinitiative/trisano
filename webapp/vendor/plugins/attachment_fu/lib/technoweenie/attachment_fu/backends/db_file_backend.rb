@@ -15,7 +15,7 @@ module Technoweenie # :nodoc:
         
         # Gets the current data from the database
         def current_data
-          db_file.data
+          Base64.decode64(db_file.data)
         end
         
         protected
@@ -34,10 +34,11 @@ module Technoweenie # :nodoc:
                   db_file.save!
                   self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
                 end
-                # NOTE Use a slightly adjusted SQL call than Rails would use with ::bytea
-                self.connection.update_sql "UPDATE \"db_files\" SET \"data\" = '#{ActiveRecord::ConnectionAdapters::PostgreSQLColumn.string_to_binary(temp_data)}'::bytea, \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
+                encoded = Base64.encode64(temp_data)
+                raise encoded
+                self.connection.update_sql "UPDATE \"db_files\" SET \"data\" = '#{encoded}', \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
               else
-                (db_file || build_db_file).data = temp_data
+                (db_file || build_db_file).data = Base64.encode64(temp_data)
                 db_file.save!
                 self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
               end
