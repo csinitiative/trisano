@@ -30,6 +30,13 @@
   -if @results.empty?
     %b=t('no_results')
   -else
+    - if User.current_user.is_entitled_to?(:create_event)
+      %div{'style' => 'float: right;'}= link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+
+    -if @results.length >= 500
+      %b{'style' => 'color: #C00'} Limit of 500 exceeded.
+    -else
+      %b= 'Displaying ' + @results.length.to_s + ' results'
     %table.list
       %tr
         %th=t('name')
@@ -42,7 +49,6 @@
         %th=t('cmr_actions')
         %th=t('entity_actions')
       =new_cmr_search_results(@results)
-    = will_paginate @results
 
 - if defined? @people or defined? @results
   %br

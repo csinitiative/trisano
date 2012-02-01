@@ -20,11 +20,15 @@ module NameAndBirthdateSearch
   end
 
   def find_or_paginate_by_sql(select, options={})
-    if options[:page_size] && options[:page]
-      self.paginate_by_sql select, :page => options[:page], :per_page => options[:page_size]
-    else
-      self.find_by_sql select
-    end
+    # This causes another very expensive COUNT query.  Generally, a query returning more than 500 is useless anyway,
+    # so let's just cap it.
+
+    #if options[:page_size] && options[:page]
+    #  self.paginate_by_sql select, :page => options[:page], :per_page => options[:page_size]
+    #else
+    #  self.find_by_sql select
+    #end
+    self.find_by_sql select + " LIMIT 500"
   end
 
   def create_name_and_bdate_sql(options)

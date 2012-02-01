@@ -292,6 +292,8 @@ class EventsController < ApplicationController
       if @event.halted?
         render :partial => "events/permission_denied", :locals => { :reason => e.message, :event => nil }, :layout => true, :status => 403 and return
       else
+        logger.error("Illegal state transition")
+        logger.error(e.message)
         render :text => t("illegal_state_transition"), :status => 409 and return
       end
     end
