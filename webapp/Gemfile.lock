@@ -97,6 +97,7 @@ GEM
       activeresource (= 2.3.5)
       activesupport (= 2.3.5)
       rake (>= 0.8.3)
+    rails-footnotes (3.6.7)
     rails_inheritable_attributes_manager (0.3.1)
     rake (0.8.7)
     rbx-require-relative (0.0.5)
@@ -161,6 +162,7 @@ DEPENDENCIES
   mongrel
   pg
   rails (= 2.3.5)
+  rails-footnotes (< 3.7.0)
   rails_inheritable_attributes_manager
   rest-open-uri
   rspec-rails

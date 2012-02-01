@@ -33,6 +33,7 @@ group :development do
   gem "capistrano"
   gem "capistrano-ext"
   gem "ruby-debug"
+  gem "rails-footnotes", '< 3.7.0'
 end
 
 group :test, :development do
