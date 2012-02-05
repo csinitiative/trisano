@@ -90,9 +90,7 @@
                 - contact_event.build_participations_contact
                 - contact_event.interested_party.person_entity.telephones.build
                 = add_record_link f, :contact_child_events, t("add_contact"), :object => contact_event, :partial => "events/contact_from_search", :html_id => "add_contact_#{result['event_id']}", :insert => 'new_contacts'
-              
-    %br
-    = will_paginate @results, :renderer => "RemoteLinkRenderer",:remote => {:with => "'name=' + $('contact_search_name').value", :update => "contact_search_results", :loading => visual_effect(:appear, "loader"),:complete =>visual_effect(:fade,"loader" ) }
+
     %hr
 
   - if(results_action == 'new' && User.current_user.is_entitled_to?(:create_event))
