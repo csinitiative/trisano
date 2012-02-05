@@ -16,10 +16,10 @@ module Technoweenie # :nodoc:
         # Gets the current data from the database
         def current_data
           # Old attachments weren't base64'ed
-          if db_file.created_at < Date.new(2012, 1, 30)
+          if not db_file.data.nil?
             db_file.data
           else
-            Base64.decode64(db_file.data)
+            Base64.decode64(db_file.data_text)
           end
         end
         
@@ -40,7 +40,7 @@ module Technoweenie # :nodoc:
                   self.class.update_all ['db_file_id = ?', self.db_file_id = db_file.id], ['id = ?', id]
                 end
                 encoded = Base64.encode64(temp_data)
-                self.connection.update_sql "UPDATE \"db_files\" SET \"data\" = '#{encoded}', \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
+                self.connection.update_sql "UPDATE \"db_files\" SET \"data_text\" = '#{encoded}', \"updated_at\" = '#{Time.now.to_s(:db)}' WHERE \"id\" = #{self.db_file_id};"
               else
                 (db_file || build_db_file).data = Base64.encode64(temp_data)
                 db_file.save!
