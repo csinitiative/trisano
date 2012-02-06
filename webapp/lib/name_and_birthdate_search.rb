@@ -53,6 +53,7 @@ module NameAndBirthdateSearch
       fields << "events.type AS event_type"
       fields << "events.event_onset_date"
       fields << "diseases.disease_name"
+      fields << "diseases.id AS disease_id"
       fields << "jurisplace.short_name AS jurisdiction_short_name"
       fields << "jurispart.secondary_entity_id AS jurisdiction_entity_id"
       fields << "sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions"

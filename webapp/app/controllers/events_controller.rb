@@ -30,6 +30,10 @@ class EventsController < ApplicationController
   def contacts_search
     page = params[:page] ? params[:page] : 1
 
+    if not params[:for_event_id].nil?
+      @event = Event.find(params[:for_event_id])
+    end
+
     begin
       @results = HumanEvent.find_by_name_and_bdate(
         :fulltext_terms => params[:name],
