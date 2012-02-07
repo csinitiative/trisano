@@ -299,7 +299,7 @@ class EventsController < ApplicationController
         logger.error("Illegal state transition")
         logger.error(e.message)
         flash[:error] = "Event state was modified prior to your action.  Review the event again."
-        redirect_to :back
+        redirect_to :back and return
       end
     end
 
