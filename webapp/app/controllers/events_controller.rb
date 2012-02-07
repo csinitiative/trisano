@@ -298,7 +298,8 @@ class EventsController < ApplicationController
       else
         logger.error("Illegal state transition")
         logger.error(e.message)
-        render :text => t("illegal_state_transition"), :status => 409 and return
+        flash[:error] = "Event state was modified prior to your action.  Review the event again."
+        redirect_to :back
       end
     end
 
