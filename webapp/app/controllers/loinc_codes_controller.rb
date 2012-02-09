@@ -32,6 +32,8 @@ class LoincCodesController < AdminController
 
     respond_to do |format|
       if @loinc_code.save
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("loinc_code_created")
         format.html { redirect_to(@loinc_code) }
       else
@@ -46,6 +48,8 @@ class LoincCodesController < AdminController
     end
     respond_to do |format|
       if @loinc_code.update_attributes(params[:loinc_code])
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("loinc_code_updated")
         format.html { redirect_to @loinc_code }
       else
@@ -57,6 +61,7 @@ class LoincCodesController < AdminController
   def destroy
     respond_to do |format|
       @loinc_code.destroy
+      expire_fragment(%r{/events/})
       flash[:notice] = t("loinc_code_deleted")
       format.html { redirect_to loinc_codes_path }
     end

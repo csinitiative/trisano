@@ -175,21 +175,31 @@ function add_tab_index_to_action(form) {
 }
 
 function post_and_return(form_id) {
-  form = document.getElementById(form_id);
-  form.action = build_url_with_tab_index(form.action);
-  form.action += form.action.match(/\?/) ? "" : "?";
-  form.action = form.action + "&return=true";
-  formWatcher.submitted = true;
-  form.submit();
+    form = document.getElementById(form_id);
+    form.action = build_url_with_tab_index(form.action);
+    form.action += form.action.match(/\?/) ? "" : "?";
+    form.action = form.action + "&return=true";
+    formWatcher.submitted = true;
+
+    if (Trisano.CmrsModifiedTabs) {
+        Trisano.CmrsModifiedTabs.setChangedTabs();
+    }
+
+    form.submit();
 }
 
 function post_and_exit(form) {
-  form = $(form);
-  url = build_url_with_tab_index(form.action);
-  queryParams = url.toQueryParams();
-  form.action = url;
-  formWatcher.submitted = true;
-  form.submit();
+    form = $(form);
+    url = build_url_with_tab_index(form.action);
+    queryParams = url.toQueryParams();
+    form.action = url;
+    formWatcher.submitted = true;
+
+    if (Trisano.CmrsModifiedTabs) {
+        Trisano.CmrsModifiedTabs.setChangedTabs();
+    }
+
+    form.submit();
 }
 
 function toggle_strike_through(element_id) {

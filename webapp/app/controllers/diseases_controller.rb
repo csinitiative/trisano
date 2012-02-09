@@ -54,6 +54,8 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.save
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("disease_successfully_created")
         format.html { redirect_to(@disease) }
         format.xml  { render :xml => @disease, :status => :created, :location => @disease }
@@ -74,6 +76,8 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.update_attributes params[:disease]
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("disease_successfully_updated")
         format.html { redirect_to(@disease) }
       else
@@ -85,6 +89,8 @@ class DiseasesController < AdminController
   def destroy
     @disease = Disease.find(params[:id])
     @disease.destroy
+
+    expire_fragment(%r{/events/})
 
     respond_to do |format|
       format.html { redirect_to(diseases_url) }

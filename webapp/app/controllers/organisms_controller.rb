@@ -24,6 +24,8 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.save
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("organism_created")
         format.html { redirect_to @organism  }
       else
@@ -37,6 +39,8 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.update_attributes params[:organism]
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("organism_updated")
         format.html { redirect_to @organism }
       else

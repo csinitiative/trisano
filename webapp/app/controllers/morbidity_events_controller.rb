@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'ruby-prof'
+
 class MorbidityEventsController < EventsController
   include EventsHelper
 
@@ -118,6 +120,9 @@ class MorbidityEventsController < EventsController
     @event.eager_load_answers
     respond_to do |format|
       if @event.save
+
+        expire_event_caches
+
         # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
@@ -224,4 +229,5 @@ class MorbidityEventsController < EventsController
   def load_event_queues
     @event_queues = EventQueue.queues_for_jurisdictions User.current_user.jurisdiction_ids_for_privilege(:view_event)
   end
+
 end

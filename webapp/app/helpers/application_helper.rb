@@ -19,6 +19,8 @@
 module ApplicationHelper
   include PostgresFu
 
+  extend ActiveSupport::Memoizable
+
   # Returns a localized date or, if date is nil, the default value.
   #
   # The following returns the date, formatted to the default format,

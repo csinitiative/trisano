@@ -28,21 +28,23 @@
             - f.fields_for(:encounter_child_events, :builder => ExtendedFormBuilder) do |e|
               = render :partial => "events/encounter", :locals => { :f => e }
 
-            - blank_encounter = EncounterEvent.new
-            - blank_encounter.build_participations_encounter
+            -cache "/events/#{@event.id}/showedit/encounters_tab/child_events" do
+              - blank_encounter = EncounterEvent.new
+              - blank_encounter.build_participations_encounter
 
-            %p= add_record_link f, :encounter_child_events, t("add_encounter"), :object => blank_encounter, :partial => "events/encounter"
+              %p= add_record_link f, :encounter_child_events, t("add_encounter"), :object => blank_encounter, :partial => "events/encounter"
 
           - else
             =t 'no_encounters', :thing => 'event'
 
-    -core_section :encounter_notes_section, f do
-      #encounter_notes
-        - unless @event.encounter_child_events.first.new_record?
-          - for encounter in @event.encounter_child_events
-            - pe = encounter.participations_encounter
-            %h3=t('encounter_on', :date => ld(pe.encounter_date))
-            = render(:partial => 'event_notes/list', :locals => { :notes => encounter.notes })
+    -cache "/events/#{@event.id}/showedit/encounters_tab/encounter_notes" do
+      -core_section :encounter_notes_section, f do
+        #encounter_notes
+          - unless @event.encounter_child_events.first.new_record?
+            - for encounter in @event.encounter_child_events
+              - pe = encounter.participations_encounter
+              %h3=t('encounter_on', :date => ld(pe.encounter_date))
+              = render(:partial => 'event_notes/list', :locals => { :notes => encounter.notes })
 
-        - else
-          %h3= t 'no_encounter_notes'
+          - else
+            %h3= t 'no_encounter_notes'

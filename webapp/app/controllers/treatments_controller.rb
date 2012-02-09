@@ -31,6 +31,8 @@ class TreatmentsController < AdminController
   def associate
     head(:not_found) && return unless @disease
     if @disease.add_treatments(params[:associations])
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t(:disease_treatments_updated)
     else
       flash[:error] = t(:update_failed)
@@ -43,6 +45,8 @@ class TreatmentsController < AdminController
   def disassociate
     head(:not_found) && return unless @disease
     if @disease.remove_treatments(params[:associations])
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t(:disease_treatments_updated)
     else
       flash[:error] = t(:update_failed)
@@ -55,6 +59,8 @@ class TreatmentsController < AdminController
   def apply_to
     head(:not_found) && return unless @disease
     if @disease.apply_treatments_to(params[:other_disease_ids])
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t(:disease_treatments_copied)
     else
       flash[:error] = t(:update_failed)
@@ -73,6 +79,8 @@ class TreatmentsController < AdminController
 
     respond_to do |format|
       if @treatment.save
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("treatment_created")
         format.html { redirect_to(@treatment) }
         format.xml  { render :xml => @treatment, :status => :created, :location => @treatment }
@@ -92,6 +100,8 @@ class TreatmentsController < AdminController
 
     respond_to do |format|
       if @treatment.update_attributes(params[:treatment])
+        expire_fragment(%r{/events/})
+
         flash[:notice] = t("treatment_updated")
         format.html { redirect_to(@treatment) }
         format.xml  { head :ok }
@@ -115,6 +125,8 @@ class TreatmentsController < AdminController
     @treatment = Treatment.find(params[:id])
 
     if @treatment.merge(params[:to_merge])
+      expire_fragment(%r{/events/})
+
       flash[:notice] = 'Merge successful.'
     else
       flash[:error] = @treatment.errors["base"]

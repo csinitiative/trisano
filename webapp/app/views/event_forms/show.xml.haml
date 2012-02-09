@@ -1,0 +1,10 @@
+!!!XML
+= xml_for 'event-form', @form, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |ef|
+  = ef.render :name
+  = ef.render :id
+
+  - for view in @form.investigator_view_elements_container.children_by_type("ViewElement")
+    = xml_for 'view', view do |v|
+      = v.render :name
+      = v.render :id
+      = show_investigator_view(view, @form, nil, 'xml')

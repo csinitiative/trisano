@@ -7,7 +7,7 @@
 -# version 3 of the License, or (at your option) any later version.
 -#
 -# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
--# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTI  CULAR PURPOSE.
 -# See the GNU Affero General Public License for more details.
 -#
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
@@ -33,30 +33,31 @@
         - search_interface :contacts, :url => { 'for_event_id' => @event.id } do
           %div#new_contacts
 
-        #contact_child_events
+        -cache "/events/#{@event.id}/showedit/contacts_tab/contacts_form" do
+          #contact_child_events
 
-          %ul{ :id => 'contact-list' }
-            - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
-              - next if c.object.deleted_at
-              - if c.object.new_record? && c.object.interested_party.primary_entity_id.nil?
-                = render :partial => "events/contact", :locals => { :f => c }
-              - else
-                = render :partial => "events/contact_show", :locals => { :f => c }
+            %ul{ :id => 'contact-list' }
+              - f.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
+                - next if c.object.deleted_at
+                - if c.object.new_record? && c.object.interested_party.primary_entity_id.nil?
+                  = render :partial => "events/contact", :locals => { :f => c }
+                - else
+                  = render :partial => "events/contact_show", :locals => { :f => c }
 
-          %p{:style => 'clear: both;'}
-            = add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => 'events/contact', :insert => 'contact-list'
-          =render_extensions :cmr_contacts_extension_renderers
+            %p{:style => 'clear: both;'}
+              = add_record_link f, :contact_child_events, t('add_contact'), :object => blank_contact, :partial => 'events/contact', :insert => 'contact-list'
+            =render_extensions :cmr_contacts_extension_renderers
 
-        - unless @event.morbidity_child_events.empty?
-          #morbidity_child_events
-            %fieldset
-              %legend=t 'cmr_contacts'
-              %i=t 'elevated_to_morbidity_events'
-              = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
+          - unless @event.morbidity_child_events.empty?
+            #morbidity_child_events
+              %fieldset
+                %legend=t 'cmr_contacts'
+                %i=t 'elevated_to_morbidity_events'
+                = render :partial => 'events/contacts_show', :locals => { :contacts => @event.morbidity_child_events }
 
-        - if @event.parent_event
-          #morbidity_parent_event
-            %fieldset
-              %legend=t 'parent_cmr'
-              %i=t('this_patient_is_a_contact_of')
-              = render :partial => 'events/parent_contact_show', :locals => { :parent => @event.parent_event, :contact => @event }
+          - if @event.parent_event
+            #morbidity_parent_event
+              %fieldset
+                %legend=t 'parent_cmr'
+                %i=t('this_patient_is_a_contact_of')
+                = render :partial => 'events/parent_contact_show', :locals => { :parent => @event.parent_event, :contact => @event }

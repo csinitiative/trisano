@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EncounterEventsController < EventsController
+  include EncounterEventsHelper
 
   def index
     render :text => t("encounter_event_no_index"), :status => 405
@@ -45,6 +46,8 @@ class EncounterEventsController < EventsController
     respond_to do |format|
       @event.validate_against_bday = true
       if @event.update_attributes(params[:encounter_event])
+        expire_event_caches
+
         flash[:notice] = t("encounter_event_updated")
         format.html {
           if go_back

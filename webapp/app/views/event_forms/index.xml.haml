@@ -1,0 +1,14 @@
+!!! XML
+= xml_for 'event-forms', nil, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |forms|
+  = forms.link_to event_forms_url(@event), :rel => :self
+  - if @event.is_a? MorbidityEvent
+    = forms.link_to cmr_url(@event), :rel => :event
+  - else
+    = forms.link_to contact_event_url(@event), :rel => :event
+
+  = xml_for 'forms', nil do
+    - for form_reference in @event.investigation_form_references
+      - form = form_reference.form
+      = xml_for 'form', form do |f|
+        = f.render :name
+        = f.render :id

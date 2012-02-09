@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ContactEventsController < EventsController
+  include ContactEventsHelper
+
   before_filter :load_parent, :only => [ :new, :create ]
   before_filter :can_promote?, :only => :event_type
 
@@ -76,6 +78,8 @@ class ContactEventsController < EventsController
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
+        expire_event_caches
+
         flash[:notice] = t("contact_event_successfully_updated")
         format.html do
           if go_back

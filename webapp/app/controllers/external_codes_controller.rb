@@ -53,6 +53,8 @@ class ExternalCodesController < AdminController
     raise(ActiveRecord::RecordNotFound, t("could_not_find_code_name_for_name", :name => params[:code_name])) unless @code_name
 
     if @external_code.update_attributes(params[:external_code])
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t("external_code_updated")
       redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
     else
@@ -75,6 +77,8 @@ class ExternalCodesController < AdminController
     raise(ActiveRecord::RecordNotFound, t("could_not_find_code_name_for_name_and_code", :name => params[:code_name], :code => params[:the_code])) unless @external_code
 
     if @external_code.save
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t("external_code_created")
       redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
     else
@@ -90,6 +94,8 @@ class ExternalCodesController < AdminController
     raise(ActiveRecord::RecordNotFound, t("could_not_find_code_name_for_name", :name => params[:code_name])) unless @code_name
 
     if @external_code.soft_delete
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t("external_code_deleted")
       redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
     else
@@ -105,6 +111,8 @@ class ExternalCodesController < AdminController
     raise(ActiveRecord::RecordNotFound, t("could_not_find_code_name_for_name", :name => params[:code_name])) unless @code_name
 
     if @external_code.soft_undelete
+      expire_fragment(%r{/events/})
+
       flash[:notice] = t("code_restoration_successful")
       redirect_to(show_code_url(@external_code.code_name, @external_code.the_code))
     else

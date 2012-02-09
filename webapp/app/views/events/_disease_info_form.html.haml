@@ -23,6 +23,7 @@
 
   #disease_info_form
 
+    -#Do not cache is there is a reference to current_user
     -core_section :disease_section, f do
       = error_messages_for :object => @event.disease_event
       - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
@@ -36,50 +37,51 @@
           = d.label(:date_diagnosed)
           = d.calendar_date_select(:date_diagnosed, :year_range => 100.years.ago..0.years.from_now)
 
-    -core_section :hospitalized_health_facilities_section, f do
-      #hospitalization_facilities
+    -cache "/events/#{@event.id}/edit/clinical_tab" do
+      -core_section :hospitalized_health_facilities_section, f do
+        #hospitalization_facilities
+          - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
+            - core_element :hospitalized_id, d, :vert do
+              = d.label(:hospitalized_id)
+              = d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event)
+            - f.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hospital_fields|
+              = render :partial => "events/hospital", :locals => { :f => hospital_fields }
+
+          - blank_hospital = HospitalizationFacility.new
+          - blank_hospital.build_hospitals_participation
+          %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital'
+
+      -core_section :mortality_status_section, f do
         - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
-          - core_element :hospitalized_id, d, :vert do
-            = d.label(:hospitalized_id)
-            = d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event)
-          - f.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hospital_fields|
-            = render :partial => "events/hospital", :locals => { :f => hospital_fields }
+          - core_element :died_id, d, :horiz do
+            = d.label(:died_id)
+            = d.dropdown_code_field(:died_id, 'yesno', {}, {}, @event)
 
-        - blank_hospital = HospitalizationFacility.new
-        - blank_hospital.build_hospitals_participation
-        %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital'
+        - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
+          - current_patient.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
+            - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |person|
+              - core_element :date_of_death, person, :horiz do
+                = person.label(:date_of_death)
+                = person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event)
 
-    -core_section :mortality_status_section, f do
-      - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
-        - core_element :died_id, d, :horiz do
-          = d.label(:died_id)
-          = d.dropdown_code_field(:died_id, 'yesno', {}, {}, @event)
+      -core_section :pregnancy_status_section, f do
+        = error_messages_for :object => f.object.interested_party.risk_factor
+        - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
+          - current_patient.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |rf|
+            - core_element :pregnant_id, rf, :horiz do
+              = rf.label(:pregnant_id)
+              = rf.dropdown_code_field(:pregnant_id, 'yesno', {}, {}, @event)
+            - core_element :pregnancy_due_date, rf, :horiz do
+              = rf.label(:pregnancy_due_date)
+              = rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..1.years.from_now)
 
-      - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
-        - current_patient.fields_for(:person_entity, :builder => ExtendedFormBuilder) do |pe|
-          - pe.fields_for(:person, :builder => ExtendedFormBuilder) do |person|
-            - core_element :date_of_death, person, :horiz do
-              = person.label(:date_of_death)
-              = person.core_calendar_date_select(:date_of_death, {:year_range => 100.years.ago..0.years.from_now}, @event)
+      = render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event }
 
-    -core_section :pregnancy_status_section, f do
-      = error_messages_for :object => f.object.interested_party.risk_factor
-      - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
-        - current_patient.fields_for(:risk_factor, :builder => ExtendedFormBuilder) do |rf|
-          - core_element :pregnant_id, rf, :horiz do
-            = rf.label(:pregnant_id)
-            = rf.dropdown_code_field(:pregnant_id, 'yesno', {}, {}, @event)
-          - core_element :pregnancy_due_date, rf, :horiz do
-            = rf.label(:pregnancy_due_date)
-            = rf.calendar_date_select(:pregnancy_due_date, :year_range => 5.years.ago..1.years.from_now)
+      -core_section :clinicians_section, f do
+        - core_element(:clinicians, f, :horiz) do
+          = render :partial => "events/clinicians_form", :locals => {:event_form => f}
 
-    = render :partial => "events/treatments_edit", :locals => { :f => f, :event => @event }
-
-    -core_section :clinicians_section, f do
-      - core_element(:clinicians, f, :horiz) do
-        = render :partial => "events/clinicians_form", :locals => {:event_form => f}
-
-    -core_section :diagnostic_facilities_section, f do
-      - core_element(:diagnostic_facilities, f, :horiz) do
-        = render :partial => "events/diagnostics_form", :locals => {:event_form => f}
+      -core_section :diagnostic_facilities_section, f do
+        - core_element(:diagnostic_facilities, f, :horiz) do
+          = render :partial => "events/diagnostics_form", :locals => {:event_form => f}
 
