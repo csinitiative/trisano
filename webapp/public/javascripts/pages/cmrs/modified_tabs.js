@@ -8,9 +8,16 @@ Trisano.CmrsModifiedTabs = {
         $j("div.tab").each(function(t) {
             var id = $j(this).attr('id');
             var tab_key = '';
-            $j(this).find(':input').each(function(c) {
+            $j(this).find('*').each(function(c) {
                 tab_key += $j(this).val();
             });
+
+            $j(this).find(':checked').each(function() {
+                alert($j(this).attr('name') + '1');
+                tab_key += $j(this).attr('name') + '1';
+
+            });
+
             self.initialTabHtml[id] = tab_key;
         });
     },
@@ -23,11 +30,17 @@ Trisano.CmrsModifiedTabs = {
             var initial = self.initialTabHtml[id];
             var current = '';
 
-            $j(this).find(':input').each(function(c) {
+            $j(this).find('*').each(function(c) {
                 current += $j(this).val();
             });
 
+            $j(this).find(':checked').each(function() {
+                alert($j(this).attr('name') + '1');
+                current += $j(this).attr('name') + '1';
+            });
+
             if (current != initial) {
+                alert(id);
                 var form = $j(".edit_morbidity_event").first();
                 $j('<input>').attr({
                     type: 'hidden',

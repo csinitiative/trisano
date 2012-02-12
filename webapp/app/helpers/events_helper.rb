@@ -1594,7 +1594,7 @@ module EventsHelper
         else
           expire_fragment(%r{/events/#{@event.id}/edit/#{key}})
           expire_fragment(%r{/events/#{@event.id}/show/#{key}})
-          expire_fragment(%r{/  events/#{@event.id}/showedit/#{key}})
+          expire_fragment(%r{/events/#{@event.id}/showedit/#{key}})
         end
       end
     end
