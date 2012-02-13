@@ -68,7 +68,6 @@ Trisano.CmrsModifiedTabs = {
     },
 
     expireAll : function() {
-        alert("Asdf");
         var form = $j(".edit_morbidity_event").first();
         $j('<input>').attr({
             type: 'hidden',
