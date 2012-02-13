@@ -33,7 +33,7 @@
         - search_interface :contacts, :url => { 'for_event_id' => @event.id } do
           %div#new_contacts
 
-        -cache "/events/#{@event.id}/showedit/contacts_tab/contacts_form" do
+        -cache :key => "/events/#{@event.id}/showedit/contacts_tab/contacts_form" do
           #contact_child_events
 
             %ul{ :id => 'contact-list' }

@@ -210,6 +210,21 @@ class Event < ActiveRecord::Base
 
   class << self
 
+    def followup_core_paths(event_id)
+      sql = "SELECT core_path
+            FROM form_references, form_elements,forms
+            WHERE form_references.event_id = " + sanitize_sql(event_id.to_s) + "
+            AND forms.id = form_references.form_id
+            AND form_elements.form_id = forms.id
+            AND type = 'FollowUpElement'"
+
+      core_paths = connection.execute sql
+
+      core_paths.collect do |cp|
+        cp['core_path'].gsub(/\[([A-Za-z-_]+?)\]\[/, '[\1_attributes][')
+      end
+    end
+
     # Does not return full on Event objects. Returns find_by_sql-records.
     def exportable_ibis_records(start_date, end_date)
       active_sql = ibis_export_sql do

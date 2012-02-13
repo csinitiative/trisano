@@ -78,7 +78,7 @@ class ContactEventsController < EventsController
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
-        expire_event_caches
+        expire_fragment(%r{/events/#{@event.id}/})
 
         flash[:notice] = t("contact_event_successfully_updated")
         format.html do

@@ -2,20 +2,30 @@ Trisano.CmrsModifiedTabs = {
 
     initialTabHtml : {},
 
+    initialHasFollowupElements : {},
+
     init : function() {
         var self = this;
 
         $j("div.tab").each(function(t) {
             var id = $j(this).attr('id');
             var tab_key = '';
-            $j(this).find('*').each(function(c) {
-                tab_key += $j(this).val();
+
+            $j(this).find(':input').each(function(c) {
+                var value = $j(this).val();
+                var name = $j(this).attr('name');
+                tab_key += value;
+
+                if (self.hasFollowupElement(name)) {
+                    self.initialHasFollowupElements[name] = value;
+                }
+                else if (name == "morbidity_event[disease_event_attributes][disease_id]") {
+                    self.initialHasFollowupElements[name] = value;
+                }
             });
 
             $j(this).find(':checked').each(function() {
-                alert($j(this).attr('name') + '1');
                 tab_key += $j(this).attr('name') + '1';
-
             });
 
             self.initialTabHtml[id] = tab_key;
@@ -30,17 +40,20 @@ Trisano.CmrsModifiedTabs = {
             var initial = self.initialTabHtml[id];
             var current = '';
 
-            $j(this).find('*').each(function(c) {
-                current += $j(this).val();
+            $j(this).find(':input').each(function(c) {
+                var name = $j(this).attr('name');
+                var value = $j(this).val();
+                current += value;
+                if (self.initialHasFollowupElements[name] != undefined && self.initialHasFollowupElements[name] != value) {
+                    self.expireAll();
+                }
             });
 
             $j(this).find(':checked').each(function() {
-                alert($j(this).attr('name') + '1');
                 current += $j(this).attr('name') + '1';
             });
 
             if (current != initial) {
-                alert(id);
                 var form = $j(".edit_morbidity_event").first();
                 $j('<input>').attr({
                     type: 'hidden',
@@ -48,6 +61,19 @@ Trisano.CmrsModifiedTabs = {
                 }).appendTo(form);
             }
         });
+    },
+
+    hasFollowupElement : function(name) {
+        return (Trisano.FollowupCorePaths[name]) ? true : false;
+    },
+
+    expireAll : function() {
+        alert("Asdf");
+        var form = $j(".edit_morbidity_event").first();
+        $j('<input>').attr({
+            type: 'hidden',
+            name: 'expire_cache_all'
+        }).appendTo(form);
     }
 
 };

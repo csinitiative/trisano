@@ -1,0 +1,6 @@
+%script{:type => "text/javascript"}
+  = "Trisano.FollowupCorePaths = {"
+  - Event.followup_core_paths(@event.id).each do |cp|
+    = '"' + j(cp) + '" : true,'
+  = "};"
+

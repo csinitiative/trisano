@@ -46,7 +46,7 @@ class EncounterEventsController < EventsController
     respond_to do |format|
       @event.validate_against_bday = true
       if @event.update_attributes(params[:encounter_event])
-        expire_event_caches
+        expire_fragment(%r{/events/#{@event.id}/})
 
         flash[:notice] = t("encounter_event_updated")
         format.html {

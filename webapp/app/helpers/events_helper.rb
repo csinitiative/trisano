@@ -1586,16 +1586,14 @@ module EventsHelper
   end
 
   def expire_event_caches()
-    if params['expire_cache']
+
+    if params['expire_cache_all']
+      expire_fragment(%r{/events/#{@event.id}/})
+    elsif params['expire_cache']
       params['expire_cache'].each do |key|
-        # If disease changed, clear the entire cache
-        if key == 'clinical_tab'
-          expire_fragment(%r{/events/#{@event.id}/})
-        else
-          expire_fragment(%r{/events/#{@event.id}/edit/#{key}})
-          expire_fragment(%r{/events/#{@event.id}/show/#{key}})
-          expire_fragment(%r{/events/#{@event.id}/showedit/#{key}})
-        end
+        expire_fragment(%r{/events/#{@event.id}/edit/#{key}})
+        expire_fragment(%r{/events/#{@event.id}/show/#{key}})
+        expire_fragment(%r{/events/#{@event.id}/showedit/#{key}})
       end
     end
   end
