@@ -46,3 +46,6 @@ end
 
 config.logger = DEFAULT_LOGGER
 
+require 'redis-store'
+config.gem 'redis-store'
+config.cache_store = :redis_store

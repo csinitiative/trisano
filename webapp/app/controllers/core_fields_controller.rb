@@ -52,7 +52,7 @@ class CoreFieldsController < AdminController
     respond_to do |format|
       if @core_field.update_attributes(params[:core_field])
 
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         format.html do
           flash[:notice] = t("core_field_successfully_updated")
@@ -80,7 +80,7 @@ class CoreFieldsController < AdminController
 
     respond_to do |format|
       if @disease.apply_core_fields_to params[:other_disease_ids]
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t(:core_fields_successfully_copied)
         format.html { redirect_to diseases_path }

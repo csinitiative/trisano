@@ -11,7 +11,7 @@ Trisano.CmrsModifiedTabs = {
             var id = $j(this).attr('id');
             var tab_key = '';
 
-            $j(this).find(':input').each(function(c) {
+            $j(this).find('*').each(function(c) {
                 var value = $j(this).val();
                 var name = $j(this).attr('name');
                 tab_key += value;
@@ -40,7 +40,7 @@ Trisano.CmrsModifiedTabs = {
             var initial = self.initialTabHtml[id];
             var current = '';
 
-            $j(this).find(':input').each(function(c) {
+            $j(this).find('*').each(function(c) {
                 var name = $j(this).attr('name');
                 var value = $j(this).val();
                 current += value;
@@ -57,7 +57,8 @@ Trisano.CmrsModifiedTabs = {
                 var form = $j(".edit_morbidity_event").first();
                 $j('<input>').attr({
                     type: 'hidden',
-                    name: 'expire_cache[' + id + ']'
+                    name: 'expire_cache[' + id + ']',
+                    value: true
                 }).appendTo(form);
             }
         });
@@ -71,7 +72,8 @@ Trisano.CmrsModifiedTabs = {
         var form = $j(".edit_morbidity_event").first();
         $j('<input>').attr({
             type: 'hidden',
-            name: 'expire_cache_all'
+            name: 'expire_cache_all',
+            value: true
         }).appendTo(form);
     }
 

@@ -1586,14 +1586,13 @@ module EventsHelper
   end
 
   def expire_event_caches()
-
     if params['expire_cache_all']
-      expire_fragment(%r{/events/#{@event.id}/})
+      redis.delete_matched("views/events/#{@event.id}/*")
     elsif params['expire_cache']
-      params['expire_cache'].each do |key|
-        expire_fragment(%r{/events/#{@event.id}/edit/#{key}})
-        expire_fragment(%r{/events/#{@event.id}/show/#{key}})
-        expire_fragment(%r{/events/#{@event.id}/showedit/#{key}})
+      params['expire_cache'].each do |key, value|
+        redis.delete_matched("views/events/#{@event.id}/edit/#{key}*")
+        redis.delete_matched("views/events/#{@event.id}/show/#{key}*")
+        redis.delete_matched("views/events/#{@event.id}/showedit/#{key}*")
       end
     end
   end

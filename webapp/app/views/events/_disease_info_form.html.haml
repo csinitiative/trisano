@@ -37,7 +37,7 @@
           = d.label(:date_diagnosed)
           = d.calendar_date_select(:date_diagnosed, :year_range => 100.years.ago..0.years.from_now)
 
-    -cache :key => "/events/#{@event.id}/edit/clinical_tab" do
+    -cache "events/#{@event.id}/edit/clinical_tab" do
       -core_section :hospitalized_health_facilities_section, f do
         #hospitalization_facilities
           - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|

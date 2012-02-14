@@ -54,7 +54,7 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.save
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("disease_successfully_created")
         format.html { redirect_to(@disease) }
@@ -76,7 +76,7 @@ class DiseasesController < AdminController
 
     respond_to do |format|
       if @disease.update_attributes params[:disease]
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("disease_successfully_updated")
         format.html { redirect_to(@disease) }
@@ -90,7 +90,7 @@ class DiseasesController < AdminController
     @disease = Disease.find(params[:id])
     @disease.destroy
 
-    expire_fragment(%r{/events/})
+    redis.delete_matched("views/events/*")
 
     respond_to do |format|
       format.html { redirect_to(diseases_url) }

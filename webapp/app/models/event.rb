@@ -221,7 +221,7 @@ class Event < ActiveRecord::Base
       core_paths = connection.execute sql
 
       core_paths.collect do |cp|
-        cp['core_path'].gsub(/\[([A-Za-z-_]+?)\]\[/, '[\1_attributes][')
+        cp['core_path'].gsub(/\[([A-Za-z\-_]+?)\]\[/, '[\1_attributes][')
       end
     end
 

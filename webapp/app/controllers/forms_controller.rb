@@ -55,7 +55,7 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.save_and_initialize_form_elements
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("form_created")
         format.html { redirect_to(@form) }
@@ -74,7 +74,7 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.save
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("form_copy_successful")
         format.html { redirect_to(edit_form_path(@form)) }
@@ -93,7 +93,7 @@ class FormsController < AdminController
 
     respond_to do |format|
       if @form.update_attributes(params[:form])
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("form_updated")
         format.html { redirect_to(@form) }
@@ -108,7 +108,7 @@ class FormsController < AdminController
   def destroy
     @form = Form.find(params[:id])
     @form.destroy
-    expire_fragment(%r{/events/})
+    redis.delete_matched("views/events/*")
 
     respond_to do |format|
       format.html { redirect_to(forms_url) }
@@ -128,7 +128,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
 
     if @form.publish
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
 
       respond_to do |format|
         flash[:notice] = t("form_publish_successful")
@@ -151,7 +151,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
 
     if @form.push
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
 
       respond_to do |format|
         flash[:notice] = t("form_push_successful")
@@ -174,7 +174,7 @@ class FormsController < AdminController
     @form = Form.find(params[:id])
 
     if @form.deactivate
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
 
       respond_to do |format|
         flash[:notice] = t("form_deactivation_successful")
@@ -196,7 +196,7 @@ class FormsController < AdminController
   def rollback
     @form = Form.find(params[:id])
     @rolled_back_form = @form.rollback
-    expire_fragment(%r{/events/})
+    redis.delete_matched("views/events/*")
 
     if @rolled_back_form
       @form = @rolled_back_form
@@ -232,7 +232,7 @@ class FormsController < AdminController
 
     begin
       @form = Form.import(params[:form][:import])
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
 
       redirect_to(@form)
     rescue Exception => ex
@@ -264,7 +264,7 @@ class FormsController < AdminController
     @reference_element = @question_element
 
     if @question_element.add_to_library(@group_element)
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
 
       @library_elements = FormElement.library_roots
       render :partial => "forms/library_elements", :locals => {:direction => :to_library, :type => @reference_element.class.name }
@@ -286,7 +286,7 @@ class FormsController < AdminController
         @form_element.copy_from_library(@lib_element, params)
       end
 
-      expire_fragment(%r{/events/})
+      redis.delete_matched("views/events/*")
     rescue FormElement::IllegalCopyOperation, FormElement::InvalidFormStructure, ActiveRecord::RecordInvalid
       @rjs_errors = @form_element.errors
       flash[:error] = t("element_copy_failed")

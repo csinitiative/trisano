@@ -35,16 +35,13 @@ module EncounterEventsHelper
   end
 
   def expire_event_caches()
-    if params['expire_cache']
-      params['expire_cache'].each do |key|
-        # If disease changed, clear the entire cache
-        if key == 'clinical_tab'
-          expire_fragment(%r{/events/#{@event.id}/})
-        else
-          expire_fragment(%r{/events/#{@event.id}/edit/#{key}})
-          expire_fragment(%r{/events/#{@event.id}/show/#{key}})
-          expire_fragment(%r{/events/#{@event.id}/showedit/#{key}})
-        end
+    if params['expire_cache_all']
+      redis.delete_matched("views/events/#{@event.id}/*")
+    elsif params['expire_cache']
+      params['expire_cache'].each do |key, value|
+        redis.delete_matched("views/events/#{@event.id}/edit/#{key}*")
+        redis.delete_matched("views/events/#{@event.id}/show/#{key}*")
+        redis.delete_matched("views/events/#{@event.id}/showedit/#{key}*")
       end
     end
   end

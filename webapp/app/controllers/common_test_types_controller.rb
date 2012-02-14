@@ -51,7 +51,7 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       if @common_test_type.save
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("common_test_type_successfully_created")
         format.html { redirect_to(@common_test_type) }
@@ -69,7 +69,7 @@ class CommonTestTypesController < AdminController
 
     respond_to do |format|
       if @common_test_type.update_attributes(params[:common_test_type])
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("common_test_type_successfully_updated")
         format.html { redirect_to(@common_test_type) }
@@ -87,7 +87,7 @@ class CommonTestTypesController < AdminController
     respond_to do |format|
       begin
         @common_test_type.update_loinc_code_ids :add => added_loincs, :remove => removed_loincs
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
         flash[:notice] = t("common_test_type_successfully_updated")
         format.html { redirect_to loinc_codes_common_test_type_path(@common_test_type) }
       rescue
@@ -104,7 +104,7 @@ class CommonTestTypesController < AdminController
     respond_to do |format|
       begin
         @common_test_type.destroy
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
         flash[:notice] = t("common_test_type_successfully_deleted")
         format.html { redirect_to common_test_types_path }
       rescue CommonTestType::DestroyNotAllowedError => e

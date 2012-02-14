@@ -24,7 +24,7 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.save
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("organism_created")
         format.html { redirect_to @organism  }
@@ -39,7 +39,7 @@ class OrganismsController < AdminController
 
     respond_to do |format|
       if @organism.update_attributes params[:organism]
-        expire_fragment(%r{/events/})
+        redis.delete_matched("views/events/*")
 
         flash[:notice] = t("organism_updated")
         format.html { redirect_to @organism }
