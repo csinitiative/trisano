@@ -216,7 +216,8 @@ class Event < ActiveRecord::Base
             WHERE form_references.event_id = " + sanitize_sql(event_id.to_s) + "
             AND forms.id = form_references.form_id
             AND form_elements.form_id = forms.id
-            AND type = 'FollowUpElement'"
+            AND type = 'FollowUpElement'
+            AND core_path != ''"
 
       core_paths = connection.execute sql
 
