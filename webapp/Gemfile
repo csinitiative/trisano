@@ -19,7 +19,7 @@ gem "mislav-will_paginate"
 gem "rubyzip"
 gem "delayed_job", '~>2.0.7'
 
-gem 'redis-store', '= 1.0.0beta2'
+gem 'redis-store', '= 1.0.0.beta2'
 
 gem "ruby-hl7", "1.0.3"
 
