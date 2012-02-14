@@ -118,7 +118,6 @@ GEM
     ruby-hl7 (1.0.3)
       rake (>= 0.8.7)
       rubyforge (>= 2.0.4)
-    ruby-prof (0.10.8)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
     rubyzip (0.9.4)
@@ -173,7 +172,6 @@ DEPENDENCIES
   rspec-rails
   ruby-debug
   ruby-hl7 (= 1.0.3)
-  ruby-prof
   rubyzip
   selenium-client
   sparrowhawk (= 0.9.5)
