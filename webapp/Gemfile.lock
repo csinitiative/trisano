@@ -2,6 +2,7 @@ GEM
   remote: http://gems.github.com/
   remote: http://rubygems.org/
   specs:
+    SystemTimer (1.2.3)
     actionmailer (2.3.5)
       actionpack (= 2.3.5)
     actionpack (2.3.5)
@@ -145,6 +146,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  SystemTimer
   activerecord-jdbcpostgresql-adapter (= 1.0.0.kofnopre1)
   capistrano
   capistrano-ext

@@ -66,7 +66,8 @@ module SearchHelper
   def link_to_search_result_event(text, event)
     link_to(text,
             search_result_event_path(event),
-            :id => search_result_link_id(event))
+            :id => search_result_link_id(event),
+            :class => 'show_link')
   end
 
   def search_result_class(event)

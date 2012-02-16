@@ -105,6 +105,8 @@ class MorbidityEventsController < EventsController
   end
 
   def update
+    expire_event_caches
+
     go_back = params.delete(:return)
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
@@ -123,8 +125,6 @@ class MorbidityEventsController < EventsController
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
         end
-
-        expire_event_caches
 
         flash[:notice] = t("cmr_updated")
         format.html {

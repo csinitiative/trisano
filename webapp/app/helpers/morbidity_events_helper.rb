@@ -30,15 +30,15 @@ module MorbidityEventsHelper
     can_create =  User.current_user.is_entitled_to_in?(:create_event, event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } )
 
     controls = ""
-    controls << link_to(t('show'), cmr_path(event)) if ((view_mode == :index) && can_view)
+    controls << link_to(t('show'), cmr_path(event), :class => "show_link") if ((view_mode == :index) && can_view)
     if can_update
       controls << " | " unless controls.blank?
       if (view_mode == :index)
-        controls << link_to(t('edit'), edit_cmr_path(event))
+        controls << link_to(t('edit'), edit_cmr_path(event), :class => "edit_link")
       elsif (view_mode == :edit)
-        controls << link_to_function(t('show'), "send_url_with_tab_index('#{cmr_path(event)}')")
+        controls << link_to_function(t('show'), "send_url_with_tab_index('#{cmr_path(event)}')", :class => "show_link")
       else
-        controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_cmr_path(event)}')")
+        controls << link_to_function(t('edit'), "send_url_with_tab_index('#{edit_cmr_path(event)}')", :class => "edit_link")
       end
     end
     if can_view

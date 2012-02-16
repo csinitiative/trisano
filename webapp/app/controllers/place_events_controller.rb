@@ -52,6 +52,9 @@ class PlaceEventsController < EventsController
       if @event.save
         @event.reload
         @event.try(:address).try(:establish_canonical_address)
+        redis.delete_matched("views/events/#{@parent_event.id}/edit/epi_tab*")
+        redis.delete_matched("views/events/#{@parent_event.id}/show/epi_tab*")
+        redis.delete_matched("views/events/#{@parent_event.id}/showedit/epi_tab*")
         flash[:notice] = t("place_exposure_created")
         format.html {
           redirect_to edit_place_event_url(@event)
@@ -65,6 +68,11 @@ class PlaceEventsController < EventsController
   end
 
   def update
+    redis.delete_matched("views/events/#{@event.id}/*")
+    redis.delete_matched("views/events/#{@event.parent_id}/edit/epi_tab*")
+    redis.delete_matched("views/events/#{@event.parent_id}/show/epi_tab*")
+    redis.delete_matched("views/events/#{@event.parent_id}/showedit/epi_tab*")
+
     go_back = params.delete(:return)
     @event.add_note(t("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 

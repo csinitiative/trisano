@@ -59,6 +59,7 @@ class EventFormsController < ApplicationController
     else
       begin
         @event.add_forms(forms_to_add)
+        redis.delete_matched("views/events/#{@event.id}/")
       rescue ArgumentError, ActiveRecord::RecordNotFound
         render :file => static_error_page_path(422), :layout => 'application', :status => 422 and return
       rescue RuntimeError
@@ -81,6 +82,7 @@ class EventFormsController < ApplicationController
       flash[:error] = t("no_forms_were_selected_for_removal")
     else
       if @event.remove_forms(forms_to_remove)
+        redis.delete_matched("views/events/#{@event.id}/")
         flash[:notice] = t("forms_in_use_successfully_updated")
       else
         flash[:error] = t("unable_to_remove_forms")

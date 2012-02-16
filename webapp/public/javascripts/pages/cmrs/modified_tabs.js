@@ -30,6 +30,23 @@ Trisano.CmrsModifiedTabs = {
 
             self.initialTabHtml[id] = tab_key;
         });
+
+        this.prefetchShow();
+    },
+
+    /**
+     * Prefetch the show page to ensure it is in the cache
+     */
+    prefetchShow : function() {
+        var url = window.location.pathname;
+        url = url.replace(/\/edit/, '');
+
+        $j.ajax({
+          url: url,
+          complete: function() {
+            // Do nothing
+          }
+        });
     },
 
     setChangedTabs : function() {

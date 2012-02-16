@@ -59,6 +59,11 @@ class ContactEventsController < EventsController
       if @event.save
         @event.reload
         @event.try(:address).try(:establish_canonical_address)
+
+        redis.delete_matched("views/events/#{@parent_event.id}/edit/contacts_tab")
+        redis.delete_matched("views/events/#{@parent_event.id}/show/contacts_tab")
+        redis.delete_matched("views/events/#{@parent_event.id}/showedit/contacts_tab")
+
         flash[:notice] = t("contact_event_created")
         format.html {
           redirect_to edit_contact_event_url(@event)
@@ -79,6 +84,10 @@ class ContactEventsController < EventsController
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
         redis.delete_matched("views/events/#{@event.id}}/*")
+
+        redis.delete_matched("views/events/#{@event.parent_id}/edit/contacts_tab*")
+        redis.delete_matched("views/events/#{@event.parent_id}/show/contacts_tab*")
+        redis.delete_matched("views/events/#{@event.parent_id}/showedit/contacts_tab*")
 
         flash[:notice] = t("contact_event_successfully_updated")
         format.html do
