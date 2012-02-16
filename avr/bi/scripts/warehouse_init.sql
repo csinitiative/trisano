@@ -933,10 +933,10 @@ BEGIN
 
     -- Loop through each form
     FOR form_name IN
-                SELECT DISTINCT short_name
+                SELECT DISTINCT lower(short_name) AS short_name
                 FROM forms
                 WHERE short_name IS NOT NULL AND short_name != ''
-                ORDER BY short_name LOOP
+                ORDER BY 1 LOOP
 
         RAISE NOTICE 'Processing form name %', form_name;
 
@@ -968,7 +968,7 @@ BEGIN
         -- defined schema
         <<question_loop>>
         FOR tmprec IN SELECT DISTINCT
-                    q.short_name,
+                    lower(q.short_name) AS short_name,
                     regexp_replace(lower(q.short_name), '[^[:alnum:]_]', '_', 'g') AS safe_name
                 FROM questions q JOIN answers a
                     ON (a.question_id = q.id AND a.text_answer IS NOT NULL AND a.text_answer != '')
