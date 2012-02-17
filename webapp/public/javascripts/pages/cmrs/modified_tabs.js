@@ -8,12 +8,13 @@ Trisano.CmrsModifiedTabs = {
         var self = this;
 
         $j("div.tab").each(function(t) {
-            var id = $j(this).attr('id');
             var tab_key = '';
+            var tab_id = $j(this).attr('id');
 
             $j(this).find('*').each(function(c) {
                 var value = $j(this).val();
                 var name = $j(this).attr('name');
+                var id = $j(this).attr('id');
                 tab_key += value;
 
                 if (self.hasFollowupElement(name)) {
@@ -22,17 +23,22 @@ Trisano.CmrsModifiedTabs = {
                 else if (name == "morbidity_event[disease_event_attributes][disease_id]") {
                     self.initialHasFollowupElements[name] = value;
                 }
+
+                if (id && id.match(/investigat/)) {
+                    tab_key = "INVALIDATE"; // always invalidate tab caches that include investigation questions/answers
+                }
             });
 
             $j(this).find(':checked').each(function() {
                 tab_key += $j(this).attr('name') + '1';
             });
 
-            self.initialTabHtml[id] = tab_key;
+            self.initialTabHtml[tab_id] = tab_key;
         });
 
         this.prefetchShow();
     },
+
 
     /**
      * Prefetch the show page to ensure it is in the cache
