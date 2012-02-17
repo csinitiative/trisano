@@ -4,6 +4,8 @@ Trisano.CmrsModifiedTabs = {
 
     initialHasFollowupElements : {},
 
+    affectedInvestigationTabs : {},
+
     init : function() {
         var self = this;
 
@@ -25,7 +27,7 @@ Trisano.CmrsModifiedTabs = {
                 }
 
                 if (id && id.match(/investigat/)) {
-                    tab_key = "INVALIDATE"; // always invalidate tab caches that include investigation questions/answers
+                    self.affectedInvestigationTabs[tab_id] = true;
                 }
             });
 
@@ -77,14 +79,26 @@ Trisano.CmrsModifiedTabs = {
             });
 
             if (current != initial) {
-                var form = $j(".edit_morbidity_event").first();
-                $j('<input>').attr({
-                    type: 'hidden',
-                    name: 'expire_cache[' + id + ']',
-                    value: true
-                }).appendTo(form);
+                self.expireTab(id);
+
+                if (self.affectedInvestigationTabs[id]) {
+                    self.expireTab('investigation_tab');
+
+                    $j.each(self.affectedInvestigationTabs, function(i, v) {
+                        self.expireTab(i);
+                    });
+                }
             }
         });
+    },
+
+    expireTab : function(id) {
+        var form = $j(".edit_morbidity_event").first();
+        $j('<input>').attr({
+            type: 'hidden',
+            name: 'expire_cache[' + id + ']',
+            value: true
+        }).appendTo(form);
     },
 
     hasFollowupElement : function(name) {
