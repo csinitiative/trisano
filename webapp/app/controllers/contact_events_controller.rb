@@ -60,9 +60,9 @@ class ContactEventsController < EventsController
         @event.reload
         @event.try(:address).try(:establish_canonical_address)
 
-        redis.delete_matched("views/events/#{@parent_event.id}/edit/contacts_tab")
-        redis.delete_matched("views/events/#{@parent_event.id}/show/contacts_tab")
-        redis.delete_matched("views/events/#{@parent_event.id}/showedit/contacts_tab")
+        redis.delete_matched("views/events/#{@parent_event.id}/edit/contacts_tab*")
+        redis.delete_matched("views/events/#{@parent_event.id}/show/contacts_tab*")
+        redis.delete_matched("views/events/#{@parent_event.id}/showedit/contacts_tab*")
 
         flash[:notice] = t("contact_event_created")
         format.html {
