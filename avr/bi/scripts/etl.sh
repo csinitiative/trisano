@@ -33,6 +33,12 @@ DEST_DB_PORT=5432
 DEST_DB_NAME=trisano_warehouse
 DEST_DB_USER=trisano_su
 
+TRISANO_PLUGIN_DIRECTORY=""
+
+# Should the ETL process obfuscate private information for events associated
+# with diseases marked "sensitive"?
+OBFUSCATE_SENSITIVE_DISEASES=true
+
 PSQL_FLAGS="-X -q -t -v ON_ERROR_STOP=on"
 PGDUMP_FLAGS="-i -O -x"
 
@@ -164,6 +170,7 @@ $PGDUMP -T attachments -T db_files $PGDUMP_FLAGS --disable-triggers -a -h $SOURC
 
 echo "Performing ETL data manipulation"
 $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
+    -v obfuscate=${OBFUSCATE_SENSITIVE_DISEASES} \
     -f $ETL_SCRIPT $DEST_DB_NAME || DIE "Failed to create new data warehouse structures"
 
 echo "Processing plugin ETL"

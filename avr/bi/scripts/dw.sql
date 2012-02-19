@@ -19,6 +19,10 @@
 -- This script creates new denormalized tables from a freshly dumped OLTP
 -- database, using a schema called "staging".
 
+-- The script expects a variable to be set in psql called :obfuscate. It is
+-- boolean, and if true, will cause individually identifiable health
+-- information in cases with diseases marked "sensitive" to be obfuscated.
+
 BEGIN;
     DELETE FROM trisano.etl_success WHERE operation = 'Data Sync Subprocess - Structure Modification' AND NOT success;
     INSERT INTO trisano.etl_success (success, operation) VALUES (FALSE, 'Data Sync Subprocess - Structure Modification');
@@ -223,14 +227,14 @@ CREATE TABLE dw_morbidity_events AS
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
-    CASE WHEN ds.sensitive THEN -100 ELSE ppl.id END AS dw_patients_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE ppl.id END AS dw_patients_id,
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
     primary_language_ec.code_description AS primary_language,        -- code_description?
     pplpart.primary_entity_id AS patient_entity_id,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
     ppl.birth_date,
     ppl.date_of_death,
 
@@ -268,7 +272,7 @@ SELECT
     trisano.get_age_in_years(events.age_at_onset, agetypeec.code_description) AS age_in_years,
     ppl.approximate_age_no_birthday AS estimated_age_at_onset,
     est_ec.code_description AS estimated_age_type,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE events.parent_guardian END AS parent_guardian,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE events.parent_guardian END AS parent_guardian,
 
     fhec.code_description AS food_handler,
     hcwec.code_description AS healthcare_worker,
@@ -292,13 +296,13 @@ SELECT
     events.acuity,
 
     CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.city END AS city,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.city END AS city,
     jorec.code_description AS county,
     stateec.code_description AS state,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.postal_code END AS postal_code,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.postal_code END AS postal_code,
 
     disev.disease_onset_date AS date_disease_onset,
     CASE
@@ -570,9 +574,9 @@ SELECT
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
     primary_language_ec.code_description AS primary_language,        -- code_description?
     pplpart.primary_entity_id AS patient_entity_id,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
     ppl.birth_date,
     ppl.date_of_death,
 
@@ -613,10 +617,10 @@ SELECT
     events.event_queue_id,                    -- do something w/ event queues?
 
     CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
-    CASE WHEN ds.sensitive THEN '(Obfuscated)' ELSE pataddr.city END AS city,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.city END AS city,
     jorec.code_description AS county,
     stateec.code_description AS state,
     pataddr.postal_code,
@@ -1393,6 +1397,7 @@ UPDATE addresses
     FROM
         dw_morbidity_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         addresses.event_id = dme.id;
 
@@ -1408,6 +1413,7 @@ UPDATE addresses
     FROM
         dw_contact_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         addresses.event_id = dme.id;
 
@@ -1417,6 +1423,7 @@ UPDATE events
     FROM
         diseases d, disease_events de
     WHERE
+        :obfuscate AND
         d.id = de.disease_id AND
         de.event_id = events.id AND
         d.sensitive;
@@ -1429,6 +1436,7 @@ UPDATE people
     FROM
         dw_morbidity_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         dme.patient_entity_id = people.entity_id;
 
@@ -1446,6 +1454,7 @@ UPDATE people
     FROM
         dw_contact_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         dme.patient_entity_id = people.entity_id;
 
