@@ -15,6 +15,38 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+require 'rubygems'
+require 'pg'
+require 'erb'
+
+namespace :avr do
+    def db_config
+        @db_config = YAML::load(ERB.new(File.read('./config/database.yml')).result) if @config.nil?
+        @db_config
+    end
+
+    def get_warehouse_connection
+        if db_config['development'].nil?
+          raise "Development environment is not defined."
+        end
+        dbhost   = db_config[RAILS_ENV]['warehouse_host']
+        dbport   = db_config[RAILS_ENV]['warehouse_port']
+        dbname   = db_config[RAILS_ENV]['warehouse_database']
+        dbuser   = db_config[RAILS_ENV]['warehouse_username']
+        dbpass   = db_config[RAILS_ENV]['warehouse_password']
+
+        conn = PG.connect( :dbname => dbname, :host => dbhost, :port => dbport, :user => dbuser, :password => dbpass )
+        yield conn
+    end
+    
+    desc 'test getting a connection'
+    task :get_connection => :rails_env do
+        get_warehouse_connection do
+            puts "Yay!"
+        end
+    end
+end
+
 if RUBY_PLATFORM =~ /java/
   require 'java'
   require 'fileutils'
