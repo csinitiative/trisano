@@ -77,13 +77,14 @@ class ContactEventsController < EventsController
   end
 
   def update
+    redis.delete_matched("views/events/#{@event.id}}/*")
+
     go_back = params.delete(:return)
 
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
     respond_to do |format|
       if @event.update_attributes(params[:contact_event])
-        redis.delete_matched("views/events/#{@event.id}}/*")
 
         redis.delete_matched("views/events/#{@event.parent_id}/edit/contacts_tab*")
         redis.delete_matched("views/events/#{@event.parent_id}/show/contacts_tab*")

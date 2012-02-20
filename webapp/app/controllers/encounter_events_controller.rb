@@ -41,13 +41,13 @@ class EncounterEventsController < EventsController
   end
 
   def update
+    redis.delete_matched("views/events/#{@event.id}/*")
+
     go_back = params.delete(:return)
 
     respond_to do |format|
       @event.validate_against_bday = true
       if @event.update_attributes(params[:encounter_event])
-        redis.delete_matched("views/events/#{@event.id}/*")
-
         flash[:notice] = t("encounter_event_updated")
         format.html {
           if go_back

@@ -4,7 +4,7 @@ class NoRedis
 end
 
 def redis
-  if RAILS_ENV == "production"
+  if Rails.configuration.try(:action_view).try(:cache_template_loading)
     Thread.current[:redis] ||= ActiveSupport::Cache::RedisStore.new
   else
     NoRedis.new

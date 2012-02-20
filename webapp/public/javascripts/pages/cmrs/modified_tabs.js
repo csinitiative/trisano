@@ -4,8 +4,6 @@ Trisano.CmrsModifiedTabs = {
 
     initialHasFollowupElements : {},
 
-    affectedInvestigationTabs : {},
-
     init : function() {
         var self = this;
 
@@ -26,9 +24,6 @@ Trisano.CmrsModifiedTabs = {
                     self.initialHasFollowupElements[name] = value;
                 }
 
-                if (id && id.match(/investigat/)) {
-                    self.affectedInvestigationTabs[tab_id] = true;
-                }
             });
 
             $j(this).find(':checked').each(function() {
@@ -80,14 +75,6 @@ Trisano.CmrsModifiedTabs = {
 
             if (current != initial) {
                 self.expireTab(id);
-
-                if (self.affectedInvestigationTabs[id]) {
-                    self.expireTab('investigation_tab');
-
-                    $j.each(self.affectedInvestigationTabs, function(i, v) {
-                        self.expireTab(i);
-                    });
-                }
             }
         });
     },
