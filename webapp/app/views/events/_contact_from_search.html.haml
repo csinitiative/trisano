@@ -17,11 +17,8 @@
   - f.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc_fields|
     %span.horiz
       - if @event
-        - form_for(@event, :url => cmr_path(@event) ) do |event_form|
-          - event_form.fields_for(:contact_child_events, :builder => ExtendedFormBuilder) do |c|
-            - c.fields_for(:participations_contact, :builder => ExtendedFormBuilder) do |pc|
-              = pc.label(:disposition_id)
-              = pc.dropdown_code_field(:disposition_id, 'contactdispositiontype')
+        = pc_fields.label(:disposition_id)
+        = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype', {}, {}, @event)
       - else
         = pc_fields.label(:disposition_id)
         = pc_fields.dropdown_code_field(:disposition_id, 'contactdispositiontype')
