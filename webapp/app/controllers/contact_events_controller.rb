@@ -77,7 +77,7 @@ class ContactEventsController < EventsController
   end
 
   def update
-    redis.delete_matched("views/events/#{@event.id}}/*")
+    redis.delete_matched("views/events/#{@event.id}/*")
 
     go_back = params.delete(:return)
 

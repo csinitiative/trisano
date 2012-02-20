@@ -107,7 +107,7 @@ class MorbidityEventsController < EventsController
   def update
     # Per-tab cache expire feature not quite working yet, so expire all.
     #expire_event_caches
-    redis.delete_matched("views/events/#{@event.id}}/*")
+    redis.delete_matched("views/events/#{@event.id}/*")
 
     go_back = params.delete(:return)
 
