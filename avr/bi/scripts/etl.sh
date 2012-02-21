@@ -153,7 +153,7 @@ if [ "x$BUC" = "xbucardo" ]; then
 fi
 
 echo "   Dumping main schema"
-$PGDUMP -T attachments -T db_files $PGDUMP_FLAGS -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \
+$PGDUMP -T attachments -T logos -T db_files $PGDUMP_FLAGS -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \
     -n public $SOURCE_DB_NAME | \
     $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME || \
     DIE "Problem dumping database schema"
@@ -163,7 +163,7 @@ $PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER \
     DIE "Problem cleaning Bucardo"
 
 echo "   Doing main dump"
-$PGDUMP -T attachments -T db_files $PGDUMP_FLAGS --disable-triggers -a -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT \
+$PGDUMP -T attachments -T logos -T db_files $PGDUMP_FLAGS --disable-triggers -a -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT \
     -U $SOURCE_DB_USER -n public $SOURCE_DB_NAME | \
     $PSQL $PSQL_FLAGS -x -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME || \
     DIE "Problem with main database dump into staging area"
