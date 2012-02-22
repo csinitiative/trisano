@@ -1,6 +1,8 @@
 Trisano.CmrsPrefetchIndex = {
 
     init : function() {
+        return;
+
         this.prefetchIndex();
     },
 

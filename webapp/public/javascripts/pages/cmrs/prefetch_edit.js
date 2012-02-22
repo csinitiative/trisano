@@ -1,6 +1,7 @@
 Trisano.CmrsPrefetchEdit = {
 
     init : function() {
+        return;
         this.prefetchEdit();
     },
 

@@ -35,6 +35,8 @@ class PlacesController < ApplicationController
   end
 
   def update
+    redis.delete_matched("views/events/*")
+
     @place_entity = PlaceEntity.find(params[:id])
 
     if @place_entity.update_attributes(params[:place_entity])
@@ -59,6 +61,8 @@ class PlacesController < ApplicationController
   end
 
   def create
+    redis.delete_matched("views/events/*")
+
     @place_entity = PlaceEntity.new
     @place_entity.place = Place.new
     @place_entity.update_attributes(params[:place_entity])

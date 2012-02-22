@@ -28,7 +28,7 @@
             - f.fields_for(:encounter_child_events, :builder => ExtendedFormBuilder) do |e|
               = render :partial => "events/encounter", :locals => { :f => e }
 
-            -cache "events/#{@event.id}/showedit/encounters_tab/child_events" do
+            -cache_event_fragment @event, "events/#{@event.id}/showedit/encounters_tab/child_events" do
               - blank_encounter = EncounterEvent.new
               - blank_encounter.build_participations_encounter
 
@@ -37,7 +37,7 @@
           - else
             =t 'no_encounters', :thing => 'event'
 
-  -cache "events/#{@event.id}/showedit/encounters_tab/encounter_notes" do
+  -cache_event_fragment @event, "events/#{@event.id}/showedit/encounters_tab/encounter_notes" do
     -core_section :encounter_notes_section, f do
       #encounter_notes
         - unless @event.encounter_child_events.first.new_record?

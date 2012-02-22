@@ -1585,6 +1585,14 @@ module EventsHelper
     result
   end
 
+  def cache_event_fragment(event, key, &block)
+    if !block.nil? && !event.id.nil?
+      return cache key, &block
+    end
+
+    (block_is_haml?(block)) ? capture_haml { block.call } : block.call
+  end
+
   def expire_event_caches()
     if params['expire_cache_all']
       redis.delete_matched("views/events/#{@event.id}/*")

@@ -78,13 +78,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <% end %>
   <% end %>
 
-  <% cache "events/#{@event.id}/edit/followup_core_paths" do %>
+  <% cache_event_fragment @event, "events/#{@event.id}/edit/followup_core_paths" do %>
     <%= render :partial => "events/followup_core_paths", :locals => { :event => @event } %>
   <% end %>
 
   <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
 
-    <% cache "events/#{@event.id}/edit/demographic_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/demographic_tab" do -%>
       <% core_tab(:demographic_tab, event_form) do -%>
         <%= render :partial => "events/people/form", :locals => { :f => event_form, :event => @event } %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Demographics" } %>
@@ -94,12 +94,12 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <!--Do not cache at this level.  There is role-specific logic in the disease_info_form partial-->
     <% core_tab(:clinical_tab, event_form) do -%>
       <%= render :partial => 'events/disease_info_form', :locals => { :f => event_form } %>
-      <% cache "events/#{@event.id}/edit/clinical_tab/core_tab_supplemental" do -%>
+      <% cache_event_fragment @event, "events/#{@event.id}/edit/clinical_tab/core_tab_supplemental" do -%>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Clinical" } %>
       <% end -%>
     <% end -%>
 
-    <% cache "events/#{@event.id}/edit/lab_info_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/lab_info_tab" do -%>
       <% core_tab(:lab_info_tab, event_form) do -%>
         <%= render :partial => 'events/lab_info_form', :locals => {:f => event_form} %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Laboratory" } %>
@@ -109,7 +109,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <!--Do not cache at this level.  There is role-specific logic in the contacts_form partial-->
     <% core_tab(:contacts_tab, event_form) do -%>
       <%= render :partial => 'events/contacts_form', :locals => {:f => event_form} %>
-      <% cache "events/#{@event.id}/edit/contacts_tab/core_tab_supplemental" do -%>
+      <% cache_event_fragment @event, "events/#{@event.id}/edit/contacts_tab/core_tab_supplemental" do -%>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Contacts" } %>
       <% end -%>
     <% end -%>
@@ -119,27 +119,27 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <%= render :partial => 'events/encounters_form', :locals => {:f => event_form} %>
     <% end -%>
 
-    <% cache "events/#{@event.id}/edit/epi_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/epi_tab" do -%>
       <% core_tab(:epi_tab, event_form) do -%>
         <%= render :partial => 'events/epidemiological_form', :locals => {:f => event_form} %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Epidemiological" } %>
       <% end -%>
     <% end -%>
 
-    <% cache "events/#{@event.id}/edit/reporting_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/reporting_tab" do -%>
       <% core_tab(:reporting_tab, event_form) do -%>
         <%= render :partial => 'events/reporting_agency_form', :locals => {:f => event_form} %>
         <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => event_form, :tab => "Reporting" } %>
       <% end -%>
     <% end -%>
 
-    <% cache "events/#{@event.id}/edit/investigation_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/investigation_tab" do -%>
       <% core_tab(:investigation_tab, event_form) do -%>
         <%= render :partial => 'events/disease_investigation_form', :locals => {:f => event_form} %>
       <% end -%>
     <% end -%>
 
-    <% cache "events/#{@event.id}/edit/notes_tab" do -%>
+    <% cache_event_fragment @event, "events/#{@event.id}/edit/notes_tab" do -%>
       <% core_tab(:notes_tab, event_form) do -%>
         <%= render :partial => 'events/note_form', :locals => {:f => event_form} %>
       <% end -%>

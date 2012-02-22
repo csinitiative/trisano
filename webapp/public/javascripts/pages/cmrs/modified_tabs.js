@@ -5,6 +5,8 @@ Trisano.CmrsModifiedTabs = {
     initialHasFollowupElements : {},
 
     init : function() {
+        return;
+
         var self = this;
 
         $j("div.tab").each(function(t) {
