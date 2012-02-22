@@ -1590,7 +1590,7 @@ module EventsHelper
       return cache key, &block
     end
 
-    (block_is_haml?(block)) ? capture_haml { block.call } : block.call
+    yield
   end
 
   def expire_event_caches()
