@@ -56,6 +56,7 @@ module TrisanoAuth
         end
       end
 
+
       def self.included(base)
         #TODO debt
         unless config_option(:auth_src_env) || config_option(:auth_src_header)
@@ -64,6 +65,9 @@ module TrisanoAuth
             c.logged_in_timeout = config_options[:trisano_auth][:login_timeout].minutes
             password_reset_token_valid_for = config_options[:trisano_auth][:password_reset_timeout].days
             c.perishable_token_valid_for 1.day
+
+            c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
+
           end
           base.class_eval do
             extend ClassMethods
@@ -75,6 +79,7 @@ module TrisanoAuth
         end
       end
     end
+
   end
 end
 
