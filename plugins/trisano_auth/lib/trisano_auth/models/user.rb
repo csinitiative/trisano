@@ -54,6 +54,7 @@ module TrisanoAuth
           
           return user
         end
+
       end
 
 
@@ -66,8 +67,10 @@ module TrisanoAuth
             password_reset_token_valid_for = config_options[:trisano_auth][:password_reset_timeout].days
             c.perishable_token_valid_for 1.day
 
-            c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
+            password_length_constraints = c.validates_length_of_password_field_options.reject { |k,v| [:minimum, :maximum].include?(k) }
+            c.validates_length_of_password_field_options = password_length_constraints.merge :within => 0..64
 
+            c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
           end
           base.class_eval do
             extend ClassMethods
