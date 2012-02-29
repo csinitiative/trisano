@@ -67,6 +67,9 @@
         <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease" allMemberName="All Diseases" description="Disease associated with this event">
             <Hierarchy hasAll="true" primaryKey="id" description="Disease associated with this event">
                 <Table name="diseases_view" schema="trisano"></Table>
+                <Level name="Sensitive" type="String" uniqueMembers="true" description="Is this disease sensitive?">
+                    <KeyExpression><SQL dialect="generic">CASE WHEN sensitive THEN 'Sensitive' ELSE 'Non-Sensitive' END</SQL></KeyExpression>
+                </Level>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true" description="Disease associated with this event"></Level>
             </Hierarchy>
         </Dimension>
@@ -409,6 +412,9 @@
         <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease">
             <Hierarchy name="Disease" hasAll="true" primaryKey="id" allMemberName="All Diseases">
                 <Table name="diseases_view" schema="trisano"></Table>
+                <Level name="Sensitive" type="String" uniqueMembers="true" description="Is this disease sensitive?">
+                    <KeyExpression><SQL dialect="generic">CASE WHEN sensitive THEN 'Sensitive' ELSE 'Non-Sensitive' END</SQL></KeyExpression>
+                </Level>
                 <Level name="Disease" column="disease_name" type="String" uniqueMembers="true"></Level>
             </Hierarchy>
         </Dimension>
@@ -608,6 +614,24 @@
 <!--        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count])" formatString="##.####%" dimension="Measures" />
         <CalculatedMember name="Rate" formula="IIf(NOT ([Measures].[Population] = 0), Format([Measures].[RatePerc], '##.#### %'), '0 %')" visible="true" dimension="Measures" description="Count of all cases in this group divided by the total state population in this group" /> -->
     </Cube>
-
+    <Role name="sensitiveAccess">
+        <SchemaGrant access="all"></SchemaGrant>
+    </Role>
+    <Role name="Authenticated">
+        <SchemaGrant access="all">
+            <CubeGrant cube="Morbidity Events" access="all">
+                <HierarchyGrant hierarchy="Disease" rollupPolicy="partial" access="custom">
+                    <MemberGrant member="[Disease].[Sensitive]" access="none"></MemberGrant>
+                    <MemberGrant member="[Disease].[Non-Sensitive]" access="all"></MemberGrant>
+                </HierarchyGrant>
+            </CubeGrant>
+            <CubeGrant cube="Contact Events" access="all">
+                <HierarchyGrant hierarchy="Disease" rollupPolicy="partial" access="custom">
+                    <MemberGrant member="[Disease].[Sensitive]" access="none"></MemberGrant>
+                    <MemberGrant member="[Disease].[Non-Sensitive]" access="all"></MemberGrant>
+                </HierarchyGrant>
+            </CubeGrant>
+        </SchemaGrant>
+    </Role>
     <UserDefinedFunction name="GetPopulation" className="org.trisano.mondrian.GetPopulation" />
 </Schema>
