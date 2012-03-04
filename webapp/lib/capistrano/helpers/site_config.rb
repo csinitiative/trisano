@@ -9,11 +9,18 @@ module Capistrano::Helpers
       config = config.merge telephone_config
       config = config.merge locale_config
       config = config.merge mailer_config
+      config = config.merge redis_config
       config.each { |key, value| config.delete(key) if value.nil? }
       config
     end
 
     private
+
+    def redis_config
+      config = {}
+      config['redis_server'] = safe_fetch :redis_server
+      config
+    end
 
     def external_resources_config
       config = {}
