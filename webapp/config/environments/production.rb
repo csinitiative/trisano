@@ -48,4 +48,5 @@ config.logger = DEFAULT_LOGGER
 
 require 'redis-store'
 config.gem 'redis-store'
-config.cache_store = :redis_store, { :host => config_option(:redis_server) }
+require 'site_config'
+Rails.configuration.cache_store = :redis_store, { :host => config_option(:redis_server) }
