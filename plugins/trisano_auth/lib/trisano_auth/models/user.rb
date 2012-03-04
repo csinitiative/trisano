@@ -61,6 +61,10 @@ module TrisanoAuth
       def self.included(base)
         #TODO debt
         unless config_option(:auth_src_env) || config_option(:auth_src_header)
+          def require_password_changed?
+            !new_record? && password_changed?
+          end
+
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'
             c.logged_in_timeout = config_options[:trisano_auth][:login_timeout].minutes
@@ -70,7 +74,7 @@ module TrisanoAuth
             password_length_constraints = c.validates_length_of_password_field_options.reject { |k,v| [:minimum, :maximum].include?(k) }
             c.validates_length_of_password_field_options = password_length_constraints.merge :within => 0..64
 
-            c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
+            c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password_changed?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
           end
           base.class_eval do
             extend ClassMethods
@@ -79,6 +83,8 @@ module TrisanoAuth
               alias_method_chain :load_default_users, :auth
             end
           end
+
+
         end
       end
     end
