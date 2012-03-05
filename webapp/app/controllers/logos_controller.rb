@@ -18,6 +18,7 @@
 
 class LogosController < ApplicationController
 
+  skip_before_filter :load_user, :only => [:show]
   before_filter :check_role, :except => [:show]
 
   def new

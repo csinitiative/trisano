@@ -9,6 +9,15 @@ body {
   background-color: #090;
   z-index: 800; }
 
+  #head td#logo-container {
+      /* Keeps logo in position when header menu is not displayed  */
+      height: 58px; 
+      
+      /* Prevents overly large custom logos from disrupting layout */
+      overflow-y: hidden;
+      position: fixed;
+    }
+
 #bar {
   position: fixed;
   top: 68px;
@@ -48,7 +57,7 @@ body {
 
 #rot {
   width: 100%;
-  float: left;
+  table float: left;
   margin-right: -220px; }
 
 table {
@@ -211,4 +220,4 @@ legend {
   background-color: #fff; }
 
 .ui-icon {
-  display: inline-block !important; }
+  display: inline-block !important; } 
