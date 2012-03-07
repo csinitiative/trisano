@@ -17,12 +17,8 @@ body {
     }
   
   #head .right {
-    float: right;
     text-align: right;
-  }
-
-  #head a#logo img {
-    height: 58px;
+    position: static;
   }
 
 #bar {
@@ -43,7 +39,7 @@ body {
 #main-content {
   position: absolute;
   width: 100%; 
-  top: 113px;
+  top: 143px;
 }
 
 #form-content {

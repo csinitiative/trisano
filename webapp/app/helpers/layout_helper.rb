@@ -96,7 +96,7 @@ module LayoutHelper
     returning "" do |result|
       result << '<div class="horiz" id="logo-container">'
       result << link_to(
-        image_tag(main_logo_path, :border => 0, :alt => "Return to Dashboard"),
+        image_tag(main_logo_path, :border => 0, :title => "Return to Dashboard"),
         home_path, :id => 'logo' )
       result << '</div>'
     end
