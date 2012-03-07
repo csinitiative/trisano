@@ -15,7 +15,7 @@
 
 
 !!!
-%html
+%html{:xmlns => 'http://www.w3.org/1999/xhtml'}
   %head
     %title
       =ct 'trisano_title'
@@ -32,7 +32,7 @@
     = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls'
     = javascript_include_tag 'jquery-1.4.2.min', 'jquery-ui-1.8.4.custom.min', 'jquery.tmpl.min'
     = javascript_include_tag 'jquery.metadata', 'jquery.tablesorter.custom', 'jquery.livequery'
-    %script
+    %script{:type => "text/javascript"}
       var $j = jQuery.noConflict();
 
     = javascript_include_tag 'trisano_i18n'
@@ -68,45 +68,45 @@
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
-        %table
-          %tr
-            %td#logo-container
-              =render_main_logo
-            %td.right
-              .areas
-                =render_main_menu
-              .user
-                -if User.current_user
-                  =render_user_tools(User.current_user)
-
-    #bar
-      .container
-        .left.areas_title
-          = yield :title
-        .right.action1
-          = yield :tools_two
-    #title_area
-      .container
-        - if flash[:notice]
-          #flash-message.notice-message
-            = flash[:notice]
-        - elsif flash[:error]
-          #flash-message.error-message
-            = flash[:error]
-        - else
-          #flash-message
-        .name
-          = yield :name
-        .tools
-          = yield :tools
+        =render_main_logo
+        .right
+          .areas
+            =render_main_menu
+          .user
+            -if User.current_user
+              =render_user_tools(User.current_user)
+      #bar
+        .container
+          .left.areas_title
+            = yield :title
+          .right.action1
+            = yield :tools_two
+      #title_area
+        .container
+          - if flash[:notice]
+            #flash-message.notice-message
+              = flash[:notice]
+          - elsif flash[:error]
+            #flash-message.error-message
+              = flash[:error]
+          - else
+            #flash-message
+          .name
+            = yield :name
+          .tools
+            = yield :tools
     #main-content
-      %script
+      %script{:type => "text/javascript"}
         function setMainContentTopMargin() {
-        header_height = Element.getHeight('head') + Element.getHeight('bar') + Element.getHeight('title_area') + 2 + "px"
+        header_height = Element.getHeight('head') + 2 + "px"
         Element.setStyle('main-content', {top: header_height})
         }
-        setMainContentTopMargin();
         jQuery(window).resize(function() {
+        setMainContentTopMargin();
+        });
+        jQuery(window).load(function() {
+        // Becuase we don't know the size of the logo being loaded
+        // we must wait for the window to be loaded to calcuate the header_height
         setMainContentTopMargin();
         });
       .container

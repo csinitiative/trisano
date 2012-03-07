@@ -5,22 +5,28 @@ body {
 #head {
   position: fixed;
   width: 100%;
-  height: 68px;
   background-color: #090;
   z-index: 800; }
 
-  #head td#logo-container {
+  #head div#logo-container {
       /* Keeps logo in position when header menu is not displayed  */
       height: 58px; 
       
       /* Prevents overly large custom logos from disrupting layout */
-      overflow-y: hidden;
-      position: fixed;
+      overflow: hidden;
     }
+  
+  #head .right {
+    float: right;
+    text-align: right;
+  }
+
+  #head a#logo img {
+    height: 58px;
+  }
 
 #bar {
-  position: fixed;
-  top: 68px;
+  position: relative;
   width: 100%;
   height: 36px;
   background: url(../images/repeat.gif);
@@ -28,8 +34,7 @@ body {
   z-index: 800; }
 
 #title_area {
-  position: fixed;
-  top: 104px;
+  position: relative;
   width: 100%;
   padding-top: 1em;
   background-color: #f9f8f5;
@@ -37,7 +42,9 @@ body {
 
 #main-content {
   position: absolute;
-  width: 100%; }
+  width: 100%; 
+  top: 113px;
+}
 
 #form-content {
   position: absolute;

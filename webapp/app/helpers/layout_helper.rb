@@ -94,10 +94,10 @@ module LayoutHelper
 
   def render_main_logo
     returning "" do |result|
-      result << '<div class="horiz">'
+      result << '<div class="horiz" id="logo-container">'
       result << link_to(
-        image_tag(main_logo_path, :border => 0),
-        home_path, :id => 'logo')
+        image_tag(main_logo_path, :border => 0, :alt => "Return to Dashboard"),
+        home_path, :id => 'logo' )
       result << '</div>'
     end
   end
@@ -118,7 +118,7 @@ module LayoutHelper
       text = item[:t] ? t(*item[:t]) : item[:text]
       link_to(text, item[:link], item[:options])
     end
-    links.join("&nbsp;|&nbsp;")
+    links.join(" | ")
   end
 
   def main_menu_items
