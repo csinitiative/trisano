@@ -35,15 +35,20 @@
   -if @results.empty?
     %b=t('no_results')
   -else
-    =page_entries_info @results, :entry_name => "result"
-    =will_paginate @results
-    - if User.current_user.is_entitled_to?(:create_event)
-      %div{'style' => 'float: right;'}= link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
 
-    -if @results.length >= 500
-      %b{'style' => 'color: #C00'} Limit of 500 exceeded.
-    -else
-      %b= 'Displaying ' + @results.length.to_s + ' results'
+    
+    - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event) 
+      = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+
+
+    -if @results.length >= 500 
+      %p{'style' => 'color: #C00'} Only first 500 results will be shown
+
+
+    %p
+      =page_entries_info @results, :entry_name => "result"
+      =will_paginate @results
+
     %table.list
       %tr
         %th=t('name')
@@ -57,7 +62,10 @@
         %th=t('entity_actions')
       =new_cmr_search_results(@results)
 
-- if defined? @people or defined? @results
-  %br
-  - if User.current_user.is_entitled_to?(:create_event)
-    = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+    %p
+      =page_entries_info @results, :entry_name => "result"
+      =will_paginate @results
+
+
+    - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
+      = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
