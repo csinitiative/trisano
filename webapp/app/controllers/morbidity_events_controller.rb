@@ -161,7 +161,8 @@ class MorbidityEventsController < EventsController
 
     if @search_form.valid?
       if @search_form.has_search_criteria?
-        @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash)
+        logger.debug "S@search_form.to_hash = #{@search_form.to_hash.inspect}"
+        @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
       end
     else
       render :action => :event_search, :status => :unprocessable_entity
