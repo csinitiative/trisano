@@ -84,7 +84,7 @@ class SearchController < ApplicationController
 
         raise if (!error_details.empty?)
 
-        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params))
+        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params)).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]

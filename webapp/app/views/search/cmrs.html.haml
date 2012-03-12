@@ -28,6 +28,10 @@
       = link_to_function t('show_hide_name_criteria'), "Effect.toggle('name_criteria', 'blind', { duration: 0 })"
       %div#name_criteria{:style => "margin-top: 5px"}
         =name_criteria_fields(params).join
+        %span.horiz
+          %label=t "items_per_page"
+          - page_options = %w(25 50 75 100).collect {|c| "<option#{c == params[:per_page] ? ' selected="selected" ' : ''}>#{c}</option>"}.join
+          =select_tag('per_page', page_options)
 
     %div.search_group.clearfix
       = link_to_function t('show_hide_other_criteria'), "Effect.toggle('all_other_criteria', 'blind', { duration: 0 })"
@@ -72,6 +76,10 @@
     = render :partial => "refine_search"
 
   %br
+  %p
+    =page_entries_info @cmrs, :entry_name => "result"
+    =will_paginate @cmrs
+  
   %table{:style => "table-layout: fixed", :id => 'search_results' }
     %tr{:style => "text-align: left"}
       %th
@@ -117,6 +125,11 @@
           %td
             = ld(cmr['onset_date'])
 
+  %br
+  %p
+    =page_entries_info @cmrs, :entry_name => "result"
+    =will_paginate @cmrs
+  
   =render_extensions :search_extensions
 
 - params.delete('action')
