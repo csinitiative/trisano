@@ -84,7 +84,10 @@ class SearchController < ApplicationController
 
         raise if (!error_details.empty?)
 
-        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params)).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params))
+
+        #only paginate if results are found
+        @cmrs = @cmrs.paginate(:page => params[:page], :per_page => params[:per_page] || 25) if @cmrs.present?
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]
