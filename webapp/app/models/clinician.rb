@@ -18,4 +18,16 @@
 class Clinician < Participation
   belongs_to :person_entity,  :foreign_key => :secondary_entity_id
   accepts_nested_attributes_for :person_entity, :reject_if => proc { |attrs| attrs["person_attributes"].all? { |k, v| v.blank? } }
+
+  class << self
+    def blank
+      instance = new
+      instance.build_person_entity
+      instance.person_entity.build_person
+      instance.person_entity.telephones.build
+      instance.person_entity.person.person_type = 'clinician'
+      instance
+    end
+  end
+
 end

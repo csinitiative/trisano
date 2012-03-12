@@ -48,7 +48,7 @@ class EventsController < ApplicationController
   end
 
   def clinicians_search_selection
-    clinician_entity = PersonEntity.find(params[:entity_id])
+    clinician_entity = PersonEntity.find(params[:id])
     @clinician = Clinician.new
     @clinician.person_entity = clinician_entity
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
@@ -92,6 +92,20 @@ class EventsController < ApplicationController
     @place.build_participations_place
 
     render :partial => "events/place_exposure_show", :layout => false, :locals => {:event_type => params[:event_type]}
+  end
+
+  def clinicians_search
+    page = params[:page] || 1
+    name = (params[:name] || '').strip
+    begin
+      @clinicians = Person.active.send(:clinicians).find(:all,
+      :conditions => ["(LOWER(last_name) LIKE ? OR LOWER(first_name) LIKE ?)", name.downcase + '%', name.downcase + '%']).paginate(:include => {:person_entity => :telephones}, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @clinicians = []
+    end
+    render :partial => "events/clinicians_search", :layout => false
   end
 
   def diagnostic_facilities_search

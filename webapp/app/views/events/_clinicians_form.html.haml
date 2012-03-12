@@ -13,26 +13,20 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%div{:id => "clinicians"}
-  =clinician_dropdown
+%div#clinicians
+  - search_interface :clinicians, :url => { :event_type => event_form.object.type.underscore }
 
-  -event_form.fields_for(:clinicians, :builder => ExtendedFormBuilder) do |clinician_fields|
-    -# Currently we don't allow editing clinician information (because changing it for one event will change it for all).
-    -# This will change soon, and when it does we can undo this.
+  %div#existing-clinicians
+    -event_form.fields_for(:clinicians, :builder => ExtendedFormBuilder) do |clinician_fields|
+      -# Currently we don't allow editing clinician information (because changing it for one event will change it for all).
+      -# This will change soon, and when it does we can undo this.
 
-    -# If this is a new record and we are not returning from a failed validation
-    -if clinician_fields.object.new_record? && clinician_fields.object.secondary_entity_id.nil?
-      =render :partial => 'events/clinician', :locals => { :f => clinician_fields }
-    -else
-      =render :partial => 'events/clinician_show', :locals => { :f => clinician_fields }
-  #selected_clinicians
-
-  -blank_clinician = Clinician.new
-  -blank_clinician.build_person_entity
-  -blank_clinician.person_entity.build_person
-  -blank_clinician.person_entity.telephones.build
-  -blank_clinician.person_entity.person.person_type = 'clinician'
+      -# If this is a new record and we are not returning from a failed validation
+      -if clinician_fields.object.new_record? && clinician_fields.object.secondary_entity_id.nil?
+        =render :partial => 'events/clinician', :locals => { :f => clinician_fields }
+      -else
+        =render :partial => 'events/clinician_show', :locals => { :f => clinician_fields }
 
   %p{:style => "clear: both;"}
     %br
-    =add_record_link event_form, :clinicians, t("add_clinician"), :object => blank_clinician, :partial => 'events/clinician'
+    =add_record_link event_form, :clinicians, t("add_clinician"), :object => Clinician.blank, :partial => 'events/clinician'
