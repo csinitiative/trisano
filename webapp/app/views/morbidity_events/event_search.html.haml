@@ -31,14 +31,15 @@
   %span.vert-break
 
 %br
+
+- if User.current_user.is_entitled_to?(:create_event)
+  %div
+    = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+
 - if defined? @results
   -if @results.empty?
     %b=t('no_results')
   -else
-
-    
-    - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event) 
-      = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
 
 
     -if @results.length >= 500 
