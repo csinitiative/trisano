@@ -168,6 +168,7 @@ class ContactEvent < HumanEvent
       self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
     end
     self.add_note(I18n.translate("system_notes.event_changed_from_contact_to_morbidity", :locale => I18n.default_locale))
+    self.created_at = Time.now
 
     if self.save
       self.freeze
