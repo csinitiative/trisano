@@ -19,7 +19,9 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe EncounterEventsHelper do
   before do
-    @user = Factory(:user)
+    @privledged_user = Factory(:user)
+    @unprivledged_user = Factory(:user)
+    @current_user = Factory(:user) #last created user is set to User.current_user
     @role = Factory(:role)
     @priv = Privilege.find_by_priv_name('update_event') || Factory(:privilege, :priv_name => 'update_event')
     @role.privileges << @priv
@@ -29,7 +31,8 @@ describe EncounterEventsHelper do
     before(:each) do
       @encounter_event = Factory.create(:encounter_event)
       @jurisdiction = @encounter_event.jurisdiction.secondary_entity
-      @user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
+      @privledged_user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
+      @current_user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
     end
 
     it 'should draw basic controls without show' do
@@ -59,9 +62,38 @@ describe EncounterEventsHelper do
 
     it 'should add the current user to the list of users' do
       encounter_event = Factory.create(:encounter_event)
-      helper.users_for_investigation_select(encounter_event).should == [@user]
+      helper.users_for_investigation_select(encounter_event).should == [@current_user]
     end
 
   end
+
+  # This test was added because investigators were not being collected
+  # properly when building a new encounter event.  Specifically, until
+  # the encounter event is saved, it doesn't know it's jursidiction.
+  # However, if it's built from the parent record (which it should be)
+  # we can look at the jursidiction of the morbidity event instead.
+  describe "usage in webapp/app/views/events/_encounters_form.html.haml" do
+    before do
+      @morbidity_event = Factory.create(:morbidity_event)
+      @encounter_event = @morbidity_event.encounter_child_events.build
+      @jurisdiction = @morbidity_event.jurisdiction.place_entity
+      @investegator_priv = Privilege.find_by_priv_name('investigate_event') || Factory(:privilege, :priv_name => 'investigate_event') 
+      @investegator_role = Factory(:role)
+      @investegator_role.privileges << @investegator_priv 
+      @privledged_user.role_memberships.create(:role => @investegator_role, :jurisdiction => @jurisdiction)
+    end
+    
+    it "should have no jursidiction defined on the encounter event" do
+      assert_equal nil, @encounter_event.jurisdiction
+    end
+    it "should have a jurisdiction defined on the morbidity_event" do
+      assert @morbidity_event.jurisdiction.is_a?(Jurisdiction)
+      assert @morbidity_event.jurisdiction.place_entity.is_a?(PlaceEntity)
+    end
+    it "should use the parent_event to determine the jurisdiction when none is available for the encounter event" do
+      assert_equal true, helper.users_for_investigation_select(@encounter_event).include?(@privledged_user)
+      assert_equal false, helper.users_for_investigation_select(@encounter_event).include?(@unprivledged_user)
+    end
+  end 
 
 end

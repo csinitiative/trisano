@@ -26,7 +26,8 @@ module EncounterEventsHelper
   # adds the current user to the front of the list if the current user isn't included in the
   # results pulled back based on permissions.
   def users_for_investigation_select(encounter)
-    users = User.investigators_for_jurisdictions(encounter.jurisdiction.try(:place_entity))
+    place_entity = encounter.jurisdiction.try(:place_entity) || encounter.parent_event.try(:jurisdiction).try(:place_entity)
+    users = User.investigators_for_jurisdictions(place_entity)
     users.unshift(User.current_user) unless users.include?(User.current_user)
     if encounter.investigator && !users.include?(encounter.investigator)
       users.unshift(encounter.investigator)
