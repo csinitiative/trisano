@@ -32,7 +32,7 @@
 
 %br
 
-- if User.current_user.is_entitled_to?(:create_event)
+- if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
   %div
     = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
 
