@@ -248,7 +248,7 @@ module Export
       end
 
       def exp_state
-        '49'
+        config_option(:cdc_state)
       end
 
       def exp_year
