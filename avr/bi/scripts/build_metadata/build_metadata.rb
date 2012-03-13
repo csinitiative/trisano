@@ -298,8 +298,9 @@ def add_single_business_column(bt, pt, pc, id, name, descr, category, make_cat)
     bc.business_table = bt
     bt.add_business_column bc
     if not category.nil? and make_cat == 'TRUE' then
+      puts " *** Adding business column #{name} (#{id}) to category #{category.get_name 'en_US'}"
+
       category.add_business_column bc
-      puts " *** Added business column #{name} to category #{category.get_name 'en_US'}"
     end
     return bc
 end
@@ -333,7 +334,7 @@ end
 
 def formbuilder_hstore_query(name, prefix, dg)
     return %{
-        SELECT key, data_type, f_short, q_short FROM (
+        SELECT key, data_type, f_short, q_short, (RANDOM() * 100000)::INTEGER AS rand FROM (
             SELECT
                 key,
                 -- If a field has had multiple data types, one of which was a date type, 
@@ -408,8 +409,8 @@ def add_formbuilder_categories(prefix, sourcetable, pt, bt, dg, meta, formbuilde
         formula = "trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       end
 
-      pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}", colname, fbkey['data_type'].to_i, nil, formula
-      bc = add_single_business_column(bt, pt, pc, "#{fbkey['key']}_#{type_num}", fbkey['key'], colname, category, 'TRUE')
+      pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}_#{fbkey['rand']}", colname, fbkey['data_type'].to_i, nil, formula
+      bc = add_single_business_column(bt, pt, pc, "#{fbkey['key']}_#{type_num}_#{fbkey['rand']}", fbkey['key'], colname, category, 'TRUE')
     end
 end
 

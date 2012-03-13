@@ -10,11 +10,18 @@ module Capistrano::Helpers
       config = config.merge locale_config
       config = config.merge mailer_config
       config = config.merge redis_config
+      config = config.merge cdc_config
       config.each { |key, value| config.delete(key) if value.nil? }
       config
     end
 
     private
+
+    def cdc_config
+      config = {}
+      config['cdc_state'] = safe_fetch :cdc_state
+      config
+    end
 
     def redis_config
       config = {}

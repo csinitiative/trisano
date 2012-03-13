@@ -1,4 +1,6 @@
 base:
+  # CDC state ID.  For example, Utah is 49.
+  cdc_state: '49'
   bi_server_url: http://localhost:18080/pentaho/Home
   support_url: http://connect.csinitiative.com
   # Help url is optional, but can be used to link to custom help documentation.
