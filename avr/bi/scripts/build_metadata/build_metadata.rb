@@ -298,8 +298,8 @@ def add_single_business_column(bt, pt, pc, id, name, descr, category, make_cat)
     bc.business_table = bt
     bt.add_business_column bc
     if not category.nil? and make_cat == 'TRUE' then
+      puts " *** Adding business column #{name} to category #{category.get_name 'en_US'}"
       category.add_business_column bc
-      puts " *** Added business column #{name} to category #{category.get_name 'en_US'}"
     end
     return bc
 end
