@@ -48,6 +48,7 @@ class EventAttachmentsController < ApplicationController
 
     respond_to do |format|
       if @attachment.save
+        @event.add_note(I18n.translate("system_notes.event_attachment_created", :locale => I18n.default_locale, :filename => @attachment.filename))
         flash[:notice] = t("event_attachement_created")
         format.html {redirect_to request.env["HTTP_REFERER"] }
       else
@@ -60,6 +61,7 @@ class EventAttachmentsController < ApplicationController
     begin
       @attachment = @event.attachments.find(params[:id])
       @attachment.destroy
+      @event.add_note(I18n.translate("system_notes.event_attachment_deleted", :locale => I18n.default_locale, :filename => @attachment.filename))
       respond_to do |format|
         format.html do
           flash[:notice] = t("event_attachement_deleted")

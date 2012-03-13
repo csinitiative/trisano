@@ -26,9 +26,13 @@ class LabResult < ActiveRecord::Base
   belongs_to :test_status, :class_name => 'ExternalCode'
 
   after_create :generate_task
+  
+  after_create do |lab_result|
+    lab_result.participation.event.add_note(I18n.translate("system_notes.lab_result_created", :locale => I18n.default_locale, :accession_no => lab_result.accession_no, :lab_name => lab_result.lab_name))
+  end
 
   before_destroy do |lab_result|
-    lab_result.participation.event.add_note(I18n.translate("system_notes.lab_result_deleted", :locale => I18n.default_locale))
+    lab_result.participation.event.add_note(I18n.translate("system_notes.lab_result_deleted", :locale => I18n.default_locale, :accession_no => lab_result.accession_no, :lab_name => lab_result.lab_name))
   end
 
   validates_presence_of :test_type_id

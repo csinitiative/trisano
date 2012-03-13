@@ -22,6 +22,8 @@ class ContactEvent < HumanEvent
   supports :attachments
 
   before_create :direct_child_creation_initialization, :add_contact_event_creation_note
+    
+  after_create :add_parent_event_creation_note
 
   workflow do
     state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
@@ -146,6 +148,14 @@ class ContactEvent < HumanEvent
   # If you're wondering why calling #destroy on a contact event isn't deleting the record, this is why.
   # Override destroy to soft-delete record instead.  This makes it easier to work with :autosave.
   def destroy
+
+    # DEBT HERE
+    # It seems this method gets called twice when deleting a contact event from a morbidity event
+    # In order to prevent duplicate audit notes from being added, we check if the deleted_at
+    # field is set.  The first time this is fired, it is not set.  The second time it is.
+    # This prevents duplicate notes.
+    parent_event.add_note(I18n.translate("system_notes.contact_event_deleted", :locale => I18n.default_locale)) if parent_event.present? && deleted_at.present?
+    
     self.soft_delete
   end
 
@@ -197,10 +207,14 @@ class ContactEvent < HumanEvent
 
   private
 
+  def add_parent_event_creation_note
+    parent_event.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale)) if parent_event.present?
+  end
+
   def add_contact_event_creation_note
     self.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale))
   end
-
+  
   def validate_disposition_date_against_birth_date(base_errors)
     contact_bdate = self.try(:interested_party).try(:person_entity).try(:person).try(:birth_date)
     return if contact_bdate.nil?

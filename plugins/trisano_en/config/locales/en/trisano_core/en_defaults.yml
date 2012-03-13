@@ -209,8 +209,8 @@ en:
 
   system_notes:
     event_deleted: Event deleted
-    event_edited: "Edited event"
-    extra_jurisdictional_view_only_access: "Extra-jurisdictional, view-only access"
+    event_edited: "Edited event."
+    extra_jurisdictional_view_only_access: "Extra-jurisdictional, view-only access."
     event_derived_from: "Event derived from {{link}}."
     event_promoted_from_contact: "Promoted from contact."
 
@@ -218,19 +218,20 @@ en:
     event_needs_reassignment: "Event has not yet been accepted for investigation and should be reassigned."
 
     contact_event_created: "Contact event created."
-    event_changed_from_contact_to_morbidity: "Event changed from contact event to morbidity event"
+    contact_event_deleted: "Contact event deleted."
+    event_changed_from_contact_to_morbidity: "Event changed from contact event to morbidity event."
 
-    lab_and_results_deleted: "Lab and all its results deleted"
-    lab_result_deleted: "Lab result deleted"
+    lab_result_created: "Lab result added.\nLab name: {{lab_name}}\nAccession number: {{accession_no}}"
+    lab_result_deleted: "Lab result deleted.\nLab name: {{lab_name}}\nAccession number: {{accession_no}}"
     elr_with_test_type_assigned: "ELR with test type \"{{test_type}}\" assigned to event."
 
     place_event_created: "Place event created."
 
     task_created: "Task created.\n\nName: {{name}}\nDescription: {{notes}}"
-    task_repeats: "Repeats every {{repeating_interval}} until {{until_date}}"
-    task_status_change: "Task status change.\n\n'{{name}}' changed from {{existing_status}} to {{new_status}}"
+    task_repeats: "Repeats every {{repeating_interval}} until {{until_date}}."
+    task_status_change: "Task status change.\n\n'{{name}}' changed from {{existing_status}} to {{new_status}}."
 
-    encounter_event_created: "Encounter event created"
+    encounter_event_created: "Encounter event created."
 
     workflow_accepted_by: "Accepted by {{jurisdiction_name}}.\n{{note}}"
     workflow_rejected_by: "Rejected by {{jurisdiction_name}}.\n{{note}}"
@@ -244,6 +245,9 @@ en:
     workflow_reopened_by: "Reopened by {{jurisdiction_name}} manager.\n{{note}}"
     workflow_reopened_by_state: "Reopened by State.\n{{note}}"
     workflow_approved_by_state: "Approved by State.\n{{note}}"
+
+    event_attachment_created: "Attachment {{filename}} added."
+    event_attachment_deleted: "Attachment {{filename}} deleted."
 
   common_test_type_associated_with_lab_results: "{{name}} already associated with lab results"
   investigator_already_assigned: "Investigator already assigned"

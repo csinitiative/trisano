@@ -204,7 +204,7 @@ es:
   system_notes:
     event_deleted: Se eliminó evento
     event_edited: Se corrigió evento
-    extra_jurisdictional_view_only_access: "Acceso de sólo vista y extrajurisdiccional"
+    extra_jurisdictional_view_only_access: "Acceso de sólo vista y extrajurisdiccional."
     event_derived_from: "El evento proviene de {{link}}."
     event_promoted_from_contact: "Traspasado/a(s) desde contacto."
 
@@ -212,19 +212,21 @@ es:
     event_needs_reassignment: "Todavía no se ha aceptado el evento para investigación y debería reasignarse."
 
     contact_event_created: "Se creó el evento de contacto."
-    event_changed_from_contact_to_morbidity: "Se convertió el evento desde el tipo contacto al tipo de morbilidad"
+    contact_event_deleted: "Caso de contacto borrado."
+    event_changed_from_contact_to_morbidity: "Se convertió el evento desde el tipo contacto al tipo de morbilidad."
 
-    lab_and_results_deleted: "Se eliminaron el laboratorio junto con sus resultados"
-    lab_result_deleted: "Se eliminó el resultado de laboratorio"
+    lab_and_results_deleted: "Se eliminaron el laboratorio junto con sus resultados."
+    lab_result_created: "Resultado de laboratorio añadido."
+    lab_result_deleted: "Se eliminó el resultado de laboratorio."
     elr_with_test_type_assigned: "Se asignó la ELR con el tipo de prueba común \"{{test_type}}\" al evento."
 
     place_event_created: "Se creó el evento de lugar."
 
     task_creatd: "Se creó la tarea. \n\nNombre: {{name}}\nDescripción: {{notes}}"
     task_repeats: "Se repite cada {{repeating_interval}} hasta {{until_date}}"
-    task_status_change: "Cambio de estado de tarea.\n\n'{{name}}' se convirtió desde {{existing_status}} hasta {{new_status}}"
+    task_status_change: "Cambio de estado de tarea.\n\n'{{name}}' se convirtió desde {{existing_status}} hasta {{new_status}}."
 
-    encounter_event_created: "Se creó el evento de encuentro"
+    encounter_event_created: "Se creó el evento de encuentro."
 
     workflow_accepted_by: "Aceptado por {{jurisdiction_name}}.\n{{note}}"
     workflow_rejected_by: "Rechazado por {{jurisdiction_name}}.\n{{note}}"
@@ -238,6 +240,9 @@ es:
     workflow_reopened_by: "Reabierto por el gerente de {{jurisdiction_name}}.\n{{note}}"
     workflow_reopened_by_state: "Reabierto por el Estado.\n{{note}}"
     workflow_approved_by_state: "Aprobado por el Estado.\n{{note}}"
+    
+    event_attachment_created: "Adjunto añadido."
+    event_attachment_created: "Archivo adjunto borrado."
 
   common_test_type_associated_with_lab_results: "{{name}} ya corresponde a los resultados de laboratorio"
   investigator_already_assigned: "Investigador ya asignado"

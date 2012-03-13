@@ -19,10 +19,6 @@ class Lab < Participation
   belongs_to :place_entity, :foreign_key => :secondary_entity_id
   has_many   :lab_results, :foreign_key => :participation_id, :order => 'position, created_at ASC', :dependent => :destroy
 
-  before_destroy do |lab|
-    lab.event.add_note(I18n.translate("system_notes.lab_and_results_deleted", :locale => I18n.default_locale))
-  end
-
   validates_presence_of :place_entity
 
   accepts_nested_attributes_for :lab_results,
