@@ -22,6 +22,7 @@ class EventAttachmentsController < ApplicationController
   before_filter :can_update_event?, :only => [:create, :new, :destroy]
   before_filter :can_view_event?, :only => [:index, :new, :show]
   after_filter TouchEventFilter, :only => [:create, :destroy]
+  after_filter :expire_event_notes_cache, :only => [:create, :destroy]
   
   def index
   end
@@ -89,6 +90,13 @@ class EventAttachmentsController < ApplicationController
         end
       end
     end
+  end
+
+  protected
+
+  def expire_event_notes_cache
+    redis.delete_matched("views/events/#{@event.id}/show/notes_tab")
+    redis.delete_matched("views/events/#{@event.id}/edit/notes_tab")
   end
 
 end
