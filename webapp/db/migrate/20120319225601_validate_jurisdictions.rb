@@ -19,10 +19,6 @@ BEGIN
 END;
 $validate_jurisdiction$ LANGUAGE plpgsql;
  
-DROP TRIGGER IF EXISTS validate_jurisdiction ON alert_subscriptions_jurisdictions;
-CREATE TRIGGER validate_jurisdiction BEFORE INSERT OR UPDATE
-    ON alert_subscriptions_jurisdictions FOR EACH ROW EXECUTE PROCEDURE validate_jurisdiction();
-
 DROP TRIGGER IF EXISTS validate_jurisdiction ON event_queues;
 CREATE TRIGGER validate_jurisdiction BEFORE INSERT OR UPDATE
     ON event_queues FOR EACH ROW EXECUTE PROCEDURE validate_jurisdiction();
