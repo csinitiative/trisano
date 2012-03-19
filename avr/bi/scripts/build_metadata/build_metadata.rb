@@ -275,7 +275,7 @@ end
 def initialize_model(model, meta)
   model.set_connection meta.find_database('TriSano')
 # Sample code so we know how to push outer join conditions into the WHERE clause if need be
-#  model.concept.add_property BooleanProperty.new('delay_outer_join_conditions', true)
+  model.concept.add_property BooleanProperty.new('delay_outer_join_conditions', true)
   secure model
   return model
 end
