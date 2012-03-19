@@ -250,8 +250,8 @@ SELECT
     ijpl.id AS investigating_jurisdiction_id,
     jorpl.name AS jurisdiction_of_residence,
     jorpl.id AS jurisdiction_of_residence_id,
-    COALESCE(scsi.code_description, 'Unknown') AS state_case_status_code,
-    COALESCE(lcsi.code_description, 'Unknown') AS lhd_case_status_code,
+    scsi.code_description AS state_case_status_code,
+    lcsi.code_description AS lhd_case_status_code,
     events."MMWR_week"::text AS mmwr_week,
     events."MMWR_year"::text AS mmwr_year,
 
