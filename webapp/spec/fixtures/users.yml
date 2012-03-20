@@ -12,7 +12,6 @@ default_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
 admin_user:
@@ -29,7 +28,6 @@ admin_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
 update_cmr_user:
@@ -46,7 +44,6 @@ update_cmr_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
 view_cmr_user:
@@ -63,7 +60,6 @@ view_cmr_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
 update_davis_user:
@@ -80,7 +76,6 @@ update_davis_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
 disabledd_user:
@@ -97,6 +92,5 @@ disabledd_user:
   crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
   password_salt: "H80ugKrKxNF65FI0lwYh"
   persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
-  single_access_token: "AJQIAB80IIeI8wL_8yBF"
   perishable_token: "4qzc2TGhW36LM64TGeom"
 
