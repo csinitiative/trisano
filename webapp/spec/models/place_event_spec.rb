@@ -33,7 +33,7 @@ describe PlaceEvent do
         }
       },
       :jurisdiction_attributes => {
-        :secondary_entity_id => 1
+        :secondary_entity_id => 102
       }
     }
 
@@ -62,7 +62,7 @@ describe PlaceEvent do
       end
 
       it "should have the same jurisdiction as the original event" do
-        @place_event.jurisdiction.secondary_entity_id.should == 1
+        @place_event.jurisdiction.secondary_entity_id.should == 102
       end
 
       it "should have the same disease as the original" do

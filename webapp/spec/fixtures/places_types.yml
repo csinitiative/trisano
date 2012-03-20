@@ -37,3 +37,7 @@ Existing_Lab_Two_lab:
 Davis_Nat_other:
   place_id: 102
   type_id: 2206
+
+Davis_Nat_jurisdiction:
+  place_id: 102
+  type_id: 2202
