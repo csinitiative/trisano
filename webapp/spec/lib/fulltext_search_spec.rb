@@ -140,7 +140,7 @@ describe "searching" do
       @person_entity_2 = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => last_name ))
       @deleted_person_entity = Factory.create(:person_entity, :person => Factory.create(:person, :last_name => last_name ), :deleted_at => Time.now)
 
-      Person.find_all_for_filtered_view(:last_name => last_name).should == [@person_entity_1.person, @person_entity_2.person]
+      (Person.find_all_for_filtered_view(:last_name => last_name).sort { |x, y| x.id <=> y.id }).should == [@person_entity_1.person, @person_entity_2.person]
       Person.find_all_for_filtered_view(:last_name => last_name).detect { |person| person.person_entity.id == @deleted_person_entity.id }.should be_nil
       Person.find_all_for_filtered_view(:last_name => last_name, :show_deleted => true).size.should == 3
       Person.find_all_for_filtered_view(:last_name => last_name, :show_deleted => true).detect { |person| person.person_entity.id == @deleted_person_entity.id }.should_not be_nil
