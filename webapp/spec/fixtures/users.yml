@@ -9,6 +9,11 @@ default_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
   status: "active"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
 admin_user:
   id: 2
@@ -21,6 +26,11 @@ admin_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: ['Willy Wonka']\n:states: "
   status: "active"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
 update_cmr_user:
   id: 3
@@ -33,6 +43,11 @@ update_cmr_user:
   initials:
   event_view_settings:
   status: "active"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
 view_cmr_user:
   id: 4
@@ -45,6 +60,11 @@ view_cmr_user:
   initials:
   event_view_settings:
   status: "active"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
 update_davis_user:
   id: 5
@@ -57,6 +77,11 @@ update_davis_user:
   initials:
   event_view_settings:
   status: "active"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
 disabledd_user:
   id: 6
@@ -69,4 +94,9 @@ disabledd_user:
   initials:
   event_view_settings:
   status: "disabled"
+  crypted_password: "5be3ccea90965c729731c0964af9883fc68db90b168bc1d178aa9a6cefbb7a3cf204a91aa31e408e46628fcbdd7ddcb258d5c1151d56dc6a787b9d8038c2a2d8"
+  password_salt: "H80ugKrKxNF65FI0lwYh"
+  persistence_token: "b021ba3ba26f0b53596c461ea0155ff17ba65ca7e8f06ad8e1980efc4f60f495129673f59033b4094a501152344c225a2d0f759da8a5fc9f19738928ace3fcf7"
+  single_access_token: "AJQIAB80IIeI8wL_8yBF"
+  perishable_token: "4qzc2TGhW36LM64TGeom"
 
