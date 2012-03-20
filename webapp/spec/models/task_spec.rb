@@ -129,7 +129,7 @@ describe Task, 'when working with task assignment' do
   it 'should not allow assignment to a user with the update_event privilege in another jurisdiction' do
     @assignee = Factory(:privileged_user)
     add_privileges_for(@assignee, "update_event")
-    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:place_entity))
+    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:jurisdiction))
     User.current_user = @user
 
     @task.user = @assignee
@@ -201,7 +201,7 @@ describe Task, 'generating notes' do
     @task.status = "complete"
     @task.save.should be_true
     @event.notes.size.should == 1
-    @event.notes.first.note.should == "Task status change.\n\n'#{@task.name}' changed from Pending to Complete"
+    @event.notes.first.note.should == "Task status change.\n\n'#{@task.name}' changed from Pending to Complete."
   end
 
   it 'should not create a clinical note on the event when updating a task without a status change' do
