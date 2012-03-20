@@ -182,6 +182,7 @@ class ContactEvent < HumanEvent
 
     if self.save
       self.freeze
+      expire_parent_record_contacts_cache
       # Return a fresh copy from the db
       MorbidityEvent.find(self.id)
     else
@@ -206,6 +207,15 @@ class ContactEvent < HumanEvent
   end
 
   private
+
+  def expire_parent_record_contacts_cache
+    parent=self.parent_event
+    if parent.present? 
+      parent.touch
+      redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
+      redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")
+    end
+  end
 
   def add_parent_event_creation_note
     parent_event.add_note(I18n.translate("system_notes.contact_event_created", :locale => I18n.default_locale)) if parent_event.present?
