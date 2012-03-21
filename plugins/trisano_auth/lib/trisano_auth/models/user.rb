@@ -68,8 +68,14 @@ module TrisanoAuth
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'
             c.logged_in_timeout = config_options[:trisano_auth][:login_timeout].minutes
-            password_reset_token_valid_for = config_options[:trisano_auth][:password_reset_timeout].days
-            c.perishable_token_valid_for 1.day
+            
+            
+            
+            # Perishable token maintenance resets the user's perishable token with every page load.
+            # This makes it impossible to use the token for password resets. By disabling
+            # we take responsiblity for making sure the user's perishable token is reset once used.
+            c.disable_perishable_token_maintenance = true
+            c.perishable_token_valid_for = config_options[:trisano_auth][:password_reset_timeout].minutes
 
             password_length_constraints = c.validates_length_of_password_field_options.reject { |k,v| [:minimum, :maximum].include?(k) }
             c.validates_length_of_password_field_options = password_length_constraints.merge :within => 0..64
