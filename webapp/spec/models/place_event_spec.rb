@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe PlaceEvent do
 
-  fixtures :diseases
+  fixtures :diseases, :places, :places_types
 
   describe "Initializing a new place event from an existing morbidity event" do
 

@@ -19,7 +19,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ContactEvent do
 
-  fixtures :diseases
+  fixtures :diseases, :places, :places_types
 
   describe "validating" do
     
@@ -59,7 +59,7 @@ describe ContactEvent do
         }
       },
       :jurisdiction_attributes => {
-        :secondary_entity_id => 1
+        :secondary_entity_id => 102
       }
     }
 
@@ -91,7 +91,7 @@ describe ContactEvent do
       end
 
       it "should have the same jurisdiction as the original patient" do
-        @contact_event.jurisdiction.secondary_entity_id.should == 1
+        @contact_event.jurisdiction.secondary_entity_id.should == 102
       end
 
       it "should have the same disease as the original" do
