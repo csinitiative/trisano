@@ -33,8 +33,8 @@ anthrax_form_all_jurisdictions_2:
 anthrax_form_for_LHD_1:
   id: 4
   name: "Anthrax Form 1, Jurisdicition 1"
-  description: "Anthrax form for jurisdiction 1."
-  jurisdiction_id: 1
+  description: "Anthrax form for jurisdiction 75."
+  jurisdiction_id: 75
   status: "Live"
   event_type: "morbidity_event"
   template_id: 1003
@@ -42,8 +42,8 @@ anthrax_form_for_LHD_1:
 anthrax_form_for_LHD_2:
   id: 5
   name: "Anthrax Form 2, Jurisdiction 2"
-  description: "Anthrax form for jurisdiction 2."
-  jurisdiction_id: 2
+  description: "Anthrax form for jurisdiction 102."
+  jurisdiction_id: 102 
   status: "Live"
   event_type: "morbidity_event"
   template_id: 1004
@@ -51,17 +51,17 @@ anthrax_form_for_LHD_2:
 aids_form_for_LHD_2:
   id: 6
   name: "Aids Form 1, jurisidiction 2"
-  description: "AIDS form for jurisdiction 2."
-  jurisdiction_id: 2
+  description: "AIDS form for jurisdiction 102."
+  jurisdiction_id: 102
   status: "Live"
   event_type: "morbidity_event"
   template_id: 1005
 
 checken_pox_TB_form_for_LHD_2:
   id: 7
-  name: "Chicken Pox and Tuberculosis form 1, jurisdiction 2."
-  description: "Chicken pox and tuberculosis form for jurisdiction 1."
-  jurisdiction_id: 2
+  name: "Chicken Pox and Tuberculosis form 1, jurisdiction 102."
+  description: "Chicken pox and tuberculosis form for jurisdiction 102."
+  jurisdiction_id: 102
   is_template: true
   status: "Live"
   event_type: "morbidity_event"

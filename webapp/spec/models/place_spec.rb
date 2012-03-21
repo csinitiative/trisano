@@ -139,7 +139,7 @@ describe Place do
     describe "jurisdictions" do
       it "should return a list of jurisdictions" do
         h = Place.jurisdictions
-        h.length.should == 4
+        h.length.should == 5
       end
 
       it "should not return deleted jurisdictions" do
@@ -147,7 +147,7 @@ describe Place do
         @jurisdiction_to_delete.entity.deleted_at = Time.now
         @jurisdiction_to_delete.entity.save!
         h = Place.jurisdictions
-        h.length.should == 3
+        h.length.should == 4
 
         # Setting back to un-deleted to avoid future fixture panic until this is factoried up
         @jurisdiction_to_delete.entity.deleted_at = nil
