@@ -39,7 +39,7 @@ CREATE TRIGGER validate_participations BEFORE INSERT OR UPDATE
 
   def self.down
     execute <<-SQL
-      DROP FUNCTION IF EXISTS validate_participation();
+      DROP FUNCTION IF EXISTS validate_participation() CASCADE;
     SQL
   end
 end
