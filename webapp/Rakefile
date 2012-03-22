@@ -24,7 +24,7 @@ require 'rake/rdoctask'
 require 'tasks/rails'
 require 'tasks/helpers'
 require 'delayed/tasks'
-
+begin; require 'parallel_tests/tasks'; rescue LoadError; end
 include Tasks::Helpers::Commands
 
 def rakefile_dir file_name=''
