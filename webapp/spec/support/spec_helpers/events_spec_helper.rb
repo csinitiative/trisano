@@ -336,8 +336,10 @@ module EventsSpecHelper
     event.stubs(:interested_party=)
     event.stubs(:get_investigation_forms).returns(nil)
     event.stubs(:safe_call_chain).with(:disease_event, :disease, :disease_name).returns("Bubonic,Plague")
+    event.stubs(:safe_call_chain).with(:disease_event, :disease_onset_date).returns("2007-01-07")
     event.stubs(:deleted_at).returns(nil)
     event.stubs(:updated_at).returns(Time.new)
+    event.stubs(:safe_call_chain).with(:interested_party, :person_entity, :person, :birth_date).returns(nil)
     event
   end
 
