@@ -776,7 +776,11 @@ module EventsHelper
   def event_navigation_options(events)
     results = ""
     events.each do |event|
-      results << "<option value=\"#{edit_event_path(event)}\">#{event.full_name}</option>"
+      if params[:action] == "edit"
+        results << "<option value=\"#{edit_event_path(event)}\">#{event.full_name}</option>"
+      else
+        results << "<option value=\"#{event_path(event)}\">#{event.full_name}</option>"
+      end
     end
     results
   end
@@ -786,6 +790,15 @@ module EventsHelper
     person = parent.party
     path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
     link_to(h(person.try(:full_name)), path)
+  end
+
+
+  def event_path(event)
+    url_for({
+      :controller => controller_name_from_event(event),
+      :id => event.id,
+      :action => :show
+    })
   end
 
   def edit_event_path(event)
