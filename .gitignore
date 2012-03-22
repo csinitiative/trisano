@@ -36,3 +36,9 @@ avr/mdr.*
 /webapp/unicorn-conf.rb
 /webapp/bin/*
 .idea
+edge-deploy.sh
+test-clean.sh
+*.log
+*.swo
+kdhe-test-deploy.sh
+prep-clean.sh
