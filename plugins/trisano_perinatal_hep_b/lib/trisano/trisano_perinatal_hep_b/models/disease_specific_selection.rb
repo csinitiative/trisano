@@ -32,6 +32,7 @@ module Trisano
           def create_selection!(disease, attributes)
             render = attributes.delete('rendered')
             code = ::ExternalCode.find(:first, :conditions => attributes)
+            puts "unable to find code with #{attributes.inspect}" if code.nil?
             create!(:disease => disease, :external_code => code, :rendered => render)
           end
         end

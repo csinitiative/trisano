@@ -69,10 +69,75 @@
   code_description: "Native Hawaiian / Pacific Islander"
   sort_order: 30
 
--  code_name: "race"
-   the_code:  "UNK"
-   code_description: "Unknown"
-   sort_order: 1
+- code_name: "race"
+  the_code:  "UNK"
+  code_description: "Unknown"
+  sort_order: 1
+
+- code_name:        "race"
+  the_code:         "AI_AN"
+  code_description: "American Indian / Alaskan Native"
+  sort_order:       15
+
+- code_name:        "race"
+  the_code:         "CHINESE"
+  code_description: "Chinese"
+  sort_order:       20
+
+- code_name:        "race"
+  the_code:         "JAPANESE"
+  code_description: "Japanese"
+  sort_order:       40
+
+- code_name:        "race"
+  the_code:         "KOREAN"
+  code_description: "Korean"
+  sort_order:       50
+
+- code_name:        "race"
+  the_code:         "VIETNAMESE"
+  code_description: "Vietnamese"
+  sort_order:       60
+
+- code_name:        "race"
+  the_code:         "FILIPINO"
+  code_description: "Filipino"
+  sort_order:       70
+
+- code_name:        "race"
+  the_code:         "ASIAN_UNSPECIFIED"
+  code_description: "Asian unspecified"
+  sort_order:       80
+
+- code_name:        "race"
+  the_code:         "HAWAIIAN"
+  code_description: "Hawaiian Native"
+  sort_order:       90
+
+- code_name:        "race"
+  the_code:         "SAMOAN"
+  code_description: "Samoan"
+  sort_order:       100
+
+- code_name:        "race"
+  the_code:         "TONGAN"
+  code_description: "Tongan"
+  sort_order:       110
+
+- code_name:        "race"
+  the_code:         "GUATEMALAN"
+  code_description: "Guatemalan"
+  sort_order:       120
+
+- code_name:        "race"
+  the_code:         "OTHER_PAC_ISLAN"
+  code_description: "Other Pacific Islander"
+  sort_order:       130
+
+- code_name:        "race"
+  the_code:         "OTHER"
+  code_description: "Other"
+  sort_order:       140
 
   ### LANGUAGE ###
   
