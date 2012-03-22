@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
-
+include ActionController::TestProcess #required by fixture_file_upload
 describe Attachment do
 
   it "shouldn't be valid without a file uploaded" do
