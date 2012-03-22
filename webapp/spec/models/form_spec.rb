@@ -190,7 +190,7 @@ describe Form do
 
     before(:all) do
       @disease = Factory.create(:disease)
-      @jurisdiction = Factory.create(:jurisdiction)
+      @jurisdiction = Factory.create(:jurisdiction).place_entity
 
       @non_matching_disease = Factory.create(:disease)
       @non_matching_jurisdiction = Factory.create(:place_entity)
@@ -200,13 +200,13 @@ describe Form do
       @morb_form_matching_jurisdiction = Factory.build(:form, :event_type => "morbidity_event")
       @morb_form_matching_jurisdiction.diseases << @disease
       @morb_form_matching_jurisdiction.diseases << @second_disease_for_form
-      @morb_form_matching_jurisdiction.jurisdiction = @jurisdiction.place_entity
+      @morb_form_matching_jurisdiction.jurisdiction = @jurisdiction
       @morb_form_matching_jurisdiction.save_and_initialize_form_elements
       @published_morb_form_matching_jurisdiction = @morb_form_matching_jurisdiction.publish
 
       @morb_form_non_matching_disease = Factory.build(:form, :event_type => "morbidity_event")
       @morb_form_non_matching_disease.diseases << @non_matching_disease
-      @morb_form_non_matching_disease.jurisdiction = @jurisdiction.place_entity
+      @morb_form_non_matching_disease.jurisdiction = @jurisdiction
       @morb_form_non_matching_disease.save_and_initialize_form_elements
       @published_morb_form_non_matching_disease = @morb_form_non_matching_disease.publish
 
@@ -224,7 +224,7 @@ describe Form do
 
     it "should return only forms for the specified disease and jurisdiction" do
       forms = Form.get_published_investigation_forms(@disease.id, @jurisdiction.id, :morbidity_event)
-      forms.length.should == 1
+      forms.length.should == 2
       forms.each do |form|
         form.disease_ids.should == [@disease.id]
         form.jurisdiction_id.should == @jurisdiction.id unless form.jurisdiction_id.nil?
