@@ -129,7 +129,7 @@ describe Task, 'when working with task assignment' do
   it 'should not allow assignment to a user with the update_event privilege in another jurisdiction' do
     @assignee = Factory(:privileged_user)
     add_privileges_for(@assignee, "update_event")
-    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:jurisdiction))
+    @assignee.role_memberships.first.update_attributes(:jurisdiction => Factory(:jurisdiction).place_entity)
     User.current_user = @user
 
     @task.user = @assignee
