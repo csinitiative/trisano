@@ -16,6 +16,8 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require File.dirname(__FILE__) + '/../spec_helper'
+require RAILS_ROOT + '/app/helpers/application_helper'
+include ApplicationHelper
 
 describe PeopleManagementHelper do
 

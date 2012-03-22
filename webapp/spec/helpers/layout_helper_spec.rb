@@ -1,4 +1,6 @@
 require 'spec_helper'
+require RAILS_ROOT + '/app/helpers/application_helper'
+include ApplicationHelper
 
 describe LayoutHelper do
   
