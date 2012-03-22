@@ -17,6 +17,8 @@ base:
   # Only v2 is currently supported
   # google_api_version: 2
   default_admin_uid: trisano_admin # the initial user that has admin privileges
+  default_admin_password: changem3!  # must be set when using trisano_auth plugin, otherwise ignored
+  default_user_password: changeM3!  # must be set when using trisano_auth plugin, otherwise ignored
   # redis server ip or hostname
   redis_server: localhost
   # used when generating urls in mailings.
@@ -84,13 +86,13 @@ base:
 
 development:
   inherit: base
-  auth_src_env: TRISANO_UID
-  auth_allow_user_switch: true
+  auth_src_env: TRISANO_UID     #must be commented out when using trisano_auth plugin
+  auth_allow_user_switch: true  #must be commented out when using trisano_auth plugin
 
 test:
   inherit: base
-  auth_src_env: TRISANO_UID
-  auth_allow_user_switch: true
+  auth_src_env: TRISANO_UID     #must be commented out when using trisano_auth plugin
+  auth_allow_user_switch: true  #must be commented out when using trisano_auth plugin
   max_search_results: 50
   mailer: test
 

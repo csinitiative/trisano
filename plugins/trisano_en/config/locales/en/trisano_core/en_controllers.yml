@@ -5,7 +5,7 @@ en:
   no_create_privs_for_jurisdiction: "You do not have create privileges for this jurisdiction"
   no_update_privs_for_jurisdiction: "You do not have update privileges for this jurisdiction"
   no_uid_present: "Internal application error: No UID is present. Please contact your administrator."
-  user_not_found: "Internal application error: User not found. Please contact your administrator."
+  user_not_found: "Internal application error: User {{uid}} not found. Please contact your administrator."
   account_not_avaliable: "This account is not currently available. Please contact your administrator."
   application_error: "Application Error"
   an_error_occurred: "An error occurred while your request was being processed."

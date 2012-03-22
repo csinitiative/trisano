@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
     if User.current_user.nil?
       I18nLogger.info("logger.user_not_found", :uid => uid)
       log_request_info
-      render :text => t("user_not_found"), :status => 403
+      render :text => t("user_not_found", :uid => uid), :status => 403
       return
     end
 

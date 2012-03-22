@@ -24,8 +24,9 @@ module TrisanoAuth
       module ClassMethods
         def set_default_admin_uid_with_auth(uid, options={})
           auth_options = {
-            :password => 'changeme',
-            :password_confirmation => 'changeme',
+            :password => config_option(:default_admin_password),
+            :password_confirmation => config_option(:default_admin_password),
+            :perishable_token => Authlogic::Random.friendly_token
           }
           options = options.merge(auth_options)
           set_default_admin_uid_without_auth(uid, options)
@@ -36,8 +37,9 @@ module TrisanoAuth
           
           users.each do |u|
             auth_options = {
-              "password" => 'changeme',
-              "password_confirmation" => 'changeme',
+              "password" => config_option(:default_user_password),
+              "password_confirmation" => config_option(:default_user_password),
+              "perishable_token" => Authlogic::Random.friendly_token
             }
             new_users << u.merge(auth_options)
           end

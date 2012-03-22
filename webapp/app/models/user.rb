@@ -68,9 +68,11 @@ class User < ActiveRecord::Base
       reset_column_information
       admin_role = Role.find_by_role_name("Administrator")
       unassigned_jurisdiction = Place.unassigned_jurisdiction.entity
-      user = User.find_or_create_by_uid(:uid => uid, :user_name => uid)
+
+      user = User.find_or_initialize_by_uid(:uid => uid, :user_name => uid)
+      user.update_attributes!(options)
+      
       RoleMembership.create(:user => user, :role => admin_role, :jurisdiction => unassigned_jurisdiction)
-      user.update_attributes(options)
     end
 
     def load_default_users(users)

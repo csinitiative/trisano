@@ -27,7 +27,7 @@ To enable this plugin, you need to:
 2) Remove any auth related parameters in site_config.yml (or setup.yml)
 3) Disable user switching (also in site_config.yml)
 
-The default password for all default users is 'changeme'.
+The default password is configured in the site_config.yml
 
 To run the features:
 1) Add features/standard vendor/plugins/trisano_auth/features/standard  -r vendor/plugins/trisano_auth/features/standard_step_definitions -r vendor/plugins/trisano_auth/features/support to cucumber.yml in the root dir
