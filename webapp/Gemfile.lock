@@ -169,6 +169,7 @@ DEPENDENCIES
   rails (= 2.3.5)
   rails-footnotes (< 3.7.0)
   rails_inheritable_attributes_manager
+  rake (= 0.8.7)
   redis-store (= 1.0.0.beta2)
   rest-open-uri
   rspec-rails
