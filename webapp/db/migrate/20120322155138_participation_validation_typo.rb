@@ -1,4 +1,4 @@
-class AllowNullsInParticipationEntityIds < ActiveRecord::Migration
+class ParticipationValidationTypo < ActiveRecord::Migration
   def self.up
     execute <<-SQL
 CREATE OR REPLACE FUNCTION validate_participation() RETURNS TRIGGER AS $validate_participation$
