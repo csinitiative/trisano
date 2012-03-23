@@ -24,6 +24,7 @@ describe EventTasksController do
     @event = mock_event
     @event.stubs(:id).returns(1)
     @event.stubs(:save).returns(true)
+    @event.stubs(:save!).returns(true)  #needed for EventTouchFilter
     Event.stubs(:find).returns(@event)
   end
 

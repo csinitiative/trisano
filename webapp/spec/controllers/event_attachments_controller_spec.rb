@@ -25,7 +25,7 @@ describe EventAttachmentsController do
     @event = mock_event
     @event.stubs(:id).returns(1)
     @event.stubs(:save).returns(true)
-    @event.stubs(:save!).returns(true)
+    @event.stubs(:save!).returns(true)  #needed for EventTouchFilter
     Event.stubs(:find).returns(@event)
     User.stubs(:current_user).returns(@user)
   end

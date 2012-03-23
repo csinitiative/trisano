@@ -286,8 +286,8 @@ module EventsSpecHelper
     disease_event.stubs(:died).returns(died)
     disease_event.stubs(:pregnant).returns(pregnant)
     disease_event.stubs(:disease).returns(disease)
-    disease_event.stubs(:date_diagnosed).returns("2008-02-15")
-    disease_event.stubs(:disease_onset_date).returns("2008-02-13")
+    disease_event.stubs(:date_diagnosed).returns(Date.parse("2008-02-15"))
+    disease_event.stubs(:disease_onset_date).returns(Date.parse("2008-02-13"))
     disease_event.stubs(:pregnant_id).returns(1401)
     disease_event.stubs(:pregnancy_due_date).returns("")
 
@@ -296,8 +296,8 @@ module EventsSpecHelper
 
     lab_result.stubs(:specimen_source_id).returns(1501)
     lab_result.stubs(:specimen_source).returns(specimen_source)
-    lab_result.stubs(:collection_date).returns("2008-02-14")
-    lab_result.stubs(:lab_test_date).returns("2008-02-15")
+    lab_result.stubs(:collection_date).returns(Date.parse("2008-02-14"))
+    lab_result.stubs(:lab_test_date).returns(Date.parse("2008-02-15"))
 
     lab_result.stubs(:specimen_sent_to_state_id).returns(1401)
     lab_result.stubs(:specimen_sent_to_state).returns(specimen_sent_to_state)
@@ -310,7 +310,7 @@ module EventsSpecHelper
     event.stubs(:interested_party).returns(interested_party)
     event.stubs(:record_number).returns("2008537081")
     event.stubs(:event_name).returns('Test')
-    event.stubs(:event_onset_date).returns("2008-02-19")
+    event.stubs(:event_onset_date).returns(Date.parse("2008-02-19"))
     event.stubs(:disease_event).returns(disease_event)
     event.stubs(:lab_result).returns(lab_result)
     event.stubs(:event_status).returns("NEW")
@@ -323,11 +323,11 @@ module EventsSpecHelper
     event.stubs(:outbreak_associated_id).returns(1401)
     event.stubs(:outbreak_associated).returns(outbreak_associated)
     event.stubs(:outbreak_name).returns("Test Outbreak")
-    event.stubs(:investigation_started_date).returns("2008-02-05")
-    event.stubs(:investigation_completed_LHD_date).returns("2008-02-08")
-    event.stubs(:review_completed_by_state_date).returns("2008-02-11")
-    event.stubs(:first_reported_PH_date).returns("2008-02-07")
-    event.stubs(:results_reported_to_clinician_date).returns("2008-02-08")
+    event.stubs(:investigation_started_date).returns(Date.parse("2008-02-05"))
+    event.stubs(:investigation_completed_LHD_date).returns(Date.parse("2008-02-08"))
+    event.stubs(:review_completed_by_state_date).returns(Date.parse("2008-02-11"))
+    event.stubs(:first_reported_PH_date).returns(Date.parse("2008-02-20"))
+    event.stubs(:results_reported_to_clinician_date).returns(Date.parse("2008-02-08"))
     event.stubs(:MMWR_year).returns("2008")
     event.stubs(:MMWR_week).returns("7")
     event.stubs(:answers).returns([answer])
@@ -335,12 +335,13 @@ module EventsSpecHelper
     event.stubs(:under_investigation?).returns(true)
     event.stubs(:interested_party=)
     event.stubs(:get_investigation_forms).returns(nil)
-    event.stubs(:safe_call_chain).with(:disease_event, :disease, :disease_name).returns("Bubonic,Plague")
-    event.stubs(:safe_call_chain).with(:disease_event, :disease_onset_date).returns("2007-01-07")
+    event.stubs(:safe_call_chain).with(:disease_event, :disease, :disease_name).returns("Bubonic,Plague")  #must be same as disease event above
+    event.stubs(:safe_call_chain).with(:disease_event, :disease_onset_date).returns(Date.parse("2008-02-13"))  #must be same as disease event above
     event.stubs(:deleted_at).returns(nil)
     event.stubs(:updated_at).returns(Time.new)
-    event.stubs(:safe_call_chain).with(:interested_party, :person_entity, :person, :birth_date).returns(nil)
-    event
+    event.stubs(:safe_call_chain).with(:interested_party, :person_entity, :person, :birth_date).returns(Date.parse("1902-10-2")) #must be same as mock_person_entity
+
+    return event
   end
 
   def mock_person_entity
