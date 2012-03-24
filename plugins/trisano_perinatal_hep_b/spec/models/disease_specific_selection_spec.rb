@@ -30,7 +30,7 @@ describe DiseaseSpecificSelection, "in the Perinatal Hep B plugin" do
   it "should associate hep b specific external codes for hep b selections based on disease" do
     lambda do
       DiseaseSpecificSelection.create_perinatal_hep_b_associations
-    end.should change(DiseaseSpecificSelection, :count).by(54)
+    end.should change(DiseaseSpecificSelection, :count).by(35)
   end
 
 end
