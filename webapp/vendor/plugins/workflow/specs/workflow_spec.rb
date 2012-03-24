@@ -35,7 +35,7 @@ describe 'Workflow:' do
 
   describe 'a workflow with event actions' do
 
-    setup do
+    before do
       Workflow.specify do
         state :for_sale do
           event :sell, :transitions_to => :sold do
@@ -77,7 +77,7 @@ describe 'Workflow:' do
 
   describe 'a workflow with on exit and on entry actions' do
 
-    setup do
+    before do
       Workflow.specify do
         state :looking_for_speeders do
           event :speeding_car_detected, :transitions_to => :taking_photo
@@ -114,7 +114,7 @@ describe 'Workflow:' do
 
   describe 'specifying and instanciating named state workflows' do
 
-    setup do
+    before do
       Workflow.specify :alphabet_workflow do
         state :a
         state :b
@@ -141,7 +141,7 @@ describe 'Workflow:' do
 
   describe 'reconstitution of a workflow (say, from a serialised object)' do
 
-    setup do
+    before do
       Workflow.specify do
         state :first
         state :second
@@ -161,7 +161,7 @@ describe 'Workflow:' do
 
   describe 'a workflow with an on transition hook' do
 
-    setup do
+    before do
       Workflow.specify do
         state(:first)  { event(:next, :transitions_to => :second) { |i| nil } }
         state(:second) { event(:next, :transitions_to => :third)  { |i| nil } }

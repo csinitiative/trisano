@@ -79,30 +79,3 @@ Feature: Select options specific to Hepatitis B Pregnancy Event
         | Child by other mother     |
         | Non-spouse sexual contact |
         | Spouse sexual contact     |
-
-  Scenario: Contact type selection on a Contact event
-    Given I am logged in as a super user
-      And the hep b disease specific selections are loaded
-      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
-      And the morbidity event has the following contacts:
-        | last_name |
-        | Chandler  |
-     When I go to the first CMR contact's edit page
-     Then I should see only these race ID select options:
-        | content                          |
-        | White                            |
-        | Black / African-American         |
-        | American Indian / Alaskan Native |
-        | Chinese                          |
-        | Japanese                         |
-        | Asian Indian                     |
-        | Korean                           |
-        | Vietnamese                       |
-        | Filipino                         |
-        | Asian unspecified                |
-        | Hawaiian Native                  |
-        | Samoan                           |
-        | Tongan                           |
-        | Guatemalan                       |
-        | Other Pacific Islander           |
-        | Other                            |

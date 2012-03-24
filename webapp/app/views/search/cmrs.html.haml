@@ -70,7 +70,7 @@
     = link_to_function(t('export_all_to_csv'), nil) do |page|
       - page[:export_options].visual_effect :appear
 
-  - if @cmrs.size < max_search_results
+  - if @cmrs.total_entries < max_search_results
     = render :partial => "morbidity_events/export_options", :locals => { :path => cmrs_format_path(params.merge(:format => 'csv')) }
   - else
     = render :partial => "refine_search"
