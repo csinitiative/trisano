@@ -11,7 +11,7 @@ platforms :ruby_18, :ruby_19 do
   gem "pg", "0.12.2"
 end
 
-gem "rake", "0.8.7"
+gem "rake", "0.8.7", :require => false
 gem "logging", "1.4.3"
 gem "rails_inheritable_attributes_manager", "0.3.1"
 gem "haml", "2.0.7"
