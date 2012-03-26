@@ -39,6 +39,10 @@ if User.new.respond_to?(:crypted_password)
     raise "ERROR: You must specify the default_admin_password in the site config while using the trisano_auth plugin" 
   end
 
+else
+
+  RoleMembership.transaction do
+      User.set_default_admin_uid(@default_admin_uid)
+  end
+
 end
-
-
