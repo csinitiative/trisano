@@ -103,7 +103,8 @@ end
 
 Then /^I should see max_search_results records returned$/i do
   count = config_option(:max_search_results).to_i
-  response.should have_xpath("//*[count(tr[@class='search-active'])=#{count}]")
+  #response.should have_xpath("//*[count(tr[@class='search-active'])=#{count}]")
+  response.should contain "#{count} in total"
 end
 
 def search_criteria(hash)
