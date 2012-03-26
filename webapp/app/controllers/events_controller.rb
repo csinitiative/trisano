@@ -54,14 +54,10 @@ class EventsController < ApplicationController
     render :partial => "events/clinician_show", :layout => false, :locals => { :event_type => params[:event_type] }
   end
 
-  def reporters_search_selection
-    if @event.reporter.nil?
-      @event.build_reporter :secondary_entity_id => params[:entity_id]
-    else
-      @event.reporter.secondary_entity_id = params[:entity_id]
-    end
-
-    render :layout => false
+  def reporter_search_selection
+    @event = Event.find params[:event_id]
+    @event.build_reporter :secondary_entity_id => params[:id]
+    render :partial => "events/reporter_from_search", :layout => false
   end
 
   def places_search
@@ -106,6 +102,21 @@ class EventsController < ApplicationController
       @clinicians = []
     end
     render :partial => "events/clinicians_search", :layout => false
+  end
+
+  def reporters_search
+    @event = Event.find(params[:event_id])
+    page = params[:page] || 1
+    name = (params[:name] || '').strip
+    begin
+      @reporters = Person.active.send(:reporters).find(:all,
+      :conditions => ["(LOWER(last_name) LIKE ? OR LOWER(first_name) LIKE ?)", name.downcase + '%', name.downcase + '%']).paginate(:include => {:person_entity => :telephones}, :page => page, :per_page => 10)
+    rescue
+      logger.error($!)
+      flash.now['error'] = t('invalid_search_criteria')
+      @reporters = []
+    end
+    render :partial => "events/reporters_search", :layout => false
   end
 
   def diagnostic_facilities_search

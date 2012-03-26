@@ -1,5 +1,5 @@
 #reporter
-  - fields_for event, :builder => ImmutableFormBuilder do |f|
+  - fields_for @event, :builder => ImmutableFormBuilder do |f|
     - f.fields_for(:reporter) do |r|
       = r.hidden_field(:secondary_entity_id)
       - r.fields_for(:person_entity) do |pe|
@@ -7,34 +7,28 @@
           = error_messages_for :object => p.object
           - core_element :last_name, p, :horiz do
             = p.label(:last_name, t('reporter_last_name'))
-            = p.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, event)
+            = h(p.object.last_name)
           - core_element :first_name, p, :horiz do
             = p.label(:first_name, t('reporter_first_name'))
-            = p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, event)
+            = h(p.object.first_name)
 
         - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
         - pe.fields_for(:telephones, phone) do |phone_fields|
           -if Telephone.use?(:country_code)
             - core_element :country_code, phone_fields, :horiz do
               = phone_fields.label(:country_code)
-              = phone_fields.core_text_field(:country_code, {:size => 3}, event)
+              = h(phone_fields.object.country_code)
           -if Telephone.use?(:area_code)
             - core_element :area_code, phone_fields, :horiz do
               = phone_fields.label(:area_code)
-              = phone_fields.core_text_field(:area_code, {:size => 3}, event)
+              = h(phone_fields.object.area_code)
           - core_element :phone_number, phone_fields, :horiz do
             = phone_fields.label(:phone_number)
-            = phone_fields.core_text_field(:phone_number, {:size => 8}, event)
+            = h(phone_fields.object.phone_number)
           - core_element :extension, phone_fields, :horiz do
             = phone_fields.label(:extension)
-            = phone_fields.core_text_field(:extension, {:size => 6}, event)
+            = h(phone_fields.object.extension)
 
       %span.horiz
-        - unless r.object.new_record?
-          = r.label :_delete
-          = r.check_box :_destroy
-        -else
-          - if render_remove_link
-            = label_tag "&nbsp;"
-            = link_to_function t(:remove) do |page|
-              - page[:reporter].replace render_reporter_form(event.class.new)
+        = r.label :_delete
+        = r.check_box :_destroy

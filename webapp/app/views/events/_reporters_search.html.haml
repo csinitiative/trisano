@@ -1,0 +1,44 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+- if flash[:error]
+  #flash-message.error-message
+    = flash[:error]
+
+%br
+-if @reporters.empty?
+  %b=t(:no_results)
+-else
+  %table.list
+    %tr
+      %th= t :last_name
+      %th= t :first_name
+      %th= t :middle_name
+      %th= t :phone
+      %th= t :actions
+    - for reporter in @reporters do
+      %tr
+        %td=h reporter.last_name
+        %td=h reporter.first_name
+        %td=h reporter.middle_name
+        %td
+          - if reporter.primary_phone
+            =h reporter.primary_phone.simple_format
+          - else
+            &nbsp;
+        %td=link_to_remote(t(:select), :update => 'existing-reporter', :position => 'bottom', :before => "jQuery('#existing-reporter').html('');", :url => { :action => :reporter_search_selection, :event_id => @event.id, :id => reporter.entity_id, :event_type => params['event_type'] })
+
+  %br
+  = ajaxy_pagination(@reporters, 'reporters')
