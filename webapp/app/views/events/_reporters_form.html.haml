@@ -1,0 +1,13 @@
+%div#reporters
+  - search_interface :reporters, :url => { :event_id => event.id, :event_type => event.type.underscore }
+  %br.vert-break
+
+  - fields_for event, :builder => ImmutableFormBuilder do |f|
+
+    %div#existing-reporter
+      - f.fields_for(:reporter) do |reporter_fields|
+        -# If this is a new record and we are not returning from a failed validation
+        -if reporter_fields.object.new_record? && reporter_fields.object.secondary_entity_id.nil?
+          =render :partial => 'events/reporter', :locals => { :f => reporter_fields, :event => event }
+        -else
+          =render :partial => 'events/reporter_show', :locals => { :f => reporter_fields, :event => event }

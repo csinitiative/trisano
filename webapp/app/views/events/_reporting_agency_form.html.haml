@@ -26,7 +26,6 @@
         = render_reporting_agency_form(@event)
 
     -core_section :reporter_section, f do
-      = reporter_dropdown :id => 'reporter', :insertion => :replaceWith
       = render_reporter_form @event
     -core_section :reported_dates_section, f do
       #reported_dates

@@ -1,0 +1,43 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%div{:class => 'reporter', :style => "clear: both;"}
+
+  - f.fields_for(:person_entity) do |pe|
+    - pe.fields_for(:person) do |p|
+      = error_messages_for :object => p.object
+      - core_element :last_name, p, :horiz do
+        = p.label(:last_name, t('reporter_last_name'))
+        = p.core_text_field(:last_name, {:size => 25, :maxlength => 25, :class => 'required_if_others'}, event)
+      - core_element :first_name, p, :horiz do
+        = p.label(:first_name, t('reporter_first_name'))
+        = p.core_text_field(:first_name, {:size => 25, :maxlength => 25}, event)
+
+    - phone = pe.object.telephones.last # Works around issue where 1.0 code was duping reporter phone with each save.
+    - pe.fields_for(:telephones, phone) do |phone_fields|
+      -if Telephone.use?(:country_code)
+        - core_element :country_code, phone_fields, :horiz do
+          = phone_fields.label(:country_code)
+          = phone_fields.core_text_field(:country_code, {:size => 3}, event)
+      -if Telephone.use?(:area_code)
+        - core_element :area_code, phone_fields, :horiz do
+          = phone_fields.label(:area_code)
+          = phone_fields.core_text_field(:area_code, {:size => 3}, event)
+      - core_element :phone_number, phone_fields, :horiz do
+        = phone_fields.label(:phone_number)
+        = phone_fields.core_text_field(:phone_number, {:size => 8}, event)
+      - core_element :extension, phone_fields, :horiz do
+        = phone_fields.label(:extension)
+        = phone_fields.core_text_field(:extension, {:size => 6}, event)

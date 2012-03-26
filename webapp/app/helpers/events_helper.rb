@@ -1416,7 +1416,7 @@ module EventsHelper
 
   def render_reporter_form(event, render_remove_link=false)
     locals = { :event => event, :render_remove_link => render_remove_link }
-    render :partial => 'events/reporter_form', :locals => locals
+    render :partial => 'events/reporters_form', :locals => locals
   end
 
   # wraps up remote function so it can be used in a prototype callback
