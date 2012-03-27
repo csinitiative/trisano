@@ -182,8 +182,9 @@ Given /^there is a contact on the event named (.+)$/ do |last_name|
 end
 
 Given /^the contact has the disease (.+)$/ do |disease|
-  @contact_event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease))
-  @contact_event.save!
+  @contact_event.disease_event.destroy if @contact_event.disease_event.present?
+  Factory(:disease_event, :disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease), :event_id => @contact_event.id)
+  @contact_event.reload
 end
 
 Given /^the contact event is deleted$/i do
