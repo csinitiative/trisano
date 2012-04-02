@@ -21,12 +21,20 @@ module TrisanoAuth
       reloadable!
       hook! 'User'
 
+      module InstanceMethods
+
+        def initialize_tokens
+          self.perishable_token = Authlogic::Random.friendly_token
+        end
+
+      end
+
       module ClassMethods
+
         def set_default_admin_uid_with_auth(uid, options={})
           auth_options = {
             :password => config_option(:default_admin_password),
-            :password_confirmation => config_option(:default_admin_password),
-            :perishable_token => Authlogic::Random.friendly_token
+            :password_confirmation => config_option(:default_admin_password)
           }
           options = options.merge(auth_options)
           set_default_admin_uid_without_auth(uid, options)
@@ -38,8 +46,7 @@ module TrisanoAuth
           users.each do |u|
             auth_options = {
               "password" => config_option(:default_user_password),
-              "password_confirmation" => config_option(:default_user_password),
-              "perishable_token" => Authlogic::Random.friendly_token
+              "password_confirmation" => config_option(:default_user_password)
             }
             new_users << u.merge(auth_options)
           end
@@ -84,8 +91,15 @@ module TrisanoAuth
 
             c.validates_format_of :password, :with => /^(?!.*(.)\1)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^0-9a-zA-Z])([\x20-\x7E]){7,}$/, :if => :require_password_changed?, :message => "must be at least 7 characters.  It must include a number, a lower case letter, an upper case character, and a non-alphanumeric character.  No two characters may be repeated sequentially."
           end
+
+
+          base.send :include, InstanceMethods
+
           base.class_eval do
             extend ClassMethods
+            
+            before_create :initialize_tokens
+            
             class << self
               alias_method_chain :set_default_admin_uid, :auth
               alias_method_chain :load_default_users, :auth
