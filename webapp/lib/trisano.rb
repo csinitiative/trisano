@@ -1,5 +1,5 @@
 module Trisano
-  VERSION = %w(3 5 4).freeze
+  VERSION = %w(3 5 5).freeze
 end
 
 require 'trisano/application'
