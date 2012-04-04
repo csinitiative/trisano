@@ -86,12 +86,14 @@ class Event < ActiveRecord::Base
     end
   end
 
-  has_many :encounter_child_events, :class_name => 'EncounterEvent', :foreign_key => 'parent_id' do
+  has_many :encounter_child_events, :class_name => 'EncounterEvent', :foreign_key => 'parent_id',
+           :include => :participations_encounter, :order => "participations_encounters.encounter_date DESC" do
     def active(reload=false)
       @active_encounters = nil if reload
       @active_encounters ||= EncounterEvent.find(:all,
         :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id],
-        :order => "created_at ASC"
+        :include => :participations_encounter,
+        :order => "participations_encounters.encounter_date DESC"
       )
     end
   end
