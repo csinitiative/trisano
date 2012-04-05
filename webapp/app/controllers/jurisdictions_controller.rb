@@ -39,7 +39,7 @@ class JurisdictionsController < AdminController
   def create
     @place = Place.new(params[:jurisdiction][:place_attributes])
     @jurisdiction = PlaceEntity.new(:place => @place)
-    @place.place_types << Code.active.find(Code.jurisdiction_place_type_id)
+    @place.place_types = [Code.find(Code.jurisdiction_place_type_id)]
 
     if @jurisdiction.save
       flash[:notice] = t("jurisdiction_created")

@@ -15,10 +15,19 @@
 -# You should have received a copy of the GNU Affero General Public License
 -# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+- field_name = options[:name] || h(f.object_name + "[place_type_ids][]")
+
 = f.label(:places_types, t('place_type'))
-%div{ :style => 'border: 1px solid; height: 5em; width: 20em; overflow: auto; margin-bottom: 3px' }
-  - field_name = options[:name] || h(f.object_name + "[place_type_ids][]")
-  -# 'types' is passed in as a local.  It contains a method name dictating what types of types (argh) to display: e.g. epi_types or agency_types
-  - Place.send(types).each do |type|
-    - field_id = h((f.object_name. + "place_type_#{type.the_code}").gsub(/[\[\]]/, "_"))
-    = "<label>" + check_box_tag(field_name, type.id, f.object.place_type_ids.include?(type.id), :id => field_id ) + h(type.code_description) + "</label>"
+
+- # Jurisdictions' place types cannot be modified.
+- # The Place model will enforce this.
+- if f.object.is_a_jurisdiction?
+  Jurisdiction
+
+- else
+  %div{ :style => 'border: 1px solid; height: 5em; width: 20em; overflow: auto; margin-bottom: 3px' }
+    -# 'types' is passed in as a local.  It contains a method name dictating what types of types (argh) to display: e.g. epi_types or agency_types    
+    - Place.send(types).each do |type|
+      - field_id = h((f.object_name. + "place_type_#{type.the_code}").gsub(/[\[\]]/, "_"))
+      = "<label>" + check_box_tag(field_name, type.id, f.object.place_type_ids.include?(type.id), :id => field_id ) + h(type.code_description) + "</label>"
+
