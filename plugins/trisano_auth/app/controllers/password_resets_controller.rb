@@ -31,7 +31,8 @@ class PasswordResetsController < ApplicationController
   def update  
     @user.password = params[:user][:password]  
     @user.password_confirmation = params[:user][:password_confirmation]  
-    if @user.save  
+    if @user.save
+      Rails.logger.info "Reset password for #{@user.inspect}" 
       @user.reset_perishable_token!  # invalidate used token
       flash[:notice] = "Password successfully updated"  
       redirect_to home_url  
@@ -57,7 +58,9 @@ class PasswordResetsController < ApplicationController
     # Will check token is found and that user's updated at field
     # is within the time specified by config_options[:trisano_auth][:password_reset_timeout].minutes 
     @user = User.find_using_perishable_token(params[:id])  
-    
+   
+    Rails.logger.info "Granted #{@user.inspect} access via perishable token."
+
     unless @user  
       flash[:notice] = "We're sorry, but we could not locate your account. " +  
       "If you are having issues try copying and pasting the URL " +  
