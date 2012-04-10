@@ -25,6 +25,11 @@
       #encounter_child_events
         -core_element(:encounters, f, :horiz) do
           - unless f.object.new_record?
+
+            - add_new_encounter_link_id = f.object_name + "_add_new_encounter_link"
+
+            %p= link_to_function "Add new encounter", "$('#{add_new_encounter_link_id}').onclick(); new Effect.ScrollTo('morbidity_event_add_new_encounter_link', {offset: -225, duration: 0.4});"
+
             - f.fields_for(:encounter_child_events, :builder => ExtendedFormBuilder) do |e|
               = render :partial => "events/encounter", :locals => { :f => e }
 
@@ -32,7 +37,9 @@
               - blank_encounter = f.object.encounter_child_events.build
               - blank_encounter.build_participations_encounter
 
-              %p= add_record_link f, :encounter_child_events, t("add_encounter"), :object => blank_encounter, :partial => "events/encounter"
+              %p= add_record_link f, :encounter_child_events, t("add_encounter"), :object => blank_encounter, :partial => "events/encounter", :insertion_point => "top", :insert => "new_encounter_child_events", :html_id => add_new_encounter_link_id
+
+            #new_encounter_child_events
 
           - else
             =t 'no_encounters', :thing => 'event'
