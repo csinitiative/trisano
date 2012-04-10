@@ -252,7 +252,7 @@ SELECT
     jorpl.id AS jurisdiction_of_residence_id,
     scsi.code_description AS state_case_status_code,
     lcsi.code_description AS lhd_case_status_code,
-    events."MMWR_week"::text AS mmwr_week,
+    to_char(events."MMWR_week", '00') AS mmwr_week,
     events."MMWR_year"::text AS mmwr_year,
 
     events.event_name,
