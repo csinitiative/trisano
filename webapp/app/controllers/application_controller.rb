@@ -22,6 +22,8 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 
+  filter_parameter_logging :password, :password_confirmation, :api_key
+
   before_filter :load_user
   before_filter :prep_extensions
 
