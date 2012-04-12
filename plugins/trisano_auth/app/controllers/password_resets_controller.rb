@@ -32,7 +32,7 @@ class PasswordResetsController < ApplicationController
     @user.password = params[:user][:password]  
     @user.password_confirmation = params[:user][:password_confirmation]  
     if @user.save
-      Rails.logger.info "Reset password for #{@user.inspect}" 
+      Rails.logger.info "Successfully reset password for #{@user.inspect}" 
       @user.reset_perishable_token!  # invalidate used token
       flash[:notice] = "Password successfully updated"  
       redirect_to home_url  

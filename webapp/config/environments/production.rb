@@ -27,7 +27,9 @@ require 'logging'
 # when an Appender or Layout is created BEFORE any Logger is instantiated:
 Logging.init :debug, :info, :warn, :error, :fatal
 
-layout = Logging::Layouts::Pattern.new :pattern => "[%d] [%-5l] %m\n"
+# see https://github.com/TwP/logging/blob/master/lib/logging/layouts/pattern.rb
+# for pattern formatting reference
+layout = Logging::Layouts::Pattern.new :pattern => "[%p] [%d] [%-5l] %m\n"
 
 # Default logfile, history kept for 10 days
 TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= '/var/log/trisano/'
