@@ -28,6 +28,7 @@ class FormElementCache
   end
   
   def reload
+    @children = {}
     @full_set = load_full_set
   end
   
