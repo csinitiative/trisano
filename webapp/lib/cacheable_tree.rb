@@ -32,7 +32,13 @@ module CacheableTree
   def children(element = @root_element)
     @children ||= {}
     #@children[element] ||= full_set.select { |node| node.parent_id == element.id }
-    @children[element] ||= FormElement.find_by_sql("SELECT * FROM form_elements WHERE (tree_id = #{element.tree_id} AND (lft BETWEEN #{element.lft} AND #{element.rgt}) AND parent_id = #{element.id}) ORDER BY form_elements.lft")
+    if element.tree_id.present?
+      #FormElement
+      @children[element] ||= FormElement.find_by_sql("SELECT * FROM form_elements WHERE (tree_id = #{element.tree_id} AND (lft BETWEEN #{element.lft} AND #{element.rgt}) AND parent_id = #{element.id}) ORDER BY form_elements.lft")
+    else
+      #LibraryElement
+      @children[element] ||= FormElement.find_by_sql("SELECT * FROM form_elements WHERE ((lft BETWEEN #{element.lft} AND #{element.rgt}) AND parent_id = #{element.id}) ORDER BY form_elements.lft")
+    end
   end
   
   def children_by_type(type, element = @root_element)
