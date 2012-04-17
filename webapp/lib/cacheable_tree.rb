@@ -26,17 +26,13 @@ module CacheableTree
   end
    
   def children?(element = @root_element)
-    full_set.collect { |node| if (node.parent_id == element.id)
-        node
-      end
-    }.compact.size
+    children_count(element)
   end
   
   def children(element = @root_element)
-    full_set.collect { |node| if (node.parent_id == element.id)
-        node
-      end
-    }.compact
+    @children ||= {}
+    #@children[element] ||= full_set.select { |node| node.parent_id == element.id }
+    @children[element] ||= FormElement.find_by_sql("SELECT * FROM form_elements WHERE (tree_id = #{element.tree_id} AND (lft BETWEEN #{element.lft} AND #{element.rgt}) AND parent_id = #{element.id}) ORDER BY form_elements.lft")
   end
   
   def children_by_type(type, element = @root_element)
@@ -47,10 +43,7 @@ module CacheableTree
   end
   
   def children_count(element = @root_element)
-    full_set.collect { |node| if (node.parent_id == element.id)
-        node
-      end
-    }.compact.size
+    children(element).size
   end
   
   def children_count_by_type(type,  element = @root_element)

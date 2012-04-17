@@ -912,7 +912,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[#{t('show')}]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
 
       section_children = form_elements_cache.children(element)
 
@@ -970,7 +970,7 @@ module EventsHelper
     result = tooltip("#{identifier}_help_text_#{element.id}") do
       image_tag('help.png', :border => 0)
     end
-    result << "<span id='#{h(identifier)}_help_text_#{h(element.id)}' style='display: none;'>#{simple_format(sanitize(help_text, :tags => %w(br)))}</span>"
+    result << "<span id='#{h(identifier)}_help_text_#{h(element.id)}' style='display: none;'>#{simple_format(help_text)}</span>"
   end
 
   def render_core_field_help_text(attribute, form_builder, event)
@@ -1110,7 +1110,7 @@ module EventsHelper
       result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[#{t('show')}]</span>"
       result << "</legend>"
       result << "<div id='#{section_id}'>"
-      result << "<i>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</i><br/><br/>" unless element.description.blank?
+      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
 
       section_children = form_elements_cache.children(element)
 
@@ -1159,7 +1159,7 @@ module EventsHelper
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-      result << "<label>#{sanitize(question.question_text, :tags => %w(br))}&nbsp;"
+      result << "<label>#{question.question_text}&nbsp;"
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
       answer = form_elements_cache.answer(element, @event)
@@ -1268,7 +1268,7 @@ module EventsHelper
     begin
       result = "<div class='print-section'>"
       result << "<br/>#{strip_tags(element.name)}<br/>"
-      result << "<span class='print-instructions'>#{sanitize(element.description.gsub("\n", '<br/>'), :tags => %w(br))}</span>" unless element.description.blank?
+      result << "<span class='print-instructions'>#{element.description.gsub("\n", '<br/>')}</span>" unless element.description.blank?
       result << "<hr/>"
 
       section_children = form_elements_cache.children(element)
@@ -1318,7 +1318,7 @@ module EventsHelper
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
-      result << "<span class='print-label'>#{sanitize(question.question_text, :tags => %w(br))}:</span>&nbsp;"
+      result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
       answer = form_elements_cache.answer(element, @event)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
       result << "</div>"
