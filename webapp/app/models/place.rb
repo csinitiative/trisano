@@ -59,7 +59,7 @@ class Place < ActiveRecord::Base
   }
 
   named_scope :reporting_agencies_by_name, lambda { |name|
-    { :conditions => ["places.name ILIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (?) AND entities.deleted_at IS NULL", name + '%', Place.agency_type_codes],   
+    { :conditions => ["places.name ILIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (?) AND entities.deleted_at IS NULL", name + '%', Place.agency_type_codes],
       :include => [:place_types, :entity],
       :order => 'LOWER(TRIM(places.name)) ASC'
     }

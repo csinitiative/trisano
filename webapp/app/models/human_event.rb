@@ -103,7 +103,7 @@ class HumanEvent < Event
     def lab_result_attributes_blank?(attrs)
       attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
     end
-    
+
     def rewrite_attributes_to_reuse_place_entities(attrs)
       if attrs["place_entity_attributes"]
         place_attributes = attrs["place_entity_attributes"]["place_attributes"]
@@ -463,7 +463,7 @@ class HumanEvent < Event
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == self.jurisdiction.secondary_entity_id
-        proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id) 
+        proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id)
         raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
         self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
         self.add_note note
