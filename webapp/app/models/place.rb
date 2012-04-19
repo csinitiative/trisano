@@ -32,8 +32,6 @@ class Place < ActiveRecord::Base
   end
   validates_presence_of :short_name, :if => :is_a_jurisdiction?
 
-  # Once a Place is created as a Jurisdiction
-  # it's place type will always be set to Jurisdiction
   before_update :set_jurisdiction_place_type, :if => :is_a_jurisdiction?
 
   named_scope :active, {
@@ -255,6 +253,8 @@ class Place < ActiveRecord::Base
   end
 
   def set_jurisdiction_place_type
+  # Once a Place is created as a Jurisdiction
+  # it's place type will always be set to Jurisdiction
     self.place_types = [Code.find(Code.jurisdiction_place_type_id)]
   end
 
