@@ -25,6 +25,10 @@ class Jurisdiction < Participation
     User.current_user.is_entitled_to_in?(privilege, secondary_entity_id)
   end
 
+  def self.out_of_state
+    Place.find_by_name("Out of State")
+  end
+
   def place
     place_entity.try :place
   end

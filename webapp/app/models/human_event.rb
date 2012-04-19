@@ -878,8 +878,8 @@ class HumanEvent < Event
   def validate
     super
 
-    county_code = self.address.try(:county).try(:the_code)
-    if county_code == "OS" &&
+    county_jurisdiction = self.address.try(:county).try(:jurisdiction)
+    if county_jurisdiction == Jurisdiction.out_of_state &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) &&
           ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
       errors.add(:base, :invalid_case_status, :status => ExternalCode.out_of_state.code_description, :attr => I18n.t(:county).downcase, :value => self.address.county.code_description)
