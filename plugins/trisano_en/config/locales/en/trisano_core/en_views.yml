@@ -732,6 +732,7 @@ en:
   change_view: "Change View"
   status: 'Status'
   event_date: 'Event Date'
+  event_created: 'Event Created'
   mortality_status: 'Mortality Status'
   pregnancy_status: 'Pregnancy Status'
   event_investigation_status: "Event Investigation Status"

@@ -81,7 +81,7 @@
       %th
         = link_to(t("status"), cmrs_path(merge_sort_params(query_params, 'status')))
       %th
-        = link_to(t("event_date"), cmrs_path(merge_sort_params(query_params, 'event_date', :date)))
+        = link_to(t("event_created"), cmrs_path(merge_sort_params(query_params, 'event_created', :date)))
 
       - @events.each do |event|
         - if event.is_a? ContactEvent

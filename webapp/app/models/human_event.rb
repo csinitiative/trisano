@@ -183,7 +183,7 @@ class HumanEvent < Event
       when 'status'
         # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
         "workflow_state #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name"
-      when 'event_date'
+      when 'event_created'
         "events.created_at #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name, workflow_state"
       else
         "events.updated_at DESC"

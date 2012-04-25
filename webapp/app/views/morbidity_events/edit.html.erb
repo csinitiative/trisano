@@ -44,7 +44,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th><%= t('disease') %></th>
       <th><%= t('jurisdictions') %></th>
       <th><%= t('status') %></th>
-      <th><%= t('event_date') %></th>
+      <th><%= t('event_created') %></th>
     </tr>
     <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :view_mode => :edit, :extra_tools => " | " + link_to(t('events_normal_case'), cmrs_path_with_defaults) } %>
   </table>
