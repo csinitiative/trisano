@@ -64,9 +64,9 @@ Feature: Ordering the events view by column
       And a simple morbidity event in jurisdiction Bear River for last name Cleveland
       And the morbidity event was created 1 day ago
     When I visit the events index page
-      And I follow "Event Date"
+      And I follow "Event Created"
     Then the "Cleveland" event should come before the "Benson" event
       And the "Benson" event should come before the "Abernathy" event
-    When I follow "Event Date"
+    When I follow "Event Created"
     Then the "Abernathy" event should come before the "Benson" event
       And the "Benson" event should come before the "Cleveland" event
