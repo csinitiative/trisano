@@ -1,9 +1,10 @@
 namespace :cache do
-    task :warm, :host_url, :limit, :needs => :environment do |task, args|
+    task :warm, :protocol, :host_url, :limit, :needs => :environment do |task, args|
       require 'console_app'
       require 'benchmark'
       include ActionController::UrlWriter
-      
+     
+      default_url_options[:protocol] = args[:protocol] || "http"
       default_url_options[:host] = args[:host_url] || ask("HOST URL? ")
       limit = args[:limit] || ask("Records to cache? ")
 
@@ -25,7 +26,7 @@ def request_url(url)
   sanitized_url = url.gsub(/api_key=..................../, '')
   puts "loading #{sanitized_url}"
   execute_with_benchmark do
-    app.get url
+    puts "returned " + app.get(url).to_s
   end
 end
 
