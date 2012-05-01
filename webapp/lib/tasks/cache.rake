@@ -1,22 +1,40 @@
 namespace :cache do
-    task :warm, :protocol, :host_url, :limit, :needs => :environment do |task, args|
+    task :warm, :limit, :needs => :environment do |task, args|
       require 'console_app'
       require 'benchmark'
       include ActionController::UrlWriter
-     
-      default_url_options[:protocol] = args[:protocol] || "http"
-      default_url_options[:host] = args[:host_url] || ask("HOST URL? ")
-      limit = args[:limit] || ask("Records to cache? ")
 
-      api_key = User.find(:first, :conditions => "single_access_token IS NOT NULL").single_access_token 
+      limit = args[:limit].to_i || 1000
+
+      begin
+
+      super_user = User.find_or_create_by_uid_and_user_name("system-super", "system-super")
+      super_role = Role.find_or_create_by_role_name("system-super")
+      super_role.privileges = Privilege.all
+      Place.jurisdictions.each do |jurisdiction|
+        RoleMembership.create(:jurisdiction => jurisdiction.entity, :user => super_user, :role => super_role)
+      end
+       
+
+
+      api_key = super_user.single_access_token 
 
       raise "No API key found" if api_key.empty?
       
       current_events = MorbidityEvent.find(:all, :order => "updated_at DESC", :limit => limit)
 
       current_events.each do |event|
-        request_url url_for(:controller => "morbidity_events", :action => "show", :id => event, :api_key => api_key)
-        request_url url_for(:controller => "morbidity_events", :action => "edit", :id => event, :api_key => api_key)
+        request_url url_for(:controller => "morbidity_events", :action => "show", :id => event, :api_key => api_key, :only_path => true)
+        request_url url_for(:controller => "morbidity_events", :action => "edit", :id => event, :api_key => api_key, :only_path => true)
+      end
+
+      super_user.destroy unless super_user.nil?
+      super_role.destroy unless super_role.nil?
+
+      rescue Exception => e
+        puts e.message
+        super_user.destroy unless super_user.nil?
+        super_role.destroy unless super_role.nil?
       end
       
     end
