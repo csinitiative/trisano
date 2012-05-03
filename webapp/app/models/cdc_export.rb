@@ -98,10 +98,12 @@ class CdcExport < ActiveRecord::Base
       sql = <<-SQL
        SELECT
          e.id,
+         e.created_at,
          e.state_case_status_id,
          de.disease_onset_date,
          de.date_diagnosed,
          diseases.cdc_code,
+         lab_results.lab_collection_dates,
          lab_results.lab_test_dates,
          e."first_reported_PH_date",
          e."MMWR_year",
@@ -205,7 +207,11 @@ class CdcExport < ActiveRecord::Base
         ) ethnic_conversions ON ethnic_codes.the_code = ethnic_conversions.value_from
         INNER JOIN
         (
-          SELECT x.id as event_id, ARRAY_ACCUM(lab_test_date) as lab_test_dates FROM events x
+          SELECT 
+            x.id as event_id,
+            ARRAY_ACCUM(lab_test_date) as lab_test_dates, 
+            ARRAY_ACCUM(collection_date) as lab_collection_dates 
+          FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id
           GROUP BY x.id
