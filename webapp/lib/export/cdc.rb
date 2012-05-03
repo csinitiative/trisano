@@ -220,8 +220,8 @@ module Export
         cdc_export_fields.map {|field|
           begin
             send field
-          rescue
-            raise "Failed to export event #{self.id} on field named #{field}."
+          rescue Exception => e
+            raise "Failed to export event #{self.id} on field named #{field}. #{e.message}"
           end
         }.join
       end
@@ -309,11 +309,11 @@ module Export
       end
 
       def exp_eventdate
-        event_date = disease_onset_date || date_diagnosed || pg_array(lab_test_dates).sort.last || first_reported_PH_date
+        event_date = disease_onset_date || date_diagnosed || pg_array(lab_collection_dates).sort.first || pg_array(lab_test_dates).sort.first || first_reported_PH_date || created_at 
         if event_date.blank?
-          '999999'
+          return '999999'
         else
-          unless event_date.kind_of? Date
+          unless event_date.kind_of?(Date) || event_date.kind_of?(DateTime) || event_date.kind_of?(Time)
             event_date = Date.parse(event_date)
           end
           # the cdc specifies this date, so no localization

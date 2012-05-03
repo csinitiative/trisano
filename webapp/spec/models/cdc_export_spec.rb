@@ -18,16 +18,18 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
 
-  def with_cdc_records(event = nil)
-    if (event.nil?)
-      event = MorbidityEvent.new(@event_hash)
-      disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
-      event.save!
-      event.build_disease_event(disease_event.attributes)
-      event.save!
-      event.reload
-    end
+  def create_cdc_event
+    event = MorbidityEvent.new(@event_hash)
+    disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+    event.save!
+    event.build_disease_event(disease_event.attributes)
+    event.save!
+    event.reload
+  end
 
+  def with_cdc_records(event = nil)
+    event = event || create_cdc_event
+    
     start_mmwr = Mmwr.new(Date.today - 7)
     end_mmwr = Mmwr.new
 
@@ -241,11 +243,136 @@ describe CdcExport do
       end
     end
 
-    it "should display event date a YYMMDD" do
-      with_cdc_records do |records|
-        records[0].first.to_cdc[45..50].should == Date.yesterday.strftime("%y%m%d")
+
+    describe "event date calculations" do
+      context "when disease onset date is present" do
+        
+        before do
+          @event_date_calculation_test = create_cdc_event
+          @disease_onset_date = 10.days.ago.to_date
+          @event_date_calculation_test.disease_event.update_attribute(:disease_onset_date, @disease_onset_date)
+        end
+
+        it "should use disease onset date" do
+          with_cdc_records @event_date_calculation_test do |records|
+            records[0].first.to_cdc[45..50].should == @disease_onset_date.strftime("%y%m%d")
+          end
+        end
       end
-    end
+      context "when disease onset date is nil" do
+        before do
+         @event_date_calculation_test = create_cdc_event
+         @event_date_calculation_test.disease_event.update_attribute(:disease_onset_date, nil)
+        end
+        
+        context "and date diagnosed is present" do
+          before do
+            @date_diagnosed = 11.days.ago.to_date
+            @event_date_calculation_test.disease_event.update_attribute(:date_diagnosed, @date_diagnosed)
+          end
+          it "should use date diagnosed" do
+            with_cdc_records @event_date_calculation_test do |records|
+              records[0].first.to_cdc[45..50].should == @date_diagnosed.strftime("%y%m%d")
+            end #with_cdc_records
+          end #should use date diagnosed
+        end #contxt date diagnosed is present
+
+        context "and date diagnosed is nil" do
+
+          before do
+            @event_date_calculation_test.disease_event.update_attribute(:date_diagnosed, nil)
+          end
+
+          context "and multiple lab collection dates are present" do
+            before do
+              @earliest_lab_collection_date = 13.days.ago.to_date
+              @later_lab_collection_date = 12.days.ago.to_date
+              lab = Factory(:lab)
+              lab.lab_results.first.update_attribute(:collection_date, @earliest_lab_collection_date)
+              lab.lab_results << Factory(:lab_result, :collection_date => @later_lab_collection_date)
+              @event_date_calculation_test.labs << lab
+            end
+            it "should use the earliest lab collection date" do
+              with_cdc_records @event_date_calculation_test do |records|
+                records[0].first.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
+              end #with_cdc_records
+            end #should use earliest lab collection
+          end #context multiple lab collection dates present
+
+          context "and lab collection dates are nil" do
+
+            before do
+              @event_date_calculation_test.labs.clear
+            end
+
+            context "and multiple lab test dates are present" do
+              before do
+                @earliest_lab_test_date = 15.days.ago.to_date
+                @later_lab_test_date = 14.days.ago.to_date
+                lab = Factory(:lab)
+                lab.lab_results.first.update_attribute(:lab_test_date, @earliest_lab_test_date)
+                lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
+                @event_date_calculation_test.labs << lab
+              end
+              it "should use the earliest lab test date" do
+                with_cdc_records @event_date_calculation_test do |records|
+                  records[0].first.to_cdc[45..50].should == @earliest_lab_test_date.strftime("%y%m%d")
+                end #with_cdc_records
+              end #should use earliest lab test date
+            end #context multiple lab test dates present
+
+            context "and lab test dates are nil" do
+
+              before do
+                @event_date_calculation_test.labs.clear
+              end
+
+              context "date first reported to public health is present" do
+                before do
+                  @date_first_reported_to_public_health = 16.days.ago.to_date
+                  @event_date_calculation_test.update_attribute(:first_reported_PH_date, @date_first_reported_to_public_health)
+                end
+                it "should use date first reported to public health" do
+                  with_cdc_records @event_date_calculation_test do |records|
+                    records[0].first.to_cdc[45..50].should == @date_first_reported_to_public_health.strftime("%y%m%d")
+                  end #with cdc_records
+                end #should use date first reported to public health
+              end #context date first reported to public health is present
+
+              context "date first reported to public health is nil" do
+
+                before do
+                  @event_date_calculation_test.update_attribute(:first_reported_PH_date, nil)
+                end
+
+                context "date event created is present" do
+                  before do
+                    @date_created = 17.days.ago.to_date
+                    @event_date_calculation_test.update_attribute(:created_at, @date_created)
+                  end
+                  it "should use date created" do
+                    with_cdc_records @event_date_calculation_test do |records|
+                      records[0].first.to_cdc[45..50].should == @date_created.strftime("%y%m%d")
+                    end #with_cdc_records
+                  end #should use date created
+                end #date event created is present
+
+                context "when event date created is nil" do
+                  it "should use 999999" do
+
+                    #this case is here for documentation purposes.
+                    #the system should never be able to have an event without created_at
+                    #additionally, a CDC export could never include an event with out a created_at because
+                    #it's used for the MMRW calculations
+                    
+                  end #should ouput 999999
+                end #context event date created is nil
+              end #context date first reported to public health is nil
+            end #context lab test dates are nil
+          end #context lab colelction dates are nil
+        end #context date diagnosed is nil
+      end #context disease date is nil
+    end #event edate calculations
 
     it "should display which event date was used as a one digit code" do
       with_cdc_records do |records|
