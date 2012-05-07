@@ -66,8 +66,16 @@ When /^I search for last_name = "([^\"]*)"$/ do |last_name|
   click_button "Search"
 end
 
-When /^I search for:$/i do |search_fields|
+When /^I search for morbidity event:$/i do |search_fields|
   visit event_search_cmrs_path
+  in_fields(search_fields) do |field, value|
+    fill_in field, :with => value
+  end
+  click_button "Search"
+end
+
+When /^I search for assessment event:$/i do |search_fields|
+  visit event_search_aes_path
   in_fields(search_fields) do |field, value|
     fill_in field, :with => value
   end
@@ -153,7 +161,7 @@ Then /^the search field should contain Jones$/ do
   field_labeled("Last name").value.should == "Jones"
 end
 
-Then /^I should see results for both records$/ do
+Then /^I should see results for morbidity and contact event records$/ do
   response.should have_selector("table.list") do |table|
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
@@ -162,6 +170,23 @@ Then /^I should see results for both records$/ do
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
       tr.should contain("Contact Event")
+    end
+  end
+end
+
+Then /^I should see results for morbidity, contact, and assessment records$/ do
+  response.should have_selector("table.list") do |table|
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Morbidity Event")
+    end
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Contact Event")
+    end
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Assessment Event")
     end
   end
 end
@@ -241,6 +266,15 @@ Then /^I should see the following results:$/ do |results|
       td.inner_text.should =~ /#{result[0]}, #{result[1]}/
     }
   end
+end
+
+Then /^I should see an assessment event search form$/ do
+  response.should have_selector("form[method='get'][action='#{event_search_aes_path}']")
+  field_labeled("Last name").value.should be_nil
+end
+
+Then /^I should not see a link to enter a new AE$/ do
+  response.should_not have_selector("a[href='#{new_ae_path}']")
 end
 
 def in_fields(table)

@@ -137,10 +137,22 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :people
 
-  map.resources :ae,
+  map.resources :aes,
     :controller => :assessment_events,
     :collection => {
-      :event_search => :get
+      :event_search => :get,
+      :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
+    },
+    :member => {
+      :state => :post,
+      :edit_jurisdiction => :get,
+      :jurisdiction => :post,
+      :soft_delete => :post,
+      :export_single => :post
+    },
+    :new => {
+      :lab_form => :get,
+      :lab_result_form => :get
     }
 
 

@@ -17,6 +17,17 @@
 
 class AssessmentEventsController < EventsController
   include EventsHelper
+  
+  def new
+    @event = AssessmentEvent.new
+
+    prepopulate unless params[:from_search].nil?
+
+    respond_to do |format|
+      format.html
+      format.xml
+    end
+  end
 
   def event_search
     unless User.current_user.is_entitled_to?(:view_event)
@@ -24,14 +35,34 @@ class AssessmentEventsController < EventsController
     end
 
     @search_form = NameAndBirthdateSearchForm.new(params)
+    @event_type = "assessment event"
+    @form_target = event_search_aes_path 
+    @new_event_link_text = t("start_an_ae")
+    @new_event_link_path = new_ae_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date])
+    @new_event_link_html_options = {:id => "start_ae"}
 
     if @search_form.valid?
       if @search_form.has_search_criteria?
         logger.debug "S@search_form.to_hash = #{@search_form.to_hash.inspect}"
         @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
       end
+      render :template => 'search/event_search'
     else
-      render :action => :event_search, :status => :unprocessable_entity
+      render :template => 'search/event_search', :status => :unprocessable_entity
     end
+  end
+  
+  private
+
+  def prepopulate
+    @event = setup_human_event_tree(@event)
+    # Perhaps include a message if we know the names were split out of a full text search
+    @event.interested_party.person_entity.person.first_name = params[:first_name]
+    @event.interested_party.person_entity.person.middle_name = params[:middle_name]
+    @event.interested_party.person_entity.person.last_name = params[:last_name]
+    @event.interested_party.person_entity.person.birth_gender = ExternalCode.find(params[:gender]) unless params[:gender].blank? || params[:gender].to_i == 0
+    @event.address.city = params[:city]
+    @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
+    @event.interested_party.person_entity.person.birth_date = params[:birth_date]
   end
 end

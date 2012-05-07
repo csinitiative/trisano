@@ -78,6 +78,7 @@ es:
   use_starts_with: "Usar búsqueda de primeras letras"
   no_results: "No resultados"
   start_a_cmr: "Crear CMR con la criteria usada en la búsqueda"
+  start_an_ae: "Crear AE con la criteria usada en la búsqueda"
   created_date: "Fecha de creación"
 
   cmr_actions: "Acciones de CMR"

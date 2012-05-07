@@ -79,12 +79,14 @@ en:
   use_starts_with: "Use starts with search"
   no_results: "No results"
   start_a_cmr: "Start a CMR with the criteria you searched on"
+  start_an_ae: "Start an AE with the criteria you searched on"
   created_date: "Created date"
   invalid_search_criteria: "Invalid search criteria"
 
   cmr_actions: "CMR Actions"
   entity_actions: "Entity Actions"
   create_cmr_this_person: 'Create and edit CMR using this person'
+  create_ae_this_person: 'Create and edit AE using this person'
   patient_name: "Patient Name"
   contact_name: "Contact Name"
   place_name: "Place Name"
@@ -223,6 +225,7 @@ en:
   core_field: 'Core Field'
   core_fields: 'Core&nbsp;Fields'
   morbidity_event_fields: 'Morbidity Event Fields'
+  assessment_event_fields: 'Morbidity Event Fields'
   contact_event_fields: 'Contact Event Fields'
   place_event_fields: 'Place Event Fields'
   core_fields_detail: 'Core Fields Detail'
@@ -798,6 +801,10 @@ en:
   route_event: Route event
   routing_disabled: Routing disabled
   more_choices: More choices...
+
+  
+  #Assessment events
+  assessment_event: "Assessment Event"
 
   #Organisms
   show_an_organism: "Show an Organism"

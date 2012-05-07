@@ -158,14 +158,20 @@ class MorbidityEventsController < EventsController
     end
 
     @search_form = NameAndBirthdateSearchForm.new(params)
+    @event_type = "morbidity event"
+    @form_target = event_search_cmrs_path 
+    @new_event_link_text = t("start_a_cmr")
+    @new_event_link_path = new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date])
+    @new_event_link_html_options = {:id => "start_cmr"}
 
     if @search_form.valid?
       if @search_form.has_search_criteria?
         logger.debug "S@search_form.to_hash = #{@search_form.to_hash.inspect}"
         @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
       end
+      render :template => 'search/event_search'
     else
-      render :action => :event_search, :status => :unprocessable_entity
+      render :template => 'search/event_search', :status => :unprocessable_entity
     end
   end
 

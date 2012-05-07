@@ -1,4 +1,6 @@
 en:
   event_fields:
+    assessment_event:
+      test_attribute: Test Attribute
     morbidity_event:
       test_attribute: Test Attribute

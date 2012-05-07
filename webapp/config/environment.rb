@@ -117,7 +117,7 @@ Rails::Initializer.run do |config|
     require 'event_search'
     require 'fulltext_search'
     require 'name_and_birthdate_search'
-    require 'new_cmr_search_results'
+    require 'new_human_event_search_results'
     require 'routing/workflow_helper'
     require 'hl7/extensions'
     require 'postgres_fu'

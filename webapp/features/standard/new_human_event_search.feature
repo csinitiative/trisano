@@ -1,9 +1,25 @@
-Feature: Searching for existing people or events before adding a CMR
+Feature: Searching for existing people or events before adding a CMR or AE
 
   So that I can avoid duplicate data entry
   As an investigator
-  I want to search for existing people or events before adding a new CMR
+  I want to search for existing people or events before adding a new CMR or AE
 
+  Scenario: Clicking 'NEW AE' link brings up a human events search form
+    Given I am logged in as a super user
+    When I click the "NEW AE" link
+    Then I should see an assessment event search form
+    And I should not see a link to enter a new AE
+ 
+  Scenario: Creating a new AE from search criteria
+    Given I am logged in as a super user
+     When I search for assessment event:
+       | Last name | First name | Birth date |
+       | Aurelius  | Marcus     | 3/3/1972   |
+      And I follow "Start an AE with the criteria you searched on"
+     Then I should see the following values:
+       | Last name | First name | Date of birth |
+       | Aurelius  | Marcus     | March 03, 1972 |
+  
   Scenario: Clicking 'NEW CMR' link brings up a morbidity event search form
     Given I am logged in as a super user
      When I click the "NEW CMR" link
@@ -18,12 +34,13 @@ Feature: Searching for existing people or events before adding a CMR
      Then I should see results for Jones and Joans
       And the search field should contain Jones
 
-  Scenario: Searches include contact and morbidity events
+  Scenario: Searches include contact, morbidity and assessment events
     Given a simple morbidity event for last name Jones
       And there is a contact on the event named Jones
+      And a simple assessment event for last name Jones
       And I am logged in as a super user
      When I search for last_name = "Jones"
-     Then I should see results for both records
+     Then I should see results for morbidity, contact, and assessment records
 
   Scenario: Searches should not include encounter events
     Given a simple morbidity event for last name Jones
@@ -152,7 +169,7 @@ Feature: Searching for existing people or events before adding a CMR
 
   Scenario: Creating a new morb from search criteria
     Given I am logged in as a super user
-     When I search for:
+     When I search for morbidity event:
        | Last name | First name | Birth date |
        | Aurelius  | Marcus     | 3/3/1972   |
       And I follow "Start a CMR with the criteria you searched on"
@@ -166,7 +183,7 @@ Feature: Searching for existing people or events before adding a CMR
       And a simple morbidity event for last name Jones
       And there is a contact on the event named Smith
       And the contact event is deleted
-     When I search for:
+     When I search for morbidity event:
        | Last name |
        | Smith     |
      Then the contact event search result should be styled search-inactive

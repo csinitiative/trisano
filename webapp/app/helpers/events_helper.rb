@@ -682,7 +682,7 @@ module EventsHelper
     # Don't need addresses or phones for labs
     event.labs[0].lab_results.build if event.labs[0].lab_results.empty?
 
-    if event.is_a?(MorbidityEvent)
+    if event.is_a?(MorbidityEvent) || event.is_a?(AssessmentEvent)
       event.contact_child_events.build if event.contact_child_events.empty?
       # If in edit mode, there may be contacts without phones or dispositions, thus we loop to initialize them all
       event.contact_child_events.each do |contact|

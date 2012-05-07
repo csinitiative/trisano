@@ -121,18 +121,18 @@ module MorbidityEventsHelper
     end
   end
 
-  def new_cmr_search_results(results)
-    results = NewCmrSearchResults.new(results, self)
+  def new_human_event_search_results(results)
+    results = NewHumanEventSearchResults.new(results, self)
     returning "" do |html|
       results.each do |result|
-        html << new_cmr_search_result(result)
+        html << new_human_event_search_result(result)
       end
     end
   end
 
-  def new_cmr_search_result(result)
+  def new_human_event_search_result(result)
     tr_tag(:class => result.css_class, :id => result.css_id) do |tr|
-      tr << td_tag(new_cmr_search_result_name(result))
+      tr << td_tag(new_human_event_search_result_name(result))
       tr << td_tag(result.bdate)
       tr << td_tag(h(result.gender))
       tr << td_tag(result.event_type)
@@ -140,11 +140,11 @@ module MorbidityEventsHelper
       tr << td_tag(result.event_onset_date)
       tr << td_tag(h(result.disease_name))
       tr << td_tag(result.links)
-      tr << td_tag(result.link_to_create_cmr)
+      tr << td_tag(result.link_to_create_human_event)
     end
   end
 
-  def new_cmr_search_result_name(result)
+  def new_human_event_search_result_name(result)
     result.name
   end
 

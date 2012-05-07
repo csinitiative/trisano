@@ -66,11 +66,13 @@ test:
   use_starts_with: "xUse starts with search"
   no_results: "xNo results"
   start_a_cmr: "xStart a CMR with the criteria you searched on"
+  start_an_ae: "xStart an AE with the criteria you searched on"
   created_date: "xCreated date"
 
   cmr_actions: "xCMR Actions"
   entity_actions: "xEntity Actions"
   create_cmr_this_person: 'xCreate and edit CMR using this person'
+  create_ae_this_person: 'xCreate and edit AE using this person'
   patient_name: "xPatient Name"
   contact_name: "xContact Name"
   place_name: "xPlace Name"
@@ -717,6 +719,9 @@ test:
   route_event: xRoute event
   routing_disabled: xRouting disabled
   more_choices: xMore choices...
+
+  #Assessment Event
+  assessment_event: "xAssessment Event"
 
   #Organisms
   show_an_organism: "xShow an Organism"

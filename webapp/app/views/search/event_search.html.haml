@@ -1,7 +1,7 @@
 =error_messages_for(:search_form, :header_message => t(:invalid_search_criteria))
 
-%h3=t('before_create', :type => "assessment event")
-- form_tag event_search_cmrs_path, :method => :get do
+%h3=t('before_create', :type => @event_type)
+- form_tag @form_target, :method => :get do
 
   %span.horiz
     = label_tag :last_name, t('last_name')
@@ -34,7 +34,7 @@
 
 - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
   %div
-    = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+    = link_to(@new_event_link_text, @new_event_link_path, @new_event_link_html_options)
 
 - if defined? @results
   -if @results.empty?
@@ -61,7 +61,7 @@
         %th=t('disease')
         %th=t('cmr_actions')
         %th=t('entity_actions')
-      =new_cmr_search_results(@results)
+      =new_human_event_search_results(@results)
 
     %p
       =page_entries_info @results, :entry_name => "result"
@@ -69,4 +69,4 @@
 
 
     - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
-      = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+      = link_to(@new_event_link_text, @new_event_link_path, @new_event_link_html_options)
