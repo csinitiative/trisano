@@ -62,7 +62,7 @@ test:
   collaborate: "xCollaborate"
   copyright: "xCopyright © 2011 Collaborative Software Foundation"
 
-  before_create: "xBefore creating a new morbidity event, please search for the person in question."
+  before_create: "xBefore creating a new {{type}}, please search for the person in question."
   use_starts_with: "xUse starts with search"
   no_results: "xNo results"
   start_a_cmr: "xStart a CMR with the criteria you searched on"

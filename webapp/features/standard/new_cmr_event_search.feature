@@ -4,10 +4,10 @@ Feature: Searching for existing people or events before adding a CMR
   As an investigator
   I want to search for existing people or events before adding a new CMR
 
-  Scenario: Clicking 'NEW CMR' link brings up a search form
+  Scenario: Clicking 'NEW CMR' link brings up a morbidity event search form
     Given I am logged in as a super user
      When I click the "NEW CMR" link
-     Then I should see a search form
+     Then I should see a morbidity event search form
       And I should not see a link to enter a new CMR
 
   Scenario: Searching for a person uses soundex

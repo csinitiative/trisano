@@ -129,7 +129,7 @@ When /^I search for last_name starting with "([^\"]*)" and first_name starting w
   click_button "Search"
 end
 
-Then /^I should see a search form$/ do
+Then /^I should see a morbidity event search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
   field_labeled("Last name").value.should be_nil
 end

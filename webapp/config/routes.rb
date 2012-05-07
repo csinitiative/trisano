@@ -137,6 +137,13 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :people
 
+  map.resources :ae,
+    :controller => :assessment_events,
+    :collection => {
+      :event_search => :get
+    }
+
+
   map.resources :cmrs,
     :controller => :morbidity_events,
     :collection => {

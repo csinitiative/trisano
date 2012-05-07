@@ -126,6 +126,7 @@ module LayoutHelper
     returning MenuArray.new do |items|
       if user.is_entitled_to? :create_event
         items << {:link => event_search_cmrs_path, :t => :new_cmr}
+        items << {:link => event_search_ae_path, :t => :new_ae}
       end
       if user.is_entitled_to? :manage_staged_message, :write_staged_message
         items << {
