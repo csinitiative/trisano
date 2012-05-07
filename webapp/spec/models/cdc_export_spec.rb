@@ -297,8 +297,8 @@ describe CdcExport do
 
           context "and multiple lab collection dates are present" do
             before do
-              @earliest_lab_collection_date = 13.days.ago.to_date
-              @later_lab_collection_date = 12.days.ago.to_date
+              @later_lab_collection_date = 14.days.ago.to_date
+              @earliest_lab_collection_date = 15.days.ago.to_date
               lab = Factory(:lab)
               lab.lab_results.first.update_attributes(:collection_date => @earliest_lab_collection_date)
               lab.lab_results << Factory(:lab_result, :collection_date => @later_lab_collection_date)
@@ -311,6 +311,26 @@ describe CdcExport do
                 HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_collection_date.strftime("%y%m%d")
               end #with_cdc_records
             end #should use earliest lab collection
+            
+            context "and multiple lab test dates are present, which are before the collection dates" do
+              # This is to test specifically that the lab collection dates are given priority
+              # over the test dates, even if the test dates are earlier
+              before do
+                @later_lab_test_date = 12.days.ago.to_date
+                @earliest_lab_test_date = 13.days.ago.to_date
+                lab = Factory(:lab)
+                lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
+                lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
+                @event_date_calculation_test.labs << lab
+                @event_date_calculation_test.save
+              end
+              it "should use the earliest lab collection date" do
+                with_cdc_records @event_date_calculation_test do |records|
+                  records[0].first.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
+                  HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_collection_date.strftime("%y%m%d")
+                end #with_cdc_records
+              end #should use earliest lab collection date
+            end #context multiple lab test dates present
           end #context multiple lab collection dates present
 
           context "and lab collection dates are nil" do
@@ -321,8 +341,8 @@ describe CdcExport do
 
             context "and multiple lab test dates are present" do
               before do
-                @earliest_lab_test_date = 15.days.ago.to_date
-                @later_lab_test_date = 14.days.ago.to_date
+                @earliest_lab_test_date = 9.days.ago.to_date
+                @later_lab_test_date = 8.days.ago.to_date
                 lab = Factory(:lab)
                 lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
                 lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
