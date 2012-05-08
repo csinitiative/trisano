@@ -66,6 +66,9 @@ def path_to(page_name)
   when /the export CMR as csv page/i
     export_single_cmr_path @event, :format => 'csv'
 
+  when /edit the AE/i
+    edit_ae_path @event
+
   when /edit the CMR/i
     edit_cmr_path @event
 

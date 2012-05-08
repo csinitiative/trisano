@@ -207,6 +207,7 @@ test:
   core_field: 'xCore Field'
   core_fields: 'xCore Fields'
   morbidity_event_fields: 'xMorbidity Event Fields'
+  assessment_event_fields: 'xAssessment Event Fields'
   contact_event_fields: 'xContact Event Fields'
   place_event_fields: 'xPlace Event Fields'
   core_fields_detail: 'xCore Fields Detail'
@@ -668,6 +669,7 @@ test:
   status: 'xStatus'
   event_investigation_status: "xEvent Investigation Status"
   create_new_morbidity_report: "xCreate New Morbidity Report"
+  create_new_assessment_report: "xCreate New Assessment Report"
   queues: "xQueues"
   queue: "xQueue"
   investigators: "xInvestigators"
@@ -694,13 +696,18 @@ test:
   cmr_field: "xCMR Field"
   events_normal_case: "xEvents"
   edit_morbidity_event_of: "xEdit morbidity event: {{name}}"
+  edit_assessment_event_of: "xEdit assessment event: {{name}}"
   morbidity_event: "xMorbidity Event"
+  assessment_event: "xAssessment Event"
   same_as_above: "xSame as above"
   new_cmr_normal_case: "xNew CMR"
   new_morbidity_event: "xNew Morbidity Event"
+  new_assessment_event: "xNew Assessment Event"
   view_morbidity_event_of: "xView Morbidity Event: {{name}}"
+  view_assessment_event_of: "xView Assessment Event: {{name}}"
   view_morbidity_event: "xView Morbidity Event"
   create_new_morbidity_report: "xCreate New Morbidity Report"
+  create_new_assessment_report: "xCreate New Assessment Report"
   events_normal_case: "xEvents"
   printed: "xPrinted {{date}}"
   current_investigator: "xCurrent Investigator: {{name}}"
@@ -785,6 +792,7 @@ test:
   searching: xSearching...
   event_search_results:
     morbidity_event: xCMR
+    assessment_event: xAE
     contact_event: xContact
 
   #staging_area

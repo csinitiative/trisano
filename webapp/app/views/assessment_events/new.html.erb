@@ -20,11 +20,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <%= javascript_include_tag 'events_highlight_error_tabs.js' %>
 
 <% content_for :title do %>
-  <%= t 'new_morbidity_event' %>
+  <%= t 'new_assessment_event' %>
 <% end %>
 
 <% content_for :name do %>
-  <%= t 'new_cmr_normal_case' %>
+  <%= t 'new_ae_normal_case' %>
 <% end %>
 
 <% content_for :tools_two do %>
@@ -37,7 +37,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <%= error_messages_for :object => @event %>
 
-<% form_for(setup_human_event_tree(@event), :url => cmrs_path, :builder => ExtendedFormBuilder, :html => { :name => 'new_morbidity_event', :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
+<% form_for(setup_human_event_tree(@event), :url => aes_path, :builder => ExtendedFormBuilder, :html => { :name => 'new_assessment_event', :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <% @event_form = event_form %>
 
   <%# We put this here to keep jurisdiction from being changed in edit mode %>
@@ -51,7 +51,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
     <% end %>
   <% end %>
 
-  <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
+  <% tabbed_content(assessment_event_tabs, @tab_index) do %>
     <% core_tab(:demographic_tab, event_form) do -%>
       <%= render :partial => "events/people/form", :locals => { :f => event_form , :event => @event} %>
     <% end -%>

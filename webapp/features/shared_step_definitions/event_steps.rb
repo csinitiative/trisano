@@ -19,6 +19,10 @@ Given(/^a basic morbidity event exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given(/^a basic assessment event exists$/) do
+  @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+end
+
 Given /^a cmr exists$/ do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end

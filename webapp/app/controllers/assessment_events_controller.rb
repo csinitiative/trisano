@@ -18,6 +18,17 @@
 class AssessmentEventsController < EventsController
   include EventsHelper
   
+  def show
+    # @event initialized in can_view? filter
+    @export_options = params[:export_options]
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml
+      format.csv
+      format.print { @print_options = params[:print_options] || [] }
+    end
+  end
+
   def new
     @event = AssessmentEvent.new
 
@@ -29,6 +40,105 @@ class AssessmentEventsController < EventsController
     end
   end
 
+  def create
+    go_back = params.delete(:return)
+
+    @event = AssessmentEvent.new
+    if params[:from_event]
+      org_event = Event.find(params[:from_event])
+      components = params[:event_components]
+      org_event.copy_event(@event, components || []) # Copy instead of clone to make sure contacts become assessment
+
+      # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
+      @event.add_note(t("system_notes.event_derived_from", :locale => I18n.default_locale, :link => ActionView::Base.new.link_to("Event #{org_event.record_number}", ae_path(org_event) ))) if components && !components.empty?
+    elsif params[:from_person]
+      person = PersonEntity.find(params[:from_person])
+      @event.copy_from_person(person)
+    else
+      @event.attributes = params[:assessment_event]
+    end
+
+    unless can_create?
+      render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
+    end
+
+    respond_to do |format|
+      if @event.save
+        # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
+        Event.transaction do
+          [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+          @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
+        end
+        @event.reload
+        @event.try(:address).try(:establish_canonical_address)
+        flash[:notice] = t("ae_created")
+        format.html {
+          if go_back
+            redirect_to edit_ae_url(@event, @query_params)
+          else
+            redirect_to ae_url(@event, @query_params)
+          end
+        }
+        format.xml { head :created, :location => ae_url(@event) }
+      else
+        format.html { render :action => "new", :status => :unprocessable_entity }
+        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def edit
+    # Via filters above #can_update? is called which loads up @event with the found event.
+    # Nothing to do here.
+  end
+  
+  def update
+    # Per-tab cache expire feature not quite working yet, so expire all.
+    #expire_event_caches
+    redis.delete_matched("views/events/#{@event.id}/*")
+
+    go_back = params.delete(:return)
+
+    # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
+    @event.update_from_params(params[:assessment_event])
+
+    # Assume that "save & exits" represent a 'significant' update
+    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
+
+    # Eager load answers that already exist so questions won't need to be retrieved 1-by-1
+    # during validation on answers on the save
+    @event.eager_load_answers
+    respond_to do |format|
+      if @event.save
+
+        # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
+        Event.transaction do
+          [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+        end
+
+        flash[:notice] = t("ae_updated")
+        format.html {
+          if go_back
+            redirect_to edit_ae_url(@event, @query_params)
+          else
+            url = params[:redirect_to]
+            url = ae_url(@event, @query_params) if url.blank?
+            redirect_to url
+          end
+        }
+        format.xml  { head :ok }
+        format.js   { render :inline => t("ae_saved"), :status => :created }
+      else
+        format.html { render :action => "edit", :status => :unprocessable_entity }
+        format.xml  { render :xml => @event.errors, :status => :unprocessable_entity }
+        format.js   { render :inline => t("assessment_event_not_saved", :message => @event.errors.full_messages), :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+    head :method_not_allowed
+  end
   def event_search
     unless User.current_user.is_entitled_to?(:view_event)
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return

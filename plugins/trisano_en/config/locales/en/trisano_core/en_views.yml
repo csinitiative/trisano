@@ -225,7 +225,7 @@ en:
   core_field: 'Core Field'
   core_fields: 'Core&nbsp;Fields'
   morbidity_event_fields: 'Morbidity Event Fields'
-  assessment_event_fields: 'Morbidity Event Fields'
+  assessment_event_fields: 'Assessment Event Fields'
   contact_event_fields: 'Contact Event Fields'
   place_event_fields: 'Place Event Fields'
   core_fields_detail: 'Core Fields Detail'
@@ -741,6 +741,7 @@ en:
   pregnancy_status: 'Pregnancy Status'
   event_investigation_status: "Event Investigation Status"
   create_new_morbidity_report: "Create New Morbidity Report"
+  create_new_assessment_report: "Create New Assessment Report"
   queues: "Queues"
   queue: "Queue"
   investigators: "Investigators"
@@ -771,8 +772,11 @@ en:
   treatment_field: "Treatment Field"
   events_normal_case: "Events"
   edit_morbidity_event_of: "Edit morbidity event: {{name}}"
+  edit_assessment_event_of: "Edit assessment event: {{name}}"
   morbidity_event: "Morbidity Event"
+  assessment_event: "Assessment Event"
   morbidity_events: "Morbidity Events"
+  assessement_events: "Assessment Events"
   contact_events: "Contact Events"
   place_events: "Place Events"
   encounter_events: "Encounter Events"
@@ -780,9 +784,13 @@ en:
   new_cmr_normal_case: "New CMR"
   new_ae_normal_case: "New AE"
   new_morbidity_event: "New Morbidity Event"
+  new_assessment_event: "New Assessment Event"
   view_morbidity_event_of: "View Morbidity Event: {{name}}"
+  view_assessment_event_of: "View Assessment Event: {{name}}"
   view_morbidity_event: "View Morbidity Event"
+  view_assessment_event: "View Assessment Event"
   create_new_morbidity_report: "Create New Morbidity Report"
+  create_new_assessment_report: "Create New Assessment Report"
   events_normal_case: "Events"
   printed: "Printed {{date}}"
   current_investigator: "Current Investigator: {{name}}"
@@ -877,6 +885,7 @@ en:
   searching: Searching...
   event_search_results:
     morbidity_event: CMR
+    assessement_event: AE
     contact_event: Contact
 
   #staging_area

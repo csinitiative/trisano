@@ -73,6 +73,8 @@ end
 When /^I save the event$/i do
   if @contact_event
     submit_form "edit_contact_event_#{@contact_event.id}"
+  elsif @event.class.name == "AssessmentEvent"
+    submit_form "edit_assessment_event_#{@event.id}"
   else
     submit_form "edit_morbidity_event_#{@event.id}"
   end
