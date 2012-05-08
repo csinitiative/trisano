@@ -160,23 +160,29 @@ class NewHumanEventSearchResults
     end
 
     def edit_path
-      if morb?
+      case @result['event_type']
+      when "MorbidityEvent"
         view.send(:edit_cmr_path, @result['event_id'])
-      else
+      when "AssessmentEvent"
+        view.send(:edit_ae_path, @result['event_id'])
+      when "ContactEvent"
         view.send(:edit_contact_event_path, @result['event_id'])
+      else
+        raise "No event type specified"
       end
     end
 
     def view_path
-      if morb?
+      case @result['event_type']
+      when "MorbidityEvent"
         view.send(:cmr_path, @result['event_id'])
-      else
+      when "ContactEvent"
         view.send(:contact_event_path, @result['event_id'])
+      when "AssessmentEvent"
+        view.send(:ae_path, @result['event_id'])
+      else
+        raise "No event type sepcified"
       end
-    end
-
-    def morb?
-      @result['event_type'] == 'MorbidityEvent'
     end
 
     def view
