@@ -447,12 +447,6 @@ Trisano = {
 
 Trisano.setBaseUrl();
 
-document.observe('trisano:dom:loaded', function() {
-  if ($('flash-message')) {
-    $('flash-message').fade({ delay: 3.0 });
-  }
-});
-
 function moveMultiple(item, where) {
   liAncestor = $j(item).closest('li');
   ulAncestor = $j(liAncestor).closest('ul');
