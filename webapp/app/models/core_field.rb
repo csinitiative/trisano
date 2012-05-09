@@ -25,6 +25,7 @@ class CoreField < ActiveRecord::Base
   has_many :core_fields_diseases, :dependent => :destroy, :autosave => true
   has_many :diseases, :through => :core_fields_diseases
 
+  validates_uniqueness_of :key
   validates_presence_of :field_type
   validates_presence_of :event_type
   before_validation :normalize_attributes
