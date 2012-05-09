@@ -390,9 +390,10 @@ class EventsController < ApplicationController
     is_rejected = false
     if event.read_attribute('type') != controller_name.classify
       is_rejected = true
-      flash[:notice] = "It seems you've tried to access an event with the wrong URL.  Please check the event type and your URL."
+      correct_url = event_path(@event)
+      redirect_text = "It seems you've tried to access an event with the wrong URL.  Please try #{@template.link_to(correct_url, correct_url)}"
       respond_to do |format|
-        format.html { render :file => static_error_page_path(404), :layout => 'application', :status => 404 }
+        format.html { render :text => redirect_text, :layout => 'application', :status => 404 }
         format.all { render :nothing => true, :status => 404 }
       end
     end
