@@ -8,6 +8,12 @@ class PopulateAssessmentEventCoreFields < ActiveRecord::Migration
     # unless they've been defined.
     if assessment_core_fields.empty?
 
+      core_fields = YAML::load( File.open("#{RAILS_ROOT}/db/defaults/core_fields.yml") )
+
+      core_fields.each do |field|
+        CoreField.load!([field]) if field['event_type'] == "assessment_event"
+      end
+
       morbidity_core_fields = CoreField.find(:all, :conditions => ["event_type = ?", "morbidity_event"])
 
       morbidity_core_fields.each do |field|
@@ -21,15 +27,18 @@ class PopulateAssessmentEventCoreFields < ActiveRecord::Migration
         new_field_formatted.gsub!("\n", "\n  ")
 
         CoreField.load!([new_field])
-
       end
+    
     else
-      say "Assessment core fields already defined.  No action taken."
+      puts "Assessment core fields already defined.  No action taken."
     end
   end
 
   def self.down
-    CoreField.destroy_all(["event_type = ?", "assessment_event"])
+    CoreField.find(:all, :conditions => ["event_type = ?", "assessment_event"]).each do |core_ae|
+      core_ae.core_field_translations.each { |cft| cft.destroy }
+      core_ae.destroy
+    end
   end
 
   def self.core_field_to_hash(core_field)
@@ -40,4 +49,5 @@ class PopulateAssessmentEventCoreFields < ActiveRecord::Migration
     end
     return hash
   end
+
 end
