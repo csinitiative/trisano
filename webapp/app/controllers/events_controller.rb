@@ -367,7 +367,7 @@ class EventsController < ApplicationController
   def can_view?
     @event ||= Event.find(params[:id])
     @display_view_warning = false
-    reject_if_wrong_type(@event)
+    return if reject_if_wrong_type(@event)
     unless User.current_user.can_view?(@event)
       log_access_or_prompt_for_reason
       return
@@ -387,12 +387,16 @@ class EventsController < ApplicationController
   end
 
   def reject_if_wrong_type(event)
+    is_rejected = false
     if event.read_attribute('type') != controller_name.classify
+      is_rejected = true
+      flash[:notice] = "It seems you've tried to access an event with the wrong URL.  Please check the event type and your URL."
       respond_to do |format|
-        format.html { render :file => static_error_page_path(404), :layout => 'application', :status => 404 and return }
-        format.all { render :nothing => true, :status => 404 and return }
+        format.html { render :file => static_error_page_path(404), :layout => 'application', :status => 404 }
+        format.all { render :nothing => true, :status => 404 }
       end
     end
+    return is_rejected
   end
 
   def log_access_or_prompt_for_reason
