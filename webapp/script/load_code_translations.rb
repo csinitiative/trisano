@@ -19,7 +19,7 @@ Code.transaction do
     end
     code_translation = code.code_translations.build(:locale => locale, :code_description => t['code_description'])
     unless code_translation.save
-      $stderr.puts code_translation.errors.full_messages.join("\n")
+      $stderr.puts code_translation.errors.full_messages.join("\n") unless code_translation.errors.full_messages == ["Locale has already been taken"]
       error_code = 1
     end
     print "."
