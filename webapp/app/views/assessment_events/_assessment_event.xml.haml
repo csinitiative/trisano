@@ -1,0 +1,139 @@
+!!! XML
+= xml_for assessment_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |assessment|
+  - if assessment_event.new_record?
+    = assessment.link_to cmrs_url, :rel => :index
+    = assessment.link_to new_ae_url, :rel => :self
+  - else
+    = assessment.link_to ae_url(assessment_event), :rel => :self
+    = assessment.link_to edit_ae_url(assessment_event), :rel => :edit
+  = assessment.link_to index_code_url(:code_name => 'imported'), :rel => :imported
+  = assessment.link_to index_code_url(:code_name => 'case'),   :rel => :case
+  = assessment.link_to index_code_url(:code_name => 'yesno'),  :rel => :yesno
+  = assessment.link_to index_code_url(:code_name => 'state'),  :rel => :state
+  = assessment.link_to index_code_url(:code_name => 'county'), :rel => :county
+  = assessment.link_to index_code_url(:code_name => 'ethnicity'), :rel => :ethnicity
+  = assessment.link_to index_code_url(:code_name => 'race'), :rel => :race
+  = assessment.link_to index_code_url(:code_name => 'gender'), :rel => :gender
+  = assessment.link_to index_code_url(:code_name => 'language'), :rel => :language
+  = assessment.link_to index_code_url(:code_name => 'telephonelocationtype'), :rel => :telephone_location_type
+  = assessment.link_to index_code_url(:code_name => 'specimen'), :rel => :specimen_source
+  = assessment.link_to index_code_url(:code_name => 'test_status'), :rel => :test_status
+  = assessment.link_to index_code_url(:code_name => 'test_result'), :rel => :test_result
+  -# TODO: place_type code resource doesn't work yet.
+  = assessment.link_to index_code_url(:code_name => 'placetype'), :rel => :place_type
+  = assessment.link_to diseases_url, :rel => :disease
+  = assessment.link_to places_url(:name => '', :place_type => 'J'), :rel => :jurisdiction
+  = assessment.link_to edit_jurisdiction_ae_url(assessment_event),  :rel => :edit_jurisdiction unless assessment_event.new_record?
+  = assessment.link_to places_url(:name => '', :place_type => 'H'), :rel => :hospitalization
+  = assessment.link_to places_url(:name => '', :place_type => 'L'), :rel => :lab
+  = assessment.link_to places_url(:name => '', :place_type => 'DiagnosticFacility'), :rel => :diagnostic_facility
+  - if assessment_event.disease?
+    = assessment.link_to disease_treatments_url(assessment_event.disease_event.disease), :rel => :treatment
+  - else
+    = assessment.link_to treatments_url, :rel => :treatment
+  = assessment.link_to common_test_types_url, :rel => :test_type
+  = assessment.link_to organisms_url, :rel => :organism
+  = assessment.link_to new_event_task_url(assessment_event), :rel => :new_task
+
+  - assessment.fields.each do |field|
+    = assessment.render *field
+  = assessment.xml_for :address do |address|
+    - address.fields.each do |field|
+      = address.render *field
+
+  = assessment.xml_for :disease_event do |disease_event|
+    - disease_event.fields.each do |field|
+      = disease_event.render *field
+
+  = assessment.xml_for :jurisdiction do |j|
+    - j.fields.each do |field|
+      = j.render *field
+
+  = assessment.xml_for :interested_party do |patient|
+    = patient.xml_for :risk_factor do |rf|
+      - rf.fields.each do |field|
+        = rf.render *field
+    = patient.xml_for :person_entity do |pe|
+      - pe.fields.each do |field|
+        = pe.render *field
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
+      = pe.xml_for :email_addresses do |email_addresses|
+        - email_addresses.fields.each do |field|
+          = email_addresses.render *field
+      = pe.xml_for :person do |person|
+        - person.fields.each do |field|
+          = person.render *field
+    = patient.xml_for :treatments do |treatments|
+      - treatments.fields.each do |field|
+        =treatments.render *field
+
+  = assessment.xml_for :clinicians do |clinicians|
+    = clinicians.xml_for :person_entity do |pe|
+      = pe.xml_for :person do |person|
+        = person.render :first_name
+        = person.render :middle_name
+        = person.render :last_name
+        = person.render :person_type
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
+
+  = assessment.xml_for :reporter do |reporter|
+    = reporter.xml_for :person_entity do |pe|
+      = pe.xml_for :person do |person|
+        = person.render :first_name
+        = person.render :last_name
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
+
+  = assessment.xml_for :reporting_agency do |agency|
+    = agency.xml_for :place_entity do |pe|
+      = pe.xml_for :place do |place|
+        - place.fields.each do |field|
+          = place.render *field
+      = pe.xml_for :telephones do |telephones|
+        - telephones.fields.each do |field|
+          = telephones.render *field
+
+  = assessment.xml_for :notes do |notes|
+    - notes.fields.each do |field|
+      = notes.render *field
+
+  = assessment.xml_for :hospitalization_facilities do |hf|
+    - hf.fields.each do |field|
+      = hf.render *field
+    = hf.xml_for :hospitals_participation do |hp|
+      - hp.fields.each do |field|
+        = hp.render *field
+
+  = assessment.xml_for :diagnostic_facilities do |df|
+    - df.fields.each do |field|
+      = df.render *field
+    = df.xml_for :place_entity do |pe|
+      = pe.xml_for :place do |place|
+        - place.fields.each do |field|
+          = place.render *field
+
+  = assessment.xml_for :labs do |labs|
+    - labs.fields.each do |field|
+      = labs.render *field
+    = labs.xml_for :lab_results do |results|
+      - results.fields.each do |field|
+        = results.render *field
+
+  = assessment.xml_for :place_child_events do |place_events|
+    = place_events.xml_for :participations_place do |participation|
+      - participation.fields.each do |field|
+        = participation.render *field
+    = place_events.xml_for :interested_place do |ip|
+      = ip.xml_for :place_entity do |pe|
+        = pe.xml_for :place do |place|
+          - place.fields.each do |field|
+            = place.render *field
+        = pe.xml_for :canonical_address do |ca|
+          - ca.fields.each do |field|
+            = ca.render *field
+

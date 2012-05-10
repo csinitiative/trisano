@@ -20,32 +20,32 @@
 
 %tr.roll
   %td.forminformation
-    - event_div_class(morbidity_event) do
-      = person_name_for_event(morbidity_event, view_mode)
+    - event_div_class(assessment_event) do
+      = person_name_for_event(assessment_event, view_mode)
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
-        ="#{t 'morbidity_event'}"
+        ="#{t 'assessment_event'}"
     .tools
-      = basic_human_event_controls(morbidity_event, view_mode)
-      = render :partial => 'morbidity_events/print_options', :locals => { :event => morbidity_event }
+      = basic_human_event_controls(assessment_event, view_mode)
+      = render :partial => 'assessment_events/print_options', :locals => { :event => assessment_event }
       = extra_tools if (view_mode != :index)
   %td
-    %b= h((view_mode == :index) ? morbidity_event['disease_name'] : morbidity_event.try(:disease).try(:disease).try(:disease_name))
+    %b= h((view_mode == :index) ? assessment_event['disease_name'] : assessment_event.try(:disease).try(:disease).try(:disease_name))
   %td
-    %b= h((view_mode == :index) ? i18n_jurisdiction_short_name(morbidity_event['jurisdiction_short_name']) : morbidity_event.primary_jurisdiction.short_name)
+    %b= h((view_mode == :index) ? i18n_jurisdiction_short_name(assessment_event['jurisdiction_short_name']) : assessment_event.primary_jurisdiction.short_name)
     %br
     .tools
-      = jurisdiction_routing_control(morbidity_event)
+      = jurisdiction_routing_control(assessment_event)
     %div{:id => 'secondary_jurisdictions'}
       %small
         - if (view_mode == :index)
-          = h(pg_array(morbidity_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', '))
+          = h(pg_array(assessment_event['secondary_jurisdictions']).map { |j| j.gsub(/\"/, '')}.join(', '))
         - else
-          = h(morbidity_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
+          = h(assessment_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
-    %b= h(morbidity_event.state_description)
+    %b= h(assessment_event.state_description)
 
-    - queue_name = (view_mode == :index) ? morbidity_event['queue_name'] : morbidity_event.try(:event_queue).try(:queue_name)
+    - queue_name = (view_mode == :index) ? assessment_event['queue_name'] : assessment_event.try(:event_queue).try(:queue_name)
     - unless queue_name.blank?
       %div{:id => 'queue_info'}
         %small
@@ -53,7 +53,7 @@
           &nbsp;
           %b= h(queue_name)
 
-    - inv_name = (view_mode == :index) ? morbidity_event['investigator_name'] : morbidity_event.try(:investigator).try(:best_name)
+    - inv_name = (view_mode == :index) ? assessment_event['investigator_name'] : assessment_event.try(:investigator).try(:best_name)
     - unless inv_name.blank?
       %div{:id => 'investigator_info'}
         %small
@@ -62,6 +62,6 @@
           %b= h(inv_name)
 
     .tools
-      = state_controls(morbidity_event)
+      = state_controls(assessment_event)
   %td
-    = ld(morbidity_event.created_at.to_date)
+    = ld(assessment_event.created_at.to_date)

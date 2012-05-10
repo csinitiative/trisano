@@ -21,14 +21,14 @@
         = t('shallow_copy_of', :name => h(@event.party.full_name))
         %br
         %b=t 'copies_demographics_only'
-      = button_to(t("create_and_edit_shallow_copy"), cmrs_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
+      = button_to(t("create_and_edit_shallow_copy"), aes_path(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
     %fieldset.form
       %legend= t 'deep_copy'
       %p
         = t('deep_copy_of', :name => h(@event.party.full_name))
 
       %b=ct 'also_copy'
-      - form_tag(cmrs_path(:return => true)) do
+      - form_tag(aes_path(:return => true)) do
         = hidden_field_tag(:from_event, @event.id)
         %label.horiz{ :for => "event_components_clinical_info" }
           = check_box_tag "event_components[]", "clinical", false, :id => 'event_components_clinical_info'
