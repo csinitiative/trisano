@@ -390,21 +390,14 @@ class EventsController < ApplicationController
     is_rejected = false
     if event.read_attribute('type') != controller_name.classify
       is_rejected = true
-      redirect_text = "It seems you've tried to access an event with the wrong URL."
-
-      begin
-        correct_url = @template.event_path(@event)
-        raise if correct_url.nil?
-        redirect_text += " Please try #{@template.link_to(correct_url, correct_url)}" 
-      rescue
-        redirect_text += " Could not generate a valid link for you.  Please notify your system administrator."
-      end
+      correct_url = @template.event_path(@event)
+      event_link = correct_url ? @template.link_to(correct_url, correct_url) : nil
       respond_to do |format|
-        format.html { render :text => redirect_text, :layout => 'application', :status => 404 }
+        format.html { render :partial => "shared/missing_event", :event_link => event_link, :layout => 'application', :status => 404 }
         format.all { render :nothing => true, :status => 404 }
       end
     end
-    return is_rejected
+    is_rejected
   end
 
   def log_access_or_prompt_for_reason
