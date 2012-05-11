@@ -121,7 +121,7 @@ describe PlaceEventsController do
 
       it "should render the public 404 page" do
         do_get
-        response.should render_template("#{RAILS_ROOT}/public/404.en.html")
+        response.should render_template "shared/_missing_event"
       end
     end
 
