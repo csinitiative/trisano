@@ -309,7 +309,7 @@ module Export
       end
 
       def exp_eventdate
-        event_date = disease_onset_date || date_diagnosed || pg_array(lab_test_dates).sort.last || first_reported_PH_date
+        event_date = disease_onset_date || date_diagnosed || pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.last || first_reported_PH_date
         if event_date.blank?
           '999999'
         else
@@ -324,7 +324,7 @@ module Export
       def exp_datetype
         date_type = '1' if disease_onset_date
         date_type = '2' if date_diagnosed unless date_type
-        date_type = '3' if pg_array(lab_test_dates).sort.last unless date_type
+        date_type = '3' if pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.last unless date_type
         date_type = '5' if first_reported_PH_date unless date_type
         date_type || '9'
       end
