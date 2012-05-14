@@ -809,7 +809,7 @@ class HumanEvent < Event
         test_results.each do |result|
           result.code_description.split('/').each do |component|
             @result_map[component.gsub(/\s/, '').downcase] = result.id
-          end
+          end if result.code_description
         end
       end
       @result_map
