@@ -114,7 +114,6 @@
       .container
         #foot
           = render_footer
-          = yield :enable_save_buttons
           - if config_option(:auth_allow_user_switch_hidden) == true
             - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
             - form_tag(url_for(:controller => "events", :action => "change_user"), :id => "switch_user") do
