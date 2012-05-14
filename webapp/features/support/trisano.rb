@@ -17,8 +17,17 @@
 
 def log_in_as(user)
   visit home_path unless current_url
+  begin
   select user, :from => "user_id"
   submit_form "switch_user"
+  rescue Exception => e
+    case e.message
+    when 'Could not find field: "user_id"'
+      raise "Please check your site_config.yml and make sure the test enviornment includes auth_src_env: TRISANO_UID, auth_allow_user_switch: true"
+    else
+      raise e.message
+    end
+  end
   @current_user = User.find_by_user_name(user)
 end
 

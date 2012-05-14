@@ -91,8 +91,8 @@ development:
 
 test:
   inherit: base
-  auth_src_env: TRISANO_UID     #must be commented out when using trisano_auth plugin
-  auth_allow_user_switch: true  #must be commented out when using trisano_auth plugin
+  auth_src_env: TRISANO_UID     #NEVER comment out when using trisano_auth plugin
+  auth_allow_user_switch: true  #NEVER comment out when using trisano_auth plugin
   max_search_results: 50
   mailer: test
 
