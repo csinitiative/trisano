@@ -158,6 +158,14 @@ en:
     lab: Laboratory results
     letter: Letter
     x-ray: X-ray
+    edn-notification: EDN Notification
+    edn-followup: EDN Follow Up
+    igra-report: IGRA Report
+    consult-report: Consultation Report
+    ijr: IJR
+    death-certificate: Death Certificate
+    medical-record: Medical Record
+    other: Other
 
   encounter_location_types:
     clinic: Clinic

@@ -21,9 +21,17 @@ class Attachment < ActiveRecord::Base
   class << self
     def category_array
       [
+        [I18n.t('attachment_types.consult-report'), "consult-report"],
         [I18n.t('attachment_types.correspondence'), "correspondence"],
+        [I18n.t('attachment_types.death-certificate'), "death-certificate"],
+        [I18n.t('attachment_types.edn-notification'), "edn-notification"],
+        [I18n.t('attachment_types.edn-followup'), "edn-followup"],
+        [I18n.t('attachment_types.igra-report'), "igra-report"],
+        [I18n.t('attachment_types.ijr'), "ijr"],
         [I18n.t('attachment_types.lab'), "lab"],
         [I18n.t('attachment_types.letter'), "letter"],
+        [I18n.t('attachment_types.medical-record'), "medical-record"],
+        [I18n.t('attachment_types.other'), "other"],
         [I18n.t('attachment_types.x-ray'), "x-ray"]]
     end
 
