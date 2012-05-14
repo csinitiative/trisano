@@ -39,11 +39,7 @@ module TasksHelper
     result << "</select>"
     result << "<br/>"
 
-    if task.event.is_a?(MorbidityEvent)
-      result << link_to(t(:edit_event), edit_cmr_path(task.event))
-    elsif
-      result << link_to(t(:edit_event), edit_contact_event_path(task.event))
-    end
+    result << link_to(t(:edit_event), edit_event_path(task.event))
 
     result << "&nbsp;|&nbsp;"
     result << link_to(t(:edit_task), edit_event_task_path(task.event, task))

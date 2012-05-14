@@ -404,6 +404,10 @@ module EventsHelper
     link_to(text, event_search_cmrs_path) if User.current_user.is_entitled_to?(:create_event)
   end
 
+  def new_ae_button(text)
+    button_to_function(text, "location.href = '#{event_search_aes_path}'") if User.current_user.is_entitled_to?(:create_event)
+  end
+
   def new_cmr_button(text)
     button_to_function(text, "location.href = '#{event_search_cmrs_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
@@ -414,12 +418,16 @@ module EventsHelper
   end
 
   def event_to_path_name
-    { "MorbidityEvent" => 'cmr' }
+    { 
+      "MorbidityEvent" => 'cmr',
+      "AssessmentEvent" => 'ae'
+    }
   end
 
   def show_and_edit_links
     Hash[
       "MorbidityEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
+      "AssessmentEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
       "ContactEvent"  , lambda { |event, options| links_to_show_and_edit(event, options) },
       "PlaceEvent"    , lambda { |event, options| links_to_show_and_edit(event, options) },
       "EncounterEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
@@ -806,6 +814,14 @@ module EventsHelper
       :controller => controller_name_from_event(event),
       :id => event.id,
       :action => :edit
+    })
+  end
+
+  def soft_delete_event_path(event)
+    url_for({
+      :controller => controller_name_from_event(event),
+      :id => event.id,
+      :action => :soft_delete
     })
   end
 

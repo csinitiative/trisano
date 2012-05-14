@@ -1,0 +1,100 @@
+#export_options{:style => "display: none; width: 40%; position: relative"}
+  %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
+    %b=ct('include_repeating_aspects')
+    %br
+    -export_options_form(path) do
+      %label.horiz
+        = check_box_tag("export_options[]", "contacts", false, :onclick => "$('contact_code_field_options').toggle();")
+        %span=t'contacts'
+      %label.horiz
+        = check_box_tag("export_options[]", "places", false, :onclick => "$('place_code_field_options').toggle();")
+        %span=t 'place_exposures'
+      %label.horiz
+        = check_box_tag("export_options[]", "labs", false, :onclick => "$('lab_code_field_options').toggle();")
+        %span=t 'lab_results'
+      %label.horiz
+        = check_box_tag("export_options[]", "treatments", false, :onclick => "$('treatment_code_field_options').toggle();")
+        %span= t 'treatments'
+      %label.vert-break
+        = check_box_tag("export_options[]", "hospitalization_facilities", false)
+        %span= t 'hospitalization_facilities'
+      %b= ct 'additional_options'
+      %br
+      %label.vert-break
+        = check_box_tag("export_options[]", "use_short_names")
+        %span= t 'use_short_column_names'
+      %b= ct 'codes_and_descriptions'
+      %div{:style => 'width: 30em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
+        %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
+          #morbidity_code_field_options
+            %table
+              %thead
+                %tr
+                  %th= t 'cmr_field'
+                  %th= t 'description'
+                  %th= t 'code'
+              %tbody
+                - CsvField.morbidity_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
+          #contact_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th=t 'contact_field'
+                  %th=t 'description'
+                  %th=t 'code'
+              %tbody
+                - CsvField.contact_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
+          #place_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th= t'place_field'
+                  %th= t 'description'
+                  %th= t 'code'
+              %tbody
+                - CsvField.place_event_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
+          #lab_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th=t 'lab_field'
+                  %th=t 'description'
+                  %th=t 'code'
+              %tbody
+                - CsvField.lab_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
+          #treatment_code_field_options{ :style => "display: none;" }
+            %table
+              %thead
+                %tr
+                  %th= t 'treatment_field'
+                  %th= t 'description'
+                  %th= t'code'
+              %tbody
+                - CsvField.treatment_code_fields.each do |field|
+                  %tr
+                    %td= h(field.long_name)
+                    %td= radio_button_tag h(field.long_name), 'use_description', true
+                    %td= radio_button_tag h(field.long_name), 'use_code'
+          = set_options_availability
+      -# This div is needed to keep IE from drawing a button as wide as the form.
+      %div{:style => "position: absolute; bottom: 1em; right: 1em;"}
+        = submit_tag(t("export"), :id => "export_btn")
+    %p.vert-break
+      %br
+      = link_to_function t("close"), "Effect.Fade('export_options', { duration: 0.3 })"

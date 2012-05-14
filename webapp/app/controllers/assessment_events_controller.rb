@@ -28,6 +28,12 @@ class AssessmentEventsController < EventsController
       format.print { @print_options = params[:print_options] || [] }
     end
   end
+  
+  # IE can't handle URLs > 2K so we've added a special method that it can POST to.
+  def export_single
+    render :action => "show"
+  end
+
 
   def new
     @event = AssessmentEvent.new

@@ -939,6 +939,8 @@ test:
 
   add_telephone: "xAdd a Telephone"
 
+  show_ae: "xShow AE"
+  edit_ae: "xEdit AE"
   show_cmr: "xShow CMR"
   edit_cmr: "xEdit CMR"
   show_contact: "xShow Contact"

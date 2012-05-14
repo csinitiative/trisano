@@ -20,6 +20,10 @@ class CsvField < ActiveRecord::Base
 
   default_scope :order => 'sort_order'
 
+  named_scope :assessment_event_fields, :conditions => { :event_type => 'assessment_event' }
+  named_scope :assessment_event_code_fields,
+              :conditions => "event_type = 'assessment_event' and use_code is not null"
+
   named_scope :morbidity_event_fields, :conditions => { :event_type => 'morbidity_event' }
   named_scope :morbidity_event_code_fields,
               :conditions => "event_type = 'morbidity_event' and use_code is not null"

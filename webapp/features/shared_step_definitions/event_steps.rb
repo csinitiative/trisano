@@ -27,6 +27,13 @@ Given /^a cmr exists$/ do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given(/^an assessment event exists with the disease (.+)$/) do |disease|
+  @event = create_basic_event("assessment", get_unique_name(1), disease.strip, get_random_jurisdiction_by_short_name)
+  @event.disease_event.disease_onset_date = Date.yesterday
+  @event.build_address(:county => ExternalCode.counties.first)
+  @event.save!
+end
+
 Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event = create_basic_event("morbidity", get_unique_name(1), disease.strip, get_random_jurisdiction_by_short_name)
   @event.disease_event.disease_onset_date = Date.yesterday
@@ -157,6 +164,42 @@ Given /^the morbidity event has the following contacts:$/ do |contacts|
     @contact_events << ContactEvent.create!(hash)
     @event.contact_child_events << @contact_events.last
   end
+end
+
+Given /^the assessment event has the following contacts:$/ do |contacts|
+  @contact_events = []
+  contacts.hashes.each do |contact|
+    hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => contact
+        }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
+    }
+
+    if disease_id = @event.try(:disease_event).try(:disease).try(:id)
+      hash.merge!({ "disease_event_attributes"=> { "disease_id"=> disease_id }})
+    end
+    @contact_events << ContactEvent.create!(hash)
+    @event.contact_child_events << @contact_events.last
+  end
+end
+
+Given /^the assessment event has the following deleted contacts:$/ do |contacts|
+  contacts.hashes.each do |contact|
+    hash = {
+      "interested_party_attributes" => {
+        "person_entity_attributes" => {
+          "person_attributes" => contact
+        }
+      },
+      "jurisdiction_attributes" => { "secondary_entity_id" => Place.all_by_name_and_types("Unassigned", 'J', true).first.entity_id }
+    }
+    @event.contact_child_events << ContactEvent.create(hash)
+    @event.contact_child_events.last.transactional_soft_delete
+  end
+  @event.save!
 end
 
 Given /^the morbidity event has the following deleted contacts:$/ do |contacts|

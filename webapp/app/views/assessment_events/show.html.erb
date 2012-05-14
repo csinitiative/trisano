@@ -23,11 +23,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% patient_name = "#{patient.first_name} #{patient.last_name}" %>
 
 <% content_for :title do %>
-  <%= t 'view_morbidity_event', :name => h(patient_name) %>
+  <%= t 'view_assessment_event', :name => h(patient_name) %>
 <% end %>
 
 <% content_for :tools_two do %>
-  <%= new_cmr_button t("create_new_morbidity_report") %>
+  <%= new_ae_button t("create_new_assessment_report") %>
 <% end %>
 
 <% content_for :tools do %>
@@ -49,7 +49,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th><%= t('status') %></th>
       <th><%= t('event_created') %></th>
     </tr>
-    <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :view_mode => :show, :extra_tools => " | " + link_to(t('events_normal_case'), cmrs_path_with_defaults) } %>
+    <%= render :partial => 'assessment_events/assessment_event', :locals => {:assessment_event => @event, :view_mode => :show, :extra_tools => " | " + link_to(t('events_normal_case'), cmrs_path_with_defaults) } %>
   </table>
   <%- if @display_view_warning %>
     <%= warning_banner %>
@@ -57,13 +57,13 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <% end %>
 
 <% if User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } ) %>
-  <%= render :partial => 'morbidity_events/export_options', :locals => { :path => export_single_cmr_path(@event, :format => 'csv') } %>
+  <%= render :partial => 'assessment_events/export_options', :locals => { :path => export_single_ae_path(@event, :format => 'csv') } %>
 <% end %>
 <%= render :partial => 'assessment_events/copy_ae_options' %>
 
 <% fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
 
-  <% tabbed_content(morbidity_event_tabs, @tab_index) do %>
+  <% tabbed_content(assessment_event_tabs, @tab_index) do %>
 
     <% cache_event_fragment @event, "events/#{@event.id}/show/demographic_tab" do %>
         <% core_tab :demographic_tab, event_form do -%>

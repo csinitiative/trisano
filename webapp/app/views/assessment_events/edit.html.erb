@@ -55,9 +55,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <%= error_messages_for :object => @event %>
 
 <% if User.current_user.can_view?(@event) %>
-  <%= render :partial => 'morbidity_events/export_options', :locals => { :path => export_single_cmr_path(@event, :format => 'csv') } %>
+  <%= render :partial => 'assessment_events/export_options', :locals => { :path => export_single_ae_path(@event, :format => 'csv') } %>
 <% end %>
-<%= render :partial => 'assessment_event/copy_ae_options' %>
+<%= render :partial => 'assessment_events/copy_ae_options' %>
 
 <div id="event-task-form"></div>
 <div id="follow-up-error"></div>

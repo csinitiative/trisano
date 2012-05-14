@@ -86,6 +86,8 @@
       - @events.each do |event|
         - if event.is_a? ContactEvent
           = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :view_mode => :index }
+        - elsif event.is_a? AssessmentEvent
+          = render :partial => 'assessment_events/assessment_event', :locals => { :assessment_event => event, :view_mode => :index }
         - else
           = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :view_mode => :index }
   %br

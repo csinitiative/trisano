@@ -1,7 +1,7 @@
 - event = @event || event
 %div{ :id => "printing_controls_#{event.id}", :style => 'display: none; position: relative; width: 29em' } 
   %div{ :style => 'background-color: #fff; border: solid 2px; padding: 15px; border-color: #000' }
-    - form_tag(cmr_path(event, :format => 'print'), :method => :get, :target => "_blank", :onsubmit => "Effect.Fade('printing_controls_#{event.id}', { duration: 0.0 })") do
+    - form_tag(ae_path(event, :format => 'print'), :method => :get, :target => "_blank", :onsubmit => "Effect.Fade('printing_controls_#{event.id}', { duration: 0.0 })") do
       %span=t 'print_options'
       %div{ :style => 'width: 26em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;' }
         %div{ :style => 'background:#fff; overflow:auto;height: 9em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}

@@ -27,7 +27,7 @@ module HumanEventsHelper
     end
     if event.deleted_at.nil? && can_update
       controls << " | " unless controls.blank?
-      controls << link_to(t('delete'), soft_delete_ae_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
+      controls << link_to(t('delete'), soft_delete_event_path(event), :method => :post, :confirm => 'Are you sure?', :id => 'soft-delete')
     end
     if (view_mode != :index)
       if can_update
