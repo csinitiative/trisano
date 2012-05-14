@@ -124,6 +124,11 @@ class StagedMessage < ActiveRecord::Base
     @rejected = bad_message_type || bad_processing_id || bad_version_id
     return if @rejected
 
+    control_ids = StagedMessage.all.map {|m| m.id != self.id ? HL7::Message.new(m.hl7_message)[:MSH].message_control_id : nil }.compact
+    if control_ids.include?(hl7[:MSH].message_control_id)
+      add_hl7_error :duplicate_message_control_id, :msh, 1
+    end
+
     if patient.nil?
       add_hl7_error :missing_segment, :pid, 1
       return

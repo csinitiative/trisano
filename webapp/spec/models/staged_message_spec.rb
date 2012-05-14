@@ -54,6 +54,13 @@ describe StagedMessage do
     m.should_not be_valid
   end
 
+  it "should not be valid if there is the same MSH:message_control_id present in the database" do
+    StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
+    m = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+
+    m.should_not be_valid
+  end
+
   it "should not be valid if there's no PID segment" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_pid])
     m.should_not be_valid
