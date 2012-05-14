@@ -180,6 +180,7 @@ class MorbidityEvent < HumanEvent
   end
 
   def self.check_reporter_attrs(attrs)
+    return false if attrs.has_key?("secondary_entity_id")
     person_empty = attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| v.blank? }
     phones_empty = attrs["person_entity_attributes"].has_key?("telephones_attributes") && attrs["person_entity_attributes"]["telephones_attributes"].all? { |k, v| v.all? { |k, v| v.blank? } }
     (person_empty && phones_empty) ? true : false
