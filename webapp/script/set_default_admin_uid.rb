@@ -22,7 +22,7 @@
 
 puts "Setting default administrator UID to #{@default_admin_uid}"
 
-if User.new.respond_to?(:crypted_password)
+if User.new.respond_to?(:crypted_password) && RAILS_ENV=="development"
   
   raise "ERROR: You must not specify the auth_env_src option in site_config while using the trisano_auth plugin" if @auth_src_env.present?
   raise "ERROR: You must not enable the auth_allow_user_switch option in site_config while using the trisano_auth plugin" if @auth_allow_user_switch == true
