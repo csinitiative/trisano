@@ -1,6 +1,14 @@
 It seems you've tried to access an event with the wrong URL.
+<<<<<<< HEAD
 <% if defined?(event_link) %>
   Please try <%= event_link %>
 <% else %>
   Could not generate a valid link for you. Please notify your system administrator.
 <% end %>
+=======
+<% if event_link %>
+  Please try <%= event_link %>
+<% else %>
+  Could not generate a valid link for you. Please notify your system administrator.
+<% end %>
+>>>>>>> cdbb3ba... Add missing event template and fix tests
