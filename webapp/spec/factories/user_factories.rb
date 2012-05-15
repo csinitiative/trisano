@@ -20,8 +20,16 @@ Factory.define :user do |u|
   u.user_name { Factory.next(:user_name) }
   u.status 'active'
   if User.column_names.include?("crypted_password")
-    u.password "changeme"
-    u.password_confirmation { |u| u.password }
+    if User.new.respond_to?(:password=)
+      u.password "changeme"
+      u.password_confirmation { |u| u.password }
+    else
+      u.crypted_password "random_pasword_hash"
+      u.password_salt "random_password_salt"
+      u.persistence_token "random_token"
+      u.single_access_token "ndom_token"
+      u.perishable_token "ndom_token"
+    end
   end
   u.after_build { |user| User.current_user = user }
 end

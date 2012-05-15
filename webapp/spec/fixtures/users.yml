@@ -9,6 +9,13 @@ default_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
   status: "active"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 admin_user:
   id: 2
@@ -21,6 +28,13 @@ admin_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: ['Willy Wonka']\n:states: "
   status: "active"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 update_cmr_user:
   id: 3
@@ -33,6 +47,13 @@ update_cmr_user:
   initials:
   event_view_settings:
   status: "active"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 view_cmr_user:
   id: 4
@@ -45,6 +66,13 @@ view_cmr_user:
   initials:
   event_view_settings:
   status: "active"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 update_davis_user:
   id: 5
@@ -57,6 +85,13 @@ update_davis_user:
   initials:
   event_view_settings:
   status: "active"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 disabledd_user:
   id: 6
@@ -69,3 +104,10 @@ disabledd_user:
   initials:
   event_view_settings:
   status: "disabled"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
