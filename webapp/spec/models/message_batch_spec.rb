@@ -26,7 +26,8 @@ describe MessageBatch do
 
   it 'should be valid if any message in the batch is valid' do
     batch1 = MessageBatch.create :hl7_message =>
-      HL7MESSAGES[:realm_batch]
+      unique_messages(HL7MESSAGES[:realm_batch])
+
     batch1.should be_valid
     batch1.staged_messages.count.should == 2
 
@@ -47,5 +48,11 @@ describe MessageBatch do
     lambda do
       MessageBatch.find batch.id
     end.should raise_exception
+  end
+
+  def unique_messages(message)
+    message = HL7::Message.new(message)
+    message[:MSH].each {|m| m.message_control_id = rand(1000) + Time.now.to_i }
+    message.to_hl7
   end
 end
