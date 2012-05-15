@@ -44,3 +44,4 @@ kdhe-test-deploy.sh
 prep-clean.sh
 kdhe-prod-deploy.sh
 *.swn
+*.swm
