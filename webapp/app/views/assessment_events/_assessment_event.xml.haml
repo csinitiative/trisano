@@ -1,7 +1,7 @@
 !!! XML
 = xml_for assessment_event, "xmlns:atom" => "http://www.w3.org/2005/Atom" do |assessment|
   - if assessment_event.new_record?
-    = assessment.link_to cmrs_url, :rel => :index
+    = assessment.link_to aes_url, :rel => :index
     = assessment.link_to new_ae_url, :rel => :self
   - else
     = assessment.link_to ae_url(assessment_event), :rel => :self

@@ -8,7 +8,7 @@ Feature: XML API for CMRs
     Given a basic morbidity event exists
      When I retrieve the CMR XML representation for cmr
      Then I should have an xml document
-     When I use xpath to find the patient's last name
+     When I use xpath to find the morbidity event patient's last name
      Then I should have 1 node
 
   Scenario: Putting a CMR back using the XML representation
@@ -26,11 +26,11 @@ Feature: XML API for CMRs
 
   Scenario: Creating a CMR from an XML representation
      When I retrieve the CMR XML representation for new_cmr
-      And I replace the patient's last name with "Davis"
-      And I replace the first reported to public health date with yesterday's date
+      And I replace the morbidity event patient's last name with "Davis"
+      And I replace the morbidity event first reported to public health date with yesterday's date
       And I POST the XML to the "index" link
      Then I should get a 201 response
-      And the Location header should have a link to the new event
+      And the Location header should have a link to the new morbidity event
 
   Scenario: Adding a note to a CMR
     Given a basic morbidity event exists

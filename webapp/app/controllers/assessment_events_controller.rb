@@ -17,7 +17,9 @@
 
 class AssessmentEventsController < EventsController
   include EventsHelper
-  
+
+  before_filter :load_event_queues, :only => [:index]
+
   def show
     # @event initialized in can_view? filter
     @export_options = params[:export_options]
@@ -169,6 +171,10 @@ class AssessmentEventsController < EventsController
   end
   
   private
+  
+  def load_event_queues
+    @event_queues = EventQueue.queues_for_jurisdictions User.current_user.jurisdiction_ids_for_privilege(:view_event)
+  end
 
   def prepopulate
     @event = setup_human_event_tree(@event)

@@ -10,6 +10,13 @@ def set_xpath_value(xpath, value)
   end
 end
 
+When /^I retrieve the AE XML representation for (.*)$/ do |path|
+  header "Accept", "application/xml"
+  url = self.send "#{path}_path", @event
+  visit url
+  @xml = Nokogiri::XML(response.body)
+end
+
 When /^I retrieve the CMR XML representation for (.*)$/ do |path|
   header "Accept", "application/xml"
   url = self.send "#{path}_path", @event
@@ -113,7 +120,11 @@ When /^I replace (.*) with (.*)'s date$/ do |xpath_name, date_word|
   set_xpath_value(xpath_to(xpath_name), date)
 end
 
-Then /^the Location header should have a link to the new event$/ do
+Then /^the Location header should have a link to the new assessment event$/ do
+  headers['Location'].should =~ %r{http://www.example.com/aes/\d+}
+end
+
+Then /^the Location header should have a link to the new morbidity event$/ do
   headers['Location'].should =~ %r{http://www.example.com/cmrs/\d+}
 end
 
