@@ -97,6 +97,7 @@ en:
               parse_error: "could not be parsed"
               missing_header: "is missing the header"
               missing_segment: "is missing one or more of the following segments: PID, OBR, or OBX"
+              duplicate_message_control_id: "with the same message control id is already present"
               missing_last_name: "No last name provided for patient."
               missing_loinc: "OBX segment {{segment}} does not contain a LOINC code."
               unsupported_message_type:   "Unsupported message type"
