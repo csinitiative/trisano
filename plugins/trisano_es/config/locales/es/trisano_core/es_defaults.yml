@@ -150,16 +150,16 @@ es:
   attachment_types:
     correspondence: Correspondencia
     lab: Resultados de laboratorio
-    letter: Letra
+    letter: Carta
     x-ray: Rayo X
-    edn-notification: EDN Notification
-    edn-followup: EDN Follow Up
-    igra-report: IGRA Report
-    consult-report: Consultation Report
+    edn-notification: Notificación de EDN
+    edn-followup: Seguimiento de EDN
+    igra-report: IGRA Reporte
+    consult-report: Consultación Reporte
     ijr: IJR
-    death-certificate: Death Certificate
-    medical-record: Medical Record
-    other: Other
+    death-certificate: Certificación de Muerte
+    medical-record: Historia Clínica
+    other: Otro/a
 
   encounter_location_types:
     clinic: Cl√≠nica
