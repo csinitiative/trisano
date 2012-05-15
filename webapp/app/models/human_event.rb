@@ -103,7 +103,7 @@ class HumanEvent < Event
     def lab_result_attributes_blank?(attrs)
       attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
     end
-    
+
     def rewrite_attributes_to_reuse_place_entities(attrs)
       if attrs["place_entity_attributes"]
         place_attributes = attrs["place_entity_attributes"]["place_attributes"]
@@ -183,7 +183,7 @@ class HumanEvent < Event
       when 'status'
         # Fortunately the event status code stored in the DB and the text the user sees mostly correspond to the same alphabetical ordering"
         "workflow_state #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name"
-      when 'event_date'
+      when 'event_created'
         "events.created_at #{order_direction}, last_name, first_name, disease_name, jurisdiction_short_name, workflow_state"
       else
         "events.updated_at DESC"
@@ -463,7 +463,7 @@ class HumanEvent < Event
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
       unless jurisdiction_id == self.jurisdiction.secondary_entity_id
-        proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id) 
+        proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id)
         raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
         self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
         self.add_note note
@@ -878,8 +878,8 @@ class HumanEvent < Event
   def validate
     super
 
-    county_code = self.address.try(:county).try(:the_code)
-    if county_code == "OS" &&
+    county_jurisdiction = self.address.try(:county).try(:jurisdiction)
+    if county_jurisdiction == Jurisdiction.out_of_state &&
         (((self.lhd_case_status != ExternalCode.out_of_state) && (!self.lhd_case_status.nil?)) &&
           ((self.state_case_status != ExternalCode.out_of_state) && (!self.state_case_status.nil?)))
       errors.add(:base, :invalid_case_status, :status => ExternalCode.out_of_state.code_description, :attr => I18n.t(:county).downcase, :value => self.address.county.code_description)

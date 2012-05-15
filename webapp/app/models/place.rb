@@ -32,9 +32,10 @@ class Place < ActiveRecord::Base
   end
   validates_presence_of :short_name, :if => :is_a_jurisdiction?
 
-  # Once a Place is created as a Jurisdiction
-  # it's place type will always be set to Jurisdiction
   before_update :set_jurisdiction_place_type, :if => :is_a_jurisdiction?
+
+  validate :not_modifying_special_jurisdiction_names, :if => :is_a_jurisdiction?, :on => :update
+
 
   named_scope :active, {
     :include => :entity,
@@ -59,7 +60,7 @@ class Place < ActiveRecord::Base
   }
 
   named_scope :reporting_agencies_by_name, lambda { |name|
-    { :conditions => ["places.name ILIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (?) AND entities.deleted_at IS NULL", name + '%', Place.agency_type_codes],   
+    { :conditions => ["places.name ILIKE ? AND codes.code_name = 'placetype' AND codes.the_code IN (?) AND entities.deleted_at IS NULL", name + '%', Place.agency_type_codes],
       :include => [:place_types, :entity],
       :order => 'LOWER(TRIM(places.name)) ASC'
     }
@@ -255,7 +256,15 @@ class Place < ActiveRecord::Base
   end
 
   def set_jurisdiction_place_type
+  # Once a Place is created as a Jurisdiction
+  # it's place type will always be set to Jurisdiction
     self.place_types = [Code.find(Code.jurisdiction_place_type_id)]
+  end
+
+  def not_modifying_special_jurisdiction_names
+    special_jurisdiction_names = ["Out of State", "Unassigned"]
+    # Uses the ActiveRecord::Dirty to determine if user is modifying the name of a special jurisdiction
+    self.errors.add(:base, "Cannot modify the name of this Jurisdiction.") if self.name_changed? && special_jurisdiction_names.include?(self.name_was)
   end
 
 end

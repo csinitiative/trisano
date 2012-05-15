@@ -267,6 +267,11 @@ Then /^I should see the pregnancy fields in the right place$/ do
   end
 end
 
+Then /^There should be only one event for$/ do |last_name|
+  p = Person.find_by_last_name(last_name)
+  assert_equal 1, p.person_entity.human_events.size if p
+end
+
 Then /^I should see the mortality fields in the right place$/ do
   response.should have_tag('#disease_info_form .form') do
     with_tag('legend', 'Mortality Status') do

@@ -16,9 +16,9 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class JurisdictionsController < AdminController
-    
+
   before_filter :check_role
-    
+
   def index
     @jurisdictions = PlaceEntity.jurisdictions.excluding_unassigned
   end

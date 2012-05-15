@@ -21,6 +21,12 @@ When(/^I navigate to the new event page and start a simple event$/) do
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end
 
+When(/^I navigate to the new event page and start a simple event for$/) do |name|
+  @browser.open "/trisano/cmrs/new"
+  add_demographic_info(@browser, { :last_name => name })
+  @browser.type('morbidity_event_first_reported_PH_date', date)
+end
+
 When /^I go to the new CMR page$/ do
   @browser.open "/trisano/cmrs/new"
   @browser.wait_for_page_to_load
@@ -181,6 +187,10 @@ end
 
 When /^I enter a valid first reported to public health date$/ do
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
+end
+
+When /^I enter a new valid first reported to public health date$/ do
+  @browser.type('morbidity_event_first_reported_PH_date', Date.yesterday)
 end
 
 When /^I enter basic CMR data$/ do
