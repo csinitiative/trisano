@@ -425,6 +425,40 @@ describe CdcExport do
       end
     end
 
+     it "should display events for this year only for weekly report" do
+      event = create_cdc_event
+      event.disease_event.disease_onset_date = Date.new(Date.today.year - 1, 12, 31)
+      event.cdc_updated_at = Date.today
+      event.save!
+      event.reload
+
+      new_event = create_cdc_event
+      new_event.disease_event.disease_onset_date = Date.new(Date.today.year, 5, 15)
+      new_event.cdc_updated_at = Date.today
+      new_event.save!
+      new_event.reload
+
+      start_mmwr = Mmwr.new(Date.today - 7)
+      end_mmwr = Mmwr.new
+
+      records =  CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
+      records.find {|e| e.id == event.id}.should == nil
+      records.find {|e| e.id == new_event.id}.should_not == nil
+     end
+
+     it "should correctly display events for a week spanning two years" do
+      event = create_cdc_event
+      event.disease_event.disease_onset_date = Date.parse("2011/12/31")
+      event.save!
+      event.reload
+
+      start_mmwr = Mmwr.new(Date.parse("2012/01/01") - 7)
+      end_mmwr = Mmwr.new(Date.parse("2012/01/01"))
+
+      records =  CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
+      records.first.id.should == event.id
+    end
+
     it "should display case status as a one digit code" do
       with_cdc_records do |records|
         records[0].first.to_cdc[52...53].should == '2'

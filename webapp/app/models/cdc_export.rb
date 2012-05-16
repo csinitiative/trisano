@@ -31,11 +31,10 @@ class CdcExport < ActiveRecord::Base
           (
             cdc_updated_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}
             AND
-            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year - 1]).untaint})
+            "MMWR_year" = EXTRACT(YEAR FROM cdc_updated_at)
           )
         )
       END_WHERE_CLAUSE
-
       events = HumanEvent.find_by_sql(modified_record_sql + where_clause)
       events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
