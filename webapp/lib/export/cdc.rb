@@ -309,7 +309,10 @@ module Export
       end
 
       def exp_eventdate
-        event_date = disease_onset_date || date_diagnosed || pg_array(lab_collection_dates).map {|d| Date.parse(d)}.sort.first || pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first || first_reported_PH_date || created_at
+        event_date = disease_onset_date || date_diagnosed ||
+          pg_array(lab_collection_dates || " ").map {|d| Date.parse(d)}.sort.first ||
+          pg_array(lab_test_dates || " ").map {|d| Date.parse(d)}.sort.first ||
+          first_reported_PH_date || created_at
         if event_date.blank?
           return '999999'
         else
