@@ -31,7 +31,7 @@ module TrisanoAuth
       end
 
       def self.included(base)
-        base.alias_method_chain :load_user, :authlogic
+        base.alias_method_chain :load_user, :authlogic unless RAILS_ENV == "feature" || RAILS_ENV == "test"
       end
 
       private

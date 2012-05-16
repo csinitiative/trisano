@@ -69,7 +69,7 @@ module TrisanoAuth
 
       def self.included(base)
         #TODO debt
-        unless config_option(:auth_src_env) || config_option(:auth_src_header)
+        if (config_option(:auth_src_env) || config_option(:auth_src_header)).nil? || RAILS_ENV == "feature"
           def require_password_changed?
             !new_record? && password_changed?
           end
