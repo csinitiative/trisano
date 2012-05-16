@@ -94,7 +94,7 @@ Feature: Export events for ibis
     And I click the "submit" button
 
     Then I should receive the morbidity event as xml
-    And I should see "110515" in the "EventOnsetDate" node
+    And I should see "2011-05-15" in the "EventOnsetDate" node
 
 
     

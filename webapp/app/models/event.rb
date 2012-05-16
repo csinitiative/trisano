@@ -299,8 +299,7 @@ class Event < ActiveRecord::Base
         intpplent.id AS interested_party_person_entity_id,
         ethid.the_code AS interested_party_ethnicity_code,
         sexid.the_code AS interested_party_sex_code,
-        lab_results.lab_collection_dates,
-        lab_results.lab_test_dates
+        events.event_onset_date AS event_onset_date
     FROM
         events
         LEFT OUTER JOIN disease_events
@@ -341,17 +340,6 @@ class Event < ActiveRecord::Base
             ON ethid.id = intppl.ethnicity_id
         LEFT JOIN external_codes sexid
             ON sexid.id = intppl.birth_gender_id
-        INNER JOIN
-        (
-          SELECT
-            x.id as event_id,
-            ARRAY_ACCUM(lab_test_date) as lab_test_dates,
-            ARRAY_ACCUM(collection_date) as lab_collection_dates
-          FROM events x
-          LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
-          LEFT JOIN lab_results ON labs.id = lab_results.participation_id
-          GROUP BY x.id
-        ) lab_results ON events.id = lab_results.event_id
         WHERE
       SQL
 
