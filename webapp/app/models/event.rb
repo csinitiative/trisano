@@ -210,7 +210,18 @@ class Event < ActiveRecord::Base
     @suppressed_validations ||= []
   end
 
+  def export_eventdate
+      #todo:refactor duplicate in cdc.rb
+      event_date = disease_onset_date || disease_event_date_diagnosed ||
+        pg_array(lab_collection_dates).map {|d| Date.parse(d)}.sort.first ||
+        pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first ||
+        first_reported_ph_date || event_created_at
+      return '999999' if event_date.blank?
+      (event_date.is_a?(String) ? Date.parse(event_date) : event_date).strftime('%y%m%d')
+  end
+
   class << self
+    include PostgresFu
 
     def followup_core_paths(event_id)
       sql = "SELECT core_path
@@ -287,7 +298,9 @@ class Event < ActiveRecord::Base
         jurispl.short_name AS investigation_jurisdiction_short_name,
         intpplent.id AS interested_party_person_entity_id,
         ethid.the_code AS interested_party_ethnicity_code,
-        sexid.the_code AS interested_party_sex_code
+        sexid.the_code AS interested_party_sex_code,
+        lab_results.lab_collection_dates,
+        lab_results.lab_test_dates
     FROM
         events
         LEFT OUTER JOIN disease_events
@@ -328,6 +341,17 @@ class Event < ActiveRecord::Base
             ON ethid.id = intppl.ethnicity_id
         LEFT JOIN external_codes sexid
             ON sexid.id = intppl.birth_gender_id
+        INNER JOIN
+        (
+          SELECT
+            x.id as event_id,
+            ARRAY_ACCUM(lab_test_date) as lab_test_dates,
+            ARRAY_ACCUM(collection_date) as lab_collection_dates
+          FROM events x
+          LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
+          LEFT JOIN lab_results ON labs.id = lab_results.participation_id
+          GROUP BY x.id
+        ) lab_results ON events.id = lab_results.event_id
         WHERE
       SQL
 
