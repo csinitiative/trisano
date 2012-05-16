@@ -31,9 +31,8 @@ describe StagedMessage do
   before(:each) do
     @user = users(:default_user)
     User.stubs(:current_user).returns(@user)
-
     @valid_attributes = {
-      :hl7_message => hl7_messages[:arup_1]
+      :hl7_message => unique_message(hl7_messages[:arup_1])
     }
   end
 
@@ -51,6 +50,13 @@ describe StagedMessage do
 
   it "should not be valid if there's no MSH segment" do
     m = StagedMessage.new(:hl7_message => hl7_messages[:no_msh])
+    m.should_not be_valid
+  end
+
+  it "should not be valid if there is the same MSH:message_control_id present in the database" do
+    StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
+    m = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+
     m.should_not be_valid
   end
 
@@ -376,7 +382,7 @@ describe StagedMessage do
     end
 
     it "should raise an error if LOINC code does not exist" do
-      @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:unknown_loinc])
+      @staged_message = StagedMessage.create(:hl7_message => unique_message(hl7_messages[:unknown_loinc]))
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
     end
 
@@ -411,7 +417,7 @@ describe StagedMessage do
 
     describe "with a valid, complete record" do
       before :each do
-        @staged_message = StagedMessage.create(:hl7_message => hl7_messages[:arup_1])
+        @staged_message = StagedMessage.create(:hl7_message => unique_message(hl7_messages[:arup_1]))
         @event = @staged_message.new_event_from
       end
 
@@ -452,7 +458,7 @@ describe StagedMessage do
 
     describe "with a record missing address and phone" do
       before :each do
-        @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_simple_pid])
+        @staged_message = StagedMessage.new(:hl7_message => unique_message(hl7_messages[:arup_simple_pid]))
         @event = @staged_message.new_event_from
       end
 
@@ -472,7 +478,7 @@ describe StagedMessage do
 #    self.save!
 
     before :each do
-      @staged_message = StagedMessage.new(:hl7_message => hl7_messages[:arup_1])
+      @staged_message = StagedMessage.new(:hl7_message => unique_message(hl7_messages[:arup_1]))
     end
 
     it "should raise an error if message has already been assigned" do
@@ -489,11 +495,11 @@ describe StagedMessage do
 
   describe "search" do
     before do
-      @jones_message     = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('David Jones')
-      @davis_message     = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_name].call('Mike Davis')
-      @quest_message     = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_lab].call('Quest Labs')
-      @date_message      = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_collection_date].call('200810011645')
-      @test_type_message = StagedMessage.create! :hl7_message => hl7_messages[:arup_replace_test_type].call('Monkey test')
+      @jones_message     = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_replace_name].call('David Jones'))
+      @davis_message     = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_replace_name].call('Mike Davis'))
+      @quest_message     = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_replace_lab].call('Quest Labs'))
+      @date_message      = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_replace_collection_date].call('200810011645'))
+      @test_type_message = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_replace_test_type].call('Monkey test'))
     end
 
     it 'finds records by last name' do
@@ -523,6 +529,12 @@ describe StagedMessage do
     it "finds nothing if criteria contains only options we don't care about" do
       StagedMessage.find_by_search(:action => 'Search').should == []
     end
+  end
+
+  def unique_message(message)
+    message = HL7::Message.new(message)
+    message[:MSH].message_control_id = rand(1000) + Time.now.to_i
+    message.to_hl7
   end
 end
 

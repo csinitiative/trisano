@@ -84,5 +84,17 @@ Feature: Export events for ibis
     
     Then I should receive the morbidity event as xml
 
+  Scenario: Event onset date code is present
+    Given a morbidity event with disease "African Tick Bite Fever" and disease date "2011/05/15"
+    And I am logged in as a super user
+
+    When I navigate to the ibis export form
+    And I set the "start_date" to "yesterday"
+    And I set the "end_date" to "tomorrow"
+    And I click the "submit" button
+
+    Then I should receive the morbidity event as xml
+    And I should see "2011-05-15" in the "EventOnsetDate" node
+
 
     
