@@ -63,6 +63,9 @@ def path_to(page_name)
   when /the AE show page/i
     ae_path @event
 
+  when /the AE edit page/i
+    edit_ae_path @event
+
   when /print the (.+) CMR data/i
     cmr_path(@event, :format => :print, 'print_options[]' => $1)
 

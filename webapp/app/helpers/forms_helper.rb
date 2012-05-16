@@ -518,6 +518,7 @@ module FormsHelper
   def form_event_types
     [
      [t("morbidity_event"), "morbidity_event"],
+     [t("assessment_event"), "assessment_event"],
      [t("contact_event"), "contact_event"],
      [t("place_event"), "place_event"],
      [t("encounter_event"), "encounter_event"]
