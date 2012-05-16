@@ -21,7 +21,7 @@ require 'spec_helper'
 describe StagedMessage do
 
   before(:all) do
-    destroy_fixture_data
+   destroy_fixture_data
   end
 
   after(:all) do
@@ -533,7 +533,7 @@ describe StagedMessage do
 
   def unique_message(message)
     message = HL7::Message.new(message)
-    message[:MSH].message_control_id = rand(1000) + Time.now.to_i
+    message[:MSH].message_control_id = "#{rand(10000)}#{Time.now.to_i}"
     message.to_hl7
   end
 end
