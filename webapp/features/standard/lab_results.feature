@@ -113,5 +113,5 @@ Feature: Managing Lab Results
     And I select a sent to state lab value of 'Yes'
     And I enter a comment of "Whew!"
 
-    When I save the new event form
+    When I save the new morbidity event form
     Then I should see the values entered above
