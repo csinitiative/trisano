@@ -288,7 +288,7 @@ SELECT
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     oaci.code_description AS outbreak_associated_code,    -- code_description?
-    events.outbreak_name,
+    outbrk.event_name AS outbreak_name,
 
     -- events.event_status,                    -- Change this from a code to a text value?
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
@@ -517,6 +517,8 @@ FROM events
         GROUP BY a.event_id
     ) formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
+    LEFT JOIN events outbrk
+        ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
     events.type = 'MorbidityEvent' AND
     events.deleted_at IS NULL
