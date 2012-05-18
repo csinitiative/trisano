@@ -19,10 +19,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CdcExport do
 
   def create_cdc_event
-    event = MorbidityEvent.new(@event_hash)
-    disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
-    event.save!
-    event.build_disease_event(disease_event.attributes)
+    event = MorbidityEvent.create!(@event_hash)
+    event.build_disease_event(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
     event.save!
     event.reload
   end
@@ -261,9 +259,9 @@ describe CdcExport do
         end
 
         it "should use disease onset date" do
+          HumanEvent.find(@event_date_calculation_test.id).event_onset_date.should == @disease_onset_date
           with_cdc_records @event_date_calculation_test do |records|
             records[0].first.to_cdc[45..50].should == @disease_onset_date.strftime("%y%m%d")
-            HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @disease_onset_date.strftime("%y%m%d")
           end
         end
       end
@@ -306,9 +304,9 @@ describe CdcExport do
               @event_date_calculation_test.save
             end
             it "should use the earliest lab collection date" do
+              HumanEvent.find(@event_date_calculation_test).event_onset_date.should == @earliest_lab_collection_date
               with_cdc_records @event_date_calculation_test do |records|
                 records[0].first.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
-                HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_collection_date.strftime("%y%m%d")
               end #with_cdc_records
             end #should use earliest lab collection
             
@@ -325,9 +323,9 @@ describe CdcExport do
                 @event_date_calculation_test.save
               end
               it "should use the earliest lab collection date" do
+                HumanEvent.find(@event_date_calculation_test.id).event_onset_date.should == @earliest_lab_collection_date
                 with_cdc_records @event_date_calculation_test do |records|
                   records[0].first.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
-                  HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_collection_date.strftime("%y%m%d")
                 end #with_cdc_records
               end #should use earliest lab collection date
             end #context multiple lab test dates present
@@ -350,9 +348,9 @@ describe CdcExport do
                 @event_date_calculation_test.save
               end
               it "should use the earliest lab test date" do
+                HumanEvent.find(@event_date_calculation_test.id).event_onset_date.should == @earliest_lab_test_date
                 with_cdc_records @event_date_calculation_test do |records|
                   records[0].first.to_cdc[45..50].should == @earliest_lab_test_date.strftime("%y%m%d")
-                  HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_test_date.strftime("%y%m%d")
                 end #with_cdc_records
               end #should use earliest lab test date
             end #context multiple lab test dates present
