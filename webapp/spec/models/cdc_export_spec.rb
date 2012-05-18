@@ -19,8 +19,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CdcExport do
 
   def create_cdc_event
-    event = MorbidityEvent.create!(@event_hash)
-    event.build_disease_event(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+    event = MorbidityEvent.new(@event_hash)
+    disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+    event.save!
+    event.build_disease_event(disease_event.attributes)
     event.save!
     event.reload
   end
