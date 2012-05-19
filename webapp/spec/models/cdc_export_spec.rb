@@ -17,6 +17,15 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CdcExport do
+  before(:all) do
+   Fixtures.reset_cache
+  end
+
+  after(:all) do
+    Fixtures.reset_cache
+  end
+
+  fixtures :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
   def create_cdc_event
     event = MorbidityEvent.new(@event_hash)
@@ -297,13 +306,14 @@ describe CdcExport do
 
           context "and multiple lab collection dates are present" do
             before do
-              @later_lab_collection_date = 14.days.ago.to_date
-              @earliest_lab_collection_date = 15.days.ago.to_date
+              @later_lab_collection_date = 5.days.ago.to_date
+              @earliest_lab_collection_date = 6.days.ago.to_date
               lab = Factory(:lab)
               lab.lab_results.first.update_attributes(:collection_date => @earliest_lab_collection_date)
               lab.lab_results << Factory(:lab_result, :collection_date => @later_lab_collection_date)
               @event_date_calculation_test.labs << lab
-              @event_date_calculation_test.save
+              @event_date_calculation_test.save!
+              @event_date_calculation_test.reload
             end
             it "should use the earliest lab collection date" do
               HumanEvent.find(@event_date_calculation_test).event_onset_date.should == @earliest_lab_collection_date
@@ -316,8 +326,8 @@ describe CdcExport do
               # This is to test specifically that the lab collection dates are given priority
               # over the test dates, even if the test dates are earlier
               before do
-                @later_lab_test_date = 12.days.ago.to_date
-                @earliest_lab_test_date = 13.days.ago.to_date
+                @later_lab_test_date = 5.days.ago.to_date
+                @earliest_lab_test_date = 6.days.ago.to_date
                 lab = Factory(:lab)
                 lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
                 lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
@@ -326,6 +336,7 @@ describe CdcExport do
               end
               it "should use the earliest lab collection date" do
                 HumanEvent.find(@event_date_calculation_test.id).event_onset_date.should == @earliest_lab_collection_date
+
                 records = CdcExport.weekly_cdc_export(Mmwr.new(Date.today - 7), Mmwr.new)
                 event = records.find {|r| r.id == @event_date_calculation_test.id}
                 event.should_not == nil
