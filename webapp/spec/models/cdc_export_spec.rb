@@ -326,9 +326,10 @@ describe CdcExport do
               end
               it "should use the earliest lab collection date" do
                 HumanEvent.find(@event_date_calculation_test.id).event_onset_date.should == @earliest_lab_collection_date
-                with_cdc_records @event_date_calculation_test do |records|
-                  records[0].first.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
-                end #with_cdc_records
+                records = CdcExport.weekly_cdc_export(Mmwr.new(Date.today - 7), Mmwr.new)
+                event = records.find {|r| r.id == @event_date_calculation_test.id}
+                event.should_not == nil
+                event.to_cdc[45..50].should == @earliest_lab_collection_date.strftime("%y%m%d")
               end #should use earliest lab collection date
             end #context multiple lab test dates present
           end #context multiple lab collection dates present
