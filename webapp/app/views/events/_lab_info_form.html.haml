@@ -32,6 +32,6 @@
       %p
         = add_lab_link t('add_new_lab'), f.object_name
 
-    - if @event.is_a?(MorbidityEvent)
+    - if @event.supports_encounter_specific_labs?
       = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }
 

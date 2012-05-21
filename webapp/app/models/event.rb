@@ -546,27 +546,6 @@ class Event < ActiveRecord::Base
     Answer.new(:question_id => question_id)
   end
 
-
-  # Indicates whether an event supports tasks. Generally used by the UI in shared partials
-  # to determine whether task-specific layout should be included.
-  #
-  # Sub-classes can either override this method to return true or use a declarative option:
-  #
-  # supports :tasks
-  def supports_tasks?
-    false
-  end
-
-  # Indicates whether an event supports attachements. Generally used by the UI in shared partials
-  # to determine whether attachment-specific layout should be included.
-  #
-  # Sub-classes can either override this method to return true or use a declarative option:
-  #
-  # supports :attachments
-  def supports_attachments?
-    false
-  end
-
   def clone_event(event_components=[])
     event_components = [] if event_components.nil?
     _event = self.class.new
@@ -640,17 +619,38 @@ class Event < ActiveRecord::Base
     end
   end
 
+
+  # Indicates whether an event supports something. Generally used by the UI in shared partials
+  # to determine whether task-specific layout should be included.
+  #
+  # Sub-classes can either override this method to return true or use a declarative option:
+  # supports :something
   class << self
+    # self is the class from which support :something is being called
+
     def supports(functionality)
-      return unless [:tasks, :attachments].include?(functionality)
+
       supports_method = %Q{
         def supports_#{functionality.to_s}?
           true
         end
       }
+
+      # adds method to the calling class so supports_something? and returns true
       class_eval(supports_method)
-    end
-  end
+
+    
+      # When adding a support method to a class, we want to assign a default state
+      # to the super class (Event) to false
+      supports_method_default = %Q{
+        def supports_#{functionality.to_s}?
+          false
+        end
+      }
+      Event.send(:class_eval, supports_method_default)
+
+    end #def supports
+  end #class << self
 
   def events_quick_list(reload=false)
     if reload or @events_quick_list.nil?
