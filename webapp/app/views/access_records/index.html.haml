@@ -29,7 +29,7 @@
     -@access_records.each do |access_record|
       %tr.search-active.tabular
         %td=h(access_record.user.best_name)
-        %td=link_to(h(access_record.event.record_number), self.send("#{event_to_path_name[access_record.event.class.name] || access_record.event.class.name.underscore}_path".to_sym, access_record.event))
+        %td=link_to(h(access_record.event.record_number), self.send("#{event_to_path_name(access_record.event)}_path".to_sym, access_record.event))
         %td=h(access_record.reason)
         %td=h(access_record.access_count)
         %td=h(access_record.created_at.to_date)

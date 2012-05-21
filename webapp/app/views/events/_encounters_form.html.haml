@@ -28,7 +28,7 @@
 
             - add_new_encounter_link_id = f.object_name + "_add_new_encounter_link"
 
-            %p= link_to_function "Add new encounter", "$('#{add_new_encounter_link_id}').onclick(); new Effect.ScrollTo('morbidity_event_add_new_encounter_link', {offset: -225, duration: 0.4});"
+            %p= link_to_function "Add new encounter", "$('#{add_new_encounter_link_id}').onclick(); new Effect.ScrollTo('#{@event.type}_add_new_encounter_link', {offset: -225, duration: 0.4});"
 
             - f.fields_for(:encounter_child_events, :builder => ExtendedFormBuilder) do |e|
               = render :partial => "events/encounter", :locals => { :f => e }

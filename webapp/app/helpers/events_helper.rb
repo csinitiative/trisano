@@ -171,7 +171,7 @@ module EventsHelper
 
   def add_lab_link(name, prefix)
     event_type = /^.+_event/.match(prefix)[0]
-    url = event_type == 'morbidity_event' ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
+    #DEBT
     url = case event_type
     when 'morbidity_event'
       lab_form_new_cmr_path(:prefix => prefix)
@@ -179,6 +179,8 @@ module EventsHelper
       lab_form_new_contact_event_path(:prefix => prefix)
     when 'encounter_event'
       lab_form_new_encounter_event_path(:prefix => prefix)
+    when 'assessment_event'
+      lab_form_new_ae_path(:prefix => prefix)
     end
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
@@ -186,6 +188,7 @@ module EventsHelper
 
   def add_lab_result_link(name, prefix, lab_id)
     event_type = /^.+_event/.match(prefix)[0]
+    #DEBT
     url = case event_type
     when 'morbidity_event'
       lab_result_form_new_cmr_path(:prefix => prefix)
@@ -193,6 +196,8 @@ module EventsHelper
       lab_result_form_new_contact_event_path(:prefix => prefix)
     when 'encounter_event'
       lab_result_form_new_encounter_event_path(:prefix => prefix)
+    when 'assessment_event'
+      lab_result_form_new_ae_path(:prefix => prefix)
     end
 
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
@@ -381,7 +386,7 @@ module EventsHelper
   end
 
   def routing_form_tag(action, event, options={}, &block)
-    path_meth = event.is_a?(MorbidityEvent) ? "#{action.to_s}_cmr_path" : "#{action.to_s}_contact_event_path"
+    path_meth = "#{action.to_s}_#{event_to_path_name(event)}_path"
     returning "" do |form|
       form << form_tag(send(path_meth, event), options)
       form << block.call if block_given?
@@ -417,11 +422,19 @@ module EventsHelper
     show_and_edit_links[event.class.name][event, options]
   end
 
-  def event_to_path_name
+  def altered_paths_map
     { 
       "MorbidityEvent" => 'cmr',
       "AssessmentEvent" => 'ae'
     }
+  end
+
+  def event_to_controller_name(event)
+    event.attributes["type"].tableize
+  end
+  
+  def event_to_path_name(event)
+    altered_paths_map[event.class.name] || event.class.name.underscore
   end
 
   def show_and_edit_links
@@ -437,7 +450,7 @@ module EventsHelper
   def link_to_action(event, options={})
     action = options[:prefix] || 'show'
     options[:prefix] += '_' if options[:prefix]
-    resource = event_to_path_name[event.class.name] || event.class.name.underscore
+    resource = event_to_path_name(event)
     method = "#{options[:prefix]}#{resource}_path"
 
     unless options[:action_only]
@@ -796,14 +809,14 @@ module EventsHelper
   def link_to_parent(event)
     parent = event.parent_event
     person = parent.party
-    path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
+    path = request.symbolized_path_parameters[:action] == 'edit' ? edit_event_path(parent) : event_path(parent)
     link_to(h(person.try(:full_name)), path)
   end
 
 
   def event_path(event)
     url_for({
-      :controller => controller_name_from_event(event),
+      :controller => event_to_controller_name(event),
       :id => event.id,
       :action => :show
     })
@@ -811,7 +824,7 @@ module EventsHelper
 
   def edit_event_path(event)
     url_for({
-      :controller => controller_name_from_event(event),
+      :controller => event_to_controller_name(event),
       :id => event.id,
       :action => :edit
     })
@@ -819,14 +832,10 @@ module EventsHelper
 
   def soft_delete_event_path(event)
     url_for({
-      :controller => controller_name_from_event(event),
+      :controller => event_to_controller_name(event),
       :id => event.id,
       :action => :soft_delete
     })
-  end
-
-  def controller_name_from_event(model)
-    model.attributes["type"].tableize
   end
 
   def association_recorded?(association_collection)
