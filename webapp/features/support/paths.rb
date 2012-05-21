@@ -102,6 +102,15 @@ def path_to(page_name)
   when /the contact show page/i
     contact_event_path(@contact_event || @event)
 
+  when /the first AE contact\'s edit page/i
+    edit_contact_event_path(@event.contact_child_events.first)
+
+  when /the first AE contact\'s show page/i
+    contact_event_path(@event.contact_child_events.first)
+
+  when /the first AE place\'s edit page/i
+    edit_place_event_path(@event.place_child_events.first)
+
   when /the first CMR contact\'s edit page/i
     edit_contact_event_path(@event.contact_child_events.first)
 

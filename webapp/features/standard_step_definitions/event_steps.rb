@@ -40,7 +40,7 @@ Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
   @event.save!
 end
 
-Given /^the morbidity event has the following place exposures:$/ do |places|
+Given /^the event has the following place exposures:$/ do |places|
   places.hashes.each do |place|
     hash = {
       "interested_place_attributes" => {
@@ -195,6 +195,10 @@ end
 When /^I "([^\"]*)" the routed event$/ do |action|
   set_hidden_field "morbidity_event[workflow_action]", :to => action.downcase
   submit_form "state_change"
+end
+
+Then /^the AE should look deleted$/ do
+  response.should have_xpath("//div[@class='patientname-inactive']")
 end
 
 Then /^the CMR should look deleted$/ do
