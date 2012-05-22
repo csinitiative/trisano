@@ -32,7 +32,7 @@ Feature: Promoting Assessment Events to Morbidity Events
     And I am logged in as a super user
 
     When I promote Jones assessment to a morbidity event
-    Then the parent CMR should show the assessment as an elevated assessment
+    And I should see "<b>Promoted</b> from <b>Assessment event</b> to <b>Morbidity event</b> on (.+) at (.+) by (.+)"
 
   Scenario: Promoting an assessment that has becom invalid
     Given a assessment event for last name Smith with disease Mumps in jurisdiction Davis County

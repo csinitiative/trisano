@@ -32,6 +32,9 @@
       %label=t 'mmwr_week'
       = h(@event.MMWR_week)
 
+    %span.vert-break
+    = render(:partial => 'events/event_type_transition', :locals => { :event => @event })
+
   %span.vert-break
 
   -core_section :case_outbreak_section, event_form do

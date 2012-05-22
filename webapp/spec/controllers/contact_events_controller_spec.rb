@@ -310,7 +310,7 @@ describe ContactEventsController do
       User.current_user.stubs(:can_create?).with(@event).returns(true)
       post :event_type, :id => @event.id
       response.should redirect_to("/cmrs/#{@event.id}")
-      flash[:notice].should == "Contact successfully promoted"
+      flash[:notice].should == "Successfully promoted to CMR."
     end
   end
 end

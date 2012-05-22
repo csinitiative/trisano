@@ -1,0 +1,4 @@
+-if defined?(event)
+  %ul
+  -EventTypeTransition.for(event).each do |transition|
+    %li="<b>Promoted</b> from <b>#{transition.was.underscore.humanize}</b> to <b>#{transition.became.underscore.humanize}</b> on #{transition.created_at.to_date} at #{transition.created_at.strftime("%H:%m %p")} by #{transition.by.try(:user_name) || "an unknown user"}"

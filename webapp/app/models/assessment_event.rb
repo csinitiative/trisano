@@ -251,6 +251,9 @@ class AssessmentEvent < HumanEvent
     self.created_at = Time.now
 
     if self.save
+
+      EventTypeTransition.create(:event => self, :was => AssessmentEvent, :became => MorbidityEvent, :by => User.current_user)
+
       self.freeze
       expire_parent_record_contacts_cache
       # Return a fresh copy from the db

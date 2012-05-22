@@ -38,6 +38,7 @@ Feature: Promoting Contact Events to Morbidity Events
 
     When I promote Jones to a morbidity event
     Then the parent CMR should show the child as an elevated contact
+    And I should see "<b>Promoted</b> from <b>Contact event</b> to <b>Morbidity event</b> on (.+) at (.+) by (.+)"
 
   Scenario: Promoting a contact that has becom invalid
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County

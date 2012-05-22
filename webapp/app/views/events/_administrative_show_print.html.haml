@@ -33,6 +33,11 @@
   %span.print-label=ct('mmwr_week')
   %span.print-value= h(@event.MMWR_week)
 
+
+-EventTypeTransition.for(@event).each do |transition|
+  %span.vert
+    %span.print-value= "Promoted from #{transition.was.underscore.humanize} to #{transition.became.underscore.humanize} on #{transition.created_at.to_date} at #{transition.created_at.strftime("%H:%m %p")} by #{transition.by.try(:user_name) || "an unknown user"}"
+
 %span{:class => "vert"}
   %span.print-label=ct('jurisdiction_of_residence')
   - if @event.address
