@@ -6,8 +6,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.login 'login', :controller => 'user_sessions', :action => 'new'
   map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'
+  map.change_password 'change_password', :controller => 'password_resets', :action => 'change'
   map.resources :user_sessions
-  map.resources :password_resets, :only => [:index, :new, :edit, :update]
+  map.resources :password_resets, :only => [:index, :new, :edit, :update, :change]
 
   map.api_key 'users/settings/api_key', :controller => 'users', :action => 'api_key'
 end

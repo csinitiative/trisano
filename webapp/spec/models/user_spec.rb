@@ -107,6 +107,14 @@ describe User do
     @user.owns?(@email_address).should be_true
   end
 
+  it "should detect expired password" do
+    if User.column_names.include?("crypted_password")
+      @user = Factory(:user)
+      @user.update_attribute(:password_last_updated, 1.year.ago)
+      @user.password_expired?.should be_true
+    end
+  end
+
   describe "getting potential task assignees" do
     before do
       assignee = Factory(:user)

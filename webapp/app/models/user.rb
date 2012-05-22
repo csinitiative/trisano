@@ -277,6 +277,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def password_expired?
+    password_last_updated and password_last_updated < (Date.today - 90.days)
+  end
+
   def state_manager?
     is_entitled_to?(:approve_event_at_state)
   end

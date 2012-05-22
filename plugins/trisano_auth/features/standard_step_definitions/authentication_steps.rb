@@ -17,23 +17,38 @@
 
 
 Given /^I am not logged in$/ do
-  
+
+end
+
+When /^My password expires$/ do
+  User.current_user.update_attribute(:password_last_updated, 1.year.ago)
 end
 
 When /^I login with good credentials$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
+        :password => 'Helo1234!',
+        :password_confirmation => 'Helo1234!'))
   puts user.inspect
   fill_in :user_session_user_name, :with => user.user_name
-  fill_in :user_session_password, :with => 'changeme'
+  fill_in :user_session_password, :with => 'Helo1234!'
+  click_button "Submit"
+end
+
+When /^I login with expired password$/ do
+  user = User.create(Factory.attributes_for(:user,
+        :password => 'Helo1234!',
+        :password_confirmation => 'Helo1234!',
+        :password_last_updated => 1.year.ago))
+  puts user.inspect
+  fill_in :user_session_user_name, :with => user.user_name
+  fill_in :user_session_password, :with => 'Helo1234!'
   click_button "Submit"
 end
 
 When /^I login with a bad password$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
+        :password => 'Helo1234!',
+        :password_confirmation => 'Helo1234!'))
   puts user.inspect
   fill_in :user_session_user_name, :with => user.user_name
   fill_in :user_session_password, :with => 'stork'
@@ -42,10 +57,10 @@ end
 
 When /^I login with a bad user name$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
+        :password => 'Helo1234!',
+        :password_confirmation => 'Helo1234!'))
   puts user.inspect
   fill_in :user_session_user_name, :with => 'robertwrong'
-  fill_in :user_session_password, :with => 'changeme'
+  fill_in :user_session_password, :with => 'Helo1234!'
   click_button "Submit"
 end

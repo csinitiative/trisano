@@ -25,9 +25,15 @@ class UserSessionsController < ApplicationController
 
   def create
     @user_session = UserSession.new(params[:user_session])
+    @user = User.find_by_user_name(@user_session.user_name) || User.current_user
     if @user_session.save
+      if @user.password_expired?
+        flash[:notice] = "Your password has expired. Please set the new password in order to proceed."
+        render :template => "password_resets/change"
+       else
       flash[:notice] = "Successfully logged in."
       redirect_to home_url
+      end
     else
       render :action => 'new'
     end
@@ -41,11 +47,11 @@ class UserSessionsController < ApplicationController
     redirect_to login_url
   end
 
+
   protected
 
   def destroy_session
     User.current_user = nil
     @user_session.try(:destroy)
   end
-  
 end

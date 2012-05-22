@@ -14,3 +14,4 @@ en:
     manage_passwords_link: "Manage User Passwords"
     reset_password: "Reset Password"
     reset_explanation: "Provide the following link to {{user}} to allow them to set their password. This link will expire {{expiry}} and can only be used once."
+    change_password: "Change Password"
