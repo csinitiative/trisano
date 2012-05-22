@@ -17,6 +17,7 @@
 
 require 'trisano'
 require 'spec_helper'
+require 'active_support'
 
 describe StagedMessage do
 
@@ -533,7 +534,7 @@ describe StagedMessage do
 
   def unique_message(message)
     message = HL7::Message.new(message)
-    message[:MSH].message_control_id = rand(1000) + Time.now.to_i
+    message[:MSH].message_control_id = ActiveSupport::SecureRandom.hex(32)
     message.to_hl7
   end
 end
