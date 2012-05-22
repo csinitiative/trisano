@@ -393,7 +393,7 @@ class EventsController < ApplicationController
       correct_url = @template.event_path(@event)
       event_link = correct_url ? @template.link_to(correct_url, correct_url) : nil
       respond_to do |format|
-        format.html { render :partial => "shared/missing_event", :event_link => event_link, :layout => 'application', :status => 404 }
+        format.html { render :partial => "shared/missing_event", :locals => {:event_link => event_link}, :layout => 'application', :status => 404 }
         format.all { render :nothing => true, :status => 404 }
       end
     end
