@@ -41,7 +41,7 @@ en:
   contact_saved: "Contact saved."
   contact_not_saved: "Contact event not saved: {{messages}}"
   could_not_promote_to_morbidity: "Could not promote to morbidity event."
-  promoted_to_morbidity: "Contact successfully promoted"
+  promoted_to_morbidity: "Successfully promoted to CMR."
 
   # Core field configurations
   core_field_configuration_successfully_created: "Core field configuration was successfully created."

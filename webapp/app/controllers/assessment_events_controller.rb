@@ -170,6 +170,16 @@ class AssessmentEventsController < EventsController
     end
   end
   
+  def event_type
+    if m_event = @event.promote_to_morbidity_event
+      flash[:notice] = t(:promoted_to_morbidity)
+      redirect_to cmr_path(m_event)
+    else
+      flash.now[:error] = t("could_not_promote_to_morbidity")
+      render :action => :edit, :status => :bad_request
+    end
+  end
+  
   private
   
   def load_event_queues

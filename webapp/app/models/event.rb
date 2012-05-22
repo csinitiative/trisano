@@ -641,13 +641,13 @@ class Event < ActiveRecord::Base
 
     
       # When adding a support method to a class, we want to assign a default state
-      # to the super class (Event) to false
+      # to false on all other objects
       supports_method_default = %Q{
         def supports_#{functionality.to_s}?
           false
         end
       }
-      Event.send(:class_eval, supports_method_default)
+      Object.send(:class_eval, supports_method_default)
 
     end #def supports
   end #class << self
@@ -698,6 +698,16 @@ class Event < ActiveRecord::Base
   end
 
   private
+  
+  def expire_parent_record_contacts_cache
+    parent=self.parent_event
+    if parent.present? 
+      parent.touch
+      redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
+      redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")
+    end
+  end
+
 
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?

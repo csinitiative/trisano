@@ -148,7 +148,8 @@ ActionController::Routing::Routes.draw do |map|
       :edit_jurisdiction => :get,
       :jurisdiction => :post,
       :soft_delete => :post,
-      :export_single => :post
+      :export_single => :post,
+      :event_type => :post
     },
     :new => {
       :lab_form => :get,
