@@ -619,39 +619,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-
-  # Indicates whether an event supports something. Generally used by the UI in shared partials
-  # to determine whether task-specific layout should be included.
-  #
-  # Sub-classes can either override this method to return true or use a declarative option:
-  # supports :something
-  class << self
-    # self is the class from which support :something is being called
-
-    def supports(functionality)
-
-      supports_method = %Q{
-        def supports_#{functionality.to_s}?
-          true
-        end
-      }
-
-      # adds method to the calling class so supports_something? and returns true
-      class_eval(supports_method)
-
-    
-      # When adding a support method to a class, we want to assign a default state
-      # to false on all other objects
-      supports_method_default = %Q{
-        def supports_#{functionality.to_s}?
-          false
-        end
-      }
-      Object.send(:class_eval, supports_method_default)
-
-    end #def supports
-  end #class << self
-
   def events_quick_list(reload=false)
     if reload or @events_quick_list.nil?
       @events_quick_list = self.class.find_by_sql([<<-SQL, self.id, self.id])
@@ -747,4 +714,50 @@ class Event < ActiveRecord::Base
     parent_disease_event.disease_id = parent_event.disease_event.disease_id
     build_disease_event(parent_disease_event.attributes)
   end
+  
+  # Indicates whether an event supports something. Generally used by the UI in shared partials
+  # to determine whether task-specific layout should be included.
+  #
+  # Is evaulated at runtime so we must limit the type of functionality supported so we can explictly
+  # set the defaults below the class definition, so when the class is loaded, it defines methods
+  # for each of these functionalities.
+  
+  def self.supported_functionality
+    %w(
+        encounter_specific_treatments
+        encounter_specific_labs
+        tasks 
+        attachments
+      )
+  end
+
+
+
+  # Sub-classes can either override these method to return true or use a declarative option:
+  # supports :something
+  class << self
+    # self is the class from which support :something is being called
+
+    def supports(functionality)
+      raise "Unsupported functionality" unless Event.supported_functionality.include?(functionality.to_s)
+
+      supports_method = %Q{
+        def supports_#{functionality.to_s}?
+          true
+        end
+      }
+
+      # adds method to the calling class so supports_something? and returns true
+      class_eval(supports_method)
+    end #def supports
+  end #class << self
+end
+
+# Define methods for supported event functionality such as
+# supports_tasks? which will return false, allowing subclasses
+# who have defined supports :tasks to override this
+#
+# Must get called outside the class so when class is loaded the code is evaulated
+Event.supported_functionality.each do |functionality|
+  Event.send(:define_method, "supports_#{functionality}?", Proc.new {false})
 end
