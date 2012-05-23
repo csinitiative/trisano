@@ -108,7 +108,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       select_list = ""
       selected_code = ""
 
-      html_options[:onclick] = select_answer_event if follow_ups
+      html_options[:onchange] = select_answer_event if follow_ups
       select_values = []
       get_values(form_elements_cache, question_element).each do |value_hash|
         codes << {:value => value_hash[:value], :code => value_hash[:code]}
