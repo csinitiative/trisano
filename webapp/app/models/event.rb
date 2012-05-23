@@ -665,10 +665,10 @@ class Event < ActiveRecord::Base
   end
 
   private
-  
+
   def expire_parent_record_contacts_cache
     parent=self.parent_event
-    if parent.present? 
+    if parent.present?
       parent.touch
       redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
       redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")
@@ -714,19 +714,19 @@ class Event < ActiveRecord::Base
     parent_disease_event.disease_id = parent_event.disease_event.disease_id
     build_disease_event(parent_disease_event.attributes)
   end
-  
+
   # Indicates whether an event supports something. Generally used by the UI in shared partials
   # to determine whether task-specific layout should be included.
   #
   # Is evaulated at runtime so we must limit the type of functionality supported so we can explictly
   # set the defaults below the class definition, so when the class is loaded, it defines methods
   # for each of these functionalities.
-  
+
   def self.supported_functionality
     %w(
         encounter_specific_treatments
         encounter_specific_labs
-        tasks 
+        tasks
         attachments
       )
   end
