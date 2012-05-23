@@ -19,6 +19,7 @@ class AssessmentEventsController < EventsController
   include EventsHelper
 
   before_filter :load_event_queues, :only => [:index]
+  before_filter :can_promote?, :only => :event_type
 
   def show
     # @event initialized in can_view? filter
@@ -196,5 +197,14 @@ class AssessmentEventsController < EventsController
     @event.address.city = params[:city]
     @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
+  end
+  
+  def can_promote?
+    unless User.current_user.can_create?(@event)
+      render(:partial => 'events/permission_denied',
+             :layout => true,
+             :locals => { :reason => t("no_event_create_privs") },
+             :status => 403) and return
+    end
   end
 end
