@@ -666,16 +666,6 @@ class Event < ActiveRecord::Base
 
   private
 
-  def expire_parent_record_contacts_cache
-    parent=self.parent_event
-    if parent.present?
-      parent.touch
-      redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
-      redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")
-    end
-  end
-
-
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
 

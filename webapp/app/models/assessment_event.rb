@@ -264,6 +264,11 @@ class AssessmentEvent < HumanEvent
   end
 
   private
+  
+  def expire_parent_record_contacts_cache
+    redis.delete_matched("views/events/#{self.id}*")
+  end
+
 
   def generate_mmwr
     mmwr = Mmwr.new({
