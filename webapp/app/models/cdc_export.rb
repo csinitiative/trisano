@@ -31,11 +31,10 @@ class CdcExport < ActiveRecord::Base
           (
             cdc_updated_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}
             AND
-            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year - 1]).untaint})
+            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", start_mmwr.mmwr_year]).untaint})
           )
         )
       END_WHERE_CLAUSE
-
       events = HumanEvent.find_by_sql(modified_record_sql + where_clause)
       events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
@@ -125,7 +124,8 @@ class CdcExport < ActiveRecord::Base
          disease_answers.lengths,
          disease_answers.data_types,
          form_references_counter.core_field_export_count,
-         form_ids_accumulator.form_ids AS disease_form_ids
+         form_ids_accumulator.form_ids AS disease_form_ids,
+         e.event_onset_date
         FROM events e
         INNER JOIN disease_events de ON e.id = event_id
         INNER JOIN participations ip ON (ip.event_id = e.id AND ip.type='InterestedParty')
@@ -207,10 +207,10 @@ class CdcExport < ActiveRecord::Base
         ) ethnic_conversions ON ethnic_codes.the_code = ethnic_conversions.value_from
         INNER JOIN
         (
-          SELECT
+          SELECT 
             x.id as event_id,
-            ARRAY_ACCUM(lab_test_date) as lab_test_dates,
-            ARRAY_ACCUM(collection_date) as lab_collection_dates
+            ARRAY_ACCUM(lab_test_date) as lab_test_dates, 
+            ARRAY_ACCUM(collection_date) as lab_collection_dates 
           FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id

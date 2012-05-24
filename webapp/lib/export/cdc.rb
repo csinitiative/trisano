@@ -322,6 +322,8 @@ module Export
           # the cdc specifies this date, so no localization
           event_date.strftime('%y%m%d')
         end
+#        p event_onset_date.strftime('%y%m%d')
+        event_onset_date.strftime('%y%m%d')
       end
 
       def exp_datetype
