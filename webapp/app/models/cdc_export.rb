@@ -31,10 +31,11 @@ class CdcExport < ActiveRecord::Base
           (
             cdc_updated_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint}
             AND
-            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", start_mmwr.mmwr_year]).untaint})
+            ("MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint} OR "MMWR_year"=#{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year - 1]).untaint})
           )
         )
       END_WHERE_CLAUSE
+
       events = HumanEvent.find_by_sql(modified_record_sql + where_clause)
       events.map!{ |event| event.extend(Export::Cdc::Record) }
       events
@@ -206,10 +207,10 @@ class CdcExport < ActiveRecord::Base
         ) ethnic_conversions ON ethnic_codes.the_code = ethnic_conversions.value_from
         INNER JOIN
         (
-          SELECT 
+          SELECT
             x.id as event_id,
-            ARRAY_ACCUM(lab_test_date) as lab_test_dates, 
-            ARRAY_ACCUM(collection_date) as lab_collection_dates 
+            ARRAY_ACCUM(lab_test_date) as lab_test_dates,
+            ARRAY_ACCUM(collection_date) as lab_collection_dates
           FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id
