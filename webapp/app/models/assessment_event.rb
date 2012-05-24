@@ -37,11 +37,6 @@ class AssessmentEvent < HumanEvent
   }
 
   workflow do
-    state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
-      :note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
-      promote_to_cmr
-      assign_to_lhd
-    end
     # on_entry evaluated at wrong time, so note is attached to meta for :new
     state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
       assign_to_lhd
@@ -231,15 +226,6 @@ class AssessmentEvent < HumanEvent
   
   def promote_to_morbidity_event
     raise(I18n.t("cannot_promote_unsaved_assessment")) if self.new_record?
-
-    # In case the contact is in a state that doesn't exist for a morb
-    if self.not_routed?
-      if self.jurisdiction.place.is_unassigned_jurisdiction?
-        self.promote_as_new
-      else
-        self.promote_as_accepted
-      end
-    end
 
     self['type'] = MorbidityEvent.to_s
     # Pull morb forms
