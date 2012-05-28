@@ -203,6 +203,62 @@ describe HumanEvent, 'age at onset'  do
       event.errors.on(:age_at_onset).should == "must be between 0 and 120. This is usually caused by an incorrect onset date or birth date."
     end
   end
+
+  describe 'set_onset_date before validation' do
+    before do
+      module TestCdcExportAttributes
+        attr_accessor :event_created_at, :first_reported_ph_date, :lab_test_dates, :lab_collection_dates, :disease_onset_date, :disease_event_date_diagnosed
+      end
+      @event = HumanEvent.new
+      @event.extend TestCdcExportAttributes
+    end
+
+    it 'should pick the earliest lab_test_date' do
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:lab_test_date => Date.parse("2011-05-03"))])
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:lab_test_date => Date.parse("2012-01-01"), :collection_date => Date.parse("2011-12-30"))])
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2011-05-03")
+    end
+
+     it 'should pick the earliest lab_collection_date' do
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:lab_test_date => Date.parse("2011-05-03"))])
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:lab_test_date => Date.parse("2012-01-01"), :collection_date => Date.parse("2010-12-30"))])
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2010-12-30")
+     end
+
+    it 'should pick disease_onset_date if present' do
+      @event.build_disease_event(:date_diagnosed => Date.parse("2012-05-01"), :disease_onset_date => Date.parse("2012-05-25"))
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2012-05-25")
+    end
+
+     it 'should pick disease_event_date_diagnosed if present' do
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:lab_test_date => Date.parse("2011-05-03"))])
+      @event.labs << Lab.new(:lab_results => [LabResult.new(:collection_date => Date.parse("2010-12-30"))])
+      @event.build_disease_event(:date_diagnosed => Date.parse("2012-05-25"))
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2012-05-25")
+     end
+
+     it 'should pick first_reported_ph_date over event created date' do
+      @event.created_at =  Date.parse("2011-05-04")
+      @event.first_reported_PH_date = Date.parse("2012-05-04")
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2012-05-04")
+     end
+
+    it 'should pick event_created_at date if nothing present' do
+      @event.created_at =  Date.parse("2011-05-04")
+      @event.valid?
+      @event.event_onset_date.should == Date.parse("2011-05-04")
+    end
+
+    it 'should fallback to today if nothing present' do
+      @event.valid?
+      @event.event_onset_date.should == Date.today
+    end
+  end
 end
 
 describe HumanEvent, 'parent/guardian field' do
