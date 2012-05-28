@@ -309,20 +309,6 @@ module Export
       end
 
       def exp_eventdate
-        event_date = disease_onset_date || date_diagnosed ||
-          pg_earliest_date(lab_collection_dates) ||
-          pg_earliest_date(lab_test_dates) ||
-          first_reported_PH_date || created_at
-        if event_date.blank?
-          return '999999'
-        else
-          unless event_date.kind_of?(Date) || event_date.kind_of?(DateTime) || event_date.kind_of?(Time)
-            event_date = Date.parse(event_date)
-          end
-          # the cdc specifies this date, so no localization
-          event_date.strftime('%y%m%d')
-        end
-#        p event_onset_date.strftime('%y%m%d')
         event_onset_date.strftime('%y%m%d')
       end
 
