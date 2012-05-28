@@ -210,16 +210,6 @@ class Event < ActiveRecord::Base
     @suppressed_validations ||= []
   end
 
-  def export_eventdate
-      #todo:refactor duplicate in cdc.rb
-      event_date = disease_onset_date || disease_event_date_diagnosed ||
-        pg_array(lab_collection_dates).map {|d| Date.parse(d)}.sort.first ||
-        pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first ||
-        first_reported_ph_date || event_created_at
-      return '999999' if event_date.blank?
-      (event_date.is_a?(String) ? Date.parse(event_date) : event_date).strftime('%y%m%d')
-  end
-
   class << self
     include PostgresFu
 
