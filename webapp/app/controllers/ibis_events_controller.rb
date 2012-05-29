@@ -29,8 +29,8 @@ class IbisEventsController < AdminController
       redirect_to ibis_events_path
       return
     end
-    @events_to_export = Event.exportable_ibis_records(start_date, end_date)
-    Event.reset_ibis_status(@events_to_export)
+    @events_to_export = IbisExport.exportable_ibis_records(start_date, end_date)
+    IbisExport.reset_ibis_status(@events_to_export)
     headers['Content-Disposition'] = "Attachment; filename=\"ibis.xml\""
     render :template => "ibis_events/ibis", :layout => false
   end

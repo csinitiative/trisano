@@ -42,7 +42,7 @@ describe CdcExport do
     with_cdc_records(event) do |records|
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
-      Event.reset_ibis_status(samples)
+      IbisExport.reset_ibis_status(samples)
       start_mmwr = Mmwr.new(Date.today - 7)
       end_mmwr = Mmwr.new
       CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).should_not be_empty
@@ -485,7 +485,7 @@ describe CdcExport do
         with_cdc_records do |records|
           samples = records.collect {|record| record[0]}
           CdcExport.reset_sent_status(samples)
-          Event.reset_ibis_status(samples)
+          IbisExport.reset_ibis_status(samples)
           event = records[0][1]
           event.reload
           event.should be_sent_to_cdc
