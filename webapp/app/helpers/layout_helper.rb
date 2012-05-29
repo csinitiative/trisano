@@ -92,14 +92,24 @@ module LayoutHelper
     end
   end
 
+  def render_small_logo
+    returning "" do |result|
+      result << content_tag(:div, :class => "horiz", :id => "logo-container") do
+                  image_tag(small_logo_path, :border => 0, :id => 'logo')
+                end
+    end
+  end
+  
   def render_main_logo
     returning "" do |result|
       result << '<div class="horiz" id="logo-container">'
-      result << link_to(
-        image_tag(main_logo_path, :border => 0, :title => "Return to Dashboard"),
-        home_path, :id => 'logo' )
+      result << image_tag(main_logo_path, :border => 0, :id => 'logo')
       result << '</div>'
     end
+  end
+
+  def small_logo_path
+    'logo_small.png'
   end
 
   def main_logo_path
@@ -124,6 +134,7 @@ module LayoutHelper
   def main_menu_items
     return MenuArray.new unless user = User.current_user
     returning MenuArray.new do |items|
+      items << {:link => home_path, :t => :dashboard}
       if user.is_entitled_to? :create_event
         items << {:link => event_search_cmrs_path, :t => :new_cmr}
         items << {:link => event_search_aes_path, :t => :new_ae}

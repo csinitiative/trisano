@@ -22,6 +22,7 @@ en:
   search: "SEARCH"
   search_normal_case: "Search"
   welcome_message: "Welcome to TriSano"
+  dashboard: "DASHBOARD"
   new_cmr: "NEW CMR"
   new_ae: "NEW AE"
   people: "PEOPLE"
