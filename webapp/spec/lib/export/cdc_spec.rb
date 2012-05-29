@@ -125,25 +125,4 @@ describe 'export/cdc' do
     end
       
   end
-
-#  describe 'exp methods' do
-#    before :each do
-#      class HumanEvent
-#        #attr_accessor :lab_test_dates, :lab_collection_dates, :disease_onset_date, :date_diagnosed
-#        #include Export::Cdc::Record
-#      end
-#    end
-#
-#    it 'should pick the earliest exp_eventdate' do
-#      event = HumanEvent.new
-#      event.lab_test_dates =  " 2012-05-03,2012-05-01,2012-05-05 "
-#      assert_equal "120501", event.send(:resolve_onset_date)
-#    end
-#
-#     it 'should correctly calculate exp_datetype' do
-#      event = HumanEvent.new
-#      event.lab_test_dates =  " 2012-05-03,2012-05-01,2012-05-05 "
-#      assert_equal "3", event.send(:resolve_onset_date)
-#    end
-#  end
 end
