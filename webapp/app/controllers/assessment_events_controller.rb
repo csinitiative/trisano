@@ -99,7 +99,6 @@ class AssessmentEventsController < EventsController
   def edit
     # Via filters above #can_update? is called which loads up @event with the found event.
     # Nothing to do here.
-    render :layout => "ipad"
   end
   
   def update

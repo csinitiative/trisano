@@ -1,7 +1,8 @@
 document.observe('trisano:dom:loaded', function() {
   Trisano.Layout.hookLogoMenu();
+  Trisano.Layout.initiaizeMainMenu();
   Trisano.Layout.hookWindowResize();
-  Trisano.Layout.setMainContentPosition();
+  Trisano.Layout.setMainContentPosition();  //Must go last!!
 });
 
 Trisano.Layout = {
@@ -24,7 +25,10 @@ Trisano.Layout = {
   },
 
   setMainContentPosition: function () {
-      var head_height = $j("#head").height() + 'px';
+      var head_height = $j("#head").height()+ 5 + 'px';
       $j("#main-content").css('top', head_height);
+  },
+
+  initiaizeMainMenu: function() {
   }
 };

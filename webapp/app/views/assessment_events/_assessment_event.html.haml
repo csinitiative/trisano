@@ -25,10 +25,6 @@
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         ="#{t 'assessment_event'}"
-    .tools
-      = basic_human_event_controls(assessment_event, view_mode)
-      = render :partial => 'assessment_events/print_options', :locals => { :event => assessment_event }
-      = extra_tools if (view_mode != :index)
   %td
     %b= h((view_mode == :index) ? assessment_event['disease_name'] : assessment_event.try(:disease).try(:disease).try(:disease_name))
   %td
@@ -65,3 +61,9 @@
       = state_controls(assessment_event)
   %td
     = ld(assessment_event.created_at.to_date)
+%tr
+  %td{:colspan => "5"}
+    .tools
+      = basic_human_event_controls(assessment_event, view_mode)
+      = render :partial => 'assessment_events/print_options', :locals => { :event => assessment_event }
+      = extra_tools if (view_mode != :index)
