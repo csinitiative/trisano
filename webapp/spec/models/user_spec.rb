@@ -123,6 +123,11 @@ describe User do
        @user.update_attribute(:password_last_updated, 12.years.ago)
        @user.password_expires_soon?.should be_false
        @user.password_expired?.should be_false
+
+       SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { } }
+       @user.update_attribute(:password_last_updated, 12.years.ago)
+       @user.password_expires_soon?.should be_false
+       @user.password_expired?.should be_false
      end
   end
 

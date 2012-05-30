@@ -61,7 +61,9 @@ base:
     login_timeout: 30
     #Default is 3 Days
     password_reset_timeout: 4320
+    #Default is 90 days. Set password_expiry_date as zero to disable password expiration.
     password_expiry_date: 90
+    # Default is 14 days. Ignored with password_expiry_date set as zero.
     password_expiry_notice_date: 14
 
   # Customize the way telephone numbers are displayed and validated
