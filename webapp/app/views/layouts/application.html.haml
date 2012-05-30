@@ -120,5 +120,4 @@
               %div{:id => "hidden_switch", :onmouseover => "$('user_id').style.visibility = 'visible'"}
                 = select_tag("user_id", options_for_select(users, User.current_user.uid), :onmouseout => "this.style.visibility = 'hidden'", :onchange => "this.form.submit()", :style => "display: inline; visibility: hidden")
         %div#footnotes_holder
-    =render :partial => "shared/password_expired"
     =fire_document_loaded

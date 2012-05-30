@@ -30,9 +30,13 @@ class UserSessionsController < ApplicationController
       if @user.password_expired?
         flash[:notice] = "Your password has expired. Please set the new password in order to proceed."
         render :template => "password_resets/change"
-       else
-      flash[:notice] = "Successfully logged in."
-      redirect_to home_url
+      else
+        flash[:notice] = "Successfully logged in."
+
+        if @user.password_expires_soon?
+          flash[:notice] += "<br/> Your password will expire in #{config_options[:trisano_auth][:password_expiry_notice_date]} days. Please, click <a href='/change_password'>here</a> to change it."
+        end
+        redirect_to home_url
       end
     else
       render :action => 'new'

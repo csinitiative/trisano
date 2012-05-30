@@ -277,10 +277,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def password_expired?
-    password_last_updated and password_last_updated < (Date.today - 90.days)
-  end
-
   def state_manager?
     is_entitled_to?(:approve_event_at_state)
   end
@@ -317,6 +313,17 @@ class User < ActiveRecord::Base
     else
       !(privs[priv] & event.jurisdiction_entity_ids).empty?
     end
+  end
+
+  def password_expired?
+    return if config_options[:trisano_auth][:password_expiry_date] == 0
+    password_last_updated and password_last_updated < config_options[:trisano_auth][:password_expiry_date].days.ago.to_date
+  end
+
+  def password_expires_soon?
+    return if config_options[:trisano_auth][:password_expiry_date] == 0
+    days_left = config_options[:trisano_auth][:password_expiry_date] - config_options[:trisano_auth][:password_expiry_notice_date]
+    password_last_updated and password_last_updated < days_left.days.ago.to_date
   end
 
   protected

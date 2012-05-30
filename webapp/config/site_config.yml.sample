@@ -61,6 +61,8 @@ base:
     login_timeout: 30
     #Default is 3 Days
     password_reset_timeout: 4320
+    password_expiry_date: 90
+    password_expiry_notice_date: 14
 
   # Customize the way telephone numbers are displayed and validated
   telephone:

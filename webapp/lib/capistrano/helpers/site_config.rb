@@ -47,6 +47,8 @@ module Capistrano::Helpers
       trisano_auth = {}
       trisano_auth['login_timeout'] = safe_fetch :auth_login_timeout
       trisano_auth['password_reset_timeout'] = safe_fetch :password_reset_timeout
+      trisano_auth['password_expiry_date'] = safe_fetch :password_expiry_date
+      trisano_auth['password_expiry_notice_date'] = safe_fetch :password_expiry_notice_date
       config['trisano_auth'] = trisano_auth unless trisano_auth.values.all?(&:nil?)
       config
     end
