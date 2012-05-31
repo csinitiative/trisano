@@ -30,7 +30,7 @@ class UserSessionsController < ApplicationController
       # Because authlogic thinks MySQL's choice to ignore case sensistivity in queries,
       # we as Postgres users must search for user names using this little gem.  Please see:
       # http://rdoc.info/github/binarylogic/authlogic/Authlogic/ActsAsAuthentic/Login/Config#find_by_smart_case_login_field-instance_method
-      user = User.find_by_smart_case_user_name_field(params[:user_session][:user_name])
+      user = User.find_by_smart_case_login_field(params[:user_session][:user_name])
       
       if user.password_expired?
         flash[:notice] = "Your password has expired. Please set the new password in order to proceed."
