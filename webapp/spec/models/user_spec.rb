@@ -109,10 +109,11 @@ describe User do
 
   it "should detect expired password" do
      if User.column_names.include?("crypted_password")
-       @user.update_attribute(:password_last_updated, config_options[:trisano_auth][:password_expiry_date].days.ago - 1.day)
+       SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { :password_expiry_date => 90, :password_expiry_notice_date => 14 } }
+       @user.update_attribute(:password_last_updated, 91.days.ago)
        @user.password_expired?.should be_true
 
-       @user.update_attribute(:password_last_updated, (config_options[:trisano_auth][:password_expiry_date] - config_options[:trisano_auth][:password_expiry_notice_date] + 1).days.ago)
+       @user.update_attribute(:password_last_updated, 80.days.ago)
        @user.password_expires_soon?.should be_true
 
        @user.update_attribute(:password_last_updated, Date.today)
