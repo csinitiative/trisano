@@ -25,8 +25,8 @@ class UserSessionsController < ApplicationController
 
   def create
     @user_session = UserSession.new(params[:user_session])
-    @user = User.find_by_user_name(@user_session.user_name) || User.current_user
     if @user_session.save
+      @user = User.find_by_user_name(params[:user_session][:user_name]) || User.current_user
       if @user.password_expired?
         flash[:notice] = "Your password has expired. Please set the new password in order to proceed."
         render :template => "password_resets/change"
@@ -34,7 +34,7 @@ class UserSessionsController < ApplicationController
         flash[:notice] = "Successfully logged in."
 
         if @user.password_expires_soon?
-          flash[:notice] += "<br/> Your password will expire in #{config_options[:trisano_auth][:password_expiry_notice_date]} days. Please, click <a href='/change_password'>here</a> to change it."
+          flash[:notice] += "<br/> Your password will expire in #{config_options[:trisano_auth][:password_expiry_notice_date]} days. Please, click <a href='#{ change_password_url }'>here</a> to change it."
         end
         redirect_to home_url
       end
