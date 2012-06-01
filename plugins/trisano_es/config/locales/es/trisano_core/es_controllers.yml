@@ -40,8 +40,8 @@ es:
   contact_event_no_create: "Sólo se puede crear contactos desde un evento de morbilidad."
   contact_saved: "Se guardó contacto."
   contact_not_saved: "Contacto no se guardó: {{message}}"
-  could_not_promote_to_morbidity: "No fue posible traspasar a evento de morbilidad."
-  promoted_to_moridity: "Se traspasó el contacto con éxito"
+  could_not_promote_event: "No se puede promover el evento."
+  promoted_to: "Se traspasó {{type}} con éxito"
 
   #Core field configurations
   core_field_configuration_successfully_created: "Se creó la configuración de campo principal con éxito."

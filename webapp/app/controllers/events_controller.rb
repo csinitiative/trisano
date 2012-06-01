@@ -26,6 +26,7 @@ class EventsController < ApplicationController
   before_filter :set_tab_index
   before_filter :update_last_modified_date, :only => [:update]
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
+  before_filter :can_promote?, :only => :event_type
 
   def contacts_search
     page = params[:page] ? params[:page] : 1
@@ -339,6 +340,16 @@ class EventsController < ApplicationController
         flash[:error] = t(:unable_to_change_state_no_edit_privs)
         redirect_to :action => :index
       end
+    end
+  end
+
+  def event_type
+    if promoted_event = @event.promote_to(params[:type])
+      flash[:notice] = t(:promoted_to, :type => params[:type].humanize.downcase)
+      redirect_to @template.event_path(promoted_event)
+    else
+      flash.now[:error] = t("could_not_promote_event")
+      render :action => :edit, :status => :bad_request
     end
   end
 

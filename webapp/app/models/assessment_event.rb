@@ -23,6 +23,7 @@ class AssessmentEvent < HumanEvent
   supports :attachments
   supports :encounter_specific_labs
   supports :encounter_specific_treatments
+  supports :promote_to_morbidity_event
 
   before_save :generate_mmwr
   before_save :initialize_children
@@ -224,30 +225,6 @@ class AssessmentEvent < HumanEvent
      'results_reported_to_clinician_date']
   end
   
-  def promote_to_morbidity_event
-    raise(I18n.t("cannot_promote_unsaved_assessment")) if self.new_record?
-
-    self['type'] = MorbidityEvent.to_s
-    # Pull morb forms
-    if self.disease_event && self.disease_event.disease
-      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
-      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
-    end
-    self.add_note(I18n.translate("system_notes.event_changed_from_assessment_to_morbidity", :locale => I18n.default_locale))
-    self.created_at = Time.now
-
-    if self.save
-
-      EventTypeTransition.create(:event => self, :was => AssessmentEvent, :became => MorbidityEvent, :by => User.current_user)
-
-      self.freeze
-      expire_parent_record_contacts_cache
-      # Return a fresh copy from the db
-      MorbidityEvent.find(self.id)
-    else
-      false
-    end
-  end
 
   private
   

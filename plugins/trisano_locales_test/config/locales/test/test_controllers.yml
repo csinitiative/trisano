@@ -41,7 +41,7 @@ test:
   contact_saved: "xContact saved."
   contact_not_saved: "xContact event not saved: {{messages}}"
   could_not_promote_to_morbidity: "xCould not promote to morbidity event."
-  promoted_to_morbidity: "xSuccessfully promoted to CMR."
+  promoted_to: "xSuccessfully promoted to {{type}}."
 
   # Core field configurations
   core_field_configuration_successfully_created: "xCore field configuration was successfully created."

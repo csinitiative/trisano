@@ -664,6 +664,49 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def promote_to(event_type)
+    method_name = "promote_to_#{event_type}"
+    supports_method_name = "supports_#{method_name}?"
+    if self.send(supports_method_name)
+      return self.send(method_name)
+    else
+      return false
+    end    
+  end
+  
+  def promote_to_morbidity_event
+    raise(I18n.t("cannot_promote_unsaved_event")) if self.new_record?
+
+    # In case the event is in a state that doesn't exist for a morbidity evnet.
+    # Also check that the event type supports the not_routed state. (Assessment Events do not.)
+    if self.respond_to?(:not_routed?) && self.not_routed?
+      if self.jurisdiction.place.is_unassigned_jurisdiction?
+        self.promote_as_new
+      else
+        self.promote_as_accepted
+      end
+    end
+
+    self['type'] = MorbidityEvent.to_s
+    # Pull morb forms
+    if self.disease_event && self.disease_event.disease
+      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
+      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
+    end
+    self.add_note(I18n.translate("system_notes.event_promoted_from_to", :locale => I18n.default_locale, :from => self.type.humanize.downcase, :to => "morbidity event"))
+    self.created_at = Time.now
+
+    if self.save
+      EventTypeTransition.create(:event => self, :was => self.class, :became => MorbidityEvent, :by => User.current_user)
+      self.freeze
+      expire_parent_record_contacts_cache
+      # Return a fresh copy from the db
+      MorbidityEvent.find(self.id)
+    else
+      false
+    end
+  end
+  
   private
 
   def create_form_references
@@ -718,6 +761,7 @@ class Event < ActiveRecord::Base
         encounter_specific_labs
         tasks
         attachments
+        promote_to_morbidity_event
       )
   end
 

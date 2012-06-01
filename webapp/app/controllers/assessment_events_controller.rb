@@ -19,7 +19,6 @@ class AssessmentEventsController < EventsController
   include EventsHelper
 
   before_filter :load_event_queues, :only => [:index]
-  before_filter :can_promote?, :only => :event_type
 
   def show
     # @event initialized in can_view? filter
@@ -168,16 +167,6 @@ class AssessmentEventsController < EventsController
       render :template => 'search/event_search'
     else
       render :template => 'search/event_search', :status => :unprocessable_entity
-    end
-  end
-  
-  def event_type
-    if m_event = @event.promote_to_morbidity_event
-      flash[:notice] = t(:promoted_to_morbidity)
-      redirect_to cmr_path(m_event)
-    else
-      flash.now[:error] = t("could_not_promote_to_morbidity")
-      render :action => :edit, :status => :bad_request
     end
   end
   

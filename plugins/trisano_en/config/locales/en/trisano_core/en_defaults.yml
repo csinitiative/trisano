@@ -220,15 +220,13 @@ en:
     event_edited: "Edited event."
     extra_jurisdictional_view_only_access: "Extra-jurisdictional, view-only access."
     event_derived_from: "Event derived from {{link}}."
-    event_promoted_from_contact: "Promoted from contact."
 
     event_queue_deleted: "Event queue '{{queue_name}}' has been deleted. Event has been moved out of that queue."
     event_needs_reassignment: "Event has not yet been accepted for investigation and should be reassigned."
 
     contact_event_created: "Contact event created."
     contact_event_deleted: "Contact event deleted."
-    event_changed_from_contact_to_morbidity: "Event changed from contact event to morbidity event."
-    event_changed_from_assessment_to_morbidity: "Event changed from assessment event to morbidity event."
+    event_promoted_from_to: "Event promoted from {{from}} to {{to}}."
 
     lab_result_created: "Lab result added.\nLab name: {{lab_name}}\nAccession number: {{accession_no}}"
     lab_result_deleted: "Lab result deleted.\nLab name: {{lab_name}}\nAccession number: {{accession_no}}"
@@ -260,8 +258,7 @@ en:
 
   common_test_type_associated_with_lab_results: "{{name}} already associated with lab results"
   investigator_already_assigned: "Investigator already assigned"
-  cannot_promote_unsaved_contact: "Cannot promote an unsaved contact to a morbidity event"
-  cannot_promote_unsaved_contact: "Cannot promote an unsaved assessment to a morbidity event"
+  cannot_promote_unsaved_event: "Cannot promote an unsaved event."
   loading_disease_group: "Loading disease group {{disease_group}}"
   could_not_remove_form_from_event: "Could not remove a form from an event: {{message}}"
   unable_to_process_new_forms: "Unable to process new forms"

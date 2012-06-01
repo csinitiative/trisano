@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Then /^I should see a link to promote event to a CMR from an assessment$/ do
-  response.should have_selector("a#event-type[href='#{event_type_ae_path(@event)}']")
+  response.should have_selector("a#event-type[href='#{event_type_ae_path(@event)}?type=morbidity_event']")
 end
 
 When /^I promote Jones assessment to a morbidity event$/ do
