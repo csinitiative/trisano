@@ -70,7 +70,10 @@
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
-        =render_small_logo
+        .horiz#logo-container
+          =render_small_logo
+          %span#patient-header
+            =render_patient_summary
         .right
           .areas
             =render_main_menu

@@ -748,6 +748,21 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def patient
+    if self.interested_party.present? &&
+       self.interested_party.person_entity.present? &&
+       self.interested_party.person_entity.person.present? 
+      return interested_party.person_entity.person
+    end
+  end
+  
+  def disease_name
+    if self.disease.present? &&
+       self.disease.disease.present?
+      return disease.disease.disease_name
+    end
+  end
+  
   private
 
   def create_form_references

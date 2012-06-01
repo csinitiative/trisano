@@ -93,11 +93,7 @@ module LayoutHelper
   end
 
   def render_small_logo
-    returning "" do |result|
-      result << content_tag(:div, :class => "horiz", :id => "logo-container") do
-                  image_tag(small_logo_path, :border => 0, :id => 'logo')
-                end
-    end
+    image_tag(small_logo_path, :border => 0, :id => 'logo', :height => "60px", :width => "59px")
   end
   
   def render_main_logo
@@ -120,6 +116,31 @@ module LayoutHelper
     else
       logo_path(logo)
     end
+  end
+
+  def render_patient_summary
+    if defined?(@event) and !@event.new_record? and @event.patient
+      output = "#{@event.patient.last_comma_first} (#{record_number_without_phone})"
+      output << " DOB: #{@event.patient.birth_date.strftime("%m/%d/%Y")}" if @event.patient.birth_date.present?
+      output << "<br/>#{@event.disease_name}" if @event.disease_name.present?
+      output << " (#{@event.state_description})" if @event.state.present?
+    end
+  end
+
+  def record_number_without_phone
+    # Because mobile OSes and browser plugins like Skype
+    # detect 10 digit numbers as phone numbers, it seems the best
+    # way to prevent this type of detection is by putting invisible
+    # span tags in the number. 
+    #
+    # Sadly, this does not stop the Google Voice plugin when you double
+    # click on the number. 
+    arr = @event.record_number.chars.to_a
+    arr.insert(1, "<span>")
+    arr.insert(4, "<span>")
+    arr.insert(6, "</span>")
+    arr << "</span>"
+    arr.join
   end
 
   def render_main_menu

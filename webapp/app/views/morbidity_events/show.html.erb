@@ -19,7 +19,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <%= javascript_include_tag 'pages/cmrs/prefetch_edit.js' %>
 
-<% patient = @event.interested_party.person_entity.person %>
+<% patient = @event.patient %>
 <% patient_name = "#{patient.first_name} #{patient.last_name}" %>
 
 <% content_for :title do %>
