@@ -258,6 +258,7 @@ module EventsHelper
       controls << link_to(t(:add_task), new_event_task_path(event))
       controls << " | " << link_to(t(:add_attachment), new_event_attachment_path(event))
       controls << " | " << link_to(t(:promote_to_cmr), event_type_contact_event_path(event, :type => "morbidity_event"), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
+      controls << " | " << link_to(t(:promote_to_ae), event_type_contact_event_path(event, :type => "assessment_event"), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
     end
 
     controls

@@ -201,13 +201,13 @@ es:
   contact: 'Contacto'
   event_deleted: 'Se Eliminó Evento'
   contact_info: 'Información de Contacto'
-  elevated_to_morbidity_events: 'Se subió a eventos de morbilidad'
+  elevated_to: 'Se subió a eventos {{type}}'
   cmr_contacts: 'Contactos de CMR'
   parent_cmr: 'CMR superior'
   parent_guardian: Padre/Tutor
   parent_patient: 'Paciente Principal'
   parent_event: 'Parent Event (EN)'
-  not_elevated: "No ha sido elevado a un acontecimiento de morbilidad"
+  not_elevated: "No ha sido elevado a un acontecimiento"
   event_sibling_nav:
     navigate_to:      '--- Navigate to...(EN)     ---'
     morbidity_events: '--- Promoted Contacts (EN) ---'
@@ -777,6 +777,7 @@ es:
   confidential_case_report: "'Informe de Caso Confidencial"
   unassigned: "Sin asignación"
   promote_to_cmr: Traspasar a CMR
+  promote_to_ae: Traspasar a AE
   assign_to_queue: Asignar a la cola
   assign_to_investigator: Asignar a investigador/a
   insufficient_privs_transition: Privilegios insuficientes para alterar este evento

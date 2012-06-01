@@ -202,12 +202,12 @@ en:
   contact: 'Contact'
   event_deleted: 'Event Deleted'
   contact_info: 'Contact Information'
-  elevated_to_morbidity_events: 'Elevated to morbidity events'
+  elevated_to: 'Elevated to {{type}}'
   cmr_contacts: 'CMR Contacts'
   parent_cmr: 'Parent CMR'
   parent_patient: Parent Patient
   parent_event: 'Parent Event'
-  not_elevated: "Not yet elevated to morbidity events"
+  not_elevated: "Not yet elevated"
   event_sibling_nav:
     navigate_to:      '--- Navigate to...    ---'
     morbidity_events: '--- Promoted Contacts ---'
@@ -798,6 +798,7 @@ en:
   confidential_case_report: "Confidential Case Report"
   unassigned: "Unassigned"
   promote_to_cmr: Promote to CMR
+  promote_to_ae: Promote to AE
   assign_to_queue: Assign to queue
   assign_to_investigator: Assign to investigator
   insufficient_privs_transition: Insufficient privileges to transition this event

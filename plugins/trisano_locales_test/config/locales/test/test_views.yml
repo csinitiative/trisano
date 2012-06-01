@@ -181,11 +181,11 @@ test:
   contact: 'xContact'
   event_deleted: 'xEvent Deleted'
   contact_info: 'xContact Information'
-  elevated_to_morbidity_events: 'xElevated to morbidity events'
+  elevated_to: 'xElevated to {{type}}'
   cmr_contacts: 'xCMR Contacts'
   parent_cmr: 'xParent CMR'
   parent_patient: xParent Patient
-  not_elevated: "xNot yet elevated to morbidity events"
+  not_elevated: "xNot yet elevated"
   save_button_help: "xClick here to enable the save buttons if they are grayed out when they shouldn't be."
   disable_tabs: xDisable tabs
   enable_tabs: xEnable tabs
@@ -714,6 +714,7 @@ test:
   confidential_case_report: "xConfidential Case Report"
   unassigned: "xUnassigned"
   promote_to_cmr: xPromote to CMR
+  promote_to_ae: xPromote to AE
   assign_to_queue: xAssign to queue
   assign_to_investigator: xAssign to investigator
   insufficient_privs_transition: xInsufficient privileges to transition this event

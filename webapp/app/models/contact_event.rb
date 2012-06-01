@@ -21,6 +21,7 @@ class ContactEvent < HumanEvent
   supports :tasks
   supports :attachments
   supports :promote_to_morbidity_event
+  supports :promote_to_assessment_event
 
   before_create :direct_child_creation_initialization, :add_contact_event_creation_note
     
