@@ -93,7 +93,7 @@ module LayoutHelper
   end
 
   def render_small_logo
-    image_tag(small_logo_path, :border => 0, :id => 'logo', :height => "60px", :width => "59px")
+    image_tag(small_logo_path, :border => 0, :id => 'logo', :height => "45px")
   end
   
   def render_main_logo

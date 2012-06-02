@@ -51,7 +51,7 @@
           - unless @event.assessment_child_events.empty?
             #assessment_child_events
               %fieldset
-                %legend=t 'cmr_contacts'
+                %legend=t 'ae_contacts'
                 %i=t 'elevated_to', :type => 'assessment event'
                 = render :partial => 'events/contacts_show', :locals => { :contacts => @event.assessment_child_events }
 
@@ -65,6 +65,6 @@
           - if @event.parent_event
             #morbidity_parent_event
               %fieldset
-                %legend=t 'parent_cmr'
+                %legend=t 'parent_event'
                 %i=t('this_patient_is_a_contact_of')
                 = render :partial => 'events/parent_contact_show', :locals => { :parent => @event.parent_event, :contact => @event }

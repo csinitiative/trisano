@@ -204,7 +204,8 @@ en:
   contact_info: 'Contact Information'
   elevated_to: 'Elevated to {{type}}'
   cmr_contacts: 'CMR Contacts'
-  parent_cmr: 'Parent CMR'
+  ae_contacts: 'AE Contacts'
+  parent_event: 'Parent Event'
   parent_patient: Parent Patient
   parent_event: 'Parent Event'
   not_elevated: "Not yet elevated"

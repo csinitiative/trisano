@@ -203,7 +203,8 @@ es:
   contact_info: 'Información de Contacto'
   elevated_to: 'Se subió a eventos {{type}}'
   cmr_contacts: 'Contactos de CMR'
-  parent_cmr: 'CMR superior'
+  ae_contacts: 'Contactos de AE'
+  parent_event: 'Evento superior'
   parent_guardian: Padre/Tutor
   parent_patient: 'Paciente Principal'
   parent_event: 'Parent Event (EN)'

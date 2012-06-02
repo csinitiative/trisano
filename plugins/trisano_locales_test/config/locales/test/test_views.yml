@@ -183,7 +183,8 @@ test:
   contact_info: 'xContact Information'
   elevated_to: 'xElevated to {{type}}'
   cmr_contacts: 'xCMR Contacts'
-  parent_cmr: 'xParent CMR'
+  ae_contacts: 'xAE Contacts'
+  parent_event: 'xParent Event'
   parent_patient: xParent Patient
   not_elevated: "xNot yet elevated"
   save_button_help: "xClick here to enable the save buttons if they are grayed out when they shouldn't be."
