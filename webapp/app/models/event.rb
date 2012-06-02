@@ -749,7 +749,8 @@ class Event < ActiveRecord::Base
   end
 
   def patient
-    if self.interested_party.present? &&
+    if self.respond_to?(:interested_party) &&
+       self.interested_party.present? &&
        self.interested_party.person_entity.present? &&
        self.interested_party.person_entity.person.present? 
       return interested_party.person_entity.person
@@ -757,7 +758,8 @@ class Event < ActiveRecord::Base
   end
   
   def disease_name
-    if self.disease.present? &&
+    if self.respond_to?(:disease) &&
+       self.disease.present? &&
        self.disease.disease.present?
       return disease.disease.disease_name
     end

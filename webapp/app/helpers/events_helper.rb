@@ -365,9 +365,9 @@ module EventsHelper
               form << check_box_tag("secondary_jurisdiction_ids[]",
                                     jurisdiction.entity_id,
                                     event.associated_jurisdictions.map(&:place_entity).include?(jurisdiction),
-                                    :id => h(jurisdiction.short_name.tr(" ", "_")),
+                                    :id => h(jurisdiction.short_name.try(:tr, " ", "_")),
                                     :style => "display: inline")
-              form << label_tag(h(jurisdiction.short_name.tr(" ", "_")), h(jurisdiction.short_name), :style => 'display: inline')
+              form << label_tag(h(jurisdiction.short_name.try(:tr, " ", "_")), h(jurisdiction.short_name), :style => 'display: inline')
               form << "<br/>"
             end
             form << "</div></div>"
