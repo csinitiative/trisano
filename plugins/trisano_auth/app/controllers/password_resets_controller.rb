@@ -40,20 +40,6 @@ class PasswordResetsController < ApplicationController
       render :action => :edit  
     end  
   end
-
-   def change
-    @user = User.current_user
-    if request.put?
-      @user.password = params[:user][:password]
-      @user.password_confirmation = params[:user][:password_confirmation]
-      @user.password_last_updated = Date.today
-      if @user.save
-        Rails.logger.info "Successfully reset password for #{@user.inspect}"
-        flash[:notice] = "Password successfully updated"
-        redirect_to home_url
-        end
-      end
-    end
   
   def index
     @users = User.all

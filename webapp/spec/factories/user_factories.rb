@@ -26,9 +26,9 @@ Factory.define :user do |u|
     else
       u.crypted_password "random_pasword_hash"
       u.password_salt "random_password_salt"
-      u.persistence_token "random_token"
-      u.single_access_token "ndom_token"
-      u.perishable_token "ndom_token"
+      u.sequence(:persistence_token)  { |n|  "#{n}_random_token" }
+      u.sequence(:single_access_token) { |n|  "#{n}_random_token" }
+      u.sequence(:perishable_token) { |n|  "#{n}_random_token" }
     end
   end
   u.after_build { |user| User.current_user = user }

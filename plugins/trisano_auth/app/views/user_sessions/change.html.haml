@@ -1,0 +1,20 @@
+-content_for :title do
+  =t('trisano_auth.change_password')
+- form_for @user, :url => change_password_path, :method => :put do |f|
+  = f.error_messages
+  = label_tag :current_password
+  %br
+  = password_field_tag :current_password
+  %br
+  %br
+  = f.label :new_password
+  %br
+  = f.password_field :password 
+  %br
+  %br 
+  = f.label :password_confirmation 
+  %br 
+  = f.password_field :password_confirmation 
+  %br 
+  %br 
+  = f.submit "Update my password and log me in" 
