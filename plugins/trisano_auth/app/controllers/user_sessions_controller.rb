@@ -30,22 +30,37 @@ class UserSessionsController < ApplicationController
       # Because authlogic thinks MySQL's choice to ignore case sensistivity in queries,
       # we as Postgres users must search for user names using this little gem.  Please see:
       # http://rdoc.info/github/binarylogic/authlogic/Authlogic/ActsAsAuthentic/Login/Config#find_by_smart_case_login_field-instance_method
-      user = User.find_by_smart_case_login_field(params[:user_session][:user_name])
+      @user = User.find_by_smart_case_login_field(params[:user_session][:user_name])
       
-      if user.password_expired?
+      if @user.password_expired?
         flash[:notice] = "Your password has expired. Please set the new password in order to proceed."
-        render :template => "password_resets/change"
+        render :template => "user_sessions/change"
       else
         flash[:notice] = "Successfully logged in."
 
-        if user.password_expires_soon?
-          days_to_expiry = user.password_last_updated.mjd - config_options[:trisano_auth][:password_expiry_date].days.ago.to_date.mjd
+        if @user.password_expires_soon?
+          days_to_expiry = @user.password_last_updated.mjd - config_options[:trisano_auth][:password_expiry_date].days.ago.to_date.mjd
           flash[:notice] += "<br/> Your password will expire in #{days_to_expiry} days. Please, click <a href='#{ change_password_url }'>here</a> to change it."
         end
         redirect_to home_url
       end
     else
       render :action => 'new'
+    end
+  end
+
+  def change
+    @user = User.current_user
+    if request.put?
+      @user.password = params[:user][:password]
+      @user.password_confirmation = params[:user][:password_confirmation]
+      @user.password_last_updated = Date.today
+      @user.current_password = params[:current_password]
+      if @user.save
+        Rails.logger.info "Successfully reset password for #{@user.inspect}"
+        flash[:notice] = "Password successfully updated"
+        redirect_to home_url
+      end
     end
   end
 

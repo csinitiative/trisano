@@ -33,10 +33,10 @@ describe User do
     end
 
     it 'should not be valid without a password' do
-      user = User.new(Factory.attributes_for(:user))
-      user.should_not be_valid
-      user.save.should be_false
-      user.errors.empty?.should be_false
+      @user.password = nil
+      @user.should_not be_valid
+      @user.save.should be_false
+      @user.errors.empty?.should be_false
     end
 
     it 'should not be valid without a password confirmation' do
@@ -64,6 +64,25 @@ describe User do
 
     it 'should be valid with a password, and password confirmation' do
       @user.should be_valid
+    end
+
+    it "new password should be different from the old one" do
+       @user.password = "Test1234!"
+       @user.password_confirmation = "Test1234!"
+       @user.save!
+
+       @user.password = "Test1234!"
+       @user.password_confirmation= "Test1234!"
+       @user.valid?.should be_false
+       @user.errors.full_messages.first.should == "New password should be different from the old one."
+    end
+
+    it "should require current password to be supplied on every password change" do
+       @user.password = "Nest1234!"
+       @user.password_confirmation= "Nest1234!"
+       @user.current_password = "Invalid"
+       @user.valid?.should be_false
+       @user.errors.full_messages.first.should == "Current password is invalid."
     end
 
     it 'should not be valid without a password' do
