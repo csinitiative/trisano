@@ -56,12 +56,22 @@ When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_
   click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
+When /^I create a new assessment event from the assessment named (.+)$/ do | last_name |
+  click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit AE using this person"
+end
+
 When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
   click_link_within "#entity_#{@contact_event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
-When /^I search for last_name = "([^\"]*)"$/ do |last_name|
+When /^I search for morbidity events with last_name = "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
+  fill_in "last_name", :with => last_name
+  click_button "Search"
+end
+
+When /^I search for assessment events with last_name = "([^\"]*)"$/ do |last_name|
+  visit event_search_aes_path
   fill_in "last_name", :with => last_name
   click_button "Search"
 end
@@ -88,48 +98,48 @@ Then /^I should see the following values:$/i do |field_values|
   end
 end
 
-When /^I search for last_name = "([^\"]*)" for people entities$/ do |last_name|
+When /^I search for morbidity events last_name = "([^\"]*)" for people entities$/ do |last_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   check "search_people_entities"
   click_button "Search"
 end
 
-When /^I search for last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
+When /^I search for morbidity events with last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "first_name", :with => first_name
   click_button "Search"
 end
 
-When /^I search for last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
+When /^I search for morbidity events with last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
-When /^I search for birth date = "([^\"]*)"$/ do |birth_date|
+When /^I search for morbidity events with birth date = "([^\"]*)"$/ do |birth_date|
   visit event_search_cmrs_path
   fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
-When /^I search for last_name starting with "([^\"]*)"$/ do |last_name|
+When /^I search for morbidity events with last_name starting with "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   check "use_starts_with_search"
   click_button "Search"
 end
 
-When /^I search for first_name starting with "([^\"]*)"$/ do |first_name|
+When /^I search for morbidity events with first_name starting with "([^\"]*)"$/ do |first_name|
   visit event_search_cmrs_path
   fill_in "first_name", :with => first_name
   check "use_starts_with_search"
   click_button "Search"
 end
 
-When /^I search for last_name starting with "([^\"]*)" and first_name starting with "([^\"]*)"$/ do |last_name, first_name|
+When /^I search for morbidity events with last_name starting with "([^\"]*)" and first_name starting with "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "first_name", :with => first_name
@@ -257,7 +267,7 @@ Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
   current_url.should =~ /(\d?)\/edit/
   $1.should_not == @event.id
   $1.should_not == @contact_event.id if @contact_event
-  field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
+  field_with_id("#{@event.type.underscore}_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end
 
 Then /^I should see the following results:$/ do |results|
