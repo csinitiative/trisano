@@ -16,3 +16,10 @@ end
 Given /^a disease specific core field$/i do
   @core_field = Factory.create(:cmr_core_field, :disease_specific => true)
 end
+
+When /^I edit a (.*) event core field and add help text that says '(.*)'$/ do |event_type, help_text|
+  core_field = CoreField.event_fields("#{event_type}_event").values.first
+  visit edit_core_field_path(core_field)
+  fill_in :core_field_help_text, :with => help_text
+  click_button "Update"
+end
