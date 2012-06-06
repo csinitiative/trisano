@@ -36,7 +36,7 @@ module TrisanoAuth
         menu.each do |section|
           if section.first == :general
             section.second << link_to(t("trisano_auth.api_key"), api_key_path)
-            section.second << link_to(t("trisano_auth.change_password"), change_password_url)
+            section.second << link_to(t("trisano_auth.change_password"), change_password_path)
           end
         end
       end

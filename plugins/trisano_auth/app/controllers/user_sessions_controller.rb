@@ -40,7 +40,7 @@ class UserSessionsController < ApplicationController
 
         if @user.password_expires_soon?
           days_to_expiry = @user.password_last_updated.mjd - config_options[:trisano_auth][:password_expiry_date].days.ago.to_date.mjd
-          flash[:notice] += "<br/> Your password will expire in #{days_to_expiry} days. Please, click <a href='#{ change_password_url }'>here</a> to change it."
+          flash[:notice] += "<br/> Your password will expire in #{days_to_expiry} days. Please, click <a href='#{ change_password_path }'>here</a> to change it."
         end
         redirect_to home_url
       end
