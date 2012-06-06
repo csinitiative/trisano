@@ -9,7 +9,7 @@ Feature: Editing contacts on morbidity events
       And the morbidity event has the following contacts:
         | last_name | first_name |
         | Davis     | James      |
-     When I navigate to the event edit page
+     When I navigate to the morbidity event edit page
       And I select "Not infected" from "Disposition"
       And I enter a valid disposition date of 2 days ago
       And I press "Save & Exit"
@@ -22,7 +22,7 @@ Feature: Editing contacts on morbidity events
     When I enter a valid disposition date of 3 days ago
       And I press "Save & Exit"
     Then the disposition date of 3 days ago should be visible in show format
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     When I print the morbidity event with "All"
     Then I should see "Not infected"
     And the disposition date of 3 days ago should be visible in print format

@@ -10,7 +10,7 @@ Feature: Event treatment fields
         | rubbings       |
         | leeches        |
         | bleeding       |
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     Then I should see "rubbings"
       And I should see "leeches"
       And I should see "bleeding"
@@ -25,7 +25,7 @@ Feature: Event treatment fields
         | rubbings       |
         | leeches        |
         | bleeding       |
-    When I am on the event edit page
+    When I am on the morbidity event edit page
       And I follow "Show Contact"
     Then I should see "rubbings"
       And I should see "leeches"
@@ -39,7 +39,7 @@ Feature: Event treatment fields
         | rubbings       |
         | leeches        |
         | bleeding       |
-    When I am on the event edit page
+    When I am on the morbidity event edit page
     Then I should see "rubbings"
      And I should see "leeches"
      And I should see "bleeding"

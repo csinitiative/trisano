@@ -10,7 +10,7 @@ Feature: Reordering entities
       | Leeches        | true    |
       | Whiskey        | true    |
       | Cornbread      | true    |
-    And I am on the event edit page
+    And I am on the morbidity event edit page
     When I move the treatment "Cornbread" to the top
     And I move the treatment "Whiskey" up
     And I save and continue
@@ -26,7 +26,7 @@ Feature: Reordering entities
       | OneContact     |
       | TwoContact    |
       | ThreeContact    |
-    And I am on the event edit page
+    And I am on the morbidity event edit page
     When I move the contact "ThreeContact" to the top
     And I move the contact "TwoContact" up
     And I save and continue
@@ -40,7 +40,7 @@ Feature: Reordering entities
     Given there is a place on the event named OnePlace
     And there is a place on the event named TwoPlace
     And there is a place on the event named ThreePlace
-    And I am on the event edit page
+    And I am on the morbidity event edit page
     When I move the place "ThreePlace" to the top
     And I move the place "TwoPlace" up
     And I save and continue
@@ -56,7 +56,7 @@ Feature: Reordering entities
         | TestTypeOne |
         | TestTypeTwo |
         | TestTypeThree |
-    And I am on the event edit page
+    And I am on the morbidity event edit page
     When I move the lab result "TestTypeThree" to the top
     And I move the place "TestTypeTwo" up
     And I save and continue
@@ -67,7 +67,7 @@ Feature: Reordering entities
     Then the lab results should be ordered TestTypeOne, TestTypeTwo, TestTypeThree
 
   Scenario: Ordering labs without filling in lab info should not cause a validation error
-    Given I am on the event edit page
+    Given I am on the morbidity event edit page
     And I click the arrows on an empty lab result
     And I save and continue
     Then I should not see "There were problems with the following fields"

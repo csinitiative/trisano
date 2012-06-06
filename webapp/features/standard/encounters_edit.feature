@@ -11,7 +11,7 @@ Feature: Editing encounters
 
   Scenario: Updating an event w/ encounters just forwarded from another jurisdiction
     Given I am logged in as "alice"
-    When I go to the event edit page
+    When I go to the morbidity event edit page
     And I save the event
     Then I should see "joe" in the encounters table
     And I should not see "alice" in the encounters table

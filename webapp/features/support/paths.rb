@@ -78,7 +78,7 @@ def path_to(page_name)
   when /edit the CMR/i
     edit_cmr_path @event
 
-  when /the event edit page/i
+  when /the morbidity event edit page/i
     edit_cmr_path @event
 
   when /show the CMR with record number "(\d*)"/

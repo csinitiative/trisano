@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When(/^I navigate to the new event page and start a simple event$/) do
+When(/^I navigate to the new morbidity event page and start a simple event$/) do
   @browser.open "/trisano/cmrs/new"
   add_demographic_info(@browser, { :last_name => get_unique_name })
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
@@ -26,19 +26,19 @@ When /^I go to the new CMR page$/ do
   @browser.wait_for_page_to_load
 end
 
-When(/^I navigate to the event edit page$/) do
+When(/^I navigate to the morbidity event edit page$/) do
   @browser.click "link=EVENTS"
   @browser.wait_for_page_to_load $load_time
   @browser.click "link=Edit"
   @browser.wait_for_page_to_load $load_time
 end
 
-When(/^I am on the event edit page$/) do
+When(/^I am on the morbidity event edit page$/) do
   @browser.open "/trisano/cmrs/#{(@event).id}/edit"
   @browser.wait_for_page_to_load
 end
 
-When(/^I am on the event show page$/) do
+When(/^I am on the morbidity event show page$/) do
   @browser.open "/trisano/cmrs/#{(@event).id}"
   @browser.wait_for_page_to_load
 end
@@ -46,7 +46,7 @@ end
 # Consider refactoring the name of this one -- it really isn't
 # navigating, it's more like a "when I am on" -- doesn't 'I am on'
 # imply a verification that you are already there?
-When(/^I navigate to the event show page$/) do
+When(/^I navigate to the morbidity event show page$/) do
   @browser.open "/trisano/cmrs/#{(@event).id}"
   @browser.wait_for_page_to_load
 end

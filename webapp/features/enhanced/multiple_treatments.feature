@@ -28,7 +28,7 @@ Feature: Adding multiple treatments to a CMR
         | treatment_name | default |
         | Leeches        | true    |
         | Whiskey        | true    |
-      And I am on the event edit page
+      And I am on the morbidity event edit page
      When I remove treatment "Whiskey"
       And I press "Save & Exit"
       And I wait for the page to load

@@ -8,7 +8,7 @@ Feature: Routing events through a set workflow.
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     And that event has been sent to the state
     
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And the event status is "Approved by Local Health Dept."
     And I click the "Reopen" radio
     And I wait for the page to load

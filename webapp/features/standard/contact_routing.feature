@@ -6,7 +6,7 @@ Feature: Routing contacts
 
   Scenario: Creating a contact should put it in an "inactive" state
     Given I am logged in as a super user
-     When I navigate to the new event page
+     When I navigate to the new morbidity event page
       And I create an event with a contact
       And I click the "Show contact" link
      Then I should see "Not Participating in Workflow"

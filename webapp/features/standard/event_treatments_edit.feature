@@ -66,7 +66,7 @@ Features: Editing treatments on events
     When I go to edit the CMR
       And I select "Leeches" from "morbidity_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
       And I save the event
-      And I navigate to the event show page
+      And I navigate to the morbidity event show page
     Then I should see "Leeches"
       And I should not see "Rubbings"
       And I should not see "Foot massage"
@@ -83,11 +83,11 @@ Features: Editing treatments on events
         | Foot massage   | true   | true    |
         | Leeches        | true   | true    |
         | Garlic         | false  | true    |
-    When I am on the event edit page
+    When I am on the morbidity event edit page
       And I follow "Edit Contact"
       And I select "Leeches" from "contact_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
       And I save the contact event
-      And I am on the event edit page
+      And I am on the morbidity event edit page
       And I follow "Show Contact"
     Then I should see "Leeches"
       And I should not see "Rubbings"
@@ -103,11 +103,11 @@ Features: Editing treatments on events
         | Foot massage   | true   | true    |
         | Leeches        | true   | true    |
         | Garlic         | false  | true    |
-    When I am on the event edit page
+    When I am on the morbidity event edit page
       And I follow "Edit Encounter"
       And I select "Leeches" from "encounter_event[interested_party_attributes][treatments_attributes][0][treatment_id]"
       And I save the encounter event
-      And I am on the event edit page
+      And I am on the morbidity event edit page
       And I follow "Show Encounter"
     Then I should see "Leeches"
       And I should not see "Rubbings"

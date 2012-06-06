@@ -20,7 +20,7 @@ Feature: Attaching documents to an Event.
     And a simple morbidity event in jurisdiction Davis County for last name Simpson
     And a file attachment named "test-attachment"
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I click and confirm the attachment "Delete" link
     And I wait a few seconds
         

@@ -7,7 +7,7 @@ Feature: Managing clinicians on events
     Given I am logged in as a super user
     And there is a clinician
 
-    When I navigate to the new event page and start a simple event
+    When I navigate to the new morbidity event page and start a simple event
     And I add an existing clinician
     And I click remove for that clinician
     Then I should not see the clinician
@@ -17,7 +17,7 @@ Feature: Managing clinicians on events
     And I save the event
     Then I should see all added clinicians
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I check a clinician to remove
     And I save the event
     Then I should not see the removed clinician
@@ -27,7 +27,7 @@ Feature: Managing clinicians on events
     And there is a clinician
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I add an existing clinician
     And I add a new clinician
     And I save the event
@@ -38,6 +38,6 @@ Feature: Managing clinicians on events
     And a deleted clinician exists with a name similar to another clinician
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then I should not see the deleted clinician
 

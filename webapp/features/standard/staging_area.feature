@@ -87,7 +87,7 @@
     And  I should see a note for the assigned lab
     And  I should see a link back to the staged message
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then I should see a link back to the staged message
 
   Scenario: Assigning lab result to found contact event

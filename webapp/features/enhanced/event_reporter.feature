@@ -9,7 +9,7 @@ Feature: Adding and removing existing reporters on a CMR
       And the event has a reporter
       
   Scenario: Add and removing existing reporters
-    When I navigate to the new event page and start a simple event
+    When I navigate to the new morbidity event page and start a simple event
      And I select a reporter from the reporter drop down
     Then I should see the reporter on the page
     When I click on the remove reporter link

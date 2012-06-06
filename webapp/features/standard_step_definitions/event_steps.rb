@@ -164,15 +164,15 @@ When /^I visit the events index page$/ do
   visit cmrs_path({})
 end
 
-When(/^I navigate to the event edit page$/) do
+When(/^I navigate to the morbidity event edit page$/) do
   visit edit_cmr_path(@event)
 end
 
-When(/^I navigate to the event show page$/) do
+When(/^I navigate to the morbidity event show page$/) do
   visit cmr_path(@event)
 end
 
-When(/^I navigate to the new event page$/) do
+When(/^I navigate to the new morbidity event page$/) do
   visit new_cmr_path
 end
 

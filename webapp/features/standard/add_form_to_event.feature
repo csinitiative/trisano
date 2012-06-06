@@ -12,14 +12,14 @@ Feature: Adding forms to events
 
   Scenario: Morbidity event form add as admin
     Given I am logged in as a super user
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I click the "Add/Remove forms for this event" link
     Then I should see a checkbox to add the form
     And I should see the "Add Forms" button
     
   Scenario: Morbidity event form add as investigator
     Given I am logged in as an investigator
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I click the "Add/Remove forms for this event" link
     Then I should see a checkbox to add the form
     And I should see the "Add Forms" button
@@ -33,7 +33,7 @@ Feature: Adding forms to events
 
   Scenario: Morbidity event form add as investigator without checking a form to add
     Given I am logged in as an investigator
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I click the "Add/Remove forms for this event" link
     Then I should see a checkbox to add the form
     And I should see the "Add Forms" button
@@ -46,7 +46,7 @@ Feature: Adding forms to events
 
   Scenario: Morbidity event form add as data entry tech
     Given I am logged in as a data entry tech
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I click the "Add/Remove forms for this event" link
     Then I should see "You do not have rights to add/remove forms."
 

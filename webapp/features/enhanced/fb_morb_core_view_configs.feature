@@ -9,7 +9,7 @@ Feature: Morbidity event form core view configs
     And that form has core view configs configured for all core views
     And that form is published
     And a morbidity event exists with a disease that matches the form
-    When I am on the event edit page
+    When I am on the morbidity event edit page
     Then I should see all of the core view config questions
 
     When I answer all core view config questions
