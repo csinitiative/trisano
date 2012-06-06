@@ -863,6 +863,7 @@ es:
   searching: Buscando....
   event_search_results:
     morbidity_event: CMR
+    assessment_event: AE
     contact_event: Contacto
 
   #staging_area

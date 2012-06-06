@@ -54,9 +54,9 @@ ActionController::Routing::Routes.draw do |map|
   map.calendar 'calendar/:year/:month', :controller => 'dashboard', :action => 'calendar', :month => Time.now.month, :year => Time.now.year
 
   map.with_options :controller => 'search' do |search|
-    search.search_cmrs   'search/cmrs',           :action => 'cmrs'
-    search.cmrs_format   'search/cmrs.:format',   :action => 'cmrs'
-    search.search        'search',                :action => 'cmrs'
+    search.search_events   'search/events',           :action => 'events'
+    search.events_format   'search/events.:format',   :action => 'events'
+    search.search        'search',                :action => 'events'
   end
 
   map.settings 'users/settings', :controller => 'users', :action => 'settings'

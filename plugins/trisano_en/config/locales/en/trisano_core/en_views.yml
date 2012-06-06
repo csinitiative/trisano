@@ -778,7 +778,7 @@ en:
   morbidity_event: "Morbidity Event"
   assessment_event: "Assessment Event"
   morbidity_events: "Morbidity Events"
-  assessement_events: "Assessment Events"
+  assessment_events: "Assessment Events"
   contact_events: "Contact Events"
   place_events: "Place Events"
   encounter_events: "Encounter Events"
@@ -888,7 +888,7 @@ en:
   searching: Searching...
   event_search_results:
     morbidity_event: CMR
-    assessement_event: AE
+    assessment_event: AE
     contact_event: Contact
 
   #staging_area

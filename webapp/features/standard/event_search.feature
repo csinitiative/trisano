@@ -5,7 +5,7 @@ Feature: Searching for Events using core fields for criteria.
   As an investigator
   I want to be able to search for events based on a number of criteria
 
-  Scenario: Searching for an event by record number
+  Scenario: Searching for a morbidity event by record number
     Given a morbidity event with the record number 300000000000001
     And another morbidity event
     And I am logged in as a super user
@@ -14,7 +14,18 @@ Feature: Searching for Events using core fields for criteria.
     And I enter 300000000000001 into the record number search field
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
+
+  Scenario: Searching for an assessment event by record number
+    Given a assessment event with the record number 300000000000001
+    And another assessment event
+    And I am logged in as a super user
+
+    When I navigate to the event search form
+    And I enter 300000000000001 into the record number search field
+    And I submit the search
+
+    Then I should receive 1 matching assessment record
 
   Scenario: Searching for an event by pregancy status
     Given a morbidity event with a pregnant patient
@@ -25,7 +36,7 @@ Feature: Searching for Events using core fields for criteria.
     And I select "Yes" from "pregnant_id"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for an event by state case status
     Given a morbidity event with a state status "Confirmed"
@@ -36,7 +47,7 @@ Feature: Searching for Events using core fields for criteria.
     And I select "Confirmed" from "State case status"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for an event by local health department status
     Given a morbidity event with a LHD status "Probable"
@@ -47,7 +58,7 @@ Feature: Searching for Events using core fields for criteria.
     And I select "Probable" from "LHD case status"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for events sent to CDC
     Given a morbidity event that has been sent to the CDC
@@ -57,7 +68,7 @@ Feature: Searching for Events using core fields for criteria.
     And I select "Yes" from "sent_to_cdc"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for events by date first reported to public health
     Given a morbidity event first reported on "December 12th, 2008"
@@ -69,7 +80,7 @@ Feature: Searching for Events using core fields for criteria.
     And I fill in "first_reported_PH_date_end" with "1/2/2009"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for events by investigator
     Given a morbidity event investigated by "investigator"
@@ -80,7 +91,7 @@ Feature: Searching for Events using core fields for criteria.
     And I select "investigator" from "Investigated by"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for events by 'other data 1' field
     Given a morbidity event with "other_data_1" set to "blah"
@@ -91,7 +102,7 @@ Feature: Searching for Events using core fields for criteria.
     And I fill in "other_data_1" with "blah"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for events by 'other data 2' field
     Given a morbidity event with "other_data_2" set to "blah"
@@ -102,7 +113,7 @@ Feature: Searching for Events using core fields for criteria.
     And I fill in "other_data_2" with "blah"
     And I submit the search
 
-    Then I should receive 1 matching record
+    Then I should receive 1 matching CMR record
 
   Scenario: Searching for an event w/ fulltext
     Given a simple morbidity event in jurisdiction Unassigned for last name Jones

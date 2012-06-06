@@ -197,7 +197,7 @@ en:
   cmr_saved: "CMR saved."
   ae_saved: "AE saved."
   morbidity_event_not_saved: "Morbidity Event not saved: {{message}}"
-  assessement_event_not_saved: "Assessment Event not saved: {{message}}"
+  assessment_event_not_saved: "Assessment Event not saved: {{message}}"
   unable_to_process_search: "Unable to process search. Is birth date a valid date?"
   too_many_cmrs: "TriSano cannot process more then 100 cmrs per page."
 
