@@ -179,7 +179,7 @@ if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISAN
     for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
         if [ -r $plugin/avr/etl.sql ] ; then
             echo "Found ETL file for $plugin"
-            $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
+            $PSQL $PSQL_FLAGS -h $DEST_DB_HOST \
                 -p $DEST_DB_PORT -U $DEST_DB_USER \
                 -f $plugin/avr/etl.sql $DEST_DB_NAME || \
                 DIE "Error running ETL for plugin $plugin"
@@ -200,7 +200,7 @@ if [[ -n $TRISANO_PLUGIN_DIRECTORY && -d $TRISANO_PLUGIN_DIRECTORY && -r $TRISAN
     for plugin in $TRISANO_PLUGIN_DIRECTORY/*; do
         if [ -r $plugin/avr/post-etl.sql ] ; then
             echo "Found post-ETL file for $plugin"
-            $PGSQL_PATH/psql $PSQL_FLAGS -h $DEST_DB_HOST \
+            $PSQL $PSQL_FLAGS -h $DEST_DB_HOST \
                 -p $DEST_DB_PORT -U $DEST_DB_USER \
                 -f $plugin/avr/post-etl.sql $DEST_DB_NAME || \
                 DIE "Error running post-ETL for plugin $plugin"
