@@ -23,6 +23,7 @@ class MorbidityEvent < HumanEvent
   supports :attachments
   supports :encounter_specific_labs
   supports :encounter_specific_treatments
+  supports :child_events
 
   before_save :generate_mmwr
   before_save :initialize_children

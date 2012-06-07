@@ -15,6 +15,7 @@ class PopulateAssessmentEventCoreFields < ActiveRecord::Migration
           CoreField.load!([field]) if field['event_type'] == "assessment_event"
         end
 
+        # Because we don't want to JUST load defaults, we'll also migrate everything from MorbidityEvents
         morbidity_core_fields = CoreField.find(:all, :conditions => ["event_type = ?", "morbidity_event"])
 
         morbidity_core_fields.each do |field|

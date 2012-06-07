@@ -104,8 +104,8 @@ class Event < ActiveRecord::Base
     :order => "created_at ASC"
 
   named_scope :active, :conditions => ['deleted_at IS NULL']
-  named_scope :morbs_or_contacts,
-    :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)],
+  named_scope :root_level_events,
+    :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent AssessmentEvent)],
     :order => "created_at ASC"
 
   named_scope :sensitive, lambda { |user|
@@ -821,6 +821,7 @@ class Event < ActiveRecord::Base
         attachments
         promote_to_morbidity_event
         promote_to_assessment_event
+        child_events
       )
   end
 

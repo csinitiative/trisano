@@ -24,6 +24,7 @@ class AssessmentEvent < HumanEvent
   supports :encounter_specific_labs
   supports :encounter_specific_treatments
   supports :promote_to_morbidity_event
+  supports :child_events
 
   before_save :generate_mmwr
   before_save :initialize_children
