@@ -17,16 +17,16 @@
 
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe "search/cmrs.csv.haml" do
+describe "search/events.csv.haml" do
   
   before(:each) do    
     cmr = mock("record_1")
-    assigns[:cmrs] = [cmr, cmr]
+    assigns[:events] = [cmr, cmr]
   end
 
   it "should render a csv template of events" do
     template.expects(:render_events_csv)
-    render "search/cmrs.csv.haml"
+    render "search/events.csv.haml"
   end
 
 end

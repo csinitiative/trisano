@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 # DEBT: only testing the availability of fields, not the layout
-describe "search/cmrs.html.haml" do
+describe "search/events.html.haml" do
   include Trisano::HTML::Matchers
 
   def assert_in_search_group(&block)
@@ -56,7 +56,7 @@ describe "search/cmrs.html.haml" do
   def do_render(options={})
     default_assigns
     options.each { |k, v| assigns[k] = v }
-    render "search/cmrs.html.haml"
+    render "search/events.html.haml"
   end
 
   it "renders search fields if user can view events" do

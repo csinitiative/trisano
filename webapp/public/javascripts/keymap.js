@@ -29,7 +29,7 @@ keymap = {
   },
 
   'cmr_search': function() {
-    window.location = joinAndPreserveLocale(this.root, "search/cmrs");
+    window.location = joinAndPreserveLocale(this.root, "search/events");
   },
 
   'cmrs': function() {

@@ -7563,7 +7563,7 @@ function global_shortcuts_init() {
   });
 
   shortcut.add("Ctrl+Shift+Question",function(){
-    window.location = "/search/cmrs";
+    window.location = "/search/events";
   });
 
   shortcut.add("Ctrl+Shift+,",function(){
