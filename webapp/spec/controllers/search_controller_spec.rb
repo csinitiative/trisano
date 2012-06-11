@@ -21,13 +21,13 @@ describe SearchController do
     end
 
     it "does not return sensitive diseases if the user doesn't have that privilege" do
-      get "cmrs", nil, {:user_id => @user.uid}
+      get "events", nil, {:user_id => @user.uid}
       assigns[:diseases].should == @diseases[0,1]
     end
 
     it "returns sensitive diseases if the user has that privilege" do
       @role.privileges << (Privilege.find_by_priv_name("access_sensitive_diseases") || Factory(:privilege, :priv_name => "access_sensitive_diseases"))
-      get "cmrs", nil, {:user_id => @user.uid}
+      get "events", nil, {:user_id => @user.uid}
       assigns[:diseases].should == @diseases
     end
   end
