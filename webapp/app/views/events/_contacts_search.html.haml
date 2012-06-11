@@ -83,8 +83,8 @@
           %td
             -if results_action == 'new'
               = link_to(I18n.t(:create_contact_event_this_person), contact_events_path(:from_person => result['entity_id'], :parent_id => params[:parent_id]), :method => :post)
-            - elsif results_action == 'add'
-              - fields_for(:morbidity_event, MorbidityEvent.new, :builder => ExtendedFormBuilder) do |f|
+            - elsif results_action == 'add' && @event.present?
+              - fields_for(@event.type.underscore.to_sym, @event.class.new, :builder => ExtendedFormBuilder) do |f|
                 - contact_event = ContactEvent.new
                 - contact_event.build_interested_party(:primary_entity_id => result['entity_id'])
                 - contact_event.build_participations_contact
