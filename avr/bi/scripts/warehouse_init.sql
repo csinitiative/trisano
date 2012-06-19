@@ -905,6 +905,7 @@ DECLARE
     insert_cols_clause      TEXT;
     tmprec                  RECORD;
     tmptext                 TEXT;
+    tmpint                  INTEGER;
     tmpbool                 BOOLEAN;
     done                    BOOLEAN;
 BEGIN
@@ -1009,6 +1010,8 @@ BEGIN
 
             -- The loop takes care of columns with different short_names that reduce to
             -- the same safe name
+            tmptext := question_name;
+            tmpint := 1;
             <<add_column>>
             LOOP
                 done := TRUE;
@@ -1025,8 +1028,9 @@ BEGIN
                     END IF;
                 EXCEPTION
                     WHEN unique_violation THEN
-                        question_name := question_name || '1';
-                    done := FALSE;
+                        question_name := tmptext || tmpint::TEXT;
+                        tmpint := tmpint + 1;
+                        done := FALSE;
                 END;
                 IF done THEN
                     EXIT add_column;
