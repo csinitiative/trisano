@@ -25,6 +25,12 @@ module CsvSpecHelper
   end
 
   def csv_mock_disease
+    assessment_question = Factory.build(:question)
+    assessment_question.stubs(:short_name).returns("assessment_q")
+
+    assessment_form = Factory.build(:form)
+    assessment_form.stubs(:exportable_questions).returns([assessment_question])
+
     morbidity_question = Factory.build(:question)
     morbidity_question.stubs(:short_name).returns("morb_q")
 
@@ -33,6 +39,7 @@ module CsvSpecHelper
 
     d = Factory.build(:disease)
     d.stubs(:live_forms).with("MorbidityEvent").returns([morbidity_form])
+    d.stubs(:live_forms).with("AssessmentEvent").returns([assessment_form])
     d.stubs(:live_forms).with("ContactEvent").returns([])
     d.stubs(:live_forms).with("PlaceEvent").returns([])
 
@@ -73,6 +80,8 @@ module CsvSpecHelper
   def lead_in(event_type)
     case event_type
     when :morbidity
+      "patient"
+    when :assessment
       "patient"
     when :contact
       "contact"
@@ -164,7 +173,7 @@ module CsvSpecHelper
       header_array << "#{lead_in}_risk_factors_notes"
       header_array << "#{lead_in}_imported_from"
 
-      if event_type == :morbidity
+      if event_type == :morbidity || event_type == :assessment
         header_array << "patient_reporting_agency"
         header_array << "patient_reporter_last_name"
         header_array << "patient_reporter_first_name"
@@ -213,6 +222,8 @@ module CsvSpecHelper
     out << '"",'
     out << '"",'
     out << '"",'
+
+    #trisano_ee monkeypatches this method here to add address_latitude and address_longitude
 
     out << "#{@person.birth_date},"
     out << "#{@person.approximate_age_no_birthday},"
@@ -263,7 +274,7 @@ module CsvSpecHelper
     out << '"",'
     out << '"",'
     out << "#{m.imported_from.code_description},"
-    if event_type == :morbidity
+    if event_type == :morbidity || event_type == :assessment
       out << '"",'
       out << '"",'
       out << '"",'
@@ -293,7 +304,6 @@ module CsvSpecHelper
       out << "#{m.other_data_2},"
       out << "#{Time.parse(m.created_at).strftime('%Y-%m-%d %H:%M')},"
       out << "#{Time.parse(m.updated_at).strftime('%Y-%m-%d %H:%M')},"
-
       if options[:disease]
         out << "#{m.answers[0].text_answer}"
       end
@@ -377,13 +387,17 @@ module CsvSpecHelper
       a.stubs(:short_name).returns('morb_q')
       m = Factory.build(:morbidity_event)
       m.stubs(:answers).returns([a])
+    elsif event_type == :assessment
+      a = Factory.build(:answer, :text_answer => 'assessment_q answer')
+      a.stubs(:short_name).returns('assessment_q')
+      m = Factory.build(:assessment_event)
+      m.stubs(:answers).returns([a])
     elsif event_type == :contact
       m = Factory.build(:contact_with_disease)
       m.stubs(:participations_contact).returns(@contact)
     else
       m = Factory.build(:place_event)
     end
-
     m.stubs(:id).returns(1)
     m.stubs(:address).returns(nil)
     m.stubs(:record_number).returns("20080001")
@@ -430,7 +444,7 @@ module CsvSpecHelper
     m.stubs(:other_data_1).returns('First Other Data')
     m.stubs(:other_data_2).returns('Second Other Data')
     m.stubs(:deleted_at).returns(nil)
-
+    
     @common_test_type = Factory.build(:common_test_type)
     @common_test_type.stubs(:common_name).returns("Biopsy")
 
@@ -452,8 +466,8 @@ module CsvSpecHelper
     @lab_result.stubs(:lab_test_date).returns("2008-02-02")
     @lab_result.stubs(:specimen_sent_to_state).returns(simple_reference)
     m.stubs(:lab_results).returns([@lab_result])
-
     m.stubs(:reload).returns(m)
     m
+
   end
 end
