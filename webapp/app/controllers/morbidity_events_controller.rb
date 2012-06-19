@@ -210,6 +210,7 @@ class MorbidityEventsController < EventsController
       @export_options = params[:export_options]
 
       query_options = {
+        :event_types => params[:event_types],
         :states => params[:states],
         :queues => params[:queues],
         :investigators => params[:investigators],

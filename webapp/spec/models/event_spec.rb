@@ -854,6 +854,15 @@ describe MorbidityEvent do
 
     it 'should filter by state and the other attributes' do
       a = MorbidityEvent.create(@event_hash)
+      a.save!
+
+      MorbidityEvent.find_all_for_filtered_view(@search_hash).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:event_types => [])).size.should == 1
+      MorbidityEvent.find_all_for_filtered_view(@search_hash.merge!(:event_types => ["AssessmentEvent"])).size.should == 0
+    end
+
+    it 'should filter by state and the other attributes' do
+      a = MorbidityEvent.create(@event_hash)
       a.workflow_state = 'closed'
       a.save!
 

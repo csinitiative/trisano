@@ -1,4 +1,5 @@
 en:
+  event_types: "Event Types"
   include_repeating_aspects: "Include these repeating aspects in the export"
   trisano_title: "TriSano"
   view_edit_cmrs: "View/Edit CMRs"

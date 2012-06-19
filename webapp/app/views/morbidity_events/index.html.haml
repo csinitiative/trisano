@@ -32,6 +32,16 @@
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do
     %span.horiz
+      %label=t 'event_types'
+      = check_box_tag("event_types[]", "AssessmentEvent")
+      = t("assessment_event")
+      %br
+      = check_box_tag("event_types[]", "MorbidityEvent")
+      = t("morbidity_event")
+      %br
+      = check_box_tag("event_types[]", "ContactEvent")
+      = t("contact_event")
+    %span.horiz
       %label=t 'event_investigation_status'
 
       -# Contacts and events have slightly different workflows.  Get the union of the two.

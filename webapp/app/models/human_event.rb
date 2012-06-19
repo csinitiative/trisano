@@ -136,11 +136,21 @@ class HumanEvent < Event
       return [] if users_view_jurisdictions.empty?
 
       where_clause = <<-SQL
-        (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent' OR events.type = 'AssessmentEvent') AND
         (NOT diseases.sensitive OR diseases.sensitive IS NULL OR
          jurisdictions.secondary_entity_id || secondary_jurisdiction_ids
            && ARRAY[#{(options[:access_sensitive_jurisdiction_ids] || []).join(',')}]::integer[])
       SQL
+      
+      event_types = options[:event_types] || []
+      if event_types.empty?
+        where_clause << " AND (events.type = 'MorbidityEvent' OR events.type = 'ContactEvent' OR events.type = 'AssessmentEvent')"
+      else
+        event_types_clause = []
+        event_types.each { |event_type| event_types_clause << "events.type = '#{event_type}'" }
+        where_clause << " AND ("
+        where_clause << event_types_clause.join(" OR ")
+        where_clause << ")"
+      end
 
       states = options[:states] || []
       if states.empty?
