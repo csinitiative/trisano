@@ -49,7 +49,7 @@
         %tr{:class => result_class, :id => "entity_#{result['entity_id']}"}
           %td
             - if output_name
-              = "#{h(result['last_name'])}, #{h(result['first_name'])}"
+              = "#{h(Person.last_comma_first_middle(result))}"
             - else
               %i="&nbsp;&nbsp;#{t('same_as_above')}"
           %td

@@ -51,16 +51,7 @@ class NewCmrSearchResults
 
     def name
       unless same_as_previous_entity?
-        returning "" do |str|
-          if @result['first_name'].blank?
-            str << view.h(@result['last_name'])
-          else
-            unless @result['last_name'].blank?
-              str << view.h(@result['last_name']) + ', '
-            end
-            str << view.h(@result['first_name'])
-          end
-        end
+        view.h(Person.last_comma_first_middle(@result))
       else
         "<i>&nbsp;&nbsp;#{I18n.t(:same_as_above)}</i>"
       end
