@@ -24,7 +24,7 @@
       - name = event.interested_place.place_entity.place.name
     - elsif event.is_a? HumanEvent
       - patient = event.interested_party.person_entity.person
-      - name = patient.last_name + (patient.first_name.blank? ? "" : fml(", ", patient.first_name, ""))
+      - name = patient.last_comma_first_middle
     - else
       - name = event.event_name unless event.event_name.nil?
 

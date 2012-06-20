@@ -77,6 +77,13 @@ class Person < ActiveRecord::Base
     self.last_name + result
   end
 
+  def self.last_comma_first_middle(person)
+    result = "#{person['first_name']} #{person['middle_name']}".strip
+    result = ", " + result unless result.blank?
+
+    person['last_name'] + result
+  end
+
   def primary_phone
     self.person_entity.primary_phone
   end

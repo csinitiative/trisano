@@ -27,9 +27,9 @@
   %td.forminformation
     - event_div_class(contact_event) do
       - if (view_mode == :index)
-        = h(contact_event['last_name'] << (contact_event['first_name'].blank? ? "" : ", #{contact_event['first_name']}"))
+        = h(Person.last_comma_first_middle(contact_event))
       - else
-        = h(contact_event.interested_party.person_entity.person.last_comma_first)
+        = h(contact_event.interested_party.person_entity.person.last_comma_first_middle)
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         = t("contact_event")

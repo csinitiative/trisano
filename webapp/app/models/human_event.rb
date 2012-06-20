@@ -216,7 +216,8 @@ class HumanEvent < Event
                WHEN users.user_name IS NOT NULL AND users.user_name != '' THEN users.user_name
                ELSE users.uid
             END AS investigator_name,
-            event_queues.queue_name as queue_name
+            event_queues.queue_name as queue_name,
+            people.middle_name as middle_name
         FROM events
             INNER JOIN participations ON participations.event_id = events.id
                 AND (participations.type = 'InterestedParty' )
