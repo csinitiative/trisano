@@ -62,15 +62,17 @@ test:
   collaborate: "xCollaborate"
   copyright: "xCopyright © 2011 Collaborative Software Foundation"
 
-  before_create: "xBefore creating a new morbidity event, please search for the person in question."
+  before_create: "xBefore creating a new {{type}}, please search for the person in question."
   use_starts_with: "xUse starts with search"
   no_results: "xNo results"
   start_a_cmr: "xStart a CMR with the criteria you searched on"
+  start_an_ae: "xStart an AE with the criteria you searched on"
   created_date: "xCreated date"
 
   cmr_actions: "xCMR Actions"
   entity_actions: "xEntity Actions"
   create_cmr_this_person: 'xCreate and edit CMR using this person'
+  create_ae_this_person: 'xCreate and edit AE using this person'
   patient_name: "xPatient Name"
   contact_name: "xContact Name"
   place_name: "xPlace Name"
@@ -179,11 +181,12 @@ test:
   contact: 'xContact'
   event_deleted: 'xEvent Deleted'
   contact_info: 'xContact Information'
-  elevated_to_morbidity_events: 'xElevated to morbidity events'
+  elevated_to: 'xElevated to {{type}}'
   cmr_contacts: 'xCMR Contacts'
-  parent_cmr: 'xParent CMR'
+  ae_contacts: 'xAE Contacts'
+  parent_event: 'xParent Event'
   parent_patient: xParent Patient
-  not_elevated: "xNot yet elevated to morbidity events"
+  not_elevated: "xNot yet elevated"
   save_button_help: "xClick here to enable the save buttons if they are grayed out when they shouldn't be."
   disable_tabs: xDisable tabs
   enable_tabs: xEnable tabs
@@ -205,6 +208,7 @@ test:
   core_field: 'xCore Field'
   core_fields: 'xCore Fields'
   morbidity_event_fields: 'xMorbidity Event Fields'
+  assessment_event_fields: 'xAssessment Event Fields'
   contact_event_fields: 'xContact Event Fields'
   place_event_fields: 'xPlace Event Fields'
   core_fields_detail: 'xCore Fields Detail'
@@ -666,6 +670,7 @@ test:
   status: 'xStatus'
   event_investigation_status: "xEvent Investigation Status"
   create_new_morbidity_report: "xCreate New Morbidity Report"
+  create_new_assessment_report: "xCreate New Assessment Report"
   queues: "xQueues"
   queue: "xQueue"
   investigators: "xInvestigators"
@@ -692,19 +697,25 @@ test:
   cmr_field: "xCMR Field"
   events_normal_case: "xEvents"
   edit_morbidity_event_of: "xEdit morbidity event: {{name}}"
+  edit_assessment_event_of: "xEdit assessment event: {{name}}"
   morbidity_event: "xMorbidity Event"
+  assessment_event: "xAssessment Event"
   same_as_above: "xSame as above"
   new_cmr_normal_case: "xNew CMR"
   new_morbidity_event: "xNew Morbidity Event"
+  new_assessment_event: "xNew Assessment Event"
   view_morbidity_event_of: "xView Morbidity Event: {{name}}"
+  view_assessment_event_of: "xView Assessment Event: {{name}}"
   view_morbidity_event: "xView Morbidity Event"
   create_new_morbidity_report: "xCreate New Morbidity Report"
+  create_new_assessment_report: "xCreate New Assessment Report"
   events_normal_case: "xEvents"
   printed: "xPrinted {{date}}"
   current_investigator: "xCurrent Investigator: {{name}}"
   confidential_case_report: "xConfidential Case Report"
   unassigned: "xUnassigned"
   promote_to_cmr: xPromote to CMR
+  promote_to_ae: xPromote to AE
   assign_to_queue: xAssign to queue
   assign_to_investigator: xAssign to investigator
   insufficient_privs_transition: xInsufficient privileges to transition this event
@@ -717,6 +728,9 @@ test:
   route_event: xRoute event
   routing_disabled: xRouting disabled
   more_choices: xMore choices...
+
+  #Assessment Event
+  assessment_event: "xAssessment Event"
 
   #Organisms
   show_an_organism: "xShow an Organism"
@@ -780,6 +794,7 @@ test:
   searching: xSearching...
   event_search_results:
     morbidity_event: xCMR
+    assessment_event: xAE
     contact_event: xContact
 
   #staging_area
@@ -926,6 +941,8 @@ test:
 
   add_telephone: "xAdd a Telephone"
 
+  show_ae: "xShow AE"
+  edit_ae: "xEdit AE"
   show_cmr: "xShow CMR"
   edit_cmr: "xEdit CMR"
   show_contact: "xShow Contact"

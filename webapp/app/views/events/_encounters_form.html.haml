@@ -26,9 +26,11 @@
         -core_element(:encounters, f, :horiz) do
           - unless f.object.new_record?
 
+            -# https://www.pivotaltracker.com/story/show/26677521
+            -# Encounters need to be shown in cronological order, but when clicking add new encounter link
+            -# users should be scrolled to the bottom of the cronological list
             - add_new_encounter_link_id = f.object_name + "_add_new_encounter_link"
-
-            %p= link_to_function "Add new encounter", "$('#{add_new_encounter_link_id}').onclick(); new Effect.ScrollTo('morbidity_event_add_new_encounter_link', {offset: -225, duration: 0.4});"
+            %p= link_to_function "Add new encounter", "$('#{add_new_encounter_link_id}').onclick(); new Effect.ScrollTo('#{@event.type.underscore}_add_new_encounter_link', {offset: -225, duration: 0.4});"
 
             - f.fields_for(:encounter_child_events, :builder => ExtendedFormBuilder) do |e|
               = render :partial => "events/encounter", :locals => { :f => e }

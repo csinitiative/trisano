@@ -23,7 +23,7 @@ class SearchController < ApplicationController
   def index
   end
 
-  def cmrs
+  def events
     unless User.current_user.is_entitled_to?(:view_event)
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_event_view_privs") }, :status => 403 and return
     end
@@ -38,7 +38,8 @@ class SearchController < ApplicationController
     @last_name = ""
 
     @event_types = [[I18n.t(:event_search_type_morb), "MorbidityEvent"],
-                    [I18n.t(:event_search_type_contact), "ContactEvent"]]
+                    [I18n.t(:event_search_type_contact), "ContactEvent"],
+                    [I18n.t(:event_search_type_assessment), "AssessmentEvent"]]
 
     @diseases = Disease.sensitive(User.current_user, nil).all(:order => "disease_name")
 
@@ -84,10 +85,10 @@ class SearchController < ApplicationController
 
         raise if (!error_details.empty?)
 
-        @cmrs = Event.find_by_criteria(convert_to_search_criteria(params))
+        @events = Event.find_by_criteria(convert_to_search_criteria(params))
 
         #only paginate if results are found
-        @cmrs = @cmrs.paginate(:page => params[:page], :per_page => params[:per_page] || 25) if @cmrs.present?
+        @events = @events.paginate(:page => params[:page], :per_page => params[:per_page] || 25) if @events.present?
 
         if !params[:sw_first_name].blank? || !params[:sw_last_name].blank?
           @first_name = params[:sw_first_name]

@@ -288,7 +288,7 @@ SELECT
     disevhosp.code_description AS disease_event_hospitalized,    -- code description?
 
     oaci.code_description AS outbreak_associated_code,    -- code_description?
-    events.outbreak_name,
+    outbrk.event_name AS outbreak_name,
 
     -- events.event_status,                    -- Change this from a code to a text value?
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
@@ -517,6 +517,8 @@ FROM events
         GROUP BY a.event_id
     ) formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
+    LEFT JOIN events outbrk
+        ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
     events.type = 'MorbidityEvent' AND
     events.deleted_at IS NULL
@@ -562,6 +564,348 @@ CREATE INDEX dw_morbidity_events_date_created_ix
     ON dw_morbidity_events (date_created);
 CREATE INDEX dw_morbidity_events_parent_id_ix
     ON dw_morbidity_events (parent_id);
+
+CREATE TABLE dw_assessment_events AS
+SELECT
+    events.id,
+    events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE ppl.id END AS dw_patients_id,
+    birth_gender_ec.code_description AS birth_gender,            -- code_description?
+    ethnicity_ec.code_description AS ethnicity,                -- code_description?
+    primary_language_ec.code_description AS primary_language,        -- code_description?
+    pplpart.primary_entity_id AS patient_entity_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.first_name END AS first_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.middle_name END AS middle_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE ppl.last_name END AS last_name,
+    ppl.birth_date,
+    ppl.date_of_death,
+
+    ds.id AS disease_id,
+    ds.disease_name,
+    ds.sensitive AS sensitive_disease,
+    ds.contact_lead_in,
+    ds.place_lead_in,
+    ds.treatment_lead_in,
+    ds.active,
+    ds.cdc_code,
+    ijpl.name AS investigating_jurisdiction,
+    ijpl.id AS investigating_jurisdiction_id,
+    jorpl.name AS jurisdiction_of_residence,
+    jorpl.id AS jurisdiction_of_residence_id,
+    scsi.code_description AS state_case_status_code,
+    lcsi.code_description AS lhd_case_status_code,
+    to_char(events."MMWR_week", '00') AS mmwr_week,
+    events."MMWR_year"::text AS mmwr_year,
+
+    events.event_name,
+    events.record_number,
+
+    reppl.first_name AS rep_first_name,
+    reppl.middle_name AS rep_middle_name,
+    reppl.last_name AS rep_last_name,
+    repphn.phones AS rep_phone_numbers,
+
+    repagpl.name AS rep_ag_name,
+    repagpt.place_types AS rep_ag_place_type,
+    repag_phn.phones AS rep_ag_phone_numbers,
+
+    events.age_at_onset AS actual_age_at_onset,
+    agetypeec.code_description AS actual_age_type,
+    trisano.get_age_in_years(events.age_at_onset, agetypeec.code_description) AS age_in_years,
+    ppl.approximate_age_no_birthday AS estimated_age_at_onset,
+    est_ec.code_description AS estimated_age_type,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE events.parent_guardian END AS parent_guardian,
+
+    fhec.code_description AS food_handler,
+    hcwec.code_description AS healthcare_worker,
+    glec.code_description AS group_living,
+    dcaec.code_description AS day_care_association,
+    pregec.code_description AS pregnant,
+    prf.pregnancy_due_date,
+    prf.risk_factors AS additional_risk_factors,
+    prf.risk_factors_notes AS risk_factor_details,
+    prf.occupation AS occupation,
+    events.other_data_1 AS other_data_1,
+    events.other_data_2 AS other_data_2,
+    disevhosp.code_description AS disease_event_hospitalized,    -- code description?
+
+    oaci.code_description AS outbreak_associated_code,    -- code_description?
+    outbrk.event_name AS outbreak_name,
+
+    -- events.event_status,                    -- Change this from a code to a text value?
+    COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
+    events.event_queue_id,
+    events.acuity,
+
+    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.city END AS city,
+    jorec.code_description AS county,
+    stateec.code_description AS state,
+    CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.postal_code END AS postal_code,
+
+    disev.disease_onset_date AS date_disease_onset,
+    CASE
+        WHEN disev.disease_onset_date IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from disev.disease_onset_date)::TEXT
+    END AS date_disease_onset_year,
+    CASE
+        WHEN disev.disease_onset_date IS NULL THEN NULL
+        WHEN extract(month from disev.disease_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 3 AND extract(month from disev.disease_onset_date) <= 6 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.disease_onset_date) > 6 AND extract(month from disev.disease_onset_date) <= 9 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_disease_onset_quarter,
+    to_char(disev.disease_onset_date, 'Month') AS date_disease_onset_month,
+    'Week ' || (extract(week from disev.disease_onset_date))::TEXT AS date_disease_onset_week,
+    extract(day from disev.disease_onset_date)::TEXT AS date_disease_onset_day,
+
+    upsert_date(disev.date_diagnosed) AS date_disease_diagnosed,
+    CASE
+        WHEN disev.date_diagnosed IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from disev.date_diagnosed)::TEXT
+    END AS date_disease_diagnosed_year,
+    CASE
+        WHEN disev.date_diagnosed IS NULL THEN NULL
+        WHEN extract(month from disev.date_diagnosed) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 3 AND extract(month from disev.date_diagnosed) <= 6 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from disev.date_diagnosed) > 6 AND extract(month from disev.date_diagnosed) <= 9 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_disease_diagnosed_quarter,
+    to_char(disev.date_diagnosed, 'Month') AS date_disease_diagnosed_month,
+    'Week ' || (extract(week from disev.date_diagnosed))::TEXT AS date_disease_diagnosed_week,
+    extract(day from disev.date_diagnosed)::TEXT AS date_disease_diagnosed_day,
+
+    upsert_date(events.results_reported_to_clinician_date) AS results_reported_to_clinician_date,
+
+    upsert_date(events."first_reported_PH_date") AS date_reported_to_public_health,
+    CASE
+        WHEN events."first_reported_PH_date" IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from events."first_reported_PH_date")::TEXT
+    END AS date_reported_to_public_health_year,
+    CASE
+        WHEN events."first_reported_PH_date" IS NULL THEN NULL
+        WHEN extract(month from events."first_reported_PH_date") <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from events."first_reported_PH_date") > 3 AND extract(month from events."first_reported_PH_date") <= 6 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from events."first_reported_PH_date") > 6 AND extract(month from events."first_reported_PH_date") <= 9 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_reported_to_public_health_quarter,
+    to_char(events."first_reported_PH_date", 'Month') AS date_reported_to_public_health_month,
+    'Week ' || (extract(week from events."first_reported_PH_date"))::TEXT AS date_reported_to_public_health_week,
+    extract(day from events."first_reported_PH_date")::TEXT AS date_reported_to_public_health_day,
+
+    upsert_date(events.event_onset_date) AS date_entered_into_system,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN 'Unknown'::TEXT
+        ELSE extract(year from events.event_onset_date)::TEXT
+    END AS date_entered_into_system_year,
+    CASE
+        WHEN events.event_onset_date IS NULL THEN NULL
+        WHEN extract(month from events.event_onset_date) <= 3 THEN 'Quarter 1'::TEXT
+        WHEN extract(month from events.event_onset_date) > 3 AND extract(month from events.event_onset_date) <= 6 THEN 'Quarter 2'::TEXT
+        WHEN extract(month from events.event_onset_date) > 6 AND extract(month from events.event_onset_date) <= 9 THEN 'Quarter 3'::TEXT
+        ELSE 'Quarter 4'::TEXT
+    END AS date_entered_into_system_quarter,
+    to_char(events.event_onset_date, 'Month') AS date_entered_into_system_month,
+    'Week ' || (extract(week from events.event_onset_date))::TEXT AS date_entered_into_system_week,
+    extract(day from events.event_onset_date)::TEXT AS date_entered_into_system_day,
+
+    events.event_onset_date - ppl.birth_date AS event_onset_age_days,
+
+    upsert_date(events.investigation_started_date) AS date_investigation_started,
+    upsert_date(events."investigation_completed_LHD_date") AS date_investigation_completed,
+    upsert_date(events.review_completed_by_state_date) AS review_completed_by_state_date,
+
+    events.created_at AS date_created,
+    events.updated_at AS date_updated,
+    events.deleted_at AS date_deleted,
+
+    events.sent_to_cdc,
+
+    partcon.disposition_date,
+    partcon_disp_ec.code_description AS disposition_if_once_a_contact,        -- the_code?
+    partcon_cont_ec.code_description AS contact_type_if_once_a_contact,        -- the_code?
+
+    ifi.code_description AS imported_from_code,         -- code_description?
+--      events."investigation_LHD_status_id",  Can be ignored, as it's never used
+    events.sent_to_ibis,
+    events.ibis_updated_at,
+    disevdied.code_description AS disease_event_died,        -- code description?
+
+    -- See "Feature Areas -- Public Health Status"
+    CASE
+        WHEN events.workflow_state = 'accepted_by_lhd'          THEN 'Accepted by Local Health Dept.'
+        WHEN events.workflow_state = 'approved_by_lhd'          THEN 'Approved by Local Health Dept.'
+        WHEN events.workflow_state = 'assigned_to_investigator' THEN 'Assigned to Investigator'
+        WHEN events.workflow_state = 'assigned_to_lhd'          THEN 'Assigned to Local Health Dept.'
+        WHEN events.workflow_state = 'assigned_to_queue'        THEN 'Assigned to Queue'
+        WHEN events.workflow_state = 'closed'                   THEN 'Closed'
+        WHEN events.workflow_state = 'investigation_complete'   THEN 'Investigation Complete'
+        WHEN events.workflow_state = 'new'                      THEN 'New'
+        WHEN events.workflow_state = 'rejected_by_investigator' THEN 'Rejected by Investigator'
+        WHEN events.workflow_state = 'rejected_by_lhd'          THEN 'Rejected by Local Health Dept.'
+        WHEN events.workflow_state = 'reopened_by_manager'      THEN 'Reopened by Manager'
+        WHEN events.workflow_state = 'reopened_by_state'        THEN 'Reopened by State'
+        WHEN events.workflow_state = 'under_investigation'      THEN 'Under Investigation'
+        ELSE ''
+    END AS public_health_status,
+    newhstore AS assessment_formbuilder,
+
+    1::integer AS always_one     -- This column joins against the population.population_years view
+                                 -- to associate every event with every population year, and keep
+                                 -- Mondrian happy
+FROM events
+    LEFT JOIN participations pplpart
+        ON (events.id = pplpart.event_id AND pplpart.secondary_entity_id IS NULL AND pplpart.type = 'InterestedParty')
+    LEFT JOIN dw_prf2 prf
+        ON (prf.participation_id = pplpart.id)
+    LEFT JOIN entities pplent
+        ON (pplpart.primary_entity_id = pplent.id)
+    LEFT JOIN people ppl
+        ON (ppl.entity_id = pplent.id)
+    LEFT JOIN external_codes birth_gender_ec
+        ON (birth_gender_ec.id = ppl.birth_gender_id)
+    LEFT JOIN external_codes ethnicity_ec
+        ON (ethnicity_ec.id = ppl.ethnicity_id)
+    LEFT JOIN external_codes primary_language_ec
+        ON (primary_language_ec.id = ppl.primary_language_id)
+    LEFT JOIN external_codes ifi
+        ON (events.imported_from_id = ifi.id)
+    LEFT JOIN external_codes scsi
+        ON (events.state_case_status_id = scsi.id)
+    LEFT JOIN external_codes oaci
+        ON (events.outbreak_associated_id = oaci.id)
+    LEFT JOIN external_codes lcsi
+        ON (events.lhd_case_status_id = lcsi.id)
+    LEFT JOIN users inv
+        ON (events.investigator_id = inv.id)
+    LEFT JOIN disease_events disev
+        ON (events.id = disev.event_id)
+    LEFT JOIN diseases ds
+        ON (disev.disease_id = ds.id)
+    LEFT JOIN external_codes disevhosp
+        ON (disevhosp.id = disev.hospitalized_id)
+    LEFT JOIN external_codes disevdied
+        ON (disevdied.id = disev.died_id)
+    LEFT JOIN participations pa
+        ON (pa.event_id = events.id AND pa.type = 'Jurisdiction')
+    LEFT JOIN places ijpl
+        ON (ijpl.entity_id = pa.secondary_entity_id)
+    LEFT JOIN external_codes fhec
+        ON (prf.food_handler_id = fhec.id)
+    LEFT JOIN external_codes hcwec
+        ON (hcwec.id = prf.healthcare_worker_id)
+    LEFT JOIN external_codes glec
+        ON (glec.id = prf.group_living_id)
+    LEFT JOIN external_codes dcaec
+        ON (dcaec.id = prf.day_care_association_id)
+    LEFT JOIN external_codes pregec
+        ON (pregec.id = prf.pregnant_id)
+    LEFT JOIN addresses pataddr
+        ON (pataddr.event_id = events.id)
+    LEFT JOIN external_codes jorec
+        ON (jorec.id = pataddr.county_id)
+    LEFT JOIN places jorpl
+        ON (jorpl.entity_id = jorec.jurisdiction_id)
+    LEFT JOIN external_codes stateec
+        ON (stateec.id = pataddr.state_id)
+    LEFT JOIN external_codes agetypeec
+        ON (agetypeec.id = events.age_type_id)
+    LEFT JOIN external_codes est_ec
+        ON (est_ec.id = ppl.age_type_id)
+    LEFT JOIN participations_contacts partcon
+        ON (partcon.id = events.participations_contact_id)
+    LEFT JOIN external_codes partcon_disp_ec
+        ON (partcon.disposition_id = partcon_disp_ec.id)
+    LEFT JOIN external_codes partcon_cont_ec
+        ON (partcon.contact_type_id = partcon_cont_ec.id)
+    LEFT JOIN participations reppart
+        ON (reppart.event_id = events.id AND reppart.type = 'Reporter')
+    LEFT JOIN people reppl
+        ON (reppl.entity_id = reppart.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones repphn
+        ON (repphn.entity_id = reppart.secondary_entity_id)
+    LEFT JOIN participations repagpart
+        ON (repagpart.event_id = events.id AND repagpart.type = 'ReportingAgency')
+    LEFT JOIN places repagpl
+        ON (repagpl.entity_id = repagpart.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones repag_phn
+        ON (repag_phn.entity_id = repagpart.secondary_entity_id)
+    LEFT JOIN (
+        SELECT place_id, trisano.text_join_agg(code_description, ', ') AS place_types
+        FROM
+            codes repagc
+            JOIN places_types repag_pt
+                ON (repag_pt.type_id = repagc.id)
+        GROUP BY place_id 
+    ) repagpt
+        ON (repagpt.place_id = repagpl.id)
+--    LEFT JOIN codes repagc
+--        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name), a.text_answer) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != ''
+        GROUP BY a.event_id
+    ) formbuilder_hstores
+        ON (events.id = formbuilder_hstores.event_id)
+    LEFT JOIN events outbrk
+        ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
+WHERE
+    events.type = 'MorbidityEvent' AND
+    events.deleted_at IS NULL
+;
+
+ALTER TABLE dw_assessment_events
+    ADD CONSTRAINT pk_dw_assessment_events PRIMARY KEY (id);
+
+CREATE INDEX dw_assessment_events_patient_id ON dw_assessment_events (dw_patients_id);
+CREATE INDEX dw_assessment_events_investigating_jurisdiction
+    ON dw_assessment_events (investigating_jurisdiction);
+CREATE INDEX dw_assessment_events_jurisdiction_of_residence
+    ON dw_assessment_events (jurisdiction_of_residence);
+CREATE INDEX dw_assessment_events_disease_id_ix
+    ON dw_assessment_events (disease_id);
+CREATE INDEX dw_assessment_events_food_handler_ix
+    ON dw_assessment_events (food_handler);
+CREATE INDEX dw_assessment_events_healthcare_worker_ix
+    ON dw_assessment_events (healthcare_worker);
+CREATE INDEX dw_assessment_events_group_living_ix
+    ON dw_assessment_events (group_living);
+CREATE INDEX dw_assessment_events_day_care_ix
+    ON dw_assessment_events (day_care_association);
+CREATE INDEX dw_assessment_events_pregnant_ix
+    ON dw_assessment_events (pregnant);
+CREATE INDEX dw_assessment_events_date_disease_onset_ix
+    ON dw_assessment_events (date_disease_onset);
+CREATE INDEX dw_assessment_events_date_disease_diagnosed_ix
+    ON dw_assessment_events (date_disease_diagnosed);
+CREATE INDEX dw_assessment_events_results_reported_to_clinician_date_ix
+    ON dw_assessment_events (results_reported_to_clinician_date);
+CREATE INDEX dw_assessment_events_date_reported_to_public_health_ix
+    ON dw_assessment_events (date_reported_to_public_health);
+CREATE INDEX dw_assessment_events_date_entered_into_system_ix
+    ON dw_assessment_events (date_entered_into_system);
+CREATE INDEX dw_assessment_events_date_investigation_started_ix
+    ON dw_assessment_events (date_investigation_started);
+CREATE INDEX dw_assessment_events_date_investigation_completed_ix
+    ON dw_assessment_events (date_investigation_completed);
+CREATE INDEX dw_assessment_events_review_completed_by_state_date_ix
+    ON dw_assessment_events (review_completed_by_state_date);
+CREATE INDEX dw_assessment_events_date_created_ix
+    ON dw_assessment_events (date_created);
+CREATE INDEX dw_assessment_events_parent_id_ix
+    ON dw_assessment_events (parent_id);
 
 CREATE TABLE dw_contact_events AS
 SELECT
@@ -846,6 +1190,10 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_morbidity_events_id,
     CASE
+        WHEN events.type = 'AssessmentEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_assessment_events_id,
+    CASE
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
@@ -870,7 +1218,8 @@ WHERE
     events.deleted_at IS NULL AND
     (
         events.type = 'ContactEvent' OR
-        events.type = 'MorbidityEvent'
+        events.type = 'MorbidityEvent' OR
+        events.type = 'AssessmentEvent'
     )
 ;
 
@@ -878,6 +1227,8 @@ ALTER TABLE dw_secondary_jurisdictions
     ADD CONSTRAINT dw_secondary_jurisdictions_pkey PRIMARY KEY (id, jurisdiction_id);
 CREATE INDEX dw_secondary_jurisdictions_morbidity_id_ix
     ON dw_secondary_jurisdictions (dw_morbidity_events_id);
+CREATE INDEX dw_secondary_jurisdictions_assessment_id_ix
+    ON dw_secondary_jurisdictions (dw_assessment_events_id);
 CREATE INDEX dw_secondary_jurisdictions_contact_id_ix
     ON dw_secondary_jurisdictions (dw_contact_events_id);
 CREATE INDEX dw_secondary_jurisdictions_jurisdiction_id_ix
@@ -890,6 +1241,10 @@ SELECT
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_morbidity_events_id,
+    CASE
+        WHEN events.type = 'AssessmentEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_assessment_events_id,
     CASE
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
@@ -918,6 +1273,8 @@ ALTER TABLE dw_events_hospitals
     ADD CONSTRAINT pk_dw_events_hospitals PRIMARY KEY (id);
 CREATE INDEX dw_events_hospitals_morbidity_event_id_ix
     ON dw_events_hospitals (dw_morbidity_events_id);
+CREATE INDEX dw_events_hospitals_assessment_event_id_ix
+    ON dw_events_hospitals (dw_assessment_events_id);
 CREATE INDEX dw_events_hospitals_contact_event_id_ix
     ON dw_events_hospitals (dw_contact_events_id);
 CREATE INDEX dw_events_hospitals_admission_date_ix
@@ -932,6 +1289,10 @@ SELECT
         WHEN events.type = 'MorbidityEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_morbidity_events_id,
+    CASE
+        WHEN events.type = 'AssessmentEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_assessment_events_id,
     CASE
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
@@ -1009,6 +1370,8 @@ FROM
     --ADD CONSTRAINT pk_dw_lab_results PRIMARY KEY (id, lab_type);
 CREATE INDEX dw_lab_results_morbidity_id_ix
     ON dw_lab_results (dw_morbidity_events_id);
+CREATE INDEX dw_lab_results_assessment_id_ix
+    ON dw_lab_results (dw_assessment_events_id);
 CREATE INDEX dw_lab_results_contact_id_ix
     ON dw_lab_results (dw_contact_events_id);
 
@@ -1040,6 +1403,10 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_morbidity_events_id,
     CASE
+        WHEN events.type = 'AssessmentEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_assessment_events_id,
+    CASE
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
@@ -1068,6 +1435,8 @@ ALTER TABLE dw_events_treatments
     ADD CONSTRAINT pk_dw_events_treatments PRIMARY KEY (id);
 CREATE INDEX dw_events_treatments_morbidity_id_ix
     ON dw_events_treatments (dw_morbidity_events_id);
+CREATE INDEX dw_events_treatments_assessment_id_ix
+    ON dw_events_treatments (dw_assessment_events_id);
 CREATE INDEX dw_events_treatments_contact_id_ix
     ON dw_events_treatments (dw_contact_events_id);
 CREATE INDEX dw_events_treatments_encounter_id_ix
@@ -1104,6 +1473,35 @@ ALTER TABLE dw_morbidity_clinicians
 CREATE INDEX dw_morbidity_clinicians_event_id_ix
     ON dw_morbidity_clinicians (dw_morbidity_events_id);
 
+CREATE TABLE dw_assessment_clinicians AS
+SELECT
+    p.id,
+    events.id AS dw_assessment_events_id,
+    pl.entity_id,
+    pl.first_name,
+    pl.last_name,
+    pl.middle_name,
+    tel.phones
+FROM
+    events
+    JOIN participations p
+        ON (p.event_id = events.id AND events.type = 'MorbidityEvent')
+    JOIN people pl
+        ON (pl.entity_id = p.secondary_entity_id)
+    LEFT JOIN dw_entity_telephones tel
+        ON (p.secondary_entity_id = tel.entity_id)
+--    RIGHT JOIN events e
+--        ON (p.event_id = e.id AND e.type = 'MorbidityEvent')
+WHERE
+    p.type = 'Clinician' AND
+    events.deleted_at IS NULL
+;
+
+ALTER TABLE dw_assessment_clinicians
+    ADD CONSTRAINT dw_assessment_clinicians_pkey PRIMARY KEY (id);
+CREATE INDEX dw_assessment_clinicians_event_id_ix
+    ON dw_assessment_clinicians (dw_assessment_events_id);
+
 CREATE TABLE dw_contact_clinicians AS
 SELECT
     p.id,
@@ -1139,6 +1537,10 @@ SELECT
         ELSE NULL::INTEGER
     END AS dw_morbidity_events_id,
     CASE
+        WHEN events.type = 'AssessmentEvent' THEN events.id
+        ELSE NULL::INTEGER
+    END AS dw_assessment_events_id,
+    CASE
         WHEN events.type = 'ContactEvent' THEN events.id
         ELSE NULL::INTEGER
     END AS dw_contact_events_id,
@@ -1170,6 +1572,8 @@ WHERE
 
 CREATE INDEX dw_events_diag_fac_morbidity_event_ix
     ON dw_events_diagnostic_facilities (dw_morbidity_events_id);
+CREATE INDEX dw_events_diag_fac_assessment_event_ix
+    ON dw_events_diagnostic_facilities (dw_assessment_events_id);
 CREATE INDEX dw_events_diag_fac_contact_event_ix
     ON dw_events_diagnostic_facilities (dw_contact_events_id);
 CREATE INDEX dw_events_diag_fac_place_id_ix
@@ -1411,6 +1815,22 @@ UPDATE addresses
         latitude = NULL,
         longitude = NULL
     FROM
+        dw_assessment_events dme
+    WHERE
+        :obfuscate AND
+        dme.sensitive_disease AND
+        addresses.event_id = dme.id;
+
+UPDATE addresses
+    SET
+        street_number = '(Obfusc.)',
+        street_name = '(Obfuscated)',
+        unit_number = '(Obfusc.)',
+        postal_code = '(Obfusc.)',
+        city = '(Obfuscated)',
+        latitude = NULL,
+        longitude = NULL
+    FROM
         dw_contact_events dme
     WHERE
         :obfuscate AND
@@ -1452,6 +1872,24 @@ UPDATE people
         last_name = '(Obfuscated)',
         middle_name = '(Obfuscated)'
     FROM
+        dw_assessment_events dme
+    WHERE
+        :obfuscate AND
+        dme.sensitive_disease AND
+        dme.patient_entity_id = people.entity_id;
+
+DELETE FROM notes
+    USING dw_assessment_events dme
+    WHERE
+        dme.sensitive_disease AND
+        dme.id = notes.event_id;
+
+UPDATE people
+    SET
+        first_name = '(Obfuscated)',
+        last_name = '(Obfuscated)',
+        middle_name = '(Obfuscated)'
+    FROM
         dw_contact_events dme
     WHERE
         :obfuscate AND
@@ -1465,6 +1903,7 @@ DELETE FROM notes
         dme.id = notes.event_id;
 
 UPDATE dw_morbidity_events SET patient_entity_id = -100 WHERE sensitive_disease;
+UPDATE dw_assessment_events SET patient_entity_id = -100 WHERE sensitive_disease;
 UPDATE dw_contact_events SET patient_entity_id = -100 WHERE sensitive_disease;
 
 COMMIT;

@@ -1,21 +1,24 @@
-When /^I search for a diagnostic facility named "([^\"]*)"$/ do |name|
-  visit url_for({ :controller => :morbidity_events,
+When /^in a (.+) event, I search for a diagnostic facility named "([^\"]*)"$/ do |event_type, name|
+  event_controller = event_type + "_events"
+  visit url_for({ :controller => event_controller,
                   :action => :diagnostic_facilities_search,
                   :name => name })
 end
 
-When /^I search for a place exposure named "([^\"]*)"$/ do |name|
+When /^in a (.+) event, I search for a place exposure named "([^\"]*)"$/ do |event_type, name|
   codes = Place.epi_type_codes.map do |the_code|
     Code.find_by_code_name_and_the_code('placetype', the_code).id
   end
 
-  visit url_for({ :controller => :morbidity_events,
+  event_controller = event_type + "_events"
+  visit url_for({ :controller => event_controller,
                   :action => :places_search,
                   :name => name, :types => "[#{codes.join(',')}]"})
 end
 
-When /^I search for a reporting agency named "([^\"]*)"$/ do |name|
-  visit url_for({ :controller => :morbidity_events,
+When /^in a (.+) event, I search for a reporting agency named "([^\"]*)"$/ do |event_type, name|
+  event_controller = event_type + "_events"
+  visit url_for({ :controller => event_controller,
                   :action => :reporting_agencies_search,
                   :place_name => name,
                   :event_type => 'morbidity_event' })

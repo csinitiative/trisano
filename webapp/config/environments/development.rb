@@ -33,7 +33,7 @@ Logging.init :debug, :info, :warn, :error, :fatal
 layout = Logging::Layouts::Pattern.new :pattern => "[%d] [%-5l] %m\n"
 
 # Default logfile, history kept for 10 days
-TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= RAILS_ROOT
+TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= '/var/log/trisano/'
 if TRISANO_LOG_LOCATION.split('').last != '/'
   TRISANO_LOG_LOCATION = TRISANO_LOG_LOCATION + '/'
 end

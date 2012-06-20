@@ -9,11 +9,13 @@ default_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: \n:states: \n:queues: ['Enterics-BearRiver']"
   status: "active"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"    #Test1234!
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 admin_user:
   id: 2
@@ -26,11 +28,13 @@ admin_user:
   initials:
   event_view_settings: "--- \n:diseases: \n:do_not_show_deleted: \n:investigators: ['Willy Wonka']\n:states: "
   status: "active"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"    #Test1234!
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 update_cmr_user:
   id: 3
@@ -43,11 +47,13 @@ update_cmr_user:
   initials:
   event_view_settings:
   status: "active"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"    #Test1234!
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 view_cmr_user:
   id: 4
@@ -60,11 +66,13 @@ view_cmr_user:
   initials:
   event_view_settings:
   status: "active"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"    #Test1234!
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 update_davis_user:
   id: 5
@@ -77,11 +85,13 @@ update_davis_user:
   initials:
   event_view_settings:
   status: "active"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>
 
 disabledd_user:
   id: 6
@@ -94,8 +104,10 @@ disabledd_user:
   initials:
   event_view_settings:
   status: "disabled"
-  crypted_password: "f7e72f46548444a5bbaad7a039a8c474cb447821f99361766c5501b29ef3ca808b609e062ae29416088d23471a619f856086ae477e4492f29996e6d2a0d068a2"
-  password_salt: "zMX7Ibu1ddGwqVPhxYsi"    #Test1234!
-  persistence_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  single_access_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
-  perishable_token: "2f8826171df0fe4419a3229b2f0ad3d56870c14fa0101d770c6d1c68735f770722efc4e3f1911f4c7421d9d3b46809bce44af2bcc861ad08b115e1929309e5f8"
+<% if trisano_auth?  %>
+  crypted_password: "asdf"
+  password_salt: "asdf"
+  persistence_token: "random_token"
+  single_access_token: "ndom_token"
+  perishable_token: "ndom_token"
+<% end %>

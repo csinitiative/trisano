@@ -54,9 +54,9 @@ ActionController::Routing::Routes.draw do |map|
   map.calendar 'calendar/:year/:month', :controller => 'dashboard', :action => 'calendar', :month => Time.now.month, :year => Time.now.year
 
   map.with_options :controller => 'search' do |search|
-    search.search_cmrs   'search/cmrs',           :action => 'cmrs'
-    search.cmrs_format   'search/cmrs.:format',   :action => 'cmrs'
-    search.search        'search',                :action => 'cmrs'
+    search.search_events   'search/events',           :action => 'events'
+    search.events_format   'search/events.:format',   :action => 'events'
+    search.search        'search',                :action => 'events'
   end
 
   map.settings 'users/settings', :controller => 'users', :action => 'settings'
@@ -136,6 +136,26 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :roles
 
   map.resources :people
+
+  map.resources :aes,
+    :controller => :assessment_events,
+    :collection => {
+      :event_search => :get,
+      :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
+    },
+    :member => {
+      :state => :post,
+      :edit_jurisdiction => :get,
+      :jurisdiction => :post,
+      :soft_delete => :post,
+      :export_single => :post,
+      :event_type => :post
+    },
+    :new => {
+      :lab_form => :get,
+      :lab_result_form => :get
+    }
+
 
   map.resources :cmrs,
     :controller => :morbidity_events,

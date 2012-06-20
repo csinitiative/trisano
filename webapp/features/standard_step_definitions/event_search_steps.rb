@@ -18,67 +18,67 @@
 #
 # Givens
 #
-Given /^another morbidity event$/ do
-  @other_event = create_basic_event('morbidity', 'Patient')
+Given /^another (.*) event$/ do |event_type|
+  @other_event = create_basic_event(event_type, 'Patient')
 end
 
-Given /^a morbidity event with the record number (\d{15})$/ do |record_number|
-  @event_to_match = create_basic_event('morbidity', 'Record Number')
+Given /^a (.*) event with the record number (\d{15})$/ do |event_type, record_number|
+  @event_to_match = create_basic_event(event_type, 'Record Number')
   @event_to_match.record_number = record_number
   @event_to_match.save!
 end
 
-Given /^a morbidity event with a pregnant patient$/ do
-  @event_to_match = create_basic_event('morbidity', 'Pregnant')
+Given /^a (.*) event with a pregnant patient$/ do |event_type|
+  @event_to_match = create_basic_event(event_type, 'Pregnant')
   @event_to_match.interested_party.build_risk_factor(:pregnant_id => ExternalCode.yes_id)
   @event_to_match.save!
 end
 
-Given /^a morbidity event with a state status "([^\"]*)"$/ do |status|
-  @event_to_match = create_basic_event('morbidity', 'state status')
+Given /^a (.*) event with a state status "([^\"]*)"$/ do |event_type, status|
+  @event_to_match = create_basic_event(event_type, 'state status')
   @event_to_match.state_case_status = ExternalCode.send(status.downcase.underscore)
   @event_to_match.save!
 end
 
-Given /^a morbidity event with a LHD status "([^\"]*)"$/ do |status|
-  @event_to_match = create_basic_event('morbidity', 'lhd status')
+Given /^a (.*) event with a LHD status "([^\"]*)"$/ do |event_type, status|
+  @event_to_match = create_basic_event(event_type, 'lhd status')
   @event_to_match.lhd_case_status = ExternalCode.send(status.downcase.underscore)
   @event_to_match.save!
 end
 
-Given /^a morbidity event that has been sent to the CDC$/ do
-  @event_to_match = create_basic_event('morbidity', 'sent_to_cdc')
+Given /^a (.*) event that has been sent to the CDC$/ do |event_type|
+  @event_to_match = create_basic_event(event_type, 'sent_to_cdc')
   @event_to_match.sent_to_cdc = true
   @event_to_match.save!
 end
 
-Given /^a morbidity event first reported on "([^\"]*)"$/ do |date|
-  @event_to_match = create_basic_event('morbidity', 'first_reported')
+Given /^a (.*) event first reported on "([^\"]*)"$/ do |event_type, date|
+  @event_to_match = create_basic_event(event_type, 'first_reported')
   @event_to_match.first_reported_PH_date = Date.parse(date)
   @event_to_match.save!
 end
 
-Given /^a morbidity event investigated by "([^\"]*)"$/ do |arg1|
-  @event_to_match = create_basic_event('morbidity', 'investigated_by')
+Given /^a (.*) event investigated by "([^\"]*)"$/ do |event_type, arg1|
+  @event_to_match = create_basic_event(event_type, 'investigated_by')
   @event_to_match.investigator = User.find_by_user_name('investigator')
   @event_to_match.save!
 end
 
-Given /^a morbidity event with "([^\"]*)" set to "([^\"]*)"$/ do |field, value|
-  @event_to_match = create_basic_event('morbidity', 'some_guy')
+Given /^a (.*) event with "([^\"]*)" set to "([^\"]*)"$/ do |event_type, field, value|
+  @event_to_match = create_basic_event(event_type, 'some_guy')
   @event_to_match.send("#{field}=", value)
   @event_to_match.save!
 end
 
 When /^I search for events with the following criteria:$/ do |criteria|
-  visit(search_cmrs_path(search_criteria(criteria.hashes.first)))
+  visit(search_events_path(search_criteria(criteria.hashes.first)))
 end
 
 #
 # Whens
 #
 When /^I navigate to the event search form$/ do
-  visit search_cmrs_path
+  visit search_events_path
   response.should contain("Event Search")
 end
 
@@ -93,8 +93,12 @@ end
 #
 # Thens
 #
-Then /^I should receive 1 matching record$/ do
+Then /^I should receive 1 matching CMR record$/ do
   response.should have_xpath("//a[@id='show-cmr-link-#{@event_to_match.id}']")
+end
+
+Then /^I should receive 1 matching assessment record$/ do
+  response.should have_xpath("//a[@id='show-ae-link-#{@event_to_match.id}']")
 end
 
 Then /^I should see "([^\"]*)" in the search results$/ do |text|

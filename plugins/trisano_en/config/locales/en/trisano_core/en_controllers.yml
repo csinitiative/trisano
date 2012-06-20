@@ -40,8 +40,8 @@ en:
   contact_event_no_create: "Contacts can only be created from within a morbidity event."
   contact_saved: "Contact saved."
   contact_not_saved: "Contact event not saved: {{messages}}"
-  could_not_promote_to_morbidity: "Could not promote to morbidity event."
-  promoted_to_morbidity: "Contact successfully promoted"
+  could_not_promote_event: "Could not promote event."
+  promoted_to: "Successfully promoted to {{type}}."
 
   # Core field configurations
   core_field_configuration_successfully_created: "Core field configuration was successfully created."
@@ -100,11 +100,14 @@ en:
   successfully_marked_as_deleted: "The event was successfully marked as deleted."
   error_marking_event_as_deleted: "An error occurred marking the event as deleted."
   unable_to_route_cmr: "Unable to route CMR. {{message}}"
+  unable_to_route_ae: "Unable to route AE. {{message}}"
   unable_to_route_cmr_no_edit_priv: "Unable to route CMR. A user with update privileges will need to fix the event. {{message}}"
+  unable_to_route_ae_no_edit_priv: "Unable to route AE. A user with update privileges will need to fix the event. {{message}}"
   event_successfully_routed: "Event successfully routed."
   event_successfully_routed_no_privs: "Event successfully routed, but you have insufficent privileges to view it in it's new jurisdiction."
   illegal_state_transition: "Illegal State Transition"
   unable_to_change_cmr_state: "Unable to change state of CMR."
+  unable_to_change_ae_state: "Unable to change state of AE."
   unable_to_change_state_no_edit_privs: "Unable to change state of CMR. A user with update privileges will need to fix the event."
   no_update_privs_for_jurisdiction: "You do not have update privileges for this jurisdiction."
   no_event_create_privs: "You do not have privileges to create an event."
@@ -188,9 +191,13 @@ en:
 
   # Morbidity events
   cmr_created: "CMR was successfully created."
+  ae_created: "AE was successfully created."
   cmr_updated: "CMR was successfully updated."
+  ae_updated: "AE was successfully updated."
   cmr_saved: "CMR saved."
+  ae_saved: "AE saved."
   morbidity_event_not_saved: "Morbidity Event not saved: {{message}}"
+  assessment_event_not_saved: "Assessment Event not saved: {{message}}"
   unable_to_process_search: "Unable to process search. Is birth date a valid date?"
   too_many_cmrs: "TriSano cannot process more then 100 cmrs per page."
 
@@ -235,6 +242,7 @@ en:
   invalid_entered_on_end_date_format: "Invalid entered-on end date format"
   problem_with_search_criteria: "There was a problem with your search criteria"
   event_search_type_morb: Morbidity Event (CMR)
+  event_search_type_assessment: Assessment Event (AE)
   event_search_type_contact: Contact Event
 
   # Sections

@@ -20,13 +20,13 @@
 BEGIN;
 DROP SCHEMA IF EXISTS trisano CASCADE;
 CREATE SCHEMA trisano;
-ALTER SCHEMA trisano OWNER TO trisano_su;
+ALTER SCHEMA trisano OWNER TO dw_priv_user;
 COMMIT;
 
 BEGIN;
 DROP SCHEMA IF EXISTS population CASCADE;
 CREATE SCHEMA population;
-ALTER SCHEMA population OWNER TO trisano_su;
+ALTER SCHEMA population OWNER TO dw_priv_user;
 COMMIT;
 
 BEGIN;
@@ -380,7 +380,7 @@ COMMIT;
 
 BEGIN;
 -- NOTE: Adjust this user to the DEST_DB_USER
-ALTER SCHEMA public OWNER TO trisano_su;
+ALTER SCHEMA public OWNER TO dw_priv_user;
 GRANT USAGE ON SCHEMA trisano TO trisano_ro;
 GRANT USAGE ON SCHEMA population TO trisano_ro;
 ALTER USER trisano_ro SET search_path = trisano;
@@ -905,6 +905,7 @@ DECLARE
     insert_cols_clause      TEXT;
     tmprec                  RECORD;
     tmptext                 TEXT;
+    tmpint                  INTEGER;
     tmpbool                 BOOLEAN;
     done                    BOOLEAN;
 BEGIN
@@ -1009,6 +1010,8 @@ BEGIN
 
             -- The loop takes care of columns with different short_names that reduce to
             -- the same safe name
+            tmptext := question_name;
+            tmpint := 1;
             <<add_column>>
             LOOP
                 done := TRUE;
@@ -1025,8 +1028,9 @@ BEGIN
                     END IF;
                 EXCEPTION
                     WHEN unique_violation THEN
-                        question_name := question_name || '1';
-                    done := FALSE;
+                        question_name := tmptext || tmpint::TEXT;
+                        tmpint := tmpint + 1;
+                        done := FALSE;
                 END;
                 IF done THEN
                     EXIT add_column;
@@ -1971,6 +1975,14 @@ BEGIN
             )';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_assessment_patients_races_view AS
+            SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_assessment_events_view
+                WHERE dw_patients_id = pr.person_id
+            )';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_contact_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
             WHERE EXISTS (
@@ -1992,6 +2004,11 @@ BEGIN
             WHERE dw_morbidity_events_id IS NOT NULL';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_assessment_diagnostic_facilities_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
+            WHERE dw_assessment_events_id IS NOT NULL';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_contact_diagnostic_facilities_view AS
             SELECT * FROM ' || new_schema || '.dw_events_diagnostic_facilities
             WHERE dw_contact_events_id IS NOT NULL';
@@ -2000,6 +2017,11 @@ BEGIN
         'CREATE VIEW trisano.dw_morbidity_treatments_events_view AS
             SELECT * FROM ' || new_schema || '.dw_events_treatments
             WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_treatments_events_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_treatments
+            WHERE dw_assessment_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_treatments_events_view AS
@@ -2021,6 +2043,15 @@ BEGIN
             )';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_assessment_treatments_view AS
+            SELECT t.* FROM ' || new_schema || '.treatments t
+            WHERE EXISTS (
+                SELECT 1 FROM trisano.dw_events_treatments_view
+                WHERE dw_assessment_events_id IS NOT NULL AND
+                    treatment_id = t.id
+            )';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_contact_treatments_view AS
             SELECT t.* FROM ' || new_schema || '.treatments t
             WHERE EXISTS (
@@ -2033,6 +2064,11 @@ BEGIN
         'CREATE VIEW trisano.dw_morbidity_lab_results_view AS
             SELECT * FROM ' || new_schema || '.dw_lab_results
             WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_lab_results_view AS
+            SELECT * FROM ' || new_schema || '.dw_lab_results
+            WHERE dw_assessment_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_lab_results_view AS
@@ -2050,6 +2086,11 @@ BEGIN
             WHERE dw_morbidity_events_id IS NOT NULL';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_assessment_hospitals_view AS
+            SELECT * FROM ' || new_schema || '.dw_events_hospitals
+            WHERE dw_assessment_events_id IS NOT NULL';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_contact_hospitals_view AS
             SELECT * FROM ' || new_schema || '.dw_events_hospitals
             WHERE dw_contact_events_id IS NOT NULL';
@@ -2058,6 +2099,11 @@ BEGIN
         'CREATE VIEW trisano.dw_morbidity_secondary_jurisdictions_view AS
             SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
             WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_secondary_jurisdictions_view AS
+            SELECT * FROM ' || new_schema || '.dw_secondary_jurisdictions
+            WHERE dw_assessment_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_secondary_jurisdictions_view AS
@@ -2078,6 +2124,23 @@ BEGIN
                     ON (dsj.jurisdiction_id = j.id AND dsj.dw_morbidity_events_id IS NOT NULL)
                 WHERE dme.investigating_jurisdiction_id IS NOT NULL
                     OR dsj.dw_morbidity_events_id IS NOT NULL
+            ) f
+                ON (p.id = f.id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_jurisdictions_view AS
+            SELECT p.*
+            FROM ' || new_schema || '.places p
+            INNER JOIN (
+                SELECT DISTINCT j.id
+                FROM ' || new_schema || '.places j
+                LEFT JOIN trisano.dw_assessment_events_view dme
+                    ON (dme.investigating_jurisdiction_id = j.id
+                        OR dme.jurisdiction_of_residence_id = j.id)
+                LEFT JOIN trisano.dw_secondary_jurisdictions_view dsj
+                    ON (dsj.jurisdiction_id = j.id AND dsj.dw_assessment_events_id IS NOT NULL)
+                WHERE dme.investigating_jurisdiction_id IS NOT NULL
+                    OR dsj.dw_assessment_events_id IS NOT NULL
             ) f
                 ON (p.id = f.id)';
 
@@ -2109,6 +2172,16 @@ BEGIN
                 ON (t.entity_id = f.patient_entity_id)';
 
     EXECUTE
+        'CREATE VIEW trisano.dw_assessment_email_addresses_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_email_addresses t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_assessment_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_contact_email_addresses_view AS
             SELECT t.*
             FROM ' || new_schema || '.dw_email_addresses t
@@ -2135,6 +2208,16 @@ BEGIN
             INNER JOIN (
                 SELECT DISTINCT patient_entity_id
                 FROM ' || new_schema || '.dw_morbidity_events
+            ) f
+                ON (t.entity_id = f.patient_entity_id)';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_telephones_view AS
+            SELECT t.*
+            FROM ' || new_schema || '.dw_telephones t
+            INNER JOIN (
+                SELECT DISTINCT patient_entity_id
+                FROM ' || new_schema || '.dw_assessment_events
             ) f
                 ON (t.entity_id = f.patient_entity_id)';
 

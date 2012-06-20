@@ -9,7 +9,7 @@ Feature: Persisting form builder value codes
     And that form has multiple questions with values on value sets
     And that form is published
     And a morbidity event exists with a disease that matches the form
-    And I am on the event edit page
+    And I am on the morbidity event edit page
 
     When I answer all of the first questions with "No"
     And I save the event
@@ -18,7 +18,7 @@ Feature: Persisting form builder value codes
     And there should be 3 answers answered "No"
     And there should be 1 answers answered "Yes"
 
-    When I am on the event edit page
+    When I am on the morbidity event edit page
     And I answer all of the first questions with "Yes"
     And I answer all of the second questions with "No"
     And I save the event
@@ -27,12 +27,12 @@ Feature: Persisting form builder value codes
     And there should be 3 answers answered "Yes"
     And there should be 4 answers answered "No"
 
-    When I am on the event edit page
+    When I am on the morbidity event edit page
     And I check all check boxes
     And I save the event
     Then both check box questions should have all codes
 
-    When I am on the event edit page
+    When I am on the morbidity event edit page
     And I save the event
     And there should be 4 answers answered "Yes"
     And there should be 4 answers answered "No"

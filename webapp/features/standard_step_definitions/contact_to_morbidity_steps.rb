@@ -24,7 +24,7 @@ Given /^a published disease form called (.+) for (.+) events with (.+)$/ do |for
 end
 
 Then /^I should see a link to promote event to a CMR$/ do
-  response.should have_selector("a#event-type[href='#{event_type_contact_event_path(@event.contact_child_events.first)}']")
+  response.should have_selector("a#event-type[href='#{event_type_contact_event_path(@event.contact_child_events.first)}?type=morbidity_event']")
 end
 
 When /^I promote Jones to a morbidity event$/ do

@@ -112,9 +112,11 @@ BrowserDetect.init();
 
 function detect() {
    var not_supported = true;
-   if (((BrowserDetect.browser == 'Firefox') && (BrowserDetect.version
- >= 2)) || ((BrowserDetect.browser == 'Explorer') &&
-(BrowserDetect.version >= 7))) not_supported = false
+   if (((BrowserDetect.browser == 'Firefox') && (BrowserDetect.version >= 2)) || 
+       ((BrowserDetect.browser == 'Explorer') && (BrowserDetect.version >= 7)) ||
+       (BrowserDetect.browser == 'Chrome') ||
+       ((BrowserDetect.browser == 'Safari') && (BrowserDetect.version >=5)))
+     not_supported = false
    if (not_supported) document.write(i18n.t('unsupported_browser') + ' ' +
 BrowserDetect.browser + ' ' + BrowserDetect.version + '<br>' +
 i18n.t('please_switch_to') + ' ' + '<a href="http://getfirefox.com">FireFox 2 '

@@ -28,6 +28,11 @@
         .formname
           = t('morbidity_event_fields')
     = render @morbidity_event_fields
+    %tr
+      %td{:colspan => 2}
+        .formname
+          = t('assessment_event_fields')
+    = render @assessment_event_fields
     %trl
       %td{:colspan => 2}
         .formname

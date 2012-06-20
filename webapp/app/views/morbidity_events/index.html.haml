@@ -13,8 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= javascript_include_tag 'pages/cmrs/prefetch_index.js'
-
 - content_for :title do
   =t 'list_morbidity_events'
 
@@ -33,6 +31,16 @@
 
 #change_view{:style => "display: none"}
   - form_tag(cmrs_path, :method => :get) do
+    %span.horiz
+      %label=t 'event_types'
+      = check_box_tag("event_types[]", "AssessmentEvent")
+      = t("assessment_event")
+      %br
+      = check_box_tag("event_types[]", "MorbidityEvent")
+      = t("morbidity_event")
+      %br
+      = check_box_tag("event_types[]", "ContactEvent")
+      = t("contact_event")
     %span.horiz
       %label=t 'event_investigation_status'
 
@@ -86,6 +94,8 @@
       - @events.each do |event|
         - if event.is_a? ContactEvent
           = render :partial => 'contact_events/contact_event', :locals => { :contact_event => event, :view_mode => :index }
+        - elsif event.is_a? AssessmentEvent
+          = render :partial => 'assessment_events/assessment_event', :locals => { :assessment_event => event, :view_mode => :index }
         - else
           = render :partial => 'morbidity_events/morbidity_event', :locals => { :morbidity_event => event, :view_mode => :index }
   %br

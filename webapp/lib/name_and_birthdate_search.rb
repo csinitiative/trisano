@@ -100,7 +100,7 @@ module NameAndBirthdateSearch
         LEFT JOIN disease_events ON (disease_events.event_id = events.id)
         LEFT JOIN diseases ON (disease_events.disease_id = diseases.id)
         WHERE participations.type = 'InterestedParty' AND
-          events.type IN ('MorbidityEvent','ContactEvent') AND
+          events.type IN ('MorbidityEvent','ContactEvent','AssessmentEvent') AND
           #{sensitive_disease_conditions}
       )
     }

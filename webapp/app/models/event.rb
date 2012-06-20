@@ -104,8 +104,8 @@ class Event < ActiveRecord::Base
     :order => "created_at ASC"
 
   named_scope :active, :conditions => ['deleted_at IS NULL']
-  named_scope :morbs_or_contacts,
-    :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent)],
+  named_scope :root_level_events,
+    :conditions => ['type IN (?)', %w(MorbidityEvent ContactEvent AssessmentEvent)],
     :order => "created_at ASC"
 
   named_scope :sensitive, lambda { |user|
@@ -121,11 +121,19 @@ class Event < ActiveRecord::Base
       :include => :all_jurisdictions }
   }
 
+  # These are assessment events that have been 'elevated' from contacts of this event
+  has_many :assessment_child_events, :class_name => 'AssessmentEvent', :foreign_key => 'parent_id' do
+    def active(reload=false)
+      @active_assessment_siblings = nil if reload
+      @active_assessment_siblings ||= AssessmentEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+    end
+  end
+
   # These are morbidity events that have been 'elevated' from contacts of this event
   has_many :morbidity_child_events, :class_name => 'MorbidityEvent', :foreign_key => 'parent_id' do
     def active(reload=false)
-      @active_siblings = nil if reload
-      @active_siblings ||= MorbidityEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
+      @active_morbidity_siblings = nil if reload
+      @active_morbidity_siblings ||= MorbidityEvent.find(:all, :conditions => ["parent_id = ? AND deleted_at IS NULL", proxy_owner.id])
     end
   end
 
@@ -210,7 +218,18 @@ class Event < ActiveRecord::Base
     @suppressed_validations ||= []
   end
 
+  def export_eventdate
+      #todo:refactor duplicate in cdc.rb
+      event_date = disease_onset_date || disease_event_date_diagnosed ||
+        pg_array(lab_collection_dates).map {|d| Date.parse(d)}.sort.first ||
+        pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first ||
+        first_reported_ph_date || event_created_at
+      return '999999' if event_date.blank?
+      (event_date.is_a?(String) ? Date.parse(event_date) : event_date).strftime('%y%m%d')
+  end
+
   class << self
+    include PostgresFu
 
     def followup_core_paths(event_id)
       sql = "SELECT core_path
@@ -287,7 +306,8 @@ class Event < ActiveRecord::Base
         jurispl.short_name AS investigation_jurisdiction_short_name,
         intpplent.id AS interested_party_person_entity_id,
         ethid.the_code AS interested_party_ethnicity_code,
-        sexid.the_code AS interested_party_sex_code
+        sexid.the_code AS interested_party_sex_code,
+        events.event_onset_date AS event_onset_date
     FROM
         events
         LEFT OUTER JOIN disease_events
@@ -534,27 +554,6 @@ class Event < ActiveRecord::Base
     Answer.new(:question_id => question_id)
   end
 
-
-  # Indicates whether an event supports tasks. Generally used by the UI in shared partials
-  # to determine whether task-specific layout should be included.
-  #
-  # Sub-classes can either override this method to return true or use a declarative option:
-  #
-  # supports :tasks
-  def supports_tasks?
-    false
-  end
-
-  # Indicates whether an event supports attachements. Generally used by the UI in shared partials
-  # to determine whether attachment-specific layout should be included.
-  #
-  # Sub-classes can either override this method to return true or use a declarative option:
-  #
-  # supports :attachments
-  def supports_attachments?
-    false
-  end
-
   def clone_event(event_components=[])
     event_components = [] if event_components.nil?
     _event = self.class.new
@@ -628,18 +627,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  class << self
-    def supports(functionality)
-      return unless [:tasks, :attachments].include?(functionality)
-      supports_method = %Q{
-        def supports_#{functionality.to_s}?
-          true
-        end
-      }
-      class_eval(supports_method)
-    end
-  end
-
   def events_quick_list(reload=false)
     if reload or @events_quick_list.nil?
       @events_quick_list = self.class.find_by_sql([<<-SQL, self.id, self.id])
@@ -685,6 +672,99 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def promote_to(event_type)
+    method_name = "promote_to_#{event_type}"
+    supports_method_name = "supports_#{method_name}?"
+    if self.send(supports_method_name)
+      return self.send(method_name)
+    else
+      return false
+    end    
+  end
+  
+  def promote_to_morbidity_event
+    raise(I18n.t("cannot_promote_unsaved_event")) if self.new_record?
+
+    # In case the event is in a state that doesn't exist for a morbidity evnet.
+    # Also check that the event type supports the not_routed state. (Assessment Events do not.)
+    if self.respond_to?(:not_routed?) && self.not_routed?
+      if self.jurisdiction.place.is_unassigned_jurisdiction?
+        self.promote_as_new
+      else
+        self.promote_as_accepted
+      end
+    end
+
+    self['type'] = MorbidityEvent.to_s
+    # Pull morb forms
+    if self.disease_event && self.disease_event.disease
+      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
+      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
+    end
+    self.add_note(I18n.translate("system_notes.event_promoted_from_to", :locale => I18n.default_locale, :from => self.type.humanize.downcase, :to => "morbidity event"))
+    self.created_at = Time.now
+
+    if self.save
+      EventTypeTransition.create(:event => self, :was => self.class, :became => MorbidityEvent, :by => User.current_user)
+      self.freeze
+      expire_parent_record_contacts_cache
+      # Return a fresh copy from the db
+      MorbidityEvent.find(self.id)
+    else
+      false
+    end
+  end
+  
+  def promote_to_assessment_event
+    raise(I18n.t("cannot_promote_unsaved_event")) if self.new_record?
+
+    # In case the event is in a state that doesn't exist for a morbidity evnet.
+    # Also check that the event type supports the not_routed state. (Assessment Events do not.)
+    if self.respond_to?(:not_routed?) && self.not_routed?
+      if self.jurisdiction.place.is_unassigned_jurisdiction?
+        self.promote_as_new
+      else
+        self.promote_as_accepted
+      end
+    end
+
+    self['type'] = AssessmentEvent.to_s
+    # Pull assessment event forms
+    if self.disease_event && self.disease_event.disease
+      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
+      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'assessment_event'))
+    end
+    self.add_note(I18n.translate("system_notes.event_promoted_from_to", :locale => I18n.default_locale, :from => self.type.humanize.downcase, :to => "morbidity event"))
+    self.created_at = Time.now
+
+    if self.save
+      EventTypeTransition.create(:event => self, :was => self.class, :became => AssessmentEvent, :by => User.current_user)
+      self.freeze
+      expire_parent_record_contacts_cache
+      # Return a fresh copy from the db
+      AssessmentEvent.find(self.id)
+    else
+      false
+    end
+  end
+
+  def patient
+    if self.respond_to?(:interested_party) &&
+       self.interested_party.present? &&
+       self.interested_party.person_entity.present? &&
+       self.interested_party.person_entity.person.present? 
+      return interested_party.person_entity.person
+    end
+  end
+  
+  def disease_name
+    if self.respond_to?(:disease) &&
+       self.disease.present? &&
+       self.disease.disease.present?
+      return disease.disease.disease_name
+    end
+  end
+  
   private
 
   def create_form_references
@@ -725,4 +805,53 @@ class Event < ActiveRecord::Base
     parent_disease_event.disease_id = parent_event.disease_event.disease_id
     build_disease_event(parent_disease_event.attributes)
   end
+
+  # Indicates whether an event supports something. Generally used by the UI in shared partials
+  # to determine whether task-specific layout should be included.
+  #
+  # Is evaulated at runtime so we must limit the type of functionality supported so we can explictly
+  # set the defaults below the class definition, so when the class is loaded, it defines methods
+  # for each of these functionalities.
+
+  def self.supported_functionality
+    %w(
+        encounter_specific_treatments
+        encounter_specific_labs
+        tasks
+        attachments
+        promote_to_morbidity_event
+        promote_to_assessment_event
+        child_events
+      )
+  end
+
+
+
+  # Sub-classes can either override these method to return true or use a declarative option:
+  # supports :something
+  class << self
+    # self is the class from which support :something is being called
+
+    def supports(functionality)
+      raise "Unsupported functionality" unless Event.supported_functionality.include?(functionality.to_s)
+
+      supports_method = %Q{
+        def supports_#{functionality.to_s}?
+          true
+        end
+      }
+
+      # adds method to the calling class so supports_something? and returns true
+      class_eval(supports_method)
+    end #def supports
+  end #class << self
+end
+
+# Define methods for supported event functionality such as
+# supports_tasks? which will return false, allowing subclasses
+# who have defined supports :tasks to override this
+#
+# Must get called outside the class so when class is loaded the code is evaulated
+Event.supported_functionality.each do |functionality|
+  Event.send(:define_method, "supports_#{functionality}?", Proc.new {false})
 end

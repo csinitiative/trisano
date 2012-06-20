@@ -10,7 +10,7 @@ Feature: Managing Lab Results
       | Urine Test |
       | X-Ray      |
 
-    When I navigate to the new event page
+    When I navigate to the new morbidity event page
     Then all common test types should be available for selection
     And the following common test types should not be available for selection
       |More choices... |
@@ -24,7 +24,7 @@ Feature: Managing Lab Results
       | Plague       | X-Ray       |
     And a simple morbidity event for last name Jones
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then the following common test types should be available for selection
       | Blood Test |
       | Urine Test |
@@ -42,7 +42,7 @@ Feature: Managing Lab Results
       | Plague       | X-Ray       |
     And a morbidity event exists with the disease AIDS
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then the following common test types should be available for selection
       | Blood Test      |
       | Urine Test      |
@@ -60,7 +60,7 @@ Feature: Managing Lab Results
       | Plague       | X-Ray       |
     And a morbidity event exists with the disease Anthrax
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then the following common test types should be available for selection
       | Blood Test |
       | Urine Test |
@@ -78,7 +78,7 @@ Feature: Managing Lab Results
       | Plague       | X-Ray       |
     And a morbidity event exists with a lab result having test type 'Blood Test'
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then the following common test types should be available for selection
       | Blood Test      |
       | More choices... |
@@ -97,7 +97,7 @@ Feature: Managing Lab Results
     And the following organisms exist
       | Cooties     |
       | Lurgy Virus |
-    And I navigate to the new event page
+    And I navigate to the new morbidity event page
     And I click on the lab tab
     And I enter a last name of Jones
     And I fill in "Date first reported to public health" with "September 14, 2010"
@@ -113,5 +113,5 @@ Feature: Managing Lab Results
     And I select a sent to state lab value of 'Yes'
     And I enter a comment of "Whew!"
 
-    When I save the new event form
+    When I save the new morbidity event form
     Then I should see the values entered above

@@ -19,7 +19,6 @@ class ContactEventsController < EventsController
   include ContactEventsHelper
 
   before_filter :load_parent, :only => [ :new, :create ]
-  before_filter :can_promote?, :only => :event_type
 
   def index
     render :text => t("contact_event_no_index"), :status => 405
@@ -131,16 +130,6 @@ class ContactEventsController < EventsController
 
   def destroy
     head :method_not_allowed
-  end
-
-  def event_type
-    if m_event = @event.promote_to_morbidity_event
-      flash[:notice] = t(:promoted_to_morbidity)
-      redirect_to cmr_path(m_event)
-    else
-      flash.now[:error] = t("could_not_promote_to_morbidity")
-      render :action => :edit, :status => :bad_request
-    end
   end
 
   private

@@ -20,6 +20,8 @@ class ContactEvent < HumanEvent
 
   supports :tasks
   supports :attachments
+  supports :promote_to_morbidity_event
+  supports :promote_to_assessment_event
 
   before_create :direct_child_creation_initialization, :add_contact_event_creation_note
     
@@ -28,7 +30,7 @@ class ContactEvent < HumanEvent
   workflow do
     state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
       :note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
-      promote_to_cmr
+      promote_to_morbidity_event
       assign_to_lhd
     end
     state :new, :meta => {:note_text => '"#{I18n.translate(\'workflow.event_created_for_jurisdiction\', :locale => I18n.default_locale)} #{self.jurisdiction.name}."'} do
@@ -159,37 +161,6 @@ class ContactEvent < HumanEvent
     self.soft_delete
   end
 
-  def promote_to_morbidity_event
-    raise(I18n.t("cannot_promote_unsaved_contact")) if self.new_record?
-
-    # In case the contact is in a state that doesn't exist for a morb
-    if self.not_routed?
-      if self.jurisdiction.place.is_unassigned_jurisdiction?
-        self.promote_as_new
-      else
-        self.promote_as_accepted
-      end
-    end
-
-    self['type'] = MorbidityEvent.to_s
-    # Pull morb forms
-    if self.disease_event && self.disease_event.disease
-      jurisdiction = self.jurisdiction ? self.jurisdiction.secondary_entity_id : nil
-      self.add_forms(Form.get_published_investigation_forms(self.disease_event.disease_id, jurisdiction, 'morbidity_event'))
-    end
-    self.add_note(I18n.translate("system_notes.event_changed_from_contact_to_morbidity", :locale => I18n.default_locale))
-    self.created_at = Time.now
-
-    if self.save
-      self.freeze
-      expire_parent_record_contacts_cache
-      # Return a fresh copy from the db
-      MorbidityEvent.find(self.id)
-    else
-      false
-    end
-  end
-
   def copy_event(new_event, event_components)
     super
     # When we get a story asking for it, this is where we will copy over the (now poorly named) participations_contacts info to a new event.
@@ -207,10 +178,10 @@ class ContactEvent < HumanEvent
   end
 
   private
-
+  
   def expire_parent_record_contacts_cache
     parent=self.parent_event
-    if parent.present? 
+    if parent.present?
       parent.touch
       redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
       redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")

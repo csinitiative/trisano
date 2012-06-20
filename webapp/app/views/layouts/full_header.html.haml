@@ -1,0 +1,123 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+
+!!!
+%html{:xmlns => 'http://www.w3.org/1999/xhtml'}
+  %head
+    %title
+      =ct 'trisano_title'
+      = yield :title
+
+    = stylesheet_link_tag 'trisano-theme/jquery-ui-1.8.4.custom'
+    = stylesheet_link_tag 'grid'
+    = stylesheet_link_tag 'structure'
+    = stylesheet_link_tag 'typography'
+    = stylesheet_link_tag 'action'
+    = stylesheet_link_tag 'tabview'
+    = stylesheet_link_tag 'calendar/trisano/style'
+
+    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls'
+    = javascript_include_tag 'jquery/jquery-1.4.2.min', 'jquery/jquery-ui-1.8.4.custom.min', 'jquery/jquery.tmpl.min'
+    = javascript_include_tag 'jquery/jquery.metadata', 'jquery/jquery.tablesorter.custom', 'jquery/jquery.livequery'
+    %script{:type => "text/javascript"}
+      var $j = jQuery.noConflict();
+
+    = javascript_include_tag 'trisano_i18n'
+    = translations_js
+    = javascript_include_tag 'application'
+    = javascript_include_tag 'sniffer'
+    = javascript_include_tag 'yui/yahoo-dom-event'
+    = javascript_include_tag 'shortcut'
+    = javascript_include_tag 'keycode'
+    = javascript_include_tag 'keymap'
+    = javascript_include_tag 'element-beta-min'
+    = javascript_include_tag 'tabview-min'
+    = javascript_include_tag 'patch_inplaceeditor_1-8-1'
+    = javascript_include_tag 'trisano_ajax', 'trisano_lazy_load'
+    = javascript_include_tag 'sortable'
+    - javascript_include_renderers.each do |js|
+      = javascript_include_tag js[:path]
+    = embedded_javascripts
+
+    / Calendar
+    = calendar_date_select_includes
+    = localized_calendar_date_select_variables
+
+    / Other javascripts, maybe
+    = yield :javascript_includes
+
+  %body.yui-skin-sam
+    - dom_loaded do
+      = "shortcuts_init('#{home_path}', '#{shortcuts_path}');"
+      = "focus_init();"
+      - dom_loaded_javascripts.each do |js|
+        = js
+    = javascript_include_tag 'wz_tooltip'
+    #head
+      .container
+        =render_main_logo
+        .right
+          .areas
+            =render_main_menu
+          .user
+            -if User.current_user
+              =render_user_tools(User.current_user)
+      #bar
+        .container
+          .left.areas_title
+            = yield :title
+          .right.action1
+            = yield :tools_two
+      #title_area
+        .container
+          - if flash[:notice]
+            #flash-message.notice-message
+              = flash[:notice]
+          - elsif flash[:error]
+            #flash-message.error-message
+              = flash[:error]
+          - else
+            #flash-message
+          .name
+            = yield :name
+          .tools
+            = yield :tools
+    #main-content
+      %script{:type => "text/javascript"}
+        function setMainContentTopMargin() {
+        header_height = Element.getHeight('head') + 2 + "px"
+        Element.setStyle('main-content', {top: header_height})
+        }
+        jQuery(window).resize(function() {
+        setMainContentTopMargin();
+        });
+        jQuery(window).load(function() {
+        // Becuase we don't know the size of the logo being loaded
+        // we must wait for the window to be loaded to calcuate the header_height
+        setMainContentTopMargin();
+        });
+      .container
+        = yield
+      .container
+        #foot
+          = render_footer
+          - if config_option(:auth_allow_user_switch_hidden) == true
+            - users = User.find(:all).collect { |user| [ user.user_name, user.uid] }
+            - form_tag(url_for(:controller => "events", :action => "change_user"), :id => "switch_user") do
+              %div{:id => "hidden_switch", :onmouseover => "$('user_id').style.visibility = 'visible'"}
+                = select_tag("user_id", options_for_select(users, User.current_user.uid), :onmouseout => "this.style.visibility = 'hidden'", :onchange => "this.form.submit()", :style => "display: inline; visibility: hidden")
+        %div#footnotes_holder
+    =fire_document_loaded

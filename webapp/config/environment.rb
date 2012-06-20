@@ -38,7 +38,6 @@ Rails::Initializer.run do |config|
   # :all can be used as a placeholder for all plugins not explicitly named
   config.plugins = [ :rails_inheritable_attributes_manager, :trisano_locales, :all ]
   config.plugin_paths << "#{RAILS_ROOT}/vendor/trisano"
-  config.plugin_paths << "#{RAILS_ROOT}/../plugins"
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
@@ -118,7 +117,7 @@ Rails::Initializer.run do |config|
     require 'event_search'
     require 'fulltext_search'
     require 'name_and_birthdate_search'
-    require 'new_cmr_search_results'
+    require 'new_human_event_search_results'
     require 'routing/workflow_helper'
     require 'hl7/extensions'
     require 'postgres_fu'

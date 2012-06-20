@@ -35,6 +35,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <br />
       <span class="label"><%= ct 'date_record_created' %></span>
       <%= ld(@event.created_at.try(:to_date)) %>
+      <span class="vert-break"></span>
+      <%= render(:partial => 'events/event_type_transition.html.haml', :locals => { :event => @event }) %>
     <% end -%>
     <% core_section :case_outbreak_section, f do -%>
       <% core_element :lhd_case_status_id, f, :horiz do -%>

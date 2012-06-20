@@ -1,6 +1,7 @@
 class CsvFieldsController < ApplicationController
   def index
     @morbidity_event_fields = CsvField.morbidity_event_fields
+    @assessment_event_fields = CsvField.assessment_event_fields
     @place_event_fields     = CsvField.place_event_fields
     @contact_event_fields   = CsvField.contact_event_fields
     @lab_fields             = CsvField.lab_fields

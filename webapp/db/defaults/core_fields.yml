@@ -2132,3 +2132,1027 @@
   key: place_event[interested_place][place_entity][email_addresses]
   parent_key: place_event[interested_place][place_entity][phone_section]
 
+#ASSESSMENT EVENTS
+- help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: event
+  event_type: assessment_event
+  key: assessment_event
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[demographic_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[clinical_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[lab_info_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[contacts_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[encounters_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[epi_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[reporting_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[investigation_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[notes_tab]
+  
+- parent_key: assessment_event
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: tab
+  event_type: assessment_event
+  key: assessment_event[administrative_tab]
+  
+- parent_key: assessment_event[demographic_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][name_section]
+  
+- parent_key: assessment_event[demographic_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[address_section]
+  
+- parent_key: assessment_event[demographic_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][age_section]
+  
+- parent_key: assessment_event[demographic_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][phone_section]
+  
+- parent_key: assessment_event[demographic_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][demographics_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[disease_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[hospitalized_health_facilities_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[mortality_status_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[pregnancy_status_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[treatments_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[encounter_specific_treatments_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[clinicians_section]
+  
+- parent_key: assessment_event[clinical_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[diagnostic_facilities_section]
+  
+- parent_key: assessment_event[lab_info_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[labs_section]
+  
+- parent_key: assessment_event[lab_info_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[encounter_specific_labs_section]
+  
+- parent_key: assessment_event[contacts_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[contacts_section]
+  
+- parent_key: assessment_event[encounters_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[encounters_section]
+  
+- parent_key: assessment_event[encounters_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[encounter_notes_section]
+  
+- parent_key: assessment_event[epi_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[contact_oriented_section]
+  
+- parent_key: assessment_event[epi_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[place_exposures_section]
+  
+- parent_key: assessment_event[epi_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[other_section]
+  
+- parent_key: assessment_event[reporting_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[reporting_agency_section]
+  
+- parent_key: assessment_event[reporting_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[reporter_section]
+  
+- parent_key: assessment_event[reporting_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[reported_dates_section]
+  
+- parent_key: assessment_event[notes_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[event_attachments_section]
+  
+- parent_key: assessment_event[notes_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[event_notes_section]
+  
+- parent_key: assessment_event[notes_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[event_tasks_section]
+  
+- parent_key: assessment_event[administrative_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[event_information_section]
+  
+- parent_key: assessment_event[administrative_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[case_outbreak_section]
+  
+- parent_key: assessment_event[administrative_tab]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: section
+  event_type: assessment_event
+  key: assessment_event[event_auditing_section]
+  
+- parent_key: assessment_event[interested_party][person_entity][name_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[interested_party][person_entity][person][first_name]
+  
+- parent_key: assessment_event[reporter_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[reporter][person_entity][person][first_name]
+  
+- parent_key: assessment_event[interested_party][person_entity][demographics_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: gender
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][person_entity][person][birth_gender_id]
+  
+- parent_key: assessment_event[interested_party][person_entity][demographics_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: ethnicity
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][person_entity][person][ethnicity_id]
+  
+- parent_key: assessment_event[interested_party][person_entity][demographics_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  code_name: race
+  event_type: assessment_event
+  field_type: multi_select
+  key: assessment_event[interested_party][person_entity][race_ids]
+  
+- parent_key: assessment_event[reporter_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[reporter][person_entity][telephones][area_code]
+  
+- parent_key: assessment_event[interested_party][person_entity][demographics_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: language
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][person_entity][person][primary_language_id]
+  
+- parent_key: assessment_event[reporter_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[reporter][person_entity][telephones][phone_number]
+  
+- parent_key: assessment_event[pregnancy_status_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][risk_factor][pregnant_id]
+  
+- parent_key: assessment_event[reporter_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[reporter][person_entity][telephones][extension]
+  
+- parent_key: assessment_event[pregnancy_status_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: date
+  key: assessment_event[interested_party][risk_factor][pregnancy_due_date]
+  
+- parent_key: assessment_event[disease_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[disease_event][disease_id]
+  
+- parent_key: assessment_event[disease_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: date
+  key: assessment_event[disease_event][disease_onset_date]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][reference_range]
+  
+- parent_key: assessment_event[disease_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: date
+  key: assessment_event[disease_event][date_diagnosed]
+  
+- parent_key: assessment_event[contact_oriented_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][risk_factor][food_handler_id]
+  
+- parent_key: assessment_event[contact_oriented_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][risk_factor][healthcare_worker_id]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][collection_date]
+  
+- parent_key: assessment_event[contact_oriented_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][risk_factor][group_living_id]
+  
+- parent_key: assessment_event[hospitalized_health_facilities_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[disease_event][hospitalized_id]
+  
+- parent_key: assessment_event[mortality_status_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[disease_event][died_id]
+  
+- parent_key: assessment_event[contact_oriented_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[interested_party][risk_factor][day_care_association_id]
+  
+- parent_key: assessment_event[contacts_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[contacts]
+  
+- parent_key: assessment_event[contact_oriented_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[interested_party][risk_factor][occupation]
+  
+- parent_key: assessment_event[place_exposures_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[places]
+  
+- parent_key: assessment_event[other_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[interested_party][risk_factor][risk_factors]
+  
+- parent_key: assessment_event[treatments_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[treatments]
+  
+- parent_key: assessment_event[other_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: multi_line_text
+  key: assessment_event[interested_party][risk_factor][risk_factors_notes]
+  
+- parent_key: assessment_event[reported_dates_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[results_reported_to_clinician_date]
+  
+- parent_key: assessment_event[reported_dates_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  required_for_event: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[first_reported_PH_date]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: numeric
+  key: assessment_event[acuity]
+  
+- parent_key: assessment_event[case_outbreak_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  code_name: investigation
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[lhd_case_status_id]
+  
+- parent_key: assessment_event[other_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[other_data_1]
+  
+- parent_key: assessment_event[interested_party][person_entity][name_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  required_for_event: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[interested_party][person_entity][person][last_name]
+  
+- parent_key: assessment_event[other_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[other_data_2]
+  
+- parent_key: assessment_event[case_outbreak_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  code_name: investigation
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[state_case_status_id]
+  
+- parent_key: assessment_event[case_outbreak_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: yesno
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[outbreak_associated_id]
+  
+- parent_key: assessment_event[interested_party][person_entity][name_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[interested_party][person_entity][person][middle_name]
+  
+- parent_key: assessment_event[case_outbreak_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[outbreak_name]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[address][street_number]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: multi_select
+  key: assessment_event[jurisdiction][secondary_entity_id]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[address][street_name]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[workflow_state]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[address][unit_number]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[investigation_started_date]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[address][city]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[investigation_completed_LHD_date]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: state
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[address][state_id]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  code_name: yesno
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][specimen_sent_to_state]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[event_name]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: county
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[address][county_id]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  required_for_section: true
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][secondary_entity_id]
+  
+- parent_key: assessment_event[event_auditing_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[review_completed_by_state_date]
+  
+- parent_key: assessment_event[other_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  code_name: imported
+  event_type: assessment_event
+  field_type: drop_down
+  key: assessment_event[imported_from_id]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  required_for_section: false
+  fb_accessible: false
+  can_follow_up: false
+  code_name: lab_accession_no
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][accession_no]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  required_for_section: true
+  fb_accessible: false
+  can_follow_up: false
+  code_name: lab_test_type
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][test_type]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][lab_test_date]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[address][postal_code]
+  
+- parent_key: assessment_event[interested_party][person_entity][age_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: date
+  key: assessment_event[interested_party][person_entity][person][birth_date]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  code_name: specimen
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][specimen_source]
+  
+- parent_key: assessment_event[reporting_agency_section]
+  help_text: 
+  required_for_section: true
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[reporting_agency][place_entity][place][name]
+  
+- parent_key: assessment_event[interested_party][person_entity][age_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: numeric
+  key: assessment_event[interested_party][person_entity][person][approximate_age_no_birthday]
+  
+- parent_key: assessment_event[interested_party][person_entity][age_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: numeric
+  key: assessment_event[interested_party][person_entity][person][age_at_onset]
+  
+- parent_key: assessment_event[reporter_section]
+  help_text: 
+  required_for_section: true
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: single_line_text
+  key: assessment_event[reporter][person_entity][person][last_name]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  code_name: test_result
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][test_result]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][organism]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  code_name: test_status
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][test_status]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][result_value]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][units]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: false
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs][lab_results][comment]
+  
+- parent_key: assessment_event[mortality_status_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  event_type: assessment_event
+  field_type: date
+  key: assessment_event[interested_party][person_entity][person][date_of_death]
+  
+- parent_key: assessment_event[interested_party][person_entity][name_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[parent_guardian]
+  
+- parent_key: assessment_event[address_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  code_name: district
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[address][district]
+  
+- parent_key: assessment_event[reporting_agency_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[reporting_agency][place_entity][telephones][area_code]
+  
+- parent_key: assessment_event[reporting_agency_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[reporting_agency][place_entity][telephones][phone_number]
+  
+- parent_key: assessment_event[reporting_agency_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[reporting_agency][place_entity][telephones][extension]
+  
+- parent_key: assessment_event[reporting_agency_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  code_name: placetype
+  field_type: multi_select
+  event_type: assessment_event
+  key: assessment_event[reporting_agency][place_entity][place][place_type]
+  
+- parent_key: assessment_event[interested_party][person_entity][phone_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][telephones]
+  
+- parent_key: assessment_event[interested_party][person_entity][phone_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][email_addresses]
+  
+- parent_key: assessment_event[clinicians_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[clinicians]
+  
+- parent_key: assessment_event[diagnostic_facilities_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[diagnostic_facilities]
+  
+- parent_key: assessment_event[labs_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[labs]
+  
+- parent_key: assessment_event[encounters_section]
+  help_text: 
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[encounters]
+  

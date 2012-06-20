@@ -150,16 +150,16 @@ es:
   attachment_types:
     correspondence: Correspondencia
     lab: Resultados de laboratorio
-    letter: Letra
+    letter: Carta
     x-ray: Rayo X
-    edn-notification: EDN Notification
-    edn-followup: EDN Follow Up
-    igra-report: IGRA Report
-    consult-report: Consultation Report
+    edn-notification: Notificaci梟 de EDN
+    edn-followup: Seguimiento de EDN
+    igra-report: IGRA Reporte
+    consult-report: Consultaci梟 Reporte
     ijr: IJR
-    death-certificate: Death Certificate
-    medical-record: Medical Record
-    other: Other
+    death-certificate: Certificaci梟 de Muerte
+    medical-record: Historia Cl抧ica
+    other: Otro/a
 
   encounter_location_types:
     clinic: Cl铆nica
@@ -214,14 +214,13 @@ es:
     event_edited: Se corrigi贸 evento
     extra_jurisdictional_view_only_access: "Acceso de s贸lo vista y extrajurisdiccional."
     event_derived_from: "El evento proviene de {{link}}."
-    event_promoted_from_contact: "Traspasado/a(s) desde contacto."
 
     event_queue_deleted: "Se ha eliminado la cola de eventos '{{queue_name}}'. Se desaloj贸 el evento de dicha cola."
     event_needs_reassignment: "Todav铆a no se ha aceptado el evento para investigaci贸n y deber铆a reasignarse."
 
     contact_event_created: "Se cre贸 el evento de contacto."
     contact_event_deleted: "Caso de contacto borrado."
-    event_changed_from_contact_to_morbidity: "Se converti贸 el evento desde el tipo contacto al tipo de morbilidad."
+    event_promoted_from_to: "Evento promovido desde {{from}} hasta {{to}}."
 
     lab_and_results_deleted: "Se eliminaron el laboratorio junto con sus resultados."
     lab_result_created: "Resultado de laboratorio a帽adido."
@@ -254,7 +253,7 @@ es:
 
   common_test_type_associated_with_lab_results: "{{name}} ya corresponde a los resultados de laboratorio"
   investigator_already_assigned: "Investigador ya asignado"
-  cannot_promote_unsaved_contact: "No se puede traspasar un contacto no guardado a un evento de morbilidad"
+  cannot_promote_unsaved_event: "No se puede promocionar un evento no son salvos."
   loading_disease_group: "Cargando el grupo de enfermedad {{disease_group}}"
   could_not_remove_form_from_event: "No se pudo remover un formulario de este event: {{message}}"
   unable_to_process_new_forms: "No se pudo procesar formularios nuevos"

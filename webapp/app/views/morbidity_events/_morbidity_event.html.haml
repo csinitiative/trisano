@@ -26,7 +26,7 @@
       %span{ :style => 'font-style: italic; font-size: small;'}
         ="#{t 'morbidity_event'}"
     .tools
-      = basic_morbidity_event_controls(morbidity_event, view_mode)
+      = basic_human_event_controls(morbidity_event, view_mode)
       = render :partial => 'morbidity_events/print_options', :locals => { :event => morbidity_event }
       = extra_tools if (view_mode != :index)
   %td

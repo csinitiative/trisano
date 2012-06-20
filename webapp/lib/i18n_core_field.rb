@@ -17,7 +17,6 @@ module I18nCoreField
   end
 
   def core_path_segments
-    core_path.gsub(']','').split('[')
+    core_path.gsub(/\[\d+\]/, '').gsub(']','').split('[')
   end
-
 end

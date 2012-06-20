@@ -22,9 +22,9 @@ module Export
     reloadable!
 
     # To follow along:  We may be asked to export a single event or multiple events.  Top level events can
-    # be either morbidity events, contact events or a mix of both (ideally sorted first by event type).
-    # For morbidities and contacts we need to output labs and treatments, if any, on separate lines.  Also,
-    # for morbidities only we need to output any contact or place (exposure) events associated with the event.
+    # be root level events (Morbidity, Assessment, Contact) or a mix of both (ideally sorted first by event type).
+    # For root level events we need to output labs and treatments, if any, on separate lines.  Also,
+    # for morbidities and assessments only we need to output any contact or place (exposure) events associated with the event.
     def Csv.export(events, options={}, &proc)
       events = [events] unless events.respond_to?(:each)
       return if events.empty?
@@ -44,6 +44,7 @@ module Export
 
       exportable_questions = {
         :morbidity_event => [],
+        :assessment_event => [],
         :contact_event => [],
         :place_event => []
       }
@@ -51,6 +52,9 @@ module Export
       unless options[:disease].nil?
         morbidity_forms = options[:disease].live_forms("MorbidityEvent")
         morbidity_forms.each { |form| exportable_questions[:morbidity_event].concat(form.exportable_questions) }
+
+        assessment_forms = options[:disease].live_forms("AssessmentEvent")
+        assessment_forms.each { |form| exportable_questions[:assessment_event].concat(form.exportable_questions) }
 
         contact_forms = options[:disease].live_forms("ContactEvent")
         contact_forms.each { |form| exportable_questions[:contact_event].concat(form.exportable_questions) }
@@ -125,7 +129,7 @@ module Export
         csv_header  = event_headers(event)
         csv_header += lab_headers if exporting?(:labs)
         csv_header += treatment_headers if exporting?(:treatments)
-        if event.is_a? MorbidityEvent
+        if event.supports_child_events?
           csv_header += event_headers(PlaceEvent) if exporting?(:places)
           csv_header += event_headers(ContactEvent) if exporting?(:contacts)
         end
@@ -144,12 +148,14 @@ module Export
         export_group_data(:treatment_fields).map { |treatment_datum| treatment_datum.first }
       end
 
-      # A root-level event is either a morbidity or a contact, not a place
       def output_body(event)
         # A contact is only contact is the original patient
-        num_contacts    = exporting?(:contacts) ? event.child_events.morbs_or_contacts.active.size : 0
+        
+        # A root-level event is either a morbidity, contact or assessment, not a place
+        num_contacts    = exporting?(:contacts) ? event.child_events.root_level_events.active.size : 0
+        
         #contacts don't have places
-        num_places      = event.is_a?(MorbidityEvent) && exporting?(:places) ? event.place_child_events.active(true).size : 0
+        num_places      = event.supports_child_events? && exporting?(:places) ? event.place_child_events.active(true).size : 0
         num_lab_results = exporting?(:labs) ? event.lab_results.size : 0
         num_treatments  = exporting?(:treatments) ? event.interested_party.treatments.size : 0
         num_hospitals = (!exporting?(:hospitalization_facilities) || event.hospitalization_facilities.nil?) ? 0 : event.hospitalization_facilities.size
@@ -166,7 +172,7 @@ module Export
           csv_row += export_group_values(loop_event, :lab_fields, ctr).map { |value| value.to_s.gsub(/,/,' ') } if exporting?(:labs)
           csv_row += export_group_values(loop_event, :treatment_fields, ctr).map { |value| value.to_s.gsub(/,/,' ') } if exporting?(:treatments)
 
-          if event.is_a? MorbidityEvent
+          if event.supports_child_events?
             if exporting?(:places)
               if ctr < num_places
                 place_event = event.place_child_events.active[ctr]
@@ -178,7 +184,7 @@ module Export
 
             if exporting?(:contacts)
               if ctr < num_contacts
-                contact_event = event.child_events.morbs_or_contacts.active[ctr]
+                contact_event = event.child_events.root_level_events.active[ctr]
               else
                 contact_event = ContactEvent.new
               end

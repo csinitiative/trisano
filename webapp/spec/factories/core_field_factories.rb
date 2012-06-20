@@ -21,7 +21,7 @@ end
 
 Factory.define :cmr_core_field, :parent => :core_field do |cf|
   cf.event_type :morbidity_event
-  cf.key 'morbidity_event[parent_guardian]'
+  cf.sequence(:key){|n| "morbidity_event[parent_guardian][#{n}]" }
 end
 
 Factory.define :core_fields_disease do |o|
@@ -34,13 +34,13 @@ Factory.define :cmr_core_fields_disease, :parent => :core_fields_disease do |cf|
 end
 
 Factory.define :cmr_section_core_field, :parent => :cmr_core_field do |cf|
-  cf.key 'morbidity_event[interested_party][person_entity][name_section]'
+  cf.sequence(:key){|n| "morbidity_event[interested_party][person_entity][name_section][#{n}]" }
   cf.tree_id { CoreField.next_tree_id }
   cf.field_type 'section'
 end
 
 Factory.define :cmr_tab_core_field, :parent => :cmr_core_field do |cf|
-  cf.key 'morbidity_event[demographic_tab]'
+  cf.sequence(:key){|n| "morbidity_event[demographic_tab][#{n}]" }
   cf.tree_id { CoreField.next_tree_id }
   cf.field_type 'tab'
 end

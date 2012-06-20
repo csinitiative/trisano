@@ -29,7 +29,7 @@ Feature: Deleting a CMR
   Scenario: Deleting a Morbidity event that has a place exposure
     Given I am logged in as a super user
       And a morbidity event exists with the disease Mumps
-      And the morbidity event has the following place exposures:
+      And the event has the following place exposures:
         | name             |
         | Allen Scrap      |
     When I go to the show CMR page
@@ -42,7 +42,7 @@ Feature: Deleting a CMR
   Scenario: Deleting only a place event
     Given I am logged in as a super user
       And a morbidity event exists with the disease Mumps
-      And the morbidity event has the following place exposures:
+      And the event has the following place exposures:
         | name         |
         | Allen Scrap  |
     When I go to the show CMR page
@@ -67,3 +67,37 @@ Feature: Deleting a CMR
     When I go to the show CMR page
     Then contact "Davis, Miles" should appear deleted
 
+  Scenario: Deleting an Assessment event
+    Given I am logged in as a super user
+      And an assessment event exists with the disease Mumps
+    When I go to the AE show page
+     And I follow "Delete"
+    Then I should see "The event was successfully marked as deleted."
+     And the AE should look deleted
+     And I should not see the 'Delete' link
+
+  Scenario: Deleting an Assessment event that has a contact
+    Given I am logged in as a super user
+      And an assessment event exists with the disease Mumps
+      And the assessment event has the following contacts:
+        | last_name  | first_name |
+        | Davis      | Miles      |
+    When I go to the AE show page
+     And I follow "Delete"
+    Then I should see "The event was successfully marked as deleted."
+     And the AE should look deleted
+     And I should not see the 'Delete' link
+     And contact "Davis, Miles" should appear deleted
+
+  Scenario: Deleting a Morbidity event that has a place exposure
+    Given I am logged in as a super user
+      And an assessment event exists with the disease Mumps
+      And the event has the following place exposures:
+        | name             |
+        | Allen Scrap      |
+    When I go to the AE show page
+     And I follow "Delete"
+    Then I should see "The event was successfully marked as deleted."
+     And the AE should look deleted
+     And I should not see the 'Delete' link
+     And place exposure "Allen Scrap" should appear deleted

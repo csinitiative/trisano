@@ -22,7 +22,7 @@ Role.transaction do
       :description => r['description']
     )
     unless role_translation.save
-      $stderr.puts role_translation.errors.full_messages.join("\n")
+      $stderr.puts role_translation.errors.full_messages.join("\n") unless role_translation.errors.full_messages == ["Locale has already been taken"]
       error_code = 1
     end
     print "."

@@ -6,7 +6,7 @@ Feature: Managing diagnosing facilities on events
   Scenario: Adding and removing diagnosing facilities in new mode
     Given I am logged in as a super user
 
-    When I navigate to the new event page and start a simple event
+    When I navigate to the new morbidity event page and start a simple event
     And I add an existing diagnosing facility
     And I click remove for that diagnosing facility
     Then I should not see the diagnosing facility
@@ -16,7 +16,7 @@ Feature: Managing diagnosing facilities on events
     And I save the event
     Then I should see all added diagnosing facilities
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I remove all of the diagnostic facilities
     Then I should not see the removed diagnostic facility
 
@@ -24,7 +24,7 @@ Feature: Managing diagnosing facilities on events
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I add an existing diagnosing facility
     And I click remove for that diagnosing facility
     Then I should not see the diagnosing facility

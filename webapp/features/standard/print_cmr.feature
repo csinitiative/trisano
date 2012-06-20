@@ -11,7 +11,7 @@ Feature: Printer friendly morbidity events
       |last_name|first_name|
       |Davis    |Miles     |
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I choose to print "Demographic" data
     And I press "Print"
 
@@ -38,7 +38,7 @@ Feature: Printer friendly morbidity events
       |last_name|first_name|
       |Davis    |Miles     |
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I choose to print "Demographic" data
     And I choose to print "Clinical" data
     And I press "Print"
@@ -66,7 +66,7 @@ Feature: Printer friendly morbidity events
       |last_name|first_name|
       |Davis    |Miles     |
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I choose to print "Demographic" data
     And I choose to print "Clinical" data
     And I choose to print "Laboratory" data
@@ -100,7 +100,7 @@ Feature: Printer friendly morbidity events
       |last_name|first_name|
       |Davis    |Miles     |
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I choose to print "All" data
     And I press "Print"
 
@@ -121,7 +121,7 @@ Feature: Printer friendly morbidity events
     Given I am logged in as a super user
     And a simple morbidity event for full name Robert Johnson
 
-    When I navigate to the event show page
+    When I navigate to the morbidity event show page
     And I choose to print "All" data
     And I press "Print"
 

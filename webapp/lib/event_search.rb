@@ -38,7 +38,7 @@ module EventSearch
     end
 
     def searchable_event_type?(options)
-      ['MorbidityEvent', 'ContactEvent', '', nil].include?(options[:event_type])
+      ['MorbidityEvent', 'ContactEvent', 'AssessmentEvent', '', nil].include?(options[:event_type])
     end
 
     def construct_criteria_sql(options)
@@ -151,7 +151,7 @@ module EventSearch
 
     def event_type_conditions(options)
       if options[:event_type].blank?
-        "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent')"
+        "(events.type = 'MorbidityEvent' OR events.type = 'ContactEvent' OR events.type = 'AssessmentEvent')"
       else
         sanitize_sql_for_conditions(['events.type = ?', options[:event_type]])
       end

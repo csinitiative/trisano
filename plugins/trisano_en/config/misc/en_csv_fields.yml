@@ -1458,3 +1458,763 @@ csv_field_00075:
   short_name: 
   use_code: disease_event.try(:died).try(:the_code)
   event_type: morbidity_event
+csv_field_10002:
+  export_group: event
+  long_name: patient_reporting_agency
+  sort_order: 10540
+  use_description: safe_call_chain(:reporting_agency, :secondary_entity, :place, :name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10003:
+  export_group: event
+  long_name: patient_reporter_last_name
+  sort_order: 10550
+  use_description: safe_call_chain(:reporter, :secondary_entity, :person, :last_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10004:
+  export_group: event
+  long_name: patient_address_postal_code
+  sort_order: 10110
+  use_description: address.try(:postal_code)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10005:
+  export_group: event
+  long_name: patient_outbreak_associated
+  sort_order: 10670
+  use_description: outbreak_associated.try(:code_description)
+  short_name: 
+  use_code: outbreak_associated.try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10007:
+  export_group: event
+  long_name: patient_address_street_name
+  sort_order: 10060
+  use_description: address.try(:street_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10008:
+  export_group: event
+  long_name: patient_event_onset_date
+  sort_order: 10620
+  use_description: event_onset_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10009:
+  export_group: event
+  long_name: patient_birth_gender
+  sort_order: 10180
+  use_description: interested_party.person_entity.person.try(:birth_gender).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:birth_gender).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10010:
+  export_group: event
+  long_name: patient_outbreak_name
+  sort_order: 10680
+  use_description: outbreak_name
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10013:
+  export_group: event
+  long_name: patient_first_reported_PH_date
+  sort_order: 10610
+  use_description: first_reported_PH_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10016:
+  export_group: event
+  long_name: patient_hospital_admission_date
+  sort_order: 10340
+  use_description: try(:hospitals_participation).try(:admission_date)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  collection: hospitalization_facilities
+  
+csv_field_10017:
+  export_group: event
+  long_name: patient_results_reported_to_clinician_date
+  sort_order: 10600
+  use_description: results_reported_to_clinician_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10020:
+  export_group: event
+  long_name: patient_clinician_phone_phone_number
+  sort_order: 10440
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10023:
+  export_group: event
+  long_name: patient_hospital_discharge_date
+  sort_order: 10350
+  use_description: try(:hospitals_participation).try(:discharge_date)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  collection: hospitalization_facilities
+  
+csv_field_10025:
+  export_group: event
+  long_name: patient_MMWR_week
+  sort_order: 10630
+  use_description: read_attribute('MMWR_week')
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10026:
+  export_group: event
+  long_name: patient_phone_extension
+  sort_order: 10170
+  use_description: interested_party.person_entity.telephones.last.try(:extension)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10027:
+  export_group: event
+  long_name: other_data_2
+  sort_order: 10800
+  use_description: other_data_2
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10028:
+  export_group: event
+  long_name: patient_hospital_medical_record_no
+  sort_order: 10360
+  use_description: try(:hospitals_participation).try(:medical_record_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  collection: hospitalization_facilities
+  
+csv_field_10030:
+  export_group: event
+  long_name: patient_reporter_phone_area_code
+  sort_order: 10570
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :area_code)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10031:
+  export_group: event
+  long_name: patient_phone_phone_number
+  sort_order: 10160
+  use_description: interested_party.person_entity.telephones.last.try(:phone_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10032:
+  export_group: event
+  long_name: patient_record_number
+  sort_order: 10010
+  use_description: record_number
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10033:
+  export_group: event
+  long_name: patient_race_5
+  sort_order: 10240
+  use_description: interested_party.person_entity.try(:races).try(:[], 4).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 4).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10034:
+  export_group: event
+  long_name: patient_imported_from
+  sort_order: 10530
+  use_description: imported_from.try(:code_description)
+  short_name: 
+  use_code: imported_from.try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10038:
+  export_group: event
+  long_name: patient_disease
+  sort_order: 10280
+  use_description: disease_event.try(:disease).try(:disease_name)
+  short_name: 
+  use_code: disease_event.try(:disease).try(:cdc_code)
+  event_type: assessment_event
+  
+csv_field_10039:
+  export_group: event
+  long_name: patient_phone_area_code
+  sort_order: 10150
+  use_description: interested_party.person_entity.telephones.last.try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10043:
+  export_group: event
+  long_name: patient_middle_name
+  sort_order: 10040
+  use_description: interested_party.person_entity.person.middle_name
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10046:
+  export_group: event
+  long_name: patient_clinician_phone_extension
+  sort_order: 10450
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:extension)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10047:
+  export_group: event
+  long_name: patient_address_street_number
+  sort_order: 10050
+  use_description: address.try(:street_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10049:
+  export_group: event
+  long_name: patient_MMWR_year
+  sort_order: 10640
+  use_description: read_attribute('MMWR_year')
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10051:
+  export_group: event
+  long_name: patient_clinician_middle_name
+  sort_order: 10420
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:middle_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10054:
+  export_group: event
+  long_name: patient_lhd_case_status
+  sort_order: 10650
+  use_description: lhd_case_status.try(:code_description)
+  short_name: 
+  use_code: lhd_case_status.try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10055:
+  export_group: event
+  long_name: patient_clinician_phone_area_code
+  sort_order: 10430
+  use_description: clinicians.first.try(:person_entity).try(:telephones).try(:last).try(:area_code)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10058:
+  export_group: event
+  long_name: patient_race_7
+  sort_order: 10260
+  use_description: interested_party.person_entity.try(:races).try(:[], 6).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 6).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10060:
+  export_group: event
+  long_name: patient_state_case_status
+  sort_order: 10660
+  use_description: state_case_status.try(:code_description)
+  short_name: 
+  use_code: state_case_status.try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10061:
+  export_group: event
+  long_name: patient_group_living
+  sort_order: 10480
+  use_description: interested_party.try(:risk_factor).try(:group_living).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:group_living).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10062:
+  export_group: event
+  long_name: patient_address_unit_number
+  sort_order: 10070
+  use_description: address.try(:unit_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10065:
+  export_group: event
+  long_name: patient_reporter_first_name
+  sort_order: 10560
+  use_description: safe_call_chain(:reporter, :secondary_entity, :person, :first_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10066:
+  export_group: event
+  long_name: patient_address_city
+  sort_order: 10080
+  use_description: address.try(:city)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10067:
+  export_group: event
+  long_name: patient_race_6
+  sort_order: 10250
+  use_description: interested_party.person_entity.try(:races).try(:[], 5).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 5).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10068:
+  export_group: event
+  long_name: patient_pregnant
+  sort_order: 10390
+  use_description: interested_party.try(:risk_factor).try(:pregnant).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:pregnant).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10069:
+  export_group: event
+  long_name: acuity
+  sort_order: 10780
+  use_description: acuity
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10070:
+  export_group: event
+  long_name: patient_event_id
+  sort_order: 10000
+  use_description: id
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10073:
+  export_group: event
+  long_name: patient_investigation_started_date
+  sort_order: 10730
+  use_description: investigation_started_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10076:
+  export_group: event
+  long_name: patient_review_completed_by_state_date
+  sort_order: 10750
+  use_description: review_completed_by_state_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10080:
+  export_group: event
+  long_name: patient_food_handler
+  sort_order: 10460
+  use_description: interested_party.try(:risk_factor).try(:food_handler).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:food_handler).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10081:
+  export_group: event
+  long_name: patient_risk_factors
+  sort_order: 10510
+  use_description: interested_party.risk_factor.try(:risk_factors)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10085:
+  export_group: event
+  long_name: patient_healthcare_worker
+  sort_order: 10470
+  use_description: interested_party.try(:risk_factor).try(:healthcare_worker).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:healthcare_worker).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10086:
+  export_group: event
+  long_name: patient_race_1
+  sort_order: 10200
+  use_description: interested_party.person_entity.try(:races).try(:[], 0).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 0).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10093:
+  export_group: event
+  long_name: patient_clinician_first_name
+  sort_order: 10410
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:first_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10095:
+  export_group: event
+  long_name: patient_language
+  sort_order: 10270
+  use_description: interested_party.person_entity.person.try(:primary_language).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:primary_language).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10097:
+  export_group: event
+  long_name: patient_ethnicity
+  sort_order: 10190
+  use_description: interested_party.person_entity.person.try(:ethnicity).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.person.try(:ethnicity).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10102:
+  export_group: event
+  long_name: patient_last_name
+  sort_order: 10020
+  use_description: interested_party.person_entity.person.last_name
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10103:
+  export_group: event
+  long_name: patient_clinician_last_name
+  sort_order: 10400
+  use_description: clinicians.first.try(:person_entity).try(:person).try(:last_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10105:
+  export_group: event
+  long_name: patient_investigator
+  sort_order: 10760
+  use_description: investigator.try(:best_name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10111:
+  export_group: event
+  long_name: patient_first_name
+  sort_order: 10030
+  use_description: interested_party.person_entity.person.first_name
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10117:
+  export_group: event
+  long_name: patient_occupation
+  sort_order: 10500
+  use_description: interested_party.try(:risk_factor).try(:occupation)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10125:
+  export_group: event
+  long_name: patient_investigation_completed_lhd_date
+  sort_order: 10740
+  use_description: investigation_completed_LHD_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10126:
+  export_group: event
+  long_name: patient_event_name
+  sort_order: 10690
+  use_description: event_name
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10128:
+  export_group: event
+  long_name: patient_race_2
+  sort_order: 10210
+  use_description: interested_party.person_entity.try(:races).try(:[], 1).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 1).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10129:
+  export_group: event
+  long_name: patient_jurisdiction_of_investigation
+  sort_order: 10700
+  use_description: primary_jurisdiction.try(:name)
+  short_name: 
+  use_code: primary_jurisdiction.try(:entity_id)
+  event_type: assessment_event
+  
+csv_field_10137:
+  export_group: event
+  long_name: patient_risk_factors_notes
+  sort_order: 10520
+  use_description: interested_party.risk_factor.try(:risk_factors_notes)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10140:
+  export_group: event
+  long_name: patient_sent_to_cdc
+  sort_order: 10770
+  use_description: sent_to_cdc
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10147:
+  export_group: event
+  long_name: patient_address_county
+  sort_order: 10100
+  use_description: address.try(:county).try(:code_description)
+  short_name: 
+  use_code: address.try(:county).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10149:
+  export_group: event
+  long_name: other_data_1
+  sort_order: 10790
+  use_description: other_data_1
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10150:
+  export_group: event
+  long_name: patient_date_of_death
+  sort_order: 10380
+  use_description: interested_party.person_entity.person.date_of_death
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10153:
+  export_group: event
+  long_name: patient_workflow_state
+  sort_order: 10720
+  use_description: workflow_state
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10154:
+  export_group: event
+  long_name: patient_jurisdiction_of_residence
+  sort_order: 10710
+  use_description: address.try(:county).try(:jurisdiction).try(:name)
+  short_name: 
+  use_code: address.try(:county).try(:jurisdiction).try(:entity_id)
+  event_type: assessment_event
+  
+csv_field_10155:
+  export_group: event
+  long_name: patient_disease_onset_date
+  sort_order: 10290
+  use_description: disease_event.try(:disease_onset_date)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10156:
+  export_group: event
+  long_name: patient_address_state
+  sort_order: 10090
+  use_description: address.try(:state).try(:code_description)
+  short_name: 
+  use_code: address.try(:state).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10158:
+  export_group: event
+  long_name: patient_race_3
+  sort_order: 10220
+  use_description: interested_party.person_entity.try(:races).try(:[], 2).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 2).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10161:
+  export_group: event
+  long_name: patient_event_created_date
+  sort_order: 10810
+  use_description: created_at
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10162:
+  export_group: event
+  long_name: patient_race_4
+  sort_order: 10230
+  use_description: interested_party.person_entity.try(:races).try(:[], 3).try(:code_description)
+  short_name: 
+  use_code: interested_party.person_entity.try(:races).try(:[], 3).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10164:
+  export_group: event
+  long_name: patient_date_diagnosed
+  sort_order: 10300
+  use_description: disease_event.try(:date_diagnosed)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10165:
+  export_group: event
+  long_name: patient_pregnancy_due_date
+  sort_order: 10391
+  use_description: interested_party.try(:risk_factor).try(:pregnancy_due_date)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:pregnancy_due_date)
+  event_type: assessment_event
+  
+csv_field_10167:
+  export_group: event
+  long_name: patient_age_at_onset_in_years
+  sort_order: 10140
+  use_description: age_info.in_years
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10168:
+  export_group: event
+  long_name: patient_diagnostic_facility
+  sort_order: 10310
+  use_description: diagnostic_facilities.first.try(:place_entity).try(:place).try(:name)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10170:
+  export_group: event
+  long_name: patient_event_last_updated_date
+  sort_order: 10820
+  use_description: updated_at
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10171:
+  export_group: event
+  long_name: patient_reporter_phone_extension
+  sort_order: 10590
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :extension)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10172:
+  export_group: event
+  long_name: patient_hospitalized
+  sort_order: 10320
+  use_description: disease_event.try(:hospitalized).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:hospitalized).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10173:
+  export_group: event
+  long_name: patient_approximate_age_no_birthdate
+  sort_order: 10130
+  use_description: interested_party.person_entity.person.approximate_age_no_birthday
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10174:
+  export_group: event
+  long_name: patient_day_care_association
+  sort_order: 10490
+  use_description: interested_party.try(:risk_factor).try(:day_care_association).try(:code_description)
+  short_name: 
+  use_code: interested_party.try(:risk_factor).try(:day_care_association).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10175:
+  export_group: event
+  long_name: patient_died
+  sort_order: 10370
+  use_description: disease_event.try(:died).try(:code_description)
+  short_name: 
+  use_code: disease_event.try(:died).try(:the_code)
+  event_type: assessment_event
+  
+csv_field_10176:
+  export_group: event
+  long_name: patient_hospitalization_facility
+  sort_order: 10330
+  use_description: try(:secondary_entity).try(:place).try(:name)
+  short_name: 
+  use_code: try(:secondary_entity).try(:place).try(:id)
+  event_type: assessment_event
+  collection: hospitalization_facilities
+  
+csv_field_10178:
+  export_group: event
+  long_name: patient_birth_date
+  sort_order: 10120
+  use_description: interested_party.person_entity.person.birth_date
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  
+csv_field_10179:
+  export_group: event
+  long_name: patient_reporter_phone_phone_number
+  sort_order: 10580
+  use_description: safe_call_chain(:reporter, :secondary_entity, :telephones, :last, :phone_number)
+  short_name: 
+  use_code: 
+  event_type: assessment_event
+  

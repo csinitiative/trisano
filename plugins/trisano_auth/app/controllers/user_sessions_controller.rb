@@ -15,6 +15,7 @@
 
 class UserSessionsController < ApplicationController
   reloadable!
+  layout "full_header"
 
   skip_before_filter :load_user, :only => [:new, :create]
   prepend_before_filter :destroy_session, :only => [:new, :create]

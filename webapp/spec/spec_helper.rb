@@ -10,7 +10,11 @@ require 'nokogiri'
 require 'validates_timeliness/matcher'
 require 'factory_girl'
 
-if User.column_names.include?("crypted_password")
+def self.trisano_auth?
+  User.column_names.include?("crypted_password")
+end
+
+if trisano_auth?
   require 'authlogic/test_case'
 end
 

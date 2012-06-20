@@ -57,8 +57,14 @@ def path_to(page_name)
   when /the CMR show page/i
     cmr_path @event
 
-  when /view the CMR/i
-    cmr_path @event
+  when /view the AE/i
+    ae_path @event
+
+  when /the AE show page/i
+    ae_path @event
+
+  when /the AE edit page/i
+    edit_ae_path @event
 
   when /print the (.+) CMR data/i
     cmr_path(@event, :format => :print, 'print_options[]' => $1)
@@ -66,11 +72,17 @@ def path_to(page_name)
   when /the export CMR as csv page/i
     export_single_cmr_path @event, :format => 'csv'
 
+  when /edit the AE/i
+    edit_ae_path @event
+
   when /edit the CMR/i
     edit_cmr_path @event
 
-  when /the event edit page/i
+  when /the morbidity event edit page/i
     edit_cmr_path @event
+
+  when /the assessment event edit page/i
+    edit_ae_path @event
 
   when /show the CMR with record number "(\d*)"/
     cmr_path MorbidityEvent.find_by_record_number($1)
@@ -92,6 +104,15 @@ def path_to(page_name)
 
   when /the contact show page/i
     contact_event_path(@contact_event || @event)
+
+  when /the first AE contact\'s edit page/i
+    edit_contact_event_path(@event.contact_child_events.first)
+
+  when /the first AE contact\'s show page/i
+    contact_event_path(@event.contact_child_events.first)
+
+  when /the first AE place\'s edit page/i
+    edit_place_event_path(@event.place_child_events.first)
 
   when /the first CMR contact\'s edit page/i
     edit_contact_event_path(@event.contact_child_events.first)
@@ -268,8 +289,8 @@ def path_to(page_name)
   when /the edit "([^\"]*)" role page/i
     edit_role_path(Role.find_by_role_name($1))
 
-  when /the CMR search page/i
-    search_cmrs_path
+  when /the event search page/i
+    search_events_path
 
   when /edit the person "(.+)"/i
     edit_person_path(Person.find_by_first_name_and_last_name(*$1.split(' ')).entity_id)

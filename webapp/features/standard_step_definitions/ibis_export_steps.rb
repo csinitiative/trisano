@@ -24,6 +24,16 @@ Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the state$/ 
   @event_to_match.save!
 end
 
+Given /^a morbidity event with disease "([^\"]*)" and disease date "([^\"]*)"$/ do |disease_name, disease_date|
+  disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
+  status = ExternalCode.find_by_code_name_and_code_description('case', 'Confirmed')
+  @event_to_match = create_basic_event('morbidity', 'ibis_guy')
+  @event_to_match.state_case_status = status
+  @event_to_match.build_disease_event(:disease_id => disease.id)
+  @event_to_match.disease_event.disease_onset_date = disease_date
+  @event_to_match.save!
+end
+
 Given /^a morbidity event with disease "([^\"]*)" and "([^\"]*)" by the LHD$/ do |disease_name, status_description|
   disease = Disease.find_or_create_by_disease_name :disease_name => disease_name, :active => true
   status = ExternalCode.find_by_code_name_and_code_description('case', status_description)

@@ -20,6 +20,10 @@ class CsvField < ActiveRecord::Base
 
   default_scope :order => 'sort_order'
 
+  named_scope :assessment_event_fields, :conditions => { :event_type => 'assessment_event' }
+  named_scope :assessment_event_code_fields,
+              :conditions => "event_type = 'assessment_event' and use_code is not null"
+
   named_scope :morbidity_event_fields, :conditions => { :event_type => 'morbidity_event' }
   named_scope :morbidity_event_code_fields,
               :conditions => "event_type = 'morbidity_event' and use_code is not null"
@@ -48,10 +52,10 @@ class CsvField < ActiveRecord::Base
 
   def self.load_csv_fields(csv_fields)
     transaction do
-      attributes = CsvField.new.attribute_names
-      csv_fields.each do |k, v|
-        v.delete_if { |key, value| !attributes.include?(key) } # Remove any extra attributes in the YAML that are not attributes on the model
-        csv_field = CsvField.find_or_initialize_by_long_name(v)
+      valid_attributes = CsvField.new.attribute_names
+      csv_fields.each do |csv_field_label, csv_field_attributes|
+        csv_field_attributes.delete_if { |attribute, value| !valid_attributes.include?(attribute) } # Remove any extra attributes in the YAML that are not attributes on the model
+        csv_field = CsvField.find_or_initialize_by_long_name_and_event_type(csv_field_attributes)
         csv_field.save!
       end
     end

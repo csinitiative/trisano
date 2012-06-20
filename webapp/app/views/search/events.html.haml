@@ -13,12 +13,10 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-= javascript_include_tag 'pages/cmrs/prefetch_index.js'
-
 - content_for :title do
   =t 'event_search'
 
-- form_tag(search_cmrs_path, :method => :get) do
+- form_tag(search_events_path, :method => :get) do
 
   - if !flash[:error].blank?
     %span{ :style => "color:red" }= flash[:error]
@@ -62,23 +60,23 @@
             =epi_criteria_fields(params).join
 
     %input{ :value => t('submit_query'), :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 12em; width:130px;" }
-= button_to(t("start_over"), search_cmrs_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
+= button_to(t("start_over"), search_events_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
 %br
 
-- if !@cmrs.blank?
+- if !@events.blank?
   %div{ :class => 'tools' }
     = link_to_function(t('export_all_to_csv'), nil) do |page|
       - page[:export_options].visual_effect :appear
 
-  - if @cmrs.total_entries < max_search_results
-    = render :partial => "morbidity_events/export_options", :locals => { :path => cmrs_format_path(params.merge(:format => 'csv')) }
+  - if @events.total_entries < max_search_results
+    = render :partial => "morbidity_events/export_options", :locals => { :path => events_format_path(params.merge(:format => 'csv')) }
   - else
     = render :partial => "refine_search"
 
   %br
   %p
-    =page_entries_info @cmrs, :entry_name => "result"
-    =will_paginate @cmrs
+    =page_entries_info @events, :entry_name => "result"
+    =will_paginate @events
   
   %table{:style => "table-layout: fixed", :id => 'search_results' }
     %tr{:style => "text-align: left"}
@@ -100,41 +98,41 @@
         =t 'jurisdiction'
       %th
         =t 'onset_date'
-      - for cmr in @cmrs
-        %tr{:class => search_result_class(cmr)}
+      - for event in @events
+        %tr{:class => search_result_class(event)}
           %td
-            =link_to_search_result_event("#{h(cmr.record_number)}", cmr)
-            %small=t(cmr.type.underscore, :scope => :event_search_results)
+            =link_to_search_result_event("#{h(event.record_number)}", event)
+            %small=t(event.type.underscore, :scope => :event_search_results)
           %td
-            = search_result_full_name(cmr)
+            = search_result_full_name(event)
           %td
-            - if  cmr['birth_date'].blank?
-              = h(cmr['approximate_age_no_birthday'])
+            - if  event['birth_date'].blank?
+              = h(event['approximate_age_no_birthday'])
             - else
-              = h("#{calculate_age cmr['birth_date'].to_date} / #{ld(cmr['birth_date'])}")
+              = h("#{calculate_age event['birth_date'].to_date} / #{ld(event['birth_date'])}")
           %td
-            = h(cmr['birth_gender'])
+            = h(event['birth_gender'])
           %td
-            = h(cmr['disease_name'])
+            = h(event['disease_name'])
           %td
-            = h(cmr['city'])
+            = h(event['city'])
           %td
-            = h(cmr['county'])
+            = h(event['county'])
           %td
-            = h(i18n_jurisdiction_short_name(cmr['jurisdiction']))
+            = h(i18n_jurisdiction_short_name(event['jurisdiction']))
           %td
-            = ld(cmr['onset_date'])
+            = ld(event['onset_date'])
 
   %br
   %p
-    =page_entries_info @cmrs, :entry_name => "result"
-    =will_paginate @cmrs
+    =page_entries_info @events, :entry_name => "result"
+    =will_paginate @events
   
   =render_extensions :search_extensions
 
 - params.delete('action')
 - params.delete('controller')
-- if @cmrs.blank? && flash[:error].blank? && !params.values_blank?
+- if @events.blank? && flash[:error].blank? && !params.values_blank?
 
   %span
     =t 'no_search_results'

@@ -26,6 +26,7 @@ class EventsController < ApplicationController
   before_filter :set_tab_index
   before_filter :update_last_modified_date, :only => [:update]
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
+  before_filter :can_promote?, :only => :event_type
 
   def contacts_search
     page = params[:page] ? params[:page] : 1
@@ -63,6 +64,11 @@ class EventsController < ApplicationController
   def places_search
     page = params[:page] ? params[:page] : 1
     name = params[:name]
+    
+    if not params[:for_event_id].nil?
+      @event = Event.find(params[:for_event_id])
+    end
+
     # DEBT: Sure there must be a better way to parse this.
     type_ids = params[:types].sub(/^\[(.*)\]$/, '\1').split(',').map {|s| s.to_i}
     types = Code.find(type_ids).map{|c|c.the_code}
@@ -342,6 +348,16 @@ class EventsController < ApplicationController
     end
   end
 
+  def event_type
+    if promoted_event = @event.promote_to(params[:type])
+      flash[:notice] = t(:promoted_to, :type => params[:type].humanize.downcase)
+      redirect_to @template.event_path(promoted_event)
+    else
+      flash.now[:error] = t("could_not_promote_event")
+      render :action => :edit, :status => :bad_request
+    end
+  end
+
   private
 
   def can_update?
@@ -393,7 +409,7 @@ class EventsController < ApplicationController
       correct_url = @template.event_path(@event)
       event_link = correct_url ? @template.link_to(correct_url, correct_url) : nil
       respond_to do |format|
-        format.html { render :partial => "shared/missing_event", :event_link => event_link, :layout => 'application', :status => 404 }
+        format.html { render :partial => "shared/missing_event", :locals => {:event_link => event_link}, :layout => 'application', :status => 404 }
         format.all { render :nothing => true, :status => 404 }
       end
     end

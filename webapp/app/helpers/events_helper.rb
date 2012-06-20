@@ -171,7 +171,7 @@ module EventsHelper
 
   def add_lab_link(name, prefix)
     event_type = /^.+_event/.match(prefix)[0]
-    url = event_type == 'morbidity_event' ? lab_form_new_cmr_path(:prefix => prefix) : lab_form_new_contact_event_path(:prefix => prefix)
+    #DEBT
     url = case event_type
     when 'morbidity_event'
       lab_form_new_cmr_path(:prefix => prefix)
@@ -179,6 +179,8 @@ module EventsHelper
       lab_form_new_contact_event_path(:prefix => prefix)
     when 'encounter_event'
       lab_form_new_encounter_event_path(:prefix => prefix)
+    when 'assessment_event'
+      lab_form_new_ae_path(:prefix => prefix)
     end
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
@@ -186,6 +188,7 @@ module EventsHelper
 
   def add_lab_result_link(name, prefix, lab_id)
     event_type = /^.+_event/.match(prefix)[0]
+    #DEBT
     url = case event_type
     when 'morbidity_event'
       lab_result_form_new_cmr_path(:prefix => prefix)
@@ -193,6 +196,8 @@ module EventsHelper
       lab_result_form_new_contact_event_path(:prefix => prefix)
     when 'encounter_event'
       lab_result_form_new_encounter_event_path(:prefix => prefix)
+    when 'assessment_event'
+      lab_result_form_new_ae_path(:prefix => prefix)
     end
 
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
@@ -252,7 +257,8 @@ module EventsHelper
       controls << " | " unless controls.blank?
       controls << link_to(t(:add_task), new_event_task_path(event))
       controls << " | " << link_to(t(:add_attachment), new_event_attachment_path(event))
-      controls << " | " << link_to(t(:promote_to_cmr), event_type_contact_event_path(event), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
+      controls << " | " << link_to(t(:promote_to_cmr), event_type_contact_event_path(event, :type => "morbidity_event"), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
+      controls << " | " << link_to(t(:promote_to_ae), event_type_contact_event_path(event, :type => "assessment_event"), :method => :post, :confirm => t(:are_you_sure), :id => 'event-type')
     end
 
     controls
@@ -359,9 +365,9 @@ module EventsHelper
               form << check_box_tag("secondary_jurisdiction_ids[]",
                                     jurisdiction.entity_id,
                                     event.associated_jurisdictions.map(&:place_entity).include?(jurisdiction),
-                                    :id => h(jurisdiction.short_name.tr(" ", "_")),
+                                    :id => h(jurisdiction.short_name.try(:tr, " ", "_")),
                                     :style => "display: inline")
-              form << label_tag(h(jurisdiction.short_name.tr(" ", "_")), h(jurisdiction.short_name), :style => 'display: inline')
+              form << label_tag(h(jurisdiction.short_name.try(:tr, " ", "_")), h(jurisdiction.short_name), :style => 'display: inline')
               form << "<br/>"
             end
             form << "</div></div>"
@@ -381,7 +387,7 @@ module EventsHelper
   end
 
   def routing_form_tag(action, event, options={}, &block)
-    path_meth = event.is_a?(MorbidityEvent) ? "#{action.to_s}_cmr_path" : "#{action.to_s}_contact_event_path"
+    path_meth = "#{action.to_s}_#{event_to_path_name(event)}_path"
     returning "" do |form|
       form << form_tag(send(path_meth, event), options)
       form << block.call if block_given?
@@ -404,6 +410,10 @@ module EventsHelper
     link_to(text, event_search_cmrs_path) if User.current_user.is_entitled_to?(:create_event)
   end
 
+  def new_ae_button(text)
+    button_to_function(text, "location.href = '#{event_search_aes_path}'") if User.current_user.is_entitled_to?(:create_event)
+  end
+
   def new_cmr_button(text)
     button_to_function(text, "location.href = '#{event_search_cmrs_path}'") if User.current_user.is_entitled_to?(:create_event)
   end
@@ -413,13 +423,25 @@ module EventsHelper
     show_and_edit_links[event.class.name][event, options]
   end
 
-  def event_to_path_name
-    { "MorbidityEvent" => 'cmr' }
+  def altered_paths_map
+    { 
+      "MorbidityEvent" => 'cmr',
+      "AssessmentEvent" => 'ae'
+    }
+  end
+
+  def event_to_controller_name(event)
+    event.attributes["type"].tableize
+  end
+  
+  def event_to_path_name(event)
+    altered_paths_map[event.class.name] || event.class.name.underscore
   end
 
   def show_and_edit_links
     Hash[
       "MorbidityEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
+      "AssessmentEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
       "ContactEvent"  , lambda { |event, options| links_to_show_and_edit(event, options) },
       "PlaceEvent"    , lambda { |event, options| links_to_show_and_edit(event, options) },
       "EncounterEvent", lambda { |event, options| links_to_show_and_edit(event, options) },
@@ -429,7 +451,7 @@ module EventsHelper
   def link_to_action(event, options={})
     action = options[:prefix] || 'show'
     options[:prefix] += '_' if options[:prefix]
-    resource = event_to_path_name[event.class.name] || event.class.name.underscore
+    resource = event_to_path_name(event)
     method = "#{options[:prefix]}#{resource}_path"
 
     unless options[:action_only]
@@ -679,7 +701,7 @@ module EventsHelper
     # Don't need addresses or phones for labs
     event.labs[0].lab_results.build if event.labs[0].lab_results.empty?
 
-    if event.is_a?(MorbidityEvent)
+    if event.is_a?(MorbidityEvent) || event.is_a?(AssessmentEvent)
       event.contact_child_events.build if event.contact_child_events.empty?
       # If in edit mode, there may be contacts without phones or dispositions, thus we loop to initialize them all
       event.contact_child_events.each do |contact|
@@ -785,14 +807,14 @@ module EventsHelper
   def link_to_parent(event)
     parent = event.parent_event
     person = parent.party
-    path = request.symbolized_path_parameters[:action] == 'edit' ? edit_cmr_path(parent) : cmr_path(parent)
+    path = request.symbolized_path_parameters[:action] == 'edit' ? edit_event_path(parent) : event_path(parent)
     link_to(h(person.try(:full_name)), path)
   end
 
 
   def event_path(event)
     url_for({
-      :controller => controller_name_from_event(event),
+      :controller => event_to_controller_name(event),
       :id => event.id,
       :action => :show
     })
@@ -800,14 +822,18 @@ module EventsHelper
 
   def edit_event_path(event)
     url_for({
-      :controller => controller_name_from_event(event),
+      :controller => event_to_controller_name(event),
       :id => event.id,
       :action => :edit
     })
   end
 
-  def controller_name_from_event(model)
-    model.attributes["type"].tableize
+  def soft_delete_event_path(event)
+    url_for({
+      :controller => event_to_controller_name(event),
+      :id => event.id,
+      :action => :soft_delete
+    })
   end
 
   def association_recorded?(association_collection)

@@ -33,9 +33,6 @@
       %br
       %span{ :style => 'font-style: italic; font-size: small;'}
         = t("contact_event")
-    .tools
-      = basic_contact_event_controls(contact_event, view_mode)
-      = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }
   %td
     %b= h((view_mode == :index) ? contact_event['disease_name'] : contact_event.try(:disease).try(:disease).try(:disease_name))
   %td
@@ -51,7 +48,6 @@
           = h(contact_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
     %b= h(contact_event.state_description)
-
     - queue_name = (view_mode == :index) ? contact_event['queue_name'] : contact_event.try(:event_queue).try(:queue_name)
     - unless queue_name.blank?
       %div{:id => 'queue_info'}
@@ -71,3 +67,8 @@
 
   %td
     = ld(contact_event.event_onset_date)
+%tr
+  %td{:colspan => "5"}
+    .tools
+      = basic_contact_event_controls(contact_event, view_mode)
+      = render :partial => 'contact_events/print_options', :locals => { :event => contact_event }

@@ -25,7 +25,7 @@ Feature: Adding forms to events
     And I click the "Add Forms" button
     Then I should see "The list of forms in use was successfully updated"
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then form "ATBF Form 1" should appear before "ATBF Form 2"
 
   Scenario: Forms should display in the order in which they were added (reverse case)
@@ -39,7 +39,7 @@ Feature: Adding forms to events
     And I click the "Add Forms" button
     Then I should see "The list of forms in use was successfully updated"
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     Then form "ATBF Form 2" should appear before "ATBF Form 1"
 
     

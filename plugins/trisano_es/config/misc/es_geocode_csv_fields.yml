@@ -46,3 +46,19 @@ geo_csv_field_00129:
   short_name:
   use_code: address.try(:longitude)
   event_type: place_event
+geo_csv_field_10049:
+  sort_order: 11100
+  export_group: event
+  long_name: paciente_dirección_latitud
+  use_description: address.try(:latitude)
+  short_name:
+  use_code: address.try(:latitude)
+  event_type: assessment_event
+geo_csv_field_10050:
+  sort_order: 11200
+  export_group: event
+  long_name: paciente_dirección_longitud
+  use_description: address.try(:longitude)
+  short_name:
+  use_code: address.try(:longitude)
+  event_type: assessment_event

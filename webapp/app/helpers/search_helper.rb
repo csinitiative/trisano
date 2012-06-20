@@ -55,11 +55,11 @@ module SearchHelper
   end
 
   def search_result_event_path(event)
-    event.type =~ /morbidity/i ? cmr_path(event) : contact_event_path(event)
+    event_path(event)
   end
 
   def search_result_link_id(event)
-    type = event.type =~ /morbidity/i ? "cmr" : "contact"
+    type = altered_paths_map[event.type]
     "show-#{type}-link-#{event.id}"
   end
 

@@ -29,10 +29,6 @@ gem "ruby-hl7", "1.0.3"
 # on its own like this.
 gem "sparrowhawk", "0.9.5"
 
-gem "whenever"
-
-gem "savon"
-
 group :development do
   gem "mechanize", "1.0.0"
   gem "rest-open-uri", "1.0.0"
@@ -41,7 +37,7 @@ group :development do
   gem "capistrano", "2.5.19"
   gem "capistrano-ext", "1.2.1"
   gem "ruby-debug", "0.10.4"
-  gem "rails-footnotes", '3.6.7'
+#  gem "rails-footnotes", '3.6.7'
 end
 
 group :test, :development do

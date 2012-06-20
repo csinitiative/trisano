@@ -16,7 +16,7 @@
 %table.list
   %tr
     %th.forminformation
-      = if (event.is_a? MorbidityEvent or event.is_a? EncounterEvent) then t("patient_name") elsif event.is_a? ContactEvent then t("contact_name") elsif event.is_a? PlaceEvent then t("place_name") else event.class.name.underscore.humanize end
+      = if (event.is_a? MorbidityEvent or event.is_a? EncounterEvent or event.is_a? AssessmentEvent) then t("patient_name") elsif event.is_a? ContactEvent then t("contact_name") elsif event.is_a? PlaceEvent then t("place_name") else event.class.name.underscore.humanize end
     %th=t 'jurisdictions'
     %th
   %tr

@@ -1,5 +1,39 @@
 en:
   event_fields:
+    assessment_event:
+      state_manager_id: State manager (Perinatal Hep B)
+      expected_delivery_facility:
+        place_entity:
+          place:
+            name: Expected delivery facility
+            places_types: Expected delivery facility type
+          telephones:
+            area_code: Area code (Perinatal Hep B, Expected delivery facility)
+            extension: Extension (Perinatal Hep B, Expected delivery facility)
+            phone_number: Phone number (Perinatal Hep B, Expected delivery facility)
+      actual_delivery_facility:
+        place_entity:
+          place:
+            name: Actual delivery facility
+            places_types: Actual delivery facility type
+          telephones:
+            area_code: Area code (Perinatal Hep B, Actual delivery facility)
+            extension: Extension (Perinatal Hep B, Actual delivery facility)
+            phone_number: Phone number (Perinatal Hep B, Actual delivery facility)
+        actual_delivery_facilities_participation:
+          actual_delivery_date: Actual delivery date
+      health_care_provider:
+        section: Health Care Provider
+        person_entity:
+          name_section: Name
+          person:
+            first_name: First name (Perinatal Hep B, Health care provider)
+            last_name: Last name (Perinatal Hep B, Health care provider)
+            middle_name: Middle name (Perinatal Hep B, Health care provider)
+          telephones:
+            area_code: Area code (Perinatal Hep B, Health care provider)
+            extension: Extension (Perinatal Hep B, Health care provider)
+            phone_number: Phone number (Perinatal Hep B, Health care provider)
     morbidity_event:
       state_manager_id: State manager (Perinatal Hep B)
       expected_delivery_facility:

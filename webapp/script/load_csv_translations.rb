@@ -22,7 +22,7 @@ Code.transaction do
     hash = { :locale => locale, :long_name => t['long_name'], :short_name => t['short_name'] }
     csv_translation = csv_field.csv_field_translations.build(hash)
     unless csv_translation.save
-      $stderr.puts csv_translation.errors.full_messages.join("\n")
+      $stderr.puts csv_translation.errors.full_messages.join("\n") unless csv_translation.errors.full_messages == ["Locale has already been taken"]
       error_code = 1
     end
     print "."

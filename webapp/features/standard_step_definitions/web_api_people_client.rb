@@ -77,7 +77,7 @@ Then /^I fill out the form field "(.+?)" with "(.+?)"$/ do |key, value|
   fill_in key, :with => value
 end
 
-Then /^I set the pregnancy due date to some future date$/ do
-  fill_in 'morbidity_event[interested_party_attributes][risk_factor_attributes][pregnancy_due_date]',
+Then /^I set the pregnancy due date for the (.+?) to some future date$/ do |value|
+  fill_in "#{value}[interested_party_attributes][risk_factor_attributes][pregnancy_due_date]",
           :with => 1.month.from_now.strftime('%m-%d-%Y')
 end

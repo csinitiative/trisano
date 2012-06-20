@@ -1,0 +1,137 @@
+<%#
+Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+
+This file is part of TriSano.
+
+TriSano is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the
+Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+TriSano is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+for more details.
+
+You should have received a copy of the GNU Affero General Public License along
+with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+%>
+
+<%= javascript_include_tag 'pages/cmrs/prefetch_edit.js' %>
+
+<% patient = @event.interested_party.person_entity.person %>
+<% patient_name = "#{patient.first_name} #{patient.last_name}" %>
+
+<% content_for :title do %>
+  <%= t 'view_assessment_event', :name => h(patient_name) %>
+<% end %>
+
+<% content_for :tools_two do %>
+  <%= new_ae_button t("create_new_assessment_report") %>
+<% end %>
+
+<% content_for :tools do %>
+<% end %>
+
+<% content_for :name do %>
+  <% if @event.parent_event -%>
+    <div>
+      <span style='text-align: right;'>
+        <%= original_patient_controls(@event) %>
+      </span>
+    </div>
+  <% end -%>
+  <table class='list'>
+    <tr>
+      <th class='forminformation'><%= t('patient_name') %></th>
+      <th><%= t('disease') %></th>
+      <th><%= t('jurisdictions') %></th>
+      <th><%= t('status') %></th>
+      <th><%= t('event_created') %></th>
+    </tr>
+    <%= render :partial => 'assessment_events/assessment_event', :locals => {:assessment_event => @event, :view_mode => :show, :extra_tools => " | " + link_to(t('events_normal_case'), cmrs_path_with_defaults) } %>
+  </table>
+  <%- if @display_view_warning %>
+    <%= warning_banner %>
+  <%- end %>
+<% end %>
+
+<% if User.current_user.is_entitled_to_in?(:view_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id } ) %>
+  <%= render :partial => 'assessment_events/export_options', :locals => { :path => export_single_ae_path(@event, :format => 'csv') } %>
+<% end %>
+<%= render :partial => 'assessment_events/copy_ae_options' %>
+
+<% fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form| %>
+
+  <% tabbed_content(assessment_event_tabs, @tab_index) do %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/demographic_tab" do %>
+        <% core_tab :demographic_tab, event_form do -%>
+          <%= render :partial => "events/people/show", :locals => { :entity_data => patient_entity, :event_form => event_form } %>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Demographics" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/clinical_tab" do %>
+        <% core_tab :clinical_tab, event_form do -%>
+          <%= render :partial => "events/clinical_show_tab", :locals => { :entity_data => patient_entity, :event_form => event_form }%>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Clinical" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/lab_info_tab" do %>
+        <% core_tab :lab_info_tab, event_form do -%>
+          <%= render :partial => "events/lab_info_show_tab", :locals => { :f => event_form } %>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Laboratory" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/contacts_tab" do %>
+        <% core_tab :contacts_tab, event_form do -%>
+          <%= render :partial => "events/contact_show_tab",  :locals => { :f => event_form } %>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Contacts" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/encounters_tab" do %>
+        <% core_tab :encounters_tab, event_form do -%>
+          <%= render :partial => "events/encounter_show_tab",  :locals => { :f => event_form } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/epi_tab" do %>
+        <% core_tab :epi_tab, event_form do -%>
+          <%= render :partial => "events/epidemiological_show_tab", :locals => { :event_form => event_form }%>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Epidemiological" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/reporting_tab" do %>
+        <% core_tab :reporting_tab, event_form do -%>
+          <%= render :partial => "events/reporting_show_tab", :locals => { :event_form => event_form }%>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Reporting" } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/investigation_tab" do %>
+        <% core_tab :investigation_tab, event_form do -%>
+          <%= render :partial => "events/investigation_show_tab" %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/notes_tab" do %>
+        <% core_tab :notes_tab, event_form do -%>
+          <%= render :partial => "events/notes_show_tab", :locals => { :f => event_form } %>
+        <% end -%>
+    <% end %>
+
+    <% cache_event_fragment @event, "events/#{@event.id}/show/administrative_tab" do %>
+        <% core_tab :administrative_tab, event_form do -%>
+          <%= render :partial => "events/admin_show_tab", :locals => { :event_form => event_form }%>
+          <%= render :partial => 'events/core_tab_supplemental_show', :locals => { :f => event_form, :tab => "Administrative" } %>
+        <% end -%>
+    <% end %>
+
+  <% end %>
+
+<% end %>

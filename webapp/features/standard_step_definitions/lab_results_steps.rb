@@ -125,12 +125,16 @@ Given /^I enter a comment of "([^\"]*)"$/ do |comment|
   fill_in "morbidity_event[labs_attributes][0][lab_results_attributes][0][comment]", :with => comment
 end
 
-When /^I save the new event form$/ do
+When /^I save the new morbidity event form$/ do
   submit_form "new_morbidity_event"
 end
 
+When /^I save the new assessment event form$/ do
+  submit_form "new_assessment_event"
+end
+
 When /^I save the edit event form$/ do
-  submit_form "edit_morbidity_event_#{@event.id}"
+  submit_form "edit_#{@event.type.underscore}_#{@event.id}"
 end
 
 Then /^I should see the values entered above$/ do

@@ -40,7 +40,7 @@ Given /^a routed (.+) event for last name (.+)$/ do |event_type, last_name|
   @event.save!
 end
 
-Given /^the morbidity event has the following place exposures:$/ do |places|
+Given /^the event has the following place exposures:$/ do |places|
   places.hashes.each do |place|
     hash = {
       "interested_place_attributes" => {
@@ -164,15 +164,15 @@ When /^I visit the events index page$/ do
   visit cmrs_path({})
 end
 
-When(/^I navigate to the event edit page$/) do
+When(/^I navigate to the morbidity event edit page$/) do
   visit edit_cmr_path(@event)
 end
 
-When(/^I navigate to the event show page$/) do
+When(/^I navigate to the morbidity event show page$/) do
   visit cmr_path(@event)
 end
 
-When(/^I navigate to the new event page$/) do
+When(/^I navigate to the new morbidity event page$/) do
   visit new_cmr_path
 end
 
@@ -195,6 +195,10 @@ end
 When /^I "([^\"]*)" the routed event$/ do |action|
   set_hidden_field "morbidity_event[workflow_action]", :to => action.downcase
   submit_form "state_change"
+end
+
+Then /^the AE should look deleted$/ do
+  response.should have_xpath("//div[@class='patientname-inactive']")
 end
 
 Then /^the CMR should look deleted$/ do
@@ -265,11 +269,6 @@ Then /^I should see the pregnancy fields in the right place$/ do
       with_tag('~ .horiz label', 'Expected delivery date')
     end
   end
-end
-
-Then /^There should be only one event for$/ do |last_name|
-  p = Person.find_by_last_name(last_name)
-  assert_equal 1, p.person_entity.human_events.size if p
 end
 
 Then /^I should see the mortality fields in the right place$/ do

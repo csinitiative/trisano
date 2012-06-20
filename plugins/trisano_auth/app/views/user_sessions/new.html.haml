@@ -9,7 +9,7 @@
   .formList
     %li
       = form.label :user_name, t('trisano_auth.username')
-      = form.text_field :user_name
+      = form.text_field :user_name, :autocorrect => "off", :autocapitalize => "off"
     %li
       = form.label :password, t("trisano_auth.password")
       = form.password_field :password

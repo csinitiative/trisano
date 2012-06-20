@@ -17,29 +17,31 @@
 !!!
 %html{:xmlns => 'http://www.w3.org/1999/xhtml'}
   %head
+    %meta{:name => "viewport", :content => "width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"}
     %title
       =ct 'trisano_title'
       = yield :title
 
     = stylesheet_link_tag 'trisano-theme/jquery-ui-1.8.4.custom'
     = stylesheet_link_tag 'grid'
-    = stylesheet_link_tag 'structure'
+    = stylesheet_link_tag 'structure_ipad'
     = stylesheet_link_tag 'typography'
     = stylesheet_link_tag 'action'
     = stylesheet_link_tag 'tabview'
     = stylesheet_link_tag 'calendar/trisano/style'
 
     = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls'
-    = javascript_include_tag 'jquery-1.4.2.min', 'jquery-ui-1.8.4.custom.min', 'jquery.tmpl.min'
-    = javascript_include_tag 'jquery.metadata', 'jquery.tablesorter.custom', 'jquery.livequery'
+    = javascript_include_tag 'jquery/jquery-1.7.2.min', 'jquery/jquery-ui-1.8.20.custom.min', 'jquery/jquery.tmpl.min'
+    = javascript_include_tag 'jquery/jquery.metadata', 'jquery/jquery.tablesorter.custom', 'jquery/jquery.livequery'
     %script{:type => "text/javascript"}
       var $j = jQuery.noConflict();
 
     = javascript_include_tag 'trisano_i18n'
     = translations_js
     = javascript_include_tag 'application'
+    = javascript_include_tag 'trisano_layout'
     = javascript_include_tag 'sniffer'
-    = javascript_include_tag 'yahoo-dom-event'
+    = javascript_include_tag 'yui/yahoo-dom-event'
     = javascript_include_tag 'shortcut'
     = javascript_include_tag 'keycode'
     = javascript_include_tag 'keymap'
@@ -68,47 +70,37 @@
     = javascript_include_tag 'wz_tooltip'
     #head
       .container
-        =render_main_logo
+        .horiz#logo-container
+          =render_small_logo
+          %span#patient-header
+            =render_patient_summary
         .right
           .areas
             =render_main_menu
-          .user
+          .user.hidden
             -if User.current_user
               =render_user_tools(User.current_user)
-      #bar
+      #bar.hidden
         .container
           .left.areas_title
             = yield :title
           .right.action1
             = yield :tools_two
-      #title_area
+      #title_area.hidden
         .container
-          - if flash[:notice]
-            #flash-message.notice-message
-              = flash[:notice]
-          - elsif flash[:error]
-            #flash-message.error-message
-              = flash[:error]
-          - else
-            #flash-message
           .name
             = yield :name
           .tools
             = yield :tools
     #main-content
-      %script{:type => "text/javascript"}
-        function setMainContentTopMargin() {
-        header_height = Element.getHeight('head') + 2 + "px"
-        Element.setStyle('main-content', {top: header_height})
-        }
-        jQuery(window).resize(function() {
-        setMainContentTopMargin();
-        });
-        jQuery(window).load(function() {
-        // Becuase we don't know the size of the logo being loaded
-        // we must wait for the window to be loaded to calcuate the header_height
-        setMainContentTopMargin();
-        });
+      - if flash[:notice]
+        #flash-message.notice-message
+          = flash[:notice]
+      - elsif flash[:error]
+        #flash-message.error-message
+          = flash[:error]
+      - else
+        #flash-message
       .container
         = yield
       .container

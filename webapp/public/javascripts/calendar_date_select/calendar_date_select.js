@@ -426,7 +426,9 @@ CalendarDateSelect.prototype = {
     Event.stopObserving(document, "keypress", this.keyPress_handler);
     this.calendar_div.remove(); this.closed = true;
     if (this.iframe) this.iframe.remove();
-    if (this.target_element.type!="hidden") this.target_element.focus();
+    // Do not return focus to target_element
+    // For iPad users, this unneccessarily brings up the keyboard display
+    //if (this.target_element.type!="hidden") this.target_element.focus();
     this.callback("after_close");
   },
   closeIfClickedOut: function(e) {

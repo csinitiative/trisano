@@ -56,18 +56,36 @@ When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_
   click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
+When /^I create a new assessment event from the assessment named (.+)$/ do | last_name |
+  click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit AE using this person"
+end
+
 When /^I create a new morbidity event from the contact named (.+)$/ do | last_name |
   click_link_within "#entity_#{@contact_event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
 
-When /^I search for last_name = "([^\"]*)"$/ do |last_name|
+When /^I search for morbidity events with last_name = "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   click_button "Search"
 end
 
-When /^I search for:$/i do |search_fields|
+When /^I search for assessment events with last_name = "([^\"]*)"$/ do |last_name|
+  visit event_search_aes_path
+  fill_in "last_name", :with => last_name
+  click_button "Search"
+end
+
+When /^I search for morbidity event:$/i do |search_fields|
   visit event_search_cmrs_path
+  in_fields(search_fields) do |field, value|
+    fill_in field, :with => value
+  end
+  click_button "Search"
+end
+
+When /^I search for assessment event:$/i do |search_fields|
+  visit event_search_aes_path
   in_fields(search_fields) do |field, value|
     fill_in field, :with => value
   end
@@ -80,48 +98,48 @@ Then /^I should see the following values:$/i do |field_values|
   end
 end
 
-When /^I search for last_name = "([^\"]*)" for people entities$/ do |last_name|
+When /^I search for morbidity events last_name = "([^\"]*)" for people entities$/ do |last_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   check "search_people_entities"
   click_button "Search"
 end
 
-When /^I search for last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
+When /^I search for morbidity events with last_name "([^\"]*)" and first_name = "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "first_name", :with => first_name
   click_button "Search"
 end
 
-When /^I search for last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
+When /^I search for morbidity events with last name = "([^\"]*)" and birth date = "([^\"]*)"$/ do |last_name, birth_date|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
-When /^I search for birth date = "([^\"]*)"$/ do |birth_date|
+When /^I search for morbidity events with birth date = "([^\"]*)"$/ do |birth_date|
   visit event_search_cmrs_path
   fill_in "birth_date", :with => birth_date
   click_button "Search"
 end
 
-When /^I search for last_name starting with "([^\"]*)"$/ do |last_name|
+When /^I search for morbidity events with last_name starting with "([^\"]*)"$/ do |last_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   check "use_starts_with_search"
   click_button "Search"
 end
 
-When /^I search for first_name starting with "([^\"]*)"$/ do |first_name|
+When /^I search for morbidity events with first_name starting with "([^\"]*)"$/ do |first_name|
   visit event_search_cmrs_path
   fill_in "first_name", :with => first_name
   check "use_starts_with_search"
   click_button "Search"
 end
 
-When /^I search for last_name starting with "([^\"]*)" and first_name starting with "([^\"]*)"$/ do |last_name, first_name|
+When /^I search for morbidity events with last_name starting with "([^\"]*)" and first_name starting with "([^\"]*)"$/ do |last_name, first_name|
   visit event_search_cmrs_path
   fill_in "last_name", :with => last_name
   fill_in "first_name", :with => first_name
@@ -129,7 +147,7 @@ When /^I search for last_name starting with "([^\"]*)" and first_name starting w
   click_button "Search"
 end
 
-Then /^I should see a search form$/ do
+Then /^I should see a morbidity event search form$/ do
   response.should have_selector("form[method='get'][action='#{event_search_cmrs_path}']")
   field_labeled("Last name").value.should be_nil
 end
@@ -153,7 +171,7 @@ Then /^the search field should contain Jones$/ do
   field_labeled("Last name").value.should == "Jones"
 end
 
-Then /^I should see results for both records$/ do
+Then /^I should see results for morbidity and contact event records$/ do
   response.should have_selector("table.list") do |table|
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
@@ -162,6 +180,23 @@ Then /^I should see results for both records$/ do
     table.should have_selector("tr") do |tr|
       tr.should contain("Jones")
       tr.should contain("Contact Event")
+    end
+  end
+end
+
+Then /^I should see results for morbidity, contact, and assessment records$/ do
+  response.should have_selector("table.list") do |table|
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Morbidity Event")
+    end
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Contact Event")
+    end
+    table.should have_selector("tr") do |tr|
+      tr.should contain("Jones")
+      tr.should contain("Assessment Event")
     end
   end
 end
@@ -232,7 +267,7 @@ Then /^I should be in edit mode for a new copy of (.+)$/ do |last_name|
   current_url.should =~ /(\d?)\/edit/
   $1.should_not == @event.id
   $1.should_not == @contact_event.id if @contact_event
-  field_with_id("morbidity_event_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
+  field_with_id("#{@event.type.underscore}_interested_party_attributes_person_entity_attributes_person_attributes_last_name").value.should == last_name
 end
 
 Then /^I should see the following results:$/ do |results|
@@ -241,6 +276,15 @@ Then /^I should see the following results:$/ do |results|
       td.inner_text.should =~ /#{result[0]}, #{result[1]}/
     }
   end
+end
+
+Then /^I should see an assessment event search form$/ do
+  response.should have_selector("form[method='get'][action='#{event_search_aes_path}']")
+  field_labeled("Last name").value.should be_nil
+end
+
+Then /^I should not see a link to enter a new AE$/ do
+  response.should_not have_selector("a[href='#{new_ae_path}']")
 end
 
 def in_fields(table)

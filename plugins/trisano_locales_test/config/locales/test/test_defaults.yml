@@ -211,6 +211,7 @@ test:
 
     contact_event_created: "xContact event created."
     event_changed_from_contact_to_morbidity: "xEvent changed from contact event to morbidity event"
+    event_changed_from_assessment_to_morbidity: "xEvent changed from assessment event to morbidity event"
 
     lab_and_results_deleted: "xLab and all its results deleted"
     lab_result_deleted: "xLab result deleted"
@@ -239,7 +240,7 @@ test:
 
   common_test_type_associated_with_lab_results: "x{{name}} already associated with lab results"
   investigator_already_assigned: "xInvestigator already assigned"
-  cannot_promote_unsaved_contact: "xCannot promote an unsaved contact to a morbidity event"
+  cannot_promote_unsaved_event: "xCannot promote an unsaved event."
   loading_disease_group: "xLoading disease group {{disease_group}}"
   could_not_remove_form_from_event: "xCould not remove a form from an event: {{message}}"
   unable_to_process_new_forms: "xUnable to process new forms"

@@ -55,23 +55,23 @@ describe CoreField do
 
   it 'should return fields based on key' do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[parent_guardian]'].should_not be_nil
+    hash[@core_field.key].should_not be_nil
   end
 
   it "should memoize fields for rendering" do
     hash = CoreField.event_fields('morbidity_event')
-    old_field = hash['morbidity_event[parent_guardian]']
-    CoreField.all(:conditions => ["key=?", 'morbidity_event[parent_guardian]']).each do |cf|
+    old_field = hash[@core_field.key]
+    CoreField.all(:conditions => ["key=?", @core_field.key]).each do |cf|
       cf.help_text = 'some help text'
       cf.save
     end
     hash = CoreField.event_fields('morbidity_event')
-    old_field.object_id.should_not == hash['morbidity_event[parent_guardian]'].object_id
+    old_field.object_id.should_not == hash[@core_field.key].object_id
   end
 
   it "event_fields should return hash of core fields" do
     hash = CoreField.event_fields('morbidity_event')
-    hash['morbidity_event[parent_guardian]'].class.should == CoreField
+    hash[@core_field.key].class.should == CoreField
   end
 
   it "should pull english translations for name" do

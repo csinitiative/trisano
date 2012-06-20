@@ -11,6 +11,8 @@ xml.Table {
         xml.CaseCount(1)
         xml.Event(event['disease_cdc_code'])
 
+        xml.EventOnsetDate(event['event_onset_date'])
+
         onset_date = event['disease_onset_date']
         onset_date = onset_date.blank? ? onset_date : Date.strptime(onset_date, "%Y-%m-%d").strftime("%m/%d/%Y")
         xml.OnsetDate(onset_date)

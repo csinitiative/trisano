@@ -1,4 +1,4 @@
-class NewCmrSearchResults
+class NewHumanEventSearchResults
 
   def initialize(results, view)
     @results = results
@@ -8,7 +8,7 @@ class NewCmrSearchResults
 
   def each
     @results.each do |result|
-      yield NewCmrSearchResult.new(result, self)
+      yield NewHumanEventSearchResult.new(result, self)
       @previous_entity_id = result['entity_id']
     end
   end
@@ -25,7 +25,7 @@ class NewCmrSearchResults
     @view.class_eval { public :h }
   end
 
-  class NewCmrSearchResult
+  class NewHumanEventSearchResult
     include PostgresFu
 
     def initialize(result, result_set)
@@ -102,11 +102,21 @@ class NewCmrSearchResults
       end
     end
 
-    def link_to_create_cmr
+    def link_to_create_human_event
       unless same_as_previous_entity?
         if can_create?
-          view.link_to(I18n.t(:create_cmr_this_person),
-                       view.send(:cmrs_path, :from_person => @result['entity_id'], :return => true),
+          case view.params[:controller]
+          when "morbidity_events"
+            title = I18n.t(:create_cmr_this_person)
+            path = :cmrs_path
+          when "assessment_events"
+            title = I18n.t(:create_ae_this_person)
+            path = :aes_path
+          else
+            raise "No event type specified"
+          end
+          view.link_to(title,
+                       view.send(path, :from_person => @result['entity_id'], :return => true),
                        :method => :post)
         end
       end
@@ -141,23 +151,29 @@ class NewCmrSearchResults
     end
 
     def edit_path
-      if morb?
+      case @result['event_type']
+      when "MorbidityEvent"
         view.send(:edit_cmr_path, @result['event_id'])
-      else
+      when "AssessmentEvent"
+        view.send(:edit_ae_path, @result['event_id'])
+      when "ContactEvent"
         view.send(:edit_contact_event_path, @result['event_id'])
+      else
+        raise "No event type specified"
       end
     end
 
     def view_path
-      if morb?
+      case @result['event_type']
+      when "MorbidityEvent"
         view.send(:cmr_path, @result['event_id'])
-      else
+      when "ContactEvent"
         view.send(:contact_event_path, @result['event_id'])
+      when "AssessmentEvent"
+        view.send(:ae_path, @result['event_id'])
+      else
+        raise "No event type sepcified"
       end
-    end
-
-    def morb?
-      @result['event_type'] == 'MorbidityEvent'
     end
 
     def view

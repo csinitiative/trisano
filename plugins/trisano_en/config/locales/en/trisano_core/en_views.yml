@@ -1,4 +1,5 @@
 en:
+  event_types: "Event Types"
   include_repeating_aspects: "Include these repeating aspects in the export"
   trisano_title: "TriSano"
   view_edit_cmrs: "View/Edit CMRs"
@@ -22,7 +23,9 @@ en:
   search: "SEARCH"
   search_normal_case: "Search"
   welcome_message: "Welcome to TriSano"
+  dashboard: "DASHBOARD"
   new_cmr: "NEW CMR"
+  new_ae: "NEW AE"
   people: "PEOPLE"
   places: "PLACES"
   settings: "SETTINGS"
@@ -74,16 +77,18 @@ en:
   copyright: "Copyright © 2011 Collaborative Software Foundation"
   save_button_help: "Click here to enable the save buttons if they are grayed out when they shouldn't be."
 
-  before_create: "Before creating a new morbidity event, please search for the person in question."
+  before_create: "Before creating a new {{type}}, please search for the person in question."
   use_starts_with: "Use starts with search"
   no_results: "No results"
   start_a_cmr: "Start a CMR with the criteria you searched on"
+  start_an_ae: "Start an AE with the criteria you searched on"
   created_date: "Created date"
   invalid_search_criteria: "Invalid search criteria"
 
   cmr_actions: "CMR Actions"
   entity_actions: "Entity Actions"
   create_cmr_this_person: 'Create and edit CMR using this person'
+  create_ae_this_person: 'Create and edit AE using this person'
   patient_name: "Patient Name"
   contact_name: "Contact Name"
   place_name: "Place Name"
@@ -198,12 +203,13 @@ en:
   contact: 'Contact'
   event_deleted: 'Event Deleted'
   contact_info: 'Contact Information'
-  elevated_to_morbidity_events: 'Elevated to morbidity events'
+  elevated_to: 'Elevated to {{type}}'
   cmr_contacts: 'CMR Contacts'
-  parent_cmr: 'Parent CMR'
+  ae_contacts: 'AE Contacts'
+  parent_event: 'Parent Event'
   parent_patient: Parent Patient
   parent_event: 'Parent Event'
-  not_elevated: "Not yet elevated to morbidity events"
+  not_elevated: "Not yet elevated"
   event_sibling_nav:
     navigate_to:      '--- Navigate to...    ---'
     morbidity_events: '--- Promoted Contacts ---'
@@ -222,6 +228,7 @@ en:
   core_field: 'Core Field'
   core_fields: 'Core&nbsp;Fields'
   morbidity_event_fields: 'Morbidity Event Fields'
+  assessment_event_fields: 'Assessment Event Fields'
   contact_event_fields: 'Contact Event Fields'
   place_event_fields: 'Place Event Fields'
   core_fields_detail: 'Core Fields Detail'
@@ -737,6 +744,7 @@ en:
   pregnancy_status: 'Pregnancy Status'
   event_investigation_status: "Event Investigation Status"
   create_new_morbidity_report: "Create New Morbidity Report"
+  create_new_assessment_report: "Create New Assessment Report"
   queues: "Queues"
   queue: "Queue"
   investigators: "Investigators"
@@ -767,23 +775,32 @@ en:
   treatment_field: "Treatment Field"
   events_normal_case: "Events"
   edit_morbidity_event_of: "Edit morbidity event: {{name}}"
+  edit_assessment_event_of: "Edit assessment event: {{name}}"
   morbidity_event: "Morbidity Event"
+  assessment_event: "Assessment Event"
   morbidity_events: "Morbidity Events"
+  assessment_events: "Assessment Events"
   contact_events: "Contact Events"
   place_events: "Place Events"
   encounter_events: "Encounter Events"
   same_as_above: "Same as above"
   new_cmr_normal_case: "New CMR"
+  new_ae_normal_case: "New AE"
   new_morbidity_event: "New Morbidity Event"
+  new_assessment_event: "New Assessment Event"
   view_morbidity_event_of: "View Morbidity Event: {{name}}"
+  view_assessment_event_of: "View Assessment Event: {{name}}"
   view_morbidity_event: "View Morbidity Event"
+  view_assessment_event: "View Assessment Event"
   create_new_morbidity_report: "Create New Morbidity Report"
+  create_new_assessment_report: "Create New Assessment Report"
   events_normal_case: "Events"
   printed: "Printed {{date}}"
   current_investigator: "Current Investigator: {{name}}"
   confidential_case_report: "Confidential Case Report"
   unassigned: "Unassigned"
   promote_to_cmr: Promote to CMR
+  promote_to_ae: Promote to AE
   assign_to_queue: Assign to queue
   assign_to_investigator: Assign to investigator
   insufficient_privs_transition: Insufficient privileges to transition this event
@@ -796,6 +813,10 @@ en:
   route_event: Route event
   routing_disabled: Routing disabled
   more_choices: More choices...
+
+  
+  #Assessment events
+  assessment_event: "Assessment Event"
 
   #Organisms
   show_an_organism: "Show an Organism"
@@ -868,6 +889,7 @@ en:
   searching: Searching...
   event_search_results:
     morbidity_event: CMR
+    assessment_event: AE
     contact_event: Contact
 
   #staging_area
@@ -1045,6 +1067,8 @@ en:
 
   add_telephone: "Add a Telephone"
 
+  show_ae: "Show AE"
+  edit_ae: "Edit AE"
   show_cmr: "Show CMR"
   edit_cmr: "Edit CMR"
   show_contact: "Show&nbsp;Contact"

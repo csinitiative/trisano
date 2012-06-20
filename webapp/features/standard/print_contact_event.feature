@@ -32,3 +32,16 @@ Feature: Printer friendly contact events
     And I press "Print"
 
     Then section headers should contain "Davis, Miles"
+
+  Scenario: Printing should display full names in section headers
+    Given I am logged in as a super user
+    And a simple assessment event for full name Robert Johnson
+    And the assessment event has the following contacts:
+      |last_name|first_name|
+      |Davis    |Miles     |
+
+    When I go to the first AE contact's show page
+    And I choose to print "All" data
+    And I press "Print"
+
+    Then section headers should contain "Davis, Miles"

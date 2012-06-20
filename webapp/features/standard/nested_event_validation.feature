@@ -18,7 +18,7 @@ Feature: Nested validation failure messages
     Given I am logged in as a super user
      When I go to the new CMR page
       And I fill in "Collection date" with "January 1, 2075"
-      And I save the new event form
+      And I save the new morbidity event form
      Then I should get a 422 response
       And I should have a lab error message box
       And I should not have a lab result error message box

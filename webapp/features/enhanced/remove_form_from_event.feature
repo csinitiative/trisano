@@ -12,7 +12,7 @@ Feature: Removing forms from events
     And the disease-specific questions for the event have been answered
     And I am logged in as a super user
 
-    When I navigate to the event edit page
+    When I navigate to the morbidity event edit page
     And I see the form and answers on the event
     And I click the "Add/Remove forms for this event" link
     And I check the form for removal

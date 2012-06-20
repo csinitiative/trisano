@@ -13,7 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-#copy_cmr_options{:style => "display: none; width: 50%; position: relative"}
+#copy_options{:style => "display: none; width: 50%; position: relative"}
   %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
     %fieldset.form
       %legend=t 'shallow_copy'
@@ -53,4 +53,4 @@
         %br.vert-break
         = submit_tag(t("create_and_edit_deep_copy"), :id => "deep_copy_btn")
 
-    = link_to_function t("close"), "Effect.Fade('copy_cmr_options', { duration: 0.3 })"
+    = link_to_function t("close"), "Effect.Fade('copy_options', { duration: 0.3 })"

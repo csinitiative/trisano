@@ -18,7 +18,7 @@ Feature: Promoting Contact Events to Morbidity Events
       And I am logged in as a super user
      When I promote Jones to a morbidity event
      Then I should be viewing the show morbidity event for Jones page
-      And I should see "Contact successfully promoted"
+      And I should see "Successfully promoted to morbidity event."
 
   Scenario: Promoted morbidity event displays parent and disease forms
     Given a published disease form called MA1 for morbidity events with Mumps
@@ -37,7 +37,8 @@ Feature: Promoting Contact Events to Morbidity Events
     And I am logged in as a super user
 
     When I promote Jones to a morbidity event
-    Then the parent CMR should show the child as an elevated contact
+    Then I should see "<b>Promoted</b> from <b>Contact event</b> to <b>Morbidity event</b> on (.+) at (.+) by (.+)"
+    And the parent CMR should show the child as an elevated contact
 
   Scenario: Promoting a contact that has becom invalid
     Given a morbidity event for last name Smith with disease Mumps in jurisdiction Davis County
@@ -45,5 +46,5 @@ Feature: Promoting Contact Events to Morbidity Events
       And the contact disease diagnosed date is invalid
       And I am logged in as a super user
      When I promote Jones to a morbidity event
-     Then I should see "Could not promote to morbidity event"
+     Then I should see "Could not promote event."
       And I should see "Date diagnosed must be on or after"

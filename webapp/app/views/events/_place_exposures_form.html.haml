@@ -24,7 +24,7 @@
     - f.fields_for Place.new, :builder => ExtendedFormBuilder do |pf|
       %span#place_search_types.horiz
         = pf.epi_type_selector(:name => 'place[place_type_ids][]')
-      - search_interface :places, :with_types => 'place[place_type_ids][]'
+      - search_interface :places, :with_types => 'place[place_type_ids][]', :url => { 'for_event_id' => @event.id } 
       %hr/
 
     %span{:style => "clear: both; padding-top: 20px"}

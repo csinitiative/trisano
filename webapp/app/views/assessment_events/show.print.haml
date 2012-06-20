@@ -1,0 +1,93 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+= stylesheet_link_tag 'print', :media => 'all'
+.header
+  .left
+    %h2= @event.jurisdiction.secondary_entity.place.name unless @event.jurisdiction.nil?
+
+  %br
+  .left
+    %i
+      =t 'printed', :date => Date.today.strftime("%B %d, %Y")
+  .right
+    %i
+      =t 'current_investigator', :name => @event.investigator.blank? ? t("unassigned") : @event.investigator.best_name
+    
+.sub-header
+  .left
+    = (@event.disease.nil? || @event.disease.disease.nil?) ? t("disease_not_specified") : @event.disease.disease.disease_name
+  .right
+    =t('confidential_case_report')
+
+- fields_for(setup_human_event_tree(@event), :url => cmr_path(@event), :builder => ExtendedFormBuilder) do |event_form|
+
+  - patient_entity = @event.interested_party.person_entity
+  - if @event.deleted_at
+    .deleted-event=t('event_deleted')
+
+  - unless (@print_options & [t('demographic'), t('all')]).empty?
+    #demographic
+      = render :partial => 'events/demographic_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Demographics" }
+
+  - unless (@print_options & [t('clinical'), t('all')]).empty?
+    .brak#clinical
+      = render :partial => 'events/clinical_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Clinical" }
+
+  - unless (@print_options & [t('laboratory'), t('all')]).empty?
+    .brak#laboratory
+      = render :partial => 'events/laboratory_show_print.html.haml', :locals => { :entity_data => patient_entity, :event_form => event_form }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Laboratory" }
+
+  - unless (@print_options & [t('contacts'), t('all')]).empty?
+    .brak#contacts
+      = render :partial => 'events/contacts_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Contacts" }
+
+  - unless (@print_options & [t('encounters'), t('all')]).empty?
+    .brak#encounters
+      = render :partial => 'events/encounters_show_print.html.haml', :locals => { :f => event_form, :entity_data => patient_entity }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Encounters" }
+
+  - unless (@print_options & [t('epi'), t('all')]).empty?
+    .brak#epidemiological
+      = render :partial => 'events/epidemiological_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Epidemiological" }
+
+  - unless (@print_options & [t('reporting'), t('all')]).empty?
+    #reporting
+      = render :partial => 'events/reporting_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Reporting" }
+
+  - unless (@print_options & [t('administrative'), t('all')]).empty?
+    #administrative
+      = render :partial => 'events/administrative_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
+      = render :partial => 'events/core_tab_supplemental_print.html.haml', :locals => { :f => event_form, :tab => "Administrative" }
+
+  - unless (@print_options & [t('investigation'), t('all')]).empty?
+    .brak#investigation
+      = render :partial => 'events/investigation_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity }
+
+  - unless (@print_options & [t('clinical_notes'), t('administrative_notes'), t('all')]).empty?
+    .brak#notes
+      = render :partial => 'events/notes_show_print.html.haml', :locals => { :event_form => event_form, :entity_data => patient_entity, :print_options => @print_options }
+  
+  - unless (@print_options & [t('contacts'), t('all')]).empty?
+    #contact-reports
+      - for @event in @event.contact_child_events.active
+        .brak
+          =render @event

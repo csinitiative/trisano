@@ -92,14 +92,20 @@ module LayoutHelper
     end
   end
 
+  def render_small_logo
+    image_tag(small_logo_path, :border => 0, :id => 'logo', :height => "45px")
+  end
+  
   def render_main_logo
     returning "" do |result|
       result << '<div class="horiz" id="logo-container">'
-      result << link_to(
-        image_tag(main_logo_path, :border => 0, :title => "Return to Dashboard"),
-        home_path, :id => 'logo' )
+      result << image_tag(main_logo_path, :border => 0, :id => 'logo')
       result << '</div>'
     end
+  end
+
+  def small_logo_path
+    'logo_small.png'
   end
 
   def main_logo_path
@@ -110,6 +116,31 @@ module LayoutHelper
     else
       logo_path(logo)
     end
+  end
+
+  def render_patient_summary
+    if defined?(@event) and !@event.new_record? and @event.patient
+      output = "#{@event.patient.last_comma_first} (#{record_number_without_phone})"
+      output << " DOB: #{@event.patient.birth_date.strftime("%m/%d/%Y")}" if @event.patient.birth_date.present?
+      output << "<br/>#{@event.disease_name}" if @event.disease_name.present?
+      output << " (#{@event.state_description})" if @event.respond_to?(:state)
+    end
+  end
+
+  def record_number_without_phone
+    # Because mobile OSes and browser plugins like Skype
+    # detect 10 digit numbers as phone numbers, it seems the best
+    # way to prevent this type of detection is by putting invisible
+    # span tags in the number. 
+    #
+    # Sadly, this does not stop the Google Voice plugin when you double
+    # click on the number. 
+    arr = @event.record_number.chars.to_a
+    arr.insert(1, "<span>")
+    arr.insert(4, "<span>")
+    arr.insert(6, "</span>")
+    arr << "</span>"
+    arr.join
   end
 
   def render_main_menu
@@ -124,8 +155,10 @@ module LayoutHelper
   def main_menu_items
     return MenuArray.new unless user = User.current_user
     returning MenuArray.new do |items|
+      items << {:link => home_path, :t => :dashboard}
       if user.is_entitled_to? :create_event
         items << {:link => event_search_cmrs_path, :t => :new_cmr}
+        items << {:link => event_search_aes_path, :t => :new_ae}
       end
       if user.is_entitled_to? :manage_staged_message, :write_staged_message
         items << {
@@ -135,7 +168,7 @@ module LayoutHelper
       end
       if user.is_entitled_to? :view_event
         items << {:link => cmrs_path_with_defaults, :t => :events}
-        items << {:link => search_cmrs_path, :t => :search}
+        items << {:link => search_events_path, :t => :search}
       end
       if user.is_entitled_to? :manage_entities
         items << {:link => people_path, :t => :people}

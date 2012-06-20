@@ -9,7 +9,7 @@ Feature: Treatments listed by disease
         | Placebo        | true   | false   |
 
   Scenario: A new event lists the default treatments
-    When I navigate to the new event page
+    When I navigate to the new morbidity event page
     Then I should see a treatment select
      And I should see the following treatment options:
        | treatment_name |
