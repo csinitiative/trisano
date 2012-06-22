@@ -47,8 +47,8 @@ Given /^morbidity events with the following diseases:$/ do |table|
   end
 end
 
-Given /^there is a morbidity event with a task$/ do
-  @event = create_basic_event('morbidity', get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+Given /^there is a (.+) event with a task$/ do |event_type|
+  @event = create_basic_event(event_type, get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
   @event.tasks.create :name => 'follow up', :due_date => Date.tomorrow, :user => User.current_user
 end
 
