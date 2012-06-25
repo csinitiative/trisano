@@ -56,7 +56,7 @@ group :test, :uattest do
   gem "factory_girl", "1.3.2"
   gem "cucumber", "0.6.3"
   gem "cucumber-rails", "0.3.0"
-  gem "webrat", "= 0.7.2.pre"
+  gem "webrat", "= 0.7.3"
   gem "database_cleaner", "0.5.2"
   gem "selenium-client", "1.2.18"
 end

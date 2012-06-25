@@ -209,6 +209,8 @@ ActionController::Routing::Routes.draw do |map|
     :export => :post
   }
 
+  map.resources :events, :only => [:index]
+
   # These are the forms in use with and available to an event
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]
 

@@ -726,7 +726,7 @@ es:
   add_task: "Agregar Tarea"
   route_to_local: 'Enrutar a Departamentos de Salud Locales.'
   reporting: "Reporte"
-  list_morbidity_events: "Listar Eventos de Morbilidad"
+  list_events: "Eventos"
   export_all_to_csv: "Exportar todo a CSV"
   change_view: "Cambiar Vista"
   status: 'Estado'

@@ -18,18 +18,6 @@
 class MorbidityEventsController < EventsController
   include EventsHelper
 
-  before_filter :load_event_queues, :only => [:index]
-
-  def index
-    return unless index_processing
-
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @events }
-      format.csv
-    end
-  end
-
   def show
     # @event initialized in can_view? filter
     @export_options = params[:export_options]
@@ -198,45 +186,6 @@ class MorbidityEventsController < EventsController
     @event.address.city = params[:city]
     @event.address.county = ExternalCode.find(params[:county]) unless params[:county].blank?
     @event.interested_party.person_entity.person.birth_date = params[:birth_date]
-  end
-
-  def index_processing
-    if params[:per_page].to_i > 100
-      render :text => t("too_many_cmrs"), :layout => 'application', :status => 400
-      return false
-    end
-
-    begin
-      @export_options = params[:export_options]
-
-      query_options = {
-        :event_types => params[:event_types],
-        :states => params[:states],
-        :queues => params[:queues],
-        :investigators => params[:investigators],
-        :diseases => params[:diseases],
-        :order_direction => params[:sort_direction],
-        :do_not_show_deleted => params[:do_not_show_deleted],
-        :per_page => params[:per_page]
-      }
-
-      @events = MorbidityEvent.find_all_for_filtered_view(query_options.merge({
-        :view_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:view_event),
-        :access_sensitive_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:access_sensitive_diseases),
-        :order_by => params[:sort_order],
-        :page => params[:page]
-      }))
-
-      User.current_user.update_attribute('event_view_settings', query_options) if params[:set_as_default_view] == "1"
-    rescue
-      render :file => static_error_page_path(404), :layout => 'application', :status => 404
-      return false
-    end
-    return true
-  end
-
-  def load_event_queues
-    @event_queues = EventQueue.queues_for_jurisdictions User.current_user.jurisdiction_ids_for_privilege(:view_event)
   end
 
 end

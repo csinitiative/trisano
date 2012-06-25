@@ -27,6 +27,18 @@ class EventsController < ApplicationController
   before_filter :update_last_modified_date, :only => [:update]
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
   before_filter :can_promote?, :only => :event_type
+  before_filter :load_event_queues, :only => [:index]
+
+  def index
+    return unless index_processing
+    @event_states_and_descriptions = Event.get_all_states_and_descriptions
+
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @events }
+      format.csv
+    end
+  end
 
   def contacts_search
     page = params[:page] ? params[:page] : 1
@@ -303,7 +315,7 @@ class EventsController < ApplicationController
           redirect_to :back
         else
           flash[:notice] = t("event_successfully_routed_no_privs")
-          redirect_to :action => :index
+          redirect_to events_path
         end
       end
       format.xml { head :ok }
@@ -343,7 +355,7 @@ class EventsController < ApplicationController
         render :action => :edit, :status => :bad_request
       else
         flash[:error] = t(:unable_to_change_state_no_edit_privs)
-        redirect_to :action => :index
+        redirect_to events_path
       end
     end
   end
@@ -454,4 +466,44 @@ class EventsController < ApplicationController
   def update_last_modified_date
     @event.updated_at = DateTime.now
   end
+
+  def load_event_queues
+    @event_queues = EventQueue.queues_for_jurisdictions User.current_user.jurisdiction_ids_for_privilege(:view_event)
+  end
+
+  def index_processing
+    if params[:per_page].to_i > 100
+      render :text => t("too_many_cmrs"), :layout => 'application', :status => 400
+      return false
+    end
+
+    begin
+      @export_options = params[:export_options]
+
+      query_options = {
+        :event_types => params[:event_types],
+        :states => params[:states],
+        :queues => params[:queues],
+        :investigators => params[:investigators],
+        :diseases => params[:diseases],
+        :order_direction => params[:sort_direction],
+        :do_not_show_deleted => params[:do_not_show_deleted],
+        :per_page => params[:per_page]
+      }
+
+      @events = MorbidityEvent.find_all_for_filtered_view(query_options.merge({
+        :view_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:view_event),
+        :access_sensitive_jurisdiction_ids => User.current_user.jurisdiction_ids_for_privilege(:access_sensitive_diseases),
+        :order_by => params[:sort_order],
+        :page => params[:page]
+      }))
+
+      User.current_user.update_attribute('event_view_settings', query_options) if params[:set_as_default_view] == "1"
+    rescue
+      render :file => static_error_page_path(404), :layout => 'application', :status => 404
+      return false
+    end
+    return true
+  end
+
 end

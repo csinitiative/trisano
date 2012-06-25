@@ -734,7 +734,7 @@ en:
   add_task: "Add Task"
   route_to_local: 'Route to Local Health Depts.'
   reporting: "Reporting"
-  list_morbidity_events: "List Morbidity Events"
+  list_events: "Events"
   export_all_to_csv: "Export all to CSV"
   change_view: "Change View"
   status: 'Status'

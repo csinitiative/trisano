@@ -5,16 +5,7 @@ Feature: Help text is available for all core fields
 
   Background:
     Given all core fields have help text
-
-
-  Scenario: Administrator adds help text to core field
-    Given I am logged in as a super user
-    And a assessment event exists with a lab result having test type 'Chest X-ray'
-    When I edit a assessment event core field and add help text that says 'Please capitalize patient first name'
-    Then I should see "Please capitalize patient first name"
-    When I am on the assessment event edit page
-    Then I should see "Please capitalize patient first name"
-
+ 
   Scenario: Viewing help text on morbidity event core fields
     Given I am logged in as a super user
       And a morbidity event exists with a lab result having test type 'Chest X-ray'
@@ -52,3 +43,4 @@ Feature: Help text is available for all core fields
     Given I am logged in as a super user
      When I go to view all core fields
      Then I should see all the core fields
+

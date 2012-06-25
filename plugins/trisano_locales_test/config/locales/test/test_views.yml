@@ -663,7 +663,7 @@ test:
   add_attachment: "xAdd Attachment"
   add_task: "xAdd Task"
   reporting: "xReporting"
-  list_morbidity_events: "xList Morbidity Events"
+  list_events: "xEvents"
   export_all_to_csv: "xExport all to CSV"
   route_to_local: 'xRoute to Local Health Depts.'
   change_view: "xChange View"

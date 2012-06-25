@@ -765,6 +765,20 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def self.get_all_states_and_descriptions
+    # Events have slightly different workflows.  Get the union.
+    all_states = MorbidityEvent.get_states_and_descriptions + 
+                 ContactEvent.get_states_and_descriptions + 
+                 AssessmentEvent.get_states_and_descriptions
+
+    unique_states = []
+    all_states.each do |state| 
+      unique_workflow_states = unique_states.map(&:workflow_state)
+      unique_states << state unless unique_workflow_states.include?(state.workflow_state)
+    end
+    return unique_states
+  end
+
   private
 
   def create_form_references

@@ -46,7 +46,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <th><%= t('status') %></th>
       <th><%= t('event_created') %></th>
     </tr>
-    <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :view_mode => :edit, :extra_tools => " | " + link_to(t('events_normal_case'), cmrs_path_with_defaults) } %>
+    <%= render :partial => 'morbidity_events/morbidity_event', :locals => {:morbidity_event => @event, :view_mode => :edit, :extra_tools => " | " + link_to(t('events_normal_case'), events_path_with_defaults) } %>
   </table>
 <% end %>
 
@@ -55,9 +55,9 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <%= error_messages_for :object => @event %>
 
 <% if User.current_user.can_view?(@event) %>
-  <%= render :partial => 'morbidity_events/export_options', :locals => { :path => export_single_cmr_path(@event, :format => 'csv') } %>
+  <%= render :partial => 'events/export_options', :locals => { :path => export_single_cmr_path(@event, :format => 'csv') } %>
 <% end %>
-<%= render :partial => 'morbidity_events/copy_cmr_options' %>
+<%= render :partial => 'events/copy_event_options', :locals => { :path => method(:cmrs_path) } %>
 
 <div id="event-task-form"></div>
 <div id="follow-up-error"></div>

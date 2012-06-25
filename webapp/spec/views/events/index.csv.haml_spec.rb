@@ -25,7 +25,7 @@ describe "/events/index.csv.haml" do
 
   it "should render a csv template of events" do
     template.expects(:render_events_csv)
-    render "morbidity_events/index.csv.haml"
+    render "events/index.csv.haml"
   end
 
 end

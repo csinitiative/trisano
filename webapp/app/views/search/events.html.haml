@@ -69,7 +69,7 @@
       - page[:export_options].visual_effect :appear
 
   - if @events.total_entries < max_search_results
-    = render :partial => "morbidity_events/export_options", :locals => { :path => events_format_path(params.merge(:format => 'csv')) }
+    = render :partial => "events/export_options", :locals => { :path => events_format_path(params.merge(:format => 'csv')) }
   - else
     = render :partial => "refine_search"
 

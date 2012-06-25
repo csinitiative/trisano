@@ -167,7 +167,7 @@ module LayoutHelper
           :options => {:rel => "http://trisano.org/relation/staged_messages"}}
       end
       if user.is_entitled_to? :view_event
-        items << {:link => cmrs_path_with_defaults, :t => :events}
+        items << {:link => events_path_with_defaults, :t => :events}
         items << {:link => search_events_path, :t => :search}
       end
       if user.is_entitled_to? :manage_entities

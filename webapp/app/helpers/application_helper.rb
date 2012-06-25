@@ -200,8 +200,8 @@ module ApplicationHelper
     date.strftime(using) if date
   end
 
-  def cmrs_path_with_defaults
-    cmrs_path(User.current_user.event_view_settings || {})
+  def events_path_with_defaults
+    events_path(User.current_user.event_view_settings || {})
   end
 
   def save_buttons(event)

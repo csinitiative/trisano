@@ -7567,7 +7567,7 @@ function global_shortcuts_init() {
   });
 
   shortcut.add("Ctrl+Shift+,",function(){
-    window.location = "/cmrs";
+    window.location = "/events";
   });
 }
 

@@ -34,10 +34,6 @@ When /^I print the contact event$/ do
   visit contact_event_path(@event, :format => :print, :print_options => ['All'])
 end
 
-When /^I visit the cmrs index page$/ do
-  visit cmrs_path
-end
-
 When /^I visit the contacts show page$/ do
   visit contact_event_path(@event)
 end

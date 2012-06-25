@@ -1,0 +1,56 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+#copy_options{:style => "display: none; width: 50%; position: relative"}
+  %div{:style => 'background-color: #fff; border: solid 2px; padding: 15px; margin: 3px; border-color: #000'}
+    %fieldset.form
+      %legend=t 'shallow_copy'
+      %p
+        = t('shallow_copy_of', :name => h(@event.party.full_name))
+        %br
+        %b=t 'copies_demographics_only'
+      = button_to(t("create_and_edit_shallow_copy"), path.call(:from_event => @event.id, :return => true), :id => "shallow_copy_btn")
+    %fieldset.form
+      %legend= t 'deep_copy'
+      %p
+        = t('deep_copy_of', :name => h(@event.party.full_name))
+
+      %b=ct 'also_copy'
+      - form_tag(path.call(:return => true)) do
+        = hidden_field_tag(:from_event, @event.id)
+        %label.horiz{ :for => "event_components_clinical_info" }
+          = check_box_tag "event_components[]", "clinical", false, :id => 'event_components_clinical_info'
+          =t 'clinical_information_without_disease'
+        %label.horiz
+          = check_box_tag("event_components[]", "lab")
+          =t 'labs_and_lab_results'
+        %label.horiz
+          = check_box_tag("event_components[]", "reporting")
+          =t 'reporting_information'
+        %label.horiz
+          = check_box_tag("event_components[]", "disease_specific")
+          =t 'disease_forms_and_answers'
+        -# Uncommend when contact issue is sorted out
+        -# %label.horiz
+        -#   = check_box_tag("event_components[]", "contacts")
+        -#   Contacts
+        %label.horiz
+          = check_box_tag("event_components[]", "notes")
+          =t 'notes'
+
+        %br.vert-break
+        = submit_tag(t("create_and_edit_deep_copy"), :id => "deep_copy_btn")
+
+    = link_to_function t("close"), "Effect.Fade('copy_options', { duration: 0.3 })"

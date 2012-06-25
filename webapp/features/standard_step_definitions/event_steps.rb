@@ -161,7 +161,7 @@ Given /^the contact is routed to "([^\"]*)"$/ do |short_name|
 end
 
 When /^I visit the events index page$/ do
-  visit cmrs_path({})
+  visit events_path
 end
 
 When(/^I navigate to the morbidity event edit page$/) do
