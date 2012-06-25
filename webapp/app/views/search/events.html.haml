@@ -59,8 +59,8 @@
           %div#epi_reporting_criteria{:style => "margin-top: 5px"}
             =epi_criteria_fields(params).join
 
-    %input{ :value => t('submit_query'), :type => "submit", :id => 'submit_query', :style => "position: absolute; right: 12em; width:130px;" }
-= button_to(t("start_over"), search_events_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "position: absolute; right: 1em; width:130px")
+    %input{ :value => t('submit_query'), :type => "submit", :id => 'submit_query', :style => "float: right" }
+= button_to(t("start_over"), search_events_path, :method => :get, :confirm => "Clear all search criteria and results?", :style => "float: right")
 %br
 
 - if !@events.blank?
