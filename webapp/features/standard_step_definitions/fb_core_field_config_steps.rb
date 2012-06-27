@@ -23,6 +23,14 @@ Then /^I should see all of the core field config questions$/ do
   end
 end
 
+Then /^I should see all of the promoted core field config questions$/ do
+  label_text = Nokogiri::HTML(response.body).xpath("//label").text
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @promoted_event.class.name.underscore]).each do |core_field|
+    label_text.should contain("#{core_field.key} before?")
+    label_text.should contain("#{core_field.key} after?")
+  end
+end
+
 When /^I answer all core field config questions$/ do
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     fill_in("#{core_field.key} before?", :with => "#{core_field.key} before answer")
@@ -33,6 +41,14 @@ end
 Then /^I should see all core field config answers$/ do
   divs_text =  Nokogiri::HTML(response.body).css("div").text
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+    divs_text.should contain("#{core_field.key} before answer")
+    divs_text.should contain("#{core_field.key} after answer")
+  end
+end
+
+Then /^I should see all promoted core field config answers$/ do
+  divs_text =  Nokogiri::HTML(response.body).css("div").text
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @promoted_event.class.name.underscore]).each do |core_field|
     divs_text.should contain("#{core_field.key} before answer")
     divs_text.should contain("#{core_field.key} after answer")
   end

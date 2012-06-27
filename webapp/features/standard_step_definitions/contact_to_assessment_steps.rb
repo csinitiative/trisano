@@ -22,6 +22,13 @@ end
 When /^I promote Jones to a assessment event$/ do
   visit contact_event_path(@contact_event)
   click_link "Promote to AE"
+  
+  # we want to make available the promoted event at a later time
+  # but only if the promotion was successful
+  if current_url == ae_url(@contact_event)
+    #Then reload the event to make it available for other steps
+    @promoted_event = AssessmentEvent.find(@contact_event.id)
+  end
 end
 
 Then /^I should be viewing the show assessment event for Jones page$/ do
