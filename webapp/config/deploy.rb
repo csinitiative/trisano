@@ -9,8 +9,6 @@ extend Capistrano::Helpers::SiteConfig
 default_run_options[:pty] = true
 set :application, "TriSano"
 set :deploy_to, "/opt/csi/#{application}"
-set :stages, %w(vagrant tomcat)
-set :default_stage, "vagrant"
 
 set :repository, "."
 set :scm, :none
