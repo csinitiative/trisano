@@ -14,8 +14,8 @@ Feature: Promoting Assessment Events to Morbidity Events
   Scenario: assessment changed and user redirected
     Given a assessment event for last name Smith with disease Mumps in jurisdiction Davis County
       And I am logged in as a super user
-     When I promote Jones assessment to a morbidity event
-     Then I should be viewing the show morbidity event for Jones assessment page
+     When I promote the assessment to a morbidity event
+     Then I should be viewing the show morbidity event for the assessment page
       And I should see "Successfully promoted to morbidity event."
 
   Scenario: Promoted morbidity event displays disease forms
@@ -24,20 +24,20 @@ Feature: Promoting Assessment Events to Morbidity Events
     And a assessment event for last name Smith with disease Mumps in jurisdiction Davis County
     And I am logged in as a super user
 
-    When I promote Jones assessment to a morbidity event
+    When I promote the assessment to a morbidity event
     Then the morbidity event should have disease forms for MA1 and CA1
 
   Scenario: Parent morbiditity event shows Jones as being promoted
     Given a assessment event for last name Smith with disease Mumps in jurisdiction Davis County
     And I am logged in as a super user
 
-    When I promote Jones assessment to a morbidity event
+    When I promote the assessment to a morbidity event
     Then I should see "<b>Promoted</b> from <b>Assessment event</b> to <b>Morbidity event</b> on (.+) at (.+) by (.+)"
 
   Scenario: Promoting an assessment that has becom invalid
     Given a assessment event for last name Smith with disease Mumps in jurisdiction Davis County
       And the event disease diagnosed date is invalid
       And I am logged in as a super user
-     When I promote Jones assessment to a morbidity event
+     When I promote the assessment to a morbidity event
      Then I should see "Could not promote event."
       And I should see "Date diagnosed must be on or after"

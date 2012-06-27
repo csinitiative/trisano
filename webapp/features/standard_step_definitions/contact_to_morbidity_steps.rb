@@ -30,6 +30,13 @@ end
 When /^I promote Jones to a morbidity event$/ do
   visit contact_event_path(@contact_event)
   click_link "Promote to CMR"
+  
+  # we want to make available the promoted event at a later time
+  # but only if the promotion was successful
+  if current_url == cmr_url(@contact_event)
+    #Then reload the event to make it available for other steps
+    @promoted_event = MorbidityEvent.find(@contact_event.id)
+  end
 end
 
 Then /^I should be viewing the show morbidity event for Jones page$/ do

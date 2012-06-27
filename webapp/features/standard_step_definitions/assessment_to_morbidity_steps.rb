@@ -19,7 +19,7 @@ Then /^I should see a link to promote event to a CMR from an assessment$/ do
   response.should have_selector("a#event-type[href='#{event_type_ae_path(@event)}?type=morbidity_event']")
 end
 
-When /^I promote Jones assessment to a morbidity event$/ do
+When /^I promote the assessment to a morbidity event$/ do
   visit ae_path(@event)
   click_link "Promote to CMR"
 
@@ -31,7 +31,7 @@ When /^I promote Jones assessment to a morbidity event$/ do
   end
 end
 
-Then /^I should be viewing the show morbidity event for Jones assessment page$/ do
+Then /^I should be viewing the show morbidity event for the assessment page$/ do
   path = cmr_path(@event)
   current_url.should =~ /#{path}/
 end

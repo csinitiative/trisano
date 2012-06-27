@@ -24,6 +24,7 @@ Then /^I should see all of the core field config questions$/ do
 end
 
 Then /^I should see all of the promoted core field config questions$/ do
+  raise "No promoted event found" if @promoted_event.nil?
   label_text = Nokogiri::HTML(response.body).xpath("//label").text
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
@@ -48,6 +49,7 @@ Then /^I should see all core field config answers$/ do
 end
 
 Then /^I should see all promoted core field config answers$/ do
+  raise "No promoted event found" if @promoted_event.nil?
   divs_text =  Nokogiri::HTML(response.body).css("div").text
   CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
     promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
