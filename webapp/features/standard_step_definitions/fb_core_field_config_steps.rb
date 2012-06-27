@@ -25,9 +25,10 @@ end
 
 Then /^I should see all of the promoted core field config questions$/ do
   label_text = Nokogiri::HTML(response.body).xpath("//label").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @promoted_event.class.name.underscore]).each do |core_field|
-    label_text.should contain("#{core_field.key} before?")
-    label_text.should contain("#{core_field.key} after?")
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+    promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
+    label_text.should contain("#{promoted_core_field_key} before?")
+    label_text.should contain("#{promoted_core_field_key} after?")
   end
 end
 
@@ -48,8 +49,9 @@ end
 
 Then /^I should see all promoted core field config answers$/ do
   divs_text =  Nokogiri::HTML(response.body).css("div").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @promoted_event.class.name.underscore]).each do |core_field|
-    divs_text.should contain("#{core_field.key} before answer")
-    divs_text.should contain("#{core_field.key} after answer")
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+    promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
+    divs_text.should contain("#{promoted_core_field_key} before answer")
+    divs_text.should contain("#{promoted_core_field_key} after answer")
   end
 end

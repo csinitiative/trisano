@@ -844,21 +844,50 @@ module EventsHelper
   def concat_core_field(mode, before_or_after, attribute, form_builder)
     return if  (@event.nil? || @event.form_references.nil?)
     @event.form_references.each do |form_reference|
-      configs = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path("#{(form_builder.core_path << attribute).to_s}")
-      configs.each do |config|
-        element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
+      
+      current_core_path = (form_builder.core_path << attribute).to_s #valid core path
+      concat(core_customization(form_reference, current_core_path, @event_form, before_or_after, mode))
 
-        case mode
-        when :edit
-          concat(render_investigator_view(element, @event_form, form_reference.form))
-        when :show
-          concat(show_investigator_view(element, form_reference.form, @event_form))
-        when :print
-          concat(print_investigator_view(element, form_reference.form, @event_form))
-        end
 
+      @event.event_type_transitions.each do |event_type_transition|
+
+
+        historical_core_path_prefix = form_builder.core_path.clone
+        # replace root of core path with previous event type
+        historical_core_path_prefix[0] = event_type_transition.was.underscore
+
+        historical_core_path = (historical_core_path_prefix << attribute).to_s
+
+        output = core_customization(form_reference, historical_core_path, @event_form, before_or_after, mode)
+        if output.present?
+          #debugger
+          # before we render this output, update the path to be usable on current form
+          output.gsub!(historical_core_path, current_core_path)
+          concat(output)
+        end 
+      end #event_type_transitions
+    end #form referneces
+  end
+
+  def core_customization(form_reference, core_path, current_form, before_or_after, mode)
+    customizations = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path(core_path)
+
+    customization = ""
+
+    customizations.each do |config|
+      element = before_or_after == :before ? element = form_reference.form.form_element_cache.children(config).first : form_reference.form.form_element_cache.children(config)[1]
+
+      customization << case mode
+      when :edit
+        render_investigator_view(element, current_form, form_reference.form)
+      when :show
+        show_investigator_view(element, form_reference.form, current_form)
+      when :print
+        print_investigator_view(element, form_reference.form, current_form)
       end
-    end
+    end #configs
+
+    return customization
   end
 
   def render_investigator_element(form_elements_cache, element, f)

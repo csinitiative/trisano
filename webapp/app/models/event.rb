@@ -39,6 +39,7 @@ class Event < ActiveRecord::Base
 
   has_one :jurisdiction, :dependent => :destroy
   alias primary_jurisdiction jurisdiction # fixes csv exports
+  has_many :event_type_transitions
 
   has_many :associated_jurisdictions,
     :order => 'created_at ASC',
