@@ -626,6 +626,359 @@
         <CalculatedMember name="Rate" formula="IIf(NOT ([Measures].[Population] = 0), Format([Measures].[RatePerc], '##.#### %'), '0 %')" visible="true" dimension="Measures" description="Count of all cases in this group divided by the total state population in this group" /> -->
         <CalculatedMember name="Count (not null)" formula="Iif(IsEmpty([Count]), 0, [Count])" dimension="Measures" visible="true" description="Same as Count measure, without any empty cells" />
     </Cube>
+
+    <Cube name="Assessment Events" caption="Assessment Events" cache="true" enabled="true" description="Provides detailed analysis of assessment events">
+        <Table name="dw_assessment_events_view" schema="trisano">
+        </Table>
+        <Dimension type="StandardDimension" name="Gender" description="Patient's birth gender">
+            <Hierarchy name="Gender" allMemberName="All Genders" hasAll="true" description="Patient's birth gender">
+                <!--<Table name="dw_assessment_patients_view" schema="trisano"></Table> -->
+                <Level name="Gender" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="Patient's birth gender">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN birth_gender IS NULL THEN 'Unknown' ELSE birth_gender END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Ethnicity" description="Patient's ethnicity">
+            <Hierarchy name="Ethnicity" allMemberName="All Ethnicities" hasAll="true" description="Patient's ethnicity">
+                <!--<Table name="dw_assessment_patients_view" schema="trisano"></Table> -->
+                <Level name="Ethnicity" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="Patient's ethnicity">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN ethnicity IS NULL THEN 'Unknown' ELSE ethnicity END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="TimeDimension" name="Disease diagnosis date" description="Date the disease was diagnosed">
+            <Hierarchy name="Disease diagnosis date" allMemberName="All Disease Diagnosis Dates" hasAll="true" description="Date the disease was diagnosed">
+                <Level name="Disease diagnosis year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_diagnosed_year" description="Year the disease was diagnosed"> </Level>
+                <Level name="Disease diagnosis quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed_quarter" description="Quarter the disease was diagnosed"> </Level>
+                <Level name="Disease diagnosis month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_diagnosed_month" hideMemberIf="IfBlankName" description="Month the disease was diagnosed">
+                    <OrdinalExpression><SQL dialect="generic">extract(month from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+                <Level name="Disease diagnosis week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_diagnosed_week" description="Week the disease was diagnosed">
+                    <OrdinalExpression><SQL dialect="generic"> extract(week from date_disease_diagnosed)</SQL></OrdinalExpression>
+                </Level>
+                <Level name="Disease diagnosis day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_diagnosed_day" description="Day the disease was diagnosed">
+                    <OrdinalExpression><SQL dialect="generic">
+                        LPAD(date_disease_diagnosed_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+                </Level>
+                <Level name="Date" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_diagnosed" description="Date the disease was diagnosed"> </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="TimeDimension" name="Disease onset date" description="Date of onset of disease symptoms">
+            <Hierarchy name="Disease onset date" allMemberName="All Disease Onset Dates" hasAll="true" description="Date of onset of disease symptoms">
+                <Level name="Disease onset year" type="String" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never" column="date_disease_onset_year" description="Year of onset of disease symptoms"> </Level>
+                <Level name="Disease onset quarter" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset_quarter" description="Quarter of onset of disease symptoms"> </Level>
+                <Level name="Disease onset month" type="String" uniqueMembers="false" levelType="TimeMonths" column="date_disease_onset_month" hideMemberIf="IfBlankName" description="Month of onset of disease symptoms">
+                    <OrdinalExpression><SQL dialect="generic">extract(month from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+                <Level name="Disease onset week" type="String" uniqueMembers="false" levelType="TimeWeeks" hideMemberIf="IfBlankName" column="date_disease_onset_week" description="Week of onset of disease symptoms">
+                    <OrdinalExpression><SQL dialect="generic"> extract(week from date_disease_onset)</SQL></OrdinalExpression>
+                </Level>
+                <Level name="Disease onset day" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="IfBlankName" column="date_disease_onset_day" description="Day of onset of disease symptoms">
+                    <OrdinalExpression><SQL dialect="generic">
+                        LPAD(date_disease_onset_day::text, 2, '0')
+                    </SQL></OrdinalExpression>
+                </Level>
+                <Level name="Date" type="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="IfBlankName" column="date_disease_onset" description="Date of onset of disease symptoms"> </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="County of Residence" description="Patient's county of residence">
+            <Hierarchy hasAll="true" allMemberName="All Counties of Residence" description="Patient's county of residence">
+                <Level type="String" name="County of Residence" column="county" description="Patient's county of residence"></Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Jurisdiction" description="Health department and investigator in charge of investigation">
+            <Hierarchy hasAll="true" allMemberName="All Jurisdictions" description="Health department and investigator in charge of investigation">
+                <Level type="String" name="Jurisdiction" column="investigating_jurisdiction" description="Health department in charge of investigation"></Level>
+                <Level type="String" name="Investigator" column="investigator" description="Investigator in charge of investigation"></Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" foreignKey="disease_id" name="Disease" allMemberName="All Diseases" description="Disease associated with this event">
+            <Hierarchy hasAll="true" primaryKey="id" description="Disease associated with this event">
+                <Table name="diseases_view" schema="trisano"></Table>
+                <Level name="Sensitive" type="String" uniqueMembers="true" description="Is this disease sensitive?">
+                    <KeyExpression><SQL dialect="generic">CASE WHEN sensitive THEN 'Sensitive' ELSE 'Non-Sensitive' END</SQL></KeyExpression>
+                </Level>
+                <Level name="Disease" column="disease_name" type="String" uniqueMembers="true" description="Disease associated with this event"></Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Age" allMemberName="All Ages" description="Patient Age">
+            <Hierarchy hasAll="true">
+                <Level type="String" name="Age Group" ordinalColumn="age_in_years" description="Patient ages grouped in five year intervals">
+                    <KeyExpression><SQL dialect="generic">
+                        COALESCE(trisano.get_age_group(age_in_years), 'Unknown')
+                    </SQL></KeyExpression>
+                    <OrdinalExpression><SQL dialect="generic">
+                        COALESCE(trisano.get_age_group_ordinal(age_in_years), 9999)
+                    </SQL></OrdinalExpression>
+                </Level>
+                <Level type="String" name="Age" ordinalColumn="age_in_years" description="Patient age">
+                    <KeyExpression><SQL dialect="generic">
+                        COALESCE(age_in_years::text, 'Unknown')
+                    </SQL></KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Year" description="MMWR Year">
+            <Hierarchy name="MMWR Year" allMemberName="All MMWR Years" hasAll="true" description="MMWR Year">
+                <Level name="MMWR Year" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Year">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN mmwr_year IS NULL THEN 'Unknown' ELSE mmwr_year END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="MMWR Week" description="MMWR Week">
+            <Hierarchy name="MMWR Week" allMemberName="All MMWR Weeks" hasAll="true" description="MMWR Week">
+                <Level name="MMWR Week" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="MMWR Week">
+                    <KeyExpression>
+                        <SQL dialiect="generic">CASE WHEN mmwr_week IS NULL THEN 'Unknown' ELSE mmwr_week END</SQL>
+                    </KeyExpression>
+                </Level>
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Race" foreignKey="dw_patients_id" description="Patient race">
+            <Hierarchy hasAll="true" primaryKey="person_id">
+                <Table name="dw_assessment_patients_races_view" schema="trisano" />
+                <Level name="Race" column="race" type="String" uniqueMembers="true" table="dw_assessment_patients_races_view" description="Patient race" />
+            </Hierarchy>
+        </Dimension>
+        <Dimension type="StandardDimension" name="Population Year" foreignKey="always_one" allMemberName="All Population Years" description="Year of population data to use for population calculations">
+            <Hierarchy primaryKey="id" hasAll="true" description="Year of population data to use for population calculations">
+                <Table schema="population" name="population_years" />
+                <Level name="Population Year" column="year" type="String" description="Year of population data to use for population calculations" />
+            </Hierarchy>
+        </Dimension>
+        <!-- Measures -->
+        <!-- Count, Risk factors -->
+        <Measure name="Count" datatype="Integer" aggregator="count" visible="true" column="id" description="Count of cases in this group"></Measure>
+        <Measure name="Pregnant" datatype="Integer" aggregator="sum" visible="true" description="Cound of all cases in this group where the patient is pregnant">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN pregnant = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Group living" datatype="Integer" aggregator="sum" visible="true" description="Count of all cases in this group where the patient is in a group living situation">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN group_living = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Day care association" datatype="Integer" aggregator="sum" visible="true" description="Count of cases in this group with a day care association">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN day_care_association = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Healthcare worker" datatype="Integer" aggregator="sum" visible="true" description="Count of cases in this group where the patient is a healthcare worker">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN healthcare_worker = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Food handler" datatype="Integer" aggregator="sum" visible="true" description="Count of cases in this group where the patient is a food handler">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN food_handler = 'Yes' THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Acuity" datatype="Integer" aggregator="sum" visible="true" description="Case acuity">
+            <MeasureExpression>
+                <SQL dialect="generic">COALESCE(acuity, 0)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to Diagnosis -->
+        <Measure name="Onset to Diagnosis (days), Min" aggregator="min" visible="true" datatype="Integer" description="Minimum days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Max" aggregator="max" visible="true" datatype="Integer" description="Maximum days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Avg" aggregator="avg" visible="true" datatype="Integer" description="Average days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_disease_diagnosed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Median" aggregator="count" visible="true" datatype="Integer" description="Median days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.median(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Mode" aggregator="count" visible="true" datatype="Integer" description="Mode of days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Diagnosis (days), Std dev" aggregator="count" visible="true" datatype="Integer" description="Std. deviation of days from onset of symptoms to diagnosis">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_dpcust(stddev(date_disease_diagnosed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to Report -->
+        <Measure name="Onset to Report (days), Min" aggregator="min" visible="true" datatype="Integer" description="Minimum days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Max" aggregator="max" visible="true" datatype="Integer" description="Maximum days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Avg" aggregator="avg" visible="true" datatype="Integer" description="Average days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_reported_to_public_health - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Median" aggregator="count" visible="true" datatype="Integer" description="Median days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.median(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Mode" aggregator="count" visible="true" datatype="Integer" description="Mode of days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Report (days), Std dev" aggregator="count" visible="true" datatype="Integer" description="Std. deviation of days from onset of symptoms to report">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_dpcust(stddev(date_reported_to_public_health - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to Start of Investigation -->
+        <Measure name="Onset to Investigation Start (days), Min" aggregator="min" visible="true" datatype="Integer" description="Minimum days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Max" aggregator="max" visible="true" datatype="Integer" description="Maximum days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Avg" aggregator="avg" visible="true" datatype="Integer" description="Average days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_started - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Median" aggregator="count" visible="true" datatype="Integer" description="Median days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.median(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Mode" aggregator="count" visible="true" datatype="Integer" description="Mode of days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation Start (days), Std dev" aggregator="count" visible="true" datatype="Integer" description="Std. deviation of days from onset of symptoms to start of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_dpcust(stddev(date_investigation_started - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Days from Onset to End of Investigation -->
+        <Measure name="Onset to Investigation End (days), Min" aggregator="min" visible="true" datatype="Integer" description="Minimum days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Max" aggregator="max" visible="true" datatype="Integer" description="Maximum days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Avg" aggregator="avg" visible="true" datatype="Integer" description="Average days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_disease_onset)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Median" aggregator="count" visible="true" datatype="Integer" description="Median days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.median(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Mode" aggregator="count" visible="true" datatype="Integer" description="Mode of days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="Onset to Investigation End (days), Std dev" aggregator="count" visible="true" datatype="Integer" description="Std. deviation of days from onset of symptoms to end of investigation">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_dpcust(stddev(date_investigation_completed - date_disease_onset))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Length of investigation -->
+        <Measure caption="Length (days) of Investigation, Min" name="MinInvLength" aggregator="min" visible="true" datatype="Integer" description="Minimum length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Max" name="MaxInvLength" aggregator="max" visible="true" datatype="Integer" description="Maximum length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Avg" name="AvgInvLength" aggregator="avg" visible="true" datatype="Integer" description="Average length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">(date_investigation_completed - date_investigation_started)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Median" name="MedianInvLength" aggregator="count" visible="true" datatype="Integer" description="Median length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.median((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Mode" name="ModeInvLength" aggregator="count" visible="true" datatype="Integer" description="Mode of length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode((date_investigation_completed - date_investigation_started)::integer))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Length (days) of Investigation, Std dev" name="StdevInvLength" aggregator="count" visible="true" datatype="Integer" description="Std. deviation of length of investigation in days">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_dpcust(stddev(date_investigation_completed - date_investigation_started))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- Age at onset stuff -->
+        <Measure caption="Age at Onset (years), Min" name="MinAgeAtOnset" aggregator="min" visible="true" datatype="Integer" description="Minimum age at onset of all cases in this group">
+            <MeasureExpression>
+                <SQL dialect="generic">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Age at Onset (years), Max" name="MaxAgeAtOnset" aggregator="max" visible="true" datatype="Integer" description="Maximum age at onset of all cases in this group">
+            <MeasureExpression>
+                <SQL dialect="generic">(trisano.get_age_in_years(actual_age_at_onset, actual_age_type))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Age at Onset (years), Avg" name="AvgAgeAtOnset" column="age_in_years" aggregator="avg" datatype="Integer" visible="True" description="Average age at onset of all cases in this group"> </Measure>
+        <Measure caption="Age at Onset (years), Median" name="MedianAgeAtOnset" aggregator="count" visible="true" datatype="Integer" description="Median age at onset of all cases in this group">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_numcust(trisano.median(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure caption="Age at Onset (years), Mode" name="ModeAgeAtOnset" aggregator="count" visible="true" datatype="Integer" description="Mode of age at onset of all cases in this group">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_intcust(trisano.mode(floor(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))::integer)</SQL>
+            </MeasureExpression>
+        </Measure>
+        <Measure name="StdevAgeAtOnset" caption="Age at Onset (years), Std Dev" visible="true" aggregator="count" datatype="Numeric" description="Std. deviation of age at onset of all cases in this group">
+            <MeasureExpression>
+                <SQL dialect="generic">trisano.make_numcust(stddev(trisano.get_age_in_years(actual_age_at_onset, actual_age_type)))</SQL>
+            </MeasureExpression>
+        </Measure>
+        <!-- etc. -->
+        <Measure name="Once a contact" datatype="Integer" aggregator="count" visible="false" description="Count of all cases in this group that were once a contact">
+            <MeasureExpression>
+                <SQL dialect="generic">CASE WHEN parent_id IS NOT NULL THEN 1 ELSE 0 END</SQL>
+            </MeasureExpression>
+        </Measure>
+        <CalculatedMember name="Population" formula="GetPopulation([Count])" dimension="Measures" visible="true" description="Total state population in this group" />
+<!--        <CalculatedMember name="RatePerc" visible="false" formula="[Count] / GetPopulation([Count])" formatString="##.####%" dimension="Measures" />
+        <CalculatedMember name="Rate" formula="IIf(NOT ([Measures].[Population] = 0), Format([Measures].[RatePerc], '##.#### %'), '0 %')" visible="true" dimension="Measures" description="Count of all cases in this group divided by the total state population in this group" /> -->
+        <CalculatedMember name="Count (not null)" formula="Iif(IsEmpty([Count]), 0, [Count])" dimension="Measures" visible="true" description="Same as Count measure, without any empty cells" />
+    </Cube>
     <Role name="sensitiveAccess">
         <SchemaGrant access="all"></SchemaGrant>
     </Role>
@@ -638,6 +991,12 @@
                 </HierarchyGrant>
             </CubeGrant>
             <CubeGrant cube="Contact Events" access="all">
+                <HierarchyGrant hierarchy="Disease" rollupPolicy="partial" access="custom">
+                    <MemberGrant member="[Disease].[Sensitive]" access="none"></MemberGrant>
+                    <MemberGrant member="[Disease].[Non-Sensitive]" access="all"></MemberGrant>
+                </HierarchyGrant>
+            </CubeGrant>
+            <CubeGrant cube="Assessment Events" access="all">
                 <HierarchyGrant hierarchy="Disease" rollupPolicy="partial" access="custom">
                     <MemberGrant member="[Disease].[Sensitive]" access="none"></MemberGrant>
                     <MemberGrant member="[Disease].[Non-Sensitive]" access="all"></MemberGrant>
