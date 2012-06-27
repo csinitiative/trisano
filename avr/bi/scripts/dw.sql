@@ -862,7 +862,7 @@ FROM events
     LEFT JOIN events outbrk
         ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
-    events.type = 'MorbidityEvent' AND
+    events.type = 'AssessmentEvent' AND
     events.deleted_at IS NULL
 ;
 
