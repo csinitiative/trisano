@@ -390,17 +390,21 @@ module FormBuilderDslHelper
     string.gsub(/\]/, "").gsub(/\[/, ".")
   end
 
+  def core_path_with_dots(element)
+    # Debt: Replace with shorter eval technique
+    new_path = element.core_path.clone
+    new_path = remove_event_type_from_core_path(new_path)    
+    new_path = replace_square_brackets_with_dots(new_path)
+  end
+
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
       result = ""
       include_children = false
 
       unless (ajax_render)
-        # Debt: Replace with shorter eval technique
-        core_path_with_dots = remove_event_type_from_core_path(element.core_path)
-        core_path_with_dots = replace_square_brackets_with_dots(core_path_with_dots)
         core_value = @event
-        core_path_with_dots.split(".").each do |method|
+        core_path_with_dots(element).split(".").each do |method|
           begin
             core_value = core_value.send(method)
           rescue
@@ -568,10 +572,8 @@ module FormBuilderDslHelper
       include_children = false
 
       unless (ajax_render)
-        # Debt: Replace with shorter eval technique
-        core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
         core_value = @event
-        core_path_with_dots.split(".").each do |method|
+        core_path_with_dots(element).split(".").each do |method|
           begin
             core_value = core_value.send(method)
           rescue
@@ -718,10 +720,8 @@ module FormBuilderDslHelper
 
       include_children = false
 
-      # Debt: Replace with shorter eval technique
-      core_path_with_dots = element.core_path.sub("#{@event.class.name.underscore}[", "").gsub(/\]/, "").gsub(/\[/, ".")
       core_value = @event
-      core_path_with_dots.split(".").each do |method|
+      core_path_with_dots(element).split(".").each do |method|
         begin
           core_value = core_value.send(method)
         rescue
