@@ -430,8 +430,8 @@ Trisano = {
   },
 
   setBaseUrl: function(url) {
-    Trisano.baseUrl = url || $$("script[@src*='javascripts/prototype.js']")[0]
-      .getAttribute('src').gsub(/javascripts\/prototype.js.*$/, '');
+    Trisano.baseUrl = url || $$("script[@src*='javascripts/prototype.js']")[1]
+            .getAttribute('src').gsub(/javascripts\/(.+).js.*$/, '');
   },
 
   flashError: function(msg) {
