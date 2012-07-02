@@ -253,8 +253,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
   def core_follow_up(attribute, options = {}, event = nil)
     returning [] do |result|
-      unless follow_ups_for(attribute, event).empty?
-        options[:onchange] = core_follow_up_event(attribute, event)
+      core_follow_ups = follow_ups_for(attribute, event)
+      core_follow_ups.each do |follow_up|
+        #Because we must support FormElements which no longer apply to the current core_path
+        #we pass in the historical follow_up element in order to build the follow up javascript call
+        options[:onchange] = core_follow_up_event(follow_up, attribute, event)
         result << follow_up_spinner_for(attribute)
       end
       result.unshift(yield(attribute, options)) if block_given?
@@ -265,22 +268,32 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     return [] unless core_path && event.try(:form_references)
     returning [] do |follow_ups|
       event.form_references.each do |fr|
+        #setup follow ups for current event type
         path = core_path << attribute
         follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{path.to_s}")
+
+        #setup follow ups for previous event types
+        event.event_type_transitions.each do |transition|
+          historical_core_path_prefix = core_path.clone
+          historical_core_path_prefix[0] = transition.was.underscore
+          historical_core_path = historical_core_path_prefix << attribute
+          follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{historical_core_path.to_s}")
+        end
+        follow_ups #must end with follow_ups for returning
       end
     end.flatten
   end
 
-  def core_follow_up_event(attribute, event, value_attribute = nil)
-    value_path = core_path << value_attribute
-    this_or_node = value_attribute ? "$('#{value_path.underscore}')" : 'this'
+  def core_follow_up_event(follow_up, attribute, event, value_attribute = nil)
+    this_or_node = 'this'
     path = core_path << attribute
+    follow_up_path = follow_up.core_path
     returning "" do |js|
       js << "sendCoreConditionRequest("
       js <<   "'#{process_core_condition_path}',"
       js <<   " #{this_or_node},"
       js <<   "'#{event.id}',"
-      js <<   "'#{path.to_s}',"
+      js <<   "'#{follow_up_path.to_s}',"
       js <<   "'#{path.underscore}_spinner'"
       js <<   ");"
     end
