@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/spec_helper'
   describe 'The TriSano home page' do 
 
     before :each do
-      @browser.open "/trisano/cmrs"
+      @browser.open "/trisano/events"
       @browser.wait_for_page_to_load($load_time)
     end
     

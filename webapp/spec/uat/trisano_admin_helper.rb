@@ -20,7 +20,7 @@ module TrisanoAdminHelper
   # CDC Helpers
 
   def navigate_to_export_admin(browser)
-    browser.open "/trisano/cmrs"
+    browser.open "/trisano/events"
     click_nav_admin(browser)
     browser.click("admin_cdc_config")
     browser.wait_for_page_to_load($load_time)
@@ -30,7 +30,7 @@ module TrisanoAdminHelper
   # Disease Admin Helpers
 
   def navigate_to_disease_admin(browser)
-    browser.open "/trisano/cmrs"
+    browser.open "/trisano/events"
     click_nav_admin(browser)
     browser.click("admin_diseases")
     browser.wait_for_page_to_load($load_time)
@@ -74,7 +74,7 @@ module TrisanoAdminHelper
   # User Admin Helpers
 
   def navigate_to_user_admin(browser)
-    browser.open "/trisano/cmrs"
+    browser.open "/trisano/events"
     click_nav_admin(browser)
     browser.click("link=Manage Users")
     browser.wait_for_page_to_load($load_time)
@@ -91,7 +91,7 @@ module TrisanoAdminHelper
   # Entity management helpers
 
   def navigate_to_place_admin(browser)
-    browser.open "/trisano/cmrs"
+    browser.open "/trisano/events"
     click_nav_admin(browser)
     browser.click("admin_places")
     browser.wait_for_page_to_load($load_time)

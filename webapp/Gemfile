@@ -58,6 +58,7 @@ group :test, :uattest do
   gem "cucumber-rails", "0.3.0"
   gem "webrat", "= 0.7.3"
   gem "database_cleaner", "0.5.2"
+  gem "Selenium", "1.1.14"
   gem "selenium-client", "1.2.18"
 end
 

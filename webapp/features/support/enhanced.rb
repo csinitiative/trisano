@@ -41,12 +41,12 @@ require 'spec/expectations'
 require 'selenium'
 
 # "before all"
-browser = Selenium::SeleniumDriver.new("localhost", 4444, "*chrome", "http://localhost:8080", 15000)
+browser = Selenium::SeleniumDriver.new("localhost", 4444, "*chrome /opt/firefox/firefox-bin", "http://localhost:8080", 15000)
 
 Before do
   @browser = browser
   @browser.start
-  @browser.open "/trisano/cmrs"
+  @browser.open "/trisano/events"
 end
 
 After do

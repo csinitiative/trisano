@@ -2,6 +2,7 @@ GEM
   remote: http://gems.github.com/
   remote: http://rubygems.org/
   specs:
+    Selenium (1.1.14)
     SystemTimer (1.2.3)
     actionmailer (2.3.5)
       actionpack (= 2.3.5)
@@ -147,6 +148,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  Selenium (= 1.1.14)
   SystemTimer (= 1.2.3)
   activerecord-jdbcpostgresql-adapter (= 1.0.0.kofnopre1)
   capistrano (= 2.5.19)

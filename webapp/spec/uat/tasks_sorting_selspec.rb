@@ -40,7 +40,7 @@ describe 'Sorting tasks on the Dashboard' do
   end
   
   it "should create a basic CMR" do
-    @browser.open "/trisano/cmrs"
+    @browser.open "/trisano/events"
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease).should be_true
   end
 

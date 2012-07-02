@@ -47,7 +47,7 @@ describe 'Marking a task as completed or as not applicable' do
   end
   
   it "should create a basic CMR" do
-    @browser.open "/trisano/cmrs"
+    @browser.open "/trisano/events"
     create_basic_investigatable_cmr(@browser, @cmr_last_name, @disease).should be_true
   end
 

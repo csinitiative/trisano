@@ -218,7 +218,7 @@ module TrisanoHelper
 
   def click_nav_admin(browser)
     unless browser.is_element_present("link=ADMIN")
-      @browser.open "/trisano/cmrs"
+      @browser.open "/trisano/events"
       @browser.wait_for_page_to_load($load_time)
     end
     browser.click 'link=ADMIN'
