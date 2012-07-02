@@ -36,7 +36,6 @@ module FormBuilderDslHelper
 
         output = core_customization(form_reference, historical_core_path, @event_form, before_or_after, mode)
         if output.present?
-          #debugger
           # before we render this output, update the path to be usable on current form
           output.gsub!(historical_core_path, current_core_path)
           concat(output)
@@ -78,7 +77,6 @@ module FormBuilderDslHelper
     when "QuestionElement"
       result << render_investigator_question(form_elements_cache, element, f)
     when "FollowUpElement"
-      #debugger
       result << render_investigator_follow_up(form_elements_cache, element, f)
     end
 
@@ -255,7 +253,6 @@ module FormBuilderDslHelper
 
   def render_investigator_view(view, f, form=nil)
     return "" if view.nil?
-    #debugger
     result = ""
 
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
