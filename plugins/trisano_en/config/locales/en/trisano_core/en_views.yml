@@ -778,6 +778,7 @@ en:
   edit_assessment_event_of: "Edit assessment event: {{name}}"
   morbidity_event: "Morbidity Event"
   assessment_event: "Assessment Event"
+  morbidity_and_assessment_event: "Morbidity and Assessment Event"
   morbidity_events: "Morbidity Events"
   assessment_events: "Assessment Events"
   contact_events: "Contact Events"

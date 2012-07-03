@@ -107,7 +107,7 @@ module FormsHelper
   end
 
   def event_field(element)
-    event_type = element.form.event_type
+    event_type = element.form.event_type(:hide_dummy => true)
     CoreField.event_fields(event_type)[element.core_path]
   end
 
@@ -521,7 +521,8 @@ module FormsHelper
      [t("assessment_event"), "assessment_event"],
      [t("contact_event"), "contact_event"],
      [t("place_event"), "place_event"],
-     [t("encounter_event"), "encounter_event"]
+     [t("encounter_event"), "encounter_event"],
+     [t("morbidity_and_assessment_event"), "morbidity_and_assessment_event"]
     ]
   end
 

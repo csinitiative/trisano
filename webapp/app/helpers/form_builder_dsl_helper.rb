@@ -383,7 +383,11 @@ module FormBuilderDslHelper
   end
 
   def remove_event_type_from_core_path(core_path)
-    core_path.sub(/^(.+)_event\[/, "")
+    sub_event_type_from_core_path(core_path, "")
+  end
+
+  def sub_event_type_from_core_path(core_path, sub)
+    core_path.sub(/^(.+)_event\[/, sub)
   end
 
   def replace_square_brackets_with_dots(string)

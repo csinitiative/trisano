@@ -349,6 +349,14 @@ class FormElement < ActiveRecord::Base
     FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
 
+  def core_path(event_type=nil)
+    core_path ||= read_attribute(:core_path)
+    if event_type
+      core_path.sub(/^(.+)_event\[/, event_type)      
+    else
+      core_path
+    end
+  end
   protected
 
   # A little hack to make sure that questions get deleted when a

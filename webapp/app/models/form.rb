@@ -114,6 +114,19 @@ class Form < ActiveRecord::Base
     end
   end
 
+  def event_type(*args)
+    defaults = {:hide_dummy => false}
+    options = args.extract_options!
+    defaults.merge! options
+
+    event_type = read_attribute(:event_type)
+    if defaults[:hide_dummy] && event_type == "morbidity_and_assessment_event"
+      return "morbidity_event"
+    else
+      return event_type
+    end
+  end
+
   def publish
     raise(I18n.translate('cannot_publish_already_published_version')) unless self.is_template
 
@@ -282,7 +295,7 @@ class Form < ActiveRecord::Base
 
   end
 
-  def push
+  def push(event_type = self.event_type)
     if self.diseases.empty?
       self.errors.add_to_base(:no_diseases)
       return nil
@@ -296,7 +309,7 @@ class Form < ActiveRecord::Base
       conditions_array = []
       
       conditions_array[0] = "events.type = ? "
-      conditions_array << self.event_type.camelcase
+      conditions_array << event_type.camelcase
 
       conditions_array[0] << "AND participations.type = ? "
       conditions_array << "Jurisdiction"
