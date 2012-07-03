@@ -457,10 +457,16 @@ class Form < ActiveRecord::Base
 
   def self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type)
     event_type = event_type.to_s
+    if event_type == "assessment_event" || event_type == "morbidity_event"
+      conditions = ["(event_type = ? OR event_type = ?) AND diseases_forms.disease_id = ? AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+        event_type, "morbidity_and_assessment_event", disease_id, jurisdiction_id ]
+    else
+      conditions = ["event_type = ? AND diseases_forms.disease_id = ? AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+        event_type, disease_id, jurisdiction_id ]
+    end
     Form.find(:all,
       :include => :diseases,
-      :conditions => ["event_type = ? and diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
-        event_type, disease_id, jurisdiction_id ],
+      :conditions => conditions,
       :order => "forms.created_at ASC"
     )
   end
