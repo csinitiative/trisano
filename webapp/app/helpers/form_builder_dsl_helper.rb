@@ -383,21 +383,26 @@ module FormBuilderDslHelper
   end
 
   def remove_event_type_from_core_path(core_path)
-    sub_event_type_from_core_path(core_path, "")
+    # sup event type with blank string, will leave ] at the begining
+    # so [1..-1]
+    sub_event_type_from_core_path(core_path, "")[1..-1]
   end
 
   def sub_event_type_from_core_path(core_path, sub)
-    core_path.sub(/^(.+)_event\[/, sub)
+    core_path.sub(/^(.+)_event/, sub)
   end
 
   def replace_square_brackets_with_dots(string)
+    # example: morbidity_event[disease][disease_name]
+    # remove all "]" chars  (example becomes morbidity_event[disease[disease_name)
+    # replace all "]" chars with "." (example becomes morbidity_event.diesase.disaese_name)
     string.gsub(/\]/, "").gsub(/\[/, ".")
   end
 
   def core_path_with_dots(element)
     # Debt: Replace with shorter eval technique
     new_path = element.core_path.clone
-    new_path = remove_event_type_from_core_path(new_path)    
+    new_path = remove_event_type_from_core_path(new_path) 
     new_path = replace_square_brackets_with_dots(new_path)
   end
 
