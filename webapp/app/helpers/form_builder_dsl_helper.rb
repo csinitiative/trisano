@@ -24,6 +24,20 @@ module FormBuilderDslHelper
       current_core_path = (form_builder.core_path << attribute).to_s #valid core path
       concat(core_customization(form_reference, current_core_path, @event_form, before_or_after, mode))
 
+      if @event.type == "MorbidityEvent" || @event.type == "AssessmentEvent"
+        alternate_forms_core_path_prefix = form_builder.core_path.clone
+        # replace root of core path with previous event type
+        alternate_forms_core_path_prefix[0] = "morbidity_and_assessment_event"
+
+        alternate_forms_core_path = (alternate_forms_core_path_prefix << attribute).to_s
+        output = core_customization(form_reference, alternate_forms_core_path, @event_form, before_or_after, mode)
+        if output.present?
+          # before we render this output, update the path to be usable on current form
+          output.gsub!(alternate_forms_core_path, current_core_path)
+          concat(output)
+        end 
+      end
+
 
       @event.event_type_transitions.each do |event_type_transition|
 

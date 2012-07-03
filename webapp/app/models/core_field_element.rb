@@ -43,7 +43,7 @@ class CoreFieldElement < FormElement
     fields_in_use = []
     parent_element.children_by_type("CoreFieldElement").each { |field| fields_in_use << field.name }
 
-    CoreField.event_fields(form.event_type(:hide_dummy => true)).values.reject do |cf|
+    CoreField.event_fields(form.event_type).values.reject do |cf|
       fields_in_use.include?(cf.name) || !cf.fb_accessible
     end.map{|cf| [cf.name, cf.key]}.sort_by(&:first)
   end
