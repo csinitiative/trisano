@@ -26,6 +26,7 @@ class CoreFieldElement < FormElement
       return nil
     end
 
+    parent_element = FormElement.find(parent_element_id)
     super do
       before_core_field_element = BeforeCoreFieldElement.create(:tree_id => self.tree_id, :form_id => self.form_id)
       after_core_field_element = AfterCoreFieldElement.create(:tree_id => self.tree_id, :form_id => self.form_id)
@@ -34,21 +35,17 @@ class CoreFieldElement < FormElement
     end
   end
 
+  # debt: returns an array of unused core field, but also formats for select options.
   def available_core_fields
     return nil if parent_element_id.blank?
+    parent_element = FormElement.find(parent_element_id)
+    form = Form.find(parent_element.form_id)
     fields_in_use = []
     parent_element.children_by_type("CoreFieldElement").each { |field| fields_in_use << field.name }
-    event_type = form.event_type
 
-    CoreField.event_fields(event_type).values.reject do |cf|
+    CoreField.event_fields(form.event_type(:hide_dummy => true)).values.reject do |cf|
       fields_in_use.include?(cf.name) || !cf.fb_accessible
-    end
-  end
-
-  private
-
-  def form
-    @form ||= Form.find(parent_element.form_id)
+    end.map{|cf| [cf.name, cf.key]}.sort_by(&:first)
   end
 
 end

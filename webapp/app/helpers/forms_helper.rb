@@ -107,7 +107,7 @@ module FormsHelper
   end
 
   def event_field(element)
-    event_type = element.form.event_type
+    event_type = element.form.event_type(:hide_dummy => true)
     CoreField.event_fields(event_type)[element.core_path]
   end
 

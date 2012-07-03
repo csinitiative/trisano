@@ -21,18 +21,14 @@ class CoreViewElement < FormElement
   
   def available_core_views
     return nil if parent_element_id.blank?
+    parent_element = FormElement.find(parent_element_id)
+    form = Form.find(parent_element.form_id)
     names_in_use = []
     parent_element.children_by_type("CoreViewElement").each { |view| names_in_use << view.name }
-    eval(parent_form.event_type.camelcase).core_views.collect { |core_view| if (!names_in_use.include?(core_view[1]))
+    eval(form.event_type(:hide_dummy => true).camelcase).core_views.collect { |core_view| if (!names_in_use.include?(core_view[1]))
         core_view
       end
     }.compact
   end
   
-  private
-
-  def parent_form
-    @form ||= Form.find(parent_element.form_id)
-  end
-
 end

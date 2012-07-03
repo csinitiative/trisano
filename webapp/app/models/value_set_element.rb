@@ -29,6 +29,7 @@ class ValueSetElement < FormElement
 
   def save_and_add_to_form
     begin
+      parent_element = FormElement.find(parent_element_id)
       unless parent_element.can_receive_value_set?
         self.errors.add_to_base(:too_many_value_sets)
         return nil

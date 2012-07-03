@@ -45,6 +45,7 @@ class FormElement < ActiveRecord::Base
     if self.valid?
       begin
         transaction do
+          parent_element = FormElement.find(parent_element_id)
           self.tree_id = parent_element.tree_id
           self.form_id = parent_element.form_id
           self.save(false)
@@ -367,10 +368,5 @@ class FormElement < ActiveRecord::Base
   def delete_questions
     questions = self.children.collect {|child| child.id if child.is_a? QuestionElement}
     Question.delete_all ['form_element_id IN (?)', questions]
-  end
-
-  private
-  def parent_element
-    @parent_element ||= FormElement.find(parent_element_id)
   end
 end
