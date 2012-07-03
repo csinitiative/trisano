@@ -24,6 +24,6 @@
       %tr
         %td.tools
           = link_to_function t("close"), "$('core-field-builder-mods').down('form').reset(); Effect.BlindUp($('core-field-builder-mods'), { duration: 0.1 })"
-= f.select(:core_path, @available_core_fields, {:include_blank => true}, {:style => 'width: 185px'})
+= f.select(:core_path, @available_core_fields.map{|cf| [cf.name, cf.key]}.sort_by(&:first), {:include_blank => true}, {:style => 'width: 185px'})
 - unless @available_core_fields.empty?
   = f.submit(t('create'), :id => 'create_core_field_submit')

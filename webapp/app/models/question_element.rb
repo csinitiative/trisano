@@ -172,7 +172,6 @@ class QuestionElement < FormElement
     conditions[0] = "form_id = ? and type = 'QuestionElement'"
 
     if (self.question_element_state == :new_question_on_form)
-      parent_element = FormElement.find(parent_element_id)
       conditions << parent_element.form_id
     elsif (self.question_element_state == :edit_question_on_form)
       conditions << self.form_id
