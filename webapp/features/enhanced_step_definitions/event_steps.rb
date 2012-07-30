@@ -21,12 +21,25 @@ When(/^I navigate to the new morbidity event page and start a simple event$/) do
   @browser.type('morbidity_event_first_reported_PH_date', Date.today)
 end
 
+When(/^I navigate to the new assessment event page and start a simple event$/) do
+  @browser.open "/trisano/aes/new"
+  add_demographic_info(@browser, { :last_name => get_unique_name })
+  @browser.type('assessment_event_first_reported_PH_date', Date.today)
+end
+
 When /^I go to the new CMR page$/ do
   @browser.open "/trisano/cmrs/new"
   @browser.wait_for_page_to_load
 end
 
 When(/^I navigate to the morbidity event edit page$/) do
+  @browser.click "link=EVENTS"
+  @browser.wait_for_page_to_load $load_time
+  @browser.click "link=Edit"
+  @browser.wait_for_page_to_load $load_time
+end
+
+When(/^I navigate to the assessment event edit page$/) do
   @browser.click "link=EVENTS"
   @browser.wait_for_page_to_load $load_time
   @browser.click "link=Edit"
