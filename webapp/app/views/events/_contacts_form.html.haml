@@ -30,7 +30,7 @@
       -# Handles pre- and post-questions and help for contacts as a whole
       - core_element :contacts, f, 'vert-break' do
 
-        - search_interface :contacts, :url => { 'for_event_id' => @event.id } do
+        - search_interface :contacts, :url => { 'for_event_class' => @event.class.to_s } do
           %div#new_contacts
 
         -cache_event_fragment @event, "events/#{@event.id}/showedit/contacts_tab/contacts_form" do

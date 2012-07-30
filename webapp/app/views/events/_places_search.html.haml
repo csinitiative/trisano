@@ -39,8 +39,8 @@
         %td
           -if results_action == 'new'
             = link_to(I18n.t(:create_place_event_this_person), place_events_path(:from_place => place['entity_id'], :parent_id => params[:parent_id]), :method => :post)
-          - elsif @event.present?
-            %td=link_to_remote(t(:add), :update => 'existing-place-list', :position => 'top', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => @event.type.underscore}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
+          - elsif params[:for_event_class]
+            = link_to_remote(t(:add), :update => 'existing-place-list', :position => 'top', :url => { :action => :places_search_selection, :id => place.entity_id, :event_type => params[:for_event_class]}, :html => { :id => "add_place_entity_#{place.entity_id}"} )
 
   %br
   = ajaxy_pagination(places, 'places')

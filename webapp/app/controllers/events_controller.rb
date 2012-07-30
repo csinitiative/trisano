@@ -43,10 +43,6 @@ class EventsController < ApplicationController
   def contacts_search
     page = params[:page] ? params[:page] : 1
 
-    if not params[:for_event_id].nil?
-      @event = Event.find(params[:for_event_id])
-    end
-
     begin
       @results = HumanEvent.find_by_name_and_bdate(
         :fulltext_terms => params[:name],
@@ -77,10 +73,6 @@ class EventsController < ApplicationController
     page = params[:page] ? params[:page] : 1
     name = params[:name]
     
-    if not params[:for_event_id].nil?
-      @event = Event.find(params[:for_event_id])
-    end
-
     # DEBT: Sure there must be a better way to parse this.
     type_ids = params[:types].sub(/^\[(.*)\]$/, '\1').split(',').map {|s| s.to_i}
     types = Code.find(type_ids).map{|c|c.the_code}
@@ -105,7 +97,7 @@ class EventsController < ApplicationController
     @place.interested_place.place_entity = place_entity
     @place.build_participations_place
 
-    render :partial => "events/place_exposure_show", :layout => false, :locals => {:event_type => params[:event_type]}
+    render :partial => "events/place_exposure_show", :layout => false, :locals => {:event_type => params[:event_type].underscore}
   end
 
   def clinicians_search
