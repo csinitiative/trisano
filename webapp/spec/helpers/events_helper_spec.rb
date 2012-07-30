@@ -17,6 +17,8 @@
 
 require File.dirname(__FILE__) + '/../spec_helper'
 require RAILS_ROOT + '/app/helpers/application_helper'
+require RAILS_ROOT + '/app/helpers/form_builder_dsl_helper'
+include FormBuilderDslHelper
 
 describe EventsHelper do
 
