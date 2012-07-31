@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NS1="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$cZMOR2"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="4.0b6"
+                   NS1:maxVersion="10.*" />
+  <RDF:Description RDF:about="rdf:#$rZMOR2"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.6.28"
+                   NS1:maxVersion="3.6.28" />
+  <RDF:Description RDF:about="rdf:#$RqkWT2"
+                   NS1:id="toolkit@mozilla.org"
+                   NS1:minVersion="1.9.2"
+                   NS1:maxVersion="2.2.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:item:ubufox@ubuntu.com"
+                   NS1:installLocation="app-system-share"
+                   NS1:version="0.9.4"
+                   NS1:iconURL="chrome://ubufox/content/ubuntulogo32.png"
+                   NS1:name="Ubuntu Firefox Modifications"
+                   NS1:description="Ubuntu configuration defaults and apt support for firefox extensions/plugins."
+                   NS1:creator="Canonical Ltd."
+                   NS1:appDisabled="true">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:contributor>Alexander Sack &lt;asac@ubuntu.com&gt;</NS1:contributor>
+    <NS1:contributor>Sasa Bodiroza &lt;jazzva@gmail.com&gt;</NS1:contributor>
+    <NS1:contributor>Daniel Abramov &lt;ex@vingrad.ru&gt;</NS1:contributor>
+    <NS1:contributor>Arzhel Younsi &lt;xionox@gmail.com&gt;</NS1:contributor>
+    <NS1:contributor>Saïvann Carignan &lt;oxmosys@gmail.com&gt;</NS1:contributor>
+    <NS1:targetApplication RDF:resource="rdf:#$cZMOR2"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="urn:mozilla:item:firebug@software.joehewitt.com"
+                   NS1:installLocation="app-profile"
+                   NS1:version="1.7.3"
+                   NS1:updateURL="https://getfirebug.com/releases/firebug/1.7/update.rdf"
+                   NS1:iconURL="chrome://firebug/skin/firebug32.png"
+                   NS1:name="Firebug"
+                   NS1:description="Web Development Evolved."
+                   NS1:creator="Joe Hewitt"
+                   NS1:homepageURL="http://www.getfirebug.com/">
+    <NS1:type NC:parseType="Integer">2</NS1:type>
+    <NS1:translator>Leszek(teo)Zyczkowski (pl-PL)</NS1:translator>
+    <NS1:translator>markh (nl-NL)</NS1:translator>
+    <NS1:translator>peter3 (sv-SE)</NS1:translator>
+    <NS1:translator>AlleyKat (da-DK)</NS1:translator>
+    <NS1:translator>Hector Zhao, lovelywcm (zh-CN)</NS1:translator>
+    <NS1:translator>Lukas Kucharczyk, Michal Kec (cs-CZ)</NS1:translator>
+    <NS1:translator>Team erweiterungen.de, ReinekeFux, Benedikt Langens, Sebastian Zartner (de-DE)</NS1:translator>
+    <NS1:translator>l0stintranslation, gonzalopirobutirro (it-IT)</NS1:translator>
+    <NS1:translator>alexxed (ro-RO)</NS1:translator>
+    <NS1:translator>Nicolas Martin, Franck Marcia (fr-FR)</NS1:translator>
+    <NS1:translator>gLes (hu-HU)</NS1:translator>
+    <NS1:translator>Xavi Ivars - Softcatala (ca)</NS1:translator>
+    <NS1:translator>gezmen (tr-TR)</NS1:translator>
+    <NS1:translator>eternoendless (es-AR)</NS1:translator>
+    <NS1:translator>Dark Preacher (ru-RU)</NS1:translator>
+    <NS1:translator>Tiago Oliveira, Diego de Carvalho Zimmermann, Alexandre Rapaki (pt-BR)</NS1:translator>
+    <NS1:translator>Juan Botias, Alvaro G. Vicario (es-ES)</NS1:translator>
+    <NS1:translator>Andriy Zhouck (uk-UA)</NS1:translator>
+    <NS1:translator>Hisateru Tanaka (ja-JP)</NS1:translator>
+    <NS1:translator>Mohsen Shadroo (fa-IR)</NS1:translator>
+    <NS1:translator>Eduard Babayan (hy-AM)</NS1:translator>
+    <NS1:translator>Helder Magalhaes (pt-PT)</NS1:translator>
+    <NS1:translator>Tomaz Macus (sl-SI)</NS1:translator>
+    <NS1:translator>Stoyan Stefanov, Alexander Shopov (bg)</NS1:translator>
+    <NS1:translator>Kristjan Bjarni Guomundsson (is-IS)</NS1:translator>
+    <NS1:translator>NGUYEN Manh Hung (vi-VN)</NS1:translator>
+    <NS1:translator>Bwah (hr-HR)</NS1:translator>
+    <NS1:translator>Sonickydon (el)</NS1:translator>
+    <NS1:translator>David Gonzales (es)</NS1:translator>
+    <NS1:translator>DakSrbija (sr)</NS1:translator>
+    <NS1:translator>bootleq (zh-TW)</NS1:translator>
+    <NS1:contributor>John J. Barton (IBM Almaden)</NS1:contributor>
+    <NS1:contributor>Jan Odvarko (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Max Stepanov (Aptana Inc.)</NS1:contributor>
+    <NS1:contributor>Rob Campbell (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Hans Hillen (Paciello Group, Mozilla)</NS1:contributor>
+    <NS1:contributor>Curtis Bartley (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Mike Collins (IBM Almaden)</NS1:contributor>
+    <NS1:contributor>Kevin Decker</NS1:contributor>
+    <NS1:contributor>Mike Ratcliffe (Mozilla Corp.)</NS1:contributor>
+    <NS1:contributor>Hernan Rodriguez Colmeiro</NS1:contributor>
+    <NS1:contributor>Austin Andrews</NS1:contributor>
+    <NS1:contributor>Christoph Dorn</NS1:contributor>
+    <NS1:contributor>Steven Roussey (AppCenter Inc, Network54)</NS1:contributor>
+    <NS1:contributor>Sebastian Zartner</NS1:contributor>
+    <NS1:contributor>Harutyun Amirjanyan</NS1:contributor>
+    <NS1:targetApplication RDF:resource="rdf:#$RqkWT2"/>
+    <NS1:targetApplication RDF:resource="rdf:#$SqkWT2"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$SqkWT2"
+                   NS1:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   NS1:minVersion="3.6"
+                   NS1:maxVersion="5.*" />
+  <RDF:Seq RDF:about="urn:mozilla:item:root">
+    <RDF:li RDF:resource="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"/>
+    <RDF:li RDF:resource="urn:mozilla:item:ubufox@ubuntu.com"/>
+    <RDF:li RDF:resource="urn:mozilla:item:firebug@software.joehewitt.com"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}"
+                   NS1:installLocation="app-global"
+                   NS1:version="3.6.28"
+                   NS1:internalName="classic/1.0"
+                   NS1:locked="true"
+                   NS1:appManaged="true"
+                   NS1:name="Default"
+                   NS1:description="The default theme."
+                   NS1:creator="Mozilla"
+                   NS1:contributor="Mozilla Contributors">
+    <NS1:type NC:parseType="Integer">4</NS1:type>
+    <NS1:targetApplication RDF:resource="rdf:#$rZMOR2"/>
+  </RDF:Description>
+</RDF:RDF>
