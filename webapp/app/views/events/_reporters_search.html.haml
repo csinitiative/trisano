@@ -38,7 +38,7 @@
             =h reporter.primary_phone.simple_format
           - else
             &nbsp;
-        %td=link_to_remote(t(:select), :update => 'existing-reporter', :position => 'bottom', :before => "jQuery('#existing-reporter').html('');", :url => { :action => :reporter_search_selection, :event_id => @event.id, :id => reporter.entity_id, :event_type => params['event_type'] })
+        %td=link_to_remote(t(:select), {:update => 'existing-reporter', :position => 'bottom', :before => "jQuery('#existing-reporter').html('');", :url => { :action => :reporter_search_selection, :event_id => @event.id, :id => reporter.entity_id, :event_type => params['event_type'] }}, {:id => "add_reporter_entity_#{reporter.person_entity.id}"})
 
   %br
   = ajaxy_pagination(@reporters, 'reporters')

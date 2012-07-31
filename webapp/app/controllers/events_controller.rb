@@ -64,7 +64,7 @@ class EventsController < ApplicationController
   end
 
   def reporter_search_selection
-    @event = Event.find params[:event_id]
+    @event = Event.find_by_id(params[:event_id]) || params[:event_type].constantize.new
     @event.build_reporter :secondary_entity_id => params[:id]
     render :partial => "events/reporter_from_search", :layout => false
   end
@@ -115,7 +115,7 @@ class EventsController < ApplicationController
   end
 
   def reporters_search
-    @event = Event.find(params[:event_id])
+    @event = Event.find_by_id(params[:event_id]) || params[:event_type].constantize.new
     page = params[:page] || 1
     name = (params[:name] || '').strip
     begin

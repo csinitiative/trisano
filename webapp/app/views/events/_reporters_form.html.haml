@@ -1,5 +1,5 @@
 %div#reporters
-  - search_interface :reporters, :url => { :event_id => event.id, :event_type => event.type.underscore }
+  - search_interface :reporters, :url => { :event_id => event.id, :event_type => event.class.to_s }
   %br.vert-break
 
   - fields_for event, :builder => ImmutableFormBuilder do |f|
