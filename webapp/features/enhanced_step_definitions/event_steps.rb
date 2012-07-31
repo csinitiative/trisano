@@ -64,6 +64,11 @@ When(/^I navigate to the morbidity event show page$/) do
   @browser.wait_for_page_to_load
 end
 
+When(/^I navigate to the assessment event show page$/) do
+  @browser.open "/trisano/aes/#{(@event).id}"
+  @browser.wait_for_page_to_load
+end
+
 When /^I am on the events index page$/ do
   @browser.open "/trisano/events"
   @browser.wait_for_page_to_load

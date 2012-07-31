@@ -10,3 +10,11 @@ Feature: Showing encounters
       And I follow "Show Encounter"
      Then I should get a 200 response
       And I should be on the encounter event show page
+
+  Scenario: Navigating to show mode from assessemnt show mode
+    Given a basic assessment event exists
+      And there is an associated encounter event
+     When I am on the AE show page
+      And I follow "Show Encounter"
+     Then I should get a 200 response
+      And I should be on the encounter event show page
