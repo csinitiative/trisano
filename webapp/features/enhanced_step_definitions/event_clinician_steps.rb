@@ -27,9 +27,10 @@ end
 
 When(/^I add an existing clinician$/) do
   click_core_tab(@browser, "Clinical")
-
-  @browser.select("//select[@id='_clinician_id']", @clinician.person.last_comma_first_middle)
-
+  @browser.type('clinician_search_name', @clinician.person.last_name)
+  @browser.click('clinician_search')
+  wait_for_element_present("//div[@id='clinician_search_results']/table")
+  @browser.click "//div[@id='clinician_search_results']//a[@id='add_clinician_entity_#{@clinician.id}']"
   wait_for_element_present("//div[@class='existing_clinician']")
 end
 

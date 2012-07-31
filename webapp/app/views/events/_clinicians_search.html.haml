@@ -38,7 +38,7 @@
             =h clinician.primary_phone.simple_format
           - else
             &nbsp;
-        %td=link_to_remote(t(:add), :update => 'existing-clinicians', :position => 'bottom', :url => { :action => :clinicians_search_selection, :id => clinician.entity_id, :event_type => params['event_type'] })
+        %td=link_to_remote(t(:add), {:update => 'existing-clinicians', :position => 'bottom', :url => {:action => :clinicians_search_selection, :id => clinician.entity_id, :event_type => params['event_type']}}, {:id => "add_clinician_entity_#{clinician.person_entity.id}"})
 
   %br
   = ajaxy_pagination(@clinicians, 'clinicians')
