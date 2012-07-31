@@ -22,17 +22,17 @@ When(/^I add an existing place exposure$/) do
   @browser.click('place_search')
   wait_for_element_present("//div[@id='place_search_results']/table")
   @browser.click "//div[@id='place_search_results']//a[@id='add_place_entity_#{@place_entity.id}']"
-  wait_for_element_present("//div[@class='existing_place']")
+  wait_for_element_present("//div[@id='place_child_events']")
 end
 
 When(/^I click remove for that place exposure$/) do
   # This may need to be more specific at some point
   @browser.click("link=Remove")
-  wait_for_element_not_present("//div[@id='place_child_events']/div[@class='existing_place']")
+  wait_for_element_not_present("//div[@id='place_child_events']/li[@class='existing_place']")
 end
 
 Then(/^I should not see the place exposure$/) do
-  @browser.is_element_present("//div[@id='place_child_events']/div[@class='existing_place']").should be_false
+  @browser.is_element_present("//div[@id='place_child_events']/li[@class='existing_place']").should be_false
 end
 
 When(/^I add a new place exposure$/) do
