@@ -4,7 +4,7 @@ Feature: Managing place exposures on events
   I want to be able to add and remove place exposures
 
   @clean
-  Scenario: Adding and removing place exposures in new mode
+  Scenario: Adding and removing place exposures in new morbidity mode
     Given I am logged in as a super user
     And a place entity of type FE exists
 
@@ -24,7 +24,7 @@ Feature: Managing place exposures on events
     Then I should see the removed place exposure as deleted
 
   @clean
-  Scenario: Adding and removing place exposures in edit mode
+  Scenario: Adding and removing place exposures in edit morbidity mode
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     And a place entity of type FE exists
@@ -40,7 +40,7 @@ Feature: Managing place exposures on events
     Then I should see all added place exposures
 
   @clean
-  Scenario: Adding two new place exposures at once
+  Scenario: Adding two new place exposures at once in a morbidity event
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     When I navigate to the morbidity event edit page
@@ -49,11 +49,71 @@ Feature: Managing place exposures on events
     Then I should see both new place exposures
 
   @clean
-  Scenario: Editing a place exposure as a place event
+  Scenario: Editing a place exposure as a place event in a morbidity event
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
 
     When I navigate to the morbidity event edit page
+    And I add a new place exposure
+    And I save the event
+
+    When I navigate to the place event
+    And I edit the place event
+    And I save the place event
+    Then I should see the edited place event
+
+
+  @clean
+  Scenario: Adding and removing place exposures in new assessment mode
+    Given I am logged in as a super user
+    And a place entity of type FE exists
+
+    When I navigate to the new assessment event page and start a simple event
+    And I add an existing place exposure
+    And I click remove for that place exposure
+    Then I should not see the place exposure
+
+    When I add an existing place exposure
+    And I add a new place exposure
+    And I save the event
+    Then I should see all added place exposures
+
+    When I navigate to the assessment event edit page
+    And I check a place exposure to remove
+    And I save the event
+    Then I should see the removed place exposure as deleted
+
+  @clean
+  Scenario: Adding and removing place exposures in edit assessment mode
+    Given I am logged in as a super user
+    And a assessment event exists in Bear River with the disease African Tick Bite Fever
+    And a place entity of type FE exists
+
+    When I navigate to the assessment event edit page
+    And I add an existing place exposure
+    And I click remove for that place exposure
+    Then I should not see the place exposure
+
+   When I add an existing place exposure
+    And I add a new place exposure
+    And I save the event
+    Then I should see all added place exposures
+
+  @clean
+  Scenario: Adding two new place exposures at once to an assessment
+    Given I am logged in as a super user
+    And a assessment event exists in Bear River with the disease African Tick Bite Fever
+    When I navigate to the assessment event edit page
+    And I add two new place exposures
+    And I save the event
+    Then I should see both new place exposures
+
+  @clean
+  Scenario: Editing a place exposure as a place event in an exposure
+    Given I am logged in as a super user
+    And a assessment event exists in Bear River with the disease African Tick Bite Fever
+
+    When I navigate to the assessment event edit page
     And I add a new place exposure
     And I save the event
 
