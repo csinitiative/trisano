@@ -1,5 +1,5 @@
 = content_for :title do
-  = "#{t('event_search_using_staged_message')} #{h(@staged_message.id)} / #{h(@staged_message.patient.patient_name)}"
+  = "#{t 'event_search_using_staged_message' } #{h @staged_message.id }"
 
 = link_to h(t('back_to', :name => t('staged_messages'))), staged_messages_path
 

@@ -2,7 +2,7 @@
 <% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
 
 <% content_for :title do %>
-  <%= t('edit_contact_event', :name => h(patient_name)) %>
+  <%= t('edit_contact_event') %>
 <% end %>
 
 <% content_for :name do %>

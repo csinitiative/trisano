@@ -1,7 +1,7 @@
 =error_messages_for(:search_form, :header_message => t(:invalid_search_criteria))
 
 %h3=t('before_create')
-- form_tag event_search_cmrs_path, :method => :get do
+- form_tag event_search_cmrs_path, :method => :post do
 
   %span.horiz
     = label_tag :last_name, t('last_name')
@@ -34,8 +34,11 @@
 
 - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
   %div
-    = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
-
+    - form_tag new_cmr_path(:from_search => "1"), {:id => "new_cmr_form"} do
+      = hidden_field_tag :first_name, params[:first_name]
+      = hidden_field_tag :last_name, params[:last_name]
+      = hidden_field_tag :birth_date, params[:birth_date]
+      = link_to_function t("start_a_cmr"), "$('new_cmr_form').submit()", :id => "start_cmr"
 - if defined? @results
   -if @results.empty?
     %b=t('no_results')
@@ -69,4 +72,4 @@
 
 
     - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)
-      = link_to(t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), {:id => "start_cmr"})
+      = link_to t("start_a_cmr"), new_cmr_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date]), :method => :post, :id => "start_cmr"

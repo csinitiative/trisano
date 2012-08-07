@@ -161,8 +161,8 @@ en:
   edit_common_test_type: 'Edit a Common Test Type'
   common_test_type: 'Common Test Type'
 # contact_events
-  view_contact_event: 'View Contact event: {{name}}'
-  edit_contact_event: 'Edit Contact event: {{name}}'
+  view_contact_event: 'View Contact event'
+  edit_contact_event: 'Edit Contact event'
   new_contact_for_event: 'Create new contact event'
   new_contact_event: 'New contact event'
   contact_event_created: 'Contact event was successfully created.'
@@ -766,6 +766,7 @@ en:
   lab_field: "Lab Field"
   treatment_field: "Treatment Field"
   events_normal_case: "Events"
+  edit_morbidity_event: "Edit morbidity event"
   edit_morbidity_event_of: "Edit morbidity event: {{name}}"
   morbidity_event: "Morbidity Event"
   morbidity_events: "Morbidity Events"

@@ -18,7 +18,7 @@
 - content_for :title do
   =t 'event_search'
 
-- form_tag(search_cmrs_path, :method => :get) do
+- form_tag(search_cmrs_path, :method => :post) do
 
   - if !flash[:error].blank?
     %span{ :style => "color:red" }= flash[:error]
