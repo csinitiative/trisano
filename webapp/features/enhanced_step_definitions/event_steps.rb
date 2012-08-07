@@ -46,6 +46,11 @@ When(/^I navigate to the assessment event edit page$/) do
   @browser.wait_for_page_to_load $load_time
 end
 
+When(/^I am on the assessment event edit page$/) do
+  @browser.open "/trisano/aes/#{(@event).id}/edit"
+  @browser.wait_for_page_to_load
+end
+
 When(/^I am on the morbidity event edit page$/) do
   @browser.open "/trisano/cmrs/#{(@event).id}/edit"
   @browser.wait_for_page_to_load
