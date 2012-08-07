@@ -81,8 +81,8 @@ describe ContactEvent do
               "participations_contact_attributes" => {} } ] }
 
         event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
-        disease_event = DiseaseEvent.new(:disease_id => diseases(:chicken_pox).id)
-        #event.save!
+        @date_diagnosed = 10.days.ago.to_date
+        disease_event = DiseaseEvent.new(:disease_id => diseases(:chicken_pox).id, :date_diagnosed => @date_diagnosed, :disease_onset_date => @date_diagnosed)
         event.build_disease_event(disease_event.attributes)
         event.save!
         event.reload
@@ -96,6 +96,9 @@ describe ContactEvent do
 
       it "should have the same disease as the original" do
         @contact_event.disease_event.disease_id.should == diseases(:chicken_pox).id
+        @contact_event.disease_event.disease_onset_date.should == @date_diagnosed
+        @contact_event.disease_event.date_diagnosed.should == @date_diagnosed
+        @contact_event.event_onset_date.should == @date_diagnosed
       end
     end
   end
