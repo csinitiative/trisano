@@ -45,6 +45,7 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
         @browser.type(key, "1")
       end
 
+      puts "answering core follow up #{key} with matching condition"
     end
   end
 end
@@ -64,6 +65,7 @@ When /^I answer all core follow up questions$/ do
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
     answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
+    puts "answering core follow up question #{core_field.key}"
   end
 end
 
@@ -102,6 +104,7 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
 
     end
 
+    puts "answering core follow up #{key} with NON-matching condition"
   end
 end
 
