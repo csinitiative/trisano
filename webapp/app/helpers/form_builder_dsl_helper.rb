@@ -397,13 +397,14 @@ module FormBuilderDslHelper
   end
 
   def remove_event_type_from_core_path(core_path)
-    # sup event type with blank string, will leave ] at the begining
+    # sub event type with blank string, will leave ] at the begining
     # so [1..-1]
     sub_event_type_from_core_path(core_path, "")[1..-1]
   end
 
   def sub_event_type_from_core_path(core_path, sub)
-    core_path.sub(/^(.+)_event/, sub)
+    raise "No event instance variable found" if @event == nil
+    core_path.sub(@event.class.name.underscore, sub)
   end
 
   def replace_square_brackets_with_dots(string)
