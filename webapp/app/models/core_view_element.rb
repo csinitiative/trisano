@@ -25,10 +25,16 @@ class CoreViewElement < FormElement
     form = Form.find(parent_element.form_id)
     names_in_use = []
     parent_element.children_by_type("CoreViewElement").each { |view| names_in_use << view.name }
-    eval(form.event_type.camelcase).core_views.collect { |core_view| if (!names_in_use.include?(core_view[1]))
-        core_view
-      end
-    }.compact
+
+    event_class = form.event_type.camelcase
+    event_class = "MorbidityEvent" if event_class == "MorbidityAndAssessmentEvent"
+
+    # Core views are shown in the following format:
+    # AssessmentEvent.core_views.map
+    # => [["Demographics", "Demographics"], ["Clinical", "Clinical"], ["Laboratory", "Laboratory"], ["Contacts", "Contacts"], ["Epidemiological", "Epidemiological"], ["Reporting", "Reporting"], ["Administrative", "Administrative"]]
+    #
+    # We want the second element of each item, so .map(:&last)
+    event_class.constantize.core_views.map(&:last) - names_in_use
   end
   
 end
