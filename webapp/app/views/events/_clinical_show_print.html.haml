@@ -125,27 +125,28 @@
   = render :partial => 'events/treatments_list_print.html.haml', :locals => { :event => @event }
 
 %span.subsection-header=t 'clinicians'
-- unless association_recorded?(@event.clinicians)
-  %b{ :style => 'font-size: 11px' }="No clinicians have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
-- else
-  .three-valued-row
-    .left
-      %span.print-label= ct 'name'
-    .left
-      %span.print-label= ct 'phone'
-    %br
-    - for clinician in @event.clinicians
-      - next if clinician.new_record?
-      - clinician_entity = clinician.person_entity
-      - clinician_person = clinician_entity.person
-      - clinician_phone  = clinician_entity.primary_phone
+- core_element_print :clinicians, event_form, :vert do
+  - unless association_recorded?(@event.clinicians)
+    %b{ :style => 'font-size: 11px' }="No clinicians have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
+  - else
+    .three-valued-row
+      .left
+        %span.print-label= ct 'name'
+      .left
+        %span.print-label= ct 'phone'
+      %br
+      - for clinician in @event.clinicians
+        - next if clinician.new_record?
+        - clinician_entity = clinician.person_entity
+        - clinician_person = clinician_entity.person
+        - clinician_phone  = clinician_entity.primary_phone
 
-      .three-valued-row
-        .left
-          %span.print-value
-            = h(clinician_person.last_comma_first)
-        .left
-          %span.print-value
-            = h(clinician_phone.simple_format)
+        .three-valued-row
+          .left
+            %span.print-value
+              = h(clinician_person.last_comma_first)
+          .left
+            %span.print-value
+              = h(clinician_phone.simple_format)
 
 
