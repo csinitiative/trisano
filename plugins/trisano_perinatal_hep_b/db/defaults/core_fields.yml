@@ -302,3 +302,156 @@
   key: assessment_event[state_manager_id]
   disease_specific: true
   
+
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: false
+  can_follow_up: false
+  event_type: morbidity_and_assessment_event
+  field_type: single_line_text
+  key: morbidity_and_assessment_event[actual_delivery_facility][place_entity][place][name]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: multi_select
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[actual_delivery_facility][place_entity][place][places_types]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[actual_delivery_facility][place_entity][telephones][area_code]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[actual_delivery_facility][place_entity][telephones][phone_number]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[actual_delivery_facility][place_entity][telephones][extension]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: true
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[actual_delivery_facility][actual_delivery_facilities_participation][actual_delivery_date]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: false
+  can_follow_up: false
+  event_type: morbidity_and_assessment_event
+  field_type: single_line_text
+  key: morbidity_and_assessment_event[expected_delivery_facility][place_entity][place][name]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[expected_delivery_facility][place_entity][telephones][area_code]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: multi_select
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[expected_delivery_facility][place_entity][place][places_types]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[expected_delivery_facility][place_entity][telephones][phone_number]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[expected_delivery_facility][place_entity][telephones][extension]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[pregnancy_status_section]
+  fb_accessible: false
+  can_follow_up: false
+  event_type: morbidity_and_assessment_event
+  field_type: section
+  key: morbidity_and_assessment_event[health_care_provider][section]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_and_assessment_event
+  field_type: single_line_text
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][person][first_name]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_and_assessment_event
+  field_type: single_line_text
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][person][last_name]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_and_assessment_event
+  field_type: single_line_text
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][person][middle_name]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: false
+  event_type: morbidity_and_assessment_event
+  field_type: drop_down
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][telephones][area_code]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][telephones][phone_number]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[health_care_provider][section]
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[health_care_provider][person_entity][telephones][extension]
+  disease_specific: true
+  
+- parent_key: morbidity_and_assessment_event[event_auditing_section]
+  fb_accessible: true
+  can_follow_up: true
+  field_type: drop_down
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[state_manager_id]
+  disease_specific: true
+  
