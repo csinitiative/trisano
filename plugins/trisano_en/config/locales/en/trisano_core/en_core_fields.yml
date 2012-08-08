@@ -486,3 +486,146 @@ en:
       phone_section: Telephones/Email
       address_section: Address
       demographics_section: Demographics
+    morbidity_and_assessment_event:
+      name: Morbidity and Assessment Event
+      demographic_tab: Demographic
+      clinical_tab: Clinical
+      lab_info_tab: Laboratory
+      contacts_tab: Contacts
+      encounters_tab: Encounters
+      epi_tab: Epidemiological
+      reporting_tab: Reporting
+      investigation_tab: Investigation
+      notes_tab: Notes
+      administrative_tab: Administrative
+      disease_section: Disease
+      hospitalized_health_facilities_section: Hospitalized Health Facilities
+      mortality_status_section: Mortality Status
+      pregnancy_status_section: Pregnancy Status
+      clinicians_section: Clinicians
+      diagnostic_facilities_section: Diagnostic Facilities
+      treatments_section: Treatments
+      encounter_specific_treatments_section: Encounter-specific Treatments
+      labs_section: Labs
+      encounter_specific_labs_section: Encounter-specific Labs
+      contacts_section: Contacts
+      encounters_section: Encounters
+      encounter_notes_section: Encounter Notes
+      contact_oriented_section: Contact Oriented
+      other_section: Other
+      place_exposures_section: Place Exposures
+      reporting_agency_section: Reporting Agency
+      reporter_section: Reporter
+      reported_dates_section: Reported Dates
+      event_attachments_section: Event Attachments
+      event_tasks_section: Event Tasks
+      event_notes_section: Event Notes
+      case_outbreak_section: Case / Outbreak
+      event_information_section: Event Information
+      event_auditing_section: Auditing / Investigation
+      parent_guardian: Parent / Guardian
+      clinicians: Clinicians
+      diagnostic_facilities: Diagnostic facilities
+      encounters: Encounters
+      results_reported_to_clinician_date: Results reported to clinician date
+      address_section: Address
+      address:
+        city: Patient city
+        postal_code: Patient zip code
+        unit_number: Patient unit number
+        street_number: Patient street number
+        county_id: Patient county
+        street_name: Patient street name
+        state_id: Patient state
+        district: District
+      investigation_completed_LHD_date: Date investigation completed
+      review_completed_by_state_date: Date review completed by state
+      reporter:
+        person_entity:
+          person:
+            last_name: Reporter last name
+            first_name: Reporter first name
+          telephones:
+            area_code: Reporter area code
+            extension: Reporter extension
+            phone_number: Reporter phone number
+      places: Places
+      other_data_1: Other Data (First Field)
+      disease_event:
+        date_diagnosed: Disease date diagnosed
+        disease_onset_date: Disease onset date
+        died_id: Died
+        disease_id: Disease
+        hospitalized_id: Hospitalized
+      other_data_2: Other Data (Second Field)
+      outbreak_name: Outbreak
+      jurisdiction:
+        secondary_entity_id: Jurisdiction responsible for investigation
+      first_reported_PH_date: Date first reported to public health
+      reporting_agency:
+        place_entity:
+          telephones:
+            area_code: Reporting agency area code
+            country_code: Reporting agency country code
+            phone_number: Reporting agency phone number
+            extension: Reporting agency extension
+          place:
+            name: Reporting agency
+            place_type: Reporting agency place type
+      acuity: Acuity
+      event_name: Event name
+      lhd_case_status_id: LHD case status
+      outbreak_associated_id: Outbreak associated
+      treatments: Treatments
+      contacts: Contacts
+      workflow_state: Event status
+      interested_party:
+        risk_factor:
+          occupation: Occupation
+          risk_factors: Risk factors
+          pregnancy_due_date: Expected delivery date
+          risk_factors_notes: Risk factors notes
+          day_care_association_id: Day care association
+          food_handler_id: Food handler
+          group_living_id: Group living
+          pregnant_id: Pregnant
+          healthcare_worker_id: Healthcare worker
+        person_entity:
+          name_section: Name
+          age_section: Age
+          phone_section: Telephones/Email
+          telephones: Patient telephones
+          demographics_section: Demographics
+          email_addresses: Patient email addresses
+          race_ids: Patient race
+          person:
+            date_of_death: Patient date of death
+            age_at_onset: Age at onset
+            birth_gender_id: Patient birth gender
+            ethnicity_id: Patient ethnicity
+            primary_language_id: Patient primary language
+            birth_date: Patient date of birth
+            last_name: Patient last name
+            approximate_age_no_birthday: Patient age
+            first_name: Patient first name
+            middle_name: Patient middle name
+      investigation_started_date: Date investigation started
+      state_case_status_id: State case status
+      labs:
+        name: Labs
+        secondary_entity_id: Lab results | Lab
+        lab_results:
+          organism: Lab results | Organism
+          comment: Lab results | Comment
+          accession_no: Lab results | Accession number
+          test_type: Lab results | Test type
+          test_status: Lab results | Test status
+          test_result: Lab results | Test result
+          units: Lab results | Units
+          collection_date: Lab results | Collection date
+          result_value: Lab results | Result value
+          reference_range: Lab results | Reference range
+          specimen_sent_to_state: Lab results | Specimen sent to state lab
+          lab_test_date: Lab results | Lab Test date
+          specimen_source: Lab results | Specimen source
+      imported_from_id: Imported from
