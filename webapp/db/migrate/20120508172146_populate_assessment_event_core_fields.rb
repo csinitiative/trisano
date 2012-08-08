@@ -8,28 +8,19 @@ class PopulateAssessmentEventCoreFields < ActiveRecord::Migration
     # unless they've been defined.
     if assessment_core_fields.empty?
 
-      CoreField.transaction do
-        core_fields = YAML::load( File.open("#{RAILS_ROOT}/db/defaults/core_fields.yml") )
+      morbidity_core_fields = CoreField.find(:all, :conditions => ["event_type = ?", "morbidity_event"])
 
-        core_fields.each do |field|
-          CoreField.load!([field]) if field['event_type'] == "assessment_event"
-        end
+      morbidity_core_fields.each do |field|
+        new_field = core_field_to_hash(field)
+        new_field['event_type'].gsub!("morbidity", "assessment")
+        new_field['key'].gsub!("morbidity", "assessment")
+        new_field['parent_key'].gsub!("morbidity", "assessment") unless new_field['parent_key'].nil?
 
-        # Because we don't want to JUST load defaults, we'll also migrate everything from MorbidityEvents
-        morbidity_core_fields = CoreField.find(:all, :conditions => ["event_type = ?", "morbidity_event"])
+        new_field_formatted = new_field.to_yaml
+        new_field_formatted.gsub!("--- \n", "- ")
+        new_field_formatted.gsub!("\n", "\n  ")
 
-        morbidity_core_fields.each do |field|
-          new_field = core_field_to_hash(field)
-          new_field['event_type'].gsub!("morbidity", "assessment")
-          new_field['key'].gsub!("morbidity", "assessment")
-          new_field['parent_key'].gsub!("morbidity", "assessment") unless new_field['parent_key'].nil?
-
-          new_field_formatted = new_field.to_yaml
-          new_field_formatted.gsub!("--- \n", "- ")
-          new_field_formatted.gsub!("\n", "\n  ")
-
-          CoreField.load!([new_field])
-        end
+        CoreField.load!([new_field])
       end
     
     else
