@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-puts "Loading codes"
+puts "Loading codes (script/loading_codes.rb) from db/defaults/code_names.yml"
 
 # DEBT: this file could use some clean-up. Maybe even move code
 # loading into models.
@@ -36,6 +36,7 @@ CodeName.transaction do
 end
 
 # Codes represented as an array of hashes
+puts "Loading codes from vendor/trisano/trisano_en/config/misc/en_codes.yml"
 codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_codes.yml"
 
 # Can't simply delete all and insert as the delete may trigger a FK constraint
@@ -78,12 +79,15 @@ def load_codes(model, codes)
 end
 
 # Codes that have been added later in the development cycle are in distinct files.  Cutting and pasting for now
+puts "Loading codes from vendor/trisano/trisano_en/config/misc/en_test_types.yml"
 codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_test_types.yml"
 load_codes(ExternalCode, codes)
 
+puts "Loading codes from vendor/trisano/trisano_en/config/misc/en_test_results.yml"
 codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_test_results.yml"
 load_codes(ExternalCode, codes)
 
+puts "Loading codes from vendor/trisano/trisano_en/config/misc/en_contact_types.yml"
 codes = YAML::load_file "#{RAILS_ROOT}/vendor/trisano/trisano_en/config/misc/en_contact_types.yml"
 load_codes(ExternalCode, codes)
 

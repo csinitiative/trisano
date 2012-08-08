@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-puts "Loading CDC disease-core export data"
+puts "Loading CDC disease-core export data (script/load_cdc_export_data_for_disease_core.rb)"
 
 export_columns = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_columns_disease_core.yml")
 export_conversion_values = YAML::load_file("#{RAILS_ROOT}/db/defaults/export_conversion_values_disease_core.yml")
