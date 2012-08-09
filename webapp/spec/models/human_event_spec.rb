@@ -541,6 +541,33 @@ describe HumanEvent, 'adding staged messages' do
       end
     end
 
+    it 'should take the facility address info from ORC if present' do
+        with_human_event do |event|
+          @hl7 = HL7::Message.parse HL7MESSAGES[:arup_1]
+          @orc = @hl7.common_order
+          @orc.should_not be_blank
+          event.add_labs_from_staged_message StagedMessage.new(:hl7_message => @hl7.to_hl7)
+          event.should be_valid
+
+          event.diagnostic_facilities.size.should == 1
+
+          place = event.diagnostic_facilities.first.place_entity
+          place.should_not be_blank
+          place.name.should == @orc.facility_name
+
+          place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
+          place.place.place_types.include?(place_code).should == true
+
+          place.canonical_address.should_not be_blank
+          place.canonical_address.street_number.should == @orc.facility_address_street_no
+          place.canonical_address.street_name.should == @orc.facility_address_street
+          place.canonical_address.city.should == @orc.facility_address_city
+          place.canonical_address.state_id.should == @orc.facility_address_trisano_state_id
+          place.canonical_address.postal_code.should == @orc.facility_address_zip
+        end
+    end
+
+
     it 'should take the hospitalization status from PV1-2' do
       with_human_event do |event|
         # build the required organism and disease for this

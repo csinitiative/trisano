@@ -655,14 +655,14 @@ class HumanEvent < Event
           :name => diagnostic_facility_name,
           :short_name => diagnostic_facility_name
         }
+
         place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
         place_entity.place.place_types << place_code unless place_entity.place.place_types.include?(place_code)
-        place_entity.place.entity.build_canonical_address(:street_number => orc.facility_address_street_no,
+        place_entity.build_canonical_address(:street_number => orc.facility_address_street_no,
                             :street_name => orc.facility_address_street,
                             :city => orc.facility_address_city,
                             :state_id => orc.facility_address_trisano_state_id,
                             :postal_code => orc.facility_address_zip) unless orc.facility_address_empty?
-        place_entity.place.entity.save!
         self.diagnostic_facilities.build :place_entity => place_entity
 
       end
