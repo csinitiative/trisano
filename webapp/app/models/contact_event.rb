@@ -217,6 +217,8 @@ class ContactEvent < HumanEvent
     end
   end
 
+  # Method overriden because ContactEvent needs to update its event_onset_date after DiseaseEvent is built.
+  # TODO: create a callback in DiseaseEvent that would invoke set_onset_date on HumanEvent if disease is set or updated.
   def build_disease_based_on_parent
     super
     set_onset_date
