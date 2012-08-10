@@ -1,4 +1,3 @@
-
 When /^I promote the assessment to a morbidity event$/ do
  When "I click the \"Promote to CMR\" link and accept the confirmation"
 
@@ -32,3 +31,10 @@ Then /^I should see all promoted core field config answers$/ do
   end
 end
 
+Given /^I don\'t see any of the promoted core follow up questions$/ do
+  html_source = @browser.get_html_source
+  @promoted_core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @promoted_event.type.underscore, true, false])
+  @promoted_core_fields.each do |core_field|
+    raise "Should not not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
+  end
+end

@@ -46,6 +46,7 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
       end
 
       puts "answering core follow up #{key} with matching condition"
+      sleep 1  #to many questions answered at the same time, must wait for AJAX calls
     end
   end
 end
@@ -66,10 +67,13 @@ When /^I answer all core follow up questions$/ do
   @core_fields.each do |core_field|
     answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
     puts "answering core follow up question #{core_field.key}"
+    sleep 1  #to many questions answered at the same time, must wait for AJAX calls
   end
 end
 
 Then /^I should see all follow up answers$/ do
+  @browser.wait_for_ajax
+  sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
@@ -105,6 +109,7 @@ When /^I answer all of the core follow ups with a non\-matching condition$/ do
     end
 
     puts "answering core follow up #{key} with NON-matching condition"
+    sleep 1  #to many questions answered at the same time, must wait for AJAX calls
   end
 end
 
@@ -113,7 +118,8 @@ When /^I remove read only entities from the event$/ do
 end
 
 Then /^I should not see any of the core follow up questions$/ do
-  sleep 3 # Wait a sec or three for all of the core follow ups to disappear
+  @browser.wait_for_ajax
+  sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
@@ -122,6 +128,8 @@ Then /^I should not see any of the core follow up questions$/ do
 end
 
 Then /^I should not see any follow up answers$/ do
+  @browser.wait_for_ajax
+  sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|

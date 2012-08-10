@@ -265,44 +265,37 @@ module FormBuilderDslHelper
     core_element(attribute, form_builder, css_class, :print, &block)
   end
 
-  def render_investigator_view(view, f, form=nil)
+  def investigator_view(mode, view, form, f)
     return "" if view.nil?
     result = ""
+    method_ref = method(mode + "_investigator_element")
 
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
 
     form_elements_cache.children(view).each do |element|
-      result << render_investigator_element(form_elements_cache, element, f)
+      if !element.core_path.nil? && form.event_type != @event.type.underscore
+        historical_element = element.dup #must use dup instead of clone to get element.id
+        historical_element.core_path.sub!(form.event_type, @event.type.underscore)
+        result << method_ref.call(form_elements_cache, historical_element, f)
+      else
+        result << method_ref.call(form_elements_cache, element, f)
+      end
     end
 
     result
   end
 
-  # Debt? Some duplication here of render_investigator_view
+  def render_investigator_view(view, f, form=nil)
+    investigator_view("render", view, form, f)
+  end
+
+
   def show_investigator_view(view, form=nil, f = nil)
-    return "" if view.nil?
-    result = ""
-
-    form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
-
-    form_elements_cache.children(view).each do |element|
-      result << show_investigator_element(form_elements_cache, element, f)
-    end
-
-    result
+    investigator_view("show", view, form, f)
   end
 
   def print_investigator_view(view, form=nil, f = nil)
-    return "" if view.nil?
-    result = ""
-
-    form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
-
-    form_elements_cache.children(view).each do |element|
-      result << print_investigator_element(form_elements_cache, element, f)
-    end
-
-    result
+    investigator_view("print", view, form, f)
   end
 
   def render_help_text(element)
@@ -586,7 +579,7 @@ module FormBuilderDslHelper
     end
   end
 
-  # Show mode counterpart to #render_investigator_core_follow_up
+  # Show mode counterpart to render_investigator_core_follow_up
   #
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def show_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
@@ -596,6 +589,9 @@ module FormBuilderDslHelper
       include_children = false
 
       unless (ajax_render)
+        # when the event has been promoted, attached forms will have
+        # core follow ups with core_paths which do match the current element's core path
+        #
         core_value = @event
         core_path_with_dots(element).split(".").each do |method|
           begin
