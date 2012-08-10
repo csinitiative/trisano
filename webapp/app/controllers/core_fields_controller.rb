@@ -21,7 +21,8 @@ class CoreFieldsController < AdminController
   before_filter :inject_disease_into_core_field_hash, :only => [:update]
 
   def index
-    @core_fields = CoreField.roots :order => 'tree_id'
+    # we must hide dummy event types here, so they do not display on disease#show
+    @core_fields = CoreField.roots :order => 'tree_id', :conditions => "key!='morbidity_and_assessment_event'"
 
     respond_to do |format|
       format.html
