@@ -319,6 +319,12 @@ def path_to(page_name)
   when /view all core fields/i
     core_fields_path
 
+  when /login/i
+    login_path
+
+  when /change password/i
+    change_password_path
+
   when /the "([^\"]*)" core field$/i
     core_field_name = $1
     core_field = CoreField.all.detect { |core_field| core_field.name == core_field_name }

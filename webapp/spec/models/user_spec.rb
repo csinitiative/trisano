@@ -107,6 +107,31 @@ describe User do
     @user.owns?(@email_address).should be_true
   end
 
+  it "should detect expired password" do
+     if User.column_names.include?("crypted_password")
+       SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { :password_expiry_date => 90, :password_expiry_notice_date => 14 } }
+       @user.update_attribute(:password_last_updated, 91.days.ago)
+       @user.password_expired?.should be_true
+
+       @user.update_attribute(:password_last_updated, 80.days.ago)
+       @user.password_expires_soon?.should be_true
+
+       @user.update_attribute(:password_last_updated, Date.today)
+       @user.password_expires_soon?.should be_false
+       @user.password_expired?.should be_false
+
+       SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { :password_expiry_date => 0 } }
+       @user.update_attribute(:password_last_updated, 12.years.ago)
+       @user.password_expires_soon?.should be_false
+       @user.password_expired?.should be_false
+
+       SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { } }
+       @user.update_attribute(:password_last_updated, 12.years.ago)
+       @user.password_expires_soon?.should be_false
+       @user.password_expired?.should be_false
+     end
+  end
+
   describe "getting potential task assignees" do
     before do
       assignee = Factory(:user)

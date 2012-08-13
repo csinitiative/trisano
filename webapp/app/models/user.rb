@@ -315,6 +315,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def password_expired?
+    return if config_options[:trisano_auth][:password_expiry_date] == 0 or config_options[:trisano_auth][:password_expiry_date].nil?
+    password_last_updated and password_last_updated < config_options[:trisano_auth][:password_expiry_date].days.ago.to_date
+  end
+
+  def password_expires_soon?
+    return if config_options[:trisano_auth][:password_expiry_date] == 0 or
+      config_options[:trisano_auth][:password_expiry_date].nil? or
+      config_options[:trisano_auth][:password_expiry_notice_date].nil?
+    days_left = config_options[:trisano_auth][:password_expiry_date] - config_options[:trisano_auth][:password_expiry_notice_date]
+    password_last_updated and password_last_updated < days_left.days.ago.to_date
+  end
+
   protected
 
   def clear_base_error

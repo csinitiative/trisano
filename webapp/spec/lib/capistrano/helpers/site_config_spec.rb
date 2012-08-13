@@ -105,6 +105,16 @@ module Capistrano::Helpers
       generate_site_config['trisano_auth']['password_reset_timeout'] = 4320
     end
 
+    it "sets the password expiry date" do
+      set :password_expiry_date, 90 #90 days
+      generate_site_config['trisano_auth']['password_expiry_date'] = 90
+    end
+
+    it "sets the password expiry notice date" do
+      set :password_expiry_notice_date, 14 #14 days
+      generate_site_config['trisano_auth']['password_expiry_notice_date'] = 14
+    end
+
     %w(phone_number phone_number_format area_code area_code_format use_area_code extension use_country_code country_code country_code_format).each do |var|
       it "sets the telephone #{var} value" do
         set var.to_sym, "#{var} value"

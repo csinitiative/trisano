@@ -29,7 +29,7 @@ describe CdcExport do
 
   def with_cdc_records(event = nil)
     event = event || create_cdc_event
-    
+
     start_mmwr = Mmwr.new(Date.today - 7)
     end_mmwr = Mmwr.new
 
@@ -42,7 +42,7 @@ describe CdcExport do
     with_cdc_records(event) do |records|
       samples = records.collect {|record| record[0]}
       CdcExport.reset_sent_status(samples)
-      Event.reset_ibis_status(samples)
+      IbisExport.reset_ibis_status(samples)
       start_mmwr = Mmwr.new(Date.today - 7)
       end_mmwr = Mmwr.new
       CdcExport.weekly_cdc_export(start_mmwr, end_mmwr).should_not be_empty
@@ -247,17 +247,17 @@ describe CdcExport do
     describe "event date calculations" do
       # This test is based on https://wiki.csinitiative.com/display/tri/Event+Onset+Date
       # It also checks to make sure that HumanEvent#set_onset_date remains in sync with
-      # the CDC export's calculation of event onset date, 
+      # the CDC export's calculation of event onset date,
       # which is why there are two checks for each test as well as
       # the explict calls to .save (which triggers #set_onset_date)
       # when updating associated labs or disease_events
       context "when disease onset date is present" do
-        
+
         before do
           @event_date_calculation_test = create_cdc_event
           @disease_onset_date = 10.days.ago.to_date
           @event_date_calculation_test.disease_event.update_attributes(:disease_onset_date => @disease_onset_date)
-          @event_date_calculation_test.save
+          @event_date_calculation_test.save!
         end
 
         it "should use disease onset date" do
@@ -271,14 +271,14 @@ describe CdcExport do
         before do
           @event_date_calculation_test = create_cdc_event
           @event_date_calculation_test.disease_event.update_attributes(:disease_onset_date => nil)
-          @event_date_calculation_test.save
+          @event_date_calculation_test.save!
         end
-        
+
         context "and date diagnosed is present" do
           before do
             @date_diagnosed = 11.days.ago.to_date
             @event_date_calculation_test.disease_event.update_attributes(:date_diagnosed => @date_diagnosed)
-            @event_date_calculation_test.save
+            @event_date_calculation_test.save!
           end
           it "should use date diagnosed" do
             with_cdc_records @event_date_calculation_test do |records|
@@ -292,7 +292,7 @@ describe CdcExport do
 
           before do
             @event_date_calculation_test.disease_event.update_attributes(:date_diagnosed => nil)
-            @event_date_calculation_test.save
+            @event_date_calculation_test.save!
           end
 
           context "and multiple lab collection dates are present" do
@@ -303,7 +303,7 @@ describe CdcExport do
               lab.lab_results.first.update_attributes(:collection_date => @earliest_lab_collection_date)
               lab.lab_results << Factory(:lab_result, :collection_date => @later_lab_collection_date)
               @event_date_calculation_test.labs << lab
-              @event_date_calculation_test.save
+              @event_date_calculation_test.save!
             end
             it "should use the earliest lab collection date" do
               with_cdc_records @event_date_calculation_test do |records|
@@ -311,7 +311,7 @@ describe CdcExport do
                 HumanEvent.find(records[0].first.id).event_onset_date.strftime("%y%m%d").should == @earliest_lab_collection_date.strftime("%y%m%d")
               end #with_cdc_records
             end #should use earliest lab collection
-            
+
             context "and multiple lab test dates are present, which are before the collection dates" do
               # This is to test specifically that the lab collection dates are given priority
               # over the test dates, even if the test dates are earlier
@@ -322,7 +322,7 @@ describe CdcExport do
                 lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
                 lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
                 @event_date_calculation_test.labs << lab
-                @event_date_calculation_test.save
+                @event_date_calculation_test.save!
               end
               it "should use the earliest lab collection date" do
                 with_cdc_records @event_date_calculation_test do |records|
@@ -347,7 +347,7 @@ describe CdcExport do
                 lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
                 lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
                 @event_date_calculation_test.labs << lab
-                @event_date_calculation_test.save
+                @event_date_calculation_test.save!
               end
               it "should use the earliest lab test date" do
                 with_cdc_records @event_date_calculation_test do |records|
@@ -389,15 +389,18 @@ describe CdcExport do
                 context "date event created is present" do
                   before do
                     @date_created = 17.days.ago.to_date
+                    @event_date_calculation_test.suppress_validation(:first_reported_PH_date)
                     @event_date_calculation_test.update_attribute(:created_at, @date_created)
+                    @event_date_calculation_test.save!
                   end
                   it "should use date created" do
                     with_cdc_records @event_date_calculation_test do |records|
+                      HumanEvent.find(records[0].first.id).send(:resolve_onset_date).strftime("%y%m%d").should == @date_created.strftime("%y%m%d")
+
                       records[0].first.to_cdc[45..50].should == @date_created.strftime("%y%m%d")
-                      
+
                       # we cheat here, because we're forcing invalid data into the model
                       # we must access a private method in order to verify it calculates correctly
-                      HumanEvent.find(records[0].first.id).send(:resolve_onset_date).strftime("%y%m%d").should == @date_created.strftime("%y%m%d")
                     end #with_cdc_records
                   end #should use date created
                 end #date event created is present
@@ -409,7 +412,7 @@ describe CdcExport do
                     #the system should never be able to have an event without created_at
                     #additionally, a CDC export could never include an event with out a created_at because
                     #it's used for the MMRW calculations
-                    
+
                   end #should ouput 999999
                 end #context event date created is nil
               end #context date first reported to public health is nil
@@ -423,6 +426,40 @@ describe CdcExport do
       with_cdc_records do |records|
         records[0].first.to_cdc[51...52].should == "1"
       end
+    end
+
+     it "should display events for this year only for weekly report" do
+      event = create_cdc_event
+      event.disease_event.disease_onset_date = Date.new(Date.today.year - 1, 12, 31)
+      event.cdc_updated_at = Date.today
+      event.save!
+      event.reload
+
+      new_event = create_cdc_event
+      new_event.disease_event.disease_onset_date = Date.new(Date.today.year, 5, 15)
+      new_event.cdc_updated_at = Date.today
+      new_event.save!
+      new_event.reload
+
+      start_mmwr = Mmwr.new(Date.today - 7)
+      end_mmwr = Mmwr.new
+
+      records =  CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
+      records.find {|e| e.id == event.id}.should == nil
+      records.find {|e| e.id == new_event.id}.should_not == nil
+     end
+
+     it "should correctly display events for a week spanning two years" do
+      event = create_cdc_event
+      event.disease_event.disease_onset_date = Date.parse("2011/12/31")
+      event.save!
+      event.reload
+
+      start_mmwr = Mmwr.new(Date.parse("2012/01/01") - 7)
+      end_mmwr = Mmwr.new(Date.parse("2012/01/01"))
+
+      records =  CdcExport.weekly_cdc_export(start_mmwr, end_mmwr)
+      records.first.id.should == event.id
     end
 
     it "should display case status as a one digit code" do
@@ -448,7 +485,7 @@ describe CdcExport do
         with_cdc_records do |records|
           samples = records.collect {|record| record[0]}
           CdcExport.reset_sent_status(samples)
-          Event.reset_ibis_status(samples)
+          IbisExport.reset_ibis_status(samples)
           event = records[0][1]
           event.reload
           event.should be_sent_to_cdc
@@ -516,7 +553,7 @@ describe CdcExport do
           events[0].should be_sent_to_ibis
           events[0].ibis_updated_at.should be_nil
           events[0].update_attributes!({"interested_party_attributes" => {"person_entity_attributes" => {"race_ids" => [external_codes(:race_black).id], 'person_attributes' => {'last_name' => 'Someone'}}}})
-          events[0].save
+          events[0].save!
           events[0].cdc_updated_at.should == Date.today
           events[0].ibis_updated_at.should == Date.today
           events[0].should be_sent_to_cdc

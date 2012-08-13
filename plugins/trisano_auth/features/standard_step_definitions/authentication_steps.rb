@@ -14,27 +14,47 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-
-
 Given /^I am not logged in$/ do
-  
+end
+
+Given /^Password expiry date is 90 days$/ do
+    SITE_CONFIG[RAILS_ENV] = { :trisano_auth => { :password_expiry_date => 90, :password_expiry_notice_date => 14 } }
 end
 
 When /^I login with good credentials$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
-  puts user.inspect
+        :password => 'Test1234!',
+        :password_confirmation => 'Test1234!'))
   fill_in :user_session_user_name, :with => user.user_name
-  fill_in :user_session_password, :with => 'changeme'
+  fill_in :user_session_password, :with => 'Test1234!'
+  click_button "Submit"
+end
+
+When /^I login with expired password$/ do
+  user = User.create(Factory.attributes_for(:user,
+        :password => 'Test1234!',
+        :password_confirmation => 'Test1234!',
+        :password_last_updated => 91.days.ago))
+  fill_in :user_session_user_name, :with => user.user_name
+  fill_in :user_session_password, :with => 'Test1234!'
+  click_button "Submit"
+end
+
+When /^I login with password about to expire$/ do
+  user = User.create(Factory.attributes_for(:user,
+        :password => 'Test1234!',
+        :password_confirmation => 'Test1234!',
+        :password_last_updated => 80.days.ago
+  ))
+  fill_in :user_session_user_name, :with => user.user_name
+  fill_in :user_session_password, :with => 'Test1234!'
   click_button "Submit"
 end
 
 When /^I login with a bad password$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
-  puts user.inspect
+        :password => 'Test1234!',
+        :password_confirmation => 'Test1234!'))
   fill_in :user_session_user_name, :with => user.user_name
   fill_in :user_session_password, :with => 'stork'
   click_button "Submit"
@@ -42,10 +62,9 @@ end
 
 When /^I login with a bad user name$/ do
   user = User.create(Factory.attributes_for(:user,
-        :password => 'changeme',
-        :password_confirmation => 'changeme'))
-  puts user.inspect
+        :password => 'Test1234!',
+        :password_confirmation => 'Test1234!'))
   fill_in :user_session_user_name, :with => 'robertwrong'
-  fill_in :user_session_password, :with => 'changeme'
+  fill_in :user_session_password, :with => 'Test1234!'
   click_button "Submit"
 end

@@ -22,7 +22,7 @@ require 'active_support'
 describe StagedMessage do
 
   before(:all) do
-    destroy_fixture_data
+   destroy_fixture_data
   end
 
   after(:all) do

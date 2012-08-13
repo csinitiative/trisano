@@ -309,22 +309,13 @@ module Export
       end
 
       def exp_eventdate
-        event_date = disease_onset_date || date_diagnosed || pg_array(lab_collection_dates).map {|d| Date.parse(d)}.sort.first || pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first || first_reported_PH_date || created_at
-        if event_date.blank?
-          return '999999'
-        else
-          unless event_date.kind_of?(Date) || event_date.kind_of?(DateTime) || event_date.kind_of?(Time)
-            event_date = Date.parse(event_date)
-          end
-          # the cdc specifies this date, so no localization
-          event_date.strftime('%y%m%d')
-        end
+        event_onset_date.strftime('%y%m%d')
       end
 
       def exp_datetype
         date_type = '1' if disease_onset_date
         date_type = '2' if date_diagnosed unless date_type
-        date_type = '3' if pg_array(lab_test_dates).map {|d| Date.parse(d)}.sort.first unless date_type
+        date_type = '3' if pg_earliest_date(lab_test_dates) unless date_type
         date_type = '5' if first_reported_PH_date unless date_type
         date_type || '9'
       end
@@ -347,6 +338,10 @@ module Export
       end
 
       private
+      def pg_earliest_date(array)
+         return if array.blank?
+         pg_array(array).map {|d| Date.parse(d) }.sort.first
+      end
 
       def write_answers_to(result)
         return if text_answers.blank?

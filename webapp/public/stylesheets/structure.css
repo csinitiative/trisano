@@ -10,12 +10,12 @@ body {
 
   #head div#logo-container {
       /* Keeps logo in position when header menu is not displayed  */
-      height: 58px; 
-      
+      height: 58px;
+
       /* Prevents overly large custom logos from disrupting layout */
       overflow: hidden;
     }
-  
+
   #head .right {
     text-align: right;
     position: static;
@@ -38,7 +38,7 @@ body {
 
 #main-content {
   position: absolute;
-  width: 100%; 
+  width: 100%;
   top: 143px;
 }
 
@@ -223,4 +223,19 @@ legend {
   background-color: #fff; }
 
 .ui-icon {
-  display: inline-block !important; } 
+  display: inline-block !important; }
+
+.password-expired-popup {
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 1px 1px 3px #CCCCCC;
+    height: 25px;
+    left: 40%;
+    padding: 7px 0 0 15px;
+    position: absolute;
+    top: 100px;
+    white-space: nowrap;
+    width: 350px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
