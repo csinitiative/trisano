@@ -397,8 +397,6 @@ module FormsHelper
           })
         }
       });
-
-      $j("##{h(html_id)}").disableSelection();
     </script>
     }
   end
