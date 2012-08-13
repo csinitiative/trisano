@@ -6,7 +6,7 @@ Feature: Managing user roles
   @clean_user
   Scenario: Add a role to a user
     Given I am logged in as a super user
-    And I have a user with the UID "joe" and user name "joe@joe.com"
+    And I have a user with the UID "jane" and user name "jane@jane.com"
 
     When I go to edit the user
     And I click the "Add Role" link and wait to see "Jurisdiction"
@@ -22,7 +22,7 @@ Feature: Managing user roles
   @clean_user
   Scenario: Remove a role from a user
     Given I am logged in as a super user
-    And I have a user with the UID "joe" and user name "joe@joe.com"
+    And I have a user with the UID "jane" and user name "jean@jane.com"
     And the user has the role "Investigator" in the "Bear River Health Department"
 
     When I go to edit the user
@@ -37,7 +37,7 @@ Feature: Managing user roles
   @clean_user
   Scenario: Removing a new role w/out updating
     Given I am logged in as a super user
-    And I have a user with the UID "joe" and user name "joe@joe.com"
+    And I have a user with the UID "jane" and user name "jane@jane.com"
 
     When I go to edit the user
     And I click the "Add Role" link and wait to see "Jurisdiction"
