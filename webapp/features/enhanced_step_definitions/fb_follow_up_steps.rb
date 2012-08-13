@@ -67,7 +67,7 @@ When /^I answer all core follow up questions$/ do
   @core_fields.each do |core_field|
     answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
     puts "answering core follow up question #{core_field.key}"
-    sleep 1  #to many questions answered at the same time, must wait for AJAX calls
+    sleep 3  #to many questions answered at the same time, must wait for AJAX calls
   end
 end
 
