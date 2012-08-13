@@ -25,6 +25,7 @@ class RoleMembership < ActiveRecord::Base
 
   validates_presence_of :jurisdiction_id
   validates_presence_of :role_id
+  validates_presence_of :user_id
   validates_uniqueness_of :user_id, :scope => [:role_id, :jurisdiction_id],
     :message => I18n.translate('role_membership_already_assigned')
 

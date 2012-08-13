@@ -50,7 +50,8 @@ end
 Given /^I have the "([^"]*)" role in jurisdiction "([^"]*)"$/ do |role_name, jurisdiction_name|
   jurisdiction_id = lookup_jurisdiction(jurisdiction_name).entity_id
   role_id = Role.find_by_role_name(role_name).id
-  @current_user.role_memberships << Factory(:role_membership, :role_id => role_id, :jurisdiction_id => jurisdiction_id)
+  user_id = Factory.create(:user).id
+  @current_user.role_memberships << Factory(:role_membership, :role_id => role_id, :jurisdiction_id => jurisdiction_id, :user_id => user_id)
 end
 
 #
