@@ -9,7 +9,7 @@ Feature: Editing hep b specific fields
       And disease "Hepatitis B Pregnancy Event" exists
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
-     When I am on the event edit page
+     When I am on the morbidity event edit page
       And I complete the expected delivery facility fields
       And I save and continue
      Then I should see the expected delivery facility data
@@ -25,7 +25,7 @@ Feature: Editing hep b specific fields
       And disease "Hepatitis B Pregnancy Event" exists
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
-     When I am on the event edit page
+     When I am on the morbidity event edit page
       And I complete the actual delivery facility fields
       And I save and continue
      Then I should see the actual delivery data
@@ -45,7 +45,7 @@ Feature: Editing hep b specific fields
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
       And there is an expected delivery facility named "New Expected Delivery Facility"
-     When I am on the event edit page
+     When I am on the morbidity event edit page
       And I search for an expected delivery facility
       And I select an expected delivery facility from the list
      Then I should see the expected delivery facility data
@@ -57,7 +57,7 @@ Feature: Editing hep b specific fields
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
       And there is an actual delivery facility named "New Actual Delivery Facility"
-     When I am on the event edit page
+     When I am on the morbidity event edit page
       And I search for an actual delivery facility
       And I select an actual delivery facility from the list
      Then I should see the actual delivery data
@@ -69,7 +69,7 @@ Feature: Editing hep b specific fields
      And a morbidity event exists with the disease Hepatitis B Pregnancy Event
      And "Hepatitis B Pregnancy Event" has disease specific core fields
      And there is an actual delivery facility named "New Actual Delivery Facility"
-    When I am on the event edit page
+    When I am on the morbidity event edit page
      And I fill in the actual delivery date
      And I search for an actual delivery facility
      And I select an actual delivery facility from the list
@@ -82,7 +82,7 @@ Feature: Editing hep b specific fields
       And disease "Hepatitis B Pregnancy Event" exists
       And a morbidity event exists with the disease Hepatitis B Pregnancy Event
       And "Hepatitis B Pregnancy Event" has disease specific core fields
-     When I am on the event edit page
+     When I am on the morbidity event edit page
       And I search for an actual delivery facility
       And I select an actual delivery facility from the list
      Then I should see the actual delivery data
