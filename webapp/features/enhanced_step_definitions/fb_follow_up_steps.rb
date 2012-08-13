@@ -17,14 +17,14 @@
 
 Given /^I don\'t see any of the core follow up questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
     raise "Should not not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
   end
 end
 
 When(/^I answer all of the core follow ups with a matching condition$/) do
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
     key = railsify_core_field_key(core_field.key)
 
@@ -55,7 +55,7 @@ Then /^I should see all of the core follow up questions$/ do
   @browser.wait_for_ajax
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND can_follow_up = ? AND disease_specific = ?', @form.event_type, true, false])
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
     raise "Could not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == false
   end
@@ -67,7 +67,6 @@ When /^I answer all core follow up questions$/ do
   @core_fields.each do |core_field|
     answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
     puts "answering core follow up question #{core_field.key}"
-    sleep 3  #to many questions answered at the same time, must wait for AJAX calls
   end
 end
 

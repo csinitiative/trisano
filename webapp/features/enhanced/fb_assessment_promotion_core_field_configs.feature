@@ -25,6 +25,8 @@ Feature: Forms remain attached when assessments are promoted to morbidity events
     And a assessment event exists with a disease that matches the form
     And I am on the assessment event edit page
    When I answer all of the core follow ups with a matching condition
+    And I save the event
+    And I am on the assessment event edit page
     And I answer all core follow up questions
     And I save the event
     And I promote the assessment to a morbidity event
