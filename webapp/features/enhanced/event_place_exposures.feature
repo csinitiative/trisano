@@ -10,7 +10,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the new morbidity event page and start a simple event
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
     When I add an existing place exposure
@@ -31,7 +31,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the morbidity event edit page
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
    When I add an existing place exposure
@@ -70,7 +70,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the new assessment event page and start a simple event
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
     When I add an existing place exposure
@@ -91,7 +91,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the assessment event edit page
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
    When I add an existing place exposure

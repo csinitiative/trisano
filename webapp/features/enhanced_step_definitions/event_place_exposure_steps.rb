@@ -25,14 +25,12 @@ When(/^I add an existing place exposure$/) do
   wait_for_element_present("//div[@id='place_child_events']")
 end
 
-When(/^I click remove for that place exposure$/) do
-  # This may need to be more specific at some point
-  @browser.click("link=Remove")
-  wait_for_element_not_present("//div[@id='place_child_events']/li[@class='existing_place']")
+When(/^I click remove for the unsaved place exposure$/) do
+  @browser.click("//div[@id='place_child_events']//li[@class='existing_place']//a[text()='Remove']")
 end
 
 Then(/^I should not see the place exposure$/) do
-  @browser.is_element_present("//div[@id='place_child_events']/li[@class='existing_place']").should be_false
+  @browser.is_element_present("//div[@id='place_child_events']//li[@class='existing_place']").should be_false
 end
 
 When(/^I add a new place exposure$/) do
