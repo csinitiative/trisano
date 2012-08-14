@@ -10,7 +10,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the new event page and start a simple event
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
     When I add an existing place exposure
@@ -31,7 +31,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the event edit page
     And I add an existing place exposure
-    And I click remove for that place exposure
+    And I click remove for the unsaved place exposure
     Then I should not see the place exposure
 
    When I add an existing place exposure
@@ -52,7 +52,6 @@ Feature: Managing place exposures on events
   Scenario: Editing a place exposure as a place event
     Given I am logged in as a super user
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
-
     When I navigate to the event edit page
     And I add a new place exposure
     And I save the event
