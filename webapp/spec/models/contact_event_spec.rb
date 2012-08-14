@@ -80,14 +80,13 @@ describe ContactEvent do
                   "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
               "participations_contact_attributes" => {} } ] }
 
-        event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
-        disease_event = DiseaseEvent.new(:disease_id => diseases(:chicken_pox).id)
-        #event.save!
-        event.build_disease_event(disease_event.attributes)
-        event.save!
-        event.reload
-
-        @contact_event = event.contact_child_events[0]
+        @event = MorbidityEvent.new(patient_attrs.merge(contact_hash))
+        @date_diagnosed = 10.days.ago.to_date
+        disease_event = DiseaseEvent.new(:disease_id => diseases(:chicken_pox).id, :date_diagnosed => @date_diagnosed, :disease_onset_date => @date_diagnosed)
+        @event.build_disease_event(disease_event.attributes)
+        @event.save!
+        @event.reload
+        @contact_event = @event.contact_child_events[0]
       end
 
       it "should have the same jurisdiction as the original patient" do
@@ -96,6 +95,24 @@ describe ContactEvent do
 
       it "should have the same disease as the original" do
         @contact_event.disease_event.disease_id.should == diseases(:chicken_pox).id
+        @contact_event.disease_event.disease_onset_date.should == @date_diagnosed
+        @contact_event.disease_event.date_diagnosed.should == @date_diagnosed
+      end
+
+      it "should correctly set event_onset_date for the contact event on create" do
+        @contact_event.event_onset_date.should == @date_diagnosed
+      end
+
+      it "should correctly set event_onset_date for the contact event on update" do
+        @new_date_diagnosed = 10.days.ago.to_date
+        @event.disease_event.date_diagnosed = @new_date_diagnosed
+        @event.disease_event.disease_onset_date = @new_date_diagnosed
+        @event.save!
+        @event.reload
+        @contact_event = @event.contact_child_events[0]
+        @contact_event.disease_event.disease_onset_date.should == @new_date_diagnosed
+        @contact_event.disease_event.date_diagnosed.should == @new_date_diagnosed
+        @contact_event.event_onset_date.should == @new_date_diagnosed
       end
     end
   end

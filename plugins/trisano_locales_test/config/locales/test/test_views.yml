@@ -148,8 +148,8 @@ test:
   edit_common_test_type: 'xEdit a Common Test Type'
   common_test_type: 'xCommon Test Type'
 # contact_events
-  view_contact_event: 'xView Contact event: {{name}}'
-  edit_contact_event: 'xEdit Contact event: {{name}}'
+  view_contact_event: 'xView Contact event'
+  edit_contact_event: 'xEdit Contact event'
   jurisdiction: 'xJurisdiction'
   demographic: 'xDemographic'
   clinical: 'xClinical'
@@ -691,6 +691,7 @@ test:
   export: "xExport"
   cmr_field: "xCMR Field"
   events_normal_case: "xEvents"
+  edit_morbidity_event: "xEdit morbidity event"
   edit_morbidity_event_of: "xEdit morbidity event: {{name}}"
   morbidity_event: "xMorbidity Event"
   same_as_above: "xSame as above"
