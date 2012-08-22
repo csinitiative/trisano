@@ -295,4 +295,5 @@ describe ExtendedFormBuilder::CorePath do
 
     it_should_behave_like "a complex core path"
   end
+
 end

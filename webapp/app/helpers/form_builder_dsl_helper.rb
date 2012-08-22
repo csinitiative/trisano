@@ -336,16 +336,14 @@ module FormBuilderDslHelper
     if (f.nil?)
       fields_for(@event) do |f|
         f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{h(element.id)}"})
-          result << render_help_text(element) unless question.help_text.blank?
+          result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, "", question)
         end
       end
     else
       prefix = @answer_object.new_record? ? "new_answers" : "answers"
       index = @answer_object.new_record? ? "" : @form_index += 1
       f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
-        result << render_help_text(element) unless question.help_text.blank?
+        result << answer_template_dynamic_question(answer_template, form_elements_cache, element, index, question)
       end
     end
 
@@ -367,6 +365,13 @@ module FormBuilderDslHelper
     #rescue
     #logger.warn("Formbuilder rendering: #{$!.message}")
     #return "Could not render question element (#{element.id})"
+  end
+
+  def answer_template_dynamic_question(answer_template, form_elements_cache, element, index, question)
+    result = ""
+    result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+    result << render_help_text(element) unless question.help_text.blank?
+    result
   end
 
   def render_investigator_follow_up(form_elements_cache, element, f)
