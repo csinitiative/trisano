@@ -264,6 +264,7 @@ es:
 
       question_element:
         is_active: ¿Está activo/a?
+        is_required: ¿Es necesario?
 
       form:
         name: Nombre

@@ -88,6 +88,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
     cdc_attributes = []
     codes = []
+    html_options[:class] = "required" if question_element.is_required?
     input_element = case question.data_type
     when :single_line_text
       unless (question.size.nil?)
@@ -145,13 +146,21 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       name = field_name + "[" + field_index + "][check_box_answer][]"
       selected_codes = []
 
-      get_values(form_elements_cache, question_element).inject(check_boxes = "") do |check_boxes, value_hash|
+      if question_element.is_required?
+        # We must add an extra div around the answers to color them "required"
+        check_boxes = "<div class='required'>"
+      else
+        check_boxes = ""
+      end
+
+      get_values(form_elements_cache, question_element).each do |value_hash|
         html_options[:id] =  "#{id}_#{i += 1}"
         codes << {:id => html_options[:id], :code => value_hash[:code]}
         selected_codes << value_hash[:code] if @object.check_box_answer.include?(value_hash[:value])
         check_boxes += @template.check_box_tag(name, value_hash[:value], @object.check_box_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
         check_boxes += @template.hidden_field_tag("", value_hash[:code], { :id => "#{html_options[:id]}_code"})
       end
+      check_boxes += "</div>" if question_element.is_required?
       check_boxes += @template.hidden_field_tag(name, "")
       check_boxes += @template.hidden_field_tag(field_name + "[" + field_index + "][code]", selected_codes.reject{|code|code.blank?}.join(","))
     when :radio_button
@@ -168,7 +177,14 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       name = field_name + "[" + field_index + "][radio_button_answer][]"
       selected_code = ""
 
-      get_values(form_elements_cache, question_element).inject(radio_buttons = "") do |radio_buttons, value_hash|
+      if question_element.is_required?
+        # We must add an extra div around the answers to color them "required"
+        radio_buttons = "<div class='required'>"
+      else
+        radio_buttons = ""
+      end
+
+      get_values(form_elements_cache, question_element).each do |value_hash|
         html_options[:id] =  "#{id}_#{i += 1}"
         html_options[:onclick] = select_answer_event if follow_ups
         codes << {:id => html_options[:id], :code => value_hash[:code]}
@@ -180,6 +196,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         selected_code = @object.radio_button_answer.include?(value_hash[:value]) ? value_hash[:code] : "" unless !selected_code.blank?
         radio_buttons += @template.radio_button_tag(name, value_hash[:value], @object.radio_button_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
       end
+      radio_buttons += "</div>" if question_element.is_required?
       radio_buttons += @template.hidden_field_tag(name, "")
       radio_buttons += @template.hidden_field_tag(field_name + "[" + field_index + "][code]", selected_code)
     when :date

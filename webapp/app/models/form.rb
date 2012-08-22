@@ -566,6 +566,7 @@ class Form < ActiveRecord::Base
       values[:lft] = "'#{sanitize_sql(["%s", e.lft])}'"
       values[:rgt] = "'#{sanitize_sql(["%s", e.rgt])}'"
       values[:is_active] = "#{sanitize_sql(["%s", e.is_active])}"
+      values[:is_required] = null_safe_sanitize(e.is_required)
       values[:tree_id] = "#{sanitize_sql(["%s", tree_id])}"
       values[:condition] =  null_safe_sanitize(e.condition)
       values[:core_path] = null_safe_sanitize(e.core_path)
@@ -649,6 +650,7 @@ class Form < ActiveRecord::Base
       values[:lft] = "'#{sanitize_sql(["%s", e["lft"]]).untaint}'"
       values[:rgt] = "'#{sanitize_sql(["%s",  e["rgt"]]).untaint}'"
       values[:is_active] = "#{sanitize_sql(["%s", e["is_active"]]).untaint}"
+      values[:is_required] = null_safe_sanitize(e["is_required"])
       values[:tree_id] = "#{sanitize_sql(["%s", tree_id]).untaint}"
       values[:core_path] = null_safe_sanitize(e["core_path"])
       values[:help_text] = null_safe_sanitize(e["help_text"])
@@ -741,11 +743,12 @@ class Form < ActiveRecord::Base
     sql = "INSERT INTO form_elements "
     sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
     sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
-    sql << "export_conversion_value_id, code, created_at, updated_at) "
+    sql << "export_conversion_value_id, code, created_at, updated_at, is_required) "
     sql << "VALUES (#{ values[:form_id]}, #{values[:type]} , #{values[:name]}, #{values[:description]}, "
     sql << "#{values[:parent_id]}, #{values[:lft]}, #{values[:rgt]}, false, null, #{values[:is_active]}, "
     sql << "#{values[:tree_id]}, #{ values[:condition]}, #{values[:core_path]}, #{values[:is_condition_code]}, "
-    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, #{values[:code]}, now(), now())"
+    sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, "
+    sql << "#{values[:code]}, now(), now(), #{values[:is_required]})"
     ActiveRecord::Base.connection.insert(sql)
   end
 

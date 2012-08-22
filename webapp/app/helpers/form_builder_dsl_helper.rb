@@ -328,7 +328,11 @@ module FormBuilderDslHelper
 
     @answer_object = @event.get_or_initialize_answer(question.id)
 
-    result << error_messages_for(:answer_object)
+    error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
+    error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
+    error_messages.insert(0, "<br/>") if error_messages.present?
+    result << error_messages
+
     if (f.nil?)
       fields_for(@event) do |f|
         f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|

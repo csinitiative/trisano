@@ -247,6 +247,7 @@ test:
 
       question_element:
         is_active: xIs active?
+        is_required: xIs required?
 
       form:
         name: xName
