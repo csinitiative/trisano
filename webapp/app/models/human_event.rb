@@ -76,6 +76,7 @@ class HumanEvent < Event
   after_save :associate_longitudinal_data
 
   class << self
+
     # Lab participations will either receive a place entity hash or a secondary_entity_id.
     #
     # Place entity hashes are received when the operation needs the flexibility to create
