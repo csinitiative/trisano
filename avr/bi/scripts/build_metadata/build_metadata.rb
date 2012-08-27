@@ -317,7 +317,7 @@ def add_business_columns(bt, meta, category, dg, conn)
   end
 end
 
-def core_business_table_query()
+def core_business_table_query(event_type)
   query = %{
     SELECT order_num, table_name AS business_table_name, table_description, relname AS physical_table_name,
     CASE
@@ -327,6 +327,7 @@ def core_business_table_query()
     'FALSE', formbuilder_prefix
     FROM trisano.core_tables c JOIN pg_class pgc
         ON (pgc.oid = c.target_table::regclass)
+    WHERE table_name !~ '#{event_type == 'A' ? 'dw_morbidity' : 'dw_assessment'}'
     ORDER BY order_num, business_table_name
   }
 end
@@ -462,11 +463,11 @@ def add_single_business_table(name, desc, disease_group, dg, x, y, make_cat, for
     return x, y
 end
 
-def add_business_tables(model, meta, disease_group, dg, conn)
+def add_business_tables(model, event_type, meta, disease_group, dg, conn)
   x = 0
   y = 0
   fb_cats =[]
-  get_query_results(core_business_table_query, conn).each do |btrow|
+  get_query_results(core_business_table_query(event_type), conn).each do |btrow|
     x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
   end
   fb_cats.each do |a|
@@ -484,15 +485,15 @@ def disease_groups(conn)
   return groups
 end
 
-def create_models(dg, dg_id, meta, conn)
-  puts "Processing disease group #{dg}"
-  model = BusinessModel.new dg
+def create_models(dg, event_type_str, dg_id, event_type, meta, conn)
+  puts "Processing disease group #{dg} with event type #{event_type}"
+  model = BusinessModel.new "#{dg} #{event_type_str}"
   initialize_model model, meta
   root_bc = BusinessCategory.new
   root_bc.set_root_category true
   model.set_root_category root_bc
-  add_business_tables model, meta, dg, "dg#{dg_id}", conn
-  create_relationships model, "dg#{dg_id}", conn
+  add_business_tables model, event_type, meta, dg, "dg#{dg_id}", conn
+  create_relationships model, "dg#{dg_id}", event_type, conn
   setup_role_security model, "dg#{dg_id}", meta, jurisdiction_hash(conn), conn
   meta.add_model(model)
 end
@@ -604,7 +605,7 @@ def create_physical_tables(dg, meta, conn)
   end
 end
 
-def relationships_query
+def relationships_query(event_type)
     return %{
         SELECT
             fromtab.relname || '_' || from_column AS fromcol,
@@ -619,11 +620,18 @@ def relationships_query
                 ON (r.from_table::regclass = fromtab.oid)
             JOIN pg_class totab
                 ON (r.to_table::regclass = totab.oid)
+        WHERE 
+            fromtab.relname ~ '#{event_type == 'M' ? 'dw_morbidity' : 'dw_assessment'}' OR
+            totab.relname ~ '#{event_type == 'M' ? 'dw_morbidity' : 'dw_assessment'}' OR
+            (
+                fromtab.relname !~ '#{event_type == 'A' ? 'dw_morbidity' : 'dw_assessment'}' AND
+                totab.relname !~ '#{event_type == 'A' ? 'dw_morbidity' : 'dw_assessment'}'
+            )
     }
 end
 
-def create_relationships(model, dg, conn)
-  get_query_results(relationships_query, conn).each do |rel|
+def create_relationships(model, dg, event_type, conn)
+  get_query_results(relationships_query(event_type), conn).each do |rel|
     r = Relationship.new
     puts "Creating relationship for #{rel['fromtab']}.#{rel['fromcol']} to #{rel['totab']}.#{rel['tocol']}"
     r.table_from = model.find_business_table('en_US', rel['fromtab'])
@@ -686,38 +694,40 @@ if __FILE__ == $0
 
     i = 1
     disease_groups(conn).each do |dg|
-      FileUtils.rm Dir.glob('mdr.*'), :force => true
-      meta = initialize_meta SchemaMeta.new
-      # Create physical tables, and all physical columns
-      create_physical_tables dg['name'], meta, conn
-      create_models dg['name'], dg['id'], meta, conn
-      outfile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_metadata.out")
-      xmifile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_metadata.xmi")
-      puts "Writing metadata for disease group '#{dg['name']}' to #{xmifile}"
-      save_metadata dg['name'], meta, outfile
-      FileUtils.rm xmifile, :force => true
-      FileUtils.mv(outfile, xmifile)
-      FileUtils.cp(xmifile, metadataxmi)
-      folder = dg['name'] == 'TriSano' ? 'TriSano' : "TriSano#{i}"
+      %w(A M).each do |event_type|
+          FileUtils.rm Dir.glob('mdr.*'), :force => true
+          meta = initialize_meta SchemaMeta.new
+          # Create physical tables, and all physical columns
+          create_physical_tables dg['name'], meta, conn
+          create_models dg['name'], (event_type == 'M' ? "Morbidities" : "Assessments"), dg['id'], event_type, meta, conn
+          outfile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.out")
+          xmifile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.xmi")
+          puts "Writing metadata for disease group '#{dg['name']}' and event type #{event_type} to #{xmifile}"
+          save_metadata dg['name'], meta, outfile
+          FileUtils.rm xmifile, :force => true
+          FileUtils.mv(outfile, xmifile)
+          FileUtils.cp(xmifile, metadataxmi)
+          folder = dg['name'] == 'TriSano' ? 'TriSano' : "TriSano#{i}"
 
-      files = [Java::JavaIo::File.new(metadataxmi)].to_java(Java::JavaIo::File)
-      result = PublisherUtil.publish(publish_url, folder, files, publisher_password, bi_user, bi_password, true)
-      if result == PublisherUtil::FILE_ADD_SUCCESSFUL then
-        puts "Successfully published metadata for disease group #{dg['name']} to '#{folder}'"
-      else
-        puts "ADD FAILED" if result == PublisherUtil::FILE_ADD_FAILED
-        puts "PUBLISH PASSWORD INVALID" if result == PublisherUtil::FILE_ADD_INVALID_PUBLISH_PASSWORD
-        puts "CREDENTIALS" if result == PublisherUtil::FILE_ADD_INVALID_USER_CREDENTIALS
-        puts "FILE EXISTS" if result == PublisherUtil::FILE_EXISTS
-        puts "Failed trying to publish metadata for disease group #{dg['name']} to '#{folder}'"
-        begin
-          FileUtils.mv(metadataxmi, File.join(server_dir, 'pentaho-solutions', folder, 'metadata.xmi'))
-        rescue StandardError => err
-          puts "Failed to copy metadata.xmi to #{server_dir}/pentaho-solutions/#{folder}"
-          puts "**** **** **** METADATA NOT PUBLISHED! Please create the #{folder} directory in Pentaho, and re-run build_metadata."
+          files = [Java::JavaIo::File.new(metadataxmi)].to_java(Java::JavaIo::File)
+          result = PublisherUtil.publish(publish_url, folder, files, publisher_password, bi_user, bi_password, true)
+          if result == PublisherUtil::FILE_ADD_SUCCESSFUL then
+            puts "Successfully published metadata for disease group #{dg['name']} to '#{folder}'"
+          else
+            puts "ADD FAILED" if result == PublisherUtil::FILE_ADD_FAILED
+            puts "PUBLISH PASSWORD INVALID" if result == PublisherUtil::FILE_ADD_INVALID_PUBLISH_PASSWORD
+            puts "CREDENTIALS" if result == PublisherUtil::FILE_ADD_INVALID_USER_CREDENTIALS
+            puts "FILE EXISTS" if result == PublisherUtil::FILE_EXISTS
+            puts "Failed trying to publish metadata for disease group #{dg['name']} to '#{folder}'"
+            begin
+              FileUtils.mv(metadataxmi, File.join(server_dir, 'pentaho-solutions', folder, 'metadata.xmi'))
+            rescue StandardError => err
+              puts "Failed to copy metadata.xmi to #{server_dir}/pentaho-solutions/#{folder}"
+              puts "**** **** **** METADATA NOT PUBLISHED! Please create the #{folder} directory in Pentaho, and re-run build_metadata."
+            end
+          end
+          i += 1 if dg['name'] != 'TriSano' or event_type != 'M'
         end
-      end
-      i += 1 if dg['name'] != 'TriSano'
     end
 
     mark_etl_success conn
