@@ -48,7 +48,12 @@ class FollowUpElement < FormElement
 
   def condition_match?(string_condition)
     return if self.condition.nil? || string_condition.nil?
-    return self.condition.strip.downcase == string_condition.strip.downcase
+    
+    # We split on \n in order to handle answer output from checkboxes
+    # Then check if any of the split options match the condition
+    string_condition.split("\n").any? do |other_condition|
+      self.condition.strip.downcase == other_condition.strip.downcase
+    end
   end
   
   def self.condition_string_from_code(code_id)

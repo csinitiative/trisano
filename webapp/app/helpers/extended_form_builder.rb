@@ -147,6 +147,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       get_values(form_elements_cache, question_element).each do |value_hash|
         html_options[:id] =  "#{id}_#{i += 1}"
+        html_options[:onclick] = select_answer_event if follow_ups
         codes << {:id => html_options[:id], :code => value_hash[:code]}
         selected_codes << value_hash[:code] if @object.check_box_answer.include?(value_hash[:value])
         check_boxes += @template.check_box_tag(name, value_hash[:value], @object.check_box_answer.include?(value_hash[:value]), html_options) + value_hash[:value]
