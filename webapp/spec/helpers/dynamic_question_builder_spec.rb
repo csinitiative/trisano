@@ -4,7 +4,7 @@ describe DynamicQuestionBuilder do
     let(:question_element) { stub :question_element, :question => question }
     let(:form_elements_cache) { stub :form_elements_cache }
     let(:builder) { DynamicQuestionBuilder.new(:question_element => question_element, :form_elements_cache => form_elements_cache) } 
-    let(:result) { builder.question_is_multi_valued_and_has_value_set? }
+    let(:result) { builder.question_is_multi_valued_and_has_no_value_set? }
     
     context "question is not multi valued" do
 
@@ -36,8 +36,8 @@ describe DynamicQuestionBuilder do
              form_elements_cache.stub!(:has_value_set_for?).with(question_element).and_return(true)
            end 
 
-           it "returns true" do
-             result.should be_true
+           it "returns false" do
+             result.should be_false
            end
 
 
@@ -50,8 +50,8 @@ describe DynamicQuestionBuilder do
              form_elements_cache.stub!(:has_value_set_for?).with(question_element).and_return(false)
            end 
 
-           it "returns false" do
-             result.should be_false
+           it "returns true" do
+             result.should be_true
            end
 
 
@@ -68,9 +68,9 @@ describe DynamicQuestionBuilder do
  
          end
 
-         it "returns false" do
+         it "returns true" do
 
-           result.should be_false
+           result.should be_true
 
          end
 

@@ -60,7 +60,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   def dynamic_question(form_elements_cache, question_element, event, index, html_options = {})
     builder = DynamicQuestionBuilder.new :question_element => question_element,
                                          :form_elements_cache => form_elements_cache
-    return "" unless builder.question_is_multi_valued_and_has_value_set?
+    return "" if builder.question_is_multi_valued_and_has_no_value_set?
     id = html_options[:id]
     result = ""
     question = question_element.question
