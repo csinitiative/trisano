@@ -328,7 +328,7 @@ module FormBuilderDslHelper
   def get_or_initialize_repeater_question_element(repeater_object, question_element_template)
     element_attributes = {:form_id => question_element_template.form_id,
                           :is_template => false,
-			  :parent_id => question_element_template.parent_id,
+                          :parent_id => question_element_template.parent_id,
                           :tree_id => question_element_template.tree_id}
 
     repeater_attributes = {:repeater_form_object_id => repeater_object.id,
@@ -338,31 +338,43 @@ module FormBuilderDslHelper
 
     question_element = QuestionElement.find(:first, 
                                             :conditions => repeater_element_attributes)
-
     if question_element.present?
       return nil if question_element == question_element_template
+      return nil if question_element.parent.repeater_form_object_id != repeater_object.id
       return question_element  
     else
-      question_element = QuestionElement.new(repeater_element_attributes)
+      FormElement.transaction do 
+	      question_element = QuestionElement.new(repeater_element_attributes)
 
-      # We must set this, not applied in new.
-      # No need to clone this, ValueSetElements have many form_elements
-      question_element.value_set_element = question_element_template.value_set_element
-      
-      # Must clone the question so we get a unique question and answer for each repeater
-      question = question_element.question = question_element_template.question.clone
+	      # We must set this, not applied in new.
+	      # No need to clone this, ValueSetElements have many form_elements
+	      question_element.value_set_element = question_element_template.value_set_element
+	      
+	      # Must clone the question so we get a unique question and answer for each repeater
+	      question = question_element.question = question_element_template.question.clone
 
-      # Must make a unique short name for quesiton
-      question.short_name += "_" + repeater_object.class.name.underscore + "_" + repeater_object.id.to_s + "_" + question_element_template.parent_id.to_s
+	      # Must set this to differeniate from other repeaters
+	      new_parent = question_element_template.parent.clone
+	      new_parent.repeater_form_object_id = repeater_object.id
+	      new_parent.repeater_form_object_type = repeater_object.class.name.underscore
+	      new_parent.save
 
-      raise question_element.errors.inspect unless question_element.save
 
-      # Must set this to differeniate from before/after questions
-      question_element.insert_at question_element_template.parent
+	      new_parent.insert_at question_element_template.parent.parent
+
+	      # Must make a unique short name for quesiton
+	      question.short_name += "_" + repeater_object.class.name.underscore + "_" + repeater_object.id.to_s + "_" + new_parent.id.to_s
+
+	      raise question_element.errors.inspect unless question_element.save
+	 
+              #must be done after question_element is saved
+	      question_element.insert_at new_parent
+      end
 
       # Need to reload because we need the ID
       return question_element.reload
     end
+
   end
 
   def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
