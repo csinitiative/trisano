@@ -244,7 +244,16 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     form_elements_cache.children(form_elements_cache.children(question_element).find { |child| child.is_a?(ValueSetElement) }).collect { |value| {:value => value.name, :export_conversion_value_id => value.export_conversion_value_id, :code => value.code} }
   end
 
+  def repeater_form?
+     has_many_association?
+  end
+
+  def has_many_association?
+    return @object_name =~ /\[\d+\]/
+  end
+
   def core_path
+    # Is this @options supposed to be here?
     cp = @options[:core_path] || @object_name.to_s.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
     return if cp.nil?
     CorePath[cp]

@@ -429,6 +429,7 @@ class Event < ActiveRecord::Base
   end
 
   # can't use #detect here because of http://jira.codehaus.org/browse/JRUBY-5058
+  # TODO: Use SQL here instead of Ruby loop
   def get_or_initialize_answer(question_id)
     answers.each do |answer_object|
       return answer_object if answer_object.question_id == question_id
