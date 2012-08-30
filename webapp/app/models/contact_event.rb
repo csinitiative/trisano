@@ -21,9 +21,9 @@ class ContactEvent < HumanEvent
   supports :tasks
   supports :attachments
 
-  before_create :add_contact_event_creation_note
+  before_create :direct_child_creation_initialization, :add_contact_event_creation_note
+
   after_create :add_parent_event_creation_note
-  before_create :direct_child_creation_initialization
 
   workflow do
     state :not_routed, :meta => {:description => I18n.translate('workflow.not_participating_in_workflow'),
@@ -215,13 +215,6 @@ class ContactEvent < HumanEvent
       redis.delete_matched("views/events/#{parent.id}/show/contacts_tab")
       redis.delete_matched("views/events/#{parent.id}/showedit/contacts_tab/contacts_form")
     end
-  end
-
-  # Method overriden because ContactEvent needs to update its event_onset_date after DiseaseEvent is built.
-  # TODO: create a callback in DiseaseEvent that would invoke set_onset_date on HumanEvent if disease is set or updated.
-  def build_disease_based_on_parent
-    super
-    set_onset_date
   end
 
   def add_parent_event_creation_note

@@ -308,8 +308,6 @@ class Event < ActiveRecord::Base
     unless self.disease_event.nil?
       parent_disease_event = DiseaseEvent.new
       parent_disease_event.disease_id = self.disease_event.disease_id
-      parent_disease_event.disease_onset_date = self.disease_event.disease_onset_date
-      parent_disease_event.date_diagnosed = self.disease_event.date_diagnosed
     end
 
     # Can't use plain old child_events association 'cause nothin's been saved yet
@@ -618,8 +616,6 @@ class Event < ActiveRecord::Base
     return if parent_event.nil? || parent_event.disease_event.nil? || !self.disease_event.nil?
     parent_disease_event = DiseaseEvent.new
     parent_disease_event.disease_id = parent_event.disease_event.disease_id
-    parent_disease_event.disease_onset_date = parent_event.disease_event.disease_onset_date
-    parent_disease_event.date_diagnosed = parent_event.disease_event.date_diagnosed
     build_disease_event(parent_disease_event.attributes)
   end
 end
