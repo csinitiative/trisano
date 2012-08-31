@@ -485,9 +485,9 @@ def disease_groups(conn)
   return groups
 end
 
-def create_models(dg, event_type_str, dg_id, event_type, meta, conn)
+def create_models(dg, model_name_str, dg_id, event_type, meta, conn)
   puts "Processing disease group #{dg} with event type #{event_type}"
-  model = BusinessModel.new "#{dg} #{event_type_str}"
+  model = BusinessModel.new model_name_str
   initialize_model model, meta
   root_bc = BusinessCategory.new
   root_bc.set_root_category true
@@ -699,7 +699,7 @@ if __FILE__ == $0
           meta = initialize_meta SchemaMeta.new
           # Create physical tables, and all physical columns
           create_physical_tables dg['name'], meta, conn
-          create_models dg['name'], (event_type == 'M' ? "Morbidities" : "Assessments"), dg['id'], event_type, meta, conn
+          create_models dg['name'], "#{dg['name']}#{ event_type == 'M' ? "" : " Assessments"}", dg['id'], event_type, meta, conn
           outfile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.out")
           xmifile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.xmi")
           puts "Writing metadata for disease group '#{dg['name']}' and event type #{event_type} to #{xmifile}"
