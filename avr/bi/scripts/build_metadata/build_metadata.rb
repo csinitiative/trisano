@@ -707,7 +707,7 @@ if __FILE__ == $0
           FileUtils.rm xmifile, :force => true
           FileUtils.mv(outfile, xmifile)
           FileUtils.cp(xmifile, metadataxmi)
-          folder = dg['name'] == 'TriSano' ? 'TriSano' : "TriSano#{i}"
+          folder = (dg['name'] == 'TriSano' and event_type == 'M') ? 'TriSano' : "TriSano#{i}"
 
           files = [Java::JavaIo::File.new(metadataxmi)].to_java(Java::JavaIo::File)
           result = PublisherUtil.publish(publish_url, folder, files, publisher_password, bi_user, bi_password, true)
@@ -726,7 +726,7 @@ if __FILE__ == $0
               puts "**** **** **** METADATA NOT PUBLISHED! Please create the #{folder} directory in Pentaho, and re-run build_metadata."
             end
           end
-          i += 1 if dg['name'] != 'TriSano' or event_type != 'M'
+          i += 1
         end
     end
 
