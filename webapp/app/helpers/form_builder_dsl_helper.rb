@@ -98,7 +98,7 @@ module FormBuilderDslHelper
   end
 
   # Show mode counterpart to #render_investigator_element
-  def show_investigator_element(form_elements_cache, element, f)
+  def show_investigator_element(form_elements_cache, element, f, local_form_builder=nil)
     result = ""
 
     case element.class.name
@@ -117,7 +117,7 @@ module FormBuilderDslHelper
   end
 
   # Print mode counterpart to #render_investigator_element and #show_investigator_element
-  def print_investigator_element(form_elements_cache, element, f)
+  def print_investigator_element(form_elements_cache, element, f, local_form_builder=nil)
     result = ""
 
     case element.class.name

@@ -246,6 +246,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def repeater_form?
+     excluded = %w(assessment_event[reporting_agency][place_entity][telephones]
+                   assessment_event[reporter][person_entity][telephones]
+                   morbidity_event[reporter][person_entity][telephones]
+                   morbidity_event[reporting_agency][place_entity][telephones]
+                   morbidity_event[hospitalization_facilities][hospitals_participation])
+     return false if excluded.include?(core_path.to_s)
      has_many_association?
   end
 
