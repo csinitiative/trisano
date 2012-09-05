@@ -243,6 +243,10 @@ Then /^I should see the following results:$/ do |results|
   end
 end
 
+And /^I click "Start a CMR with the criteria you searched on"$/ do
+  submit_form "new_cmr_form"
+end
+
 def in_fields(table)
   table.hashes.each do |hash|
     hash.each do |field, value|
