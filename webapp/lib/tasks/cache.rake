@@ -1,8 +1,12 @@
 namespace :cache do
-    task :warm, :limit, :needs => :environment do |task, args|
+    task :warm, :host, :limit, :needs => :environment do |task, args|
+      require "open3"
       require 'console_app'
       require 'benchmark'
       include ActionController::UrlWriter
+
+      default_url_options[:host] = args[:host] || raise("Must supply host as first argument")
+      default_url_options[:protocol] = "https"
 
       limit = args[:limit].to_i || 1000
 
@@ -24,8 +28,8 @@ namespace :cache do
       current_events = MorbidityEvent.find(:all, :order => "updated_at DESC", :limit => limit)
 
       current_events.each do |event|
-        request_url url_for(:controller => "morbidity_events", :action => "show", :id => event, :api_key => api_key, :only_path => true)
-        request_url url_for(:controller => "morbidity_events", :action => "edit", :id => event, :api_key => api_key, :only_path => true)
+        request_url url_for(:controller => "morbidity_events", :action => "show", :id => event, :api_key => api_key, :only_path => false)
+        request_url url_for(:controller => "morbidity_events", :action => "edit", :id => event, :api_key => api_key, :only_path => false)
       end
 
       super_user.destroy unless super_user.nil?
@@ -41,11 +45,10 @@ namespace :cache do
 end
 
 def request_url(url)
-  sanitized_url = url.gsub(/api_key=..................../, '')
-  puts "loading #{sanitized_url}"
-  execute_with_benchmark do
-    puts "returned " + app.get(url).to_s
-  end
+  cmd = "wget #{url} -O /dev/null --max-redirect=0 2>&1"
+  output = Open3.popen3(cmd)
+  puts "ERROR retreving #{url}\n#{output.readlines.join('\n')}" #if $?.exitstatus != 0
+
 end
 
 def ask message
