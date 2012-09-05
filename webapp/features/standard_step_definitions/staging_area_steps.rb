@@ -74,6 +74,10 @@ When /^I click "Assign lab result"$/ do
   submit_form "assign_#{@event.id}"
 end
 
+When /^I click "Assign to new CMR using this person"$/ do
+  submit_form "assign_#{@event.id}"
+end
+
 When /^I click 'Create a CMR from this message'$/ do
   # JavaScript!!!
   submit_form "assign_to_new"
