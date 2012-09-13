@@ -20,6 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe ContactEventsController do
   before(:each) do
     @user = Factory(:user)
+    session[:user_id] = @user.uid
     @user.stubs(:can_view?).returns(true)
     @user.stubs(:can_update?).returns(true)
     @user.stubs(:can_create?).returns(true)
