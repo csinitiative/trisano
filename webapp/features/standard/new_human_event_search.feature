@@ -15,7 +15,7 @@ Feature: Searching for existing people or events before adding a CMR or AE
      When I search for assessment event:
        | Last name | First name | Birth date |
        | Aurelius  | Marcus     | 3/3/1972   |
-      And I follow "Start an AE with the criteria you searched on"
+      And I click "Start an AE with the criteria you searched on"
      Then I should see the following values:
        | Last name | First name | Date of birth |
        | Aurelius  | Marcus     | March 03, 1972 |
@@ -179,7 +179,7 @@ Feature: Searching for existing people or events before adding a CMR or AE
      When I search for morbidity event:
        | Last name | First name | Birth date |
        | Aurelius  | Marcus     | 3/3/1972   |
-      And I follow "Start a CMR with the criteria you searched on"
+      And I click "Start a CMR with the criteria you searched on"
      Then I should see the following values:
        | Last name | First name | Date of birth |
        | Aurelius  | Marcus     | March 03, 1972 |

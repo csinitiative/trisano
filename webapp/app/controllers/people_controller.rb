@@ -28,6 +28,16 @@ class PeopleController < ApplicationController
     end
   end
 
+  def search
+    return unless index_processing
+
+    respond_to do |format|
+      format.html { render :index }
+      format.xml  { render :xml => @people }
+      format.csv
+    end
+  end
+
   def show
     @person = PersonEntity.find(params[:id])
 

@@ -258,23 +258,66 @@ describe Message do
 
   describe 'common order' do
     before :all do
-      @hl7 = HL7MESSAGES[:nist_orc_clinician]
+      @hl7 = HL7MESSAGES[:arup_1]
       @hl7.should_not be_nil
-      @orc = HL7::Message.parse(HL7MESSAGES[:nist_orc_clinician]).common_order
+      @orc = HL7::Message.parse(@hl7).common_order
       @orc.should_not be_nil
     end
 
     it 'should return the clinician name from ORC-12' do
-      @orc.clinician_last_name.should == 'Moreau'
-      @orc.clinician_first_name.should == 'Glenda'
+      orc = HL7::Message.parse(HL7MESSAGES[:nist_orc_clinician]).common_order
+      orc.clinician_last_name.should == 'Moreau'
+      orc.clinician_first_name.should == 'Glenda'
     end
 
     it 'should return the clinician phone number from ORC-14' do
-      @orc.clinician_phone_type.should == external_codes(:telephonelocationtype_work)
-      a, n, e = @orc.clinician_telephone
+      orc = HL7::Message.parse(HL7MESSAGES[:nist_orc_clinician]).common_order
+      orc.clinician_phone_type.should == external_codes(:telephonelocationtype_work)
+      a, n, e = orc.clinician_telephone
       a.should == '800'
       n.should == '5551212'
       e.should be_blank
+    end
+
+    it "should have a non-empty facility address" do
+      @orc.facility_address_empty?.should == false
+    end
+
+    it "should have an empty facility address if there is one" do
+      no_facility_address_msg = <<NOFACILITY
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42 HAPPY LN^^SALT LAKE CITY^UT^84444^^M||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||||||||||||||\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
+NOFACILITY
+      orc = HL7::Message.parse(no_facility_address_msg).common_order
+      orc.should_not be_nil
+      orc.facility_address_empty?.should == true
+    end
+
+    it 'should return facility street number' do
+      @orc.facility_address_street_no.should == '50'
+    end
+
+    it 'should return facility street name' do
+      @orc.facility_address_street.should == "North Medical Drive"
+    end
+
+    it 'should return facility city' do
+      @orc.facility_address_city.should == "Salt Lake City"
+    end
+
+    it 'should return facility state ID' do
+      @orc.facility_address_trisano_state_id.should == external_codes(:state_utah).id
+    end
+
+    it 'should return facility state ID when the full state name is used' do
+      @orc.facility_address_trisano_state_id.should == external_codes(:state_utah).id
+    end
+
+    it 'should return facility zip code' do
+      @orc.facility_address_zip.should == "84132"
+    end
+
+    it 'should return facility country if present' do
+      @orc.facility_address_country.should == "USA"
     end
   end
 

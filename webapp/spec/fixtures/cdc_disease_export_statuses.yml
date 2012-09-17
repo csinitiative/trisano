@@ -1,7 +1,9 @@
 aids_probable:
   disease_id: 4
   external_code_id: 1803
-  
+syphilis_probable:
+  disease_id: 9
+  external_code_id: 1803
 hep_a_probable:
   disease_id: 5
   external_code_id: 1803

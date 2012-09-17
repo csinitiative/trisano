@@ -52,6 +52,10 @@ Given /^a deleted person with the last name "(.+)"$/ do |last_name|
   PersonEntity.create(:deleted_at => Date.today, :person_attributes => { :last_name => last_name } )
 end
 
+When /^I click "Start an AE with the criteria you searched on"$/ do
+  submit_form "new_ae_form"
+end
+
 When /^I create a new morbidity event from the morbidity named (.+)$/ do | last_name |
   click_link_within "#entity_#{@event.interested_party.person_entity.id}", "Create and edit CMR using this person"
 end
@@ -285,6 +289,10 @@ end
 
 Then /^I should not see a link to enter a new AE$/ do
   response.should_not have_selector("a[href='#{new_ae_path}']")
+end
+
+And /^I click "Start a CMR with the criteria you searched on"$/ do
+  submit_form "new_cmr_form"
 end
 
 def in_fields(table)

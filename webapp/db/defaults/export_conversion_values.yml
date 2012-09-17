@@ -7142,7 +7142,7 @@
 
  - disease_code_group: 'STD'
    export_column_name: 'SPECIMEN SITE'
-   value_from: 'Cervix'
+   value_from: 'Cervix/Endocervix'
    value_to: '01'
    sort_order: 1
 
@@ -7166,7 +7166,7 @@
 
  - disease_code_group: 'STD'
    export_column_name: 'SPECIMEN SITE'
-   value_from: 'Naso-Pharynx'
+   value_from: 'Oropharynx'
    value_to: '05'
    sort_order: 5
 
@@ -7214,15 +7214,27 @@
 
  - disease_code_group: 'STD'
    export_column_name: 'SPECIMEN SITE'
+   value_from: 'Blood/Serum'
+   value_to: '13'
+   sort_order: 13
+
+ - disease_code_group: 'STD'
+   export_column_name: 'SPECIMEN SITE'
+   value_from: 'Cerebrospinal fluid (CSF)'
+   value_to: '14'
+   sort_order: 14
+
+ - disease_code_group: 'STD'
+   export_column_name: 'SPECIMEN SITE'
    value_from: 'Not Applicable'
    value_to: '88'
-   sort_order: 13
+   sort_order: 15
    
  - disease_code_group: 'STD'
    export_column_name: 'SPECIMEN SITE'
    value_from: 'Unknown'
    value_to: '99'
-   sort_order: 14
+   sort_order: 16
 
  - disease_code_group: 'STD'
    export_column_name: 'SPEC_DATE'

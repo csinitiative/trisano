@@ -216,6 +216,10 @@ Then /^I should not see errors on the "([^\"]*)" field$/ do |text|
   response.should_not have_tag('div.fieldWithErrors label', text)
 end
 
+When /^I submit "(.+)" form$/ do |form|
+  submit_form form
+end
+
 #
 # define tag behavior
 #

@@ -1,3 +1,14 @@
+specimen_export_column:
+ id: 36
+ type_data: 'FORM'
+ export_column_name: 'SPECIMEN SITE'
+ table_name:
+ column_name:
+ is_required:
+ start_position: '85'
+ length_to_output: '2'
+ export_name_id: 1
+
 event_export_column:
   id: 30
   export_name_id: 1

@@ -163,8 +163,8 @@ es:
   edit_common_test_type: 'Editar un Tipo de Prueba Común'
   common_test_type: 'Tipo de prueba común'
 # contact_events
-  view_contact_event: 'Ver el Cvento de Contacto: {{name}}'
-  edit_contact_event: 'Editar el Evento de Contacto: {{name}}'
+  view_contact_event: 'Ver el Cvento de Contacto'
+  edit_contact_event: 'Editar el Evento de Contacto'
   new_contact_for_event: 'Create new contact event (EN)'
   new_contact_event: 'New contact event (EN)'
   contact_event_created: 'Contact event was successfully created. (EN)'
@@ -762,6 +762,7 @@ es:
   treatment_field: "Campo Tratamiento"
   events_normal_case: "Eventos"
   edit_morbidity_event_of: "Editar evento de morbilidad: {{name}}"
+  edit_morbidity_event: "Editar evento de morbilidad"
   morbidity_event: "Evento de Morbilidad"
   morbidity_events: "Morbidity Events (EN)"
   contact_events: "Contact Events (EN)"

@@ -51,7 +51,10 @@
           %small= h staged_message.lab_name
         %div.tools
           -if (staged_message.state == StagedMessage.states[:pending]) || (staged_message.state == StagedMessage.states[:unprocessable])
-            = link_to t('similar_events'), event_search_staged_message_path(staged_message, :name => staged_message.patient.patient_name, :birth_date => staged_message.patient.birth_date), :class => 'staged-message-link'
+            - form_tag(event_search_staged_message_path(staged_message), {:id => "similar_events", :style => "display: inline"}) do
+              = hidden_field_tag :name, staged_message.patient.patient_name
+              = hidden_field_tag :birth_date, staged_message.patient.birth_date
+              = link_to_function t('similar_events'), "this.parentNode.submit()", :class => 'staged-message-link'
             = " | "
             - form_tag(discard_staged_message_path(staged_message), :style => "display: inline", :id => "discard_#{staged_message.id}") do
               = hidden_field_tag('staged_message_id', staged_message.id)

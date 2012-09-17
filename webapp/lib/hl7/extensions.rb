@@ -481,6 +481,54 @@ module StagedMessages
     rescue
     end
 
+    def components_empty?(components)
+      components.all? { |comp| comp.empty? }
+    end
+
+    def facility_addr_components
+      @facility_addr_components ||= orc_segment.ordering_facility_address.split(orc_segment.item_delim)
+     end
+
+    def facility_address_empty?
+      components_empty?(facility_addr_components)
+    end
+
+    def facility_address_street_no
+      if unit_md = /^\w+ /.match(facility_addr_components[0])
+        unit_md[0].strip
+      else
+        unit_md
+      end
+    end
+
+    def facility_address_street
+      if md = /^\w+ /.match(facility_addr_components[0])
+        md.post_match.titleize
+      else
+        md
+      end
+    end
+
+    def facility_address_city
+      facility_addr_components[2].titleize
+    end
+
+    def facility_address_trisano_state_id
+      if !facility_addr_components[3].blank?
+        state_object = ExternalCode.find_by_code_name_and_the_code('state', facility_addr_components[3])
+        state_object ||= ExternalCode.first :conditions => [ "code_name = 'state' AND code_description ~* ?", '^'+ facility_addr_components[3]+'$' ]
+        state_object.id if state_object
+      end
+    end
+
+    def facility_address_zip
+      facility_addr_components[4]
+    end
+
+    def facility_address_country
+      facility_addr_components[5] if facility_addr_components
+    end
+
     private
 
     def clinician_name_components

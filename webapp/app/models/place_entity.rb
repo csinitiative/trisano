@@ -17,6 +17,7 @@
 
 class PlaceEntity < Entity
   has_one :place, :foreign_key => "entity_id", :class_name => "Place", :dependent => :destroy
+  has_one :entity, :through => :place
   accepts_nested_attributes_for :place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }, :allow_destroy => true
 
   named_scope :jurisdictions,

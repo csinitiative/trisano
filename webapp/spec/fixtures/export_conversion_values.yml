@@ -156,3 +156,100 @@ pregnant_unk:
   value_from: 'UNK'
   value_to: '9'
   sort_order: 30
+
+specimen_cervix:
+  id: 24
+  export_column_id: 36
+  value_from: 'Cervix/Endocervix'
+  value_to: '01'
+  sort_order: 1
+specimen_genital:
+  id: 25
+  export_column_id: 36
+  value_from: 'Lesion-Genital'
+  value_to: '02'
+  sort_order: 2
+specimen_lesion:
+  id: 26
+  export_column_id: 36
+  value_from: 'Lesion-Extra Genital'
+  value_to: '03'
+  sort_order: 3
+specimen_lymph:
+  id: 27
+  export_column_id: 36
+  value_from: 'Lymph Node Aspirate'
+  value_to: '04'
+  sort_order: 4
+specimen_oropharynx:
+  id: 28
+  export_column_id: 36
+  value_from: 'Oropharynx'
+  value_to: '05'
+  sort_order: 5
+specimen_ophthalmia:
+  id: 29
+  export_column_id: 36
+  value_from: 'Ophthalmia/Conjunctiva'
+  value_to: '06'
+  sort_order: 6
+specimen_other:
+  id: 30
+  export_column_id: 36
+  value_from: 'Other'
+  value_to: '07'
+  sort_order: 7
+specimen_aspirate:
+  id: 31
+  export_column_id: 36
+  value_from: 'Other Aspirate'
+  value_to: '08'
+  sort_order: 8
+specimen_rectum:
+  id: 32
+  export_column_id: 36
+  value_from: 'Rectum'
+  value_to: '09'
+  sort_order: 9
+specimen_urethra:
+  id: 33
+  export_column_id: 36
+  value_from: 'Urethra'
+  value_to: '10'
+  sort_order: 10
+specimen_urine:
+  id: 34
+  export_column_id: 36
+  value_from: 'Urine'
+  value_to: '11'
+  sort_order: 11
+specimen_vagina:
+  id: 35
+  export_column_id: 36
+  value_from: 'Vagina'
+  value_to: '12'
+  sort_order: 12
+specimen_blood:
+  id: 36
+  export_column_id: 36
+  value_from: 'Blood/Serum'
+  value_to: '13'
+  sort_order: 13
+specimen_csf:
+  id: 37
+  export_column_id: 36
+  value_from: 'Cerebrospinal fluid (CSF)'
+  value_to: '14'
+  sort_order: 14
+specimen_na:
+  id: 38
+  export_column_id: 36
+  value_from: 'Not Applicable'
+  value_to: '88'
+  sort_order: 15
+specimen_unk:
+  id: 39
+  export_column_id: 36
+  value_from: 'Unknown'
+  value_to: '99'
+  sort_order: 16
