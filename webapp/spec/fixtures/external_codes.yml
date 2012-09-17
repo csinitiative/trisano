@@ -438,3 +438,9 @@ loinc_scale_ordqn:
   code_name: "loinc_scale"
   the_code: "OrdQn"
   code_description: "Ordinal or Quantitative"
+
+unknown_outbreak:
+  id: 2700
+  code_name: "outbreak"
+  the_code: "UNK"
+  code_description: "Unknown"

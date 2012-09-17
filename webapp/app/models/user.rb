@@ -330,7 +330,7 @@ class User < ActiveRecord::Base
       config_options[:trisano_auth][:password_expiry_date].nil? or
       config_options[:trisano_auth][:password_expiry_notice_date].nil?
     days_left = config_options[:trisano_auth][:password_expiry_date] - config_options[:trisano_auth][:password_expiry_notice_date]
-    password_last_updated and password_last_updated < days_left.days.ago.to_date
+    password_last_updated and password_last_updated.to_date < days_left.days.ago.to_date
   end
 
   protected

@@ -66,4 +66,5 @@ Existing_Lab_Two:
 Davis_Nat:
   id: 102
   name: "Davis Natatorium"
+  short_name: "Davis Natatorium"
   entity_id: 103

@@ -78,7 +78,16 @@ imported_export_column:
   is_required: "N"
   start_position: 54
   length_to_output: 1
-
+outbreak_export_column:
+   id: 37
+   export_name_id: 1
+   type_data: "CORE"
+   export_column_name: "OUTBREAK"
+   table_name: 'events'
+   column_name: 'outbreak_associated_id'
+   is_required: 'N'
+   start_position: 55
+   length_to_output: 1
 std_neuro:
   id: 16
   export_column_name: 'NEURO'
@@ -102,6 +111,17 @@ std_detected:
   start_position: '63'
   length_to_output: '2'
   export_disease_group_id: 2
+
+outbreak_export_column:
+   id: 37
+   export_name_id: 1
+   type_data: "CORE"
+   export_column_name: "OUTBREAK"
+   table_name: 'events'
+   column_name: 'outbreak_associated_id'
+   is_required: 'N'
+   start_position: 55
+   length_to_output: 1
 
 hep_jaundiced:
    id: 2

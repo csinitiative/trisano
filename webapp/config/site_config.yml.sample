@@ -1,4 +1,5 @@
 base:
+  xsentinel_notification_email: 'csi@endpoint.com'
   # CDC state ID.  For example, Utah is 49.
   cdc_state: '49'
   bi_server_url: http://localhost:18080/pentaho/Home

@@ -31,6 +31,8 @@ gem "ruby-hl7", "1.0.3"
 # Need to put this in it's place soon. It's getting cocky standing out
 # on its own like this.
 gem "sparrowhawk", "0.9.5"
+gem "savon"
+gem 'whenever'
 
 group :development do
   gem "mechanize", "1.0.0"

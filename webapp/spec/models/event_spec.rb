@@ -1121,7 +1121,6 @@ describe MorbidityEvent do
         @event.save!
         @event.reload
         @event.form_references.size.should == 0
-
         @event.undergone_form_assignment.should be_false
         @event.build_disease_event(:disease_id =>  @disease_id)
         @event.save!
@@ -1361,17 +1360,27 @@ describe MorbidityEvent do
       @event_hash = {
         "first_reported_PH_date" => Date.yesterday.to_s(:db),
         "interested_party_attributes" => {
+          "secondary_entity_id" => Factory.create(:place_entity).id,
           "person_entity_attributes" => {
             "person_attributes" => {
               "last_name"=>"Green"
             }
           }
         },
-        "contact_child_events_attributes" => [ { "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" },
-                "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
-            "participations_contact_attributes" => {} } ],
-        "place_child_events_attributes"   => [ { "interested_place_attributes" => { "place_entity_attributes" => { "place_attributes" => { "name" => "Red" } } },
-            "participations_place_attributes" => {} } ]
+        "contact_child_events_attributes" => [
+            { "interested_party_attributes" => {
+                "secondary_entity_id" => Factory.create(:place_entity).id,
+                "person_entity_attributes" => { "person_attributes" => { "last_name" => "White" }, "telephones_attributes" => { "99" => { "phone_number" => "" } } } },
+                "participations_contact_attributes" => {}
+            }
+        ],
+        "place_child_events_attributes"   => [
+            { "interested_place_attributes" => {
+                "secondary_entity_id" => Factory.create(:place_entity).id,
+                "place_entity_attributes" => { "place_attributes" => { "name" => "Red" } } },
+                "participations_place_attributes" => {}
+            }
+        ]
       }
       @event = Factory.build(:morbidity_event)
       @event.update_attributes(@event_hash)
@@ -1804,7 +1813,7 @@ describe Event, 'cloning an event' do
       form.event_type = "morbidity_event"
       form.name = "AIDS Form"
       form.short_name = 'event_spec_aids'
-      form.diseases_forms.build(:disease_id => disease_id, :auto_assign => true)
+      form.disease_ids = [disease_id]
       form.save_and_initialize_form_elements.should_not be_nil
       form.form_base_element.children_count.should == 3
       question_element = QuestionElement.new(

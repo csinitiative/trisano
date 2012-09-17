@@ -38,7 +38,12 @@ imported_from_utah_value:
   export_column_id: 35
   value_from: 'AIS'
   value_to:   '1'
-  
+
+unknown_outbreak_value:
+  export_column_id: 37
+  value_from: 'UNK'
+  value_to: '9'
+
 jaundiced_yes:
   id: 7
   export_column_id: 2

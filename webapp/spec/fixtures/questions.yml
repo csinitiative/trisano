@@ -153,17 +153,35 @@ hep_non_cdc_q:
   data_type: "radio_button"
   size:
   short_name: "hep_non_cdc_q"
-std_group_neuro:
+cdc_pattern_1:
   id: "18"
+  short_name: "CDC_Pattern_1"
+ks_pattern_1:
+  id: "19"
+  short_name: "KS_Pattern_1"
+other_st_pattern_1:
+  id: "20"
+  short_name: "Othr_St_Pattern_1"
+cdc_pattern_2:
+  id:  "21"
+  short_name: "CDC_Pattern_2"
+ks_pattern_2:
+  id: "22"
+  short_name: "KS_Pattern_2"
+other_st_pattern_2:
+  id: "23"
+  short_name: "Othr_St_Pattern_2"
+std_group_neuro:
+  id: "24"
   form_element_id: 312
   short_name: "neuro"
   data_type: "drop_down"
 std_group_detected:
-  id: "19"
+  id: "25"
   form_element_id: 313
   short_name: "detected"
   data_type: "drop_down"
 std_group_infosrce:
-  id: "20"
+  id: "26"
   form_element_id: 314
   short_name: "infosrce"

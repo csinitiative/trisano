@@ -172,7 +172,7 @@ describe TaskFilter do
 
     before(:each) do
       @events = [Factory(:morbidity_event), Factory(:morbidity_event)]
-      @jurisdictions = @events.map { |e| e.jurisdiction.secondary_entity.place }
+      @jurisdictions = @events.map(&:all_jurisdictions).flatten.map(&:secondary_entity).map(&:place)
       @tasks = [create_task(:event => @events.first), create_task(:event => @events.second)]
     end
 

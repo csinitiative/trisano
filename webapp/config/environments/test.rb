@@ -25,7 +25,10 @@ config.action_mailer.default_url_options = { :host => "example.com" }
 require 'logging'
 Logging.init :debug, :info, :warn, :error, :fatal
 DEFAULT_LOGGER = Logging::Logger['server']
-
+TRISANO_LOG_LOCATION = ENV['TRISANO_LOG_LOCATION'] ||= '/var/log/trisano/'
+if TRISANO_LOG_LOCATION.split('').last != '/'
+  TRISANO_LOG_LOCATION = TRISANO_LOG_LOCATION + '/'
+end
 
 #make translation fail loud
 require 'trisano/i18n/fail_fast'
