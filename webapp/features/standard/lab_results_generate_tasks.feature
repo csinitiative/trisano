@@ -49,8 +49,8 @@ Feature: Adding Lab Results to an Event Generates a Task
         | 20000-2    | Urine Test | Urine Test  | Nom         |
         | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
     When I visit the staged message show page
-      And I click 'Similar Events' for the staged message
-      And I click the 'Assign lab result' link of the found event
+      And I click "Similar Events"
+      And I click "Assign lab result"
     Then I should remain on the staged message show page
       And I should see a 'success' message
     When I visit the assigned-to event
@@ -71,8 +71,8 @@ Feature: Adding Lab Results to an Event Generates a Task
         | 20000-2    | Urine Test | Urine Test  | Nom         |
         | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
     When I visit the staged message show page
-      And I click 'Similar Events' for the staged message
-      And I click the 'Assign lab result' link of the found event
+      And I click "Similar Events"
+      And I click "Assign lab result"
     Then I should remain on the staged message show page
       And I should see a 'success' message
     When I visit the assigned-to event

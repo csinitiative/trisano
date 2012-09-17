@@ -24,7 +24,7 @@ class ContactEvent < HumanEvent
   supports :promote_to_assessment_event
 
   before_create :direct_child_creation_initialization, :add_contact_event_creation_note
-    
+
   after_create :add_parent_event_creation_note
 
   workflow do

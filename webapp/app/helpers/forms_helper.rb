@@ -286,7 +286,7 @@ module FormsHelper
       result << "<table><tr>"
       result << "<td class='question label' style='text-transform: capitalize;'>#{t('question')}</td>"
       result << "<td class='question actions'>" << edit_question_link(element)
-      result << "&nbsp;&nbsp;" << add_follow_up_link(element) unless (question.data_type_before_type_cast == "check_box")
+      result << "&nbsp;&nbsp;" << add_follow_up_link(element)
       result << "&nbsp;&nbsp;" << add_to_library_link(element) if (include_children)
       result << "&nbsp;&nbsp;" << add_value_set_link(element) if include_children && element.is_multi_valued_and_empty? && element.export_column_id.blank?
       result << "&nbsp;&nbsp;" << delete_question_link(element)

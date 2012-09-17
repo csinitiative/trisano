@@ -235,25 +235,25 @@ yesno_maybe:
 specimen_blood:
   id: 1501
   code_name: "specimen"
-  the_code: "B"
+  the_code: "BD"
   code_description: "Blood"
 
 specimen_urine:
   id: 1502
   code_name: "specimen"
-  the_code: "U"
+  the_code: "UR"
   code_description: "Urine"
 
 specimen_stool:
   id: 1503
   code_name: "specimen"
-  the_code: "S"
+  the_code: "ST"
   code_description: "Stool"
 
 specimen_tissue:
   id: 1504
   code_name: "specimen"
-  the_code: "T"
+  the_code: "TI"
   code_description: "Tissue"
 
 imported_from_unknown:

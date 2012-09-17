@@ -951,6 +951,14 @@
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
+  field_type: date
+  key: morbidity_event[hospitalization_facilities][hospitals_participation][admission_date]
+  parent_key: morbidity_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[disease_event][died_id]
   code_name: yesno

@@ -89,29 +89,30 @@
 
 %br
 %span.subsection-header=t 'diagnosing_health_facilities'
-- unless association_recorded?(@event.diagnostic_facilities)
-  %b{ :style => 'font-size: 11px' }="No diganosing health facilities have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
-- else
-  .three-valued-row
-    .short
-      %span.print-label=ct 'name'
-    .short
-      %span.print-label=ct 'address'
-    .short
-      %span.print-label=ct 'type'
-    %br
-  - for diagnostic in @event.diagnostic_facilities
+-core_element_print(:diagnostic_facilities, event_form, :vert) do
+  - unless association_recorded?(@event.diagnostic_facilities)
+    %b{ :style => 'font-size: 11px' }="No diganosing health facilities have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
+  - else
     .three-valued-row
       .short
-        %span.print-value
-          = h(diagnostic.place_entity.place.name)
+        %span.print-label=ct 'name'
       .short
-        %span.print-value
-          = h(preferred_address(diagnostic.safe_call_chain(*%w(place_entity place))))
-          &nbsp;
+        %span.print-label=ct 'address'
       .short
-        %span.print-value
-          = h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
+        %span.print-label=ct 'type'
+      %br
+    - for diagnostic in @event.diagnostic_facilities
+      .three-valued-row
+        .short
+          %span.print-value
+            = h(diagnostic.place_entity.place.name)
+        .short
+          %span.print-value
+            = h(preferred_address(diagnostic.safe_call_chain(*%w(place_entity place))))
+            &nbsp;
+        .short
+          %span.print-value
+            = h(diagnostic.safe_call_chain(:place_entity, :place, :formatted_place_descriptions))
 
 %span.subsection-header
   =t 'treatments'

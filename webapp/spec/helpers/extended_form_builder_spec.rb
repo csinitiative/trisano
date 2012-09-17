@@ -171,6 +171,7 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
       question_element = mock('question_element') do
         stubs(:question).returns(question)
         stubs(:export_column).returns(nil)
+	stubs(:is_required?).returns(false)
       end
       form_elements_cache = mock('form_elements_cache') do
         stubs(:children).returns([Object.new])
@@ -294,4 +295,5 @@ describe ExtendedFormBuilder::CorePath do
 
     it_should_behave_like "a complex core path"
   end
+
 end

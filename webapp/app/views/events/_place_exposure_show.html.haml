@@ -61,7 +61,8 @@
             -# This place was added via live search. Provide a mechanism for removing the place before saving.
             &nbsp;
             %br
-            = link_to_function(t("remove"), "this.up().remove()", :id => "remove_#{uniq_id}")
+            - remove_id = "remove_#{uniq_id}"
+            = link_to_function(t("remove"), "$j('##{remove_id}').closest('li.existing_place').remove()", :id => remove_id)
           - else
             %span.horiz
               = place_form.label :_delete

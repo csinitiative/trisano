@@ -36,3 +36,8 @@ form_push_disease:
 no_forms_disease:
   id: 8
   disease_name: "No forms disease"
+
+syphilis:
+  id: 9
+  disease_name: Syphilis, primary
+  cdc_code: "10311"

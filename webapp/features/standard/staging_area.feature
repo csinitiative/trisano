@@ -43,7 +43,7 @@
     And there are no matching entries
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     Then I should be sent to the search results page
     And I should see the staged message
     And I should not see any matching results
@@ -54,7 +54,7 @@
     And there is a morbidity event with a matching name but no birth date
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     Then I should see matching results
 
   Scenario: Searching for matching events when name and birth date found
@@ -63,7 +63,7 @@
     And there is a morbidity event with a matching name and birth date
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     Then I should see matching results
 
   Scenario: Assigning lab result to found event
@@ -77,8 +77,8 @@
       | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
 
     When I visit the staged message show page
-      And I click 'Similar Events' for the staged message
-      And I click the 'Assign lab result' link of the found event
+      And I click "Similar Events"
+      And I click "Assign lab result"
     Then I should remain on the staged message show page
       And I should see a 'success' message
 
@@ -101,8 +101,8 @@
       | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
-    And I click the 'Assign lab result' link of the found event
+    And I click "Similar Events"
+    And I click "Assign lab result"
     Then I should remain on the staged message show page
     And I should see a 'success' message
     And I should not see the 'Similar Events' link
@@ -124,7 +124,7 @@
       | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     And I click 'Create a CMR from this message'
     Then I should remain on the staged message show page
     And I should see a 'success' message
@@ -149,8 +149,8 @@
       | 13954-3    | Hep-B Ag   | Hep-B Ag    | Nom         |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
-    And I click the 'Assign to new CMR using this person' link of the found event
+    And I click "Similar Events"
+    And I click "Assign to new CMR using this person"
     Then I should see a 'success' message
 
     When I visit the assigned-to event
@@ -165,7 +165,7 @@
       | 10000-1    | Blood Test | Blood Test  | Nom         |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     And I click 'Create a CMR from this message'
 
     Then I should see a 'All LOINC codes in message unknown or unlinked' message
@@ -179,7 +179,7 @@
       | 10000-1    | Blood Test |             | Nom         |
 
     When I visit the staged message show page
-    And I click 'Similar Events' for the staged message
+    And I click "Similar Events"
     And I click 'Create a CMR from this message'
 
     Then I should remain on the staged message show page

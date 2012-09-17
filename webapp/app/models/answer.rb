@@ -37,7 +37,7 @@ class Answer < ActiveRecord::Base
 
   validates_uniqueness_of :question_id, :scope => :event_id
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
-  validates_presence_of :text_answer, :if => :required
+  validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
   validates_date :date_answer, :if => :is_date, :allow_blank => true
 
@@ -84,7 +84,7 @@ class Answer < ActiveRecord::Base
   end
   
   def required
-    question.is_required
+    question.is_required? || question.try(:question_element).try(:is_required?)
   end
 
   def is_date

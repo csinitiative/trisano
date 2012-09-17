@@ -35,6 +35,12 @@
   = f.radio_button :is_active, "false"
   = t 'no_false'
 
+  = f.label(:is_required)
+  = f.radio_button :is_required, "true"
+  = t 'yes_true'
+  = f.radio_button :is_required, "false"
+  = t 'no_false'
+
   %p
     = q.label(:style)
     = q.select(:style, [[I18n.t("question_styles.horizontal"), "horiz"], [I18n.t("question_styles.vertical"), "vert"]], {:include_blank => true})

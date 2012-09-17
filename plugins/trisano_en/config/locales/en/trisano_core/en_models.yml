@@ -263,6 +263,7 @@ en:
 
       question_element:
         is_active: Is active?
+        is_required: Is required?
 
       form:
         name: Name

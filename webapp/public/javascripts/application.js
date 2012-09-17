@@ -73,7 +73,27 @@ function sendConditionRequest(path, element, event_id, question_element_id, spin
     if (path.indexOf('?') < 0) { path = path + "?"; }
     queryParams = path.toQueryParams();
     queryParams.question_element_id = question_element_id;
-    queryParams.response = element.value;
+    if (element.type == "checkbox") {
+      // We must collect all values of the checkboxes
+      // so that each value can be checked for a matching condition.
+
+      // Checkboxes share the same name, collect them all (jQuery)
+      var checkboxes = $j("[name='" + element.name + "'][type='checkbox']");
+
+      // Collect values for each checked checkbox
+      var checkbox_values = $j.map(checkboxes, function(checkbox_element, index) {
+                                                 if (checkbox_element.checked)
+                                                   return checkbox_element.value;
+                                                 else
+                                                   return null;
+                                               });
+
+      // Response cannot be an array. Convert to string with seperator
+      // that can be processed by FollowUpElement.condition_match? 
+      queryParams.response = checkbox_values.join("\n");
+    } else {
+      queryParams.response = element.value;
+    }
     queryParams.event_id = event_id;
     if (window.location.toString().toQueryParams().locale) { queryParams.locale = window.location.toString().toQueryParams().locale; }
     new Ajax.Request(path.sub(/\?.*/, '') + '?' + $H(queryParams).toQueryString(), {

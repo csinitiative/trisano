@@ -68,6 +68,7 @@ describe CdcExport do
   end
 
   before :each do
+    SITE_CONFIG[RAILS_ENV] = {:cdc_state => "49"}
     @event_hash = {
       "first_reported_PH_date" => Date.yesterday.to_s(:db),
       "imported_from_id" => external_codes(:imported_from_utah).id,

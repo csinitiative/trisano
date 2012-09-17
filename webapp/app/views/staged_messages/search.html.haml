@@ -20,7 +20,7 @@
   = link_to h(t('back_to', :name => t('staged_messages'))), staged_messages_path
   %p
 
--form_tag search_staged_messages_path, :method => :get do
+-form_tag search_staged_messages_path, :method => :post do
   %span.vert
     =label_tag :last_name, t('last_name')
     =text_field_tag :last_name, params[:last_name]

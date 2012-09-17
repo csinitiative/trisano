@@ -66,9 +66,15 @@ Given /^that event also has a middle name of (.+)$/ do |m_name|
   @event.save
 end
 
-When /^I click the '(.+)' link of the found event$/ do |link|
-  # JavaScript!!!
-  # click_link_within "#event_#{@event.id}",  link
+When /^I click "Similar Events"$/ do
+  submit_form "similar_events"
+end
+
+When /^I click "Assign lab result"$/ do
+  submit_form "assign_#{@event.id}"
+end
+
+When /^I click "Assign to new CMR using this person"$/ do
   submit_form "assign_#{@event.id}"
 end
 

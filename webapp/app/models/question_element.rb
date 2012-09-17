@@ -20,6 +20,7 @@ class QuestionElement < FormElement
 
   has_one :value_set_element, :class_name => "ValueSetElement", :foreign_key => 'parent_id', :include => [:value_elements], :dependent => :destroy
   belongs_to :export_column
+  belongs_to :repeater_form_object, :polymorphic => true
 
   validates_presence_of :question
 

@@ -31,6 +31,15 @@ class FormElementCache
     @children = {}
     @full_set = load_full_set
   end
+
+  def has_children_for?(element)
+    children(element).empty?
+  end
+
+  def has_value_set_for?(element)
+    value_set = children_by_type("ValueSetElement", element).first
+    !value_set.nil? || !form_elements_cache.children(value_set).empty?
+  end
   
   private
   

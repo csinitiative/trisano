@@ -83,6 +83,89 @@ module Export
           'primary_jurisdiction' => [:jurisdiction, :secondary_entity_id]}
       end
 
+      def self.netss_test_types
+        @@netss_test_types = nil
+        unless @@netss_test_types
+          values = CommonTestType.all
+          @@netss_test_types = Hash[values.map(&:id).zip(values.map(&:common_name))]
+        end
+        @@netss_test_types
+      end
+
+      def self.netss_specimen
+        @@netss_specimen = nil
+        unless @@netss_specimen
+          values = ExportColumn.find_by_export_column_name("SPECIMEN SITE").export_conversion_values
+          @@netss_specimen = Hash[values.map(&:value_from).zip(values.map(&:value_to))]
+        end
+        @@netss_specimen
+      end
+
+      def self.specimen_external_codes
+        @@specimen_external_codes = nil
+        unless @@specimen_external_codes
+          values = ExternalCode.find_all_by_code_name("specimen")
+          @@specimen_external_codes = Hash[values.map(&:id).zip(values.map(&:the_code))]
+        end
+        @@specimen_external_codes
+      end
+
+      def self.trisano_specimen
+        {
+          "AB" => netss_specimen["Oropharynx"],
+          "AH" => netss_specimen["Not Applicable"],
+          "BD" => netss_specimen["Blood/Serum"],
+          "BS" => netss_specimen["Other Aspirate"],
+          "BT" => netss_specimen["Other Aspirate"],
+          "BW" => netss_specimen["Other Aspirate"],
+          "CS" => netss_specimen["Cervix/Endocervix"],
+          "CSF"=> netss_specimen["Cerebrospinal fluid (CSF)"],
+          "CSFB" => netss_specimen["Blood/Serum"],
+          "EYE" => netss_specimen["Ophthalmia/Conjunctiva"],
+          "GT" => netss_specimen["Lesion-Genital"],
+          "LA" => netss_specimen["Other Aspirate"],
+          "LN" => netss_specimen["Lymph Node Aspirate"],
+          "LS" => netss_specimen["Lesion-Extra Genital"],
+          "NA" => netss_specimen["Other Aspirate"],
+          "NS" => netss_specimen["Oropharynx"],
+          "OT" => netss_specimen["Other"],
+          "PF" => netss_specimen["Other Aspirate"],
+          "RS" => netss_specimen["Rectum"],
+          "SK" => netss_specimen["Other Aspirate"],
+          "SP" => netss_specimen["Oropharynx"],
+          "ST" => netss_specimen["Rectum"],
+          "TI" => netss_specimen["Other Aspirate"],
+          "TS" => netss_specimen["Oropharynx"],
+          "TW" => netss_specimen["Oropharynx"],
+          "UNK" => netss_specimen["Unknown"],
+          "UR" => netss_specimen["Urine"],
+          "US" => netss_specimen["Urethra"],
+          "VA" => netss_specimen["Vagina"],
+          "VM" => netss_specimen["Not Applicable"]
+        }
+      end
+
+      def syphilis?
+        disease_name.include? "Syphilis"
+      end
+
+      def export?
+        self.attributes.has_key? "export"
+      end
+
+      def kansas_and_std?
+        config_option(:cdc_state) == "20" and !(self.attributes["avr_group_ids"] =~ /\b#{AvrGroup.std.id}\b/).blank?
+      end
+
+      def after_find
+        if self.export?
+          if self.kansas_and_std?
+            self.extend(Export::Cdc::StdRecord)
+          else
+            self.extend(Export::Cdc::Record)
+          end
+        end
+      end
     end
 
     module EventRules
@@ -256,7 +339,7 @@ module Export
       end
 
       def exp_caseid
-        self.record_number[4..9]
+        self.record_number[-6, 6]
       end
 
       def exp_site
@@ -343,6 +426,14 @@ module Export
          pg_array(array).map {|d| Date.parse(d) }.sort.first
       end
 
+      def pg_closest_date(event_date, array)
+        return [nil, -1] if array.blank?
+        array = array.map {|d| Date.parse(d) }
+        dates = Hash[array.map {|d| (event_date.to_date - d).abs.to_i.to_s }.zip(array) ]
+        closest_date = dates[dates.keys.sort.last]
+        [closest_date, array.index(closest_date)]
+      end
+
       def write_answers_to(result)
         return if text_answers.blank?
         answers      = pg_array(self.text_answers)
@@ -400,6 +491,217 @@ module Export
         end
       end
 
+    end
+
+    module StdRecord
+      include Record
+
+      def to_cdc
+        DEFAULT_LOGGER.debug("to_cdc on #{self.inspect}")
+        cdc_export_fields.inject('') { |memo, field|
+          begin
+            value, pos = send field
+            memo = memo.ljust(pos - 1) if pos
+            memo << value
+          rescue Exception => e
+            raise "Failed to export event #{self.id} on field named #{field}. #{e.message}"
+          end
+        }
+      end
+
+      def cdc_export_fields
+         %w(exp_rectype
+             exp_update
+             exp_state
+             exp_year
+             exp_caseid
+             exp_site
+             exp_week
+             exp_event
+             exp_count
+             exp_county
+             exp_birthdate
+             age_at_onset
+             exp_agetype
+             exp_sex
+             exp_race
+             exp_ethnicity
+             exp_eventdate
+             exp_datetype
+             state_case_status_id
+             exp_imported
+             exp_outbreak
+             future
+             disease_specific_records
+             exp_city
+             exp_pid
+             exp_origin
+             exp_dx_date
+             exp_specsite
+             exp_specsite_date
+             exp_intervw
+             exp_partner
+             exp_amind
+             exp_asian
+             exp_black
+             exp_nahaw
+             exp_white
+             exp_raceoth
+             exp_raceref
+             exp_raceunk
+             exp_hisplat
+             exp_treatment_date
+             exp_syphtest
+             exp_syphtiter
+             netss_version
+          )
+      end
+
+      def reference_date
+        date = date_diagnosed
+        date ||=  event_onset_date
+        date ||=  created_at
+      end
+
+      def exp_specsite
+        value, index = pg_closest_date(reference_date, pg_array(lab_test_dates))
+        value = HumanEvent.trisano_specimen[HumanEvent.specimen_external_codes[pg_array(specimen)[index]]] unless value.blank?  or pg_array(specimen)[index].blank?
+        value ||= '  '
+        [value, 85]
+      end
+
+      def exp_specsite_date
+        value, index = pg_closest_date(reference_date, pg_array(lab_collection_dates))
+        value = value.blank? ? '        ' : value.strftime('%y%m%d')
+        [value, 87]
+      end
+
+      def exp_treatment_date
+        value, index = pg_closest_date(reference_date, pg_array(treatment_dates))
+        value = value.blank? ? '        ' : value.strftime('%y%m%d')
+        [value, 130]
+      end
+
+      def lab_results_array
+        dates = pg_array(lab_test_dates)
+        types = pg_array(lab_test_types)
+        titers = pg_array(lab_result_values)
+        array = []
+        dates.each_with_index do |d, index|
+          array << { :date => d, :test_type => types[index].to_i, :titer => titers[index] }
+        end
+        array
+      end
+
+      def exp_syphtest
+        value = ' '
+        if syphilis?
+          syphtests = lab_results_array.select {|v| /\bRPR|VDRL\b/.match(HumanEvent.netss_test_types[v[:test_type]])}
+          date, index = pg_closest_date(reference_date, syphtests.map {|s| s[:date] })
+          value = (HumanEvent.netss_test_types[syphtests[index][:test_type]].include?("RPR") ? '1' : '2') if date
+        end
+        [value, 183]
+      end
+
+      def exp_syphtiter
+        value = '      '
+        if syphilis?
+          syphtests = lab_results_array.select {|v| /\bRPR|VDRL\b/.match(HumanEvent.netss_test_types[v[:test_type]])}
+          date, index = pg_closest_date(reference_date, syphtests.map {|s| s[:date] })
+          value = syphtests[index][:titer].gsub("1:", "").ljust(6) if date
+        end
+        [value, 184]
+      end
+
+      def exp_update
+        '9'
+      end
+
+      def exp_race
+        '9'
+      end
+
+      def exp_ethnicity
+        '9'
+      end
+
+      def future
+        '99999'
+      end
+
+      def exp_city
+        ['9999', 70]
+      end
+
+      def exp_pid
+        ['9', 74]
+      end
+
+      def exp_origin
+        ['9', 76]
+      end
+
+      def exp_dx_date
+        ['99999999', 77]
+      end
+
+      def exp_intervw
+        ['9', 96]
+      end
+
+      def exp_partner
+        ['9', 97]
+      end
+
+      def exp_amind
+        [pg_array(races).first == '1' ? 'Y' : ' ', 98]
+      end
+
+      def exp_asian
+        [pg_array(races).first == '2' ? 'Y' : ' ', 99]
+      end
+
+      def exp_black
+        [pg_array(races).first == '3' ? 'Y' : ' ', 100]
+      end
+
+      def exp_nahaw
+        [pg_array(races).first == '2' ? 'Y' : ' ', 101]
+      end
+
+      def exp_white
+        [pg_array(races).first == '5' ? 'Y' : ' ', 102]
+      end
+
+      def exp_raceoth
+        [[exp_amind, exp_asian, exp_black, exp_nahaw, exp_white, exp_raceunk].map(&:first).include?('Y') ? ' ' : 'Y', 103]
+      end
+
+      def exp_raceunk
+        [pg_array(races).first == '9' ? 'Y' : ' ', 105]
+      end
+
+      def exp_raceref
+        [pg_array(races).empty? ? 'Y' : ' ', 104]
+      end
+
+      def exp_hisplat
+        value = case ethnicity
+                  when '1' :
+                    'Y'
+                  when '2' :
+                    'N'
+                  when '9' :
+                    'U'
+                  else
+                    'R'
+                end
+        [value, 106]
+      end
+
+      def netss_version
+        ['03', 190]
+      end
     end
 
     module DeleteRecord

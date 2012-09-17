@@ -155,9 +155,10 @@ class AssessmentEventsController < EventsController
     @search_form = NameAndBirthdateSearchForm.new(params)
     @event_type = "assessment event"
     @form_target = event_search_aes_path 
-    @new_event_link_text = t("start_an_ae")
-    @new_event_link_path = new_ae_path(:from_search => "1", :first_name => params[:first_name], :last_name => params[:last_name], :birth_date => params[:birth_date])
-    @new_event_link_html_options = {:id => "start_ae"}
+    @new_event_form_id = "new_ae_form"
+    @new_event_form_submit_text = t("start_an_ae")
+    @new_event_form_path = new_ae_path(:from_search => "1")
+    @new_event_form_html_options = {:id => "start_ae"}
 
     if @search_form.valid?
       if @search_form.has_search_criteria?

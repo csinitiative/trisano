@@ -35,15 +35,11 @@ class CdcExport < ActiveRecord::Base
           )
         )
       END_WHERE_CLAUSE
-      events = HumanEvent.find_by_sql(modified_record_sql + where_clause)
-      events.map!{ |event| event.extend(Export::Cdc::Record) }
-      events
+      HumanEvent.find_by_sql(modified_record_sql + where_clause)
     end
 
     def annual_cdc_export(mmwr_year)
-      events = HumanEvent.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
-      events.map!{ |event| event.extend(Export::Cdc::Record) }
-      events
+      HumanEvent.find_by_sql(modified_record_sql + "AND \"MMWR_year\"=#{sanitize_sql_for_conditions(["%d", mmwr_year]).untaint}")
     end
 
     def cdc_deletes(start_mmwr, end_mmwr)
@@ -102,8 +98,12 @@ class CdcExport < ActiveRecord::Base
          de.disease_onset_date,
          de.date_diagnosed,
          diseases.cdc_code,
+         diseases.disease_name,
          lab_results.lab_collection_dates,
          lab_results.lab_test_dates,
+         lab_results.lab_test_types,
+         lab_results.lab_result_values,
+         avr_groups.group_ids as avr_group_ids,
          e."first_reported_PH_date",
          e."MMWR_year",
          e."MMWR_week",
@@ -125,17 +125,37 @@ class CdcExport < ActiveRecord::Base
          disease_answers.data_types,
          form_references_counter.core_field_export_count,
          form_ids_accumulator.form_ids AS disease_form_ids,
-         e.event_onset_date
+         e.event_onset_date,
+         lab_results.specimen,
+         treatments.treatment_dates,
+         1 AS export
         FROM events e
         INNER JOIN disease_events de ON e.id = event_id
         INNER JOIN participations ip ON (ip.event_id = e.id AND ip.type='InterestedParty')
         INNER JOIN people p ON p.entity_id = ip.primary_entity_id
         INNER JOIN
         (
-          SELECT d.cdc_code, c.disease_id, c.external_code_id FROM cdc_disease_export_statuses c
-           JOIN diseases d on c.disease_id = d.id
-          WHERE d.cdc_code is not null
+          SELECT
+            d.cdc_code,
+            c.disease_id,
+            d.disease_name,
+            c.external_code_id
+          FROM cdc_disease_export_statuses c
+          JOIN diseases d ON c.disease_id = d.id
+          WHERE d.cdc_code IS NOT NULL
         ) diseases ON (diseases.disease_id = de.disease_id AND e.state_case_status_id = diseases.external_code_id)
+        LEFT JOIN
+        (
+          SELECT treatments.participation_id, ARRAY_ACCUM(treatments.treatment_date) as treatment_dates
+          FROM participations_treatments treatments
+          GROUP BY treatments.participation_id
+        ) treatments ON treatments.participation_id = ip.id
+        LEFT JOIN
+        (
+          SELECT avr.disease_id, ARRAY_ACCUM(avr.avr_group_id) as group_ids
+          FROM avr_groups_diseases avr
+          GROUP BY avr.disease_id
+        ) as avr_groups ON avr_groups.disease_id = diseases.disease_id
         LEFT JOIN external_codes age_type_codes ON e.age_type_id = age_type_codes.id
         LEFT JOIN external_codes sex_codes ON p.birth_gender_id = sex_codes.id
         LEFT JOIN
@@ -210,7 +230,10 @@ class CdcExport < ActiveRecord::Base
           SELECT 
             x.id as event_id,
             ARRAY_ACCUM(lab_test_date) as lab_test_dates, 
-            ARRAY_ACCUM(collection_date) as lab_collection_dates 
+            ARRAY_ACCUM(collection_date) as lab_collection_dates,
+            ARRAY_ACCUM(lab_results.test_type_id) as lab_test_types,
+            ARRAY_ACCUM(lab_results.result_value) as lab_result_values,
+            ARRAY_ACCUM(lab_results.specimen_source_id) as specimen
           FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id

@@ -22,7 +22,7 @@ module FormBuilderDslHelper
     @event.form_references.each do |form_reference|
       
       current_core_path = (form_builder.core_path << attribute).to_s #valid core path
-      concat(core_customization(form_reference, current_core_path, @event_form, before_or_after, mode))
+      concat(core_customization(form_reference, current_core_path, @event_form, before_or_after, mode, form_builder))
 
       if @event.type == "MorbidityEvent" || @event.type == "AssessmentEvent"
         alternate_forms_core_path_prefix = form_builder.core_path.clone
@@ -30,7 +30,7 @@ module FormBuilderDslHelper
         alternate_forms_core_path_prefix[0] = "morbidity_and_assessment_event"
 
         alternate_forms_core_path = (alternate_forms_core_path_prefix << attribute).to_s
-        output = core_customization(form_reference, alternate_forms_core_path, @event_form, before_or_after, mode)
+        output = core_customization(form_reference, alternate_forms_core_path, @event_form, before_or_after, mode, form_builder)
         if output.present?
           # before we render this output, update the path to be usable on current form
           output.gsub!(alternate_forms_core_path, current_core_path)
@@ -48,7 +48,7 @@ module FormBuilderDslHelper
 
         historical_core_path = (historical_core_path_prefix << attribute).to_s
 
-        output = core_customization(form_reference, historical_core_path, @event_form, before_or_after, mode)
+        output = core_customization(form_reference, historical_core_path, @event_form, before_or_after, mode, form_builder)
         if output.present?
           # before we render this output, update the path to be usable on current form
           output.gsub!(historical_core_path, current_core_path)
@@ -58,7 +58,7 @@ module FormBuilderDslHelper
     end #form referneces
   end
 
-  def core_customization(form_reference, core_path, current_form, before_or_after, mode)
+  def core_customization(form_reference, core_path, current_form, before_or_after, mode, local_form_builder)
     customizations = form_reference.form.form_element_cache.all_cached_field_configs_by_core_path(core_path)
 
     customization = ""
@@ -68,7 +68,7 @@ module FormBuilderDslHelper
 
       customization << case mode
       when :edit
-        render_investigator_view(element, current_form, form_reference.form)
+        render_investigator_view(element, current_form, form_reference.form, local_form_builder)
       when :show
         show_investigator_view(element, form_reference.form, current_form)
       when :print
@@ -79,7 +79,7 @@ module FormBuilderDslHelper
     return customization
   end
 
-  def render_investigator_element(form_elements_cache, element, f)
+  def render_investigator_element(form_elements_cache, element, f, local_form_builder=nil)
     result = ""
 
     case element.class.name
@@ -89,7 +89,7 @@ module FormBuilderDslHelper
     when "GroupElement"
       result << render_investigator_group(form_elements_cache, element, f)
     when "QuestionElement"
-      result << render_investigator_question(form_elements_cache, element, f)
+      result << render_investigator_question(form_elements_cache, element, f, local_form_builder)
     when "FollowUpElement"
       result << render_investigator_follow_up(form_elements_cache, element, f)
     end
@@ -98,7 +98,7 @@ module FormBuilderDslHelper
   end
 
   # Show mode counterpart to #render_investigator_element
-  def show_investigator_element(form_elements_cache, element, f)
+  def show_investigator_element(form_elements_cache, element, f, local_form_builder=nil)
     result = ""
 
     case element.class.name
@@ -117,7 +117,7 @@ module FormBuilderDslHelper
   end
 
   # Print mode counterpart to #render_investigator_element and #show_investigator_element
-  def print_investigator_element(form_elements_cache, element, f)
+  def print_investigator_element(form_elements_cache, element, f, local_form_builder=nil)
     result = ""
 
     case element.class.name
@@ -265,9 +265,12 @@ module FormBuilderDslHelper
     core_element(attribute, form_builder, css_class, :print, &block)
   end
 
-  def investigator_view(mode, view, form, f)
+  def investigator_view(mode, view, form, f, local_form_builder=nil)
     return "" if view.nil?
     result = ""
+    
+    # To simplify the calls create a method reference which we can invoke below
+    # example modes include :render, :show, :print 
     method_ref = method(mode + "_investigator_element")
 
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
@@ -276,17 +279,17 @@ module FormBuilderDslHelper
       if !element.core_path.nil? && form.event_type != @event.type.underscore
         historical_element = element.dup #must use dup instead of clone to get element.id
         historical_element.core_path.sub!(form.event_type, @event.type.underscore)
-        result << method_ref.call(form_elements_cache, historical_element, f)
+        result << method_ref.call(form_elements_cache, historical_element, f, local_form_builder)
       else
-        result << method_ref.call(form_elements_cache, element, f)
+        result << method_ref.call(form_elements_cache, element, f, local_form_builder)
       end
     end
 
     result
   end
 
-  def render_investigator_view(view, f, form=nil)
-    investigator_view("render", view, form, f)
+  def render_investigator_view(view, f, form=nil, local_form_builder=nil)
+    investigator_view("render", view, form, f, local_form_builder)
   end
 
 
@@ -321,40 +324,111 @@ module FormBuilderDslHelper
     core_field ? render_help_text(core_field) : ""
   end
 
-  def render_investigator_question(form_elements_cache, element, f)
-    question = element.question
+
+  def get_or_initialize_repeater_question_element(repeater_object, question_element_template)
+    element_attributes = {:form_id => question_element_template.form_id,
+                          :is_template => false,
+                          :parent_id => question_element_template.parent_id,
+                          :tree_id => question_element_template.tree_id}
+
+    repeater_attributes = {:repeater_form_object_id => repeater_object.id,
+                           :repeater_form_object_type => repeater_object.class.name.underscore}
+
+    repeater_element_attributes = repeater_attributes.merge(element_attributes)
+
+    question_element = QuestionElement.find(:first, 
+                                            :conditions => repeater_element_attributes)
+    if question_element.present?
+      return nil if question_element == question_element_template
+      return nil if question_element.parent.repeater_form_object_id != repeater_object.id
+      return question_element  
+    else
+      FormElement.transaction do 
+	      question_element = QuestionElement.new(repeater_element_attributes)
+
+	      # We must set this, not applied in new.
+	      # No need to clone this, ValueSetElements have many form_elements
+	      question_element.value_set_element = question_element_template.value_set_element
+	      
+	      # Must clone the question so we get a unique question and answer for each repeater
+	      question = question_element.question = question_element_template.question.clone
+
+	      # Must set this to differeniate from other repeaters
+	      new_parent = question_element_template.parent.clone
+	      new_parent.repeater_form_object_id = repeater_object.id
+	      new_parent.repeater_form_object_type = repeater_object.class.name.underscore
+	      new_parent.save
+
+
+	      new_parent.insert_at question_element_template.parent.parent
+
+	      # Must make a unique short name for quesiton
+	      question.short_name += "_" + repeater_object.class.name.underscore + "_" + repeater_object.id.to_s + "_" + new_parent.id.to_s
+
+	      raise question_element.errors.inspect unless question_element.save
+	 
+              #must be done after question_element is saved
+	      question_element.insert_at new_parent
+      end
+
+      # Need to reload because we need the ID
+      return question_element.reload
+    end
+
+  end
+
+  def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
+
+    if !local_form_builder.nil? && local_form_builder.repeater_form?
+
+      # We don't want to offer a repeater question until we have a repeater record to save against
+      return "" if local_form_builder.object.new_record?
+
+      question_element = get_or_initialize_repeater_question_element(local_form_builder.object, element)
+
+      # Because we must add the question element to a parent in the tree)
+      # We need to stop the replication of question elements for children in the tree
+      return "" if question_element.nil?
+
+    else
+      question_element = element
+    end
+
+    question = question_element.question
     question_style = question.style.blank? ? "vert" : question.style
-    result = "<div id='question_investigate_#{h(element.id)}' class='#{h(question_style)}'>"
+    result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
     @answer_object = @event.get_or_initialize_answer(question.id)
 
-    result << error_messages_for(:answer_object)
+    error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
+    error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
+    error_messages.insert(0, "<br/>") if error_messages.present?
+    result << error_messages
+
     if (f.nil?)
       fields_for(@event) do |f|
         f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template.dynamic_question(form_elements_cache, element, @event, "", {:id => "investigator_answer_#{h(element.id)}"})
-          result << render_help_text(element) unless question.help_text.blank?
+          result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, "", question)
         end
       end
     else
       prefix = @answer_object.new_record? ? "new_answers" : "answers"
       index = @answer_object.new_record? ? "" : @form_index += 1
       f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
-        result << render_help_text(element) unless question.help_text.blank?
+        result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
       end
     end
 
-    follow_up_group = element.process_condition(@answer_object,
+    follow_up_group = question_element.process_condition(@answer_object,
       @event.id,
       :form_elements_cache => form_elements_cache)
 
     unless follow_up_group.nil?
-      result << "<div id='follow_up_investigate_#{h(element.id)}'>"
+      result << "<div id='follow_up_investigate_#{h(question_element.id)}'>"
       result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
       result << "</div>"
     else
-      result << "<div id='follow_up_investigate_#{h(element.id)}'></div>"
+      result << "<div id='follow_up_investigate_#{h(question_element.id)}'></div>"
     end
 
     result << "</div>"
@@ -363,6 +437,13 @@ module FormBuilderDslHelper
     #rescue
     #logger.warn("Formbuilder rendering: #{$!.message}")
     #return "Could not render question element (#{element.id})"
+  end
+
+  def answer_template_dynamic_question(answer_template, form_elements_cache, element, index, question)
+    result = ""
+    result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+    result << render_help_text(element) unless question.help_text.blank?
+    result
   end
 
   def render_investigator_follow_up(form_elements_cache, element, f)
@@ -385,7 +466,8 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:follow_up_element), :id => element.id)
+      logger.error $!.backtrace.join("\n")
+      return t(:could_not_render, :thing => t(:follow_up_element), :id => element.id)
     end
   end
 

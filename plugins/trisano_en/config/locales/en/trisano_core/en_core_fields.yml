@@ -446,6 +446,9 @@ en:
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
       imported_from_id: Imported from
+      hospitalization_facilities:
+        hospitals_participation:
+          admission_date: Admission date 
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter

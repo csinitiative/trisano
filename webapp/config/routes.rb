@@ -135,12 +135,16 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :roles
 
-  map.resources :people
+  map.resources :people,
+    :collection => {
+      :search => :post,
+    }
 
   map.resources :aes,
     :controller => :assessment_events,
     :collection => {
-      :event_search => :get,
+      :event_search => [:get, :post], #don't want to do this, but need to POST to keep patient info out of browser history
+      :new => [:get, :post],  #don't want to do this, but need to POST to keep patient info out of browser history
       :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
     },
     :member => {
@@ -160,7 +164,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :cmrs,
     :controller => :morbidity_events,
     :collection => {
-      :event_search => :get,
+      :event_search => [:get, :post], #don't want to do this, but need to POST to keep patient info out of browser history
+      :new => [:get, :post], #don't want to do this, but need to POST to keep patient info out of browser history
       :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
     },
     :member => {
@@ -238,7 +243,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :staged_messages,
     :member => {
-      :event_search => :get,
+      :event_search => :post,
       :event => :post,
       :discard => :post
   },
