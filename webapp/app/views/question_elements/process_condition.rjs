@@ -15,10 +15,20 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-if @follow_up.nil?
-  page.replace_html "follow_up_investigate_#{@question_element_id}", ""
-else
-  page.replace_html "follow_up_investigate_#{@question_element_id}", :partial => 'events/follow_up', :locals => {:follow_up => @follow_up}
-end
+follow_up_output = ""
 
+
+# Because the ExtendedFormBuilder's render_investigator_question
+# assumes that if no FormBuilder object being passed along that all
+# answers are records. In order to have the ExtendedFormBuilder actually
+# check to see if the record is new or not, we must pass along a FormBuilder.
+fields_for(@processing_event) do |f|
+  @follow_ups.each do |follow_up|
+  
+    follow_up_output << render(:partial => 'events/follow_up', :locals => {:follow_up => follow_up, :f => f})
+
+  end #follow_ups.each
+end #fields_for
+
+page.replace_html "follow_up_investigate_#{@question_element_id}", follow_up_output
 page.replace_html "follow-up-error", ""

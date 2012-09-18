@@ -258,6 +258,7 @@ describe QuestionElementsController do
       mock_user
       @event = Factory.build(:morbidity_event)
       @follow_up = Factory.build(:follow_up_element)
+      @follow_ups = [@follow_up]
       @question_element = Factory.build(:question_element)
       QuestionElement.stubs(:find).returns(@question_element)
       Event.stubs(:find).returns(@event)
@@ -270,25 +271,25 @@ describe QuestionElementsController do
       end
 
       it "should be successful" do
-        @question_element.stubs(:process_condition).returns(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_ups)
         do_post
         response.should be_success
       end
 
       it "should assign the follow up group for the view" do
-        @question_element.stubs(:process_condition).returns(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_ups)
         do_post
-        assigns(:follow_up).should equal(@follow_up)
+        assigns(:follow_ups).should equal(@follow_ups)
       end
 
       it "should assign the event for the view to use to build form fields" do
-        @question_element.stubs(:process_condition).returns(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_ups)
         do_post
         assigns(:event).should equal(@event)
       end
 
       it "should render the process_condition rjs template" do
-        @question_element.stubs(:process_condition).returns(@follow_up)
+        @question_element.stubs(:process_condition).returns(@follow_ups)
         do_post
         response.should render_template('process_condition')
       end

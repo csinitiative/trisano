@@ -423,9 +423,11 @@ module FormBuilderDslHelper
       @event.id,
       :form_elements_cache => form_elements_cache)
 
-    unless follow_up_group.nil?
+    unless follow_up_group.empty?
       result << "<div id='follow_up_investigate_#{h(question_element.id)}'>"
-      result << render_investigator_follow_up(form_elements_cache, follow_up_group, f)
+      follow_up_group.each do |follow_up|
+        result << render_investigator_follow_up(form_elements_cache, follow_up, f)
+      end
       result << "</div>"
     else
       result << "<div id='follow_up_investigate_#{h(question_element.id)}'></div>"
@@ -619,12 +621,14 @@ module FormBuilderDslHelper
           @event.id,
           :form_elements_cache => form_elements_cache
         )
-      end
 
-      unless follow_up_group.nil?
-        result << "<div id='follow_up_investigate_#{element.id}'>"
-        result << show_investigator_follow_up(form_elements_cache, follow_up_group, f)
-        result << "</div>"
+        unless follow_up_group.empty?
+          result << "<div id='follow_up_investigate_#{element.id}'>"
+          follow_up_group.each do |follow_up|
+            result << show_investigator_follow_up(form_elements_cache, follow_up, f)
+          end
+          result << "</div>"
+        end
       end
 
       return result

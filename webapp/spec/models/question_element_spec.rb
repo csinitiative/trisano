@@ -509,27 +509,27 @@ describe QuestionElement do
       answer = Answer.create(:text_answer => "Yes", :question_id => @question.id)
       follow_up_from_processing = @question_element.process_condition(answer, @event_id)
       follow_up_from_processing.should_not be_nil
-      follow_up_from_processing.id.should eql(@yes_follow_up_element.id)
+      follow_up_from_processing.first.id.should eql(@yes_follow_up_element.id)
     end
 
     it "should return follow-up element for matching condition even if the case is not identical" do
       answer = Answer.create(:text_answer => "yEs", :question_id => @question.id)
       follow_up_from_processing = @question_element.process_condition(answer, @event_id)
       follow_up_from_processing.should_not be_nil
-      follow_up_from_processing.id.should eql(@yes_follow_up_element.id)
+      follow_up_from_processing.first.id.should eql(@yes_follow_up_element.id)
     end
 
     it "should return follow-up element for matching condition even if there is leading and trailing space on the answer" do
       answer = Answer.create(:text_answer => "    Yes     ", :question_id => @question.id)
       follow_up_from_processing = @question_element.process_condition(answer, @event_id)
       follow_up_from_processing.should_not be_nil
-      follow_up_from_processing.id.should eql(@yes_follow_up_element.id)
+      follow_up_from_processing.first.id.should eql(@yes_follow_up_element.id)
     end
 
     it "should return nil for no matching condition" do
       answer = Answer.create(:text_answer => "No match", :question_id => @question.id)
       follow_up_from_processing = @question_element.process_condition(answer, @event_id)
-      follow_up_from_processing.should be_nil
+      follow_up_from_processing.should eql([])
     end
 
     it "should delete answers to questions that no longer apply if the delete option is provided" do

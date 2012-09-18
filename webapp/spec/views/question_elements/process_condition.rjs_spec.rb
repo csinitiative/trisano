@@ -29,9 +29,11 @@ describe "/question_elements/process_condition.rjs" do
 
     @follow_up = Factory.build(:follow_up_element, {
                                  :parent_element_id => @question_element.id } )
+    @follow_ups = [@follow_up]
     @follow_up.save_and_add_to_form
 
     assigns[:follow_up] = @follow_up
+    assigns[:follow_ups] = @follow_ups
     assigns[:question_element_id] = @question_element.id
   end
 

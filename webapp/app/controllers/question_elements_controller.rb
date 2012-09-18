@@ -86,9 +86,11 @@ class QuestionElementsController <  AdminController
 
   def process_condition
     begin
+      @form_index = 0
       @question_element_id = params[:question_element_id]
+      @processing_event = Event.find(params[:event_id])
       question_element = QuestionElement.find(@question_element_id)
-      @follow_up = question_element.process_condition(
+      @follow_ups = question_element.process_condition(
         params,
         params[:event_id],
         :delete_irrelevant_answers => true
