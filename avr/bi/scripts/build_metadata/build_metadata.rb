@@ -363,7 +363,7 @@ def formbuilder_hstore_query(name, prefix, dg)
                     ) f1
                 ) f2
                 LEFT JOIN trisano.questions_view qv
-                    ON (qv.short_name = q_short AND qv.form_short_name = f_short)
+                    ON (trisano.hstoresafe(qv.short_name) = q_short AND trisano.hstoresafe(qv.form_short_name) = f_short)
                 GROUP BY key, f_short, q_short
         ) f3
         ORDER BY substring(key, 1, strpos(key, '|')-1), key
