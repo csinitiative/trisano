@@ -280,7 +280,8 @@ label {
   white-space: normal; }
 
 .system-message {
-  border-bottom: 1px solid #76ADA6; }
+  color: #ff0000;
+}
 
 .message-tools {
   text-align: right;
