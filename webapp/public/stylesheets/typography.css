@@ -294,3 +294,7 @@ label {
     font-weight: normal;
     font-style: italic;
     padding: 0px 0px 0px 5px; }
+
+.search_group input[name=record_number] {
+    margin-right:25px;
+}

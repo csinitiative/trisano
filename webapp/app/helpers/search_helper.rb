@@ -101,6 +101,23 @@ module SearchHelper
           html << text_field_tag(:sw_last_name, params[:sw_last_name], :class => 'search')
         end
       end
+      fields << div_tag(:class => :vert) do
+        returning "" do |html|
+          html << div_tag(:class => :horiz) do
+            returning "" do |input|
+              input << label_tag(:record_number, t(:record_number))
+              input << text_field_tag(:record_number, params[:record_number], :size => 30, :class => "search")
+            end
+          end
+
+          html << div_tag(:class => :horiz) do
+            returning "" do |input|
+              input << label_tag(:birth_date, t(:date_or_year_of_birth))
+              input << text_field_tag(:birth_date, params[:birth_date], :class => "search")
+            end
+          end
+        end
+      end
     end
   end
 
@@ -134,13 +151,6 @@ module SearchHelper
                                               genders,
                                               params[:gender].to_i,
                                               :include_blank => true)
-        end
-      end
-
-      fields << div_tag(:class => :horiz) do
-        returning "" do |html|
-          html << label_tag(:birth_date, t(:date_or_year_of_birth))
-          html << text_field_tag(:birth_date, params[:birth_date], :size => 10)
         end
       end
     end
@@ -192,10 +202,6 @@ module SearchHelper
        html << text_field_tag(:entered_on_start, params[:entered_on_start], :size => 10)
        html << "&nbsp;-&nbsp;"
        html << text_field_tag(:entered_on_end, params[:entered_on_end], :size => 10)
-     end,
-     div_tag(:class => :horiz) do
-       html =  label_tag(:record_number, t(:record_number))
-       html << text_field_tag(:record_number, params[:record_number], :size => "15")
      end,
      div_tag(:class => :vert) do
        html =  label_tag(:jurisdiction_ids, t(:jurisdiction_of_investigation))
