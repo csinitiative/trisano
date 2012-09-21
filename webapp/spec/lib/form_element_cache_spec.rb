@@ -52,6 +52,14 @@ describe FormElementCache do
     @question_3 = Question.create(:question_text => "?", :data_type => "single_line_text", :short_name => "q")
     @question_element_3 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_3)
     @section_element.add_child(@question_element_3)
+
+    @question_4 = Question.create(:question_text => "Multi-Value", :data_type => "radio_button", :short_name => "multi")
+    @question_element_4 = QuestionElement.create(:tree_id => tree_id, :form_id => 1, :question => @question_4)
+    @value_set_4 = ValueSetElement.create(:name => "Val Set", :tree_id => tree_id)
+    @question_element_4.add_child(@value_set_4)
+    @value_4 = ValueElement.create(:tree_id => tree_id)
+    @value_set_4.add_child(@value_4)
+    @section_element.add_child(@question_element_4)
     
     @event = Event.new(:id => 1)
     @event.answers << @answer_1 = Answer.new(:event_id => 1, :question_id => @question.id, :text_answer => "What?")
@@ -99,7 +107,7 @@ describe FormElementCache do
     @form_element_cache = FormElementCache.new(@form_base_element)
     children = @form_element_cache.all_children(@form_base_element)
     children.is_a?(Array).should be_true
-    children.size.should == 9
+    children.size.should == 12
   end
   
   it "should return all follow ups by core path" do
@@ -137,7 +145,19 @@ describe FormElementCache do
 
   it "should return questions with shortnames as exportable" do
     @form_element_cache = FormElementCache.new(@form_base_element)
-    @form_element_cache.exportable_questions.size.should eql(4)
+    @form_element_cache.exportable_questions.size.should eql(5)
+  end
+ 
+  describe "#has_children_for?" do
+    it "returns true when children are found" do
+      @form_element_cache.has_children_for?(@form_base_element).should be_true
+    end
+  end
+  
+  describe "#has_value_set_for?" do
+    it "returns true when values are found" do
+      @form_element_cache.has_value_set_for?(@question_element_4).should be_true
+    end
   end
   
 end

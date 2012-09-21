@@ -33,12 +33,13 @@ class FormElementCache
   end
 
   def has_children_for?(element)
-    children(element).empty?
+    !children(element).empty?
   end
 
   def has_value_set_for?(element)
     value_set = children_by_type("ValueSetElement", element).first
-    !value_set.nil? || !form_elements_cache.children(value_set).empty?
+    return false if value_set.nil?
+    has_children_for?(value_set)
   end
   
   private
