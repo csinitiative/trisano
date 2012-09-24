@@ -261,6 +261,9 @@ label {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px; }
 
+.system-message {
+  color: #ff0000; }
+
 .message-box {
   color: #000000;
   border: 1px solid #C1DAD7;
@@ -279,9 +282,9 @@ label {
   width: 250px;
   white-space: normal; }
 
-.system-message {
-  color: #ff0000;
-}
+.system-messages .system-message {
+  border-bottom: 1px solid #76ADA6;
+  color: #000000 !important; }
 
 .message-tools {
   text-align: right;
