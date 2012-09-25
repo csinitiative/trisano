@@ -44,5 +44,5 @@
             %fieldset
               %legend=t 'parent_cmr'
               %i=t 'this_patient_is_a_contact_of'
-              =render :partial => 'events/contacts_show', :locals => { :contacts => [@event.parent_event] }
+              =render :partial => 'events/parent_contact_show', :locals => { :parent => @event.parent_event, :contact => @event }
 
