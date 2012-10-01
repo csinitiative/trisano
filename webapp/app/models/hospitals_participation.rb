@@ -18,6 +18,8 @@
 class HospitalsParticipation < ActiveRecord::Base
   belongs_to :particpations
 
+  has_one :answer, :as => :repeater_form_object, :dependent => :destroy
+
   validates_date :admission_date, :allow_blank => true,
                                   :on_or_before => lambda { Date.today } # Admission date cannot be in the future.
 

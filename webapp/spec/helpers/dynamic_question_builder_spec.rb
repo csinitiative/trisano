@@ -64,7 +64,7 @@ describe DynamicQuestionBuilder do
          before do
        
            # TODO: form_elements_cache.has_children_for?(question_element)
-           form_elements_cache.stub!(:has_children_for?).with(question_element).and_return(false)
+           form_elements_cache.stub!(:has_value_set_for?).with(question_element).and_return(false)
  
          end
 

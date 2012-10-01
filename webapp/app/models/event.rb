@@ -407,6 +407,10 @@ class Event < ActiveRecord::Base
     answers.build(attributes)
   end
 
+  def new_repeater_answer=(attributes)
+    # Should warn the user they've forgotten to save something.
+  end
+
   def new_checkboxes=(attributes)
     attributes.each do |key, value|
       answers.build(
@@ -428,13 +432,8 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # can't use #detect here because of http://jira.codehaus.org/browse/JRUBY-5058
-  # TODO: Use SQL here instead of Ruby loop
-  def get_or_initialize_answer(question_id)
-    answers.each do |answer_object|
-      return answer_object if answer_object.question_id == question_id
-    end
-    Answer.new(:question_id => question_id)
+  def get_or_initialize_answer(answer_attributes)
+    Answer.find(:first, :conditions => answer_attributes) || Answer.new(answer_attributes)
   end
 
   def clone_event(event_components=[])

@@ -38,4 +38,9 @@
       - unless f.object.new_record?
         = f.label :_delete
         = f.check_box :_destroy
+  - if f.object.new_record?
+    %span.ajax-actions
+      %a{:href=>"#", :class=>"save-new-hospital-participation"} Save
+      |
+      %a{:href=>"#", :class=>"discard-new-hospital-participation"} Discard
   %hr

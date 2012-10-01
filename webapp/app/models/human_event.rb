@@ -43,6 +43,8 @@ class HumanEvent < Event
     :foreign_key => "event_id",
     :order => 'created_at ASC',
     :dependent => :destroy
+  has_many :hospitals_participations,
+    :through => :hospitalization_facilities
 
   has_many :diagnostic_facilities,
     :foreign_key => "event_id",

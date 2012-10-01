@@ -179,6 +179,12 @@ ActionController::Routing::Routes.draw do |map|
       :lab_form => :get,
       :lab_result_form => :get
     }
+ 
+  map.resources :human_events,
+    :controller => :human_events,
+    :member => {
+      :hospitalization_facilities => [:post]
+    }
 
   map.resources :contact_events,
     :member => {

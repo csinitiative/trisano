@@ -325,95 +325,39 @@ module FormBuilderDslHelper
   end
 
 
-  def get_or_initialize_repeater_question_element(repeater_object, question_element_template)
-    element_attributes = {:form_id => question_element_template.form_id,
-                          :is_template => false,
-                          :parent_id => question_element_template.parent_id,
-                          :tree_id => question_element_template.tree_id}
-
-    repeater_attributes = {:repeater_form_object_id => repeater_object.id,
-                           :repeater_form_object_type => repeater_object.class.name.underscore}
-
-    repeater_element_attributes = repeater_attributes.merge(element_attributes)
-
-    question_element = QuestionElement.find(:first, 
-                                            :conditions => repeater_element_attributes)
-    if question_element.present?
-      return nil if question_element == question_element_template
-      return nil if question_element.parent.repeater_form_object_id != repeater_object.id
-      return question_element  
-    else
-      FormElement.transaction do 
-	      question_element = QuestionElement.new(repeater_element_attributes)
-
-	      # We must set this, not applied in new.
-	      # No need to clone this, ValueSetElements have many form_elements
-	      question_element.value_set_element = question_element_template.value_set_element
-	      
-	      # Must clone the question so we get a unique question and answer for each repeater
-	      question = question_element.question = question_element_template.question.clone
-
-	      # Must set this to differeniate from other repeaters
-	      new_parent = question_element_template.parent.clone
-	      new_parent.repeater_form_object_id = repeater_object.id
-	      new_parent.repeater_form_object_type = repeater_object.class.name.underscore
-	      new_parent.save
-
-
-	      new_parent.insert_at question_element_template.parent.parent
-
-	      # Must make a unique short name for quesiton
-	      question.short_name += "_" + repeater_object.class.name.underscore + "_" + repeater_object.id.to_s + "_" + new_parent.id.to_s
-
-	      raise question_element.errors.inspect unless question_element.save
-	 
-              #must be done after question_element is saved
-	      question_element.insert_at new_parent
-      end
-
-      # Need to reload because we need the ID
-      return question_element.reload
-    end
-
-  end
-
   def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
-
-    if !local_form_builder.nil? && local_form_builder.repeater_form?
-
-      # We don't want to offer a repeater question until we have a repeater record to save against
-      return "" if local_form_builder.object.new_record?
-
-      question_element = get_or_initialize_repeater_question_element(local_form_builder.object, element)
-
-      # Because we must add the question element to a parent in the tree)
-      # We need to stop the replication of question elements for children in the tree
-      return "" if question_element.nil?
-
-    else
-      question_element = element
-    end
-
+    question_element = element
     question = question_element.question
     question_style = question.style.blank? ? "vert" : question.style
     result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
-    @answer_object = @event.get_or_initialize_answer(question.id)
+    answer_attributes = {:question_id => question.id, 
+                         :event_id => @event.id}
+    if !local_form_builder.nil? && local_form_builder.repeater_form?
+      answer_attributes[:repeater_form_object_type] = local_form_builder.object.class.name
+      answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
+    end
+    @answer_object = @event.get_or_initialize_answer(answer_attributes)
 
     error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
     error_messages.insert(0, "<br/>") if error_messages.present?
     result << error_messages
 
-    if (f.nil?)
-      fields_for(@event) do |f|
-        f.fields_for(:new_answers, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, "", question)
-        end
+
+    if @answer_object.new_record?
+      if !local_form_builder.nil? && local_form_builder.repeater_form?
+        prefix = "new_repeater_answer"
+      else
+        prefix = "new_answers"
       end
+      index = ""
     else
-      prefix = @answer_object.new_record? ? "new_answers" : "answers"
-      index = @answer_object.new_record? ? "" : @form_index += 1
+      prefix = "answers"
+      @form_index = 0 unless @form_index
+      index = @form_index += 1
+    end
+    fields_for(@event) do |f|
       f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
         result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
       end

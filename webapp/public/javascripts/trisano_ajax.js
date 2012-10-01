@@ -1,6 +1,15 @@
 document.observe('trisano:dom:loaded', function() {
   Trisano.Ajax.hookLiveSearchFields();
   Trisano.Ajax.hookUpdateLinks();
+  $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
+  $j("a.discard-new-hospital-participation").live("click", function() {
+    $j(this).closest("div.hospital").remove();
+    $j("a#add-hospitalization-facilities").show();
+    return false;
+  });
+  $j("a#add-hospitalization-facilities").live("click", function() {
+    this.hide();
+  });
 });
 
 Element.addMethods({
@@ -82,6 +91,80 @@ Trisano.Ajax = {
     return new Element('img', {
                          src: Trisano.url('images/redbox_spinner.gif')
                        });
+  },
+
+  saveHospitalizations: function() {
+    $j.when(
+      //$j("div.hospital").each(function(index) {
+        Trisano.Ajax.postHospitalization($j($j("div.hospital").first())),
+        Trisano.Ajax.postHospitalization($j($j("div.hospital").last()))
+      //})
+    ).then(
+      function() {
+        // Done callbacks
+        // Do Nothing.
+        alert('all success');
+        return true;
+      },
+      function() {
+	// Failed callbacks
+        alert('someone failed');
+        return false;
+      }
+    );
+  },
+
+  saveHospitalization: function() {
+    var data_source = $j(this).closest("div.hospital");
+    Trisano.Ajax.postHospitalization(data_source);
+    return false;
+  },
+
+  postHospitalization: function(data_source) {
+    var hospitalization_fields = data_source.find(":input");
+    var target = $j("#hospitalization_facilities");
+
+    // Immediately following the div.hospital the hospitalization_facilities id is
+    // rendered. We must include this in the POST to avoid creating a new
+    // HospitalizationFacility
+    var facilities_hidden_fields = data_source.next(":input[type=hidden]");
+    hospitalization_fields = hospitalization_fields.add(facilities_hidden_fields);
+    var hospitalization_data = hospitalization_fields.serialize();
+
+    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/hospitalization_facilities");
+
+    return $j.ajax({
+      url: url, 
+      data: hospitalization_data,
+      dataType: 'html',
+      type: "POST",
+      beforeSend: function( xhr) {
+        data_source.find("span.ajax-actions").replaceWith(Trisano.Ajax.spinnerImgNoID());
+      },
+      error: function(request, textStatus, error) {
+        target.replaceWith(request.responseText);
+
+        // Because of the error the user's answer will be lost, so we must add it back
+
+        // References to data_source and hospitalization_fields are now invalid since we've replaced target
+        // with responseText. We must determine which hospitalization in the response has the errors
+        var new_save_link = $j("#" + $j(request.responseText).find("div.errorExplanation")
+                                                             .parent()
+                                                             .children("a.save-new-hospital-participation")
+                                                             .attr('id'));
+
+        var new_hospitalization_fields = new_save_link.closest("div.hospital").find(":input");
+
+        // So we can deserialize our data back into the forms
+        // uses jquery.deserialize
+        new_hospitalization_fields.deserialize(hospitalization_data); 
+      },
+      success: function(data, textStatus, request) {
+        // Must be run before attempting to show a#add-hospitalization-facilities
+        target.replaceWith(request.responseText);
+        $j("a#add-hospitalization-facilities").show();
+      }
+    });    
   }
 };
 

@@ -39,17 +39,15 @@
 
     -cache_event_fragment @event, "events/#{@event.id}/edit/clinical_tab" do
       -core_section :hospitalized_health_facilities_section, f do
-        #hospitalization_facilities
-          - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
-            - core_element :hospitalized_id, d, :vert do
-              = d.label(:hospitalized_id)
-              = d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event)
-            - f.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hospital_fields|
-              = render :partial => "events/hospital", :locals => { :f => hospital_fields }
+        - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|
+          - core_element :hospitalized_id, d, :vert do
+            = d.label(:hospitalized_id)
+            = d.dropdown_code_field(:hospitalized_id, 'yesno', {}, {}, @event)
+          = render :partial => "events/hospitalized_facilities", :locals => {:f => f}
 
           - blank_hospital = HospitalizationFacility.new
           - blank_hospital.build_hospitals_participation
-          %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital'
+          %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital', :html_id => "add-hospitalization-facilities"
 
       -core_section :mortality_status_section, f do
         - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|

@@ -20,6 +20,8 @@ class Answer < ActiveRecord::Base
 
   belongs_to :question
   belongs_to :export_conversion_value
+  belongs_to :repeater_form_object, :polymorphic => true
+  belongs_to :event
 
   class << self
     def regexp(field)
@@ -35,7 +37,7 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  validates_uniqueness_of :question_id, :scope => :event_id
+  validates_uniqueness_of :question_id, :scope => [:event_id, :repeater_form_object_id, :repeater_form_object_type]
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone

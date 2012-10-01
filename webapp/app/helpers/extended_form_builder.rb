@@ -249,19 +249,18 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
      excluded = %w(assessment_event[reporting_agency][place_entity][telephones]
                    assessment_event[reporter][person_entity][telephones]
                    morbidity_event[reporter][person_entity][telephones]
-                   morbidity_event[reporting_agency][place_entity][telephones]
-                   morbidity_event[hospitalization_facilities][hospitals_participation])
+                   morbidity_event[reporting_agency][place_entity][telephones])
      return false if excluded.include?(core_path.to_s)
      has_many_association?
   end
 
   def has_many_association?
-    return @object_name =~ /\[\d+\]/
+    return @object_name =~ /\[\d+\]/ || @object_name =~ /\[NEW_RECORD\]/
   end
 
   def core_path
     # Is this @options supposed to be here?
-    cp = @options[:core_path] || @object_name.to_s.gsub(/_attributes/,'').gsub(/\[\d+\]/, '')
+    cp = @options[:core_path] || @object_name.to_s.gsub(/_attributes/,'').gsub(/\[\d+\]/, '').gsub(/\[NEW_RECORD\]/,'')
     return if cp.nil?
     CorePath[cp]
   end
