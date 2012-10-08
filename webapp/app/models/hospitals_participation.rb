@@ -16,8 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HospitalsParticipation < ActiveRecord::Base
-  belongs_to :particpations
-
+  belongs_to :participation
   has_one :answer, :as => :repeater_form_object, :dependent => :destroy
 
   validates_date :admission_date, :allow_blank => true,
@@ -31,5 +30,9 @@ class HospitalsParticipation < ActiveRecord::Base
 
   def xml_fields
     [:admission_date, :discharge_date, :medical_record_number]
+  end
+
+  def hospitalization_facility
+    participation
   end
 end

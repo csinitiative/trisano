@@ -373,7 +373,7 @@ class Event < ActiveRecord::Base
       return true
     end
   rescue Exception => ex
-    I18nLogger.warn("could_not_remove_form_from_event", :message => ex.message)
+    I18nLogger.fatal("could_not_remove_form_from_event", :message => ex.message + ex.backtrace.join("\n"))
     return nil
   end
 
