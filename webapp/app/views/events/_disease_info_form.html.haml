@@ -47,7 +47,7 @@
 
           - blank_hospital = HospitalizationFacility.new
           - blank_hospital.build_hospitals_participation
-          %p{ :style => "clear: both;" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital', :html_id => "add-hospitalization-facilities"
+          %p{ :style => "clear: both; display: none" }= add_record_link f, :hospitalization_facilities, t("add_hospitalization_facility"), :object => blank_hospital, :partial => 'events/hospital', :html_id => "add-hospitalization-facilities"
 
       -core_section :mortality_status_section, f do
         - f.fields_for(:disease_event, @event.disease_event, :builder => ExtendedFormBuilder) do |d|

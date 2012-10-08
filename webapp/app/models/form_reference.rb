@@ -16,6 +16,37 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class FormReference < ActiveRecord::Base
+  include FormBuilderDslHelper
+
   belongs_to :event
   belongs_to :form
+
+  after_create :create_answers_for_repeaters
+
+  def create_answers_for_repeaters
+    Answer.transaction do
+      if repeaters = form.repeater_elements
+        repeaters.each do |repeater|
+
+          repeater_records = collect_records_from_core_path(:event => event, :element => repeater)
+          question_elements_for_repeater = form.form_element_cache.all_children_by_type("QuestionElement", repeater)
+
+          question_elements_for_repeater.each do |question_element|
+            repeater_records.each do |repeater_record|
+
+              answer_attributes = {:question_id => question_element.question.id, 
+                                   :event_id => event.id,
+                                   :repeater_form_object_type => repeater_record.class.name,
+                                   :repeater_form_object_id => repeater_record.id}
+              answer_object = event.get_or_initialize_answer(answer_attributes)
+              answer_object.save if answer_object.new_record?
+
+            end
+          end #questions_for_repater
+
+
+        end # repeaters.each
+      end # if repeaters
+    end #transaction
+  end
 end

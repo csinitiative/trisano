@@ -441,6 +441,43 @@ module FormBuilderDslHelper
     new_path = remove_event_type_from_core_path(new_path) 
     new_path = replace_square_brackets_with_dots(new_path)
   end
+ 
+  def interpret_core_path_for_event(options)
+
+    event = options[:event]
+    element = options[:element]
+    slice = options[:path_slice]
+
+    core_value = event
+    method_array = core_path_with_dots(element).split(".")
+    method_array = method_array.slice!(slice) if slice
+
+    method_array.each do |method|
+      if core_value.is_a?(Array)
+        core_value = core_value.collect { |core_value| core_value.send(method) } 
+      else
+        core_value = core_value.send(method)
+      end
+    end
+    
+    core_value.flatten
+
+  end
+
+  def collect_records_from_core_path(options)
+    event = options[:event]
+    element = options[:element]
+    interpret_core_path_for_event(:event => options[:event],
+                                  :element => options[:element],
+                                  :path_slice => (0..-2))
+  end
+
+  def value_from_core_path(options)
+    event = options[:event]
+    element = options[:element]
+    interpret_core_path_for_event(:event => options[:event],
+                                  :element => options[:element])
+  end
 
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
@@ -448,14 +485,7 @@ module FormBuilderDslHelper
       include_children = false
 
       unless (ajax_render)
-        core_value = @event
-        core_path_with_dots(element).split(".").each do |method|
-          begin
-            core_value = core_value.send(method)
-          rescue
-            break
-          end
-        end
+        core_value = value_from_core_path(:event => @event, :element => element)
 
         if (element.condition_match?(core_value.to_s))
           include_children = true

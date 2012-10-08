@@ -57,6 +57,7 @@ class ContactEventsController < EventsController
     respond_to do |format|
       if @event.save
         @event.reload
+        @event.create_form_answers_for_repeating_form_elements
         @event.try(:address).try(:establish_canonical_address)
 
         redis.delete_matched("views/events/#{@parent_event.id}/edit/contacts_tab*")

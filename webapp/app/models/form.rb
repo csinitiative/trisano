@@ -58,6 +58,15 @@ class Form < ActiveRecord::Base
   end
 
   named_scope :templates, :conditions => {:is_template => true}, :order => 'name ASC'
+  
+  def repeater_elements
+    @repeaters ||= CoreField.find_by_sql("SELECT key FROM core_fields WHERE repeater = true AND event_type = '#{self.event_type}'")
+    @repeater_keys ||= @repeaters.collect { |cf| cf.key }
+    @repeater_form_elements ||= FormElement.find(:all, :conditions => {
+                                           :form_id => self.id, 
+                                           :type => "CoreFieldElement",
+                                           :core_path => @repeater_keys.join(" OR ")})
+  end
 
   def form_element_cache
     @form_element_cache ||=  FormElementCache.new(form_base_element)

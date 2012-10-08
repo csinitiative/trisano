@@ -373,7 +373,7 @@ class Event < ActiveRecord::Base
       return true
     end
   rescue Exception => ex
-    I18nLogger.warn("could_not_remove_form_from_event", :message => ex.message)
+    I18nLogger.fatal("could_not_remove_form_from_event", :message => ex.message + ex.backtrace.join("\n"))
     return nil
   end
 
@@ -683,6 +683,10 @@ class Event < ActiveRecord::Base
     self.form_references.select {|f| !form_ids.include?(f.form_id) }
   end
 
+  def create_form_answers_for_repeating_form_elements
+    self.form_references.each { |fr| fr.create_answers_for_repeaters }
+  end
+
   private
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
@@ -696,6 +700,7 @@ class Event < ActiveRecord::Base
     end
     return true
   end
+
 
   # This method can be invoked by sub-classes before_create hooks in order to set
   # attributes on them which may be required for saving. Jurisdiction and disease

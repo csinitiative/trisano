@@ -75,6 +75,7 @@ class MorbidityEventsController < EventsController
           @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
         @event.reload
+        @event.create_form_answers_for_repeating_form_elements
         @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = t("cmr_created")
         format.html {

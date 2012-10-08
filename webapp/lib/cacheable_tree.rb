@@ -67,6 +67,14 @@ module CacheableTree
     }.compact
   end
   
+  def all_children_by_type(type, element = @root_element)
+    full_set.collect { |node|
+      if (node.lft > element.lft && node.rgt < element.rgt && node.class.name == type.to_s)
+        node
+      end
+    }.compact
+  end
+  
   def all_follow_ups_by_core_path(core_path, element = @root_element)
     full_set.collect { |node|
       if ((node.core_path == core_path) && (node.class.name == "FollowUpElement") && (node.lft > element.lft) && (node.rgt < element.rgt))
