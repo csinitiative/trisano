@@ -10,7 +10,7 @@ lazyLoader = {
   afterLoad: function(id, after) {
     var element = $j("#" + id);
     if (element.html().match(/^\s+$/)) {
-      element.html('<image src="/images/redbox_spinner.gif" />');
+      element.html(Trisano.Ajax.spinnerImgNoID());
     }
     this.lazyQueue[id] = {
       url: element.attr('data-url'),
