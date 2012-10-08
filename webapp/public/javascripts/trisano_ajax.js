@@ -72,10 +72,15 @@ Trisano.Ajax = {
   },
 
   spinnerImg: function(node) {
+    var spinner = Trisano.Ajax.spinnerImgNoID();
+    spinner.style = 'display:none';
+    spinner.id = node.associatedSpinner();
+    return spinner;
+  },
+
+  spinnerImgNoID: function() {
     return new Element('img', {
-                         src: Trisano.url('images/redbox_spinner.gif'),
-                         style: 'display:none',
-                         id: node.associatedSpinner()
+                         src: Trisano.url('images/redbox_spinner.gif')
                        });
   }
 };
