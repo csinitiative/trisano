@@ -28,6 +28,7 @@ class EventsController < ApplicationController
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
   before_filter :can_promote?, :only => :event_type
   before_filter :load_event_queues, :only => [:index]
+  before_filter :reject_if_wrong_type, :only => [:show, :export_single, :edit, :update, :destroy, :soft_delete, :event_type]
 
   def index
     return unless index_processing
@@ -365,7 +366,6 @@ class EventsController < ApplicationController
     unless User.current_user.can_update?(@event)
       render :partial => 'events/permission_denied', :layout => true, :locals => { :reason => t("no_update_privs_for_jurisdiction"), :event => @event }, :status => 403 and return
     end
-    reject_if_wrong_type(@event)
   end
 
   def can_new?
@@ -383,7 +383,6 @@ class EventsController < ApplicationController
   def can_view?
     @event ||= Event.find(params[:id])
     @display_view_warning = false
-    return if reject_if_wrong_type(@event)
     unless User.current_user.can_view?(@event)
       log_access_or_prompt_for_reason
       return
@@ -402,7 +401,7 @@ class EventsController < ApplicationController
     User.current_user.can_create?(@event) && (@event.sensitive? ? User.current_user.can_access_sensitive_diseases?(@event) : true)
   end
 
-  def reject_if_wrong_type(event)
+  def reject_if_wrong_type(event=@event)
     is_rejected = false
     if event.read_attribute('type') != controller_name.classify
       is_rejected = true
