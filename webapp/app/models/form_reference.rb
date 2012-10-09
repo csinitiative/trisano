@@ -25,15 +25,18 @@ class FormReference < ActiveRecord::Base
 
   def create_answers_for_repeaters
     Answer.transaction do
-      if repeaters = form.repeater_elements
-        repeaters.each do |repeater|
+      if repeater_form_elements = form.repeater_elements
+        repeater_form_elements.each do |repeater_form_element|
 
-          repeater_records = collect_records_from_core_path(:event => event, :element => repeater)
-          question_elements_for_repeater = form.form_element_cache.all_children_by_type("QuestionElement", repeater)
+          repeater_form_object_key = repeater_form_element.core_field.repeater_parent_key
+          method_array = core_path_to_method_array(repeater_form_object_key, event.class.name.underscore)
+
+          repeater_records = process_core_path(:object => event, :method_array => method_array)
+          question_elements_for_repeater = form.form_element_cache.all_children_by_type("QuestionElement", repeater_form_element)
 
           question_elements_for_repeater.each do |question_element|
             repeater_records.each do |repeater_record|
-
+      
               answer_attributes = {:question_id => question_element.question.id, 
                                    :event_id => event.id,
                                    :repeater_form_object_type => repeater_record.class.name,

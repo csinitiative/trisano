@@ -1,15 +1,7 @@
 document.observe('trisano:dom:loaded', function() {
   Trisano.Ajax.hookLiveSearchFields();
   Trisano.Ajax.hookUpdateLinks();
-  $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
-  $j("a.discard-new-hospital-participation").live("click", function() {
-    $j(this).closest("div.hospital").remove();
-    $j("a#add-hospitalization-facilities").show();
-    return false;
-  });
-  $j("a#add-hospitalization-facilities").live("click", function() {
-    this.hide();
-  });
+  Trisano.Ajax.setupRepeaters();
 });
 
 Element.addMethods({
@@ -93,6 +85,47 @@ Trisano.Ajax = {
                        });
   },
 
+  getRepeaterAjaxActions: function() {
+    return $j("div#hospitalization_facilities").find("span.ajax-actions");
+  },
+
+  hideRepeaterAjaxActions: function() {
+    var repeaters = Trisano.Ajax.getRepeaterAjaxActions();
+      repeaters.each(function(index) {
+        this.hide();
+      });
+  },
+ 
+  setupRepeaters: function() {
+    if($j("form[class^=new_][class$=_event]").length!=0) {
+      // New mode
+      Trisano.Ajax.hideRepeaterAjaxActions();
+      $j("a#add-hospitalization-facilities").live("click", function() {
+        Trisano.Ajax.hideRepeaterAjaxActions();
+      });
+    
+    } else {
+      // Edit mode
+
+      $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
+
+      $j("a.discard-new-hospital-participation").live("click", function() {
+        $j(this).closest("div.hospital").remove();
+        $j("a#add-hospitalization-facilities").show();
+        return false;
+      });
+
+      $j("a#add-hospitalization-facilities").live("click", function() {
+        this.hide();
+      });
+
+      if(Trisano.Ajax.getRepeaterAjaxActions().length != 0) {
+        // A blank template is being shown
+        $j("a#add-hospitalization-facilities").hide();
+      }
+    }
+  },
+
   saveHospitalizations: function() {
     $j.when(
       //$j("div.hospital").each(function(index) {
@@ -122,7 +155,7 @@ Trisano.Ajax = {
 
   postHospitalization: function(data_source) {
     var hospitalization_fields = data_source.find(":input");
-    var target = $j("#hospitalization_facilities");
+    var target = data_source;
 
     // Immediately following the div.hospital the hospitalization_facilities id is
     // rendered. We must include this in the POST to avoid creating a new

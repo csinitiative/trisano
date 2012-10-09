@@ -333,11 +333,22 @@ module FormBuilderDslHelper
 
     answer_attributes = {:question_id => question.id, 
                          :event_id => @event.id}
+
+
+
     if !local_form_builder.nil? && local_form_builder.repeater_form?
-      answer_attributes[:repeater_form_object_type] = local_form_builder.object.class.name
-      answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
+      repeater_parent_record = local_form_builder.object.repeater_parent
+
+      answer_attributes[:repeater_form_object_type] = repeater_parent_record.class.name
+
+      # This must be nil for new records so we get blank templates
+      answer_attributes[:repeater_form_object_id] = repeater_parent_record.try(:id)
     end
+
     @answer_object = @event.get_or_initialize_answer(answer_attributes)
+
+
+
 
     error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
@@ -417,15 +428,10 @@ module FormBuilderDslHelper
     end
   end
 
-  def remove_event_type_from_core_path(core_path)
+  def remove_event_type_from_core_path(core_path, event_type)
     # sub event type with blank string, will leave ] at the begining
     # so [1..-1]
-    sub_event_type_from_core_path(core_path, "")[1..-1]
-  end
-
-  def sub_event_type_from_core_path(core_path, sub)
-    raise "No event instance variable found" if @event == nil
-    core_path.sub(@event.class.name.underscore, sub)
+    core_path.sub(event_type,"")[1..-1]
   end
 
   def replace_square_brackets_with_dots(string)
@@ -436,47 +442,43 @@ module FormBuilderDslHelper
   end
 
   def core_path_with_dots(element)
-    # Debt: Replace with shorter eval technique
     new_path = element.core_path.clone
-    new_path = remove_event_type_from_core_path(new_path) 
-    new_path = replace_square_brackets_with_dots(new_path)
+    core_path_to_method_array(new_path, @event.class.name.underscore)
+  end
+
+  def core_path_to_method_array(path, event_type)
+    # Debt: Replace with shorter eval technique
+    path = remove_event_type_from_core_path(path, event_type) 
+    path = replace_square_brackets_with_dots(path)
   end
  
-  def interpret_core_path_for_event(options)
+  def process_core_path(options)
 
-    event = options[:event]
-    element = options[:element]
-    slice = options[:path_slice]
+    object = options[:object]
+    method_array = options[:method_array]
 
-    core_value = event
-    method_array = core_path_with_dots(element).split(".")
-    method_array = method_array.slice!(slice) if slice
-
+    core_value = object
     method_array.each do |method|
       if core_value.is_a?(Array)
-        core_value = core_value.collect { |core_value| core_value.send(method) } 
+        core_value = core_value.collect { |cf| cf.send(method) } 
+        core_value.delete_if { |value| value.nil? }
       else
         core_value = core_value.send(method)
       end
     end
     
-    core_value.flatten
+    core_value
 
-  end
-
-  def collect_records_from_core_path(options)
-    event = options[:event]
-    element = options[:element]
-    interpret_core_path_for_event(:event => options[:event],
-                                  :element => options[:element],
-                                  :path_slice => (0..-2))
   end
 
   def value_from_core_path(options)
-    event = options[:event]
     element = options[:element]
-    interpret_core_path_for_event(:event => options[:event],
-                                  :element => options[:element])
+    slice = options[:path_slice]
+
+    method_array = core_path_with_dots(element).split(".")
+
+    process_core_path(:object => options[:event],
+                      :method_array => method_array)
   end
 
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)

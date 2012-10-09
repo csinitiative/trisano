@@ -1,2 +1,3 @@
 - fields_for @event, :builder => ExtendedFormBuilder do |event_form|
-  = render :partial => "events/hospitalized_facilities", :locals => {:f => event_form}
+  - event_form.fields_for(:hospitalization_facilities, @hospitalization_facility, :child_index => @event.hospitalization_facilities.length-1, :builder => ExtendedFormBuilder) do |hospital_fields|
+    = render :partial => "events/hospital", :locals => { :f => hospital_fields }

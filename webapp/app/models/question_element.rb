@@ -166,6 +166,14 @@ class QuestionElement < FormElement
     end
   end
 
+  def core_field_element
+    core_field_element = self
+    until core_field_element.is_a?(CoreFieldElement) do
+      core_field_element = core_field_element.parent
+    end
+    return core_field_element
+  end
+
   private
 
   def validate_question_short_name_uniqueness
