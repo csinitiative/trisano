@@ -267,6 +267,10 @@ class MorbidityEvent < HumanEvent
       end
     end
 
+    if !invalid_form_references.empty? or !available_form_references.empty?
+      base_errors['form_references']  = [:precede_birth_date, { :thing => I18n.t(:disease) }]
+    end
+
     unless base_errors.empty?
       base_errors.values.each { |msg| self.errors.add(:base, *msg) }
     end

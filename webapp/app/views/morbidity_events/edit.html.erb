@@ -77,7 +77,11 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
       <% end %>
     <% end %>
   <% end %>
-
+  <% if  flash[:notice] and request.get? and @event.needs_forms_update? %>
+    <div id="form-references-dialog" title="Form References Dialog">
+      <%= render :partial => 'events/form_references_form', :locals => {:f => event_form} %>
+    </div>
+  <% end %>
   <% cache_event_fragment @event, "events/#{@event.id}/edit/followup_core_paths" do %>
     <%= render :partial => "events/followup_core_paths", :locals => { :event => @event } %>
   <% end %>

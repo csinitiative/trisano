@@ -62,7 +62,7 @@ class MorbidityEventsController < EventsController
     else
       @event.attributes = params[:morbidity_event]
     end
-
+    @disease_changed = @event.disease_changed?
     unless can_create?
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
@@ -78,7 +78,7 @@ class MorbidityEventsController < EventsController
         @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = t("cmr_created")
         format.html {
-          if go_back
+          if go_back or @disease_changed
             redirect_to edit_cmr_url(@event, @query_params)
           else
             redirect_to cmr_url(@event, @query_params)
@@ -101,7 +101,7 @@ class MorbidityEventsController < EventsController
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.update_from_params(params[:morbidity_event])
-
+    @disease_changed = @event.disease_changed?
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
@@ -118,7 +118,7 @@ class MorbidityEventsController < EventsController
 
         flash[:notice] = t("cmr_updated")
         format.html {
-          if go_back
+          if go_back or @disease_changed
             redirect_to edit_cmr_url(@event, @query_params)
           else
             url = params[:redirect_to]

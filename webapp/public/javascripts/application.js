@@ -497,3 +497,23 @@ function moveMultiple(item, where) {
 function setMultiplesPositionAttributes(ul) {
   ul.find("li > input[name*='position']").each(function (index, element) { element.value = index+1; });
 }
+
+jQuery(function() {
+  jQuery("#form-references-dialog").dialog({title:"Update event forms", width:400});
+  jQuery("#form-references-dialog input[type=checkbox]").change(function(){
+    var event_id = jQuery(this).next("input[type=hidden]").val();
+    if (jQuery(this).attr("checked")) {
+      jQuery.ajax("/event_forms/add?event_id=" + event_id, {
+          complete:function(data, textStatus, jqXHR){
+              jQuery("#investigation_tab").html(data.responseText);
+              jQuery("#form-references-dialog p.message").html("Successfully added.").slideDown().delay(4000).slideUp();
+          }, type:'POST', data:{form_id:jQuery(this).val()}});
+    } else {
+      jQuery.ajax("/event_forms/remove?event_id=" + event_id, {
+          complete:function(data, textStatus, jqXHR){
+              jQuery("#investigation_tab").html(data.responseText);
+              jQuery("#form-references-dialog p.message").html("Successfully removed.").slideDown().delay(4000).slideUp();
+          }, type:'POST', data:{form_id:jQuery(this).val()}});
+    }
+  });
+});

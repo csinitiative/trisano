@@ -168,7 +168,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:section_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:section_element), :id => element.id)
     end
   end
 
@@ -187,7 +187,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:group_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
 
@@ -532,7 +532,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:core_follow_up_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id)
     end
   end
 
@@ -572,7 +572,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:section_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:section_element), :id => element.id)
     end
   end
 
@@ -594,7 +594,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:group_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
 
@@ -630,7 +630,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:group_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
 
@@ -657,7 +657,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:follow_up_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:follow_up_element), :id => element.id)
     end
   end
 
@@ -705,7 +705,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:core_follow_up_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id)
     end
   end
 
@@ -754,7 +754,7 @@ module FormBuilderDslHelper
       return result
     rescue
       logger.warn($!.message)
-      return t(:could_not_render, :what => t(:group_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
 

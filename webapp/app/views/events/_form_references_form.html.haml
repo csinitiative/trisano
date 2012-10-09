@@ -1,0 +1,44 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+%div
+  %p.message
+  %p
+    = "You may add the new forms available for the current disease if present. "
+    = "You may additionally remove the old forms for the event if present."
+  %hr
+  %div{:id => "forms_references"}
+    =t 'forms_in_use'
+    - if @event.form_references.empty?
+      %p
+        %em=t 'none'
+    - else
+      %ul
+        - for form_reference in @event.form_references
+          %li
+            = check_box_tag "form_id", form_reference.form_id, true
+            = hidden_field_tag "event_id", @event.id
+            = link_to(form_reference.form.name, form_path(form_reference.form), :class => (@event.invalid_form_references.include?(form_reference) ? "invalid": ""))
+  %div{:id => "available_forms"}
+    =t 'available_forms'
+    - if @event.available_form_references.empty?
+      %p
+        %em=t 'none'
+    - else
+      %ul
+        - for form_reference in @event.available_form_references
+          %li
+            = check_box_tag "form_id", form_reference.form.id
+            = hidden_field_tag "event_id", @event.id
+            = link_to(form_reference.form.name, form_path(form_reference.form))

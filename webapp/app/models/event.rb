@@ -662,8 +662,29 @@ class Event < ActiveRecord::Base
     return unique_states
   end
 
-  private
+  def disease_changed?
+    self.disease_event and self.disease_event.disease_id_changed?
+  end
 
+  def needs_forms_update?
+    self.available_form_references.length > 0 or self.invalid_form_references.length > 0
+  end
+
+  def available_form_references
+    return [] unless self.disease_event
+    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    template_ids = self.form_references.collect { |fr| fr.template_id }
+    forms.delete_if {|f| template_ids.include?(f.template_id) }.map {|f| FormReference.new(:form_id => f.id, :template_id => f.template_id) }
+  end
+
+  def invalid_form_references
+    return [] unless self.disease_event
+    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    form_ids = forms.map(&:id)
+    self.form_references.select {|f| !form_ids.include?(f.form_id) }
+  end
+
+  private
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
 

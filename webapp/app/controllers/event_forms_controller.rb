@@ -16,7 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EventFormsController < ApplicationController
-
+  include ActionView::Helpers::TranslationHelper
   before_filter :find_event
   after_filter TouchEventFilter, :only => [:create, :destroy]
 
@@ -89,6 +89,17 @@ class EventFormsController < ApplicationController
       end
     end
     redirect_to event_forms_path(@event)
+  end
+
+  def add
+    form = Form.find(params[:form_id])
+    @event.form_references << FormReference.create(:event_id => @event.id,
+                                                    :form_id => form.id,
+                                                    :template_id => form.template_id)
+  end
+
+  def remove
+    @event.forms.delete(Form.find(params[:form_id]))
   end
 
   protected

@@ -1,3 +1,22 @@
+#form-references-dialog {
+  display:none;
+}
+
+#form-references-dialog p.message {
+  color: green;
+}
+
+#forms_references {
+  float:left;
+  width:50%
+}
+#forms_references a.invalid {
+  color: #ff0000;
+}
+#available_forms {
+  float:right;
+  width:50%
+}
 .search-active td {
   border: 1px solid #C1DAD7;
   background: #fff;
