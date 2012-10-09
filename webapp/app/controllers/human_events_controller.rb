@@ -25,7 +25,6 @@ class HumanEventsController < EventsController
       # Must take a clone here, otherwise we get a reference
       # and lose the "point in time" record
       pre_save_repeater_parents = @event.hospitalization_facilities.clone
-      pre_save_repeaters = @event.hospitals_participations.clone
 
 
       # Existing answers won't be processed
@@ -36,7 +35,6 @@ class HumanEventsController < EventsController
       if event_saved_successfully = @event.save
 
         post_save_repeater_parents = @event.hospitalization_facilities.reload
-        post_save_repeaters = @event.hospitals_participations.reload
 
 
 
@@ -52,23 +50,10 @@ class HumanEventsController < EventsController
 
 
 
-        repeater_attributes = repeater_dependent_attributes[:hospitals_participation_attributes]
-        raise "No hospitals participations attributes submitted: #{repeater_dependent_attributes.inspect}" if repeater_attributes.nil?
-
-
-        # ==================
-        
-
-
-      
 
 
         if repeater_dependent_attributes[:_destroy] == "1"
           # record was destroyed by @event.save
-          # must delete answer manually
-          #raise "more than one answer submitted: #{event_params[:answers].inspect}" if event_params[:answers].each_key.count != 1
-          #answer_id = event_params[:answers].each_key.first
-          #Answer.find(answer_id).destroy if answer_id
 
           # Nothing to do when deleting a parent repeater (hospitlization facilities).
           # The answer handled by the the cascading :dependent => :destroy from
@@ -78,71 +63,42 @@ class HumanEventsController < EventsController
         else # else from if repeater_dependent_attributes[:_destory] == "1"
           # saving a new/existing record
 
-          if repeater_id = repeater_attributes[:id]
+          if repeater_id = repeater_dependent_attributes[:id]
             # existing repeater
-            repeater_object = HospitalsParticipation.find(repeater_id)
+            @hospitalization_facility = HospitalizationFacility.find(repeater_id)
 
 
-          else # from repeater_attributes[:id]
+          else # from repeater_dependent_attributes[:id]
 
             # new repeater
 
 
             # new repeater created, must determine which what was created:
-            repeater_parent = post_save_repeater_parents - pre_save_repeater_parents
-            repeater_object = post_save_repeaters - pre_save_repeaters
-
-
-            if repeater_object == []
+            @hospitalization_facility = post_save_repeater_parents - pre_save_repeater_parents
+            if @hospitalization_facility == [] 
               # no repeater created, create one!
-
-              # it's possible the parent was created without the repeater
-              # by selecting a Health Facility, but providing no other information
-              # Need to build and save a new one if neccissary
-              if repeater_parent == [] 
-                repeater_parent = @event.hospitalization_facilities.build
-              elsif repeater_parent.length != 1
-                raise "More than one hospitalization facilities created:\n
-                       post_save_repeaters: #{post_save_repeater_parents.inspect}\n
-                       pre_save_repeaters: #{pre_save_repeater_parents.inspect}\n\n
-                       If more than one hospitalization facilities created, we cannot determine which repeater to save."
-              else
-                repeater_parent = repeater_parent.first
-              end #repeater_parent == [], create one
-            
-                
-
-
-
-              if repeater_parent.new_record?
-                raise "Cannot save HospitalizationFacility: #{repeater_parent.errors.inspect}" unless repeater_parent.save
-                @event.hospitalization_facilities.reload
-              end
-
-              # Create repeater
-              repeater_object = HospitalsParticipation.new(:participation_id => repeater_parent.id)
-              raise "Cannot save HospitalsParticipation: #{repeater_object.errors.inspect}" unless repeater_object.save
-              @event.hospitals_participations.reload
-
-
-            elsif repeater_object.length != 1
-              # TODO: Possible race condition if multiple users are adding repeaters here.
-              # Could add possibly add a JavaScript message to encourage the user to try again.
-              raise "More than one hospitals participation created:\n
-                     post_save_repeaters: #{post_save_repeaters.inspect}\n
-                     pre_save_repeaters: #{pre_save_repeaters.inspect}\n\n
-                     If more than one hospitals participation created, we cannot determine which repeater to save."
-          
+              @hospitalization_facility = @event.hospitalization_facilities.build
+            elsif @hospitalization_facility.length != 1
+              raise "More than one hospitalization facilities created:\n
+                     post_save_repeaters: #{post_save_repeater_parents.inspect}\n
+                     pre_save_repeaters: #{pre_save_repeater_parents.inspect}\n\n
+                     If more than one hospitalization facilities created, we cannot determine which repeater to save."
             else
-              # We don't really want an array, just get the first element
-              repeater_object = repeater_object.first
-
-            end # repeater_obejct = [], create one
-
-
+              @hospitalization_facility = @hospitalization_facility.first
+            end #@hospitalization_facility == [], create one
+          
+              
 
 
-          end # if repeater_attributes[:id] (new or existing record?)
+
+            if @hospitalization_facility.new_record?
+              raise "Cannot save HospitalizationFacility: #{@hospitalization_facility.errors.inspect}" unless @hospitalization_facility.save
+              @event.hospitalization_facilities.reload
+            end
+
+
+
+          end # if repeater_dependent_attributes[:id] (new or existing record?)
 
 
 
@@ -153,15 +109,15 @@ class HumanEventsController < EventsController
           # time to create an answer for it.
           new_answer_attributes = event_params.delete(:new_repeater_answer)
           unless new_answer_attributes.nil?
-            raise "A repeater object is required to create a new answer." if repeater_object.nil?
+            raise "A repeater object is required to create a new answer." if @hospitalization_facility.nil?
             new_answer_attributes.each do |answer_attributes|
 
 
-              answer_attributes[:repeater_form_object_id] = repeater_object.id
-              answer_attributes[:repeater_form_object_type] = repeater_object.class.name
+              answer_attributes[:repeater_form_object_id] = @hospitalization_facility.id
+              answer_attributes[:repeater_form_object_type] = @hospitalization_facility.class.name
               answer_attributes[:event_id] = @event.id
               a = Answer.create(answer_attributes)
-              raise "Unable to create Answer for #{repeater_object.inspect}:\n #{a.errors.inspect}" unless a.valid?
+              raise "Unable to create Answer for #{@hospitalization_facility.inspect}:\n #{a.errors.inspect}" unless a.valid?
 
             end #new_anwer_attributes.each
 

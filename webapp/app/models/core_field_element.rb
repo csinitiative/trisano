@@ -48,4 +48,8 @@ class CoreFieldElement < FormElement
     end.map{|cf| [cf.name, cf.key]}.sort_by(&:first)
   end
 
+  def core_field
+     CoreField.find_by_key(core_path)
+  end
+
 end

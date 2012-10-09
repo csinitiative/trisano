@@ -19,6 +19,12 @@ class HospitalizationFacility < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   has_one :hospitals_participation, :foreign_key => :participation_id, :dependent => :destroy
 
+  # STI/polymorphic bug
+  # https://github.com/rails/rails/issues/617
+  # Fixed in ActiveRecord 3.2.6
+  # has_one :answer, :as => :repeater_form_object, :dependent => :destroy
+  before_destroy :destroy_answers
+
   accepts_nested_attributes_for :hospitals_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
 
   def validate
@@ -30,5 +36,15 @@ class HospitalizationFacility < Participation
   
   def xml_fields
     [[:secondary_entity_id, {:rel => :hospitalization}]]
+  end
+
+  def destroy_answers
+    answers.each { |answer| answer.destroy }
+  end
+
+  def answers
+    Answer.find(:all, :conditions => {:repeater_form_object_id => self.id,
+                                      :repeater_form_object_type => self.class.name,
+                                      :event_id => self.event_id})
   end
 end
