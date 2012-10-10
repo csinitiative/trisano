@@ -223,7 +223,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :events, :only => [:index]
 
   # These are the forms in use with and available to an event
-  map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create]
+  map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create, :destroy]
 
   # These are the tasks in use with and available to an event
   map.resources :tasks, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_tasks', :only => [:new, :edit, :create, :update, :index]
