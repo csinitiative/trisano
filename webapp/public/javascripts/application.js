@@ -503,17 +503,33 @@ jQuery(function() {
   jQuery("#form-references-dialog input[type=checkbox]").change(function(){
     var event_id = jQuery(this).next("input[type=hidden]").val();
     if (jQuery(this).attr("checked")) {
-      jQuery.ajax("/event_forms/add?event_id=" + event_id, {
+      jQuery.ajax(Trisano.url("/events/"+event_id+"/forms.js"), {
+          beforeSend: function() {
+            jQuery("#form-references-dialog p.message").html(Trisano.Ajax.spinnerImgNoID()).slideDown();
+          },
           complete:function(data, textStatus, jqXHR){
-              jQuery("#investigation_tab").html(data.responseText);
-              jQuery("#form-references-dialog p.message").html("Successfully added.").slideDown().delay(4000).slideUp();
-          }, type:'POST', data:{form_id:jQuery(this).val()}});
+              jQuery("#form-references-dialog p.message").html(data.responseText).slideDown();
+          }, type:'POST', 
+             data: {
+              forms_to_add: [jQuery(this).val()],
+              event_id: event_id
+             },
+             dataType: 'html'
+      });
     } else {
-      jQuery.ajax("/event_forms/remove?event_id=" + event_id, {
+      jQuery.ajax(Trisano.url("/events/"+event_id+"/forms/"+jQuery(this).val()+".js"), {
+          beforeSend: function() {
+            jQuery("#form-references-dialog p.message").html(Trisano.Ajax.spinnerImgNoID()).slideDown();
+          },
           complete:function(data, textStatus, jqXHR){
-              jQuery("#investigation_tab").html(data.responseText);
-              jQuery("#form-references-dialog p.message").html("Successfully removed.").slideDown().delay(4000).slideUp();
-          }, type:'POST', data:{form_id:jQuery(this).val()}});
+              jQuery("#form-references-dialog p.message").html(data.responseText).slideDown();
+          }, type:'DELETE',
+             data: {
+              forms_to_remove: [jQuery(this).val()],
+              event_id: event_id
+             },
+             dataType: 'html'
+      });
     }
   });
 });

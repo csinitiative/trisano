@@ -68,7 +68,11 @@ class EventFormsController < ApplicationController
         flash[:notice] = t("forms_in_use_successfully_updated")
       end
     end
-    redirect_to event_forms_path(@event)
+
+    respond_to do |format|
+      format.html { redirect_to event_forms_path(@event) }
+      format.js { flash[:notice] = nil }
+    end
   end
 
   def destroy
@@ -88,20 +92,12 @@ class EventFormsController < ApplicationController
         flash[:error] = t("unable_to_remove_forms")
       end
     end
-    redirect_to event_forms_path(@event)
-  end
 
-  def add
-    form = Form.find(params[:form_id])
-    @event.form_references << FormReference.create(:event_id => @event.id,
-                                                    :form_id => form.id,
-                                                    :template_id => form.template_id)
+    respond_to do |format|
+      format.html { redirect_to event_forms_path(@event) }
+      format.js { flash[:notice] = nil }
+    end
   end
-
-  def remove
-    @event.forms.delete(Form.find(params[:form_id]))
-  end
-
   protected
 
   def find_event
