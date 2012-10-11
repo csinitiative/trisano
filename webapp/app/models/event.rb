@@ -679,6 +679,7 @@ class Event < ActiveRecord::Base
   def invalid_form_references
     return [] unless self.disease_event
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    return [] if forms.empty?
     form_ids = forms.map(&:id)
     self.form_references.select {|f| !form_ids.include?(f.form_id) }
   end

@@ -18,6 +18,7 @@
     = "You may add the new forms available for the current disease if present. "
     = "You may additionally remove the old forms for the event if present."
   %hr
+  = hidden_field_tag "event_id", @event.id
   %div{:id => "forms_references"}
     =t 'forms_in_use'
     - if @event.form_references.empty?
@@ -28,7 +29,6 @@
         - for form_reference in @event.form_references
           %li
             = check_box_tag "form_id", form_reference.form_id, true
-            = hidden_field_tag "event_id", @event.id
             = link_to(form_reference.form.name, form_path(form_reference.form), :class => (@event.invalid_form_references.include?(form_reference) ? "invalid": ""))
   %div{:id => "available_forms"}
     =t 'available_forms'
@@ -40,5 +40,7 @@
         - for form_reference in @event.available_form_references
           %li
             = check_box_tag "form_id", form_reference.form.id
-            = hidden_field_tag "event_id", @event.id
             = link_to(form_reference.form.name, form_path(form_reference.form))
+  %hr
+  %div
+    = submit_tag "Save", :id => "save_forms_button"

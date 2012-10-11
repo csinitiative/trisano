@@ -58,6 +58,7 @@ class EventFormsController < ApplicationController
       flash[:error] = t("no_forms_were_selected_for_addition")
     else
       begin
+        @event.form_references.clear if params[:replace]
         @event.add_forms(forms_to_add)
         redis.delete_matched("views/events/#{@event.id}/*")
       rescue ArgumentError, ActiveRecord::RecordNotFound

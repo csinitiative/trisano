@@ -500,36 +500,26 @@ function setMultiplesPositionAttributes(ul) {
 
 jQuery(function() {
   jQuery("#form-references-dialog").dialog({title:"Update event forms", width:400});
-  jQuery("#form-references-dialog input[type=checkbox]").change(function(){
-    var event_id = jQuery(this).next("input[type=hidden]").val();
-    if (jQuery(this).attr("checked")) {
-      jQuery.ajax(Trisano.url("/events/"+event_id+"/forms.js"), {
+  jQuery("#save_forms_button").click(function(event){
+    var event_id = jQuery("#form-references-dialog input[type=hidden]").val();
+    var forms = jQuery.makeArray(jQuery("#form-references-dialog input[type=checkbox]:checked").val());
+    var removed_forms = jQuery("#form-references-dialog #forms_references input[type=checkbox]");
+    if (removed_forms.length == 0 ||
+        (removed_forms.is(function() { return !jQuery(this).prop("checked"); }) &&
+        window.confirm("Are you sure? Removing a form will also remove all answers to questions on that form."))) {
+        jQuery.ajax(Trisano.url("/events/" + event_id + "/forms.js"), {
           beforeSend: function() {
             jQuery("#form-references-dialog p.message").html(Trisano.Ajax.spinnerImgNoID()).slideDown();
           },
           complete:function(data, textStatus, jqXHR){
               jQuery("#form-references-dialog p.message").html(data.responseText).slideDown();
-          }, type:'POST', 
-             data: {
-              forms_to_add: [jQuery(this).val()],
-              event_id: event_id
-             },
-             dataType: 'html'
-      });
-    } else {
-      jQuery.ajax(Trisano.url("/events/"+event_id+"/forms/"+jQuery(this).val()+".js"), {
-          beforeSend: function() {
-            jQuery("#form-references-dialog p.message").html(Trisano.Ajax.spinnerImgNoID()).slideDown();
           },
-          complete:function(data, textStatus, jqXHR){
-              jQuery("#form-references-dialog p.message").html(data.responseText).slideDown();
-          }, type:'DELETE',
-             data: {
-              forms_to_remove: [jQuery(this).val()],
-              event_id: event_id
-             },
-             dataType: 'html'
-      });
+          type:'POST',
+          data: { forms_to_add: forms, event_id: event_id, replace: true },
+          dataType: 'html'
+        });
     }
+    event.stopPropagation();
+    event.preventDefault();
   });
 });

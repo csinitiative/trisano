@@ -80,6 +80,7 @@ class MorbidityEventsController < EventsController
         flash[:notice] = t("cmr_created")
         format.html {
           if go_back or @disease_changed
+            @query_params.merge!({:update_forms => @disease_changed}) if @disease_changed
             redirect_to edit_cmr_url(@event, @query_params)
           else
             redirect_to cmr_url(@event, @query_params)
@@ -120,6 +121,7 @@ class MorbidityEventsController < EventsController
         flash[:notice] = t("cmr_updated")
         format.html {
           if go_back or @disease_changed
+            @query_params.merge!({:update_forms => @disease_changed}) if @disease_changed
             redirect_to edit_cmr_url(@event, @query_params)
           else
             url = params[:redirect_to]
