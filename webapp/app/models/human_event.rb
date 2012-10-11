@@ -650,23 +650,16 @@ class HumanEvent < Event
     if staged_message.common_order
       diagnostic_facility_name = staged_message.common_order.facility_name
       orc = staged_message.common_order
-      unless diagnostic_facility_name.blank?
-        place_entity = PlaceEntity.first :conditions => [ "places.name = ?", diagnostic_facility_name],
-          :include => :entity
-        place_entity ||= PlaceEntity.new :place_attributes => {
-          :name => diagnostic_facility_name,
-          :short_name => diagnostic_facility_name
-        }
 
-        place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
-        place_entity.place.place_types << place_code unless place_entity.place.place_types.include?(place_code)
+      unless diagnostic_facility_name.blank?
+        place_entity = find_or_build_hospital(diagnostic_facility_name)
+
         place_entity.build_canonical_address(:street_number => orc.facility_address_street_no,
                             :street_name => orc.facility_address_street,
                             :city => orc.facility_address_city,
                             :state_id => orc.facility_address_trisano_state_id,
                             :postal_code => orc.facility_address_zip) unless orc.facility_address_empty?
         self.diagnostic_facilities.build :place_entity => place_entity
-
       end
     end
 
@@ -678,31 +671,35 @@ class HumanEvent < Event
       if hospitalized_id == ExternalCode.yes.id
         facility_name = staged_message.pv2.facility_name if staged_message.pv2
         facility_name = staged_message.common_order.facility_name if facility_name.blank? and staged_message.common_order
-
-        # assign the facility name, which requires finding or building a
-        # place
         unless facility_name.blank?
-          # do we already have this?
-          place_entity = PlaceEntity.first :conditions => [ "places.name = ?", facility_name ],
-            :joins => "INNER JOIN places ON places.entity_id = entities.id"
-
-          # no? create it
-          place_entity ||= PlaceEntity.new :place_attributes => {
-            :name => facility_name,
-            :short_name => facility_name
-          }
-
-          # make it a hospital
-          place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
-          place_entity.place.place_types << place_code unless place_entity.place.place_types.include?(place_code)
-
-          # associate it with this event
+          place_entity = find_or_build_hospital(facility_name)
           self.hospitalization_facilities.build :place_entity => place_entity
         end
       end
     end
 
     self.parent_guardian = staged_message.next_of_kin.parent_guardian.slice(0,2).join(', ') if staged_message.next_of_kin
+  end
+
+  def find_or_build_hospital(place_name)
+    # assign the facility name, which requires finding or building a
+    # place
+    # do we already have this?
+    place_entity = PlaceEntity.find(:first, 
+                                    :conditions => [ "entities.deleted_at IS NULL AND LOWER(places.name) = ?", place_name.downcase ],
+                                    :include => :place)
+
+    # no? create it
+    place_entity ||= PlaceEntity.new :place_attributes => {
+      :name => place_name.titleize,
+      :short_name => place_name.titleize
+    }
+
+    # make it a hospital
+    place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
+    place_entity.place.place_types << place_code unless place_entity.place.place_types.include?(place_code)
+    
+    place_entity
   end
 
   def possible_treatments(reload=false)
