@@ -172,7 +172,7 @@ module ApplicationHelper
 
     focus_tab = 0 if tabs.size <= focus_tab.to_i
 
-    tabs_string = tabs.map{|tab| "'#{tab.first}'"}.join(',')
+    tabs_string = tabs.map{|tab| "'#{tab.name_key}'"}.join(',')
 
     concat(
       javascript_tag("var myTabs = new YAHOO.widget.TabView('cmr_tabs'); myTabs.set('activeIndex', #{focus_tab});") +
@@ -185,7 +185,7 @@ module ApplicationHelper
           line_items = ""
           tabs.each do |tab|
             line_items += content_tag(:li) do
-              link_to(content_tag(:em, tab.last), "##{tab.first}")
+              link_to(content_tag(:em, tab.name), "##{tab.name_key}", :"data-tab-index" => tab.index)
             end
           end
           line_items
@@ -209,6 +209,8 @@ module ApplicationHelper
     # The display: inline style is to get IE to render the two buttons side by side.
     out =  button_to_function(t("save_and_continue"), "post_and_return('#{form_id}')", :id => "save_and_continue_btn", :onclick => "toggle_save_buttons('off');")
     out += button_to_function(t("save_and_exit"), "post_and_exit('#{form_id}')", :id => "save_and_exit_btn", :onclick => "toggle_save_buttons('off');")
+    out += content_tag(:span, "Saving", :id => "save_indicator", :class => "title")
+    out += image_tag("large_spinner.gif", :id => "save_indicator_img")
   end
 
   # Extremely simplistic auto_complete helper, 'cause the default one don't worky.  Makes a lot of assumptions, but what we need for now.

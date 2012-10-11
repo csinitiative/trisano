@@ -18,7 +18,6 @@ Trisano.Layout = {
       var options = {};
       $j("div#head div.container div.right div.user").toggle();
       $j("#title_area").toggle();
-      $j("#bar").toggle();
       Trisano.Layout.setMainContentPosition();
       return false;
     });

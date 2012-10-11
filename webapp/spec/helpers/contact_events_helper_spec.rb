@@ -26,14 +26,14 @@ describe ContactEventsHelper do
     end
 
     it 'should include all contact event core tabs' do
-      helper.contact_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab lab_info_tab epi_tab investigation_tab notes_tab)
+      helper.contact_event_tabs.map(&:name_key).should == %w(demographic_tab clinical_tab lab_info_tab epi_tab investigation_tab notes_tab)
     end
 
     it "only shows tabs enabled on the current event" do
       disease = create_disease('The Trots')
       assigns[:event] = create_contact_event(:disease => disease)
       hide_contact_event_tabs(:lab_info_tab, :investigation_tab, :on_disease => disease)
-      helper.contact_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab epi_tab notes_tab)
+      helper.contact_event_tabs.map(&:name_key).should == %w(demographic_tab clinical_tab epi_tab notes_tab)
     end
   end
 

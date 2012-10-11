@@ -26,14 +26,14 @@ describe MorbidityEventsHelper do
     end
 
     it 'should include all morbidity event core tabs' do
-      helper.morbidity_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab lab_info_tab contacts_tab encounters_tab epi_tab reporting_tab investigation_tab notes_tab administrative_tab)
+      helper.morbidity_event_tabs.map(&:name_key).should == %w(demographic_tab clinical_tab lab_info_tab contacts_tab encounters_tab epi_tab reporting_tab investigation_tab notes_tab administrative_tab)
     end
 
     it "only shows tabs enabled on the current event" do
       disease = create_disease('The Trots')
       assigns[:event] = create_morbidity_event(:disease => disease)
       hide_morbidity_event_tabs(:lab_info_tab, :contacts_tab, :encounters_tab, :investigation_tab, :on_disease => disease)
-      helper.morbidity_event_tabs.map(&:first).should == %w(demographic_tab clinical_tab epi_tab reporting_tab notes_tab administrative_tab)
+      helper.morbidity_event_tabs.map(&:name_key).should == %w(demographic_tab clinical_tab epi_tab reporting_tab notes_tab administrative_tab)
     end
   end
 

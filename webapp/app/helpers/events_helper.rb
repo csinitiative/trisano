@@ -901,8 +901,11 @@ module EventsHelper
   end
 
   def event_tabs_for(event_type)
+    count = 0
     CoreField.tabs_for(event_type).map do |tab_field|
-      [tab_field.name_key, tab_field.name] if tab_field.rendered_on_event?(@event)
+      tab = OpenStruct.new(:name_key => tab_field.name_key, :name => tab_field.name, :index => count) if tab_field.rendered_on_event?(@event)
+      count += 1
+      tab
     end.compact
   end
 

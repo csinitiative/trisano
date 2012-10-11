@@ -42,17 +42,17 @@ class HumanEventsController < EventsController
         # PARAMS PARSING
         # ==============
    
-        repeater_dependent_attributes = event_params[:hospitalization_facilities_attributes]
-        raise "More than one hospitalization faclity submitted: #{repeater_dependent_attributes.inspect}" if repeater_dependent_attributes.each_value.count != 1
+        hospitalization_facility_attr = event_params[:hospitalization_facilities_attributes]
+        raise "More than one hospitalization faclity submitted: #{hospitalization_facility_attr.inspect}" if hospitalization_facility_attr.each_value.count != 1
         # Because we only ever submit one repeater, it's ok to just take the first
-        repeater_dependent_attributes = repeater_dependent_attributes.each_value.first
+        hospitalization_facility_attr = hospitalization_facility_attr.each_value.first
 
 
 
 
 
 
-        if repeater_dependent_attributes[:_destroy] == "1"
+        if hospitalization_facility_attr[:_destroy] == "1"
           # record was destroyed by @event.save
 
           # Nothing to do when deleting a parent repeater (hospitlization facilities).
@@ -60,25 +60,22 @@ class HumanEventsController < EventsController
           # hospitalization_facility > hospitals_participation > answer
 
 
-        else # else from if repeater_dependent_attributes[:_destory] == "1"
+        else # else from if hospitalization_facility_attr[:_destory] == "1"
           # saving a new/existing record
 
-          if repeater_id = repeater_dependent_attributes[:id]
+          if repeater_id = hospitalization_facility_attr[:id]
             # existing repeater
             @hospitalization_facility = HospitalizationFacility.find(repeater_id)
 
 
-          else # from repeater_dependent_attributes[:id]
+          else # from hospitalization_facility_attr[:id]
 
             # new repeater
 
 
             # new repeater created, must determine which what was created:
             @hospitalization_facility = post_save_repeater_parents - pre_save_repeater_parents
-            if @hospitalization_facility == [] 
-              # no repeater created, create one!
-              @hospitalization_facility = @event.hospitalization_facilities.build
-            elsif @hospitalization_facility.length != 1
+            if @hospitalization_facility.length != 1
               raise "More than one hospitalization facilities created:\n
                      post_save_repeaters: #{post_save_repeater_parents.inspect}\n
                      pre_save_repeaters: #{pre_save_repeater_parents.inspect}\n\n
@@ -98,7 +95,7 @@ class HumanEventsController < EventsController
 
 
 
-          end # if repeater_dependent_attributes[:id] (new or existing record?)
+          end # if hospitalization_facility_attr[:id] (new or existing record?)
 
 
 
@@ -125,6 +122,8 @@ class HumanEventsController < EventsController
 
 
         end # if repeater_dependent destroyed == 1 
+      else
+        @hospitalization_facility = @event.hospitalization_facilities.detect { |hf| !hf.valid? }
       end #if event_saved_successfully
 
       # Must include respond_to inside transaction to have scope for

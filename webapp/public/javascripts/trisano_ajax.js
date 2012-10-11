@@ -92,10 +92,10 @@ Trisano.Ajax = {
   hideRepeaterAjaxActions: function() {
     var repeaters = Trisano.Ajax.getRepeaterAjaxActions();
       repeaters.each(function(index) {
-        this.hide();
+        this.remove();
       });
   },
- 
+
   setupRepeaters: function() {
     if($j("form[class^=new_][class$=_event]").length!=0) {
       // New mode
@@ -106,7 +106,6 @@ Trisano.Ajax = {
     
     } else {
       // Edit mode
-
       $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
 
       $j("a.discard-new-hospital-participation").live("click", function() {
@@ -126,36 +125,42 @@ Trisano.Ajax = {
     }
   },
 
+  saveRepeaters: function() {
+    return Trisano.Ajax.saveHospitalizations();
+  },
+ 
   saveHospitalizations: function() {
-    $j.when(
-      //$j("div.hospital").each(function(index) {
-        Trisano.Ajax.postHospitalization($j($j("div.hospital").first())),
-        Trisano.Ajax.postHospitalization($j($j("div.hospital").last()))
-      //})
-    ).then(
-      function() {
-        // Done callbacks
-        // Do Nothing.
-        alert('all success');
-        return true;
-      },
-      function() {
-	// Failed callbacks
-        alert('someone failed');
-        return false;
-      }
-    );
+    var deferreds = [];
+    $j("div.hospital a.save-new-hospital-participation").closest("div.hospital").each(function() {
+      deferreds.push(Trisano.Ajax.postHospitalization($j(this)));
+    });
+    return deferreds;
   },
 
   saveHospitalization: function() {
     var data_source = $j(this).closest("div.hospital");
-    Trisano.Ajax.postHospitalization(data_source);
+    var result = Trisano.Ajax.postHospitalization(data_source);
+    if(result.length == 0){
+      // No inputs were populated. We want to do this here so that this message is only shown
+      // when an individual hospitalization is saved, not when Save & Continue is used. 
+      data_source.prepend("<strong class='required'>Please fill out at least one field.</strong>");
+    };
     return false;
   },
 
   postHospitalization: function(data_source) {
     var hospitalization_fields = data_source.find(":input");
     var target = data_source;
+
+    var at_least_one_field_populated = false;
+    data_source.find(":input:visible").each(function(idx, elem){
+      if($j(elem).val().length != 0){
+        at_least_one_field_populated = true;
+      }
+    });
+    if(!at_least_one_field_populated) {
+      return [];
+    }
 
     // Immediately following the div.hospital the hospitalization_facilities id is
     // rendered. We must include this in the POST to avoid creating a new
@@ -197,7 +202,7 @@ Trisano.Ajax = {
         target.replaceWith(request.responseText);
         $j("a#add-hospitalization-facilities").show();
       }
-    });    
+    });
   }
 };
 

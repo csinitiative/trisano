@@ -194,32 +194,49 @@ function add_tab_index_to_action(form) {
     form.action = build_url_with_tab_index(form.action);
 }
 
-function post_and_return(form_id) {
-    form = document.getElementById(form_id);
-    form.action = build_url_with_tab_index(form.action);
-    form.action += form.action.match(/\?/) ? "" : "?";
-    form.action = form.action + "&return=true";
-    formWatcher.submitted = true;
+function post_form(form_id, should_return) {
+      if (Trisano.CmrsModifiedTabs) {
+          Trisano.CmrsModifiedTabs.setChangedTabs();
+      }
 
-    if (Trisano.CmrsModifiedTabs) {
-        Trisano.CmrsModifiedTabs.setChangedTabs();
-    }
-
-    form.submit();
+      form = document.getElementById(form_id);
+      form.action = build_url_with_tab_index(form.action);
+      form.action += form.action.match(/\?/) ? "" : "?";
+      if(should_return) {
+        form.action = form.action + "&return=true";
+      }
+      formWatcher.submitted = true;
+      form.submit();
 }
 
-function post_and_exit(form) {
-    form = $(form);
-    url = build_url_with_tab_index(form.action);
-    queryParams = url.toQueryParams();
-    form.action = url;
-    formWatcher.submitted = true;
+function post_and_return(form_id) {
+    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
 
-    if (Trisano.CmrsModifiedTabs) {
-        Trisano.CmrsModifiedTabs.setChangedTabs();
-    }
+    function(data) {
+      // All repeaters saved successfully
+      post_form(form_id, true);
+    },
+    function(data) {
+      // One or more errors
+      Trisano.Tabs.highlightTabsWithErrors();
+      Trisano.Tabs.navigateToError();
+      toggle_save_buttons("on");
+    });
+}
 
-    form.submit();
+function post_and_exit(form_id) {
+    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
+
+    function(data) {
+      // All repeaters saved successfully
+      post_form(form_id,false);
+    },
+    function(data) {
+      // One or more errors
+      Trisano.Tabs.highlightTabsWithErrors();
+      Trisano.Tabs.navigateToError();
+      toggle_save_buttons("on");
+    });
 }
 
 function toggle_strike_through(element_id) {
@@ -234,18 +251,24 @@ function safe_disable(target) {
 }
 
 function toggle_save_buttons(state) {
-    btn1 = document.getElementById('save_and_exit_btn');
-    btn2 = document.getElementById('save_and_continue_btn');
+    var btn1 = $j('#save_and_exit_btn');
+    var btn2 = $j('#save_and_continue_btn');
+    var indicator = $j("#save_indicator");
+    var indicator_img = $j("#save_indicator_img");
 
     var btns = new Array(btn1, btn2);
-    $A(btns).each(function(btn) {
-        if (btn) {
-            if (state == 'on') {
-                btn.disabled=false;
-            } else {
-                btn.disabled=true;
-            }
-        }
+    $j.each(btns, function(index, btn) {
+      if (state == 'on') {
+          btn.attr('disabled', false);
+          btn.show();
+          indicator.hide();
+          indicator_img.hide();
+      } else {
+          btn.attr('disabled', true);
+          btn.hide();
+          indicator.show();
+          indicator_img.show();
+      }
     });
 }
 

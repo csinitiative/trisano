@@ -122,7 +122,8 @@ module LayoutHelper
     if defined?(@event) and !@event.new_record? and @event.patient
       output = "#{@event.patient.last_comma_first} (#{record_number_without_phone})"
       output << " DOB: #{@event.patient.birth_date.strftime("%m/%d/%Y")}" if @event.patient.birth_date.present?
-      output << "<br/>#{@event.disease_name}" if @event.disease_name.present?
+      output << "<br/>"
+      output << @event.disease_name if @event.disease_name.present?
       output << " (#{@event.state_description})" if @event.respond_to?(:state)
     end
   end
