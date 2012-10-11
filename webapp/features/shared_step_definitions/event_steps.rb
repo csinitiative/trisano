@@ -19,6 +19,12 @@ Given(/^a basic morbidity event exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given(/^a basic morbidity event with form exists$/) do
+  @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @form = Form.find_or_create_by_event_type_and_disease_id("morbidity_event", @event.disease.disease_id)
+  FormReference.create!(:form => @form, :event => @event, :template_id => @form.template_id )
+end
+
 Given(/^a basic assessment event exists$/) do
   @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
@@ -39,6 +45,10 @@ Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event.disease_event.disease_onset_date = Date.yesterday
   @event.build_address(:county => ExternalCode.counties.first)
   @event.save!
+end
+
+Given /^a form for "(.+)" is present$/ do |disease|
+  form = Form.create!(:name => get_unique_name(1), :event_type => "morbidity_event", :diseases => [Disease.find_or_create_by_disease_name(disease)])
 end
 
 Given /^morbidity events with the following diseases:$/ do |table|

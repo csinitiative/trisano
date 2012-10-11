@@ -18,6 +18,7 @@
 require 'spec_helper'
 
 describe MorbidityEvent do
+  fixtures :forms, :diseases
   before :all do
     destroy_fixture_data
   end
@@ -33,6 +34,48 @@ describe MorbidityEvent do
   it "should be valid" do
     @event.should be_valid
   end
+
+  it 'should detect disease changed' do
+    event = Factory.create(:morbidity_event_with_disease)
+    event.should_not be_disease_changed
+
+    event.disease.disease = diseases(:chicken_pox)
+    event.should be_disease_changed
+  end
+
+  it 'should correctly detect the available forms' do
+    disease = diseases(:chicken_pox)
+    chicken_pox_form = forms(:checken_pox_TB_form_for_LHD_2)
+
+    event = Factory(:morbidity_event)
+    event.jurisdiction.secondary_entity_id = chicken_pox_form.jurisdiction_id
+    event.build_disease_event(:disease_id => disease.id)
+
+    event.available_form_references.length.should == 1
+    event.should be_needs_forms_update
+
+    event.save!
+
+    event.available_form_references.length.should == 0
+    event.should_not be_needs_forms_update
+  end
+
+  it 'should correctly detect the invalid forms' do
+    disease = diseases(:chicken_pox)
+    chicken_pox_form = forms(:checken_pox_TB_form_for_LHD_2)
+    hep_form = forms(:hep_a_form)
+
+    event = Factory(:morbidity_event)
+    event.jurisdiction.secondary_entity_id = chicken_pox_form.jurisdiction_id
+    event.build_disease_event(:disease_id => disease.id)
+    event.save!
+
+    event.disease_event.disease = diseases(:hep_a)
+    event.available_form_references.length.should == 1
+    event.invalid_form_references.length == 1
+    event.should be_needs_forms_update
+  end
+
 
   it "should be invalid without a patient last name" do
     @event.interested_party.person_entity.person.last_name = ""
