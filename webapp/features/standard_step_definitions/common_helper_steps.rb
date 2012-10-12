@@ -71,6 +71,21 @@ When(/^I click the "(.+)" button$/) do |button|
   click_button button
 end
 
+When /^I wait for the ajax request to finish$/ do
+  start_time = Time.now
+  page.evaluate_script('jQuery.isReady&&jQuery.active==0').class.should_not eql(String) until page.evaluate_script('jQuery.isReady&&jQuery.active==0') or (start_time + 5.seconds) < Time.now do
+    sleep 1
+  end
+end
+
+When /^I save and exit$/ do
+  click_button "//input[@id='save_and_exit_btn']"
+end
+
+When /^I save and continue$/ do
+  click_button "//input[@id='save_and_continue_btn']"
+end
+
 When /^I save the event$/i do
   if @contact_event
     submit_form "edit_contact_event_#{@contact_event.id}"
