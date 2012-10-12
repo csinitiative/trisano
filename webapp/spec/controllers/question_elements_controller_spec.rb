@@ -22,6 +22,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @question_element = Factory.build(:question_element)
       QuestionElement.stubs(:find).returns([@question_element])
     end
@@ -40,6 +41,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @question_element = Factory.build(:question_element)
       QuestionElement.stubs(:find).returns(@question_element)
     end
@@ -58,6 +60,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @form = Factory.build(:form)
       @section_element = Factory.build(:section_element)
       @question_element = Factory.build(:question_element)
@@ -108,6 +111,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @question_element = Factory.build(:question_element)
       @form = Factory.build(:form)
       
@@ -146,6 +150,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @form = Factory.build(:form)
       @form.stubs(:disease_ids).returns([])
       @section_element = Factory.build(:section_element)
@@ -199,6 +204,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @question_element = Factory.build(:question_element)
       @form = Factory.build(:form)
       @form.stubs(:disease_ids).returns([])
@@ -256,6 +262,7 @@ describe QuestionElementsController do
 
     before(:each) do
       mock_user
+      session[:user_id] = @user.id
       @event = Factory.build(:morbidity_event)
       @follow_up = Factory.build(:follow_up_element)
       @question_element = Factory.build(:question_element)
