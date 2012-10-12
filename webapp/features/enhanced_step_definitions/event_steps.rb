@@ -142,14 +142,6 @@ Then /^no value should be selected in the sibling navigator$/ do
   @browser.get_eval(script).should == ""
 end
 
-Then(/^I should see event forms popup$/) do
-  @browser.is_element_present("//div[@id='form-references-dialog']").should be_true
-end
-
-Then(/^I should not see event forms popup$/) do
-  @browser.is_element_present("//div[@id='form-references-dialog']").should be_false
-end
-
 When(/^I am on the place event edit page$/) do
   @browser.open "/trisano/place_events/#{(@place_event).id}/edit"
   @browser.wait_for_page_to_load

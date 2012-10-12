@@ -19,6 +19,10 @@ Given(/^a basic morbidity event exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given(/^a basic morbidity event in unassigned jurisdiction with disease (.+) exists$/) do |disease|
+  @event = create_basic_event("morbidity", get_unique_name(1), disease.strip,  Place.unassigned_jurisdiction.short_name)
+end
+
 Given(/^a basic morbidity event with form exists$/) do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
   @form = Form.find_or_create_by_event_type_and_disease_id("morbidity_event", @event.disease.disease_id)
@@ -48,7 +52,16 @@ Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
 end
 
 Given /^a form for "(.+)" is present$/ do |disease|
-  form = Form.create!(:name => get_unique_name(1), :event_type => "morbidity_event", :diseases => [Disease.find_or_create_by_disease_name(disease)])
+  f = Form.create!(
+      :short_name => get_unique_name(1),
+      :description => "description",
+      :jurisdiction => Place.unassigned_jurisdiction.entity,
+      :version => 1,
+      :name => get_unique_name(1),
+      :event_type => "morbidity_event",
+      :diseases => [Disease.find_or_create_by_disease_name(disease)])
+  f.save_and_initialize_form_elements
+  f.publish
 end
 
 Given /^morbidity events with the following diseases:$/ do |table|

@@ -197,6 +197,14 @@ When /^I "([^\"]*)" the routed event$/ do |action|
   submit_form "state_change"
 end
 
+Then(/^I should see event forms popup$/) do
+  response.should have_xpath("//div[@id='form-references-dialog']")
+end
+
+Then(/^I should not see event forms popup$/) do
+  response.should_not have_xpath("//div[@id='form-references-dialog']")
+end
+
 Then /^the AE should look deleted$/ do
   response.should have_xpath("//div[@class='patientname-inactive']")
 end
