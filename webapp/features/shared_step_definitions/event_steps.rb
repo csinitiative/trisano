@@ -51,7 +51,7 @@ Given(/^a morbidity event exists with the disease (.+)$/) do |disease|
   @event.save!
 end
 
-Given /^a form for "(.+)" is present$/ do |disease|
+Given /^a morbidity event live form for (.+) in unassigned jurisdiction exists$/ do |disease|
   f = Form.create!(
       :short_name => get_unique_name(1),
       :description => "description",
@@ -67,6 +67,12 @@ end
 Given /^morbidity events with the following diseases:$/ do |table|
   table.rows.each do |disease|
     create_basic_event("morbidity", get_unique_name(1), disease.first, get_random_jurisdiction_by_short_name)
+  end
+end
+
+Given /^the following diseases:$/ do |table|
+  table.rows.each do |disease|
+    Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease.first)
   end
 end
 
