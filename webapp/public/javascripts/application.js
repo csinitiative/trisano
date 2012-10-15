@@ -503,9 +503,9 @@ jQuery(function() {
   jQuery("#save_forms_button").click(function(event){
     var event_id = jQuery("#form-references-dialog input[type=hidden]").val();
     var forms = jQuery.makeArray(jQuery("#form-references-dialog input[type=checkbox]:checked").val());
-    var removed_forms = jQuery("#form-references-dialog #forms_references input[type=checkbox]");
-    if (removed_forms.length == 0 ||
-        (removed_forms.is(function() { return !jQuery(this).prop("checked"); }) &&
+    var has_removed_forms = jQuery("#form-references-dialog #forms_references input[type=checkbox]").is(function() { return !jQuery(this).prop("checked"); });
+    if (!has_removed_forms ||
+        (has_removed_forms &&
         window.confirm("Are you sure? Removing a form will also remove all answers to questions on that form."))) {
         jQuery.ajax(Trisano.url("/events/" + event_id + "/forms.js"), {
           beforeSend: function() {

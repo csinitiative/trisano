@@ -57,7 +57,7 @@ describe MorbidityEvent do
     event.save!
 
     event.available_form_references.length.should == 0
-    event.should_not be_needs_forms_update
+    event.should be_needs_forms_update
   end
 
   it 'should correctly detect the invalid forms' do
