@@ -85,10 +85,30 @@ module TrisanoAuth
           end
 
           def password_repeated?
-            if self.valid_password?(self.password, true)
-              self.errors.add_to_base "New password should be different from the old one."
+            return if self.password.blank?
+            arguments_type = act_like_restful_authentication? ? :restful_authentication : nil
+            found = self.old_passwords.any? do |old_password|
+              args = case arguments_type
+              when :restful_authentication
+                [REST_AUTH_SITE_KEY, old_password[:salt], self.password, REST_AUTH_SITE_KEY].compact
+              else
+                [self.password, old_password[:salt]].compact
+              end
+              old_password[:password] == crypto_provider.encrypt(args)
+            end
+            self.errors.add_to_base "New password should be different from the password used last 10 times." if found
+          end
+
+          def update_old_passwords
+            if self.errors.empty? and send("#{crypted_password_field}_changed?")
+              self.old_passwords ||= []
+              self.old_passwords.unshift({:password => send("#{crypted_password_field}"), :salt =>  send("#{password_salt_field}") })
+              self.old_passwords = self.old_passwords[0, 10]
             end
           end
+
+          base.serialize :old_passwords, Array
+          base.after_validation :update_old_passwords
 
           base.acts_as_authentic do |c|
             c.login_field = 'user_name'

@@ -28,9 +28,53 @@ describe User do
       @user.password_confirmation = 'changeme'
     end
 
+    it 'should not repeat passwords for 10 times' do
+      @user.should be_valid
+
+      @user.password = 'Test1234!'
+      @user.password_confirmation = 'Test1234!'
+      @user.should be_valid
+
+      @user.password = 'Helo1234!'
+      @user.password_confirmation = 'Helo1234!'
+      @user.should be_valid
+
+      @user.password = 'Test1234!'
+      @user.password_confirmation = 'Test1234!'
+      @user.should_not be_valid
+
+      ["One1234!", "Two1234!", "Thre1234!", "Four1234!", "Five1234!", "Six1234!", "Seven1234!", "Eight1234!", "Nine1234!"].each do |p|
+        u.password = p
+        u.password_confirmation = p
+        u.save!
+      end
+
+      @user.password = "Helo1234!"
+      @user.password_confirmation = "Helo1234!"
+      @user.save.should_not be_true
+    end
+
+    it 'should allow the same password on the eleventh time' do
+      @user.password = "Valid1234!"
+      @user.password_confirmation = "Valid1234!"
+      @user.save!
+
+      ["One1234!", "Two1234!", "Thre1234!", "Four1234!", "Five1234!", "Six1234!", "Seven1234!", "Eight1234!", "Nine1234!", "Ten1234!"].each do |p|
+        u.password = p
+        u.password_confirmation = p
+        u.save!
+      end
+
+      @user.password = "Valid1234!"
+      @user.password_confirmation = "Valid1234!"
+      @user.save.should be_true
+      @user.old_passwords.length.should == 10
+    end
+
     it 'should be valid with a password, and password confirmation' do
       @user.should be_valid
     end
+
 
     it 'should not be valid without a password' do
       @user.password = nil
