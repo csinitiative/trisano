@@ -666,7 +666,7 @@ class Event < ActiveRecord::Base
   end
 
   def needs_forms_update?
-    self.available_form_references.length > 0 or self.invalid_form_references.length > 0
+    self.available_form_references.length > 0 or self.form_references.length > 0
   end
 
   def available_form_references

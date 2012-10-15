@@ -62,7 +62,6 @@ class MorbidityEventsController < EventsController
     else
       @event.attributes = params[:morbidity_event]
     end
-    @disease_changed = @event.disease_changed?
     unless can_create?
       render :partial => "events/permission_denied", :locals => { :reason => t("no_event_create_privs"), :event => @event }, :layout => true, :status => 403 and return
     end
@@ -79,8 +78,7 @@ class MorbidityEventsController < EventsController
         @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = t("cmr_created")
         format.html {
-          if go_back or @disease_changed
-            @query_params.merge!({:update_forms => @disease_changed}) if @disease_changed
+          if go_back
             redirect_to edit_cmr_url(@event, @query_params)
           else
             redirect_to cmr_url(@event, @query_params)
@@ -121,7 +119,7 @@ class MorbidityEventsController < EventsController
         flash[:notice] = t("cmr_updated")
         format.html {
           if go_back or @disease_changed
-            @query_params.merge!({:update_forms => @disease_changed}) if @disease_changed
+            @query_params.merge!({:forms => true}) if @disease_changed
             redirect_to edit_cmr_url(@event, @query_params)
           else
             url = params[:redirect_to]
