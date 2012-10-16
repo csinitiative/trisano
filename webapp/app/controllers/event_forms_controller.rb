@@ -53,12 +53,12 @@ class EventFormsController < ApplicationController
       render :partial => "events/permission_denied", :locals => { :reason => t("no_add_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
+    @event.form_references.clear if params[:replace]
     forms_to_add = params[:forms_to_add] || []
     if forms_to_add.empty? 
       flash[:error] = t("no_forms_were_selected_for_addition")
     else
       begin
-        @event.form_references.clear if params[:replace]
         @event.add_forms(forms_to_add)
         redis.delete_matched("views/events/#{@event.id}/*")
       rescue ArgumentError, ActiveRecord::RecordNotFound
