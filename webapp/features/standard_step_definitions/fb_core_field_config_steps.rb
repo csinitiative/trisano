@@ -17,7 +17,7 @@
 
 Then /^I should see all of the core field config questions$/ do
   label_text = Nokogiri::HTML(response.body).xpath("//label").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
     label_text.should contain("#{core_field.key} before?")
     label_text.should contain("#{core_field.key} after?")
   end
@@ -26,7 +26,7 @@ end
 Then /^I should see all of the promoted core field config questions$/ do
   raise "No promoted event found" if @promoted_event.nil?
   label_text = Nokogiri::HTML(response.body).xpath("//label").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
     promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
     label_text.should contain("#{promoted_core_field_key} before?")
     label_text.should contain("#{promoted_core_field_key} after?")
@@ -34,7 +34,7 @@ Then /^I should see all of the promoted core field config questions$/ do
 end
 
 When /^I answer all core field config questions$/ do
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
     fill_in("#{core_field.key} before?", :with => "#{core_field.key} before answer")
     fill_in("#{core_field.key} after?", :with => "#{core_field.key} after answer")
   end
@@ -42,7 +42,7 @@ end
 
 Then /^I should see all core field config answers$/ do
   divs_text =  Nokogiri::HTML(response.body).css("div").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
     divs_text.should contain("#{core_field.key} before answer")
     divs_text.should contain("#{core_field.key} after answer")
   end
@@ -51,7 +51,7 @@ end
 Then /^I should see all promoted core field config answers$/ do
   raise "No promoted event found" if @promoted_event.nil?
   divs_text =  Nokogiri::HTML(response.body).css("div").text
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
     promoted_core_field_key = core_field.key.gsub(@form.event_type, @promoted_event.class.name.underscore)
     divs_text.should contain("#{promoted_core_field_key} before answer")
     divs_text.should contain("#{promoted_core_field_key} after answer")

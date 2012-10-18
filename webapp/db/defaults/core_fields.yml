@@ -953,6 +953,8 @@
   event_type: morbidity_event
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][admission_date]
+  repeater: true
+  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:

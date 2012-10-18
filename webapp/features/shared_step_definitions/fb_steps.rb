@@ -133,28 +133,26 @@ Given /^that form has core field configs configured for all core fields$/ do
   @core_field_container = @form.core_field_elements_container
 
   # Create a core field config for every core field
-  CoreField.all(:conditions => ['event_type = ? and disease_specific != true', @form.event_type]).each do |core_field|
-    if core_field.fb_accessible
-      core_field_config = CoreFieldElement.new
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
+    core_field_config = CoreFieldElement.new
 
-      core_field_config.core_path = core_field.key
-      core_field_config.parent_element_id = @core_field_container.id
-      core_field_config.save_and_add_to_form
+    core_field_config.core_path = core_field.key
+    core_field_config.parent_element_id = @core_field_container.id
+    core_field_config.save_and_add_to_form
 
-      # Add question to before config
-      create_question_on_form(@form, {
-          :question_text => "#{core_field.key} before?",
-          :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
-        core_field_config.children[0]
-      )
+    # Add question to before config
+    create_question_on_form(@form, {
+        :question_text => "#{core_field.key} before?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
+      core_field_config.children[0]
+    )
 
-      # Add question to after config
-      create_question_on_form(@form, { 
-          :question_text => "#{core_field.key} after?",
-          :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
-        core_field_config.children[1]
-      )
-    end
+    # Add question to after config
+    create_question_on_form(@form, { 
+        :question_text => "#{core_field.key} after?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
+      core_field_config.children[1]
+    )
   end
 end
 

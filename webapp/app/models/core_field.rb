@@ -109,6 +109,10 @@ class CoreField < ActiveRecord::Base
       super
     end
 
+    def repeaters_supported?
+      column_names.include? 'repeater'
+    end
+
     def nested_fields_supported?
       column_names.include? 'tree_id'
     end
@@ -116,6 +120,10 @@ class CoreField < ActiveRecord::Base
     private
 
     def place_in_tree(attributes, &block)
+      unless repeaters_supported?
+        attributes.delete('repeater')
+        attributes.delete('repeater_parent_key')
+      end
       if nested_fields_supported?
         parent = find_parent(attributes)
         attributes['tree_id'] = parent ? parent.tree_id : next_tree_id
