@@ -20,6 +20,7 @@ require 'spec_helper'
 describe MorbidityEventsController do
   before do
     @user = Factory(:user)
+    session[:user_id] = @user.id
     User.stubs(:current_user).returns(@user)
   end
 
