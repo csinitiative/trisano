@@ -420,20 +420,20 @@ module Export
         (result[60...result.length] || '').rstrip
       end
 
-      private
       def pg_earliest_date(array)
          return if array.blank?
          pg_array(array).map {|d| Date.parse(d) }.sort.first
       end
 
       def pg_closest_date(event_date, array)
-        return [nil, -1] if array.blank?
-        array = array.map {|d| Date.parse(d) }
-        dates = Hash[array.map {|d| (event_date.to_date - d).abs.to_i.to_s }.zip(array) ]
-        closest_date = dates[dates.keys.sort.last]
+        return [nil, -1] if array.blank? or event_date.blank?
+        array = array.map {|d| d.to_date  }
+        dates = Hash[array.map {|d| (event_date.to_date - d).abs.to_i }.zip(array) ]
+        closest_date = dates[dates.keys.sort.first]
         [closest_date, array.index(closest_date)]
       end
 
+      private
       def write_answers_to(result)
         return if text_answers.blank?
         answers      = pg_array(self.text_answers)
@@ -565,7 +565,7 @@ module Export
 
       def exp_specsite
         value, index = pg_closest_date(reference_date, pg_array(lab_test_dates))
-        value = HumanEvent.trisano_specimen[HumanEvent.specimen_external_codes[pg_array(specimen)[index]]] unless value.blank?  or pg_array(specimen)[index].blank?
+        value = HumanEvent.trisano_specimen[HumanEvent.specimen_external_codes[pg_array(specimen)[index].to_i]] unless value.blank?  or pg_array(specimen)[index].blank?
         value ||= '  '
         [value, 85]
       end

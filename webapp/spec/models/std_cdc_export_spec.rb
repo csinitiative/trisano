@@ -133,6 +133,38 @@ describe CdcExport do
       end
     end
 
+    it "should not raise errors for events with blank fields" do
+      event = MorbidityEvent.new(@event_hash)
+      disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+      event.save!
+      event.build_disease_event(disease_event.attributes)
+      event.save!
+      event.disease.disease.avr_groups << AvrGroup.std
+      with_cdc_records(event) do |records|
+        records[0].size.should_not == 0
+      end
+    end
+
+    it "should correctly display specsite fields" do
+      with_cdc_records do |records|
+        #exp_specsite
+        records[0].first.to_cdc[84..85].should == Export::Cdc::HumanEvent.netss_specimen["Blood/Serum"]
+        #exp_specsite_date
+        records[0].first.to_cdc[86..91].should == "121008"
+        #exp_treatment_date
+        records[0].first.to_cdc[129..134].should == "121021"
+      end
+    end
+
+    it "should correctly display the closest date" do
+       with_cdc_records do |records|
+         d = 10.days.ago.to_date.to_s(:db)
+         o = 16.days.ago.to_date.to_s(:db)
+         n = 5.days.ago.to_date.to_s(:db)
+         records[0].first.pg_closest_date(d, [n, o]).first.should == 5.days.ago.to_date
+       end
+    end
+
     it "should display '49' (state id) for the state field" do
       with_cdc_records do |records|
         records[0].first.to_cdc[2..3].should == "20"
