@@ -52,7 +52,7 @@ class Event < ActiveRecord::Base
   has_one :disease_event, :order => 'created_at ASC', :dependent => :delete
 
   belongs_to :event_queue
-  has_many :form_references, :order => 'created_at ASC'
+  has_many :form_references, :order => 'created_at ASC', :dependent => :destroy
   has_many :forms, :through => :form_references
   has_many :answers, :autosave => true, :include => [:question]
   has_many :tasks, :order => 'due_date ASC'

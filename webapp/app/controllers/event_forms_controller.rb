@@ -19,7 +19,6 @@ class EventFormsController < ApplicationController
   include ActionView::Helpers::TranslationHelper
   before_filter :find_event
   after_filter TouchEventFilter, :only => [:create, :destroy]
-
   def index
 
     unless (
@@ -72,7 +71,9 @@ class EventFormsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to event_forms_path(@event) }
-      format.js { flash[:notice] = nil }
+      format.js {
+        flash[:notice] = nil
+      }
     end
   end
 

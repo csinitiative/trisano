@@ -1,2 +1,3 @@
-Successfully updated.<br/>
-<a href="#" style="text-decoration: underline" onclick="location.reload();return false;">Reload when done</a>.
+<% tabbed_content(morbidity_event_tabs, '0') do %>
+  <%= render :partial => "morbidity_events/tabs", :locals => {:f => ExtendedFormBuilder.new("morbidity_event", setup_human_event_tree(@event), @template, {}, nil) } %>
+<% end %>

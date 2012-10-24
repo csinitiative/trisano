@@ -1,6 +1,6 @@
 class TouchEventFilter
   def self.filter(controller)
-    touch controller.instance_variable_get("@event")
+    touch controller.instance_variable_get("@event") unless controller.request.xhr?
   end
 
   def self.touch(object, attribute = nil)
