@@ -29,7 +29,7 @@
         - for form_reference in @event.form_references
           %li
             = check_box_tag "form_id", form_reference.form_id, true
-            = link_to(form_reference.form.name, form_path(form_reference.form.template), :target => "_blank", :class => (@event.invalid_form_references.include?(form_reference) ? "invalid": ""))
+            = form_reference.form.name
 
   %div{:id => "available_forms"}
     =t 'available_forms'
@@ -44,4 +44,5 @@
             = link_to(form_reference.form.name, form_path(form_reference.form.template), :target => "_blank")
   %hr
   %div
-    = submit_tag "Save", :id => "save_forms_button"
+    = submit_tag "Change Forms", :id => "save_forms_button"
+    = submit_tag "Cancel", :id => "cancel_forms_button"

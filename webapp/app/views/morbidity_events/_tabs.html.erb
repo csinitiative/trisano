@@ -1,0 +1,67 @@
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/demographic_tab" do -%>
+  <% core_tab(:demographic_tab, f) do -%>
+    <%= render :partial => "events/people/form", :locals => { :f => f, :event => @event } %>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Demographics" } %>
+  <% end -%>
+<% end -%>
+
+<!--Do not cache at this level.  There is role-specific logic in the disease_info_form partial-->
+<% core_tab(:clinical_tab, f) do -%>
+  <%= render :partial => 'events/disease_info_form', :locals => { :f => f } %>
+  <% cache_event_fragment @event, "events/#{@event.id}/edit/clinical_tab/core_tab_supplemental" do -%>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Clinical" } %>
+  <% end -%>
+<% end -%>
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/lab_info_tab" do -%>
+  <% core_tab(:lab_info_tab, f) do -%>
+    <%= render :partial => 'events/lab_info_form', :locals => {:f => f} %>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Laboratory" } %>
+  <% end -%>
+<% end -%>
+
+<!--Do not cache at this level.  There is role-specific logic in the contacts_form partial-->
+<% core_tab(:contacts_tab, f) do -%>
+  <%= render :partial => 'events/contacts_form', :locals => {:f => f} %>
+  <% cache_event_fragment @event, "events/#{@event.id}/edit/contacts_tab/core_tab_supplemental" do -%>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Contacts" } %>
+  <% end -%>
+<% end -%>
+
+<!--Do not cache at this level.  There is role-specific logic in the contacts_form partial-->
+<% core_tab(:encounters_tab, f) do -%>
+  <%= render :partial => 'events/encounters_form', :locals => {:f => f} %>
+<% end -%>
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/epi_tab" do -%>
+  <% core_tab(:epi_tab, f) do -%>
+    <%= render :partial => 'events/epidemiological_form', :locals => {:f => f} %>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Epidemiological" } %>
+  <% end -%>
+<% end -%>
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/reporting_tab" do -%>
+  <% core_tab(:reporting_tab, f) do -%>
+    <%= render :partial => 'events/reporting_agency_form', :locals => {:f => f} %>
+    <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Reporting" } %>
+  <% end -%>
+<% end -%>
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/investigation_tab" do -%>
+  <% core_tab(:investigation_tab, f) do -%>
+    <%= render :partial => 'events/disease_investigation_form', :locals => {:f => f} %>
+  <% end -%>
+<% end -%>
+
+<% cache_event_fragment @event, "events/#{@event.id}/edit/notes_tab" do -%>
+  <% core_tab(:notes_tab, f) do -%>
+    <%= render :partial => 'events/note_form', :locals => {:f => f} %>
+  <% end -%>
+<% end -%>
+
+<!--Do not cache at this level.  There is role-specific logic in the partials-->
+<% core_tab(:administrative_tab, f) do -%>
+  <%= render :partial => 'events/cmr_info_form', :locals => {:f => f} %>
+  <%= render :partial => 'events/core_tab_supplemental', :locals => { :f => f, :tab => "Administrative" } %>
+<% end -%>
