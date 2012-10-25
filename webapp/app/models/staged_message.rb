@@ -227,11 +227,25 @@ class StagedMessage < ActiveRecord::Base
     self.lab_results.first.try(:participation).try(:event)
   end
 
-  def new_event_from(entity_id=nil)
+#  def new_assessment_event_from(entity_id = nil)
+#    @event = AssessmentEvent.new
+#    person = PersonEntity.find(params[:from_person])
+#    @event.copy_from_person(person)
+#    @event.add_note(t("system_notes.event_derived_from", :locale => I18n.default_locale, :link => ActionView::Base.new.link_to("Event #{org_event.record_number}", ae_path(org_event) ))) if components && !components.empty?
+#    @event.save
+#    Event.transaction do
+#      [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
+#      @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
+#    end
+#    @event.reload
+#    @event.try(:address).try(:establish_canonical_address)
+#  end
+
+  def new_event_from(entity_id = nil, type = "morbidity_event")
 
     return nil if self.patient.patient_last_name.blank?
 
-    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at)
+    event = type.classify.constantize.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at)
 
     if entity_id
       person = PersonEntity.find(entity_id.to_i)

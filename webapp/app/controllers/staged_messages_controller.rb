@@ -137,7 +137,7 @@ class StagedMessagesController < ApplicationController
         event = Event.find(params[:event_id])
         msg_string = t("existing")
       else
-        event = staged_message.new_event_from(params[:entity_id])
+        event = staged_message.new_event_from(params[:entity_id], params[:type])
         msg_string = t("new")
       end
 

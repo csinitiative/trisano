@@ -920,6 +920,7 @@ en:
   discard: "Discard"
   raw: "Raw"
   create_cmr_from_message: "Create a CMR from this message"
+  create_ae_from_message: "Create an AE from this message"
   dob: "DOB"
   event_search_using_staged_message: "Event Search using staged message"
   staging_area_states:
@@ -1094,6 +1095,7 @@ en:
 #Staged messages
   staged_message_notes: "Notes"
   assign_new_cmr: "Assign to new CMR using this person"
+  assign_new_ae: "Assign to new AE using this person"
   assign_lab_result: "Assign lab result"
 
   trisano:

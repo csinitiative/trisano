@@ -817,6 +817,7 @@ test:
   discard: "xDiscard"
   raw: "xRaw"
   create_cmr_from_message: "xCreate a CMR from this message"
+  create_ae_from_message: "xCreate an AE from this message"
   dob: "xDOB"
   staging_area_states:
     pending: xPending
@@ -966,6 +967,7 @@ test:
 #Staged messages
   staged_message_notes: "xNotes"
   assign_new_cmr: "xAssign to new CMR using this person"
+  assign_new_ae: "xAssign to new AE using this person"
   assign_lab_result: "xAssign lab result"
 
   trisano:
