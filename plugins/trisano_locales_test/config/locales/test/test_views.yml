@@ -856,12 +856,15 @@ test:
   user_detail: "xUser Detail"
   create_new_user: "xCreate New User"
   configure_shortcuts: "xConfigure Shortcuts"
+  configure_event_settings: "xConfigure Event Settings"
   keyboard_shortcuts: "xKeyboard Shortcuts"
   update_shortcuts: "xUpdate Shortcuts"
   navigation: "xNavigation"
   edit_keyboard_shortcuts: "xEdit Keyboard Shortcuts"
   user_settings: "xUser Settings"
   priority: "xPriority"
+  event_display_option: "xEvent Display Settings"
+  toggle_event_details: "xToggle event details"
 
   #forms
   create_new_form: "xCreate New Form"

@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   end
 
   serialize :event_view_settings, Hash
+  serialize :event_display_settings, Hash
   serialize :task_view_settings, Hash
   serialize :shortcut_settings, Hash
 
@@ -84,6 +85,10 @@ class User < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def toggle_event_display?
+    event_display_settings and event_display_settings[:event_display_option] == "1"
   end
 
   def active?

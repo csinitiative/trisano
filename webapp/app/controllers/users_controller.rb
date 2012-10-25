@@ -20,6 +20,7 @@ class UsersController < AdminController
     :shortcuts,
     :shortcuts_edit,
     :shortcuts_update,
+    :event_settings,
     :settings,
     :email_addresses,
     :create_email_address,
@@ -77,6 +78,18 @@ class UsersController < AdminController
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def event_settings
+    @user = User.current_user
+    if params[:user]
+      @user.attributes = params[:user]
+      if @user.save(false)
+        flash[:notice] = t("event_display_settings_successfully_updated")
+      else
+        flash[:error] = t("event_display_settings_update_failed")
       end
     end
   end

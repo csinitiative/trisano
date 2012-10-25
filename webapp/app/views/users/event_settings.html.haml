@@ -1,0 +1,32 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either 
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+-# See the GNU Affero General Public License for more details.
+-# 
+-# You should have received a copy of the GNU Affero General Public License along with TriSano. 
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+- content_for :title do
+  =t 'configure_event_settings'
+
+- form_for(@user, :url => {:action => "event_settings"}, :method => "put", :html => {:id => "event_settings_form"} ) do |f|
+  %table.list
+    %tbody
+      %tr
+        %th{:colspan => "2"}
+          =t('event_display_option')
+      %tr
+        %td
+          = hidden_field_tag "user[event_display_settings][event_display_option]", 0
+          = check_box_tag "user[event_display_settings][event_display_option]", 1, (@user.event_display_settings || {})[:event_display_option] == "1"
+        %td
+          %label
+            =t('toggle_event_details')
+  %p
+  = f.submit

@@ -725,3 +725,6 @@ form.inplaceeditor-form a {
       .autocomplete ul li .informal {
         display: block;
         text-indent: 3px; }
+#event_settings_form {
+    width: 400px;
+}
