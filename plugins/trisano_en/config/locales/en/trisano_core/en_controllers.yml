@@ -274,6 +274,8 @@ en:
   user_successfully_updated: "User was successfully updated."
   shortcuts_successfully_updated: "Shortcuts successfully updated"
   shortcuts_update_failed: "Shortcuts update failed"
+  event_display_settings_successfully_updated: "Event display settings were successfully updated."
+  event_display_settings_update_failed: "Event display settings update failed"
 
   # Value elements
   unable_to_display_value_element_form: "Unable to display the value element form at this time."

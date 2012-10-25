@@ -65,6 +65,10 @@
     - dom_loaded do
       = "shortcuts_init('#{home_path}', '#{shortcuts_path}');"
       = "focus_init();"
+      - if User.current_user and User.current_user.toggle_event_display?
+        = "Trisano.Layout.hookLogoMenu();"
+      - else
+        = "Trisano.Layout.toggleLogoMenu();"
       - dom_loaded_javascripts.each do |js|
         = js
     = javascript_include_tag 'wz_tooltip'
@@ -80,7 +84,7 @@
           .user.hidden
             -if User.current_user
               =render_user_tools(User.current_user)
-      #bar.hidden
+      #bar
         .container
           .left.areas_title
             = yield :title

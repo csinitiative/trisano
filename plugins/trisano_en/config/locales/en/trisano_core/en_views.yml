@@ -960,6 +960,7 @@ en:
   user_detail: "User Detail"
   create_new_user: "Create New User"
   configure_shortcuts: "Configure Shortcuts"
+  configure_event_settings: "Configure Event Settings"
   keyboard_shortcuts: "Keyboard Shortcuts"
   update_shortcuts: "Update Shortcuts"
   general: "General"
@@ -973,6 +974,8 @@ en:
   no_email_addresses: "No e-mail addresses currently configured"
   invalid_email_format: "format is invalid"
   user_settings: "User Settings"
+  event_display_option: "Event Display Settings"
+  toggle_event_details: "Event Details display is controlled using the TriSano 'cube' in the upper left hand corner of the screen."
   priority: "Priority"
 
   #forms
