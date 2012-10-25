@@ -227,11 +227,12 @@ class StagedMessage < ActiveRecord::Base
     self.lab_results.first.try(:participation).try(:event)
   end
 
-  def new_event_from(entity_id=nil)
+  def new_event_from(entity_id = nil, type = nil)
 
     return nil if self.patient.patient_last_name.blank?
 
-    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at)
+    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at) if type.blank?
+    event = AssessmentEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at) if type == "assessment_event"
 
     if entity_id
       person = PersonEntity.find(entity_id.to_i)

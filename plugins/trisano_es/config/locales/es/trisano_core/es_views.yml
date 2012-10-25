@@ -895,6 +895,7 @@ es:
   discard: "Descartar"
   raw: "Primo/a(s)"
   create_cmr_from_message: "Crear CMR de este mensaje"
+  create_ae_from_message: "Crear AE de este mensaje"
   dob: "FN"
   event_search_using_staged_message: "Búsqueda de eventos emplea mensaje de fases"
   staging_area_states:
@@ -1061,6 +1062,7 @@ es:
 #Staged messages
   staged_message_notes: "Apuntes"
   assign_new_cmr: "Asignar a CMR nuevo usando esta persona"
+  assign_new_ae: "Asignar a AE nuevo usando esta persona"
   assign_lab_result: "Asignar resultado de laboratorio"
 
   trisano:

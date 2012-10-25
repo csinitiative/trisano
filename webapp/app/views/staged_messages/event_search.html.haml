@@ -85,7 +85,13 @@
               - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_to_new_with_person_#{current_entity_id}") do
                 = hidden_field_tag('entity_id', current_entity_id)
                 = link_to_function(t(:assign_new_cmr), "this.parentNode.submit()")
+              %br
+              - form_tag(event_staged_message_path(@staged_message, :type => "assessment_event"), :id => "assign_to_new_ae_with_person_#{current_entity_id}", :style => "display: inline") do
+                = hidden_field_tag('entity_id', current_entity_id)
+                = link_to_function(t(:assign_new_ae), "this.parentNode.submit()")
 
   %br
   - form_tag(event_staged_message_path(@staged_message), :id => "assign_to_new") do
     = link_to_function(t("create_cmr_from_message"), "this.parentNode.submit()")
+  - form_tag(event_staged_message_path(@staged_message), :id => "assign_to_new_ae", :type => "assessment_event") do
+    = link_to_function(t("create_ae_from_message"), "this.parentNode.submit()")

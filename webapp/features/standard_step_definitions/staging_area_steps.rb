@@ -83,6 +83,11 @@ When /^I click 'Create a CMR from this message'$/ do
   submit_form "assign_to_new"
 end
 
+When /^I click 'Create an AE from this message'$/ do
+  # JavaScript!!!
+  submit_form "assign_to_new_ae"
+end
+
 Then /^I should see a '(.+)' message$/ do |msg|
   # Flash message
   response.should contain(msg)
