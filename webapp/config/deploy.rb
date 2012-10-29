@@ -74,7 +74,7 @@ namespace :deploy do
   end
   
   desc "Dumps the database before running migrations"
-  task :dump_db do
+  task :dump_db, :roles => :app do
     rails_env = fetch :rails_env, 'production'
     run "cd #{latest_release} && bundle exec rake db:dump RAILS_ENV=#{rails_env}"
   end

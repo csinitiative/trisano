@@ -553,7 +553,7 @@ describe HumanEvent, 'adding staged messages' do
 
           place = event.diagnostic_facilities.first.place_entity
           place.should_not be_blank
-          place.name.should == @orc.facility_name
+          place.name.should == @orc.facility_name.titleize
 
           place_code = Code.find_by_code_name_and_the_code('placetype', 'H')
           place.place.place_types.include?(place_code).should == true

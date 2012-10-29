@@ -289,7 +289,8 @@ label {
   white-space: normal; }
 
 .system-message {
-  border-bottom: 1px solid #76ADA6; }
+  color: #ff0000;
+}
 
 .message-tools {
   text-align: right;
@@ -312,4 +313,8 @@ label {
 }
 #save_indicator_img {
     display: none;
+}
+
+.search_group input[name=record_number] {
+    margin-right:25px;
 }

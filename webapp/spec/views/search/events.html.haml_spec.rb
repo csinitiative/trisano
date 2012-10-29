@@ -82,6 +82,11 @@ describe "search/events.html.haml" do
         div.should have_tag("input[name='name']")
         div.should have_tag("input[name='sw_first_name']")
         div.should have_tag("input[name='sw_last_name']")
+        div.should have_tag("input[name='birth_date']")
+        div.should have_tag("div.horiz") do |horiz|
+          horiz.should have_tag("label[for=?]", 'record_number')
+          horiz.should have_tag("input#record_number")
+        end
       end
     end
   end
@@ -105,7 +110,6 @@ describe "search/events.html.haml" do
           gender.should have_option(:text => 'Male')
           gender.should have_option(:text => 'Female')
         end
-        demo.should have_tag("input[name='birth_date']")
       end
     end
   end
@@ -183,10 +187,6 @@ describe "search/events.html.haml" do
           vert.should have_tag("label[for=?]", 'entered_on_start')
           vert.should have_tag("input#entered_on_start")
           vert.should have_tag("input#entered_on_end")
-        end
-        event.should have_tag("div.horiz") do |horiz|
-          horiz.should have_tag("label[for=?]", 'record_number')
-          horiz.should have_tag("input#record_number")
         end
         event.should have_tag("div.vert") do |vert|
           vert.should have_tag("label[for=?]", 'jurisdiction_ids')
