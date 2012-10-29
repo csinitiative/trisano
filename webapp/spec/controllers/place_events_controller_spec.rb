@@ -20,6 +20,7 @@ require 'spec_helper'
 describe PlaceEventsController do
   before(:each) do
     @user = Factory(:user)
+    session[:user_id] = @user.uid
     User.stubs(:current_user).returns(@user)
   end
 
