@@ -39,5 +39,15 @@ no_forms_disease:
 
 syphilis:
   id: 9
-  disease_name: Syphilis, primary
+  disease_name: "Syphilis, primary"
   cdc_code: "10311"
+
+pertussis:
+  id: 10
+  disease_name: "Pertussis"
+  cdc_code: "188888"
+
+lead_poisoning:
+  id: 11
+  disease_name: "Lead poisoning"
+  cdc_code: "188889"

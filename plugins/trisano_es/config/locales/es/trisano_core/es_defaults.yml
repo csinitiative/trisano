@@ -152,13 +152,13 @@ es:
     lab: Resultados de laboratorio
     letter: Carta
     x-ray: Rayo X
-    edn-notification: Notificaci—n de EDN
+    edn-notification: Notificaciï¿½n de EDN
     edn-followup: Seguimiento de EDN
     igra-report: IGRA Reporte
-    consult-report: Consultaci—n Reporte
+    consult-report: Consultaciï¿½n Reporte
     ijr: IJR
-    death-certificate: Certificaci—n de Muerte
-    medical-record: Historia Cl’nica
+    death-certificate: Certificaciï¿½n de Muerte
+    medical-record: Historia Clï¿½nica
     other: Otro/a
 
   encounter_location_types:
@@ -278,7 +278,7 @@ es:
   country: "Country"
   abnormal_flags: "Abnormal flags"
   specimen_id: "Specimen ID"
-
+  specimen_source: "Specimen source"
   event_disease_set_to: "Se ha fijado la enfermedad del evento a {{diesase_name}}"
   loinc_code_maps_to_multiple_diseases: "Correlaciona(n) el(los) cÃ³digo(s) LOINC a multiples enfermedades:"
   unmapped_language_code: "ELR language code {{lang_code}} not found among TriSano's external codes."
