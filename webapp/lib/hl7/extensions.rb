@@ -574,6 +574,25 @@ module StagedMessages
       end
     end
 
+    # Take the specimen source from SPM-4
+    # Returns +nil+ if no SPM segment.
+    def specimen_source_2_5_1
+      return nil unless spm_segment
+
+      specimen_source = spm_segment.specimen_source_site
+      specimen_source = spm_segment.specimen_type if specimen_source.blank?
+
+      return nil if specimen_source.blank?
+
+      # The second delimited field is the name of the specimen
+      specimen_source.split(spm_segment.item_delim).second
+    end
+
+    # Take the specimen source from OBR-15
+    def specimen_source_2_3_1
+      obr_segment.specimen_source.split(obr_segment.item_delim).join(', ')
+    end
+
     def collection_date
       return Date.parse(obr_segment.observation_date).to_s unless
         obr_segment.observation_date.blank?
@@ -677,25 +696,6 @@ module StagedMessages
 
     def clinician_phone_components
       obr_segment.order_callback_phone_number.split(obr_segment.item_delim)
-    end
-
-    # Take the specimen source from SPM-4
-    # Returns +nil+ if no SPM segment.
-    def specimen_source_2_5_1
-      return nil unless spm_segment
-
-      specimen_source = spm_segment.specimen_source_site
-      specimen_source = spm_segment.specimen_type if specimen_source.blank?
-
-      return nil if specimen_source.blank?
-
-      # The second delimited field is the name of the specimen
-      specimen_source.split(spm_segment.item_delim).second
-    end
-
-    # Take the specimen source from OBR-15
-    def specimen_source_2_3_1
-      obr_segment.specimen_source.split(obr_segment.item_delim).join(', ')
     end
   end
 
