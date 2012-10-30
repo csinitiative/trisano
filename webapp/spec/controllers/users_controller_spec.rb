@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe UsersController do
 
   before do
-    @current_user = Factory.create(:user)
+    @current_user = create_user
     @current_user.email_addresses << Factory.create(:email_address)
 
     @another_user = Factory.create(:user)

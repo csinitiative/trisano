@@ -20,8 +20,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe EncounterEventsController do
   
   before(:each) do
-    @user = Factory(:user)
-    User.stubs(:current_user).returns(@user)
+    create_user
   end
 
   describe "handling GET /encounter_events" do
