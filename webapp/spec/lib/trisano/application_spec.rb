@@ -4,6 +4,10 @@ module Trisano
   describe Application do
     include Trisano
 
+   after :each do
+     reload_site_config
+   end
+
     it "returns a human readable version number" do
       application.version_number.should == Trisano::VERSION.join('.')
     end

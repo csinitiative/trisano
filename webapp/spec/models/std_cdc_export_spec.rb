@@ -83,6 +83,10 @@ describe CdcExport do
     }
   end
 
+  after :each do
+    reload_site_config
+  end
+
   describe 'test STD CdcRecord methods' do
     fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :common_test_types, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
