@@ -317,7 +317,7 @@ class User < ActiveRecord::Base
 
   def password_expired?
     return if config_options[:trisano_auth][:password_expiry_date] == 0 or config_options[:trisano_auth][:password_expiry_date].nil?
-    password_last_updated and password_last_updated < config_options[:trisano_auth][:password_expiry_date].days.ago.to_date
+    password_last_updated and password_last_updated.to_date < config_options[:trisano_auth][:password_expiry_date].days.ago.to_date
   end
 
   def password_expires_soon?
