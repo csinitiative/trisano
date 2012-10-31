@@ -32,7 +32,7 @@ def set_obx_5(msg, value)
 end
 
 describe HumanEvent, "adding from staged message" do
-  fixtures :common_test_types, :diseases, :organisms, :loinc_codes
+  fixtures :common_test_types, :diseases, :organisms, :loinc_codes, :external_codes
 
   describe "basic processing" do
     before(:each) do
@@ -93,7 +93,6 @@ describe HumanEvent, "adding from staged message" do
     it 'should set comments from OBR-15 or SPM-4 as Specimen Source' do
       with_human_event do |event|
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
-        p event.labs.first.lab_results.first.comment
         event.labs.first.lab_results.first.comment.include?("Specimen source: Stool specimen").should == true
       end
     end
@@ -252,6 +251,44 @@ describe HumanEvent, "adding from staged message" do
         telephone.phone_number.should == '5551005'
         telephone.extension.should be_blank
       end
+    end
+
+    it 'should set the person address info and telephone if not present' do
+        with_human_event do |event|
+          @hl7 = HL7::Message.parse HL7MESSAGES[:arup_1]
+          staged_message = StagedMessage.new(:hl7_message => @hl7.to_hl7)
+          staged_message.set_address_and_phone(event)
+
+          event.address.should_not be_blank
+          event.address.state_id.should == external_codes(:state_utah).id
+          event.address.street_number.should == "42"
+          event.address.street_name.should == "Happy Ln"
+          event.address.postal_code.should == "84444"
+          event.address.city.should == "Salt Lake City"
+
+          event.interested_party.person_entity.telephones.size.should == 1
+          event.interested_party.person_entity.telephones.first.area_code.should == "801"
+          event.interested_party.person_entity.telephones.first.phone_number.should == "5552346"
+        end
+    end
+
+    it 'should not update the person address info and telephone if present' do
+        with_human_event do |event|
+          @hl7 = HL7::Message.parse HL7MESSAGES[:arup_1]
+          staged_message = StagedMessage.new(:hl7_message => @hl7.to_hl7)
+          event.build_address(:city => "Los Angeles", :street_number => "1748", :street_name => "Orange Drive", :postal_code => "90028")
+          event.interested_party.person_entity.telephones.build(:phone_number => "555-1212", :entity_location_type_id => staged_message.patient.telephone_type_home.id)
+
+          staged_message.set_address_and_phone(event)
+
+          event.address.should_not be_blank
+          event.address.street_number.should == "1748"
+          event.address.street_name.should == "Orange Drive"
+          event.address.postal_code.should == "90028"
+          event.address.city.should == "Los Angeles"
+          event.interested_party.person_entity.telephones.size.should == 1
+          event.interested_party.person_entity.telephones.first.phone_number.should == "555-1212"
+        end
     end
 
     it 'should take the facility address info from ORC if present' do
