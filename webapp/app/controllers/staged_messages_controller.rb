@@ -138,6 +138,7 @@ class StagedMessagesController < ApplicationController
         msg_string = t("existing")
       else
         event = staged_message.new_event_from(params[:entity_id])
+        staged_message.set_address_and_phone(event)
         msg_string = t("new")
       end
 

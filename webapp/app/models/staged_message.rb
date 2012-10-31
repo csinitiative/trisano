@@ -227,6 +227,36 @@ class StagedMessage < ActiveRecord::Base
     self.lab_results.first.try(:participation).try(:event)
   end
 
+  def set_address_and_phone(event)
+    unless self.patient.address_empty? or event.address
+      event.build_address(:street_number => self.patient.address_street_no,
+                          :unit_number => self.patient.address_unit_no,
+                          :street_name => self.patient.address_street,
+                          :city => self.patient.address_city,
+                          :state_id => self.patient.address_trisano_state_id,
+                          :postal_code => self.patient.address_zip)
+    end
+
+    unless self.patient.telephone_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_home.id}
+      area_code, number, extension = self.patient.telephone_home
+      event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                            :phone_number => number,
+                                                            :extension => extension,
+                                                            :entity_location_type_id => patient.telephone_type_home.id)
+    end
+
+    unless patient.telephone_work_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_work.id}
+      area_code, number, extension = patient.telephone_work
+
+      event.interested_party.person_entity.telephones.delete(telephone)
+      event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                            :phone_number => number,
+                                                            :extension => extension,
+                                                            :entity_location_type_id => patient.telephone_type_work.id)
+    end
+    event
+  end
+
   def new_event_from(entity_id=nil)
 
     return nil if self.patient.patient_last_name.blank?
