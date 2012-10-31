@@ -30,7 +30,7 @@ describe EventsHelper do
     describe "for morbidity events" do
       before do
         @event = Factory.build(:morbidity_event)
-        @event.jurisdiction.build(:secondary_entity_id => @current_user.role_memberships.first.jurisdiction_id)
+        @event.jurisdiction.place_entity = @current_user.role_memberships.first.jurisdiction
         @event.save!
       end
 
@@ -43,7 +43,7 @@ describe EventsHelper do
     describe "for contact events" do
       before do
         @event = Factory.build(:contact_event)
-        @event.jurisdiction.build(:secondary_entity_id => @current_user.role_memberships.first.jurisdiction_id)
+        @event.jurisdiction.place_entity = @current_user.role_memberships.first.jurisdiction
         @event.save!
       end
 
