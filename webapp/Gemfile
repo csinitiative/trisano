@@ -61,7 +61,9 @@ group :test, :uattest do
   gem "cucumber-rails", "0.3.0"
   gem "webrat", "= 0.7.3"
   gem "database_cleaner", "0.5.2"
-  gem "Selenium", "1.1.14"
+  # Using this instead of default gem so we don't have to follow steps here:
+  # http://www.spacevatican.org/2008/9/27/selenium-and-firefox-3
+  gem "Selenium", "1.1.14", :git => "git://github.com/bbuchalter/Ruby-Selenium-RC.git"
   gem "selenium-client", "1.2.18"
 end
 

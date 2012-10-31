@@ -1,0 +1,7 @@
+skin global classic/1.0 jar:classic.jar!/skin/classic/global/ os!=WINNT
+skin communicator classic/1.0 jar:classic.jar!/skin/classic/communicator/
+skin global classic/1.0 jar:classic.jar!/skin/classic/global/ os=WINNT osversion<6
+skin browser classic/1.0 jar:classic.jar!/skin/classic/browser/
+override chrome://global/skin/icons/warning-16.png moz-icon://stock/gtk-dialog-warning?size=menu
+skin mozapps classic/1.0 jar:classic.jar!/skin/classic/mozapps/ os!=WINNT
+skin mozapps classic/1.0 jar:classic.jar!/skin/classic/mozapps/ os=WINNT osversion<6

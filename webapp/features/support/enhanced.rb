@@ -41,7 +41,7 @@ require 'spec/expectations'
 require 'selenium'
 
 # "before all"
-browser = Selenium::SeleniumDriver.new("localhost", 4444, "*chrome /opt/firefox/firefox-bin", "http://localhost:8080", 15000)
+browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox #{RAILS_ROOT}/features/support/firefox-36/firefox-bin", "http://localhost:8080", 15000)
 
 Before do
   @browser = browser

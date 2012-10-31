@@ -1,8 +1,13 @@
+GIT
+  remote: git://github.com/bbuchalter/Ruby-Selenium-RC.git
+  revision: a10e122e8ac6df1bbf87cdfe85003e81dbd23434
+  specs:
+    Selenium (1.1.14)
+
 GEM
   remote: http://gems.github.com/
   remote: http://rubygems.org/
   specs:
-    Selenium (1.1.14)
     SystemTimer (1.2.3)
     actionmailer (2.3.5)
       actionpack (= 2.3.5)
@@ -150,7 +155,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  Selenium (= 1.1.14)
+  Selenium (= 1.1.14)!
   SystemTimer (= 1.2.3)
   activerecord-jdbcpostgresql-adapter (= 1.0.0.kofnopre1)
   capistrano (= 2.5.19)
