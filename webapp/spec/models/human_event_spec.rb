@@ -332,33 +332,35 @@ describe HumanEvent, 'adding staged messages' do
     end
 
     before :all do
-      common_test_type = CommonTestType.create :common_name => 'Culture'
 
-      disease = Factory.create :pertussis
-      organism = Factory.create :bordetella_pertussis
-      loinc_code = LoincCode.new :common_test_type => common_test_type,
-        :loinc_code => '548-8', :test_name => 'Bordetella pertussis',
-        :scale => ExternalCode.loinc_scale_by_the_code("Ord"),
-        :organism => organism
-      loinc_code.diseases << disease
-      loinc_code.save!
+      disease = Disease.find_or_create_by_disease_name("pertussis")
+      
+      unless LoincCode.find_by_loinc_code("548-8")
+        common_test_type = CommonTestType.create :common_name => 'Culture'
 
-      common_test_type = CommonTestType.new :common_name => 'Blood lead test'
-      common_test_type.diseases << disease
-      common_test_type.save!
+        organism = Organism.find_or_create_by_organism_name("bordetella_pertussis")
+        loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '548-8', :test_name => 'Bordetella pertussis',
+          :scale => ExternalCode.loinc_scale_by_the_code("Ord"),
+          :organism => organism
+        loinc_code.diseases << disease
+        loinc_code.save!
+      end
 
-      disease = Factory.create :lead_poisoning
-      loinc_code = LoincCode.new :common_test_type => common_test_type,
-        :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
-        :scale => ExternalCode.loinc_scale_by_the_code("Qn")
-      loinc_code.diseases << disease
-      loinc_code.save!
-    end
+      common_test_type = CommonTestType.find_or_initialize_by_common_name('Blood lead test')
+      unless common_test_type.new_record?
+        common_test_type.diseases << disease
+        common_test_type.save!
+      end
 
-    after :all do
-      CommonTestType.find_by_common_name('Culture').destroy
-      CommonTestType.find_by_common_name('Blood lead test').destroy
-      Disease.find_by_disease_name('Lead poisoning').destroy
+      unless LoincCode.find_by_loinc_code("10368-9")
+        disease = Disease.find_or_create_by_disease_name("lead_poisoning")
+        loinc_code = LoincCode.new :common_test_type => common_test_type,
+          :loinc_code => '10368-9', :test_name => 'Lead BldCmCnc',
+          :scale => ExternalCode.loinc_scale_by_the_code("Qn")
+        loinc_code.diseases << disease
+        loinc_code.save!
+      end
     end
 
     it 'should raise an exception when not passed a staged message' do

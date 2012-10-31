@@ -45,8 +45,8 @@ describe MorbidityEvent do
 
   it 'should correctly detect the available forms' do
     disease = diseases(:chicken_pox)
-    chicken_pox_form = forms(:checken_pox_TB_form_for_LHD_2)
-    chicken_pox_form.diseases << disease
+    chicken_pox_form = forms(:chicken_pox_TB_form_for_LHD_2)
+    chicken_pox_form.diseases << disease unless chicken_pox_form.diseases.include?(disease)
 
     event = Factory(:morbidity_event)
     event.jurisdiction.secondary_entity_id = chicken_pox_form.jurisdiction_id
@@ -63,10 +63,10 @@ describe MorbidityEvent do
 
   it 'should correctly detect the invalid forms' do
     disease = diseases(:chicken_pox)
-    chicken_pox_form = forms(:checken_pox_TB_form_for_LHD_2)
-    chicken_pox_form.diseases << disease
+    chicken_pox_form = forms(:chicken_pox_TB_form_for_LHD_2)
+    chicken_pox_form.diseases << disease unless chicken_pox_form.diseases.include?(disease)
     hep_form = forms(:hep_a_form)
-    hep_form.diseases << diseases(:hep_a)
+    hep_form.diseases << diseases(:hep_a) unless hep_form.diseases.include?(diseases(:hep_a))
 
 
     event = Factory(:morbidity_event)
@@ -82,8 +82,8 @@ describe MorbidityEvent do
 
   it 'should correctly remove the forms and questions' do
     disease = diseases(:chicken_pox)
-    chicken_pox_form = forms(:checken_pox_TB_form_for_LHD_2)
-    chicken_pox_form.diseases << disease
+    chicken_pox_form = forms(:chicken_pox_TB_form_for_LHD_2)
+    chicken_pox_form.diseases << disease unless chicken_pox_form.diseases.include?(disease)
 
     event = Factory(:morbidity_event)
     event.jurisdiction.secondary_entity_id = chicken_pox_form.jurisdiction_id

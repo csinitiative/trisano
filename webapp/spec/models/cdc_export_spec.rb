@@ -93,6 +93,10 @@ describe CdcExport do
     }
   end
 
+  after :each do
+    reload_site_config
+  end
+
   describe 'running cdc export' do
     fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 

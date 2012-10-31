@@ -28,6 +28,10 @@ describe User do
     @user.role_memberships.create(:role => @role, :jurisdiction => @jurisdiction)
   end
 
+  after :each do
+    reload_site_config
+  end
+
   it "should be valid" do
     @user.should be_valid
   end

@@ -57,7 +57,7 @@ aids_form_for_LHD_2:
   event_type: "morbidity_event"
   template_id: 1005
 
-checken_pox_TB_form_for_LHD_2:
+chicken_pox_TB_form_for_LHD_2:
   id: 7
   name: "Chicken Pox and Tuberculosis form 1, jurisdiction 102."
   description: "Chicken pox and tuberculosis form for jurisdiction 102."

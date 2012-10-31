@@ -19,8 +19,7 @@ require 'spec_helper'
 
 describe EventsController do
   before do
-    @user = Factory(:user)
-    User.stubs(:current_user).returns(@user)
+    create_user
   end
 
   context "Adding a diagnostic facility search result to a cmr" do

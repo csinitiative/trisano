@@ -83,6 +83,10 @@ describe CdcExport do
     }
   end
 
+  after :each do
+    reload_site_config
+  end
+
   describe 'test STD CdcRecord methods' do
     fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :common_test_types, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
@@ -131,6 +135,81 @@ describe CdcExport do
       with_cdc_records do |records|
         records[0].first.to_cdc[1...2].should == "9"
       end
+    end
+
+    it "should not raise errors for events with blank fields" do
+      event = MorbidityEvent.new(@event_hash)
+      disease_event = DiseaseEvent.new(:disease_id => diseases(:aids).id, :disease_onset_date => Date.yesterday)
+      event.save!
+      event.build_disease_event(disease_event.attributes)
+      event.save!
+      event.disease.disease.avr_groups << AvrGroup.std
+      with_cdc_records(event) do |records|
+        records[0].size.should_not == 0
+      end
+    end
+
+    it "should not fail when treatment dates are nil" do
+      with_cdc_records do |records|
+        record = records[0].first
+        record.treatment_dates = nil
+        record.to_cdc.length.should == 191
+        record.exp_treatment_date.first.should == "        "
+      end
+    end
+
+    it "should not fail when lab collection dates are nil" do
+      with_cdc_records do |records|
+        record = records[0].first
+        record.lab_collection_dates = nil
+        record.to_cdc.length.should == 191
+        record.exp_specsite_date.first.should == "        "
+      end
+    end
+
+    it "should not fail when lab test dates are nil" do
+      with_cdc_records do |records|
+        record = records[0].first
+        record.lab_test_dates = nil
+        record.disease_name = "Syphilis"
+
+        record.to_cdc.length.should == 191
+        record.exp_specsite.first.should == "  "
+        record.exp_syphtest.first.should == " "
+      end
+    end
+
+    it "should correctly display treatment fields" do
+      with_cdc_records do |records|
+        records[0].first.to_cdc[129..134].should == Date.yesterday.strftime('%y%m%d')
+      end
+    end
+
+    it "should correctly display specsite fields" do
+      with_cdc_records do |records|
+        #exp_specsite
+        records[0].first.to_cdc[84..85].should == Export::Cdc::HumanEvent.netss_specimen["Blood/Serum"]
+        #exp_specsite_date
+        records[0].first.to_cdc[86..91].should == 14.days.ago.to_date.strftime('%y%m%d')
+      end
+    end
+
+    it "should correctly display specsite field when specimen in blank" do
+      with_cdc_records do |records|
+        record = records[0].first
+        record.specimen = "{NULL}"
+        record.to_cdc.length.should == 191
+        record.exp_specsite.first.should == "  "
+      end
+    end
+
+    it "should correctly display the closest date" do
+       with_cdc_records do |records|
+         d = 10.days.ago.to_date.to_s(:db)
+         o = 16.days.ago.to_date.to_s(:db)
+         n = 5.days.ago.to_date.to_s(:db)
+         records[0].first.pg_closest_date(d, [n, o]).first.should == 5.days.ago.to_date
+       end
     end
 
     it "should display '49' (state id) for the state field" do

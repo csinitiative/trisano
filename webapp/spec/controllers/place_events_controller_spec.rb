@@ -19,8 +19,7 @@ require 'spec_helper'
 
 describe PlaceEventsController do
   before(:each) do
-    @user = Factory(:user)
-    User.stubs(:current_user).returns(@user)
+    create_user
   end
 
   describe "handling GET /events" do

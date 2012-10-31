@@ -13,7 +13,7 @@ describe SearchController do
   context "the search form" do
 
     before :all do
-      @user = Factory(:user)
+      create_user
       @role = Factory(:role)
       @user.role_memberships.create(:jurisdiction => create_jurisdiction_entity, :role => @role)
       @role.privileges << (Privilege.find_by_priv_name('view_event') || Factory(:privilege, :priv_name => 'view_event'))

@@ -21,7 +21,7 @@ describe EncounterEventsHelper do
   before do
     @privledged_user = Factory(:user)
     @unprivledged_user = Factory(:user)
-    @current_user = Factory(:user) #last created user is set to User.current_user
+    @current_user = create_user 
     @role = Factory(:role)
     @priv = Privilege.find_by_priv_name('update_event') || Factory(:privilege, :priv_name => 'update_event')
     @role.privileges << @priv

@@ -1,5 +1,9 @@
 SITE_CONFIG = YAML::load(File.open("#{RAILS_ROOT}/config/site_config.yml")).with_indifferent_access
 
+def reload_site_config
+  SITE_CONFIG.replace YAML::load(File.open("#{RAILS_ROOT}/config/site_config.yml")).with_indifferent_access
+end
+
 def config_option(p, env = RAILS_ENV)
   config_options(env)[p]
 end

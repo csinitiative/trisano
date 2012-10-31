@@ -19,9 +19,7 @@ require 'spec_helper'
 
 describe MorbidityEventsController do
   before do
-    @user = Factory(:user)
-    session[:user_id] = @user.uid
-    User.stubs(:current_user).returns(@user)
+    create_user
   end
 
   { :get => [:edit, :show],
@@ -499,7 +497,6 @@ describe MorbidityEventsController do
     before do
       @cmr = Factory.create(:morbidity_event)
       @promoted_event = Factory.create(:contact_event, :parent_event => @cmr)
-      User.stubs(:current_user).returns(Factory(:user))
       User.current_user.stubs(:can_update?).returns(true)
       @promoted_event.promote_to_morbidity_event
     end

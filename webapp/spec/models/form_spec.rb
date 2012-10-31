@@ -557,7 +557,7 @@ describe Form do
       @published_form.disease_ids.sort.should == @form_to_publish.disease_ids.sort
 
       # Two diseases
-      form_to_publish = forms(:checken_pox_TB_form_for_LHD_2)
+      form_to_publish = forms(:chicken_pox_TB_form_for_LHD_2)
       published_form = form_to_publish.publish
       published_form.disease_ids.length.should == form_to_publish.disease_ids.length
       published_form.disease_ids.sort.should == form_to_publish.disease_ids.sort

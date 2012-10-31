@@ -147,6 +147,7 @@ module UsersSpecHelper
     User.stubs(:current_user).returns(@user)
     @user.stubs(:id).returns(1)
     @user.stubs(:uid).returns("default")
+    @request.session[:user_id] = @user.uid if @request && !@request.session.nil?
     @user.stubs(:user_name).returns("default_user")
     @user.stubs(:first_name).returns("Johnny")
     @user.stubs(:last_name).returns("Johnson")
@@ -183,6 +184,14 @@ module UsersSpecHelper
     @user.stubs(:is_entitled_to_in?).returns(true)
     @user.stubs(:new_record?).returns(false)
 
+    @user
+  end
+
+  def create_user
+    @user = Factory(:user)
+    User.stubs(:find_by_uid).returns(@user)
+    User.stubs(:current_user).returns(@user)
+    @request.session[:user_id] = @user.uid if @request && !@request.session.nil?
     @user
   end
     

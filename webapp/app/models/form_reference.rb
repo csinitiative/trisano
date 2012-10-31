@@ -20,6 +20,7 @@ class FormReference < ActiveRecord::Base
 
   belongs_to :event
   belongs_to :form
+  has_many :answers, :through => :event, :dependent => :destroy
 
   after_create :create_answers_for_repeaters
 
