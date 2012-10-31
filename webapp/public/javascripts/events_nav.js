@@ -12,7 +12,7 @@ $j(function() {
         $j(formWatcher.form).append(redirectTo(
                                       build_url_with_tab_index(
                                         selector.val())));
-        post_and_exit(formWatcher.form);
+        post_and_exit(formWatcher.form.id);
         $j(this).dialog('close');
       };
 
