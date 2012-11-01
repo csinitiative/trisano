@@ -74,7 +74,7 @@ Trisano.Ajax = {
 
   spinnerImg: function(node) {
     var spinner = Trisano.Ajax.spinnerImgNoID();
-    spinner.style = 'display:none';
+    spinner.setStyle({display: 'none'});
     spinner.id = node.associatedSpinner();
     return spinner;
   },
