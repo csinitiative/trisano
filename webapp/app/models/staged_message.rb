@@ -235,6 +235,10 @@ class StagedMessage < ActiveRecord::Base
                           :city => self.patient.address_city,
                           :state_id => self.patient.address_trisano_state_id,
                           :postal_code => self.patient.address_zip)
+      if self.patient.address_county
+        county = ExternalCode.find_by_code_name_and_code_description("county", self.patient.address_county)
+        event.address.county = county if county
+      end
     end
 
     unless self.patient.telephone_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_home.id}
