@@ -2288,6 +2288,10 @@ END;
 $$ LANGUAGE plpgsql;
 -- END OF trisano.swap_schemas()
 
+CREATE SEQUENCE trisano.disease_group_numbers_seq START WITH 1;
+
+CREATE TABLE trisano.disease_group_numbers (name VARCHAR(255), number INTEGER);
+
 SET search_path = population;
 
 DROP TABLE IF EXISTS population_tables;
