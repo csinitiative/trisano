@@ -143,11 +143,12 @@ class StagedMessagesController < ApplicationController
       end
 
       staged_message.assigned_event = event
+      event.reload
     rescue Exception => e
       logger.error(e)
       flash[:error] = t("message_assignment_failed", :msg_string => msg_string, :message => $!)
     else
-      flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :note => staged_message.note)
+      flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :record_number => event.record_number, :note => staged_message.note)
     end
     redirect_to(staged_message_path(staged_message))
   end

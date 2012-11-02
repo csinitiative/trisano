@@ -88,6 +88,11 @@ Then /^I should see a '(.+)' message$/ do |msg|
   response.should contain(msg)
 end
 
+Then /^I should see a matching '(.+)' text$/ do |msg|
+  # Flash message
+  response.should assert_contain(/#{msg}/)
+end
+
 Then /^I should see a state of '(.+)'$/ do |state|
   response.should contain(/State:\s+#{state}/)
 end
