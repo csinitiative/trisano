@@ -158,13 +158,7 @@ module Export
       end
 
       def after_find
-        if self.export?
-          if self.kansas_and_std?
-            self.extend(Export::Cdc::StdRecord)
-          else
-            self.extend(Export::Cdc::Record)
-          end
-        end
+        self.extend(Export::Cdc::Record) if self.export?
       end
     end
 
