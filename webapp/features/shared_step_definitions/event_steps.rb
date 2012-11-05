@@ -104,7 +104,7 @@ Given /^the person has a simple (.+) event with the disease (.+)$/ do |event_typ
 end
 
 Given(/^a (.+) event exists with a lab result having test type '(.+)'$/) do |event_type, test_type|
-  test_type_id = CommonTestType.find_by_common_name(test_type).id
+  test_type_id = CommonTestType.find_or_create_by_common_name(test_type).id
   attrs = { "labs_attributes" =>
       [ { "place_entity_attributes" => { "place_attributes" => { "name" => "Quest" } },
         "lab_results_attributes"  => [ { "test_type_id" => test_type_id } ]
@@ -282,20 +282,18 @@ end
 Given /^all core fields have help text$/ do
   ActiveRecord::Base.connection.execute(<<-SQL)
     UPDATE core_field_translations a
-    SET help_text = (
-      SELECT key || ' help text' WHERE a.core_field_id = b.id)
+    SET help_text = (b.key || ' help text')
     FROM core_fields b
-    WHERE locale = '#{I18n.locale}'
+    WHERE locale = '#{I18n.locale}' AND a.core_field_id = b.id
   SQL
 end
 
 Given /^all core field configs for a (.+) have help text$/ do |event_type|
   ActiveRecord::Base.connection.execute(<<-SQL)
     UPDATE core_field_translations a
-    SET help_text = (
-      SELECT key || ' help text' WHERE a.core_field_id = b.id)
+    SET help_text = (b.key || ' help text')
     FROM core_fields b
-    WHERE a.locale = '#{I18n.locale}' AND b.event_type = '#{event_type}'
+    WHERE a.locale = '#{I18n.locale}' AND b.event_type = '#{event_type}' AND a.core_field_id = b.id
   SQL
 end
 
