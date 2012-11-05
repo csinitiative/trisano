@@ -22,9 +22,10 @@ When /^I fill in enough (.+) data to enable all core fields to show up in show m
   @browser.type("#{event_type}[address_attributes][street_number]", "12")
 
   # Lab name and type for contact and morbidity events
-  if event_type == "morbidity_event" || event_type == "contact_event"
-    common_test_type = CommonTestType.first.nil? ? CommonTestType.create(:common_name => "Common Test Type") : CommonTestType.first
+  if event_type == "morbidity_event" || event_type == "contact_event" || event_type == "assessment_event"
+    common_test_type = CommonTestType.find_or_create_by_common_name("Common Test Type")
     add_lab_result(@browser, { :lab_name => "Labby", :lab_test_type => common_test_type.common_name })
+    add_hospital(@browser, {:name => "Allen Memorial Hospital"}, index = 1)
   end
 end
 
@@ -32,7 +33,7 @@ Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_
   html_source = @browser.get_html_source
 
   @core_fields ||= CoreField.all(:conditions => [<<-SQL, event_type.gsub(" ", "_"), false, %w(section tab event)])
-    event_type = ? and disease_specific = ? and field_type NOT IN (?)
+    event_type = ? and disease_specific = ? and field_type NOT IN (?) and repeater = FALSE
   SQL
   @core_fields.each do |core_field|
     # Ignore lab result fields in show mode
