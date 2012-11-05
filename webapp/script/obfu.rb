@@ -89,7 +89,7 @@ end
 #set up the object for tracking what to obfu
 def get_obfu_config
   [
-    {#COPY telephones (id, location_id, country_code, area_code, phone_number, extension, created_at, updated_at, email_address) FROM stdin;
+    {#COPY telephones (id, location_id, country_code, area_code, phone_number, extension, created_at, updated_at, email_address, entity_id, entity_location_type_id) FROM stdin;
       :table_name => 'telephones', :fields => [
         {:field_loc => 4, :type => 'value', :value => '555'},  # Area code
         {:field_loc => 5, :type => 'num', :digits => 7},       # Phone number
@@ -97,22 +97,21 @@ def get_obfu_config
         {:field_loc => 9, :type => 'email'} # email
       ]
     },
-    {#COPY notes (id, note, struckthrough, user_id, created_at, updated_at, event_id)
+    {#COPY notes (id, note, struckthrough, user_id, created_at, updated_at, event_id, note_type)
       :table_name => 'notes', :fields => [
         {:field_loc => 2, :type => 'text', :word_count => 10}  # note
       ]
     },
-    {#COPY people (id, entity_id, birth_gender_id, ethnicity_id, primary_language_id, first_name, middle_name, last_name, birth_date, date_of_death, created_at, updated_at, food_handler_id, age_type_id, approximate_age_no_birthday, first_name_soundex, last_name_soundex, vector, live, next_ver, previous_ver, disposition_id) FROM stdin;
+    {#COPY people (id, entity_id, race_id, birth_gender_id, current_gender_id, ethnicity_id, primary_language_id, first_name, middle_name, last_name, birth_date, date_of_death, food_handler_id, healthcare_worker_id, group_living_id, day_care_association_id, age_type_id, risk_factors, risk_factors_notes, approximate_age_no_birthday, person_type, created_at, updated_at) FROM stdin;
       :table_name => 'people', :fields => [
-        {:field_loc => 6, :type => 'text', :word_count => 1},  # first_name
-        {:field_loc => 7, :type => 'text', :word_count => 1},  # middle_name
-        {:field_loc => 8, :type => 'text', :word_count => 1},  # last_name
-        {:field_loc => 9, :type => 'date', :keep_year => true}, # birth_date
-        {:field_loc => 10, :type => 'date', :keep_year => true}, # date_of_death
-        {:field_loc => 18, :type => 'nil'} # vector
+        {:field_loc => 8, :type => 'text', :word_count => 1},  # first_name
+        {:field_loc => 9, :type => 'text', :word_count => 1},  # middle_name
+        {:field_loc => 10, :type => 'text', :word_count => 1},  # last_name
+        {:field_loc => 11, :type => 'date', :keep_year => true}, # birth_date
+        {:field_loc => 12, :type => 'date', :keep_year => true}, # date_of_death
       ]
     },
-    {#COPY addresses (id, location_id, county_id, state_id, street_number, street_name, unit_number, postal_code, created_at, updated_at, city) FROM stdin;
+    {#COPY addresses (id, location_id, county_id, state_id, street_number, street_name, unit_number, postal_code, created_at, updated_at, city, entity_id, entity_location_type_id, event_id, longitude, latitude) FROM stdin;
       :table_name => 'addresses', :fields => [
         {:field_loc => 5, :type => 'num', :digits => 5},  # street_number
         {:field_loc => 6, :type => 'text', :word_count => 2},  # street_name,
@@ -126,11 +125,11 @@ def get_obfu_config
         {:field_loc => 2, :type => 'text', :word_count => 3}  # queue_name,
       ]
     },
-    {#COPY organizations (id, entity_id, organization_type_id, organization_status_id, organization_name, duration_start_date, duration_end_date, created_at, updated_at) FROM stdin;
-      :table_name => 'organizations', :fields => [
-        {:field_loc => 5, :type => 'text', :word_count => 3}  # organization_name,
-      ]
-    },
+#    {#COPY organizations (id, entity_id, organization_type_id, organization_status_id, organization_name, duration_start_date, duration_end_date, created_at, updated_at) FROM stdin;
+#      :table_name => 'organizations', :fields => [
+#        {:field_loc => 5, :type => 'text', :word_count => 3}  # organization_name,
+#      ]
+#    },
     {#COPY hospitals_participations (id, participation_id, hospital_record_number, admission_date, discharge_date, created_at, updated_at, medical_record_number)
       :table_name => 'hospitals_participations', :fields => [
         {:field_loc => 4, :type => 'date', :keep_year => true}, # admission_date
@@ -144,12 +143,13 @@ def get_obfu_config
         {:field_loc => 7, :type => 'date', :keep_year => true} # date_diagnosed
       ]
     },
-    {#COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, treatment_name)
+    {#COPY participations_treatments (id, participation_id, treatment_id, treatment_given_yn_id, treatment_date, created_at, updated_at, stop_treatment_date, "position") FROM stdin;
       :table_name => 'participations_treatments', :fields => [
-        {:field_loc => 5, :type => 'date', :keep_year => true} # treatment_date
+        {:field_loc => 5, :type => 'date', :keep_year => true}, # treatment_date
+        {:field_loc => 8, :type => 'date', :keep_year => true}  # stop_treatment_date
       ]
     },
-    {#COPY lab_results (id, specimen_source_id, collection_date, lab_test_date, specimen_sent_to_uphl_yn_id, lab_result_text, created_at, updated_at, participation_id, test_type, test_detail, interpretation_id, reference_range)
+    {#COPY lab_results (id, specimen_source_id, collection_date, lab_test_date, specimen_sent_to_state_id, created_at, updated_at, participation_id, reference_range, staged_message_id, loinc_code, test_type_id, test_result_id, result_value, units, test_status_id, comment, organism_id, "position", accession_no) FROM stdin;
       :table_name => 'lab_results', :fields => [
         {:field_loc => 3, :type => 'date', :keep_year => true}, # collection_date
         {:field_loc => 4, :type => 'date', :keep_year => true} # lab_test_date
