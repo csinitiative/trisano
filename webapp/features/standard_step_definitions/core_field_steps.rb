@@ -1,7 +1,7 @@
 Then /^I should see help text for all (.*) event core fields$/ do |type|
   doc = Nokogiri::HTML(response.body)
   core_fields = CoreField.event_fields("#{type}_event").values.each do |core_field|
-    next if core_field.disease_specific or core_field.container?
+    next if core_field.disease_specific or core_field.container? or core_field.repeater?
     doc.css("span#core_help_text_#{core_field.id}").should_not be_empty
   end
 end
