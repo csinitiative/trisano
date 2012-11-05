@@ -8,6 +8,7 @@ Feature: Morbidity event, viewing core field help text
     Given I am logged in as a super user
     And all core field configs for a morbidity event have help text
     And a basic morbidity event exists
+    And a lab named "Labby"
 
     When I am on the morbidity event edit page
     Then I should see help text for all morbidity event core fields in edit mode
