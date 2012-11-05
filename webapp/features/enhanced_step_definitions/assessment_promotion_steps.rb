@@ -15,7 +15,7 @@ end
 
 Then /^I should see all of the promoted core field config questions$/ do
   html_source = @browser.get_html_source
-  @promoted_core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ?', @promoted_event.type.underscore, true, false])
+  @promoted_core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = FALSE', @promoted_event.type.underscore, true, false])
   @promoted_core_fields.each do |core_field|
     raise "Could not find before config for #{core_field.key}" if html_source.include?("#{core_field.key} before?") == false
     raise "Could not find after config for #{core_field.key}" if html_source.include?("#{core_field.key} after?") == false
