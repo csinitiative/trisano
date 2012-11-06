@@ -16,5 +16,5 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 Given /^a lab named "([^\"]*)"$/ do |name|
-  create_lab!(name)
+  find_or_create_lab_by_name(name)
 end

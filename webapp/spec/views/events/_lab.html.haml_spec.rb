@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "events/_lab.html.haml" do
 
   it "should not show deleted labs in the labs drop down" do
-    lab_entity = create_lab!('Labmart')
-    deleted = create_lab!('Labgreens')
+    lab_entity = find_or_create_lab_by_name('Labmart')
+    deleted = find_or_create_lab_by_name('Labgreens')
     deleted.update_attribute('deleted_at', DateTime.now)
     
     render "events/_lab.html.haml", :locals => { :prefix => 'pffft_event', :uniq_id => 'TEST', :lab => Lab.new }

@@ -15,12 +15,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+Then /^I should see all of the repeater core field config questions$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = TRUE', @form.event_type, true, false])
+  @core_fields.each do |core_field|
+    check_core_fields(core_field.key, html_source)
+  end
+end
+
 Then /^I should see all of the core field config questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = FALSE', @form.event_type, true, false])
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ?', @form.event_type, true, false])
   @core_fields.each do |core_field|
-    raise "Could not find before config for #{core_field.key}" if html_source.include?("#{core_field.key} before?") == false
-    raise "Could not find after config for #{core_field.key}" if html_source.include?("#{core_field.key} after?") == false
+    check_core_fields(core_field.key, html_source)
   end
 end
 

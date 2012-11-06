@@ -70,7 +70,7 @@ describe FormElementCache do
   end
   
   it "should handle bogus constructor args" do
-    lambda {FormElementCache.new(String.new)}.should raise_error(ArgumentError, "FormElementCache initialize only handles FormElements")
+    lambda {FormElementCache.new(String.new)}.should raise_error(ArgumentError, "FormElementCache initialize only handles FormElements. Recieved \"\"")
   end
 
   it "should return children of an element" do

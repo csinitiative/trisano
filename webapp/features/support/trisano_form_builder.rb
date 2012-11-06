@@ -78,3 +78,31 @@ def create_value_elements_in_value_set(value_set_element, values_table)
   end
   value_set_element.save!
 end
+
+
+def create_core_field_config(form, container, core_field) 
+    core_field_config = CoreFieldElement.new
+
+    core_field_config.core_path = core_field.key
+    core_field_config.parent_element_id = container.id
+    core_field_config.save_and_add_to_form
+
+    # Add question to before config
+    create_question_on_form(form, {
+        :question_text => "#{core_field.key} before?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
+      core_field_config.children[0]
+    )
+
+    # Add question to after config
+    create_question_on_form(form, { 
+        :question_text => "#{core_field.key} after?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
+      core_field_config.children[1]
+    )
+end
+
+def check_core_fields(core_field_key,html_source)
+  raise "Could not find before config for #{core_field_key}" if html_source.include?("#{core_field_key} before?") == false
+  raise "Could not find after config for #{core_field_key}" if html_source.include?("#{core_field_key} after?") == false
+end

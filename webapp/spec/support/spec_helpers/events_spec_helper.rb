@@ -65,7 +65,7 @@ module EventsSpecHelper
   end
 
   def add_lab_to_event(event, lab_name_or_lab_place_entity, lab_result_attributes={})
-    lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : create_lab!(lab_name_or_lab_place_entity)
+    lab_place_entity = lab_name_or_lab_place_entity.is_a?(PlaceEntity) ? lab_name_or_lab_place_entity : find_or_create_lab_by_name(lab_name_or_lab_place_entity)
     lab_result = Factory.create(:lab_result, lab_result_attributes)
     lab = Factory.create(:lab, :secondary_entity => lab_place_entity, :lab_results => [lab_result])
     event.labs << lab
@@ -89,7 +89,7 @@ module EventsSpecHelper
     hospitalization_facility
   end
 
-  def create_lab!(name)
+  def find_or_create_lab_by_name(name)
     existing_lab = Place.labs_by_name(name).first
     return existing_lab.entity unless existing_lab.nil?
     create_place_entity!(name, :lab)

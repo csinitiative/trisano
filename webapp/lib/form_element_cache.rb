@@ -21,7 +21,7 @@ class FormElementCache
   include CacheableTree
   
   def initialize(root_element)
-    raise(ArgumentError, "FormElementCache initialize only handles FormElements") unless root_element.is_a?(FormElement)
+    raise(ArgumentError, "FormElementCache initialize only handles FormElements. Recieved #{root_element.inspect}") unless root_element.is_a?(FormElement)
     @root_element = root_element
     @root_element.reload
     @full_set = load_full_set

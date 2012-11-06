@@ -120,6 +120,11 @@ en:
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
       imported_from_id: Imported from
+      hospitalization_facilities:
+        name: Hospitalized health facilities
+        secondary_entity_id: Health facility 
+        hospitals_participation:
+          admission_date: Admission date 
     assessment_event:
       name: Assessment Event
       demographic_tab: Demographic
@@ -263,6 +268,11 @@ en:
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
       imported_from_id: Imported from
+      hospitalization_facilities:
+        name: Hospitalized health facilities
+        secondary_entity_id: Health facility 
+        hospitals_participation:
+          admission_date: Admission date 
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -447,6 +457,8 @@ en:
           specimen_source: Lab results | Specimen source
       imported_from_id: Imported from
       hospitalization_facilities:
+        name: Hospitalized health facilities
+        secondary_entity_id: Health facility 
         hospitals_participation:
           admission_date: Admission date 
     encounter_event:
@@ -632,3 +644,8 @@ en:
           lab_test_date: Lab results | Lab Test date
           specimen_source: Lab results | Specimen source
       imported_from_id: Imported from
+      hospitalization_facilities:
+        name: Hospitalized health facilities
+        secondary_entity_id: Health facility 
+        hospitals_participation:
+          admission_date: Admission date 

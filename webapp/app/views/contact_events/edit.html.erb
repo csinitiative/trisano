@@ -32,6 +32,7 @@
 
 <% form_for(setup_human_event_tree(@event), :url => contact_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
+  <%= hidden_field_tag :id, @event.id %>
 
   <% tabbed_content(contact_event_tabs, @tab_index) do %>
     <% core_tab :demographic_tab, event_form do -%>

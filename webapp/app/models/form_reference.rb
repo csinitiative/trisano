@@ -38,10 +38,13 @@ class FormReference < ActiveRecord::Base
           question_elements_for_repeater.each do |question_element|
             repeater_records.each do |repeater_record|
       
+              # It is critical the text_answer be initialized as an empty string as it would be
+              # if entered from a form
               answer_attributes = {:question_id => question_element.question.id, 
                                    :event_id => event.id,
                                    :repeater_form_object_type => repeater_record.class.name,
-                                   :repeater_form_object_id => repeater_record.id}
+                                   :repeater_form_object_id => repeater_record.id,
+                                   :text_answer => ""}
               answer_object = event.get_or_initialize_answer(answer_attributes)
               answer_object.save if answer_object.new_record?
 

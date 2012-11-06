@@ -24,8 +24,10 @@ When /^I fill in enough (.+) data to enable all core fields to show up in show m
   # Lab name and type for contact and morbidity events
   if event_type == "morbidity_event" || event_type == "contact_event" || event_type == "assessment_event"
     common_test_type = CommonTestType.find_or_create_by_common_name("Common Test Type")
-    add_lab_result(@browser, { :lab_name => "Labby", :lab_test_type => common_test_type.common_name })
-    add_hospital(@browser, {:name => "Allen Memorial Hospital"}, index = 1)
+    lab_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "L"})).first.place.name 
+    hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name 
+    add_lab_result(@browser, { :lab_name => lab_name, :lab_test_type => common_test_type.common_name })
+    add_hospital(@browser, {:name => hospital_name}, index = 1)
   end
 end
 

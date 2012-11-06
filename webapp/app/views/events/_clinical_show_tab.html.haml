@@ -37,26 +37,15 @@
     - if @event.hospitalization_facility_ids.compact.empty?
       %h3{:style => 'clear: both;'}=t('no_hospitalized_health_facilities')
     - else
-      %table.list
-        %tr
-          %th=t('activerecord.attributes.hospitalization_facility.secondary_entity_id')
-          %th=t('activerecord.attributes.hospitals_participation.admission_date')
-          %th=t('activerecord.attributes.hospitals_participation.discharge_date')
-          %th=t('activerecord.attributes.hospitals_participation.medical_record_number')
-
-          - for hospital in @event.hospitalization_facilities
-            %tr
-              - if hospital.place_entity
-                %td= h(hospital.place_entity.place.name)
-                - if hospital.hospitals_participation.nil?
-                  %td
-                  %td
-                  %td
-                - else
-                  %td= ld(hospital.hospitals_participation.admission_date)
-                  %td= ld(hospital.hospitals_participation.discharge_date)
-                  %td= h(hospital.hospitals_participation.medical_record_number)
-
+      - event_form.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hf|
+        %span{:class => "vert-break"}
+          - core_element_show :secondary_entity_id, event_form, :horiz do
+            = hf.label(:secondary_entity_id)
+            = h(hf.object.safe_call_chain(:place_entity, :place, :name))
+          - hf.fields_for(:hospitals_participation, :builder => ExtendedFormBuilder) do |hp|
+            - core_element_show :admission_date, hp, :horiz do
+              = hp.label(:admission_date)
+              = ld(hp.object.safe_call_chain(:admission_date))
   -core_section :mortality_status_section, event_form do
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
       - core_element_show :died_id, d, :horiz do
