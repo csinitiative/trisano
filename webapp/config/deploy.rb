@@ -24,7 +24,6 @@ depend :remote, :command, "bundle"
 after 'deploy:update_code', 'deploy:update_database_yml'
 after 'deploy:update_code', 'deploy:update_site_config_yml'
 
-before 'deploy:migrate', "deploy:dump_db"
 before "deploy:rollback",  "deploy:restore_db"
 
 namespace :deploy do
