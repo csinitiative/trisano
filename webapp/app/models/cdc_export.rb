@@ -113,6 +113,7 @@ class CdcExport < ActiveRecord::Base
          p.birth_date,
          sex_conversions.value_to as sex,
          praces.races,
+         praces.race_codes,
          ethnic_conversions.value_to as ethnicity,
          case_status_conversions.value_to as state_case_status_value,
          county_conversions.value_to as county_value,
@@ -127,7 +128,10 @@ class CdcExport < ActiveRecord::Base
          form_ids_accumulator.form_ids AS disease_form_ids,
          e.event_onset_date,
          lab_results.specimen,
+         lab_results.specimen_values,
          treatments.treatment_dates,
+         pregnant_conversions.value_to as pregnant,
+         addresses.postal_code as zip,
          1 AS export
         FROM events e
         INNER JOIN disease_events de ON e.id = event_id
@@ -205,7 +209,7 @@ class CdcExport < ActiveRecord::Base
         ) outbreak_conversions ON outbreak_codes.the_code = outbreak_conversions.value_from
         LEFT JOIN
         (
-          SELECT pr.entity_id, ARRAY_ACCUM(race_conversions.value_to) AS races FROM people pr
+          SELECT pr.entity_id, ARRAY_ACCUM(race_conversions.value_to) AS races, ARRAY_ACCUM(race_conversions.value_from) AS race_codes FROM people pr
           LEFT JOIN people_races ON pr.entity_id = people_races.entity_id
           LEFT JOIN external_codes race_codes ON people_races.race_id = race_codes.id
           LEFT JOIN (
@@ -233,10 +237,12 @@ class CdcExport < ActiveRecord::Base
             ARRAY_ACCUM(collection_date) as lab_collection_dates,
             ARRAY_ACCUM(lab_results.test_type_id) as lab_test_types,
             ARRAY_ACCUM(lab_results.result_value) as lab_result_values,
-            ARRAY_ACCUM(lab_results.specimen_source_id) as specimen
+            ARRAY_ACCUM(lab_results.specimen_source_id) as specimen,
+            ARRAY_ACCUM(specimen_codes.the_code) as specimen_values
           FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id
+          LEFT JOIN external_codes specimen_codes ON lab_results.specimen_source_id = specimen_codes.id
           GROUP BY x.id
         ) lab_results ON e.id = lab_results.event_id
         LEFT JOIN
@@ -252,6 +258,16 @@ class CdcExport < ActiveRecord::Base
           SELECT event_id, ARRAY_ACCUM(form_id) AS form_ids FROM form_references
           GROUP BY event_id
         ) form_ids_accumulator ON e.id = form_ids_accumulator.event_id
+        LEFT JOIN participations_risk_factors risk_factors ON ip.id = risk_factors.participation_id
+        LEFT JOIN external_codes pregnant_codes ON risk_factors.pregnant_id = pregnant_codes.id
+        LEFT JOIN
+        (
+          SELECT zzz.value_from, zzz.value_to FROM export_columns pregnant_columns
+          JOIN export_conversion_values zzz ON pregnant_columns.id = zzz.export_column_id
+          WHERE pregnant_columns.export_column_name='PREGNANT'
+            AND pregnant_columns.type_data='CORE'
+            AND pregnant_columns.start_position = 75
+        ) pregnant_conversions ON pregnant_codes.code_description = pregnant_conversions.value_from
         LEFT JOIN
         (
           SELECT
@@ -268,15 +284,18 @@ class CdcExport < ActiveRecord::Base
             SELECT
              eee.id as event_id,
              answers.text_answer,
-             v.value_to,
+             COALESCE(v.value_to, vv.value_to) as value_to,
              c.start_position,
              c.length_to_output,
              c.data_type,
              diseases.id as disease_id
             FROM events eee
             INNER JOIN answers ON eee.id = answers.event_id
-            INNER JOIN export_conversion_values v ON answers.export_conversion_value_id = v.id
-            INNER JOIN export_columns c ON v.export_column_id = c.id
+            LEFT JOIN questions ON answers.question_id = questions.id
+            LEFT JOIN form_elements ON questions.form_element_id = form_elements.id
+            LEFT JOIN export_conversion_values v ON answers.export_conversion_value_id = v.id
+            LEFT JOIN export_conversion_values vv ON vv.export_column_id = form_elements.export_column_id AND answers.text_answer = vv.value_from
+            INNER JOIN export_columns c ON COALESCE(v.export_column_id, vv.export_column_id) = c.id
             INNER JOIN diseases_export_columns dec ON c.id = dec.export_column_id
             INNER JOIN diseases ON dec.disease_id = diseases.id
           ) disease_answers ON (ee.id = disease_answers.event_id AND disease_events.disease_id = disease_answers.disease_id)

@@ -11,7 +11,7 @@ set :application, "TriSano"
 set :deploy_to, "/opt/csi/#{application}"
 set :stages, %w(vagrant tomcat)
 set :default_stage, "vagrant"
-set :user, "brianb"
+
 set :repository, "."
 set :scm, :none
 set :deploy_via, :copy
