@@ -127,7 +127,10 @@ class CdcExport < ActiveRecord::Base
          form_ids_accumulator.form_ids AS disease_form_ids,
          e.event_onset_date,
          lab_results.specimen,
+         lab_results.specimen_values,
          treatments.treatment_dates,
+         pregnant_conversions.value_to as pregnant,
+         addresses.postal_code as zip,
          1 AS export
         FROM events e
         INNER JOIN disease_events de ON e.id = event_id
@@ -233,10 +236,12 @@ class CdcExport < ActiveRecord::Base
             ARRAY_ACCUM(collection_date) as lab_collection_dates,
             ARRAY_ACCUM(lab_results.test_type_id) as lab_test_types,
             ARRAY_ACCUM(lab_results.result_value) as lab_result_values,
-            ARRAY_ACCUM(lab_results.specimen_source_id) as specimen
+            ARRAY_ACCUM(lab_results.specimen_source_id) as specimen,
+            ARRAY_ACCUM(specimen_codes.the_code) as specimen_values
           FROM events x
           LEFT JOIN participations labs ON (x.id = labs.event_id AND labs."type"='Lab')
           LEFT JOIN lab_results ON labs.id = lab_results.participation_id
+          LEFT JOIN external_codes specimen_codes ON lab_results.specimen_source_id = specimen_codes.id
           GROUP BY x.id
         ) lab_results ON e.id = lab_results.event_id
         LEFT JOIN
@@ -252,6 +257,16 @@ class CdcExport < ActiveRecord::Base
           SELECT event_id, ARRAY_ACCUM(form_id) AS form_ids FROM form_references
           GROUP BY event_id
         ) form_ids_accumulator ON e.id = form_ids_accumulator.event_id
+        LEFT JOIN participations_risk_factors risk_factors ON ip.id = risk_factors.participation_id
+        LEFT JOIN external_codes pregnant_codes ON risk_factors.pregnant_id = pregnant_codes.id
+        LEFT JOIN
+        (
+          SELECT zzz.value_from, zzz.value_to FROM export_columns pregnant_columns
+          JOIN export_conversion_values zzz ON pregnant_columns.id = zzz.export_column_id
+          WHERE pregnant_columns.export_column_name='PREGNANT'
+            AND pregnant_columns.type_data='CORE'
+            AND pregnant_columns.start_position = 75
+        ) pregnant_conversions ON pregnant_codes.the_code = pregnant_conversions.value_from
         LEFT JOIN
         (
           SELECT
