@@ -23,6 +23,13 @@ class FormReference < ActiveRecord::Base
   has_many :answers, :through => :event, :dependent => :destroy
 
   after_create :create_answers_for_repeaters
+  after_destroy :destroy_answers
+
+  def destroy_answers
+    question_ids = form.questions.map(&:id)
+    answers = Answer.find(:all, :conditions => ["question_id in (?) and event_id = ?", question_ids, event.id])
+    answers.map(&:destroy)
+  end
 
   def create_answers_for_repeaters
     Answer.transaction do
