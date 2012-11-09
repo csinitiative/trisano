@@ -9,7 +9,8 @@ extend Capistrano::Helpers::SiteConfig
 default_run_options[:pty] = true
 set :application, "TriSano"
 set :deploy_to, "/opt/csi/#{application}"
-
+set :user, "brianb"
+set :use_sudo, true
 set :repository, "."
 set :scm, :none
 set :deploy_via, :copy
