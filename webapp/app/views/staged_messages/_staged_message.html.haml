@@ -61,7 +61,7 @@
               = link_to_function(t("discard"), "this.parentNode.submit()", :class => 'staged-message-discard-link staged-message-link')
           %p
             = ct('state')
-            - if staged_message.state == StagedMessage.states[:assigned]
+            - if staged_message.state == StagedMessage.states[:assigned] and staged_message.assigned_event
               - event = staged_message.assigned_event
               - event_path = event.is_a?(MorbidityEvent) ? cmr_path(event) : contact_event_path(event)
               = link_to(t("staging_area_states.#{staged_message.state.downcase}"), event_path)

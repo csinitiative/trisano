@@ -22,6 +22,10 @@ When /^I visit the staging area page directly$/ do
   visit staged_messages_path
 end
 
+When /^I visit the staging area assigned page$/ do
+  visit staged_messages_path("message_state" => "ASSIGNED")
+end
+
 Given /^there are no matching entries$/ do
   # Do nothing
 end
@@ -50,6 +54,10 @@ end
 
 Then /^I should see matching results$/ do
   response.should have_selector("table#search_results")
+end
+
+Then /^I should see the matching result$/ do
+  response.should have_selector("div#message_#{@staged_message.id}")
 end
 
 Given /^there is a (.+) event with a matching name and birth date$/ do |type|

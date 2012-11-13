@@ -103,6 +103,16 @@ describe StagedMessage do
 
   it 'should use MSH-4 for lab name if OBX-23 is not present' do
     staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:arup_1]
+    staged_message.observation_requests.first.all_tests.should_not be_empty
+    staged_message.lab_name.should == staged_message.message_header.sending_facility
+  end
+
+  it 'should not fail if the first OBR segment does not have tests' do
+    msg = <<ARUP1
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42 HAPPY LN^^SALT LAKE CITY^UT^84444^^M||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\r
+ARUP1
+    staged_message = StagedMessage.new :hl7_message => msg
+    staged_message.observation_requests.first.all_tests.should be_empty
     staged_message.lab_name.should == staged_message.message_header.sending_facility
   end
 

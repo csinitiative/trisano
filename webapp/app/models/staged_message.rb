@@ -197,9 +197,11 @@ class StagedMessage < ActiveRecord::Base
   end
 
   def lab_name
-    first_obx = observation_requests.first.all_tests.first.obx_segment
-    name = first_obx.performing_organization_name
-    name = name.split(first_obx.item_delim).first if name
+    unless observation_requests.first.all_tests.compact.empty?
+      first_obx = observation_requests.first.all_tests.first.obx_segment
+      name = first_obx.performing_organization_name
+      name = name.split(first_obx.item_delim).first if name
+    end
     name || message_header.sending_facility
   end
 
