@@ -126,6 +126,7 @@ en:
         hospitals_participation:
           admission_date: Admission date 
           discharge_date: Discharge date
+          medical_record_number: Medical record number
     assessment_event:
       name: Assessment Event
       demographic_tab: Demographic
@@ -275,6 +276,7 @@ en:
         hospitals_participation:
           admission_date: Admission date 
           discharge_date: Discharge date
+          medical_record_number: Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -464,6 +466,7 @@ en:
         hospitals_participation:
           admission_date: Admission date 
           discharge_date: Discharge date
+          medical_record_number: Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter

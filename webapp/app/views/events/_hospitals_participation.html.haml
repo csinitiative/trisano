@@ -9,8 +9,9 @@
     = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
 
 %span{:class => "horiz"}
-  = hp.label :medical_record_number
-  = hp.text_field(:medical_record_number, :size => 20, :maxlength => 255)
+  - core_element :medical_record_number, hp, :vert do
+    = hp.label :medical_record_number
+    = hp.text_field(:medical_record_number, :size => 20, :maxlength => 255)
 
 %span.horiz
   - unless f.object.new_record?

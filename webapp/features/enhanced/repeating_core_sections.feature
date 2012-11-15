@@ -132,6 +132,8 @@ Feature: Form fields for repeating core sections.
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] after?" with "admission after"
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date] before?" with "discharge before"
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date] after?" with "discharge after"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][medical_record_number] before?" with "medical before"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][medical_record_number] after?" with "medical after"
     And  I click the Hospitalization Save link
     
     Then I should not see hospitalization save and discard buttons
@@ -145,6 +147,8 @@ Feature: Form fields for repeating core sections.
     And  I should see "admission after"
     And  I should see "discharge before"
     And  I should see "discharge after"
+    And  I should see "medical before"
+    And  I should see "medical after"
 
 
   # Coresponds with #7 with original email
