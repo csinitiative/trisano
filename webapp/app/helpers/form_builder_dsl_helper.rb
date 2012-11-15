@@ -773,11 +773,9 @@ module FormBuilderDslHelper
     begin
       result = ""
 
-      unless element.core_path.blank?
-        result << print_investigator_core_follow_up(form_elements_cache, element, f) unless element.core_path.blank?
-        return result
-      end
+      return result if element.blank? or element.core_path.blank?
 
+      result << print_investigator_core_follow_up(form_elements_cache, element, f)
       questions = form_elements_cache.children(element)
 
       if questions.size > 0

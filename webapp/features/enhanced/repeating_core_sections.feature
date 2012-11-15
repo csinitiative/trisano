@@ -143,7 +143,6 @@ Feature: Form fields for repeating core sections.
 
     When I save the event
     And I navigate to the morbidity event show page
- 
     Then I should see "Allen Memorial Hospital"
     And  I should see "entity before"
     And  I should see "entity after"
@@ -153,6 +152,18 @@ Feature: Form fields for repeating core sections.
     And  I should see "discharge after"
     And  I should see "medical before"
     And  I should see "medical after"
+
+    When I print the event
+    Then I should see "Allen Memorial Hospital"
+    And  I should see "entity before"
+    And  I should see "entity after"
+    And  I should see "admission before"
+    And  I should see "admission after"
+    And  I should see "discharge before"
+    And  I should see "discharge after"
+    And  I should see "medical before"
+    And  I should see "medical after"
+
 
 
   # Coresponds with #7 with original email

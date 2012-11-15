@@ -104,3 +104,10 @@ When /^I change the disease to (.+) the published form$/ do |match_not_match|
   end
   @browser.select("//select[@id='#{@event.type.underscore}_disease_event_attributes_disease_id']", disease_name)
 end
+
+When /^I print the event$/ do
+  When "I click the \"Print\" link and don't wait"
+  @browser.check("//input[@id='print_all']")
+  When "I click the \"Print\" button"
+end
+
