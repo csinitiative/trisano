@@ -46,6 +46,9 @@
             - core_element_show :admission_date, hp, :horiz do
               = hp.label(:admission_date)
               = ld(hp.object.safe_call_chain(:admission_date))
+            - core_element_show :discharge_date, hp, :horiz do
+              = hp.label(:discharge_date)
+              = ld(hp.object.safe_call_chain(:discharge_date))
   -core_section :mortality_status_section, event_form do
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
       - core_element_show :died_id, d, :horiz do

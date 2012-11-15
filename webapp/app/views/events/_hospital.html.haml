@@ -27,8 +27,9 @@
         = hp.calendar_date_select(:admission_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
 
     %span{:class => "horiz"}
-      = hp.label(:discharge_date)
-      = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
+      - core_element :discharge_date, hp, :vert do
+        = hp.label(:discharge_date)
+        = hp.calendar_date_select(:discharge_date, :year_range => 5.years.ago..0.years.from_now, :size => 20)
 
     %span{:class => "horiz"}
       = hp.label :medical_record_number

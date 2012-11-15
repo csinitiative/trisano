@@ -128,8 +128,10 @@ Feature: Form fields for repeating core sections.
     And  I enter the following hospitalizations: 
       | name                      |
       | Allen Memorial Hospital   |
-    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?" with "core repeater before"
-    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] after?" with "core repeater after"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?" with "admission before"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] after?" with "admission after"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date] before?" with "discharge before"
+    And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date] after?" with "discharge after"
     And  I click the Hospitalization Save link
     
     Then I should not see hospitalization save and discard buttons
@@ -139,8 +141,10 @@ Feature: Form fields for repeating core sections.
     And I navigate to the morbidity event show page
  
     Then I should see "Allen Memorial Hospital"
-    And  I should see "core repeater before"
-    And  I should see "core repeater after"
+    And  I should see "admission before"
+    And  I should see "admission after"
+    And  I should see "discharge before"
+    And  I should see "discharge after"
 
 
   # Coresponds with #7 with original email
