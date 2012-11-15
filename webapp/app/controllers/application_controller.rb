@@ -20,6 +20,7 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  include ExceptionNotification::Notifiable
   helper :all # include all helpers, all the time
 
   filter_parameter_logging :password, :password_confirmation, :api_key
@@ -52,6 +53,10 @@ class ApplicationController < ActionController::Base
   # There are other # ways to resolve this, but going big guns for now.
   #
   # protect_from_forgery # :secret => '2d3bed8e7cbfb7957951219c8ef78101'
+
+  def test_except_notification
+    raise Exception, "TEST EXCEPTION"
+  end
 
   protected
 

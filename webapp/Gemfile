@@ -25,6 +25,7 @@ gem 'SystemTimer', "1.2.3"
 
 gem "ruby-hl7", "1.0.3"
 gem "custom_error_message", "1.1.1"
+gem 'exception_notification', :git => "git://github.com/rails/exception_notification.git", :branch => "2-3-stable"
 
 # Need to put this in it's place soon. It's getting cocky standing out
 # on its own like this.
