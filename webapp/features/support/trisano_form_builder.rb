@@ -19,7 +19,7 @@ def create_form(event_type, form_name, form_short_name, disease)
   form = Form.new
   form.event_type = event_type + "_event"
   form.name = form_name
-  form.short_name = "#{form_short_name}_#{get_random_word}"
+  form.short_name = "#{form_short_name}_#{get_random_word}_#{get_random_word}"
   form.disease_ids = [Disease.find_or_create_by_disease_name(:disease_name => disease, :active => true).id]
   form.save_and_initialize_form_elements
   raise "Could not create form" if form.nil?

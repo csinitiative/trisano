@@ -31,13 +31,16 @@ Given /^I am logged in as "(.+)"$/ do |user_name|
 end
 
 When(/^I follow "(.+)"$/) do |link|
-  @browser.click("link=#{link}")
-  @browser.wait_for_page_to_load($load_time)
+  When "I click the \"#{link}\" link"
 end
 
 When(/^I click the "(.+)" link$/) do |link|
   @browser.click("link=#{link}")
   @browser.wait_for_page_to_load($load_time)
+end
+
+When(/^I click the "(.+)" link and don't wait$/) do |link|
+  @browser.click("link=#{link}")
 end
 
 When(/^I click the "(.+)" table header( (\d)+ times)?$/) do |th, ignore, times|
@@ -64,6 +67,11 @@ When(/^I click and confirm the "(.+)" button$/) do |button|
   @browser.click("//input[contains(@value, '#{button}')]")
   @browser.get_confirmation()
   @browser.wait_for_page_to_load($load_time)
+end
+
+When(/^I click and confirm the "(.+)" button and don't wait$/) do |button|
+  @browser.click("//input[contains(@value, '#{button}')]")
+  @browser.get_confirmation()
 end
 
 When(/^I click and confirm the "(.+)" link$/) do |text|

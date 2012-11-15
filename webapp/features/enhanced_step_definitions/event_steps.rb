@@ -92,15 +92,6 @@ When /^I navigate to the contact named "(.+)"$/ do |last_name|
   @browser.wait_for_page_to_load
 end
 
-When /^I change the disease$/ do |option_text|
-  click_core_tab(@browser, "Clinical")
-  @browser.type('clinician_search_name', @clinician.person.last_name)
-  @browser.click('clinician_search')
-  wait_for_element_present("//div[@id='clinician_search_results']/table")
-  @browser.click "//div[@id='clinician_search_results']//a[@id='add_clinician_entity_#{@clinician.id}']"
-  wait_for_element_present("//div[@class='existing_clinician']")
-end
-
 When /^I select "([^\"]*)" from the sibling navigator$/ do |option_text|
   @browser.select "css=.events_nav", option_text
   @browser.wait_for_page_to_load

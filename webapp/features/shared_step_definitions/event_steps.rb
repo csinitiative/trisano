@@ -300,3 +300,7 @@ end
 Given /^the event has a lab$/i do
   add_lab_to_event(@event, "ARUP")
 end
+
+When /^I navigate to the (.+) tab$/ do |tab_name|
+  @browser.click("//a[@href='##{tab_name.downcase}_tab']")
+end

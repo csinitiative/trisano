@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When /^I create the following hospitalizations:$/ do |table|
+When /^I enter the following hospitalizations:$/ do |table|
   i = 0
   table.hashes.each do |hospital_attributes|
     i += 1
@@ -31,7 +31,7 @@ Given /^a published form with repeating core fields for a (.+) event$/ do |event
   sleep 1
 end
 
-Given /^a basic (.+) event with the forms disease$/ do |event_type|
+Given /^a basic (.+) event with the form's disease$/ do |event_type|
   @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
 end
 
@@ -53,4 +53,54 @@ Then /^I should see all of the repeater core field config questions for each hos
   end
 end
 
+Then /^I should (.+) hospitalization save and discard buttons$/ do |see_not_see|
+  if see_not_see == "see"
+    expected_count = 1
+  elsif see_not_see == "not see"
+    expected_count = 0
+  else
+    raise "Unexpected statement."
+  end
 
+  save_button_count = @browser.get_xpath_count("//a[@class='save-new-hospital-participation']").to_i
+  save_button_count.should be_equal(expected_count), "Expected to see #{expected_count} save buttons, got #{save_button_count}."
+
+  discard_button_count = @browser.get_xpath_count("//a[@class='discard-new-hospital-participation']").to_i
+  discard_button_count.should be_equal(expected_count), "Expected to see #{expected_count} discard buttons, got #{discard_button_count}." 
+end
+
+Given /^a (.+) event with with a form with repeating core fields$/ do |event_type|
+  Given "a published form with repeating core fields for a #{event_type} event"
+  And   "a basic #{event_type} event with the form's disease"
+end
+
+Given /^a (.+) event with with a form with repeating core fields and hospitalizations$/ do |event_type|
+  And "a #{event_type} event with with a form with repeating core fields"
+  And   "I navigate to the #{event_type} event edit page"
+  hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name
+  add_hospital(@browser, {:name => hospital_name})
+  And   "I save the event"
+end
+
+Then /^I should see (\d+) blank hospitalization form$/ do |count|
+  unsaved_hospitalizations = @browser.get_xpath_count("//div[@class='hospital']/span[@class='ajax-actions']")
+  unsaved_hospitalizations.to_i.should be_equal(count.to_i)
+end
+
+When /^I click the Hospitalization Save link$/ do
+  @browser.click("//div[@class='hospital']//a[@class='save-new-hospital-participation']")
+  sleep(1)
+end
+
+When /^I change the disease to (.+) the published form$/ do |match_not_match|
+  click_core_tab(@browser, "Clinical")
+  if match_not_match == "match"
+    disease_name = @published_form.diseases.first.disease_name
+  elsif match_not_match == "not match"
+    disease = Disease.find(:first, :conditions => ["disease_name != ?", @published_form.diseases.first.disease_name])
+    disease_name = disease.disease_name
+  else
+    raise "Unexpected syntax: #{match_not_match}"
+  end
+  @browser.select("//select[@id='#{@event.type.underscore}_disease_event_attributes_disease_id']", disease_name)
+end
