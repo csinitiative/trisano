@@ -128,6 +128,8 @@ Feature: Form fields for repeating core sections.
     And  I enter the following hospitalizations: 
       | name                      |
       | Allen Memorial Hospital   |
+    And I fill in "morbidity_event[hospitalization_facilities][secondary_entity_id] before?" with "entity before"
+    And I fill in "morbidity_event[hospitalization_facilities][secondary_entity_id] after?" with "entity after"
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?" with "admission before"
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] after?" with "admission after"
     And I fill in "morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date] before?" with "discharge before"
@@ -143,6 +145,8 @@ Feature: Form fields for repeating core sections.
     And I navigate to the morbidity event show page
  
     Then I should see "Allen Memorial Hospital"
+    And  I should see "entity before"
+    And  I should see "entity after"
     And  I should see "admission before"
     And  I should see "admission after"
     And  I should see "discharge before"

@@ -47,4 +47,8 @@ class HospitalizationFacility < Participation
                                       :repeater_form_object_type => self.class.name,
                                       :event_id => self.event_id})
   end
+
+  def repeater_parent
+    self
+  end
 end

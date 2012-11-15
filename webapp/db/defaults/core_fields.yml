@@ -952,6 +952,16 @@
   can_follow_up: true
   event_type: morbidity_event
   field_type: date
+  key: morbidity_event[hospitalization_facilities][secondary_entity_id]
+  repeater: true
+  repeater_parent_key: morbidity_event[hospitalization_facilities]  
+  parent_key: morbidity_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_event
+  field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
   repeater_parent_key: morbidity_event[hospitalization_facilities]  
@@ -1564,6 +1574,16 @@
   key: morbidity_event[imported_from_id]
   code_name: imported
   parent_key: morbidity_event[other_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: contact_event
+  field_type: date
+  key: contact_event[hospitalization_facilities][secondary_entity_id]
+  repeater: true
+  repeater_parent_key: contact_event[hospitalization_facilities]  
+  parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
   fb_accessible: true
@@ -2694,6 +2714,16 @@
   can_follow_up: true
   event_type: assessment_event
   field_type: date
+  key: assessment_event[hospitalization_facilities][secondary_entity_id]
+  repeater: true
+  repeater_parent_key: assessment_event[hospitalization_facilities]  
+  parent_key: assessment_event[hospitalized_health_facilities_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: assessment_event
+  field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
   repeater_parent_key: assessment_event[hospitalization_facilities]  
@@ -3743,6 +3773,16 @@
   event_type: morbidity_and_assessment_event
   field_type: drop_down
   key: morbidity_and_assessment_event[disease_event][hospitalized_id]
+  
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  event_type: morbidity_and_assessment_event
+  field_type: date
+  key: morbidity_and_assessment_event[hospitalization_facilities][secondary_entity_id]
+  repeater: true
+  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
+  parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
   fb_accessible: true

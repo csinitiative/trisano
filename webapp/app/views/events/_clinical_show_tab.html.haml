@@ -39,7 +39,7 @@
     - else
       - event_form.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hf|
         %span{:class => "vert-break"}
-          - core_element_show :secondary_entity_id, event_form, :horiz do
+          - core_element_show :secondary_entity_id, hf, :horiz do
             = hf.label(:secondary_entity_id)
             = h(hf.object.safe_call_chain(:place_entity, :place, :name))
           - hf.fields_for(:hospitals_participation, :builder => ExtendedFormBuilder) do |hp|
