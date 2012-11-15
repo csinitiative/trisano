@@ -6,14 +6,16 @@
   color: green;
 }
 
-#forms_references {
+#form-references-dialog #forms_in_use {
   float:left;
   width:50%
 }
-#forms_references a.invalid {
+
+#form-references-dialog #forms_in_use a.invalid {
   color: #ff0000;
 }
-#available_forms {
+
+#form-references-dialog #forms_available {
   float:right;
   width:50%
 }

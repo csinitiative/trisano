@@ -19,7 +19,7 @@
     = "You may additionally remove the old forms for the event if present."
   %hr
   = hidden_field_tag "event_id", @event.id
-  %div{:id => "forms_references"}
+  %div{:id => "forms_in_use"}
     =t 'forms_in_use'
     - if @event.form_references.empty?
       %p
@@ -31,8 +31,8 @@
             = check_box_tag "form_id", form_reference.form_id, true
             = form_reference.form.name
 
-  %div{:id => "available_forms"}
-    =t 'available_forms'
+  %div{:id => "forms_available"}
+    =t 'forms_available'
     - if @event.available_form_references.empty?
       %p
         %em=t 'none'

@@ -331,7 +331,7 @@ en:
 #event_forms
   event_forms: 'Event Forms'
   forms_in_use: 'Forms in Use'
-  available_forms: 'Available Forms'
+  forms_available: 'Available Forms'
   form_information: 'Form Information'
   event_type: 'Event Type'
   remove_from_event: 'Remove from event'

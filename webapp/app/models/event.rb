@@ -673,6 +673,8 @@ class Event < ActiveRecord::Base
     return [] unless self.disease_event
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
     template_ids = self.form_references.collect { |fr| fr.template_id }
+
+    # What is this doing? Comments please!
     forms.delete_if {|f| template_ids.include?(f.template_id) }.map {|f| FormReference.new(:form_id => f.id, :template_id => f.template_id) }
   end
 
