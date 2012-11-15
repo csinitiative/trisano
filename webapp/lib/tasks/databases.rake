@@ -18,6 +18,10 @@ namespace :db do
     load "#{RAILS_ROOT}/script/load_codes.rb"
   end
 
+  task :load_core_fields => :environment do
+    load rakefile_dir("script/load_core_fields.rb")
+  end
+
   ## "Load defaults into database"
   task :load_defaults => :environment do
     load rakefile_dir("script/load_defaults.rb")
