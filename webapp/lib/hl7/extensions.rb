@@ -273,7 +273,8 @@ module StagedMessages
     end
 
     def address_unit_no
-      addr_components[1].titleize
+    #  addr_components[1].blank? ? "" :
+          addr_components[1].titleize
     end
 
     def address_street
