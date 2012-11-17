@@ -15,14 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When /^I enter the following hospitalizations:$/ do |table|
-  i = 0
-  table.hashes.each do |hospital_attributes|
-    i += 1
-    add_hospital(@browser, hospital_attributes, i)
-  end
-end
-
 Given /^a published form with repeating core fields for a (.+) event$/ do |event_type|
   disease_name = SecureRandom.hex(16)
   @form = create_form(event_type, 'Already created', 'something_published', disease_name)
@@ -42,54 +34,10 @@ When /^I navigate to the new morbidity event page and start a event with the for
   @browser.select('morbidity_event_disease_event_attributes_disease_id', @form.diseases.first.disease_name)
 end
 
-Then /^I should see all of the repeater core field config questions for each hospitalization$/ do
-  @core_fields ||= CoreField.all(:conditions => ["event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = TRUE AND key LIKE '%hospitalization_facilities%'", @form.event_type, true, false])
-  expected_count = @event.hospitalization_facilities.count.to_s
-  @core_fields.each do |core_field|
-    before_config_count = @browser.get_xpath_count("//label[contains(text(), '#{core_field.key} before?')]")
-    (before_config_count==expected_count).should(be_true, "Expected '#{core_field.key} before?' label to appear #{expected_count} times. Got #{before_config_count}.")
-    after_config_count = @browser.get_xpath_count("//label[contains(text(), '#{core_field.key} after?')]")
-    (after_config_count==expected_count).should(be_true, "Expected '#{core_field.key} after?' label to appear #{expected_count} times. Got #{after_config_count}.")
-  end
-end
-
-Then /^I should (.+) hospitalization save and discard buttons$/ do |see_not_see|
-  if see_not_see == "see"
-    expected_count = 1
-  elsif see_not_see == "not see"
-    expected_count = 0
-  else
-    raise "Unexpected statement."
-  end
-
-  save_button_count = @browser.get_xpath_count("//a[@class='save-new-hospital-participation']").to_i
-  save_button_count.should be_equal(expected_count), "Expected to see #{expected_count} save buttons, got #{save_button_count}."
-
-  discard_button_count = @browser.get_xpath_count("//a[@class='discard-new-hospital-participation']").to_i
-  discard_button_count.should be_equal(expected_count), "Expected to see #{expected_count} discard buttons, got #{discard_button_count}." 
-end
 
 Given /^a (.+) event with with a form with repeating core fields$/ do |event_type|
   Given "a published form with repeating core fields for a #{event_type} event"
   And   "a basic #{event_type} event with the form's disease"
-end
-
-Given /^a (.+) event with with a form with repeating core fields and hospitalizations$/ do |event_type|
-  And "a #{event_type} event with with a form with repeating core fields"
-  And   "I navigate to the #{event_type} event edit page"
-  hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name
-  add_hospital(@browser, {:name => hospital_name})
-  And   "I save the event"
-end
-
-Then /^I should see (\d+) blank hospitalization form$/ do |count|
-  unsaved_hospitalizations = @browser.get_xpath_count("//div[@class='hospital']/span[@class='ajax-actions']")
-  unsaved_hospitalizations.to_i.should be_equal(count.to_i)
-end
-
-When /^I click the Hospitalization Save link$/ do
-  @browser.click("//div[@class='hospital']//a[@class='save-new-hospital-participation']")
-  sleep(1)
 end
 
 When /^I change the disease to (.+) the published form$/ do |match_not_match|
@@ -110,4 +58,3 @@ When /^I print the event$/ do
   @browser.check("//input[@id='print_all']")
   When "I click the \"Print\" button"
 end
-
