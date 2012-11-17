@@ -698,6 +698,14 @@ module TrisanoHelper
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
   end
 
+  def add_telephone(browser, attributes, index = 1)
+    click_core_tab(browser, DEMOGRAPHIC)
+    browser.click "link=Add a Telephone" unless index == 1
+    browser.select("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:type]}")
+    browser.type("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//input[contains(@id, '_area_code')]", attributes["area code"])
+    browser.type("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//input[contains(@id, '_phone_number')]", attributes["number"])
+  end
+
   def remove_hospital(browser, index = 1)
     browser.click("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_destroy')]")
   end
