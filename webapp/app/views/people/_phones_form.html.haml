@@ -17,11 +17,10 @@
 
 -core_section :phone_section, f do
   %div#telephones.vert
-    -core_element(:telephones, f, :horiz) do
+    -core_section :telephones, f do
       -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
-        %div.data_telephones
-          =render :partial => 'people/telephone', :locals => { :f => telephone_form }
-      %p= add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone'
+        =render :partial => 'people/telephone', :locals => { :f => telephone_form }
+    %p{ :style => "clear:both" }= add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone', :insert => "telephones_section"
 
   %div#email_addresses.vert
     -core_element(:email_addresses, f, :horiz) do
