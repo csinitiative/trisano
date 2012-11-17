@@ -133,15 +133,18 @@ Then(/^I should not be presented with an error message$/) do
 end
 
 Then /^I should see "([^\"]*)"$/ do |text|
-  @browser.get_html_source.should =~ /#{text}/i
+  escaped_text = Regexp.escape(text)
+  @browser.get_html_source.should =~ /#{escaped_text}/i
 end
 
 Then(/^I should see the following in order:$/) do |values|
-  @browser.get_html_source.should =~ /#{values.raw.join(".*")}/im
+  escaped_text = Regexp.escape(values.raw.join(".*"))
+  @browser.get_html_source.should =~ /#{escaped_text}/im
 end
 
 Then /^I should not see "([^\"]*)"$/ do |text|
-  @browser.get_body_text.should_not =~ /#{text}/i
+  escaped_text = Regexp.escape(text)
+  @browser.get_body_text.should_not =~ /#{escaped_text}/i
 end
 
 Then /^I wait for ajax$/ do
