@@ -289,12 +289,10 @@ Given /^all core fields have help text$/ do
 end
 
 Given /^all core field configs for a (.+) have help text$/ do |event_type|
-  ActiveRecord::Base.connection.execute(<<-SQL)
-    UPDATE core_field_translations a
-    SET help_text = (b.key || ' help text')
-    FROM core_fields b
-    WHERE a.locale = '#{I18n.locale}' AND b.event_type = '#{event_type.gsub(" ","_")}' AND a.core_field_id = b.id
-  SQL
+  CoreField.find_all_by_event_type(event_type.gsub(" ", "_")).each do |core_field|
+    core_field.help_text = core_field.key << " help text"
+    core_field.save!
+  end
 end
 
 Given /^the event has a lab$/i do
