@@ -229,7 +229,7 @@ module FormBuilderDslHelper
 
   def core_section(attribute, form_builder, css_class='form', &block)
     rendering_core_field(attribute, form_builder) do |cf|
-      concat("<fieldset class='#{css_class}' id='#{attribute}_section'>")
+      concat("<fieldset class='#{css_class}'>")
       concat("<legend>#{cf.name}</legend>")
       concat_block_or_replacement(cf, form_builder, &block)
       concat("</fieldset>")

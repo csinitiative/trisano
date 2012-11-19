@@ -188,7 +188,7 @@ When /^I visit the editable event$/ do
 end
 
 Then %r{^I should see "([^\"]*)" under Telephones/Email on the Demographic tab} do |phone_type|
-  response.should have_xpath("//div[@id='telephones']//span[contains(text(), '#{phone_type}')]")
+  response.should have_xpath("//div[@id='demographic_tab']//div[@class='data_telephones']//span[contains(text(), '#{phone_type}')]")
 end
 
 Then %r{^I should see "([^\"]*)" under "([^\"]*)" on the Demographic tab$} do |text, label|
