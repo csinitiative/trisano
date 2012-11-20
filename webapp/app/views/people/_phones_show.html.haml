@@ -15,8 +15,9 @@
 
 -core_section :phone_section, f do
   -core_element_show(:telephones, f, :horiz) do
-    %div.data_telephones
-      =render :partial => 'people/show_telephone', :collection => f.object.telephones
+    %div#telephones.vert
+      -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
+        =render :partial => 'people/show_telephone', :locals => {:f => telephone_form, :show_telephone => telephone_form.object}
   -core_element_show(:email_addresses, f, :horiz) do
     %div.data_email_addresses
       =render :partial => 'people/show_email', :collection => f.object.email_addresses

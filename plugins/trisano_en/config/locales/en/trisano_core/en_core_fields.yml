@@ -88,7 +88,9 @@ en:
           age_section: Age
           demographics_section: Demographics
           phone_section: Telephones/Email
-          telephones: Contact telephones
+          telephones: 
+            name: All contact telephones
+            patient_telephone: Patient telephone
           email_addresses: Contact email addresses
           race_ids: Contact races
           person:
@@ -235,7 +237,9 @@ en:
           name_section: Name
           age_section: Age
           phone_section: Telephones/Email
-          telephones: Patient telephones
+          telephones:
+            name: All patient telephones
+            patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: Patient email addresses
           race_ids: Patient race
@@ -425,7 +429,9 @@ en:
           name_section: Name
           age_section: Age
           phone_section: Telephones/Email
-          telephones: Patient telephones
+          telephones: 
+            name: All patient telephones
+            patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: Patient email addresses
           race_ids: Patient race
@@ -615,7 +621,9 @@ en:
           name_section: Name
           age_section: Age
           phone_section: Telephones/Email
-          telephones: Patient telephones
+          telephones:
+            name: Patient telephones
+            patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: Patient email addresses
           race_ids: Patient race

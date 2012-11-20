@@ -14,6 +14,6 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -unless show_telephone.new_record?
-  %p
+  -core_element_show(:patient_telephone, f, :horiz) do
     %span.data_telephone=h(show_telephone.simple_format) 
     %hr

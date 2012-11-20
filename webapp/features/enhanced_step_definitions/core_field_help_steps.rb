@@ -28,6 +28,7 @@ When /^I fill in enough (.+) data to enable all core fields to show up in show m
     hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name 
     add_lab_result(@browser, { :lab_name => lab_name, :lab_test_type => common_test_type.common_name })
     add_hospital(@browser, {:name => hospital_name}, index = 1)
+    add_telephone(@browser, {:type => "Work", "area code" => "555", :number => "555-5555"})
   end
 end
 

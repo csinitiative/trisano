@@ -16,7 +16,82 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEventsController < EventsController
-  before_filter :can_update?, :only => [:hospitalization_facilities]
+  before_filter :can_update?, :only => [:hospitalization_facilities, :patient_telephones]
+
+
+  def patient_telephones
+    Person.transaction do
+      event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+      raise "No event params posted" if event_params.nil?
+
+
+      patient_tele_attr = event_params[:interested_party_attributes][:person_entity_attributes][:telephones_attributes]
+      raise "More than one patient telephone submitted: #{patient_tele_attr.inspect}" if patient_tele_attr.each_value.count != 1
+      # Because we only ever submit one repeater, it's ok to just take the first
+      patient_tele_attr = patient_tele_attr.each_value.first
+      
+      # Need to include the entity to attach the phone to
+      patient_tele_attr.merge!({:entity_id => @event.interested_party.person_entity.id.to_s})
+
+
+      @patient_telephone = Telephone.new(patient_tele_attr)
+      if saved_successfully = @patient_telephone.save
+
+
+        # PARAMS PARSING
+        # ==============
+   
+        if patient_tele_attr[:_destroy] == "1"
+          # record was destroyed by @event.save
+
+
+        else # else from if patient_tele_attr[:_destory] == "1"
+          # saving a new/existing record
+
+          @event.interested_party.person_entity.telephones.reload
+
+
+          # We've either created a new repeater or
+          # determined which existing one to use.
+          # time to create an answer for it.
+          new_answer_attributes = event_params.delete(:new_repeater_answer)
+          unless new_answer_attributes.nil?
+            raise "A repeater object is required to create a new answer." if @patient_telephone.nil?
+            new_answer_attributes.each do |answer_attributes|
+
+
+              answer_attributes[:repeater_form_object_id] = @patient_telephone.id
+              answer_attributes[:repeater_form_object_type] = @patient_telephone.class.name
+              answer_attributes[:event_id] = @event.id
+              a = Answer.create(answer_attributes)
+              raise "Unable to create Answer for #{@patient_telephone.inspect}:\n #{a.errors.inspect}" unless a.valid?
+
+            end #new_anwer_attributes.each
+
+          end #new_answer_attributes.nil
+
+
+        end # if repeater_dependent destroyed == 1 
+      end #if saved_successfully
+
+      # Must include respond_to inside transaction to have scope for
+      # event_saved_successfully
+      respond_to do |format|
+        if saved_successfully
+          redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
+          redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
+          format.js   { render :partial => "people/ajax_patient_phone_form", :status => :ok }
+        else
+          logger.error @patient_telephone.errors.inspect
+          format.js   { render :partial => "people/ajax_patient_phone_form", :status => :unprocessable_entity }
+        end
+      end    
+    end #transaction
+  end #hospitalization_facilities
+
+
+
+
   def hospitalization_facilities
     HospitalsParticipation.transaction do
       event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]

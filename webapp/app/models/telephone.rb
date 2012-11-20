@@ -138,4 +138,8 @@ class Telephone < ActiveRecord::Base
     self.class.format(field)
   end
 
+  def repeater_parent
+    self
+  end
+
 end

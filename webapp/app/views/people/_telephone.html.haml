@@ -14,33 +14,40 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 .phone
+  = error_messages_for :object => f.object
   %div.data_telephone
-    - core_element :entity_location_type_id, f, :horiz do
-      =f.label :entity_location_type_id
-      %span.data_telephone_location_type
-        =f.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
-    - core_element :country_code, f, :horiz do
-      -if f.object.use?(:country_code)
-        =f.label(:country_code)
-        %span.date_country_code
-          =f.core_text_field(:country_code, {:size => 3})
-    - core_element :area_code, f, :horiz do
-      -if f.object.use?(:area_code)
-        =f.label(:area_code)
-        %span.data_area_code
-          =f.core_text_field(:area_code, {:size => 3})
-    - core_element :phone_number, f, :horiz do
-      =f.label(:phone_number)
-      %span.data_phone_number
-        =f.core_text_field(:phone_number, {:size => 8})
-    - core_element :extension, f, :horiz do
-      =f.label(:extension)
-      %span.data_extension
-        =f.core_text_field(:extension, {:size => 6})
+    -core_element(:patient_telephone, f, :horiz) do
+      - core_element :entity_location_type_id, f, :horiz do
+        =f.label :entity_location_type_id
+        %span.data_telephone_location_type
+          =f.dropdown_code_field(:entity_location_type_id, 'telephonelocationtype', {}, {})
+      - core_element :country_code, f, :horiz do
+        -if f.object.use?(:country_code)
+          =f.label(:country_code)
+          %span.date_country_code
+            =f.core_text_field(:country_code, {:size => 3})
+      - core_element :area_code, f, :horiz do
+        -if f.object.use?(:area_code)
+          =f.label(:area_code)
+          %span.data_area_code
+            =f.core_text_field(:area_code, {:size => 3})
+      - core_element :phone_number, f, :horiz do
+        =f.label(:phone_number)
+        %span.data_phone_number
+          =f.core_text_field(:phone_number, {:size => 8})
+      - core_element :extension, f, :horiz do
+        =f.label(:extension)
+        %span.data_extension
+          =f.core_text_field(:extension, {:size => 6})
 
-    %span.horiz
-      - unless f.object.new_record?
-        =f.label :_delete
-        %span.data_telephone_delete=f.check_box :_destroy
+      %span.horiz
+        - if !f.object.new_record?
+          =f.label :_delete
+          %span.data_telephone_delete=f.check_box :_destroy
+        - elsif f.repeater_form?
+          %span.ajax-actions
+            %a{:href=>"#", :class=>"save-new-patient-telephone"} Save
+            |
+            %a{:href=>"#", :class=>"discard-new-patient-telephone"} Discard
 
 %hr

@@ -16,12 +16,11 @@
 -# with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -core_section :phone_section, f do
-  %div#telephones.vert
-    -core_element(:telephones, f, :horiz) do
+  -core_element(:telephones, f, :horiz) do
+    %div#telephones.vert
       -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
-        %div.data_telephones
-          =render :partial => 'people/telephone', :locals => { :f => telephone_form }
-      %p= add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone'
+        =render :partial => 'people/telephone', :locals => { :f => telephone_form }
+  %p{ :style => "clear:both" }= add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone', :html_id => "add-patient-telephone"
 
   %div#email_addresses.vert
     -core_element(:email_addresses, f, :horiz) do

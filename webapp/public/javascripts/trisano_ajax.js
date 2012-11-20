@@ -85,8 +85,18 @@ Trisano.Ajax = {
                        });
   },
 
-  getRepeaterAjaxActions: function() {
+  getHosFacRepeaterAjaxActions: function() {
     return $j("div#hospitalization_facilities").find("span.ajax-actions");
+  },
+
+  getPatientTeleRepeaterAjaxActions: function() {
+    return $j("div#telephones").find("span.ajax-actions");
+  },
+
+  getRepeaterAjaxActions: function() {
+    var repeaters = Trisano.Ajax.getHosFacRepeaterAjaxActions();
+    repeaters = repeaters.add(Trisano.Ajax.getPatientTeleRepeaterAjaxActions());
+    return repeaters;
   },
 
   hideRepeaterAjaxActions: function() {
@@ -96,45 +106,119 @@ Trisano.Ajax = {
       });
   },
 
+  hidePatientTeleRepeaterAjaxActions: function() {
+    var repeaters = Trisano.Ajax.getPatientTeleRepeaterAjaxActions();
+      repeaters.each(function(index) {
+        this.remove();
+      });
+  },
+
+  hideHosFacRepeaterAjaxActions: function() {
+    var repeaters = Trisano.Ajax.getHosFacRepeaterAjaxActions();
+      repeaters.each(function(index) {
+        this.remove();
+      });
+  },
+
+  hideRepeaterAjaxActionsAfterAddingRepeater: function() {
+    $j("a#add-patient-telephone").live("click", function() {
+      Trisano.Ajax.hidePatientTeleRepeaterAjaxActions();
+    });
+    $j("a#add-hospitalization-facilities").live("click", function() {
+      Trisano.Ajax.hideHosFacRepeaterAjaxActions();
+    });
+  },
+
+  enableRepeaterAjaxActions: function() {
+    Trisano.Ajax.enableHosFacRepeaterAjaxActions();
+    Trisano.Ajax.enablePatientTeleRepeaterAjaxActions();
+  },
+
+  enablePatientTeleRepeaterAjaxActions: function() {
+    $j("a.save-new-patient-telephone").live("click", Trisano.Ajax.savePatientTelephone);
+
+    $j("a.discard-new-patient-telephone").live("click", function() {
+      $j(this).closest("div.phone").remove();
+      $j("a#add-patient-telephone").show();
+      return false;
+    });
+
+    $j("a#add-patient-telephone").live("click", function() {
+      this.hide();
+    });
+
+    if(Trisano.Ajax.getPatientTeleRepeaterAjaxActions().length != 0) {
+      // A blank template is being shown
+      $j("a#add-patient-telephone").hide();
+    }
+  },
+
+  
+
+  enableHosFacRepeaterAjaxActions: function() {
+    $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
+
+    $j("a.discard-new-hospital-participation").live("click", function() {
+      $j(this).closest("div.hospital").remove();
+      $j("a#add-hospitalization-facilities").show();
+      return false;
+    });
+
+    $j("a#add-hospitalization-facilities").live("click", function() {
+      this.hide();
+    });
+
+    if(Trisano.Ajax.getHosFacRepeaterAjaxActions().length != 0) {
+      // A blank template is being shown
+      $j("a#add-hospitalization-facilities").hide();
+    }
+  },
+
+  
+
   setupRepeaters: function() {
     if($j("form[class^=new_][class$=_event]").length!=0) {
       // New mode
       Trisano.Ajax.hideRepeaterAjaxActions();
-      $j("a#add-hospitalization-facilities").live("click", function() {
-        Trisano.Ajax.hideRepeaterAjaxActions();
-      });
-    
+      Trisano.Ajax.hideRepeaterAjaxActionsAfterAddingRepeater();
     } else {
       // Edit mode
-      $j("a.save-new-hospital-participation").live("click", Trisano.Ajax.saveHospitalization);
-
-      $j("a.discard-new-hospital-participation").live("click", function() {
-        $j(this).closest("div.hospital").remove();
-        $j("a#add-hospitalization-facilities").show();
-        return false;
-      });
-
-      $j("a#add-hospitalization-facilities").live("click", function() {
-        this.hide();
-      });
-
-      if(Trisano.Ajax.getRepeaterAjaxActions().length != 0) {
-        // A blank template is being shown
-        $j("a#add-hospitalization-facilities").hide();
-      }
+      Trisano.Ajax.enableRepeaterAjaxActions();
     }
   },
 
   saveRepeaters: function() {
-    return Trisano.Ajax.saveHospitalizations();
+    var deferreds = [];
+    deferreds.push(Trisano.Ajax.saveHospitalizations());
+    deferreds.push(Trisano.Ajax.savePatientTelephones());
+    return deferreds;
   },
  
+  savePatientTelephones: function() {
+    var deferreds = [];
+    $j("div.phone a.save-new-patient-telephone").closest("div.phone").each(function() {
+      deferreds.push(Trisano.Ajax.postPatientTelephone($j(this)));
+    });
+    return deferreds;
+  },
+
   saveHospitalizations: function() {
     var deferreds = [];
     $j("div.hospital a.save-new-hospital-participation").closest("div.hospital").each(function() {
       deferreds.push(Trisano.Ajax.postHospitalization($j(this)));
     });
     return deferreds;
+  },
+
+  savePatientTelephone: function() {
+    var data_source = $j(this).closest("div.phone");
+    var result = Trisano.Ajax.postPatientTelephone(data_source);
+    if(result.length == 0){
+      // No inputs were populated. We want to do this here so that this message is only shown
+      // when an individual hospitalization is saved, not when Save & Continue is used. 
+      data_source.prepend("<strong class='required'>Please fill out at least one field.</strong>");
+    };
+    return false;
   },
 
   saveHospitalization: function() {
@@ -148,12 +232,64 @@ Trisano.Ajax = {
     return false;
   },
 
+  postPatientTelephone: function(data_source) {
+    var patient_telephone_fields = data_source.find(":input");
+    var target = data_source;
+
+    var at_least_one_field_populated = false;
+    data_source.find(":input[type!=hidden]").each(function(idx, elem){
+      if($j(elem).val().length != 0){
+        at_least_one_field_populated = true;
+      }
+    });
+    if(!at_least_one_field_populated) {
+      return [];
+    }
+
+    var patient_telephone_data = patient_telephone_fields.serialize();
+
+    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/patient_telephones");
+
+    return $j.ajax({
+      url: url, 
+      data: patient_telephone_data,
+      dataType: 'html',
+      type: "POST",
+      beforeSend: function( xhr) {
+        data_source.find("span.ajax-actions").replaceWith(Trisano.Ajax.spinnerImgNoID());
+      },
+      error: function(request, textStatus, error) {
+        target.replaceWith(request.responseText);
+
+        // Because of the error the user's answer will be lost, so we must add it back
+
+        // References to data_source and patient-telephone_fields are now invalid since we've replaced target
+        // with responseText. We must determine which patient-telephone in the response has the errors
+        var new_save_link = $j("#" + $j(request.responseText).find("div.errorExplanation")
+                                                             .parent()
+                                                             .children("a.save-new-patient-telephone")
+                                                             .attr('id'));
+
+        var new_patient_telephone_fields = new_save_link.closest("div.phone").find(":input");
+
+        // So we can deserialize our data back into the forms
+        // uses jquery.deserialize
+        new_patient_telephone_fields.deserialize(patient_telephone_data); 
+      },
+      success: function(data, textStatus, request) {
+        // Must be run before attempting to show a#add-patient-telephone-facilities
+        target.replaceWith(request.responseText);
+        $j("a#add-patient-telephone").show();
+      }
+    });
+  },
+
   postHospitalization: function(data_source) {
     var hospitalization_fields = data_source.find(":input");
     var target = data_source;
 
     var at_least_one_field_populated = false;
-    data_source.find(":input:visible").each(function(idx, elem){
+    data_source.find(":input[type!=hidden]").each(function(idx, elem){
       if($j(elem).val().length != 0){
         at_least_one_field_populated = true;
       }

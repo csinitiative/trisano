@@ -699,11 +699,11 @@ module TrisanoHelper
   end
 
   def add_telephone(browser, attributes, index = 1)
-    click_core_tab(browser, DEMOGRAPHIC)
+    click_core_tab(browser, DEMOGRAPHICS)
     browser.click "link=Add a Telephone" unless index == 1
-    browser.select("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:type]}")
-    browser.type("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//input[contains(@id, '_area_code')]", attributes["area code"])
-    browser.type("//fieldset[@id='telephones_section']//div[@class='phone'][#{index}]//input[contains(@id, '_phone_number')]", attributes["number"])
+    browser.select("//div[@id='telephones']//div[@class='phone'][#{index}]//select[contains(@id, '_entity_location_type_id')]", "label=#{attributes[:type]}")
+    browser.type("//div[@id='telephones']//div[@class='phone'][#{index}]//input[contains(@id, '_area_code')]", attributes["area code"])
+    browser.type("//div[@id='telephones']//div[@class='phone'][#{index}]//input[contains(@id, '_phone_number')]", attributes[:number])
   end
 
   def remove_hospital(browser, index = 1)
