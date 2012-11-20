@@ -27,6 +27,7 @@ end
 Given /^I already have a deactivated form with the short name "([^\"]*)"$/ do |short_name|
   @form = create_form('morbidity', 'Already created', short_name, 'African Tick Bite Fever')
   @form.publish
+  @form.should_not be_nil, "Unable to successfully publish form. Check feature logs."
   @form.deactivate
   @last_used_short_name = @form.short_name
 end
@@ -34,6 +35,7 @@ end
 Given /^I already have a published form$/ do
   @form = create_form('morbidity', 'Already created', 'something_published', 'African Tick Bite Fever')
   @published_form = @form.publish
+  @published_form.should_not be_nil, "Unable to successfully publish form. Check feature logs."
 end
 
 Given /^I already have a form with the name "([^\"]*)"$/ do |name|

@@ -95,7 +95,7 @@ Feature: Form fields for repeating core sections.
     Then I should see hospitalization save and discard buttons
     And  I should not see a link to "Add a Hospitalization Facility"
 
-    When I click the "Discard" link and don't wait
+    When I discard the unsaved hospitalization
     Then I should see a link to "Add a Hospitalization Facility"
     Then I should not see hospitalization save and discard buttons
 
@@ -110,7 +110,7 @@ Feature: Form fields for repeating core sections.
     Then I should see hospitalization save and discard buttons
     And  I should not see a link to "Add a Hospitalization Facility"
     
-    When I click the "Discard" link and don't wait
+    When I discard the unsaved hospitalization
     Then I should see a link to "Add a Hospitalization Facility"
     Then I should not see hospitalization save and discard buttons
 
@@ -175,7 +175,7 @@ Feature: Form fields for repeating core sections.
     And  I enter the following hospitalizations: 
       | name                      |
       | Allen Memorial Hospital   |
-    And  I click the "Discard" link and don't wait
+    And  I discard the unsaved hospitalization
     
     Then I should not see hospitalization save and discard buttons
     And  I should see a link to "Add a Hospitalization Facility"

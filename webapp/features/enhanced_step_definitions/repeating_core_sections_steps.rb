@@ -20,6 +20,7 @@ Given /^a published form with repeating core fields for a (.+) event$/ do |event
   @form = create_form(event_type, 'Already created', 'something_published', disease_name)
   Given "that form has core field configs configured for all repeater core fields"
   @published_form = @form.publish
+  @published_form.should_not be_nil, "Unable to publish form. See feature logs."
   sleep 1
 end
 

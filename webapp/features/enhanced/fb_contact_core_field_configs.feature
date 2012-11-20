@@ -6,6 +6,7 @@ Feature: Contact event form core field configs
   Scenario: Contact event core field configs
     Given I am logged in as a super user
     And a contact event form exists
+    And a lab named "Labby"
     And that form has core field configs configured for all core fields
     And that form is published
     And a morbidity event exists with a disease that matches the form

@@ -51,7 +51,7 @@
               = ld(hp.object.safe_call_chain(:discharge_date))
             - core_element_show :medical_record_number, hp, :horiz do
               = hp.label(:medical_record_number)
-              = ld(hp.object.safe_call_chain(:medical_record_number))
+              = h(hp.object.safe_call_chain(:medical_record_number))
   -core_section :mortality_status_section, event_form do
     - event_form.fields_for(:disease_event, :builder => ExtendedFormBuilder) do |d|
       - core_element_show :died_id, d, :horiz do

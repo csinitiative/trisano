@@ -1,6 +1,7 @@
 #!/bin/sh
 
 SHOW_FIREFOX=$1
+USE_DEBUGGER=$2
 
 features/support/enhanced_support_stop.sh
 
@@ -15,4 +16,9 @@ echo "Loading selenium hiding Firefox"
 DISPLAY=:99 bundle exec selenium > log/selenium_java.log 2>&1 &
 fi
 
+if [ "$USE_DEBUGGER" = "true" ]
+then
+bundle exec script/server -e feature -p 8080 -P /trisano --debugger &
+else
 bundle exec script/server -e feature -p 8080 -P /trisano > log/selenium_server.log 2>&1 &
+fi

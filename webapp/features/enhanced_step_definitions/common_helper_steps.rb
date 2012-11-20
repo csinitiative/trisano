@@ -138,7 +138,7 @@ Then /^I should see "([^\"]*)"$/ do |text|
 end
 
 Then(/^I should see the following in order:$/) do |values|
-  escaped_text = Regexp.escape(values.raw.join(".*"))
+  escaped_text = values.raw.join(".*")
   @browser.get_html_source.should =~ /#{escaped_text}/im
 end
 
@@ -165,6 +165,7 @@ def cleanable_classes
    LabResult,
    Address,
    Note,
+   HospitalsParticipation,
    ParticipationsTreatment,
    ParticipationsRiskFactor,
    Participation,

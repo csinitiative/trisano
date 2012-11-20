@@ -38,7 +38,7 @@ end
 
 Given(/^that form is published$/) do
   @published_form = @form.publish
-  @published_form.should_not be_nil
+  @published_form.should_not be_nil, "Unable to successfully publish form. Check feature logs."
 end
 
 Given /^a "([^\"]*)" event form named "([^\"]*)" with the following questions:$/ do |form_type, form_name, table|
@@ -61,12 +61,14 @@ end
 Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) event with the disease (.+)$/) do |form_name, form_short_name, event_type, disease|
   @form = create_form(event_type.downcase, form_name, form_short_name, disease)
   @published_form = @form.publish
+  @published_form.should_not be_nil, "Unable to publish form. See feature logs."
   @form
 end
 
 Given(/^a published form exists with the name (.+) \((.+)\) for a (.+) event with any disease$/) do |form_name, form_short_name, event_type|
   @form = create_form(event_type.downcase, form_name, form_short_name, get_random_disease)
   @published_form = @form.publish
+  @published_form.should_not be_nil, "Unable to publish form. See feature logs."
   @form
 end
 

@@ -206,7 +206,7 @@ class HumanEventsController < EventsController
       # event_saved_successfully
       respond_to do |format|
         if event_saved_successfully
-          redis.delete_matched("views/events/#{@event.id}/edit/clinical_tab")
+          redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
           format.js   { render :partial => "events/ajax_hospital", :status => :ok }
         else
           format.js   { render :partial => "events/ajax_hospital", :status => :unprocessable_entity }

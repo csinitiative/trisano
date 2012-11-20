@@ -25,6 +25,8 @@ end
 
 Then /^I should see all of the repeater core field config questions for each hospitalization$/ do
   @core_fields ||= CoreField.all(:conditions => ["event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = TRUE AND key LIKE '%hospitalization_facilities%'", @form.event_type, true, false])
+  @core_fields.count.should_not be_equal(0), "Didn't find any hospitalization core fields."
+
   expected_count = @event.hospitalization_facilities.count.to_s
   @core_fields.each do |core_field|
     before_config_count = @browser.get_xpath_count("//label[contains(text(), '#{core_field.key} before?')]")
@@ -68,3 +70,6 @@ When /^I click the Hospitalization Save link$/ do
   sleep(1)
 end
 
+When /^I discard the unsaved hospitalization$/ do
+  @browser.click("//div[@class='hospital']//a[@class='discard-new-hospital-participation']")
+end

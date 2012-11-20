@@ -271,6 +271,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if core_field
       core_field
     else
+      Rails.logger.error "***************\nMissing Core Field:\nattribute: #{attribute}\ncore_path: #{core_path}\n*****************"
       CoreField::MissingCoreField.new(cp.to_s, true)
     end
   end
