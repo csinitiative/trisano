@@ -54,21 +54,9 @@ class HumanEventsController < EventsController
           # We've either created a new repeater or
           # determined which existing one to use.
           # time to create an answer for it.
-          new_answer_attributes = event_params.delete(:new_repeater_answer)
-          unless new_answer_attributes.nil?
-            raise "A repeater object is required to create a new answer." if @patient_telephone.nil?
-            new_answer_attributes.each do |answer_attributes|
+          text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+          create_text_box_answers(text_box_answer_attributes, @patient_telephone, @event)
 
-
-              answer_attributes[:repeater_form_object_id] = @patient_telephone.id
-              answer_attributes[:repeater_form_object_type] = @patient_telephone.class.name
-              answer_attributes[:event_id] = @event.id
-              a = Answer.create(answer_attributes)
-              raise "Unable to create Answer for #{@patient_telephone.inspect}:\n #{a.errors.inspect}" unless a.valid?
-
-            end #new_anwer_attributes.each
-
-          end #new_answer_attributes.nil
 
 
         end # if repeater_dependent destroyed == 1 
@@ -90,6 +78,50 @@ class HumanEventsController < EventsController
   end #hospitalization_facilities
 
 
+  def create_radio_button_answers(attributes, repeater_object, event) 
+    unless attributes.nil?
+      raise "A repeater object is required to create a new answer." if repeater_object.nil?
+      attributes.each do |key, value|
+        answer = event.answers.build(
+          :question_id => key,
+          :radio_button_answer => value[:radio_button_answer],
+          :export_conversion_value_id => value[:export_conversion_value_id],
+          :code => value[:code],
+          :repeater_form_object_id => repeater_object.id,
+          :repeater_form_object_type => repeater_object.class.name
+        )
+        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
+      end
+    end
+  end
+
+  def create_checkbox_answers(attributes, repeater_object, event) 
+    unless attributes.nil?
+      raise "A repeater object is required to create a new answer." if repeater_object.nil?
+      attributes.each do |key, value|
+        answer = event.answers.build(
+          :question_id => key,
+          :check_box_answer => value[:check_box_answer],
+          :code => value[:code],
+          :repeater_form_object_id => repeater_object.id,
+          :repeater_form_object_type => repeater_object.class.name
+        )
+        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
+      end
+    end
+  end
+
+  def create_text_box_answers(attributes, repeater_object, event) 
+    unless attributes.nil?
+      raise "A repeater object is required to create a new answer." if repeater_object.nil?
+      attributes.each do |attributes|
+        answer = event.answers.build(attributes)         
+        answer.repeater_form_object_id = repeater_object.id
+        answer.repeater_form_object_type = repeater_object.class.name
+        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
+      end
+    end
+  end
 
 
   def hospitalization_facilities
@@ -177,24 +209,14 @@ class HumanEventsController < EventsController
 
 
 
-          # We've either created a new repeater or
-          # determined which existing one to use.
-          # time to create an answer for it.
-          new_answer_attributes = event_params.delete(:new_repeater_answer)
-          unless new_answer_attributes.nil?
-            raise "A repeater object is required to create a new answer." if @hospitalization_facility.nil?
-            new_answer_attributes.each do |answer_attributes|
+          new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+          create_text_box_answers(new_text_box_answer_attributes, @hospitalization_facility, @event)
 
+          new_checkbox_answer_attributes = event_params.delete(:new_checkboxes)
+          create_checkbox_answers(new_checkbox_answer_attributes, @hospitalization_facility, @event)
 
-              answer_attributes[:repeater_form_object_id] = @hospitalization_facility.id
-              answer_attributes[:repeater_form_object_type] = @hospitalization_facility.class.name
-              answer_attributes[:event_id] = @event.id
-              a = Answer.create(answer_attributes)
-              raise "Unable to create Answer for #{@hospitalization_facility.inspect}:\n #{a.errors.inspect}" unless a.valid?
-
-            end #new_anwer_attributes.each
-
-          end #new_answer_attributes.nil
+          new_radio_button_answer_attributes = event_params.delete(:new_radio_buttons)
+          create_radio_button_answers(new_radio_button_answer_attributes, @hospitalization_facility, @event) 
 
 
         end # if repeater_dependent destroyed == 1 
