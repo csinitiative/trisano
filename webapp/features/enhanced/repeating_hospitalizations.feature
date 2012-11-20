@@ -246,7 +246,7 @@ Feature: Form fields for repeating core sections.
     Then I should see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
 
   # Coresponds with #12 from original email
-  Scenario: When editing a CMR, unsaved hospitalizations are saved automatically with the event
+  Scenario: When editing a CMR, unsaved hospitalizations are saved automatically with the event, even when user is on another tab
     Given   a assessment event with with a form with repeating core fields
 
     When I navigate to the assessment event edit page
@@ -254,6 +254,7 @@ Feature: Form fields for repeating core sections.
     And  I enter the following hospitalizations: 
       | name                      |
       | Allen Memorial Hospital   |
+    And I navigate to the Demographic tab
     And  I save the event
     And  I navigate to the assessment event show page
     Then I should see "Allen Memorial Hospital"
