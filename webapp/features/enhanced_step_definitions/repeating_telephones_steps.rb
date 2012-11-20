@@ -70,7 +70,6 @@ When /^I click the Telephone Save link$/ do
   sleep(1)
 end
 
-
-When /^I discard the unsaved telphone$/ do
+When /^I discard the unsaved telephone$/ do
   @browser.click("//div[@class='phone']//a[@class='discard-new-patient-telephone']")
 end

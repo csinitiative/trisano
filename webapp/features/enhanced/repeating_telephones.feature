@@ -138,3 +138,96 @@ Feature: Form fields for repeating core sections.
     Then I should see "Work: (555) 555-5555"
     And  I should see "patient phone before"
     And  I should see "patient phone after"
+
+  # Coresponds with #7 with original email
+  Scenario: Editing a CMR with repeater core forms applied, create and then discard a telephone.
+    Given   a assessment event with with a form with repeating core fields
+
+    When I navigate to the assessment event edit page
+    And  I navigate to the Demographic tab
+    And  I enter the following telephone numbers: 
+      | type  | area code | number   |
+      | Work  | 555       | 555-5555 |
+    And  I discard the unsaved telephone
+    
+    Then I should not see telephone save and discard buttons
+    And  I should see a link to "Add a Telephone"
+
+    When I save the event
+    And I navigate to the morbidity event show page
+ 
+    Then I should not see "Work: (555) 555-5555"
+    
+  # Coresponds with #8 from original email
+  Scenario: Adding forms should create fields for repeating core sections 
+    Given a basic morbidity event exists
+    And a published form with repeating core fields for a morbidity event
+
+    When I navigate to the morbidity event edit page
+    Then I should not see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+    When I click the "Add/Remove forms for this event" link
+    And I check the form for addition
+    And I click the "Add Forms" button
+
+    When I navigate to the morbidity event edit page
+    Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+  # Coresponds with #9 from original email
+  Scenario: Removing forms should remove fields for repeating core sections 
+    Given a assessment event with with a form with repeating core fields and telephones
+
+    When I navigate to the assessment event edit page
+    Then I should see a label "assessment_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+    When I click the "Add/Remove forms for this event" link
+    And I check the form for removal
+    And I click and confirm the "Remove Forms" button
+
+    When I navigate to the assessment event edit page
+    Then I should not see a label "assessment_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+
+
+  # Coresponds with #10 from original email
+  Scenario: Adding forms after changing diseases should create fields for repeating core sections 
+    Given a basic morbidity event exists
+    And a published form with repeating core fields for a morbidity event
+
+    When I navigate to the morbidity event edit page
+    Then I should not see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+    When I change the disease to match the published form
+    And  I save the event
+    And  I check the form for addition
+    And  I click and confirm the "Change Forms" button and don't wait
+    And  I navigate to the morbidity event edit page
+    Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+  # Coresponds with #11 from original email
+  Scenario: Removing forms after changing disease should remove fields for repeating core sections 
+    Given a morbidity event with with a form with repeating core fields and telephones
+
+    When I navigate to the morbidity event edit page
+    Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+    When I change the disease to not match the published form
+    And  I save the event
+    And  I check the form for removal
+    And  I click the "Change Forms" button
+    And  I navigate to the morbidity event edit page
+    Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+
+  # Coresponds with #12 from original email
+  Scenario: When editing a CMR, unsaved telephones are saved automatically with the event, even when the user is on another tab
+    Given   a assessment event with with a form with repeating core fields
+
+    When I navigate to the assessment event edit page
+    And  I navigate to the Demographic tab
+    And  I enter the following telephone numbers: 
+      | type  | area code | number   |
+      | Work  | 555       | 555-5555 |
+    And I navigate to the Clinical tab
+    And  I save the event
+    And  I navigate to the assessment event show page
+    Then I should see "Work: (555) 555-5555"
