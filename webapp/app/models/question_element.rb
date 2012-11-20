@@ -168,8 +168,8 @@ class QuestionElement < FormElement
 
   def core_field_element
     core_field_element = self
-    until core_field_element.is_a?(CoreFieldElement) do
-      core_field_element = core_field_element.parent
+    until core_field_element.is_a?(CoreFieldElement) or core_field_element.nil? do
+      core_field_element = core_field_element.try(:parent)
     end
     return core_field_element
   end

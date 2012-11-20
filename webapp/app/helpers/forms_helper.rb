@@ -595,12 +595,16 @@ module FormsHelper
   end
 
   def add_follow_up_link(element, trailing_text = "", core_data = false)
-    options = fb_html_options(:add, 'follow-up', element).merge(:name => 'add-follow-up')
-    path_options = {:form_element_id => element}
-    path_options.merge!({:core_data => true, :event_type => h(@form.event_type)}) if core_data
-    path = new_follow_up_element_path(path_options)
-    txt = (trailing_text.blank? ? t('add_follow_up') : t('add_follow_up_to', :thing => trailing_text))
-    fb_ajax_link(path, txt, {:method => :post}, options)
+    if element.try(:core_field_element).try(:core_field).try(:repeater?)
+      ""
+    else
+      options = fb_html_options(:add, 'follow-up', element).merge(:name => 'add-follow-up')
+      path_options = {:form_element_id => element}
+      path_options.merge!({:core_data => true, :event_type => h(@form.event_type)}) if core_data
+      path = new_follow_up_element_path(path_options)
+      txt = (trailing_text.blank? ? t('add_follow_up') : t('add_follow_up_to', :thing => trailing_text))
+      fb_ajax_link(path, txt, {:method => :post}, options)
+    end
   end
 
   def edit_follow_up_link(element, core_data)

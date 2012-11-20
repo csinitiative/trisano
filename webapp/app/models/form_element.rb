@@ -357,6 +357,16 @@ class FormElement < ActiveRecord::Base
       core_path
     end
   end
+
+  def core_field_element
+    if self.is_a?(CoreFieldElement)
+      return self
+    elsif self.parent and self.parent.respond_to?(:core_field_element)
+      return self.parent.core_field_element
+    else
+      return nil
+    end
+  end
   protected
 
   # A little hack to make sure that questions get deleted when a
@@ -369,4 +379,6 @@ class FormElement < ActiveRecord::Base
     questions = self.children.collect {|child| child.id if child.is_a? QuestionElement}
     Question.delete_all ['form_element_id IN (?)', questions]
   end
+
+
 end
