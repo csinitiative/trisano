@@ -206,6 +206,7 @@ ARUP1
         @bad_message.message_header.msh_segment.sending_facility
     end
 
+
     it 'should contain the TriSano OID in the MSH segment' do
       @good_message_ack_header.sending_app.should ==
         Trisano.application.oid.join(@good_message.message_header.msh_segment.item_delim)
@@ -438,8 +439,12 @@ ARUP1
         @event.should be_new_record
       end
 
+      it "should parse MSH-6 and assign as first reported date" do
+        @event.first_reported_PH_date.should == Time.parse("200903261645")
+      end
+
       it "should populate the event" do
-        @event.first_reported_PH_date.should == @staged_message.created_at
+        @event.first_reported_PH_date.should == @staged_message.message_header.time
 
         p = @event.interested_party.person_entity.person
         p.last_name.should == @staged_message.patient.patient_last_name

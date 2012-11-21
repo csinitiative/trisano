@@ -101,6 +101,10 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def time
+      Time.parse(msh_segment.time) unless msh_segment.time.blank?
+    end
+
     # Should be '2.5.1' or something similar for other versions.
     def version_id
       msh_segment.version_id
