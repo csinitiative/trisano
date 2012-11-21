@@ -15,6 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+When /^I enter an additional hospitalization:$/ do |table|
+  table.hashes.each do |hospital_attributes|
+    add_hospital(@browser, hospital_attributes, 2)
+  end
+end
+
 When /^I enter the following hospitalizations:$/ do |table|
   i = 0
   table.hashes.each do |hospital_attributes|
@@ -66,10 +72,12 @@ Then /^I should see (\d+) blank hospitalization form$/ do |count|
 end
 
 When /^I click the Hospitalization Save link$/ do
-  @browser.click("//div[@class='hospital']//a[@class='save-new-hospital-participation']")
+  # There should only ever be one of these on the page
+  @browser.click("//a[@class='save-new-hospital-participation']")
   sleep(1)
 end
 
 When /^I discard the unsaved hospitalization$/ do
-  @browser.click("//div[@class='hospital']//a[@class='discard-new-hospital-participation']")
+  # There should only ever be one of these on the page
+  @browser.click("//a[@class='discard-new-hospital-participation']")
 end
