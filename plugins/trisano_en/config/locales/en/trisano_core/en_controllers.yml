@@ -81,6 +81,7 @@ en:
   #Event forms
   no_add_remove_forms_privs: "You do not have rights to add/remove forms."
   no_remove_forms_privs: "You do not have rights to remove forms"
+  no_forms_were_selected: "No forms were selected."
   no_forms_were_selected_for_addition: "No forms were selected for addition to this event."
   no_forms_were_selected_for_removal: "No forms were selected for removal from this event."
   forms_in_use_successfully_updated: "The list of forms in use was successfully updated."

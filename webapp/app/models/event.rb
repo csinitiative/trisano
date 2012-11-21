@@ -328,36 +328,22 @@ class Event < ActiveRecord::Base
   end
 
   def add_forms(forms_to_add)
-    forms_to_add = [forms_to_add] unless forms_to_add.respond_to?('each')
-    return if forms_to_add.empty?
-
-    # Accepts either form_ids or forms.  If forms, convert to form_ids
-    forms_to_add.map! { |form_ref| if form_ref.is_a? Form then form_ref.id else form_ref.to_i end }
-
-    existing_template_ids = self.form_references.map { |ref| ref.template_id }
+    return if forms_to_add.blank?
+    forms = forms_to_add.is_a?(Array) ? forms_to_add : [forms_to_add]
+    forms.map! { |f| f.is_a?(Form) ? f : Form.find(f.to_i) }
+    existing_template_ids = self.form_references.map(&:template_id)
+    forms_to_add = forms.select {|f| !existing_template_ids.include?(f.template_id) }
 
     Event.transaction do
-      unless (forms_to_add.all? do |form_id|
-            form = Form.find(form_id)
-
-            if existing_template_ids.detect {|template_id| template_id == form.template_id }
-              # A version of this form already exists as a reference, just return true to make the forms_to_add.all? above happy
-              true
-            else
-              self.form_references.create(:form_id => form_id, :template_id => form.template_id)
-            end
-
-          end)
-        raise I18n.translate('unable_to_process_new_forms')
+      forms_to_add.each do |f|
+        self.form_references.create!(:form_id => f.id, :template_id => f.template_id)
       end
     end
   end
 
-  # Removes the reference to the form with the provided form ID.
-  #
-  # Returns true on success, nil on failure
   def remove_forms(form_ids)
-    form_ids = [form_ids] unless form_ids.respond_to?('each')
+    return if form_ids.blank?
+    form_ids = [form_ids] unless form_ids.is_a? Array
     transaction do
       form_ids.each do |form_id|
         form_reference = FormReference.find_by_event_id_and_form_id(self.id, form_id)
@@ -374,7 +360,7 @@ class Event < ActiveRecord::Base
     end
   rescue Exception => ex
     I18nLogger.fatal("could_not_remove_form_from_event", :message => ex.message + ex.backtrace.join("\n"))
-    return nil
+    return
   end
 
   def soft_delete

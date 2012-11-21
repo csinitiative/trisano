@@ -47,30 +47,29 @@ class EventFormsController < ApplicationController
   end
 
   def create
-
     unless (User.current_user.is_entitled_to_in?(:add_form_to_event, @event.all_jurisdictions.collect { | participation | participation.secondary_entity_id }))
       render :partial => "events/permission_denied", :locals => { :reason => t("no_add_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
-    @event.form_references.clear if params[:replace]
+    forms_to_remove = params[:forms_to_remove] || []
     forms_to_add = params[:forms_to_add] || []
-    if forms_to_add.empty? 
-      flash[:error] = t("no_forms_were_selected_for_addition")
+    if forms_to_add.empty? and forms_to_remove.empty?
+      flash[:error] = t("no_forms_were_selected")
     else
       begin
         @event.add_forms(forms_to_add)
+        @event.remove_forms(forms_to_remove)
         redis.delete_matched("views/events/#{@event.id}/*")
+        flash[:notice] = t("forms_in_use_successfully_updated")
       rescue ArgumentError, ActiveRecord::RecordNotFound
         render :file => static_error_page_path(422), :layout => 'application', :status => 422 and return
-      rescue RuntimeError
+      rescue Exception
         render :file => static_error_page_path(500), :layout => 'application', :status => 500 and return
-      else
-        flash[:notice] = t("forms_in_use_successfully_updated")
       end
     end
 
     respond_to do |format|
-      format.html { redirect_to event_forms_path(@event) }
+      format.html { redirect_to params[:return] || event_forms_path(@event) }
       format.js { flash[:notice] = nil }
     end
   end

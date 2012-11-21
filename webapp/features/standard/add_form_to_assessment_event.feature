@@ -39,7 +39,7 @@ Feature: Adding forms to events
     And I should see the "Add Forms" button
 
     When I click the "Add Forms" button
-    Then I should see "No forms were selected for addition to this event."
+    Then I should see "No forms were selected."
 
     When I follow "Edit AE"
     Then I should not see the name of the added form

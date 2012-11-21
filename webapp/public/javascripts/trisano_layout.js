@@ -1,6 +1,7 @@
 document.observe('trisano:dom:loaded', function() {
   Trisano.Layout.initiaizeMainMenu();
   Trisano.Layout.hookWindowResize();
+  Trisano.Layout.initFormChangePopup();
   Trisano.Layout.setMainContentPosition();  //Must go last!!
 });
 
@@ -31,5 +32,29 @@ Trisano.Layout = {
   },
 
   initiaizeMainMenu: function() {
+  },
+
+  initFormChangePopup: function() {
+    $j("#form-references-dialog").dialog({title:"Update event forms", width:400});
+
+    $j("#cancel_forms_button").click(function(){
+      $j("#form-references-dialog").dialog('close');
+    });
+
+    $j("#form-references-dialog input[type=checkbox]").click(function(){
+      var has_changed_forms = $j("#form-references-dialog input[type=checkbox]:checked").length > 0;
+      if (has_changed_forms) {
+        $j("#save_forms_button").removeAttr("disabled");
+      } else {
+        $j("#save_forms_button").attr("disabled", "disabled");
+      }
+    });
+
+    $j("#save_forms_button").click(function(event){
+      if (!window.confirm("Are you sure you want to change the forms? Removing a form will also remove all answers to questions on that form.")) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+    });
   }
 };
