@@ -56,7 +56,7 @@ Feature: Form fields for repeating core sections.
 
 
   # Coresponds with #3 from original email
-  Scenario: Editing CMR with no core forms are applied, save multiple hospitalizations.
+  Scenario: Editing CMR with no core forms are applied, save multiple hospitalizations automatically.
     Given a basic morbidity event exists
 
     When I navigate to the morbidity event edit page
@@ -258,3 +258,23 @@ Feature: Form fields for repeating core sections.
     And  I save the event
     And  I navigate to the assessment event show page
     Then I should see "Allen Memorial Hospital"
+
+
+  # Coresponds with email from Nov 20, 2012
+  Scenario: Editing CMR with repeating core forms are applied, save multiple hospitalizations individually.
+    Given   a morbidity event with with a form with repeating core fields
+
+    When I navigate to the morbidity event edit page
+    When I enter the following hospitalizations: 
+      | name                      | admission_date    |
+      | Allen Memorial Hospital   | November 20, 2012 |
+    And  I click the Hospitalization Save link
+    Then I should see "Allen Memorial Hospital"
+    And  I should see "November 20, 2012"
+    When I enter an additional hospitalization: 
+      | name                      | admission_date    |
+      | Alta View Hospital        | November 19, 2012 |
+    And  I click the Hospitalization Save link
+    Then I should see "Alta View Hospital"
+    Then I should see "American Fork Hospital"
+    And  I should see "November 19, 2012"
