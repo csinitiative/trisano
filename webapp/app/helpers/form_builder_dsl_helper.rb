@@ -457,13 +457,15 @@ module FormBuilderDslHelper
     object = options[:object]
     method_array = options[:method_array]
 
+    method_array = method_array.split(".") if method_array.is_a?(String) and method_array.include?(".")
+
     core_value = object
     method_array.each do |method|
       if core_value.is_a?(Array)
-        core_value = core_value.collect { |cf| cf.send(method) } 
+        core_value = core_value.collect { |cf| cf.try(:send, method) } 
         core_value.delete_if { |value| value.nil? }
       else
-        core_value = core_value.send(method)
+        core_value = core_value.try(:send, method)
       end
     end
     

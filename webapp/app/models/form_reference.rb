@@ -40,7 +40,11 @@ class FormReference < ActiveRecord::Base
           method_array = core_path_to_method_array(repeater_form_object_key, event.class.name.underscore)
 
           repeater_records = process_core_path(:object => event, :method_array => method_array)
+          # No need to create answers for records that don't exist!
+          return nil if repeater_records.nil?
+
           question_elements_for_repeater = form.form_element_cache.all_children_by_type("QuestionElement", repeater_form_element)
+
 
           question_elements_for_repeater.each do |question_element|
             repeater_records.each do |repeater_record|

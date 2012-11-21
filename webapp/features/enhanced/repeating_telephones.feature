@@ -231,3 +231,41 @@ Feature: Form fields for repeating core sections.
     And  I save the event
     And  I navigate to the assessment event show page
     Then I should see "Work: (555) 555-5555"
+
+
+
+  # Coresponds with email from Nov 20, 2012
+  Scenario: Editing CMR with repeating core forms are applied, save multiple telephones individually.
+    Given   a morbidity event with with a form with repeating core fields
+
+    When I navigate to the morbidity event edit page
+    And  I navigate to the Demographic tab
+    And  I enter the following telephone numbers: 
+      | type  | area code | number   |
+      | Work  | 555       | 555-5555 |
+    And  I click the Telephone Save link
+    When I enter a second telephone number: 
+      | type  | area code | number   |
+      | Home  | 666       | 666-6666 |
+    And  I click the Telephone Save link
+    Then I should see the following in order:
+    | 5555555 |
+    | 6666666 |
+
+
+  Scenario: Creating a CMR with repeater core forms applied, save multiple hospitalizations with form answers.
+    Given a published form with repeating core fields for a morbidity event
+
+    When I navigate to the new morbidity event page and start a event with the form's disease
+    And  I navigate to the Demographic tab
+
+    When I enter the following telephone numbers: 
+      | type  | area code | number   |
+      | Work  | 555       | 555-5555 |
+    And  I save the event
+    Then I should see "Work: (555) 555-5555"
+
+    When I navigate to the morbidity event edit page
+    And  I fill in "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?" with "patient tele before"
+    And  I save the event 
+    Then I should see "patient tele before"

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-When /^I enter an additional hospitalization:$/ do |table|
+When /^I enter a second hospitalization:$/ do |table|
   table.hashes.each do |hospital_attributes|
     add_hospital(@browser, hospital_attributes, 2)
   end

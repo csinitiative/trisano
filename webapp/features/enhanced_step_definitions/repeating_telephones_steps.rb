@@ -15,6 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+When /^I enter a second telephone number:$/ do |table|
+  table.hashes.each do |telephone_attributes|
+    add_telephone(@browser, telephone_attributes, 2)
+  end
+end
+
 When /^I enter the following telephone numbers:$/ do |table|
   i = 0
   table.hashes.each do |telephone_attributes|

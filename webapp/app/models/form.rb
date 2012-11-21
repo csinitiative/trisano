@@ -65,7 +65,7 @@ class Form < ActiveRecord::Base
     @repeater_form_elements ||= FormElement.find(:all, :conditions => {
                                            :form_id => self.id, 
                                            :type => "CoreFieldElement",
-                                           :core_path => @repeater_keys.join(" OR ")})
+                                           :core_path => @repeater_keys})
   end
 
   def form_element_cache

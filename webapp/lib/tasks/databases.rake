@@ -22,6 +22,24 @@ namespace :db do
     load rakefile_dir("script/load_core_fields.rb")
   end
 
+  task :force_load_repeater_core_fields => :environment do
+    puts "Loading core fields from db/defaults/core_fields.yml"
+    core_fields = YAML::load_file("#{RAILS_ROOT}/db/defaults/core_fields.yml")
+    CoreField.reset_column_information
+    CoreField.acts_as_nested_set(:scope => :tree_id) if CoreField.table_exists? && CoreField.column_names.include?('tree_id')
+
+    CoreField.transaction do
+      core_fields.each do |attributes|
+        attributes.stringify_keys!
+        if attributes['repeater'] and core_field = CoreField.find_by_key(attributes['key'])
+          attributes.delete 'parent_key'
+          outcome = core_field.update_attributes(attributes)
+          puts "Updating #{attributes['key']}: #{outcome}"
+        end
+      end
+    end
+  end
+
   ## "Load defaults into database"
   task :load_defaults => :environment do
     load rakefile_dir("script/load_defaults.rb")

@@ -394,7 +394,15 @@ class Event < ActiveRecord::Base
   end
 
   def new_repeater_answer=(attributes)
-    # Should warn the user they've forgotten to save something.
+    # no op
+  end
+
+  def new_repeater_checkboxes=(attributes)
+    # no op
+  end
+
+  def new_repeater_radio_buttons=(attributes)
+    # no op
   end
 
   def new_checkboxes=(attributes)

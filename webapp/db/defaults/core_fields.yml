@@ -1903,7 +1903,7 @@
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_event[person_entity][telephones] 
+  repeater_parent_key: morbidity_event[interested_party][person_entity][telephones] 
   parent_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1978,7 +1978,7 @@
   event_type: contact_event
   key: contact_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: contact_event[person_entity][telephones] 
+  repeater_parent_key: contact_event[interested_party][person_entity][telephones] 
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -3263,7 +3263,7 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: assessment_event[person_entity][telephones] 
+  repeater_parent_key: assessment_event[interested_party][person_entity][telephones] 
   parent_key: assessment_event[interested_party][person_entity][phone_section]
 
 - parent_key: assessment_event[interested_party][person_entity][phone_section]
@@ -4338,7 +4338,7 @@
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[person_entity][telephones] 
+  repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][telephones] 
   parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
   
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]

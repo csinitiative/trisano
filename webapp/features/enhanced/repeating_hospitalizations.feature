@@ -269,12 +269,43 @@ Feature: Form fields for repeating core sections.
       | name                      | admission_date    |
       | Allen Memorial Hospital   | November 20, 2012 |
     And  I click the Hospitalization Save link
-    Then I should see "Allen Memorial Hospital"
-    And  I should see "November 20, 2012"
-    When I enter an additional hospitalization: 
+    When I enter a second hospitalization: 
       | name                      | admission_date    |
       | Alta View Hospital        | November 19, 2012 |
     And  I click the Hospitalization Save link
-    Then I should see "Alta View Hospital"
-    Then I should see "American Fork Hospital"
-    And  I should see "November 19, 2012"
+    Then I should see the following in order:
+    | Allen Memorial Hospital |
+    | November 20, 2012       |
+    | Alta View Hospital      |
+    | November 19, 2012       |
+
+
+  Scenario: Creating a CMR with repeater core forms applied, save multiple hospitalizations with form answers.
+    Given a published form with repeating core fields for a morbidity event
+
+    When I navigate to the new morbidity event page and start a event with the form's disease
+    And  I navigate to the Clinical tab
+    Then I should not see hospitalization save and discard buttons
+    And  I should see a link to "Add a Hospitalization Facility"
+
+    When I enter the following hospitalizations: 
+      | name                      |
+      | Allen Memorial Hospital   |
+    And  I save the event
+    Then I should see "Allen Memorial Hospital"
+
+    When I navigate to the morbidity event edit page
+    And  I fill in "morbidity_event[hospitalization_facilities][secondary_entity_id] before?" with "entity before"
+    And  I save the event 
+    Then I should see "entity before"
+ 
+  Scenario: Editing a CMR with repeater core forms applied, save hospitalization with invalid data.
+    Given a morbidity event with with a form with repeating core fields
+    When I navigate to the morbidity event edit page
+    When I enter the following hospitalizations: 
+      | name                      |
+      | Allen Memorial Hospital   |
+    And  I fill in "Admission date" with an invalid date
+    And  I click the Hospitalization Save link
+    Then I should see "Admission date must be on or before"
+    

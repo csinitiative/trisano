@@ -127,7 +127,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :check_box
 
       if @object.new_record?
-        field_name = "#{@object_name[0...(@object_name.index("["))]}[new_checkboxes]"
+        field_name = "#{@object_name[0...(@object_name.index("["))]}"
+        if @object_name.include?("new_repeater_answer")
+          field_name += "[new_repeater_checkboxes]"
+        else
+          field_name += "[new_checkboxes]"
+        end
         field_index = question.id.to_s
       else
         field_name = @object_name
@@ -159,7 +164,12 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     when :radio_button
 
       if @object.new_record?
-        field_name = "#{@object_name[0...(@object_name.index("["))]}[new_radio_buttons]"
+        field_name = "#{@object_name[0...(@object_name.index("["))]}"
+        if @object_name.include?("new_repeater_answer")
+          field_name += "[new_repeater_radio_buttons]"
+        else
+          field_name += "[new_radio_buttons]"
+        end
         field_index = question.id.to_s
       else
         field_name = @object_name
