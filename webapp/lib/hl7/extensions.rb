@@ -265,7 +265,7 @@ module StagedMessages
     end
 
     def address_street_no
-      if unit_md = /^\w+ /.match(addr_components[0])
+      if unit_md = /^[\w-]+ /.match(addr_components[0])
         unit_md[0].strip
       else
         unit_md
