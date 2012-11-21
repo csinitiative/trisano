@@ -188,9 +188,8 @@ Trisano.Ajax = {
   },
 
   saveRepeaters: function() {
-    var deferreds = [];
-    deferreds.push(Trisano.Ajax.saveHospitalizations());
-    deferreds.push(Trisano.Ajax.savePatientTelephones());
+    var deferreds = Trisano.Ajax.saveHospitalizations();
+    deferreds = $j.merge(deferreds, Trisano.Ajax.savePatientTelephones());
     return deferreds;
   },
  
@@ -223,7 +222,7 @@ Trisano.Ajax = {
 
   saveHospitalization: function() {
     var data_source = $j(this).closest("div.hospital");
-    var result = Trisano.Ajax.postHospitalization(data_source);
+    var result = Trisano.Ajax.postHospitalization($j(data_source));
     if(result.length == 0){
       // No inputs were populated. We want to do this here so that this message is only shown
       // when an individual hospitalization is saved, not when Save & Continue is used. 
@@ -236,13 +235,7 @@ Trisano.Ajax = {
     var patient_telephone_fields = data_source.find(":input");
     var target = data_source;
 
-    var at_least_one_field_populated = false;
-    data_source.find(":input[type!=hidden]").each(function(idx, elem){
-      if($j(elem).val().length != 0){
-        at_least_one_field_populated = true;
-      }
-    });
-    if(!at_least_one_field_populated) {
+    if(!Trisano.Ajax.fieldsPopulated(data_source)) {
       return [];
     }
 
@@ -284,17 +277,29 @@ Trisano.Ajax = {
     });
   },
 
+  fieldsPopulated: function(data_source) {
+    var populated = false;
+    $j(data_source).find(":input[type!=hidden]").each(function(idx, elem){
+      if($j(elem).is("[type=radio]") || $j(elem).is("[type=checkbox]")){
+        if($j(elem).is(":checked")){
+          populated = true;
+          return true;
+        }
+      } else {
+        if($j(elem).val().length != 0){
+          populated = true;
+          return true;
+        }
+      }
+    });
+    return populated;
+  },
+
   postHospitalization: function(data_source) {
     var hospitalization_fields = data_source.find(":input");
     var target = data_source;
 
-    var at_least_one_field_populated = false;
-    data_source.find(":input[type!=hidden]").each(function(idx, elem){
-      if($j(elem).val().length != 0){
-        at_least_one_field_populated = true;
-      }
-    });
-    if(!at_least_one_field_populated) {
+    if(!Trisano.Ajax.fieldsPopulated(data_source)) {
       return [];
     }
 
@@ -317,6 +322,7 @@ Trisano.Ajax = {
       },
       error: function(request, textStatus, error) {
         target.replaceWith(request.responseText);
+        Trisano.Tabs.highlightTabsWithErrors();
 
         // Because of the error the user's answer will be lost, so we must add it back
 

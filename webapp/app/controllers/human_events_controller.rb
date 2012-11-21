@@ -29,6 +29,13 @@ class HumanEventsController < EventsController
       raise "More than one patient telephone submitted: #{patient_tele_attr.inspect}" if patient_tele_attr.each_value.count != 1
       # Because we only ever submit one repeater, it's ok to just take the first
       patient_tele_attr = patient_tele_attr.each_value.first
+
+
+      # Remove repeater attributes because they shouldn't be handled by the regular model actions
+      # Will raise an error if posted, see app/model/event.rb
+      new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+      new_checkbox_answer_attributes = event_params.delete(:new_repeater_checkboxes)
+      new_radio_button_answer_attributes = event_params.delete(:new_repeater_radio_buttons)
       
       # Need to include the entity to attach the phone to
       patient_tele_attr.merge!({:entity_id => @event.interested_party.person_entity.id.to_s})
@@ -54,8 +61,9 @@ class HumanEventsController < EventsController
           # We've either created a new repeater or
           # determined which existing one to use.
           # time to create an answer for it.
-          text_box_answer_attributes = event_params.delete(:new_repeater_answer)
-          create_text_box_answers(text_box_answer_attributes, @patient_telephone, @event)
+          create_text_box_answers(new_text_box_answer_attributes, @patient_telephone, @event)
+          create_checkbox_answers(new_checkbox_answer_attributes, @patient_telephone, @event)
+          create_radio_button_answers(new_radio_button_answer_attributes, @patient_telephone, @event) 
 
 
 
@@ -129,6 +137,11 @@ class HumanEventsController < EventsController
       event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
       raise "No event params posted" if event_params.nil?
 
+      # Remove repeater attributes because they shouldn't be handled by the regular model actions
+      # Will raise an error if posted, see app/model/event.rb
+      new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+      new_checkbox_answer_attributes = event_params.delete(:new_repeater_checkboxes)
+      new_radio_button_answer_attributes = event_params.delete(:new_repeater_radio_buttons)
 
       # Must take a clone here, otherwise we get a reference
       # and lose the "point in time" record
@@ -208,14 +221,10 @@ class HumanEventsController < EventsController
 
 
 
-
-          new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+          # Now that we have our new/existing hospitalization facility
+          # we can save the repeater answers
           create_text_box_answers(new_text_box_answer_attributes, @hospitalization_facility, @event)
-
-          new_checkbox_answer_attributes = event_params.delete(:new_checkboxes)
           create_checkbox_answers(new_checkbox_answer_attributes, @hospitalization_facility, @event)
-
-          new_radio_button_answer_attributes = event_params.delete(:new_radio_buttons)
           create_radio_button_answers(new_radio_button_answer_attributes, @hospitalization_facility, @event) 
 
 

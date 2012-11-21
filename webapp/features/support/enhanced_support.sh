@@ -18,7 +18,8 @@ fi
 
 if [ "$USE_DEBUGGER" = "true" ]
 then
-bundle exec script/server -e feature -p 8080 -P /trisano --debugger &
+#bundle exec script/server -e feature -p 8080 -P /trisano --debugger &
+echo "Please start bundle exec script/server -e feature -p 8080 -P /trisano --debugger in another window"
 else
-bundle exec script/server -e feature -p 8080 -P /trisano > log/selenium_server.log 2>&1 &
+bundle exec script/server -e feature -p 8080 -P /trisano > log/selenium_server.log &
 fi

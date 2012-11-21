@@ -59,3 +59,12 @@ When /^I print the event$/ do
   @browser.check("//input[@id='print_all']")
   When "I click the \"Print\" button"
 end
+
+When /^I fill in "(.+)" with an invalid date$/ do |label|
+  invalid_date = 1.year.from_now.to_date.to_formatted_s(:long)
+  When "I fill in \"#{label}\" with \"#{invalid_date}\""
+end
+
+When /^the (.+) tab should be highlighted in red$/ do |tab|
+  @browser.get_xpath_count("//a[@href='##{tab.downcase}_tab'][contains(@style,'color: red')]").should be_equal(1), "Expected #{tab} to be highlighted in red."
+end

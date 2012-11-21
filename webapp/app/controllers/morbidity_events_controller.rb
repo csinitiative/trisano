@@ -73,6 +73,12 @@ class MorbidityEventsController < EventsController
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
           @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
+    
+        # This is required so that repeater answers for hospital participation fields can be
+        # established when a hospiatlization facility is created
+        @event.hospitalization_facilities.each do |hospital|
+          hospital.create_hospitals_participation unless hospital.hospitals_participation
+        end
         @event.reload
         @event.create_form_answers_for_repeating_form_elements
         @event.try(:address).try(:establish_canonical_address)
