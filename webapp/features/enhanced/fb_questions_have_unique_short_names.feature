@@ -29,7 +29,7 @@ Feature: All questions on a form must have a unique short name
     And I try to add a question to the default section providing a short name that is already in use
     Then I should be presented with the error message "The short name entered is already in use on this form. Please choose another."
 
-@clean_forms @clean_form_elements
+  @clean_forms @clean_form_elements
   Scenario: Editing a question to change its short name
     Given I am logged in as a super user
     And a Morbidity event form exists
