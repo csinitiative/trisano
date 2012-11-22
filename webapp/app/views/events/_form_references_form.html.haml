@@ -7,7 +7,8 @@
     %hr
     = hidden_field_tag "event_id", @event.id
     %div{:id => "forms_in_use"}
-      =t 'forms_in_use'
+      %h3
+        =t 'remove_from_event'
       - if @event.form_references.empty?
         %p
           %em=t 'none'
@@ -17,8 +18,10 @@
             %li
               = check_box_tag "forms_to_remove[]", form_reference.form_id, false
               = form_reference.form.name
+    %hr
     %div{:id => "forms_available"}
-      =t 'forms_available'
+      %h3
+        =t 'add_to_event'
       - if @event.available_form_references.empty?
         %p
           %em=t 'none'

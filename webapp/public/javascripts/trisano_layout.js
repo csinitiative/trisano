@@ -35,10 +35,12 @@ Trisano.Layout = {
   },
 
   initFormChangePopup: function() {
-    $j("#form-references-dialog").dialog({title:"Update event forms", width:400});
+    $j("#form-references-dialog").dialog({title:"Update event forms", width:700});
 
     $j("#cancel_forms_button").click(function(){
       $j("#form-references-dialog").dialog('close');
+      event.stopPropagation();
+      event.preventDefault();
     });
 
     $j("#form-references-dialog input[type=checkbox]").click(function(){

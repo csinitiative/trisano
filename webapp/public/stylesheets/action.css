@@ -6,18 +6,17 @@
   color: green;
 }
 
-#form-references-dialog #forms_in_use {
-  float:left;
-  width:50%
-}
-
 #form-references-dialog #forms_in_use a.invalid {
   color: #ff0000;
 }
+#form-references-dialog h4 {
 
-#form-references-dialog #forms_available {
-  float:right;
-  width:50%
+  line-height: 18px;
+}
+
+#form-references-dialog hr {
+    margin-bottom: 15px;
+    margin-top:15px;
 }
 .search-active td {
   border: 1px solid #C1DAD7;
