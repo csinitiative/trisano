@@ -37,7 +37,7 @@ Trisano.Layout = {
   initFormChangePopup: function() {
     $j("#form-references-dialog").dialog({title:"Update event forms", width:700});
 
-    $j("#cancel_forms_button").click(function(){
+    $j("#cancel_forms_button").click(function(event){
       $j("#form-references-dialog").dialog('close');
       event.stopPropagation();
       event.preventDefault();
