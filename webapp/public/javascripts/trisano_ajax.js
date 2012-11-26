@@ -231,51 +231,6 @@ Trisano.Ajax = {
     return false;
   },
 
-  postPatientTelephone: function(data_source) {
-    var patient_telephone_fields = data_source.find(":input");
-    var target = data_source;
-
-    if(!Trisano.Ajax.fieldsPopulated(data_source)) {
-      return [];
-    }
-
-    var patient_telephone_data = patient_telephone_fields.serialize();
-
-    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/patient_telephones");
-
-    return $j.ajax({
-      url: url, 
-      data: patient_telephone_data,
-      dataType: 'html',
-      type: "POST",
-      beforeSend: function( xhr) {
-        data_source.find("span.ajax-actions").replaceWith(Trisano.Ajax.spinnerImgNoID());
-      },
-      error: function(request, textStatus, error) {
-        target.replaceWith(request.responseText);
-
-        // Because of the error the user's answer will be lost, so we must add it back
-
-        // References to data_source and patient-telephone_fields are now invalid since we've replaced target
-        // with responseText. We must determine which patient-telephone in the response has the errors
-        var new_save_link = $j("#" + $j(request.responseText).find("div.errorExplanation")
-                                                             .parent()
-                                                             .children("a.save-new-patient-telephone")
-                                                             .attr('id'));
-
-        var new_patient_telephone_fields = new_save_link.closest("div.phone").find(":input");
-
-        // So we can deserialize our data back into the forms
-        // uses jquery.deserialize
-        new_patient_telephone_fields.deserialize(patient_telephone_data); 
-      },
-      success: function(data, textStatus, request) {
-        // Must be run before attempting to show a#add-patient-telephone-facilities
-        target.replaceWith(request.responseText);
-        $j("a#add-patient-telephone").show();
-      }
-    });
-  },
 
   fieldsPopulated: function(data_source) {
     var populated = false;
@@ -295,20 +250,12 @@ Trisano.Ajax = {
     return populated;
   },
 
-  postHospitalization: function(data_source) {
-    var hospitalization_fields = data_source.find(":input");
-    var target = data_source;
-
+  postRepeater: function(data_source, fields, url, target, new_repeater_id) {
     if(!Trisano.Ajax.fieldsPopulated(data_source)) {
       return [];
     }
 
-    // Immediately following the div.hospital the hospitalization_facilities id is
-    // rendered. We must include this in the POST to avoid creating a new
-    // HospitalizationFacility
-    var facilities_hidden_fields = data_source.next(":input[type=hidden]");
-    hospitalization_fields = hospitalization_fields.add(facilities_hidden_fields);
-    var hospitalization_data = hospitalization_fields.serialize();
+    var data = fields.serialize();
 
     // Because form questions name attribute does not match it's ID attribute,
     // if invalid data is submitted, Rails's form builder doesn't know how to 
@@ -323,11 +270,10 @@ Trisano.Ajax = {
       id_data[$j(e).attr('id')] = $j(e).val(); 
     });
 
-    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/hospitalization_facilities");
 
     return $j.ajax({
       url: url, 
-      data: hospitalization_data,
+      data: data,
       dataType: 'html',
       type: "POST",
       beforeSend: function( xhr) {
@@ -355,9 +301,32 @@ Trisano.Ajax = {
       success: function(data, textStatus, request) {
         // Must be run before attempting to show a#add-hospitalization-facilities
         target.replaceWith(request.responseText);
-        $j("a#add-hospitalization-facilities").show();
+        $j(new_repeater_id).show();
       }
     });
+  },
+
+  postPatientTelephone: function(data_source) {
+    var patient_telephone_fields = data_source.find(":input");
+    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/patient_telephones");
+    var target = data_source;
+    var new_repeater_id = "a#add-patient-telephone";
+
+    return Trisano.Ajax.postRepeater(data_source, patient_telephone_fields, url, target, new_repeater_id);
+  },
+  postHospitalization: function(data_source) {
+    var hospitalization_fields = data_source.find(":input");
+    // Immediately following the div.hospital the hospitalization_facilities id is
+    // rendered. We must include this in the POST to avoid creating a new
+    // HospitalizationFacility
+    var facilities_hidden_fields = data_source.next(":input[type=hidden]");
+    hospitalization_fields = hospitalization_fields.add(facilities_hidden_fields);
+
+    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/hospitalization_facilities");
+    var target = data_source;
+    var new_repeater_id = "a#add-hospitalization-facilities";
+
+    return Trisano.Ajax.postRepeater(data_source, hospitalization_fields, url, target, new_repeater_id);
   }
 };
 

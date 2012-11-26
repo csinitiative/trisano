@@ -1,5 +1,5 @@
 - fields_for @event, :builder => ExtendedFormBuilder do |event_form|
   - event_form.fields_for :interested_party, @event.interested_party, :builder => ExtendedFormBuilder do |ip|
     - ip.fields_for :person_entity, @event.interested_party.person_entity, :builder => ExtendedFormBuilder do |pe|
-      - pe.fields_for(:telephones, @patient_telephone, :child_index => @event.interested_party.person_entity.telephones.length-1, :builder => ExtendedFormBuilder) do |telephone_form|
+      - pe.fields_for(:telephones, @patient_telephone, :child_index => @event.interested_party.person_entity.telephones.length, :builder => ExtendedFormBuilder) do |telephone_form|
         = render :partial => "people/telephone", :locals => { :f => telephone_form }

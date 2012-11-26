@@ -310,4 +310,14 @@ Feature: Form fields for repeating core sections.
     And  I click the Hospitalization Save link
     Then I should see "Admission date must be on or before"
     And  I should see "form fields work even with errors"
-    
+   
+    When I fill in "Admission date" with a valid date 
+    And  I click the Hospitalization Save link
+    Then I should not see "Admission date must be on or before"
+    And  I should see "form fields work even with errors"
+
+    When I enter a second hospitalization with an invalid admission date and form data
+    And  I click the Hospitalization Save link
+    Then I should see "Admission date must be on or before"
+    And  I should see the form data entered for the second hospitalization
+

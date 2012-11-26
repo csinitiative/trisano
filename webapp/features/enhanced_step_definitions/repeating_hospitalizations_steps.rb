@@ -21,6 +21,21 @@ When /^I enter a second hospitalization:$/ do |table|
   end
 end
 
+When /^I enter a second hospitalization with an invalid admission date and form data$/ do
+  add_hospital(@browser, {:name => "Valley View Medical Center", :admission_date => 1.year.from_now.to_date.to_formatted_s(:long)}, 2)
+  
+  form_field_label = "morbidity_event[hospitalization_facilities][secondary_entity_id] before?"
+  field_id = @browser.get_attribute "//div[@id='hospitalization_facilities']/div[@class='hospital'][2]//label[text()='#{form_field_label}']@for"
+  #field_id = @browser.get_attribute "//div[@id='telephones']/div[@class='phone'][2]//label[text()='#{form_field_label}']@for"
+  @hospitalization_form_data = SecureRandom.hex(16)
+  @browser.type field_id, @hospitalization_form_data
+end
+
+Then /^I should see the form data entered for the second hospitalization$/ do
+  Then "I should see \"#{@hospitalization_form_data}\""
+end
+
+
 When /^I enter the following hospitalizations:$/ do |table|
   i = 0
   table.hashes.each do |hospital_attributes|

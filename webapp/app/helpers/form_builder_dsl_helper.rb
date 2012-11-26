@@ -398,7 +398,11 @@ module FormBuilderDslHelper
 
   def answer_template_dynamic_question(answer_template, form_elements_cache, element, index, question)
     result = ""
-    result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}"})
+    # We must start included answer_id because now questions can be repeated
+    # causing duplicate IDs in the DOM.
+    # However, there can only be one answer for a question or it's a new answer.
+    answer_id = answer_template.object.id || "new_answer"
+    result << answer_template.dynamic_question(form_elements_cache, element, @event, index, {:id => "investigator_answer_#{h(element.id)}_#{answer_id}"})
     result << render_help_text(element) unless question.help_text.blank?
     result
   end
