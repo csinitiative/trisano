@@ -3,7 +3,12 @@
 SHOW_FIREFOX=$1
 USE_DEBUGGER=$2
 
-features/support/enhanced_support_stop.sh
+if [ "$USE_DEBUGGER" = "true" ]
+then
+features/support/enhanced_support_stop.sh true
+else
+features/support/enhanced_support_stop.sh 
+fi
 
 Xvfb :99 -ac -extension GLX > log/xvfb.log 2>&1 &
 
