@@ -310,6 +310,19 @@ Trisano.Ajax = {
     hospitalization_fields = hospitalization_fields.add(facilities_hidden_fields);
     var hospitalization_data = hospitalization_fields.serialize();
 
+    // Because form questions name attribute does not match it's ID attribute,
+    // if invalid data is submitted, Rails's form builder doesn't know how to 
+    // insert the form data back into the correct form question.
+    // Here we collect all the visible questions IDs and map to their values
+    // so that if we hit an error, we can repopulate below.
+    var id_data = {};
+
+    // Must refind elements directly form data source
+    data_source.find(":input[type!=hidden]").each(function(i,e) { 
+      // { element_id: element_value }
+      id_data[$j(e).attr('id')] = $j(e).val(); 
+    });
+
     var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/hospitalization_facilities");
 
     return $j.ajax({
@@ -324,20 +337,20 @@ Trisano.Ajax = {
         target.replaceWith(request.responseText);
         Trisano.Tabs.highlightTabsWithErrors();
 
-        // Because of the error the user's answer will be lost, so we must add it back
-
-        // References to data_source and hospitalization_fields are now invalid since we've replaced target
-        // with responseText. We must determine which hospitalization in the response has the errors
-        var new_save_link = $j("#" + $j(request.responseText).find("div.errorExplanation")
-                                                             .parent()
-                                                             .children("a.save-new-hospital-participation")
-                                                             .attr('id'));
-
-        var new_hospitalization_fields = new_save_link.closest("div.hospital").find(":input");
-
-        // So we can deserialize our data back into the forms
-        // uses jquery.deserialize
-        new_hospitalization_fields.deserialize(hospitalization_data); 
+        // Must manually repopulate the form fields data on an error
+        $j.each(id_data, function(element_id,element_value) {
+          // Strangly, you MUST operate on the DOM via $j, not $j(target) or $j(request.response)
+          // otherwise changes won't be applied.
+           var element = $j.find("#" + element_id);
+           if(element){
+              $j(element).val(element_value);   
+ 
+              // This line is required to make the testing system be able to see the value was
+              // actually inserted. The Selenium RC version we're using cannot read the DOM
+              // manipulation directly.
+              $j(element).attr('value', element_value);
+           }
+        });
       },
       success: function(data, textStatus, request) {
         // Must be run before attempting to show a#add-hospitalization-facilities

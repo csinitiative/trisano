@@ -306,6 +306,8 @@ Feature: Form fields for repeating core sections.
       | name                      |
       | Allen Memorial Hospital   |
     And  I fill in "Admission date" with an invalid date
+    And  I fill in "morbidity_event[hospitalization_facilities][secondary_entity_id] before?" with "form fields work even with errors"
     And  I click the Hospitalization Save link
     Then I should see "Admission date must be on or before"
+    And  I should see "form fields work even with errors"
     
