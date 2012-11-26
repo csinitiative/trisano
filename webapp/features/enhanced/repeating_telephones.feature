@@ -253,7 +253,7 @@ Feature: Form fields for repeating core sections.
     | 6666666 |
 
 
-  Scenario: Creating a CMR with repeater core forms applied, save multiple hospitalizations with form answers.
+  Scenario: Creating a CMR with repeater core forms applied, save form answers.
     Given a published form with repeating core fields for a morbidity event
 
     When I navigate to the new morbidity event page and start a event with the form's disease
@@ -269,3 +269,16 @@ Feature: Form fields for repeating core sections.
     And  I fill in "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?" with "patient tele before"
     And  I save the event 
     Then I should see "patient tele before"
+
+
+  Scenario: Editing a CMR with repeater core forms applied, save form answers with invalid data.
+    Given a morbidity event with with a form with repeating core fields
+    When I navigate to the morbidity event edit page
+   
+    When I enter the following telephone numbers: 
+      | type  | area code | number   |
+      | Work  | 555       | 555      |
+    And  I fill in "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?" with "telephone repeaters work with errors too"
+    And  I click the Telephone Save link
+    Then I should see "Phone number must not be blank and must be 7 digits with an optional dash"
+    And  I should see "telephone repeaters work with errors too"
