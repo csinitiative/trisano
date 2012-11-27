@@ -15,6 +15,7 @@
 
 .phone
   = error_messages_for :object => @event 
+  = error_messages_for :object => f.object 
   %div.data_telephone
     -core_element(:patient_telephone, f, :horiz) do
       - core_element :entity_location_type_id, f, :horiz do

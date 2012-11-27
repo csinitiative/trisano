@@ -128,10 +128,10 @@ class HumanEventsController < EventsController
           # We've either created a new repeater or
           # determined which existing one to use.
           # time to create an answer for it.
-          created_answers_successfully = []
-          created_answers_successfully << create_answers(:text, new_text_box_answer_attributes, @patient_telephone, @event)
-          created_answers_successfully << create_answers(:checkbox, new_checkbox_answer_attributes, @patient_telephone, @event)
-          created_answers_successfully << create_answers(:radio_button, new_radio_button_answer_attributes, @patient_telephone, @event) 
+          answer_save_results = []
+          answer_save_results << create_answers(:text, new_text_box_answer_attributes, @patient_telephone, @event)
+          answer_save_results << create_answers(:checkbox, new_checkbox_answer_attributes, @patient_telephone, @event)
+          answer_save_results << create_answers(:radio_button, new_radio_button_answer_attributes, @patient_telephone, @event) 
 
           created_answers_successfully = !answer_save_results.include?(false)
 
@@ -152,7 +152,7 @@ class HumanEventsController < EventsController
         end
       end    
     end #transaction
-  end #hospitalization_facilities
+  end #patient telephone
 
 
   def save_radio_button_answer(event, repeater_object, key, value)
