@@ -1919,6 +1919,16 @@
   can_follow_up: false
   field_type: single_line_text
   event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
+  repeater_parent_key: morbidity_event[interested_party][person_entity][email_addresses] 
+  parent_key: morbidity_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
   key: morbidity_event[clinicians]
   parent_key: morbidity_event[clinicians_section]
 
@@ -1987,6 +1997,16 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][email_addresses]
+  parent_key: contact_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
+  repeater_parent_key: contact_event[interested_party][person_entity][email_addresses] 
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -3274,6 +3294,16 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][email_addresses]
   
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
+  repeater_parent_key: assessment_event[interested_party][person_entity][email_addresses] 
+  parent_key: assessment_event[interested_party][person_entity][phone_section]
+
 - parent_key: assessment_event[clinicians_section]
   help_text: 
   fb_accessible: true
@@ -4339,6 +4369,16 @@
   key: morbidity_and_assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
   repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][telephones] 
+  parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
+  
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
+  repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][email_addresses] 
   parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
   
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]

@@ -91,7 +91,9 @@ en:
           telephones: 
             name: All contact telephones
             patient_telephone: Patient telephone
-          email_addresses: Contact email addresses
+          email_addresses: 
+            name: All Contact email addresses
+            email_address: Contact email address
           race_ids: Contact races
           person:
             date_of_death: Contact date of death
@@ -241,7 +243,9 @@ en:
             name: All patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death
@@ -433,7 +437,9 @@ en:
             name: All patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death
@@ -625,7 +631,9 @@ en:
             name: Patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death

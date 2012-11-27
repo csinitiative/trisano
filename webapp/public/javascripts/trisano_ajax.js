@@ -89,6 +89,10 @@ Trisano.Ajax = {
     return $j("div#hospitalization_facilities").find("span.ajax-actions");
   },
 
+  getPatientEmailRepeaterAjaxActions: function() {
+    return $j("div#email_addresses").find("span.ajax-actions");
+  },
+
   getPatientTeleRepeaterAjaxActions: function() {
     return $j("div#telephones").find("span.ajax-actions");
   },
@@ -96,11 +100,19 @@ Trisano.Ajax = {
   getRepeaterAjaxActions: function() {
     var repeaters = Trisano.Ajax.getHosFacRepeaterAjaxActions();
     repeaters = repeaters.add(Trisano.Ajax.getPatientTeleRepeaterAjaxActions());
+    repeaters = repeaters.add(Trisano.Ajax.getPatientEmailRepeaterAjaxActions());
     return repeaters;
   },
 
   hideRepeaterAjaxActions: function() {
     var repeaters = Trisano.Ajax.getRepeaterAjaxActions();
+      repeaters.each(function(index) {
+        this.remove();
+      });
+  },
+
+  hidePatientEmailRepeaterAjaxActions: function() {
+    var repeaters = Trisano.Ajax.getPatientEmailRepeaterAjaxActions();
       repeaters.each(function(index) {
         this.remove();
       });
@@ -127,13 +139,37 @@ Trisano.Ajax = {
     $j("a#add-hospitalization-facilities").live("click", function() {
       Trisano.Ajax.hideHosFacRepeaterAjaxActions();
     });
+    $j("a#add-patient-email-address-address").live("click", function() {
+      Trisano.Ajax.hidPatientTeleFacRepeaterAjaxActions();
+    });
   },
 
   enableRepeaterAjaxActions: function() {
     Trisano.Ajax.enableHosFacRepeaterAjaxActions();
     Trisano.Ajax.enablePatientTeleRepeaterAjaxActions();
+    Trisano.Ajax.enablePatientEmailRepeaterAjaxActions();
   },
 
+  enablePatientEmailRepeaterAjaxActions: function() {
+    $j("a.save-new-patient-email").live("click", Trisano.Ajax.savePatientEmail);
+
+    $j("a.discard-new-patient-email").live("click", function() {
+      $j(this).closest("div.email").remove();
+      $j("a#add-patient-email-address-address").show();
+      return false;
+    });
+
+    $j("a#add-patient-email-address-address").live("click", function() {
+      this.hide();
+    });
+
+    if(Trisano.Ajax.getPatientEmailRepeaterAjaxActions().length != 0) {
+      // A blank template is being shown
+      $j("a#add-patient-email-address-address").hide();
+    }
+  },
+
+  
   enablePatientTeleRepeaterAjaxActions: function() {
     $j("a.save-new-patient-telephone").live("click", Trisano.Ajax.savePatientTelephone);
 
@@ -190,9 +226,18 @@ Trisano.Ajax = {
   saveRepeaters: function() {
     var deferreds = Trisano.Ajax.saveHospitalizations();
     deferreds = $j.merge(deferreds, Trisano.Ajax.savePatientTelephones());
+    deferreds = $j.merge(deferreds, Trisano.Ajax.savePatientEmails());
     return deferreds;
   },
  
+  savePatientEmails: function() {
+    var deferreds = [];
+    $j("div.phone a.save-new-patient-email").closest("div.email").each(function() {
+      deferreds.push(Trisano.Ajax.postPatientEmail($j(this)));
+    });
+    return deferreds;
+  },
+
   savePatientTelephones: function() {
     var deferreds = [];
     $j("div.phone a.save-new-patient-telephone").closest("div.phone").each(function() {
@@ -207,6 +252,17 @@ Trisano.Ajax = {
       deferreds.push(Trisano.Ajax.postHospitalization($j(this)));
     });
     return deferreds;
+  },
+
+  savePatientEmail: function() {
+    var data_source = $j(this).closest("div.email");
+    var result = Trisano.Ajax.postPatientEmail(data_source);
+    if(result.length == 0){
+      // No inputs were populated. We want to do this here so that this message is only shown
+      // when an individual hospitalization is saved, not when Save & Continue is used. 
+      data_source.prepend("<strong class='required'>Please fill out at least one field.</strong>");
+    };
+    return false;
   },
 
   savePatientTelephone: function() {
@@ -321,6 +377,15 @@ Trisano.Ajax = {
         Trisano.Tabs.clearErrorsFromTabs();
       }
     });
+  },
+
+  postPatientEmail: function(data_source) {
+    var patient_email_fields = data_source.find(":input");
+    var url = Trisano.url("/human_events/" + $j("#id").attr('value') +"/patient_email_addresses");
+    var target = data_source;
+    var new_repeater_id = "a#add-patient-email-address";
+
+    return Trisano.Ajax.postRepeater(data_source, patient_email_fields, url, target, new_repeater_id);
   },
 
   postPatientTelephone: function(data_source) {

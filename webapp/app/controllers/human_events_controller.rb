@@ -16,8 +16,75 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEventsController < EventsController
-  before_filter :can_update?, :only => [:hospitalization_facilities, :patient_telephones]
+  before_filter :can_update?, :only => [:hospitalization_facilities, :patient_telephones, :patient_email_addresses]
 
+  def patient_email_addresses
+    EmailAddress.transaction do
+      event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+      raise "No event params posted" if event_params.nil?
+
+
+      repeater_attr = event_params[:interested_party_attributes][:person_entity_attributes][:email_addresses_attributes]
+      raise "More than one repeater submitted: #{repeater_attr.inspect}" if repeater_attr.each_value.count != 1
+      # Because we only ever submit one repeater, it's ok to just take the first
+      repeater_attr = repeater_attr.each_value.first
+
+
+      # Remove repeater attributes because they shouldn't be handled by the regular model actions
+      # Will raise an error if posted, see app/model/event.rb
+      new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
+      new_checkbox_answer_attributes = event_params.delete(:new_repeater_checkboxes)
+      new_radio_button_answer_attributes = event_params.delete(:new_repeater_radio_buttons)
+      
+      # Need to include the entity to attach the email to
+      repeater_attr.merge!({:owner_id => @event.interested_party.person_entity.id.to_s, :owner_type => "Entity"})
+
+
+      @patient_email_address = EmailAddress.new(repeater_attr)
+      if saved_successfully = @patient_email_address.save
+
+
+        # PARAMS PARSING
+        # ==============
+   
+        if repeater_attr[:_destroy] == "1"
+          # record was destroyed by @event.save
+
+
+        else # else from if patient_tele_attr[:_destory] == "1"
+          # saving a new/existing record
+
+          @event.interested_party.person_entity.email_addresses.reload
+
+
+          # We've either created a new repeater or
+          # determined which existing one to use.
+          # time to create an answer for it.
+          answer_save_results = []
+          answer_save_results << create_answers(:text, new_text_box_answer_attributes, @patient_email_address, @event)
+          answer_save_results << create_answers(:checkbox, new_checkbox_answer_attributes, @patient_email_address, @event)
+          answer_save_results << create_answers(:radio_button, new_radio_button_answer_attributes, @patient_email_address, @event) 
+
+          created_answers_successfully = !answer_save_results.include?(false)
+
+
+        end # if repeater_dependent destroyed == 1 
+      end #if saved_successfully
+
+      # Must include respond_to inside transaction to have scope for
+      # event_saved_successfully
+      respond_to do |format|
+        if saved_successfully and created_answers_successfully
+          redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
+          redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
+          format.js   { render :partial => "people/repeater_patient_email_form", :status => :ok }
+        else
+          logger.error @patient_email_address.errors.inspect
+          format.js   { render :partial => "people/repeater_patient_email_form", :status => :unprocessable_entity }
+        end
+      end    
+    end #transaction
+  end #patient email_address
 
   def patient_telephones
     Person.transaction do

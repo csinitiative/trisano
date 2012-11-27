@@ -27,6 +27,10 @@ class EmailAddress < ActiveRecord::Base
     [:email_address]
   end
 
+  def repeater_parent
+    self
+  end
+
   private
 
   def strip_whitespace
