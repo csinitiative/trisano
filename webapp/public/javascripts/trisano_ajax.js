@@ -318,6 +318,7 @@ Trisano.Ajax = {
         // Must be run before attempting to show a#add-hospitalization-facilities
         target.replaceWith(request.responseText);
         $j(new_repeater_id).show();
+        Trisano.Tabs.clearErrorsFromTabs();
       }
     });
   },
