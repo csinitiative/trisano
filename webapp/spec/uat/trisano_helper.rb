@@ -698,6 +698,12 @@ module TrisanoHelper
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
   end
 
+  def add_email(browser, attributes, index = 1)
+    click_core_tab(browser, DEMOGRAPHICS)
+    browser.click "link=Add an Email Address" unless index == 1
+    browser.type("//div[@id='email_addresses']//div[@class='email'][#{index}]//input[contains(@id, '_email_address')]", attributes[:email])
+  end
+
   def add_telephone(browser, attributes, index = 1)
     click_core_tab(browser, DEMOGRAPHICS)
     browser.click "link=Add a Telephone" unless index == 1
