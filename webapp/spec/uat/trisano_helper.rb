@@ -961,7 +961,8 @@ module TrisanoHelper
     id_end_position = html_source.index("\"", id_start_position) -1
 
     # This is a kluge that will go hunting for quot; if the id looks too big. Needed for reporting agency at least.
-    id_end_position = html_source.index("quot;", id_start_position)-3 if (id_end_position-id_start_position > 10)
+    quote_position = html_source.index("quot;", id_start_position)
+    id_end_position = quote_position-3 if quote_position and (id_end_position-id_start_position > 21)
 
     html_source[id_start_position..id_end_position]
   end
