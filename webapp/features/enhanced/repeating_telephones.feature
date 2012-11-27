@@ -200,7 +200,7 @@ Feature: Form fields for repeating core sections.
     When I change the disease to match the published form
     And  I save the event
     And  I check the form for addition
-    And  I click and confirm the "Change Forms" button and don't wait
+    And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
     Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
 
@@ -214,9 +214,9 @@ Feature: Form fields for repeating core sections.
     When I change the disease to not match the published form
     And  I save the event
     And  I check the form for removal
-    And  I click the "Change Forms" button
+    And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
-    Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
+    Then I should not see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
 
   # Coresponds with #12 from original email
   Scenario: When editing a CMR, unsaved telephones are saved automatically with the event, even when the user is on another tab
