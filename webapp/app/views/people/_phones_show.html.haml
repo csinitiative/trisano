@@ -19,5 +19,6 @@
       -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
         =render :partial => 'people/show_telephone', :locals => {:f => telephone_form, :show_telephone => telephone_form.object}
   -core_element_show(:email_addresses, f, :horiz) do
-    %div.data_email_addresses
-      =render :partial => 'people/show_email', :collection => f.object.email_addresses
+    %div#email_addresses.vert
+      -f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
+        =render :partial => 'people/show_email', :locals => {:f => email_form, :show_email => email_form.object}
