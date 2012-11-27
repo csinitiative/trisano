@@ -482,7 +482,7 @@ end
 def disease_groups(conn)
   groups = get_query_results(disease_group_query, conn) #.map { |a| a['name'] }
   groups <<= { 'id' => 0, 'name' => 'TriSano' }
-  return groups
+  groups.each do |a| yield(a) end
 end
 
 def create_models(dg, model_name_str, dg_id, event_type, meta, conn)
@@ -693,7 +693,7 @@ if __FILE__ == $0
     end
 
     i = 1
-    disease_groups(conn).each do |dg|
+    disease_groups(conn) do |dg|
       %w(A M).each do |event_type|
           FileUtils.rm Dir.glob('mdr.*'), :force => true
           meta = initialize_meta SchemaMeta.new
