@@ -242,9 +242,9 @@ Feature: Form fields for repeating core sections.
     When I change the disease to not match the published form
     And  I save the event
     And  I check the form for removal
-    And  I click the "Change Forms" button
+    And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
-    Then I should see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
+    Then I should not see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
 
   # Coresponds with #12 from original email
   Scenario: When editing a CMR, unsaved hospitalizations are saved automatically with the event, even when user is on another tab
