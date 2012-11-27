@@ -262,14 +262,21 @@ Trisano.Ajax = {
     // insert the form data back into the correct form question.
     // Here we collect all the visible questions IDs and map to their values
     // so that if we hit an error, we can repopulate below.
-    var id_data = {};
+    var text_data = {};
 
     // Must refind elements directly form data source
-    data_source.find(":input[type!=hidden]").each(function(i,e) { 
-      // { element_id: element_value }
-      id_data[$j(e).attr('id')] = $j(e).val(); 
+    data_source.find(":input[type!=hidden][type!=checkbox][type!=radio]").each(function(i,e) { 
+      text_data[$j(e).attr('id')] = $j(e).val(); // { element_id: element_value }
     });
-
+    
+    // Must handle radio buttons and checkboxes seperately.
+    var checked_data = {};
+    data_source.find(":input[type!=hidden][type=checkbox]:checked").each(function(i,e) { 
+      checked_data[$j(e).attr('id')] = $j(e).val(); // { element_id: element_value }
+    });
+    data_source.find(":input[type!=hidden][type=radio]:checked").each(function(i,e) { 
+      checked_data[$j(e).attr('id')] = $j(e).val(); // { element_id: element_value }
+    });
 
     return $j.ajax({
       url: url, 
@@ -284,7 +291,7 @@ Trisano.Ajax = {
         Trisano.Tabs.highlightTabsWithErrors();
 
         // Must manually repopulate the form fields data on an error
-        $j.each(id_data, function(element_id,element_value) {
+        $j.each(text_data, function(element_id,element_value) {
           // Strangly, you MUST operate on the DOM via $j, not $j(target) or $j(request.response)
           // otherwise changes won't be applied.
            var element = $j.find("#" + element_id);
@@ -295,6 +302,15 @@ Trisano.Ajax = {
               // actually inserted. The Selenium RC version we're using cannot read the DOM
               // manipulation directly.
               $j(element).attr('value', element_value);
+           }
+        });
+
+        // And again for checkboxes and radio buttons
+        $j.each(checked_data, function(element_id,element_value) {
+           var element = $j.find("#" + element_id);
+           if(element){
+              $j(element).prop("checked", true);   
+              $j(element).attr('checked', "checked"); //maybe redundant?
            }
         });
       },
