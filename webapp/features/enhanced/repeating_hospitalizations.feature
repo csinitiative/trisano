@@ -227,8 +227,9 @@ Feature: Form fields for repeating core sections.
     When I change the disease to match the published form
     And  I save the event
     And  I check the form for addition
-    And  I click and confirm the "Change Forms" button and don't wait
+    And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
+    And  I navigate to the Clinical tab
     Then I should see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
 
   # Coresponds with #11 from original email
