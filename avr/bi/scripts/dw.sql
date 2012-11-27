@@ -505,7 +505,11 @@ FROM events
     LEFT JOIN (
         SELECT
             a.event_id,
-            trisano.hstoreagg(trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name), a.text_answer) AS newhstore
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name) || '|' ||
+                    COALESCE(a.repeater_form_object_id || '|' || repeater_form_object_type, '|'),
+                a.text_answer
+            ) AS newhstore
         FROM
             forms f, form_elements fe, questions q, answers a
         WHERE
