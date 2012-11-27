@@ -15,7 +15,7 @@
 
 %div{:class => 'hospital', :style => "clear: both;"}
 
-  = error_messages_for :object => f.object
+  = error_messages_for :object => @event
   %span{:class => "horiz"}
     - core_element :secondary_entity_id, f, :vert do
       = f.label(:secondary_entity_id)
