@@ -61,10 +61,12 @@ class HumanEventsController < EventsController
           # We've either created a new repeater or
           # determined which existing one to use.
           # time to create an answer for it.
-          create_text_box_answers(new_text_box_answer_attributes, @patient_telephone, @event)
-          create_checkbox_answers(new_checkbox_answer_attributes, @patient_telephone, @event)
-          create_radio_button_answers(new_radio_button_answer_attributes, @patient_telephone, @event) 
+          created_answers_successfully = []
+          created_answers_successfully << create_answers(:text, new_text_box_answer_attributes, @patient_telephone, @event)
+          created_answers_successfully << create_answers(:checkbox, new_checkbox_answer_attributes, @patient_telephone, @event)
+          created_answers_successfully << create_answers(:radio_button, new_radio_button_answer_attributes, @patient_telephone, @event) 
 
+          created_answers_successfully = !answer_save_results.include?(false)
 
 
         end # if repeater_dependent destroyed == 1 
@@ -73,7 +75,7 @@ class HumanEventsController < EventsController
       # Must include respond_to inside transaction to have scope for
       # event_saved_successfully
       respond_to do |format|
-        if saved_successfully
+        if saved_successfully and created_answers_successfully
           redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
           redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
           format.js   { render :partial => "people/ajax_patient_phone_form", :status => :ok }
@@ -86,49 +88,60 @@ class HumanEventsController < EventsController
   end #hospitalization_facilities
 
 
-  def create_radio_button_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |key, value|
-        answer = event.answers.build(
-          :question_id => key,
-          :radio_button_answer => value[:radio_button_answer],
-          :export_conversion_value_id => value[:export_conversion_value_id],
-          :code => value[:code],
-          :repeater_form_object_id => repeater_object.id,
-          :repeater_form_object_type => repeater_object.class.name
-        )
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
-      end
-    end
+  def save_radio_button_answer(event, repeater_object, key, value)
+    answer = event.answers.build(
+      :question_id => key,
+      :radio_button_answer => value[:radio_button_answer],
+      :export_conversion_value_id => value[:export_conversion_value_id],
+      :code => value[:code],
+      :repeater_form_object_id => repeater_object.id,
+      :repeater_form_object_type => repeater_object.class.name
+    )
+    answer.save
   end
 
-  def create_checkbox_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |key, value|
-        answer = event.answers.build(
-          :question_id => key,
-          :check_box_answer => value[:check_box_answer],
-          :code => value[:code],
-          :repeater_form_object_id => repeater_object.id,
-          :repeater_form_object_type => repeater_object.class.name
-        )
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
-      end
-    end
+  def save_checkbox_answer(event, repeater_object, key, value)
+    answer = event.answers.build(
+      :question_id => key,
+      :check_box_answer => value[:check_box_answer],
+      :code => value[:code],
+      :repeater_form_object_id => repeater_object.id,
+      :repeater_form_object_type => repeater_object.class.name
+    )
+    answer.save
   end
 
-  def create_text_box_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |attributes|
-        answer = event.answers.build(attributes)         
-        answer.repeater_form_object_id = repeater_object.id
-        answer.repeater_form_object_type = repeater_object.class.name
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
+  def save_text_answer(event, repeater_object, answer_attr)
+    answer = event.answers.build(answer_attr)         
+    answer.repeater_form_object_id = repeater_object.id
+    answer.repeater_form_object_type = repeater_object.class.name
+    answer.save
+  end
+
+
+  def create_answers(answer_type, attributes, repeater_object, event) 
+    return true if attributes.nil?
+    raise "Invalid answer type provided" unless %w(radio_button checkbox text).include?(answer_type.to_s)
+    raise "A repeater object is required to create a new answer." if repeater_object.nil?
+
+    answer_save_results = []
+
+    # constructs the appropriate method name
+    method_name = "save_#{answer_type}_answer"
+
+    if attributes.is_a?(Array)
+      attributes.each do |answer_attr|
+        answer_save_results << method(method_name).call(event, repeater_object, answer_attr)
+      end
+    elsif attributes.is_a?(Hash)
+      attributes.each do |key, value|
+        answer_save_results << method(method_name).call(event, repeater_object, key, value)
       end
     end
+
+
+    # let's us know if all text boxes answers were saved correctly
+    !answer_save_results.include?(false)
   end
 
 
@@ -223,9 +236,13 @@ class HumanEventsController < EventsController
 
           # Now that we have our new/existing hospitalization facility
           # we can save the repeater answers
-          create_text_box_answers(new_text_box_answer_attributes, @hospitalization_facility, @event)
-          create_checkbox_answers(new_checkbox_answer_attributes, @hospitalization_facility, @event)
-          create_radio_button_answers(new_radio_button_answer_attributes, @hospitalization_facility, @event) 
+          answer_save_results = []
+          answer_save_results << create_answers(:text, new_text_box_answer_attributes, @hospitalization_facility, @event)
+          answer_save_results << create_answers(:checkbox, new_checkbox_answer_attributes, @hospitalization_facility, @event)
+          answer_save_results << create_answers(:radio_button, new_radio_button_answer_attributes, @hospitalization_facility, @event) 
+
+
+          created_answers_successfully = !answer_save_results.include?(false)
 
 
         end # if repeater_dependent destroyed == 1 
@@ -236,7 +253,7 @@ class HumanEventsController < EventsController
       # Must include respond_to inside transaction to have scope for
       # event_saved_successfully
       respond_to do |format|
-        if event_saved_successfully
+        if event_saved_successfully and created_answers_successfully
           redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
           format.js   { render :partial => "events/ajax_hospital", :status => :ok }
         else
