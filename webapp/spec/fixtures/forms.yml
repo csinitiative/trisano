@@ -98,3 +98,15 @@ hep_b_form:
   event_type: "morbidity_event"
   short_name: m_hep_b
   template_id: 1009
+std_form:
+  name: STD Form
+  id: 11
+  description: STD
+  version:
+  is_template: true
+  jurisdiction_id:
+  status: "Not Published"
+  event_type: "morbidity_event"
+  short_name: std
+  template_id: 1010
+
