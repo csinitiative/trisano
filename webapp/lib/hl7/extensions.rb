@@ -277,8 +277,7 @@ module StagedMessages
     end
 
     def address_unit_no
-    #  addr_components[1].blank? ? "" :
-          addr_components[1].titleize
+      (addr_components[1] || "").titleize
     end
 
     def address_street
@@ -290,7 +289,7 @@ module StagedMessages
     end
 
     def address_city
-      addr_components[2].titleize
+      (addr_components[2] || "").titleize
     end
 
     def address_trisano_state_id
@@ -519,7 +518,7 @@ module StagedMessages
     end
 
     def facility_address_city
-      facility_addr_components[2].titleize
+      (facility_addr_components[2] || "").titleize
     end
 
     def facility_address_trisano_state_id
