@@ -19,6 +19,7 @@ class MorbidityEventsController < EventsController
   include EventsHelper
 
   before_filter :load_event_queues, :only => [:index]
+  before_filter :set_cache_buster, :only => [:show, :edit]
 
   def index
     return unless index_processing
@@ -181,6 +182,11 @@ class MorbidityEventsController < EventsController
   end
 
   private
+  def set_cache_buster
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
 
   def prepopulate
     @event = setup_human_event_tree(@event)
