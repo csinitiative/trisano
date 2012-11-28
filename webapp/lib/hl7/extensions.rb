@@ -201,7 +201,7 @@ module StagedMessages
 
     def trisano_race_id
       race, race_id = nil, nil
-      elr_race_code = pid_segment.race.split(pid_segment.item_delim)[0]
+      elr_race_code = (pid_segment.race || "U").split(pid_segment.item_delim)[0]
       if race_md = /^[WBAIHKU]$/.match(elr_race_code)
         race = race_md[0]
         race = case race
