@@ -896,6 +896,7 @@ en:
   similar_events: "Similar Events"
   discard: "Discard"
   raw: "Raw"
+  elr_hl7_message: "ELR HL7 message"
   create_cmr_from_message: "Create a CMR from this message"
   dob: "DOB"
   event_search_using_staged_message: "Event Search using staged message"
