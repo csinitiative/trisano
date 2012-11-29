@@ -348,9 +348,17 @@ module FormBuilderDslHelper
         # This must be nil for new records so we get blank templates
         answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
       end
+
+      if local_form_builder.object.respond_to?(:answers)
+        local_form_builder.object.answers.each do |answer|
+          @local_answer_object = answer if answer.question_id == answer_attributes[:question_id] and
+                                      answer.event_id   == answer_attributes[:event_id] and
+                                      answer.repeater_form_object == local_form_builder.object
+        end
+      end
     end
 
-    @answer_object = @event.get_or_initialize_answer(answer_attributes)
+    @answer_object = @local_answer_object || @event.get_or_initialize_answer(answer_attributes)
 
     error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")

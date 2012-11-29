@@ -98,7 +98,7 @@ class Answer < ActiveRecord::Base
   end
 
   def before_validation
-    if question.data_type == :phone
+    if question.data_type == :phone and text_answer.present?
       phone = text_answer.gsub(/[^0-9]/, '')
       if phone.length == 10
         phone = phone.insert(3, "-")
