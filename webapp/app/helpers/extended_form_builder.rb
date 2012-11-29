@@ -129,7 +129,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
         if @object_name.include?("new_repeater_answer")
-          field_name += "[new_repeater_checkboxes]"
+          field_name = @object_name.gsub("new_repeater_answer", "new_repeater_checkboxes")
         else
           field_name += "[new_checkboxes]"
         end
@@ -166,7 +166,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
         if @object_name.include?("new_repeater_answer")
-          field_name += "[new_repeater_radio_buttons]"
+          field_name = @object_name.sub("new_repeater_answer", "new_repeater_radio_buttons")
         else
           field_name += "[new_radio_buttons]"
         end
@@ -218,6 +218,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       result << code_js(codes, field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_code", question.data_type)
 
+      event_id_field_name = field_name + "[#{field_index}]" + '[event_id]'
+      event_id_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'event_id'
+      result += "\n" + @template.hidden_field_tag(event_id_field_name, event.id, :id => event_id_field_id)
+
       unless question_element.export_column.blank?
         export_conv_field_name = field_name + "[#{field_index}]" + '[export_conversion_value_id]'
         export_conv_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'export_conversion_value_id'
@@ -230,6 +234,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
+      result += "\n" + hidden_field(:event_id, :index => index, :value => event.id)
       unless question_element.export_column.blank?
         if question.data_type == :drop_down
           export_conv_field_name = object_name + "[#{index}]" + '[export_conversion_value_id]'

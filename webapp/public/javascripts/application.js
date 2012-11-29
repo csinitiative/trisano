@@ -214,6 +214,12 @@ function post_and_return(form_id) {
 
     function(data) {
       // All repeaters saved successfully
+
+      // Anything that wasn't saved, discard
+      $j.each($j("a[class^=discard]"), function(i,e) {
+        $j(this).click();
+      });
+
       post_form(form_id, true);
     },
     function(data) {
@@ -229,6 +235,12 @@ function post_and_exit(form_id) {
 
     function(data) {
       // All repeaters saved successfully
+
+      // Anything that wasn't saved, discard
+      $j.each($j("a[class^=discard]"), function(i,e) {
+        $j(this).click();
+      });
+
       post_form(form_id,false);
     },
     function(data) {

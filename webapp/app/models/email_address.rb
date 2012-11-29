@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class EmailAddress < ActiveRecord::Base
+  include Trisano::Repeater
   before_validation :strip_whitespace
   belongs_to :owner, :polymorphic => true
 
@@ -25,10 +26,6 @@ class EmailAddress < ActiveRecord::Base
 
   def xml_fields
     [:email_address]
-  end
-
-  def repeater_parent
-    self
   end
 
   private

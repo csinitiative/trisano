@@ -139,8 +139,8 @@ Trisano.Ajax = {
     $j("a#add-hospitalization-facilities").live("click", function() {
       Trisano.Ajax.hideHosFacRepeaterAjaxActions();
     });
-    $j("a#add-patient-email-address-address").live("click", function() {
-      Trisano.Ajax.hidPatientTeleFacRepeaterAjaxActions();
+    $j("a#add-patient-email-address").live("click", function() {
+      Trisano.Ajax.hidePatientEmailRepeaterAjaxActions();
     });
   },
 
@@ -155,17 +155,17 @@ Trisano.Ajax = {
 
     $j("a.discard-new-patient-email").live("click", function() {
       $j(this).closest("div.email").remove();
-      $j("a#add-patient-email-address-address").show();
+      $j("a#add-patient-email-address").show();
       return false;
     });
 
-    $j("a#add-patient-email-address-address").live("click", function() {
+    $j("a#add-patient-email-address").live("click", function() {
       this.hide();
     });
 
     if(Trisano.Ajax.getPatientEmailRepeaterAjaxActions().length != 0) {
       // A blank template is being shown
-      $j("a#add-patient-email-address-address").hide();
+      $j("a#add-patient-email-address").hide();
     }
   },
 
@@ -232,7 +232,7 @@ Trisano.Ajax = {
  
   savePatientEmails: function() {
     var deferreds = [];
-    $j("div.phone a.save-new-patient-email").closest("div.email").each(function() {
+    $j("div.email a.save-new-patient-email").closest("div.email").each(function() {
       deferreds.push(Trisano.Ajax.postPatientEmail($j(this)));
     });
     return deferreds;
