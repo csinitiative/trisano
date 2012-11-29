@@ -81,6 +81,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     cdc_attributes = []
     codes = []
     html_options[:class] = "required" if question_element.is_required?
+
     input_element = case question.data_type
     when :single_line_text
       unless (question.size.nil?)
