@@ -2,7 +2,6 @@ module Trisano::Repeater
   def self.included(base)
     base.class_eval do
       has_many :answers, :include => [:question], :as => :repeater_form_object, :autosave => true
-
     end
   end
 
