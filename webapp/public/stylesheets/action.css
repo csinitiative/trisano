@@ -611,6 +611,10 @@ form.inplaceeditor-form input[type="submit"] {
 form.inplaceeditor-form a {
   margin-left: 1em; }
 
+.hl7-dialog textarea {
+    width: 100%;
+    height: 100%;
+}
 .search_group {
   border: 1px solid #C1DAD7;
   background-color: #eee;
