@@ -23,12 +23,12 @@
 # generated names and diseases will do.
 
 Given(/^a (.+) event form exists$/) do |event_type|
-  unique_form_name = get_unique_name(3)
+  unique_form_name = get_unique_name(10)
   @form = create_form(event_type, unique_form_name, unique_form_name, get_random_disease)
 end
 
 Given(/^a (.+) event form exists for the disease (.+)$/) do |event_type, disease|
-  unique_form_name = get_unique_name(3)
+  unique_form_name = get_unique_name(10)
   @form = create_form(event_type, unique_form_name, unique_form_name, disease)
 end
 
@@ -78,12 +78,12 @@ end
 
 Given(/^that form has (.+) questions$/) do |number_of_questions|
   number_of_questions.to_i.times do |question|
-    create_question_on_form(@form, { :question_text => "#{get_unique_name(3)} #{question}" })
+    create_question_on_form(@form, { :question_text => "#{get_unique_name(10)} #{question}" })
   end
 end
 
 Given(/^that form has one question on the default view$/) do
-  @question_element = create_question_on_form(@form, { :question_text => get_unique_name(3) })
+  @question_element = create_question_on_form(@form, { :question_text => get_unique_name(10) })
 end
 
 Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|

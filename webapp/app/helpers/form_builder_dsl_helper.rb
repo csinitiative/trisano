@@ -337,18 +337,20 @@ module FormBuilderDslHelper
 
 
     if !local_form_builder.nil? && local_form_builder.repeater_form?
-      repeater_parent_record = local_form_builder.object.repeater_parent
 
-      answer_attributes[:repeater_form_object_type] = repeater_parent_record.class.name
+      unless local_form_builder.object.nil?
+        # This is critical to use #base_class here because polymorphic with STI
+        # requires use of base class!
+        # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
+        # see "Polymorphic Associations"
+        answer_attributes[:repeater_form_object_type] = local_form_builder.object.class.base_class.name
 
-      # This must be nil for new records so we get blank templates
-      answer_attributes[:repeater_form_object_id] = repeater_parent_record.try(:id)
+        # This must be nil for new records so we get blank templates
+        answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
+      end
     end
 
     @answer_object = @event.get_or_initialize_answer(answer_attributes)
-
-
-
 
     error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
@@ -357,20 +359,30 @@ module FormBuilderDslHelper
 
 
     if @answer_object.new_record?
+      index = ""
       if !local_form_builder.nil? && local_form_builder.repeater_form?
         prefix = "new_repeater_answer"
+        fields_for(local_form_builder.object_name) do |f|
+          f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+            result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
+          end
+        end
       else
         prefix = "new_answers"
+        fields_for(@event) do |f|
+          f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+            result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
+          end
+        end
       end
-      index = ""
     else
       prefix = "answers"
       @form_index = 0 unless @form_index
       index = @form_index += 1
-    end
-    fields_for(@event) do |f|
-      f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-        result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
+      fields_for(@event) do |f|
+        f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
+        end
       end
     end
 
@@ -447,16 +459,16 @@ module FormBuilderDslHelper
 
   def core_path_with_dots(element)
     new_path = element.core_path.clone
-    core_path_to_method_array(new_path, @event.class.name.underscore)
+    core_path_to_method_string(new_path, @event.class.name.underscore)
   end
 
-  def core_path_to_method_array(path, event_type)
+  def core_path_to_method_string(path, event_type)
     # Debt: Replace with shorter eval technique
     path = remove_event_type_from_core_path(path, event_type) 
     path = replace_square_brackets_with_dots(path)
   end
  
-  def process_core_path(options)
+  def eval_core_path(options)
 
     object = options[:object]
     method_array = options[:method_array]
@@ -483,7 +495,7 @@ module FormBuilderDslHelper
 
     method_array = core_path_with_dots(element).split(".")
 
-    process_core_path(:object => options[:event],
+    eval_core_path(:object => options[:event],
                       :method_array => method_array)
   end
 

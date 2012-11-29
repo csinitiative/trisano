@@ -240,6 +240,8 @@ end
 Then /^I should have a (.*) error message box$/i do |div_class|
   div_class = div_class.strip.gsub(' ', '_')
   response.should have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation'][1]")
+
+  # Make sure there is only one error explanation box
   response.should_not have_xpath("//div[@class='#{div_class}']/div[@id='errorExplanation'][2]")
 end
 
