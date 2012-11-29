@@ -701,7 +701,8 @@ module TrisanoHelper
   def add_email(browser, attributes, index = 1)
     click_core_tab(browser, DEMOGRAPHICS)
     browser.click "link=Add an Email Address" unless index == 1
-    browser.type("//div[@id='email_addresses']//div[@class='email'][#{index}]//input[contains(@id, '_email_address')]", attributes[:email])
+    field_id = @browser.get_attribute "//div[@id='email_addresses']//div[@class='email'][#{index}]//label[contains(text(), 'Email address')]/@for"
+    browser.type(field_id, attributes[:email])
   end
 
   def add_telephone(browser, attributes, index = 1)

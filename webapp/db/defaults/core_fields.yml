@@ -954,7 +954,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -964,7 +963,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -974,7 +972,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -984,7 +981,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1582,7 +1578,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1592,7 +1587,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1602,7 +1596,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1612,7 +1605,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1903,7 +1895,6 @@
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_event[interested_party][person_entity][telephones] 
   parent_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1921,7 +1912,6 @@
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][email_addresses][email_address]
   repeater: true
-  repeater_parent_key: morbidity_event[interested_party][person_entity][email_addresses] 
   parent_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1988,7 +1978,6 @@
   event_type: contact_event
   key: contact_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: contact_event[interested_party][person_entity][telephones] 
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -2006,7 +1995,6 @@
   event_type: contact_event
   key: contact_event[interested_party][person_entity][email_addresses][email_address]
   repeater: true
-  repeater_parent_key: contact_event[interested_party][person_entity][email_addresses] 
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -2756,7 +2744,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2766,7 +2753,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2776,7 +2762,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2786,7 +2771,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - parent_key: assessment_event[mortality_status_section]
@@ -3283,7 +3267,6 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: assessment_event[interested_party][person_entity][telephones] 
   parent_key: assessment_event[interested_party][person_entity][phone_section]
 
 - parent_key: assessment_event[interested_party][person_entity][phone_section]
@@ -3301,7 +3284,6 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][email_addresses][email_address]
   repeater: true
-  repeater_parent_key: assessment_event[interested_party][person_entity][email_addresses] 
   parent_key: assessment_event[interested_party][person_entity][phone_section]
 
 - parent_key: assessment_event[clinicians_section]
@@ -3841,7 +3823,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3851,7 +3832,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3861,7 +3841,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3871,7 +3850,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - parent_key: morbidity_and_assessment_event[mortality_status_section]
@@ -4368,7 +4346,6 @@
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][telephones] 
   parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
   
 - help_text:
@@ -4378,7 +4355,6 @@
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[interested_party][person_entity][email_addresses][email_address]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][email_addresses] 
   parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
   
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
