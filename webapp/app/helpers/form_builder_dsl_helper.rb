@@ -70,9 +70,9 @@ module FormBuilderDslHelper
       when :edit
         render_investigator_view(element, current_form, form_reference.form, local_form_builder)
       when :show
-        show_investigator_view(element, form_reference.form, current_form)
+        show_investigator_view(element, form_reference.form, current_form, local_form_builder)
       when :print
-        print_investigator_view(element, form_reference.form, current_form)
+        print_investigator_view(element, form_reference.form, current_form, local_form_builder)
       end
     end #configs
 
@@ -108,7 +108,7 @@ module FormBuilderDslHelper
     when "GroupElement"
       result << show_investigator_group(form_elements_cache, element, f)
     when "QuestionElement"
-      result << show_investigator_question(form_elements_cache, element, f)
+      result << show_investigator_question(form_elements_cache, element, f, local_form_builder)
     when "FollowUpElement"
       result << show_investigator_follow_up(form_elements_cache, element, f)
     end
@@ -127,7 +127,7 @@ module FormBuilderDslHelper
     when "GroupElement"
       result << print_investigator_group(form_elements_cache, element, f)
     when "QuestionElement"
-      result << print_investigator_question(form_elements_cache, element, f)
+      result << print_investigator_question(form_elements_cache, element, f, local_form_builder)
     when "FollowUpElement"
       result << print_investigator_follow_up(form_elements_cache, element, f)
     end
@@ -270,7 +270,7 @@ module FormBuilderDslHelper
     result = ""
     
     # To simplify the calls create a method reference which we can invoke below
-    # example modes include :render, :show, :print 
+    # example modes include :render_investigator_element, :show_investigator_element, :print_investigator_element 
     method_ref = method(mode + "_investigator_element")
 
     form_elements_cache = form.nil? ? FormElementCache.new(view) : form.form_element_cache
@@ -293,12 +293,12 @@ module FormBuilderDslHelper
   end
 
 
-  def show_investigator_view(view, form=nil, f = nil)
-    investigator_view("show", view, form, f)
+  def show_investigator_view(view, form=nil, f = nil, local_form_builder=nil)
+    investigator_view("show", view, form, f, local_form_builder)
   end
 
-  def print_investigator_view(view, form=nil, f = nil)
-    investigator_view("print", view, form, f)
+  def print_investigator_view(view, form=nil, f = nil, local_form_builder=nil)
+    investigator_view("print", view, form, f, local_form_builder)
   end
 
   def render_help_text(element)
@@ -624,7 +624,7 @@ module FormBuilderDslHelper
   # Show mode counterpart to #render_investigator_question
   #
   # Debt? Dupliactes most of the render method. Consider consolidating.
-  def show_investigator_question(form_elements_cache, element, f)
+  def show_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
     begin
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
@@ -632,7 +632,8 @@ module FormBuilderDslHelper
       result << "<label>#{question.question_text}&nbsp;"
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
-      answer = form_elements_cache.answer(element, @event)
+#      answer = form_elements_cache.answer(element, @event)
+      answer = collect_answer_object(question, local_form_builder)
       result << answer.text_answer unless answer.nil?
       result << "</div>"
 
@@ -786,13 +787,14 @@ module FormBuilderDslHelper
   # Print mode counterpart to #render_investigator_question
   #
   # Debt? Dupliactes most of the render method. Consider consolidating.
-  def print_investigator_question(form_elements_cache, element, f)
+  def print_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
     begin
       question = element.question
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
       result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
-      answer = form_elements_cache.answer(element, @event)
+#      answer = form_elements_cache.answer(element, @event)
+      answer = collect_answer_object(question, local_form_builder)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
       result << "</div>"
 
