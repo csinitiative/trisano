@@ -324,12 +324,7 @@ module FormBuilderDslHelper
     core_field ? render_help_text(core_field) : ""
   end
 
-
-  def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
-    question_element = element
-    question = question_element.question
-    question_style = question.style.blank? ? "vert" : question.style
-    result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
+  def collect_answer_object(question, local_form_builder)
 
     answer_attributes = {:question_id => question.id, 
                          :event_id => @event.id}
@@ -349,36 +344,60 @@ module FormBuilderDslHelper
         answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
       end
 
+
+      # Must define local var outside of loop below.
+      # Cannot use instance var; persists and returns wrong values later
+      local_answer_object = nil
+
       if local_form_builder.object.respond_to?(:answers)
         local_form_builder.object.answers.each do |answer|
-          @local_answer_object = answer if answer.question_id == answer_attributes[:question_id] and
+          # CANNOT USE instance variables here
+          # will be saved from previous instances!
+          local_answer_object = answer if answer.question_id == answer_attributes[:question_id] and
                                       answer.event_id   == answer_attributes[:event_id] and
                                       answer.repeater_form_object == local_form_builder.object
         end
       end
     end
 
-    @answer_object = @local_answer_object || @event.get_or_initialize_answer(answer_attributes)
+    # Must explictly check non-instance variables
+    if defined?(local_answer_object)
+      # Might be nil, might be defined
+      answer_object = local_answer_object || @event.get_or_initialize_answer(answer_attributes)
+    else
+      answer_object = @event.get_or_initialize_answer(answer_attributes)
+    end
+  end
 
-    error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(@answer_object.errors.count, "error")} prohibited this from being saved")
+  def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
+    question_element = element
+    question = question_element.question
+    question_style = question.style.blank? ? "vert" : question.style
+    result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
+
+
+    answer_object = collect_answer_object(question, local_form_builder)
+
+
+    error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
     error_messages.insert(0, "<br/>") if error_messages.present?
     result << error_messages
 
 
-    if @answer_object.new_record?
+    if answer_object.new_record?
       index = ""
       if !local_form_builder.nil? && local_form_builder.repeater_form?
         prefix = "new_repeater_answer"
         fields_for(local_form_builder.object_name) do |f|
-          f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
             result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
           end
         end
       else
         prefix = "new_answers"
         fields_for(@event) do |f|
-          f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+          f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
             result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
           end
         end
@@ -388,13 +407,13 @@ module FormBuilderDslHelper
       @form_index = 0 unless @form_index
       index = @form_index += 1
       fields_for(@event) do |f|
-        f.fields_for(prefix, @answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+        f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
           result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
         end
       end
     end
 
-    follow_up_group = question_element.process_condition(@answer_object,
+    follow_up_group = question_element.process_condition(answer_object,
       @event.id,
       :form_elements_cache => form_elements_cache)
 
