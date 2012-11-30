@@ -478,6 +478,7 @@ ARUP1
         @staged_message = StagedMessage.new(:hl7_message => msg)
         @event = @staged_message.new_event_from
         @event.address.street_number.should == "42-12"
+        @event.address.street_name.should == "Happy Ln"
       end
 
       it "should populate the county" do

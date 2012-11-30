@@ -127,11 +127,11 @@ module StagedMessages
     attr_reader :pid_segment
 
     def name_components
-      @name_components ||= pid_segment.patient_name.split(pid_segment.item_delim)
+      @name_components ||= (pid_segment.patient_name || "").split(pid_segment.item_delim)
     end
 
     def addr_components
-      @addr_components ||= pid_segment.address.split(pid_segment.item_delim)
+      @addr_components ||= (pid_segment.address || "").split(pid_segment.item_delim)
     end
 
     # Ultimately we should make a patient class that has all the components as attributes
@@ -281,7 +281,7 @@ module StagedMessages
     end
 
     def address_street
-      if md = /^\w+ /.match(addr_components[0])
+      if md = /^[\w-]+ /.match(addr_components[0])
         md.post_match.titleize
       else
         md
