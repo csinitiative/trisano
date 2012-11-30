@@ -171,7 +171,10 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
       question_element = mock('question_element') do
         stubs(:question).returns(question)
         stubs(:export_column).returns(nil)
-	stubs(:is_required?).returns(false)
+      	stubs(:is_required?).returns(false)
+      end
+      event = mock('event') do
+        stubs(:id).returns(1)
       end
       form_elements_cache = mock('form_elements_cache') do
         stubs(:children).returns([Object.new])
@@ -188,7 +191,7 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
         form_builder.send(:dynamic_question,
                           form_elements_cache,
                           question_element,
-                          nil,
+                          event,
                           nil)
       end.should_not raise_error
     end
