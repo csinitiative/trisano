@@ -393,18 +393,6 @@ class Event < ActiveRecord::Base
     answers.build(attributes)
   end
 
-  def new_repeater_answer=(attributes)
-    # no op
-  end
-
-  def new_repeater_checkboxes=(attributes)
-    # no op
-  end
-
-  def new_repeater_radio_buttons=(attributes)
-    # no op
-  end
-
   def new_checkboxes=(attributes)
     attributes.each do |key, value|
       answers.build(
