@@ -61,12 +61,12 @@ When /^I print the event$/ do
 end
 
 When /^I fill in "(.+)" with an invalid date$/ do |label|
-  invalid_date = 1.year.from_now.to_date.to_formatted_s(:long)
+  invalid_date = 1.year.from_now.to_date.to_formatted_s
   When "I fill in \"#{label}\" with \"#{invalid_date}\""
 end
 
 When /^I fill in "(.+)" with a valid date$/ do |label|
-  valid_date = 1.day.ago.to_date.to_formatted_s(:long)
+  valid_date = 1.day.ago.to_date.to_formatted_s
   When "I fill in \"#{label}\" with \"#{valid_date}\""
 end
 
