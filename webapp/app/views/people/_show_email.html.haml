@@ -15,5 +15,6 @@
 
 -unless show_email.new_record?
   - core_element_show(:email_address, f, :horiz) do
+    =f.label(:email_address)
     %span.data_email_address=h(show_email.email_address)
-    %hr
+  %hr

@@ -40,12 +40,13 @@
         %span.data_extension
           =f.core_text_field(:extension, {:size => 6})
 
-      %span.horiz
-        - if !f.object.new_record?
-          =f.label :_delete
-          %span.data_telephone_delete=f.check_box :_destroy
-        - elsif f.repeater_form?
-          %span.ajax-actions
-            %a{:href=>"#", :class=>"save-new-patient-telephone"} Save
-            |
-            %a{:href=>"#", :class=>"discard-new-patient-telephone"} Discard
+    %span.horiz
+      - if !f.object.new_record?
+        =f.label :_delete
+        %span.data_telephone_delete=f.check_box :_destroy
+      - elsif f.repeater_form?
+        %span.ajax-actions
+          %a{:href=>"#", :class=>"save-new-patient-telephone"} Save
+          |
+          %a{:href=>"#", :class=>"discard-new-patient-telephone"} Discard
+  %hr

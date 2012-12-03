@@ -16,7 +16,9 @@
 %span.subsection-header
   ="#{t('telephone')}/#{t('Email')}"
 -core_element_print(:telephones, f, :horiz) do
-  =render :partial => 'events/people/print_telephone.html.haml', :collection => f.object.telephones
+  -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
+    =render :partial => 'events/people/print_telephone.html.haml', :locals => {:print_telephone => telephone_form.object, :f => telephone_form}
 -core_element_print(:email_addresses, f, :horiz) do
-  =render :partial => 'events/people/print_email.html.haml', :collection => f.object.email_addresses
+  -f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
+    =render :partial => 'events/people/print_email.html.haml', :locals => {:print_email => email_form.object, :f => email_form}
 

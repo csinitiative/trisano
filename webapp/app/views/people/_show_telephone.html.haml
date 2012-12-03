@@ -15,5 +15,6 @@
 
 -unless show_telephone.new_record?
   -core_element_show(:patient_telephone, f, :horiz) do
+    =f.label(:telephone)
     %span.data_telephone=h(show_telephone.simple_format) 
-    %hr
+  %hr
