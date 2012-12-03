@@ -329,7 +329,7 @@ Trisano.Ajax = {
         // Must be run before attempting to show new_repeater_id
         target.replaceWith(request.responseText);
         $j(new_repeater_id).show();
-        Trisano.Tabs.clearErrorsFromTabs();
+        Trisano.Tabs.highlightTabsWithErrors();
       }
     });
   },

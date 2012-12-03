@@ -4,6 +4,7 @@ document.observe('trisano:dom:loaded', function() {
 
 Trisano.Tabs = {
   highlightTabsWithErrors: function() {
+    Trisano.Tabs.clearErrorsFromTabs();
     $j("div.fieldWithErrors").each(function(index, element) { Trisano.Tabs.markElementsParentTab(element); }  );
     $j("div.errorExplanation").each(function(index, element) { Trisano.Tabs.markElementsParentTab(element); } );
   },
@@ -35,10 +36,14 @@ Trisano.Tabs = {
   },
   
   clearTabError: function(element) {
-    $j(element).css("color", "white").removeClass('tab-link-with-error');
+    if($j(element).parent("li").attr("title")=="active"){
+      $j(element).removeClass('tab-link-with-error');
+    } else {
+      $j(element).removeClass('tab-link-with-error');
+    }
   },
 
   setTabError: function(element) {
-    $j(element).css("color", "red").addClass('tab-link-with-error');
+    $j(element).addClass('tab-link-with-error');
   }
 };

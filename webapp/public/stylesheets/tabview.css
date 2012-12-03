@@ -119,6 +119,8 @@ version: 2.6.0
 	background:#d4cbb4;
 	outline:0;
 	}
+.yui-skin-sam .yui-navset .yui-nav a.tab-link-with-error 
+	{color: red;}
 .yui-skin-sam .yui-navset .yui-nav .selected a em
 	{padding:0.35em 0.75em;}
 .yui-skin-sam .yui-navset .yui-nav .selected a,.yui-skin-sam .yui-navset .yui-nav .selected a em

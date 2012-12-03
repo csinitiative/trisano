@@ -216,6 +216,8 @@ function post_and_return(form_id) {
       // All repeaters saved successfully
 
       // Anything that wasn't saved, discard
+      // otherwise the new_repeater answers will get hit from
+      // lib/trisano/repeater.rb, which we DON'T WANT!
       $j.each($j("a[class^=discard]"), function(i,e) {
         $j(this).click();
       });
@@ -224,8 +226,12 @@ function post_and_return(form_id) {
     },
     function(data) {
       // One or more errors
+      // Fucntions added here will be fired as soon
+      // as the first deferred is rejected
       Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Tabs.navigateToError();
+      Trisano.Layout.setFlashMessage("Please review the errors in tabs highlighted red.");
+      Trisano.Layout.setFlashMessageClass("error-message")
+      Trisano.Layout.navToFlashMessage();
       toggle_save_buttons("on");
     });
 }
@@ -245,8 +251,12 @@ function post_and_exit(form_id) {
     },
     function(data) {
       // One or more errors
+      // Fucntions added here will be fired as soon
+      // as the first deferred is rejected
       Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Tabs.navigateToError();
+      Trisano.Layout.setFlashMessage("Please review the errors in tabs highlighted red.");
+      Trisano.Layout.setFlashMessageClass("error-message")
+      Trisano.Layout.navToFlashMessage();
       toggle_save_buttons("on");
     });
 }
