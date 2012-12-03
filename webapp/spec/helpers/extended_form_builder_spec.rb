@@ -185,6 +185,7 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
                         {:value => 2,   :export_conversion_value_id => 201}]
       form_builder = ExtendedFormBuilder.new('object_name', object, @template, nil, nil)
       form_builder.stubs(:hidden_field).returns('')
+      form_builder.stubs(:label).returns('')
       form_builder.stubs(:get_values).returns(select_options)
       form_builder.stubs(:follow_up_spinner_for).returns('')
       lambda do
