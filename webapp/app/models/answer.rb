@@ -38,10 +38,10 @@ class Answer < ActiveRecord::Base
   end
 
   validates_uniqueness_of :question_id, :scope => [:event_id, :repeater_form_object_id, :repeater_form_object_type]
-  validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
+  validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true, :if => :is_not_date
   validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
-  validates_date :date_answer, :if => :is_date, :allow_blank => true
+  validates_date :text_answer, :if => :is_date, :allow_blank => true
 
   def self.export_answers(*args)
     args = [:all] if args.empty?
@@ -60,12 +60,16 @@ class Answer < ActiveRecord::Base
       :result => result)
   end
 
+  def text_answer
+    is_date ? date_answer : read_attribute(:text_answer)
+  end
+
   def date_answer
-    ValidatesTimeliness::Parser.parse(text_answer, :date)
+    ValidatesTimeliness::Parser.parse(read_attribute(:text_answer), :date)
   end
 
   def date_answer_before_type_cast
-    text_answer
+    read_attribute(:text_answer)
   end
 
   def check_box_answer=(answer)
@@ -87,6 +91,10 @@ class Answer < ActiveRecord::Base
   
   def required
     question.is_required? || question.try(:question_element).try(:is_required?)
+  end
+
+  def is_not_date
+    !is_date
   end
 
   def is_date

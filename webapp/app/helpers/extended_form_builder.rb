@@ -214,8 +214,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options) + "&nbsp;<small>#{I18n.t(:phone_answer_format_msg)}</small>"
     end
 
+    result += label(:text_answer, sanitize(question.question_text, :tags => %w(br)), :for => html_options[:id]) 
+
     if question.data_type == :check_box || question.data_type == :radio_button
-      result += @template.content_tag(:label, sanitize(question.question_text, :tags => %w(br))) + " " + input_element
+      result += " " + input_element
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       result << code_js(codes, field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_code", question.data_type)
 
@@ -230,9 +232,6 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         result += rb_export_js(cdc_attributes, export_conv_field_id)
       end
     else
-      result += @template.content_tag(:label, :for => html_options[:id]) do
-        sanitize(question.question_text, :tags => %w(br))
-      end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
       result += "\n" + hidden_field(:event_id, :index => index, :value => event.id)
