@@ -14,7 +14,12 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 
-%span.print-value=h(print_email.email_address)
-%br
+-unless print_email.new_record?
+  -core_element_print(:email_address, f, :horiz) do
+    %span.print-label
+      = ct('email')
+    %span.print-value
+      =h(print_email.safe_call_chain(:email_address))
+  %br
 
 
