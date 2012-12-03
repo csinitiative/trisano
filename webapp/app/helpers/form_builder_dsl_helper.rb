@@ -376,40 +376,31 @@ module FormBuilderDslHelper
     result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
 
-    answer_object = collect_answer_object(question, local_form_builder)
 
 
+=begin
     error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(answer_object.errors.count, "error")} prohibited this from being saved")
     error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
     error_messages.insert(0, "<br/>") if error_messages.present?
     result << error_messages
+=end
 
-
-    if answer_object.new_record?
+    if !local_form_builder.nil? && local_form_builder.repeater_form?
+      answer_object = collect_answer_object(question, local_form_builder)
+      inner_prefix = answer_object.new_record? ? "new_repeater_answers" : "repeater_answers"
+      outer_prefix = local_form_builder.object_name
       index = ""
-      if !local_form_builder.nil? && local_form_builder.repeater_form?
-        prefix = "new_repeater_answer"
-        fields_for(local_form_builder.object_name) do |f|
-          f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
-          end
-        end
-      else
-        prefix = "new_answers"
-        fields_for(@event) do |f|
-          f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-            result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
-          end
-        end
-      end
     else
-      prefix = "answers"
+      answer_object = collect_answer_object(question, f)
+      inner_prefix = answer_object.new_record? ? "new_answers" : "answers"
+      outer_prefix = @event
       @form_index = 0 unless @form_index
       index = @form_index += 1
-      fields_for(@event) do |f|
-        f.fields_for(prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
-          result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
-        end
+    end
+    
+    fields_for(outer_prefix) do |f|
+      f.fields_for(inner_prefix, answer_object, :builder => ExtendedFormBuilder) do |answer_template|
+        result << answer_template_dynamic_question(answer_template, form_elements_cache, question_element, index, question)
       end
     end
 

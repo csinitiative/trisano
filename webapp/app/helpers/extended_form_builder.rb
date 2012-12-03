@@ -129,8 +129,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
-        if @object_name.include?("new_repeater_answer")
-          field_name = @object_name.gsub("new_repeater_answer", "new_repeater_checkboxes")
+        if @object_name.include?("new_repeater_answers")
+          field_name = @object_name.gsub("new_repeater_answers", "new_repeater_checkboxes")
         else
           field_name += "[new_checkboxes]"
         end
@@ -166,8 +166,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
-        if @object_name.include?("new_repeater_answer")
-          field_name = @object_name.sub("new_repeater_answer", "new_repeater_radio_buttons")
+        if @object_name.include?("new_repeater_answers")
+          field_name = @object_name.sub("new_repeater_answers", "new_repeater_radio_buttons")
         else
           field_name += "[new_radio_buttons]"
         end

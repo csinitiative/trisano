@@ -49,7 +49,7 @@ class FormReference < ActiveRecord::Base
           repeater_attributes = {
             :new_repeater_radio_buttons => {},
             :new_repeater_checkboxes => {},
-            :new_repeater_answer => []
+            :new_repeater_answers => []
           } 
 
           question_elements_for_repeater.each do |question_element|
@@ -71,7 +71,7 @@ class FormReference < ActiveRecord::Base
               }
 
             else
-              repeater_attributes[:new_repeater_answer] << {
+              repeater_attributes[:new_repeater_answers] << {
                 :event_id => event.id,
                 :question_id => question_element.question.id,
                 :text_answer => ""
