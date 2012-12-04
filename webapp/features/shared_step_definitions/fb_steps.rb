@@ -131,24 +131,6 @@ Given /^that form has core follow ups configured for all core fields$/ do
   end.compact
 end
 
-Given /^that form has core field configs configured for all repeater core fields$/ do
-  @core_field_container = @form.core_field_elements_container
-
-  # Create a core field config for every core field
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = true', @form.event_type]).each do |core_field|
-    create_core_field_config(@form, @core_field_container, core_field)
-  end
-end
-
-Given /^that form has core field configs configured for all core fields$/ do
-  @core_field_container = @form.core_field_elements_container
-
-  # Create a core field config for every core field
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = false', @form.event_type]).each do |core_field|
-    create_core_field_config(@form, @core_field_container, core_field)
-  end
-end
-
 Given /^that form has core view configs configured for all core views$/ do
   @core_view_container = @form.core_view_elements_container
 

@@ -24,6 +24,16 @@ Given /^a published form with repeating core fields for a (.+) event$/ do |event
   sleep 1
 end
 
+Given /^that form has core field configs configured for all repeater core fields$/ do
+  @core_field_container = @form.core_field_elements_container
+
+  # Create a core field config for every core field
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = true', @form.event_type]).each do
+    create_core_field_config(@form, @core_field_container, core_field)
+  end
+end
+
+
 Given /^a basic (.+) event with the form's disease$/ do |event_type|
   @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
 end
