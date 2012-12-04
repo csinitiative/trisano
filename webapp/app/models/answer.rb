@@ -38,10 +38,21 @@ class Answer < ActiveRecord::Base
   end
 
   validates_uniqueness_of :question_id, :scope => [:event_id, :repeater_form_object_id, :repeater_form_object_type]
-  validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true, :if => :is_not_date
+  validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
-  validates_date :text_answer, :if => :is_date, :allow_blank => true
+  validates_date :date_answer, :if => :is_date, :allow_blank => true
+
+  # Because we always want to render onto the page a :text_answer,
+  # but we use validates_date helper on :date_answer,
+  # we need to move any errors so they will display to the user
+  after_validation :move_date_answer_errors_to_text_answer_errors
+  def move_date_answer_errors_to_text_answer_errors
+    # uses a customization added by
+    # config/initializers/active_record_error_move.rb
+    errors.move("date_answer", "text_answer") if errors.on("date_answer")
+  end
+
 
   def self.export_answers(*args)
     args = [:all] if args.empty?
@@ -60,16 +71,12 @@ class Answer < ActiveRecord::Base
       :result => result)
   end
 
-  def text_answer
-    is_date ? date_answer : read_attribute(:text_answer)
-  end
-
   def date_answer
-    ValidatesTimeliness::Parser.parse(read_attribute(:text_answer), :date)
+    ValidatesTimeliness::Parser.parse(text_answer, :date)
   end
 
   def date_answer_before_type_cast
-    read_attribute(:text_answer)
+    text_answer
   end
 
   def check_box_answer=(answer)
@@ -91,10 +98,6 @@ class Answer < ActiveRecord::Base
   
   def required
     question.is_required? || question.try(:question_element).try(:is_required?)
-  end
-
-  def is_not_date
-    !is_date
   end
 
   def is_date
