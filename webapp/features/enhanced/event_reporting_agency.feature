@@ -11,7 +11,7 @@ Feature: Managing reporting agencies on events
     And I click remove for that reporting agency
     Then I should not see the reporting agency
 
-    When I save the event
+    When I save and continue
     Then I should not see the reporting agency
 
   Scenario: Adding an existing reporting agency in new mode
@@ -19,7 +19,7 @@ Feature: Managing reporting agencies on events
     And a place entity of type PUB exists
     When I navigate to the new morbidity event page and start a simple event
     And I add an existing reporting agency
-    And I save the event
+    And I save and continue
     Then I should see the added reporting agency
 
   Scenario: Adding and removing existing reporting agencies in edit mode
@@ -37,5 +37,5 @@ Feature: Managing reporting agencies on events
     And a place entity of type PUB exists
     When I navigate to the morbidity event edit page
     And I add an existing reporting agency
-    And I save the event
+    And I save and continue
     Then I should see the added reporting agency

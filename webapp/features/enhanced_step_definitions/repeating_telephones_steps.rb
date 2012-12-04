@@ -46,11 +46,10 @@ Then /^I should (.+) telephone save and discard buttons$/ do |see_not_see|
 end
 
 
-Then /^I should see all of the repeater core field config questions for each telephone number$/ do
+Then /^I should see all of the repeater core field config questions for (.+) telephone number$/ do |expected_count|
   @core_fields ||= CoreField.all(:conditions => ["event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = TRUE AND key LIKE '%[interested_party][person_entity][telephones]%'", @form.event_type, true, false])
   @core_fields.count.should_not be_equal(0), "Didn't find any patient telephone core fields."
 
-  expected_count = @event.interested_party.person_entity.telephones.count.to_s
   @core_fields.each do |core_field|
     before_config_count = @browser.get_xpath_count("//label[contains(text(), '#{core_field.key} before?')]")
     (before_config_count==expected_count).should(be_true, "Expected '#{core_field.key} before?' label to appear #{expected_count} times. Got #{before_config_count}.")

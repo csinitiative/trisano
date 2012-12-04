@@ -13,6 +13,6 @@ Feature: assessment event form core view configs
     Then I should see all of the core view config questions
 
     When I answer all core view config questions
-    And I save the event
+    And I save and continue
     Then I should see all of the core view config questions
     And I should see all core view config answers
