@@ -326,49 +326,51 @@ module FormBuilderDslHelper
     core_field ? render_help_text(core_field) : ""
   end
 
-  def collect_answer_object(question, local_form_builder)
+  def collect_answer_object(question, form_builder)
+
 
     answer_attributes = {:question_id => question.id, 
                          :event_id => @event.id}
 
+    return @event.get_or_initialize_answer(answer_attributes) if form_builder.nil?
 
 
-    if !local_form_builder.nil? && local_form_builder.repeater_form?
 
-      unless local_form_builder.object.nil?
+    # Must define local var outside of loop below.
+    # Cannot use instance var; persists and returns wrong values later
+    local_answer_object = nil
+
+    answerable = form_builder.object && form_builder.object.respond_to?(:answers)
+    if answerable
+      if form_builder.repeater_form?
         # This is critical to use #base_class here because polymorphic with STI
         # requires use of base class!
         # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
         # see "Polymorphic Associations"
-        answer_attributes[:repeater_form_object_type] = local_form_builder.object.class.base_class.name
+        answer_attributes[:repeater_form_object_type] = form_builder.object.class.base_class.name
 
         # This must be nil for new records so we get blank templates
-        answer_attributes[:repeater_form_object_id] = local_form_builder.object.id
-      end
+        answer_attributes[:repeater_form_object_id] = form_builder.object.id
+
+        form_builder.object.answers.each do |answer|
+          local_answer_object = answer if answer.question_id          == answer_attributes[:question_id] and
+                                          answer.event_id             == answer_attributes[:event_id] and
+                                          answer.repeater_form_object == form_builder.object
+        end
 
 
-      # Must define local var outside of loop below.
-      # Cannot use instance var; persists and returns wrong values later
-      local_answer_object = nil
+      else
+        #Not repeater, but answerable
 
-      if local_form_builder.object.respond_to?(:answers)
-        local_form_builder.object.answers.each do |answer|
-          # CANNOT USE instance variables here
-          # will be saved from previous instances!
+        form_builder.object.answers.each do |answer|
           local_answer_object = answer if answer.question_id == answer_attributes[:question_id] and
-                                      answer.event_id   == answer_attributes[:event_id] and
-                                      answer.repeater_form_object == local_form_builder.object
+                                          answer.event_id    == answer_attributes[:event_id]
         end
       end
     end
 
-    # Must explictly check non-instance variables
-    if defined?(local_answer_object)
-      # Might be nil, might be defined
-      answer_object = local_answer_object || @event.get_or_initialize_answer(answer_attributes)
-    else
-      answer_object = @event.get_or_initialize_answer(answer_attributes)
-    end
+
+    local_answer_object || @event.get_or_initialize_answer(answer_attributes)
   end
 
   def render_investigator_question(form_elements_cache, element, f, local_form_builder=nil)
@@ -391,11 +393,22 @@ module FormBuilderDslHelper
       answer_object = collect_answer_object(question, local_form_builder)
       inner_prefix = answer_object.new_record? ? "new_repeater_answers" : "repeater_answers"
       outer_prefix = local_form_builder.object_name
-      index = ""
     else
       answer_object = collect_answer_object(question, f)
       inner_prefix = answer_object.new_record? ? "new_answers" : "answers"
       outer_prefix = @event
+    end
+
+    if answer_object.new_record?
+      index = ""
+    else
+      # This worked fine when the index was always based off the @event,
+      # now that we have all sorts of elements which can have answers
+      # will this global index counter still work properly?
+
+      # Probably, as the point is just to increment
+      # Moreover, the dyanmic quesiton method checks if @object has an id and uses it
+      # Pretty repeatative, needs big refactoring
       @form_index = 0 unless @form_index
       index = @form_index += 1
     end
@@ -629,7 +642,7 @@ module FormBuilderDslHelper
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
 #      answer = form_elements_cache.answer(element, @event)
-      answer = collect_answer_object(question, local_form_builder)
+      answer = collect_answer_object(question, f)
       result << answer.text_answer unless answer.nil?
       result << "</div>"
 
