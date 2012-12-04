@@ -243,6 +243,10 @@ class StagedMessage < ActiveRecord::Base
       end
     end
 
+    if event.address and event.interested_party.person_entity.canonical_address.nil?
+      event.interested_party.person_entity.build_canonical_address(event.address.attributes.merge(:event_id => nil))
+    end
+
     unless self.patient.telephone_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_home.id}
       area_code, number, extension = self.patient.telephone_home
       event.interested_party.person_entity.telephones.build(:area_code => area_code,
@@ -271,14 +275,7 @@ class StagedMessage < ActiveRecord::Base
       person = PersonEntity.find(entity_id.to_i)
       event.copy_from_person(person)
     else
-      trisano_race_ids =
-        case patient.trisano_race_id
-        when Array
-          patient.trisano_race_id
-        else
-          [ patient.trisano_race_id ]
-        end
-
+      trisano_race_ids =  patient.trisano_race_id.is_a?(Array) ? patient.trisano_race_id :  [ patient.trisano_race_id ]
       event.build_interested_party
       event.interested_party.build_person_entity :race_ids => trisano_race_ids
       event.interested_party.person_entity.build_person( :last_name => self.patient.patient_last_name,
@@ -286,7 +283,6 @@ class StagedMessage < ActiveRecord::Base
                                                          :middle_name => self.patient.patient_middle_name,
                                                          :birth_date => self.patient.birth_date,
                                                          :birth_gender_id => self.patient.trisano_sex_id)
-
       unless patient.death_date.blank?
         event.interested_party.person_entity.person.date_of_death = patient.death_date
       end
@@ -295,13 +291,11 @@ class StagedMessage < ActiveRecord::Base
         event.interested_party.person_entity.person.ethnicity_id = patient.trisano_ethnicity_id
       end
 
-      self.set_address_and_phone(event)
-
       unless patient.primary_language.nil? or patient.primary_language.id.nil?
         event.interested_party.person_entity.person.primary_language_id = patient.primary_language.id
       end
     end
-
+    self.set_address_and_phone(event)
     event.build_jurisdiction unless event.jurisdiction
     event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
     event
