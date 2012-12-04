@@ -41,7 +41,6 @@ describe Answer do
     @answer.errors.on(:text_answer).should_not be_nil
   end
 
-=begin
   it 'should format a date-picker style date (i.e. January 12, 1987) as a YYYY-MM-DD date' do
     @answer.question.data_type = 'date'
     @answer.text_answer = 'January 12, 1987'
@@ -76,7 +75,14 @@ describe Answer do
     @answer.save!
     @answer.text_answer.should == '2009-01-21'
   end
-=end
+
+  it 'should move date_answer errors to text_answer' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '111123412341234'
+    @answer.valid?
+    @answer.errors.on('date_answer').should be_nil
+    @answer.errors.on('text_answer').should_not be_nil
+  end
 
   describe "constraints" do
 
