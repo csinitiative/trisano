@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul#main-window"
+                   width="994"
+                   height="706"
+                   screenX="0"
+                   screenY="24"
+                   sizemode="maximized" />
+  <RDF:Description RDF:about="chrome://browser/content/sanitize.xul#detailsExpander"
+                   class="expander-up" />
+  <RDF:Description RDF:about="chrome://browser/content/sanitize.xul">
+    <NC:persist RDF:resource="chrome://browser/content/sanitize.xul#detailsExpander"/>
+    <NC:persist RDF:resource="chrome://browser/content/sanitize.xul#itemList"/>
+    <NC:persist RDF:resource="chrome://browser/content/sanitize.xul#SanitizeDialog"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="chrome://browser/content/preferences/preferences.xul#BrowserPreferences"
+                   screenX="349"
+                   screenY="99"
+                   lastSelected="paneAdvanced" />
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul">
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#search-view"/>
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#viewGroup"/>
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#extensionsManager"/>
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#extensions-view"/>
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#themes-view"/>
+    <NC:persist RDF:resource="chrome://mozapps/content/extensions/extensions.xul#plugins-view"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#extensionsManager"
+                   width="520"
+                   height="380"
+                   sizemode="normal"
+                   screenX="0"
+                   screenY="24" />
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul">
+    <NC:persist RDF:resource="chrome://browser/content/browser.xul#main-window"/>
+    <NC:persist RDF:resource="chrome://browser/content/browser.xul#nav-bar"/>
+    <NC:persist RDF:resource="chrome://browser/content/browser.xul#PersonalToolbar"/>
+    <NC:persist RDF:resource="chrome://browser/content/browser.xul#sidebar-box"/>
+    <NC:persist RDF:resource="chrome://browser/content/browser.xul#sidebar-title"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul#nav-bar"
+                   collapsed="false" />
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#plugins-view"
+                   last-selected="urn:mozilla:item:libnullplugin.so" />
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#extensions-view"
+                   selected="true"
+                   last-selected="urn:mozilla:item:firebug@software.joehewitt.com" />
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#themes-view"
+                   last-selected="urn:mozilla:item:{972ce4c6-7e08-4474-a285-3208198ce6fd}" />
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul#sidebar-title"
+                   value="" />
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul#sidebar-box"
+                   sidebarcommand=""
+                   width=""
+                   src="" />
+  <RDF:Description RDF:about="chrome://browser/content/browser.xul#PersonalToolbar"
+                   collapsed="true" />
+  <RDF:Description RDF:about="chrome://browser/content/preferences/securityWarnings.xul#SecurityWarnings"
+                   screenX="25"
+                   screenY="197" />
+  <RDF:Description RDF:about="chrome://browser/content/preferences/securityWarnings.xul">
+    <NC:persist RDF:resource="chrome://browser/content/preferences/securityWarnings.xul#SecurityWarnings"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#search-view"
+                   last-selected="urn:mozilla:addons:search:https://addons.mozilla.org/firefox/downloads/file/136098/gtranslate-0.9-sm+tb+fx.xpi?src=api" />
+  <RDF:Description RDF:about="chrome://mozapps/content/extensions/extensions.xul#viewGroup"
+                   last-selected="extensions" />
+  <RDF:Description RDF:about="chrome://browser/content/sanitize.xul#SanitizeDialog"
+                   screenX="128"
+                   screenY="119" />
+  <RDF:Description RDF:about="chrome://browser/content/preferences/preferences.xul">
+    <NC:persist RDF:resource="chrome://browser/content/preferences/preferences.xul#BrowserPreferences"/>
+  </RDF:Description>
+  <RDF:Description RDF:about="chrome://browser/content/sanitize.xul#itemList"
+                   collapsed="false" />
+</RDF:RDF>

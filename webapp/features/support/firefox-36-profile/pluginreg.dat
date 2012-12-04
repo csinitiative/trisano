@@ -1,0 +1,14 @@
+Generated File. Do not edit.
+
+[HEADER]
+Version:0.11:$
+
+[PLUGINS]
+libnullplugin.so:$
+/home/brianb/code/trisano/webapp/features/support/firefox-36/plugins/libnullplugin.so:$
+1.0.0.15:$
+1354563218000:1:5:$
+The default plugin handles plugin data for mimetypes and extensions that are not specified and facilitates downloading of new plugins.:$
+Default Plugin:$
+1
+0:*:All types:.*:$
