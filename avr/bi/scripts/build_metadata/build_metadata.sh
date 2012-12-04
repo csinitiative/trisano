@@ -18,10 +18,10 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Path to JAVA_HOME
-export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre/
+export JAVA_HOME=/usr/lib/jvm/jre-1.6.0-openjdk
 
 # Path on the file system where the BI server was installed
-export BI_SERVER_PATH=/opt/avr/biserver-ee
+export BI_SERVER_PATH=/home/josh/space/pentaho-3.8/server/biserver-ee
 
 # Path for plugins
 export TRISANO_PLUGIN_DIRECTORY=/opt/avr/etl/plugins/
@@ -30,7 +30,7 @@ export TRISANO_PLUGIN_DIRECTORY=/opt/avr/etl/plugins/
 export TRISANO_DB_DRIVER="org.postgresql.Driver"
 
 # Credentials for warehouse database
-export TRISANO_DB_USER="trisano_user"
+export TRISANO_DB_USER="josh"
 export TRISANO_DB_PASSWORD="password"
 
 # JDBC connection information
@@ -40,9 +40,9 @@ export TRISANO_DB_NAME='avr_db'
 export TRISANO_JDBC_URL="jdbc:postgresql://${TRISANO_DB_HOST}:${TRISANO_DB_PORT}/${TRISANO_DB_NAME}"
 
 # URL that the BI server can is running on (needed to publish updates)
-export BI_SERVER_URL="https://localhost:18080"
+export BI_SERVER_URL="https://localhost:8080"
 export BI_PUBLISH_URL="${BI_SERVER_URL}/pentaho/RepositoryFilePublisher"
-export BI_PUBLISH_PASSWORD="publishpasswd"
+export BI_PUBLISH_PASSWORD="password"
 
 # User credentials for an admin on the BI server. (also needed for
 # publishing)
@@ -55,7 +55,7 @@ export PENTAHO_SECURITY_FILE=
 # for some things.
 cd $BI_SERVER_PATH/pentaho-solutions/TriSano
 
-CLASSPATH=$CLASSPATH:$BI_SERVER_PATH/tomcat/webapps/pentaho/WEB-INF/lib/jruby-complete-1.5.2.jar
+CLASSPATH=$CLASSPATH:/home/josh/devel/trisano/avr/bi/extensions/trisano/dist/jruby-complete-1.5.2.jar
 
 for i in $BI_SERVER_PATH/tomcat/lib/*; do
     CLASSPATH=$CLASSPATH:$i

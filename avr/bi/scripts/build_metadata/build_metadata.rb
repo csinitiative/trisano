@@ -476,13 +476,19 @@ def add_business_tables(model, event_type, meta, disease_group, dg, conn)
 end
 
 def disease_group_query
-  return "SELECT DISTINCT id, name FROM trisano.avr_groups_view WHERE name != 'TriSano'"
+  return %{
+    SELECT
+      DISTINCT id, name, morbidity_folder_number AS morb, assessment_folder_number AS asmt
+      FROM trisano.avr_groups_view
+        JOIN trisano.disease_group_numbers USING (name)
+      WHERE name != 'TriSano' ORDER BY name DESC}
 end
 
 def disease_groups(conn)
   groups = get_query_results(disease_group_query, conn) #.map { |a| a['name'] }
-  groups <<= { 'id' => 0, 'name' => 'TriSano' }
-  groups.each do |a| yield(a) end
+  #groups <<= { 'id' => 0, 'name' => 'TriSano' }
+  groups <<= { 'id' => 0, 'name' => 'TriSano', 'morb' => '', 'asmt' => '' }
+  return groups
 end
 
 def create_models(dg, model_name_str, dg_id, event_type, meta, conn)
@@ -539,6 +545,7 @@ def columns_query(tablename, schemaname)
 end
 
 def add_single_physical_column(pt, id, desc, data_type, target_column, formula)
+    puts "     -- New physical column: #{id}"
     pc = PhysicalColumn.new id
     descr = (desc == '' ? id : desc)
     descr.gsub!(/^col_/, '') if pt.get_target_table =~ /^fb_/
@@ -670,9 +677,9 @@ end
 
 if __FILE__ == $0
   FileUtils.rm 'metadata.xmi', :force => true
-  metadatadir = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage')
+  metadatadir = File.join(server_dir, 'metadata_storage')
   FileUtils.mkdir metadatadir if (not File.exist?(metadatadir))
-  metadataxmi = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', 'metadata.xmi')
+  metadataxmi = File.join(server_dir, 'metadata_storage', 'metadata.xmi')
   KettleEnvironment.init
 
   db_connection do |conn|
@@ -693,21 +700,23 @@ if __FILE__ == $0
     end
 
     i = 1
-    disease_groups(conn) do |dg|
+    disease_groups(conn).each do |dg|
       %w(A M).each do |event_type|
           FileUtils.rm Dir.glob('mdr.*'), :force => true
           meta = initialize_meta SchemaMeta.new
           # Create physical tables, and all physical columns
           create_physical_tables dg['name'], meta, conn
           create_models dg['name'], "#{dg['name']}#{ event_type == 'M' ? "" : " Assessments"}", dg['id'], event_type, meta, conn
-          outfile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.out")
-          xmifile = File.join(server_dir, 'pentaho-solutions', 'TriSano', 'metadata_storage', "dg#{i}_#{event_type}_metadata.xmi")
+          outfile = File.join(server_dir, 'metadata_storage', "dg#{i}_#{event_type}_metadata.out")
+          xmifile = File.join(server_dir, 'metadata_storage', "dg#{i}_#{event_type}_metadata.xmi")
           puts "Writing metadata for disease group '#{dg['name']}' and event type #{event_type} to #{xmifile}"
           save_metadata dg['name'], meta, outfile
           FileUtils.rm xmifile, :force => true
           FileUtils.mv(outfile, xmifile)
           FileUtils.cp(xmifile, metadataxmi)
-          folder = (dg['name'] == 'TriSano' and event_type == 'M') ? 'TriSano' : "TriSano#{i}"
+          fnum = event_type == 'M' ? dg['morb'] : dg['asmt']
+          folder = "TriSano#{fnum}"
+          #folder = (dg['name'] == 'TriSano' and event_type == 'M') ? 'TriSano' : "TriSano#{i}"
 
           files = [Java::JavaIo::File.new(metadataxmi)].to_java(Java::JavaIo::File)
           result = PublisherUtil.publish(publish_url, folder, files, publisher_password, bi_user, bi_password, true)
@@ -726,8 +735,8 @@ if __FILE__ == $0
               puts "**** **** **** METADATA NOT PUBLISHED! Please create the #{folder} directory in Pentaho, and re-run build_metadata."
             end
           end
-          i += 1
         end
+      i += 1 if dg['name'] != 'TriSano'
     end
 
     mark_etl_success conn

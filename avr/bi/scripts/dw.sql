@@ -40,11 +40,11 @@ BEGIN;
 
 SET search_path = staging, public;
 
-DROP INDEX first_name_trgm_ix;
-DROP INDEX full_name_fts_ix;
-DROP INDEX full_name_trgm_ix;
-DROP INDEX last_name_trgm_ix;
-    
+DROP INDEX IF EXISTS first_name_trgm_ix;
+DROP INDEX IF EXISTS full_name_fts_ix;
+DROP INDEX IF EXISTS full_name_trgm_ix;
+DROP INDEX IF EXISTS last_name_trgm_ix;
+
 COMMIT;
 
 BEGIN;
@@ -1909,6 +1909,17 @@ DELETE FROM notes
 UPDATE dw_morbidity_events SET patient_entity_id = -100 WHERE sensitive_disease;
 UPDATE dw_assessment_events SET patient_entity_id = -100 WHERE sensitive_disease;
 UPDATE dw_contact_events SET patient_entity_id = -100 WHERE sensitive_disease;
+
+INSERT INTO trisano.disease_group_numbers
+    SELECT
+        name,
+        nextval('trisano.disease_group_numbers_seq'),  -- Morbidity number
+        nextval('trisano.disease_group_numbers_seq')   -- Assessment number
+    FROM (
+        SELECT name FROM avr_groups
+            LEFT JOIN trisano.disease_group_numbers dgn USING (name)
+        WHERE dgn.morbidity_folder_number IS NULL ORDER BY name
+    ) f;
 
 COMMIT;
 

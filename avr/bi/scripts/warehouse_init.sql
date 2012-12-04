@@ -2290,7 +2290,13 @@ $$ LANGUAGE plpgsql;
 
 CREATE SEQUENCE trisano.disease_group_numbers_seq START WITH 1;
 
-CREATE TABLE trisano.disease_group_numbers (name VARCHAR(255), number INTEGER);
+CREATE TABLE trisano.disease_group_numbers (
+    name VARCHAR(255) PRIMARY KEY,
+    morbidity_folder_number INTEGER NOT NULL,
+    assessment_folder_number INTEGER NOT NULL);
+
+INSERT INTO trisano.disease_group_numbers
+    VALUES ('TriSano', nextval('disease_group_numbers_seq'), nextval('disease_group_numbers_seq'));
 
 SET search_path = population;
 
