@@ -166,8 +166,9 @@ module FormBuilderDslHelper
       result << "</div></fieldset><br/>"
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:section_element), :id => element.id)
     end
   end
@@ -185,8 +186,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
@@ -544,8 +546,9 @@ module FormBuilderDslHelper
       result << "</div>" unless ajax_render
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id)
     end
   end
@@ -584,8 +587,9 @@ module FormBuilderDslHelper
       result << "</div></fieldset><br/>"
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:section_element), :id => element.id)
     end
   end
@@ -606,8 +610,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+   rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
@@ -645,8 +650,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
@@ -672,8 +678,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:follow_up_element), :id => element.id)
     end
   end
@@ -720,8 +727,9 @@ module FormBuilderDslHelper
       result << "</div>" unless ajax_render
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id)
     end
   end
@@ -747,8 +755,9 @@ module FormBuilderDslHelper
       result << "</div>"
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return "Could not render section element (#{element.id})<br/>"
     end
   end
@@ -769,8 +778,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:group_element), :id => element.id)
     end
   end
@@ -798,8 +808,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:question_element), :id => element.id)
     end
   end
@@ -823,8 +834,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:follow_up_element), :id => element.id) + "<br/>"
     end
   end
@@ -858,8 +870,9 @@ module FormBuilderDslHelper
       end
 
       return result
-    rescue
+    rescue Exception => e
       logger.warn($!.message)
+      logger.debug(e.backtrace.join("\n"))
       return t(:could_not_render, :thing => t(:core_follow_up_element), :id => element.id) + "<br/>"
     end
   end
