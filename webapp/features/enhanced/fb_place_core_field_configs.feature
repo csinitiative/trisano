@@ -15,6 +15,6 @@ Feature: Place event form core field configs
     Then I should see all of the core field config questions
 
     When I answer all core field config questions
-    And I save the event
+    And I save and continue
     Then I should see all of the core field config questions
     And I should see all core field config answers

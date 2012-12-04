@@ -14,11 +14,11 @@ Feature: Contact event form core field configs
 
     When I am on the contact event edit page
      And I fill in enough contact event data to enable all core fields to show up in show mode
-     And I save the event
+     And I save and continue
      And I am on the contact event edit page
     Then I should see all of the core field config questions
 
     When I answer all core field config questions
-    And I save the event
+    And I save and continue
     Then I should see all of the core field config questions
     And I should see all core field config answers

@@ -14,5 +14,5 @@ Feature: Place event, viewing core field help text
     Then I should see help text for all place event core fields in edit mode
 
     When I fill in enough place event data to enable all core fields to show up in show mode
-    And I save the event
+    And I save and continue
     Then I should see help text for all place event core fields in show mode

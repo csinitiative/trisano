@@ -16,7 +16,7 @@ Feature: assessment event form core follow ups
     Then I should see all of the core follow up questions
 
     When I answer all core follow up questions
-    And I save the event
+    And I save and continue
     Then I should see all of the core follow up questions
     And I should see all follow up answers
 
@@ -26,7 +26,7 @@ Feature: assessment event form core follow ups
     Then I should not see any of the core follow up questions
     And I should not see any follow up answers
 
-    When I save the event
+    When I save and continue
     Then I should not see any of the core follow up questions
     And I should not see any follow up answers
 

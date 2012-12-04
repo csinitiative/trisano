@@ -167,6 +167,11 @@ When /^I save and continue$/ do
   @browser.wait_for_page_to_load
 end
 
+When /^I save and exit$/ do
+  @browser.click("//*[@id='save_and_exit_btn']")
+  @browser.wait_for_page_to_load
+end
+
 Then /^events list should show (\d+) events$/ do |expected_count|
   @browser.get_xpath_count("//div[@class='patientname']").should == expected_count
 end

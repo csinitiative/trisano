@@ -20,7 +20,7 @@ Feature: Creating new contact events
     And I fill in "City" with "Salt Lake City"
     And I select "Utah" from "State"
     And I fill in "New note" with "This is some contact."
-    And I save the event
+    And I save and continue
     Then I should see "Contact event was successfully created."
     And I should have a note that says "This is some contact."
     And I should have a note that says "Contact event created."
@@ -42,11 +42,11 @@ Feature: Creating new contact events
     And I fill in "contact_search_name" with "A name that will return no search results"
     And I press "Search" and wait to see "Create a new contact"
     And I follow "Create a new contact"
-    And I save the event
+    And I save and continue
     Then I should see "No information has been supplied for the interested party."
 
     When I fill in "Last name" with "Contacto"
-    And I save the event
+    And I save and continue
     Then I should see "Contact event was successfully created."
 
   Scenario: Creating a contact event from an existing person

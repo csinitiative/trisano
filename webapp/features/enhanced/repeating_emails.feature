@@ -17,8 +17,7 @@ Feature: Form fields for repeating core sections.
       | email         |
       | asdf@test.com |           
       | qwer@test.com |
-    And I save the event
-    And I navigate to the morbidity event show page
+    And I save and exit
     Then I should see "asdf@test.com"
     And  I should see "qwer@test.com"
     And  I navigate to the morbidity event edit page
@@ -41,12 +40,11 @@ Feature: Form fields for repeating core sections.
     When I enter the following email addresses: 
       | email         |
       | asdf@test.com |           
-    And I save the event
-    And I navigate to the morbidity event edit page
-    Then I should see all of the repeater core field config questions for each email address
-
-    When I navigate to the morbidity event show page
-    Then I should see all of the repeater core field config questions for each email address
+      | qwer@test.com |           
+    And I save and continue
+    Then I should see all of the repeater core field config questions for 2 email address
+    When I save and exit
+    Then I should see all of the repeater core field config questions for 2 email address
 
 
 
@@ -62,8 +60,7 @@ Feature: Form fields for repeating core sections.
       | email         |
       | asdf@test.com |           
       | qwer@test.com |
-    And I save the event
-    And I navigate to the assessment event show page
+    And I save and exit
     Then I should see "asdf@test.com"
     And  I should see "qwer@test.com"
     And I navigate to the assessment event edit page
@@ -127,8 +124,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see email address save and discard buttons
     And  I should see a link to "Add an Email Address"
 
-    When I save the event
-    And I navigate to the morbidity event show page
+    When I save and exit
     Then I should see "asdf@test.com"
     And  I should see "email before"
     And  I should see "email after"
@@ -152,9 +148,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see email address save and discard buttons
     And  I should see a link to "Add an Email Address"
 
-    When I save the event
-    And I navigate to the morbidity event show page
- 
+    When I save and exit
     Then I should not see "asdf@test.com"
     
   # Coresponds with #8 from original email
@@ -197,7 +191,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see a label "morbidity_event[interested_party][person_entity][email_addresses][email_address] before?"
 
     When I change the disease to match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for addition
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -211,7 +205,7 @@ Feature: Form fields for repeating core sections.
     Then I should see a label "morbidity_event[interested_party][person_entity][email_addresses][email_address] before?"
 
     When I change the disease to not match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for removal
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -227,8 +221,7 @@ Feature: Form fields for repeating core sections.
       | email         |
       | asdf@test.com |           
     And I navigate to the Clinical tab
-    And  I save the event
-    And  I navigate to the assessment event show page
+    And  I save and exit
     Then I should see "asdf@test.com"
 
 
@@ -261,12 +254,12 @@ Feature: Form fields for repeating core sections.
     When I enter the following email addresses: 
       | email         |
       | asdf@test.com |           
-    And  I save the event
+    And  I save and exit
     Then I should see "asdf@test.com"
 
     When I navigate to the morbidity event edit page
     And  I fill in "morbidity_event[interested_party][person_entity][email_addresses][email_address] before?" with "email before"
-    And  I save the event 
+    And  I save and exit 
     Then I should see "email before"
 
 

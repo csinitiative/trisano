@@ -17,8 +17,7 @@ Feature: Form fields for repeating core sections.
       | type  | area code | number    |
       | Home  | 555       | 555-5555  |           
       | Work  | 777       | 777-7777  |
-    And I save the event
-    And I navigate to the morbidity event show page
+    And I save and exit
     Then I should see "Home: (555) 555-5555"
     And  I should see "Work: (777) 777-7777"
     And  I navigate to the morbidity event edit page
@@ -42,12 +41,10 @@ Feature: Form fields for repeating core sections.
       | type  | area code | number    |
       | Home  | 555       | 555-5555  |           
       | Work  | 777       | 777-7777  |
-    And I save the event
-    And I navigate to the morbidity event edit page
-    Then I should see all of the repeater core field config questions for each telephone number
-
-    When I navigate to the morbidity event show page
-    Then I should see all of the repeater core field config questions for each telephone number
+    And I save and continue
+    Then I should see all of the repeater core field config questions for 2 telephone number
+    And I save and exit
+    Then I should see all of the repeater core field config questions for 2 telephone number
 
 
 
@@ -63,8 +60,7 @@ Feature: Form fields for repeating core sections.
       | type  | area code | number    |
       | Home  | 555       | 555-5555  |           
       | Work  | 777       | 777-7777  |
-    And I save the event
-    And I navigate to the assessment event show page
+    And I save and exit
     Then I should see "Home: (555) 555-5555"
     And  I should see "Work: (777) 777-7777"
     And I navigate to the assessment event edit page
@@ -128,8 +124,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see telephone save and discard buttons
     And  I should see a link to "Add a Telephone"
 
-    When I save the event
-    And I navigate to the morbidity event show page
+    When I save and exit
     Then I should see "Work: (555) 555-5555"
     And  I should see "patient phone before"
     And  I should see "patient phone after"
@@ -153,9 +148,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see telephone save and discard buttons
     And  I should see a link to "Add a Telephone"
 
-    When I save the event
-    And I navigate to the morbidity event show page
- 
+    When I save and exit
     Then I should not see "Work: (555) 555-5555"
     
   # Coresponds with #8 from original email
@@ -198,7 +191,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
 
     When I change the disease to match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for addition
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -212,7 +205,7 @@ Feature: Form fields for repeating core sections.
     Then I should see a label "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?"
 
     When I change the disease to not match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for removal
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -228,8 +221,7 @@ Feature: Form fields for repeating core sections.
       | type  | area code | number   |
       | Work  | 555       | 555-5555 |
     And I navigate to the Clinical tab
-    And  I save the event
-    And  I navigate to the assessment event show page
+    And  I save and exit
     Then I should see "Work: (555) 555-5555"
 
 
@@ -262,12 +254,12 @@ Feature: Form fields for repeating core sections.
     When I enter the following telephone numbers: 
       | type  | area code | number   |
       | Work  | 555       | 555-5555 |
-    And  I save the event
+    And  I save and exit
     Then I should see "Work: (555) 555-5555"
 
     When I navigate to the morbidity event edit page
     And  I fill in "morbidity_event[interested_party][person_entity][telephones][patient_telephone] before?" with "patient tele before"
-    And  I save the event 
+    And  I save and exit 
     Then I should see "patient tele before"
 
 
