@@ -113,7 +113,7 @@ class ContactEventsController < EventsController
   end
 
   def copy_address
-    @event = ContactEvent.find(params[:id])
+    @event = Event.find(params[:id])
     original_address = @event.parent_event.address
     #JSON to pass.  We shan't use a loop because we don't want all members.
     if original_address
@@ -136,7 +136,7 @@ class ContactEventsController < EventsController
   private
 
   def load_parent
-    @parent_event = MorbidityEvent.find(parent_id_from_params)
+    @parent_event = Event.find(parent_id_from_params)
   end
 
   def parent_id_from_params
