@@ -90,7 +90,7 @@ en:
           phone_section: Telephones/Email
           telephones: 
             name: All contact telephones
-            patient_telephone: Patient telephone
+            patient_telephone: Contact telephone
           email_addresses: 
             name: All Contact email addresses
             email_address: Contact email address
