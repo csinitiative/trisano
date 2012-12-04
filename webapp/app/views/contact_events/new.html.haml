@@ -24,7 +24,7 @@
   = save_buttons(@event)
 
 - content_for :tools do
-  = link_to t('back_to', :name => t('parent_event')), cmr_path(@event.parent_event)
+  = link_to t('back_to', :name => t('parent_event')), event_path(@event.parent_event)
 
 = error_messages_for :object => @event
 
