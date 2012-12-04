@@ -78,14 +78,6 @@ When /^I wait for the ajax request to finish$/ do
   end
 end
 
-When /^I save and exit$/ do
-  click_button "//input[@id='save_and_exit_btn']"
-end
-
-When /^I save and continue$/ do
-  click_button "//input[@id='save_and_continue_btn']"
-end
-
 When /^I save the event$/i do
   if @contact_event
     submit_form "edit_contact_event_#{@contact_event.id}"
