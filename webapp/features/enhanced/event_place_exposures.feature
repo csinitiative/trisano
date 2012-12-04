@@ -15,12 +15,12 @@ Feature: Managing place exposures on events
 
     When I add an existing place exposure
     And I add a new place exposure
-    And I save the event
+    And I save and continue
     Then I should see all added place exposures
 
     When I navigate to the morbidity event edit page
     And I check a place exposure to remove
-    And I save the event
+    And I save and continue
     Then I should see the removed place exposure as deleted
 
   @clean
@@ -36,7 +36,7 @@ Feature: Managing place exposures on events
 
    When I add an existing place exposure
     And I add a new place exposure
-    And I save the event
+    And I save and continue
     Then I should see all added place exposures
 
   @clean
@@ -45,7 +45,7 @@ Feature: Managing place exposures on events
     And a morbidity event exists in Bear River with the disease African Tick Bite Fever
     When I navigate to the morbidity event edit page
     And I add two new place exposures
-    And I save the event
+    And I save and continue
     Then I should see both new place exposures
 
   @clean
@@ -55,7 +55,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the morbidity event edit page
     And I add a new place exposure
-    And I save the event
+    And I save and continue
 
     When I navigate to the place event
     And I edit the place event
@@ -75,12 +75,12 @@ Feature: Managing place exposures on events
 
     When I add an existing place exposure
     And I add a new place exposure
-    And I save the event
+    And I save and continue
     Then I should see all added place exposures
 
     When I navigate to the assessment event edit page
     And I check a place exposure to remove
-    And I save the event
+    And I save and continue
     Then I should see the removed place exposure as deleted
 
   @clean
@@ -96,7 +96,7 @@ Feature: Managing place exposures on events
 
    When I add an existing place exposure
     And I add a new place exposure
-    And I save the event
+    And I save and continue
     Then I should see all added place exposures
 
   @clean
@@ -105,7 +105,7 @@ Feature: Managing place exposures on events
     And a assessment event exists in Bear River with the disease African Tick Bite Fever
     When I navigate to the assessment event edit page
     And I add two new place exposures
-    And I save the event
+    And I save and continue
     Then I should see both new place exposures
 
   @clean
@@ -115,7 +115,7 @@ Feature: Managing place exposures on events
 
     When I navigate to the assessment event edit page
     And I add a new place exposure
-    And I save the event
+    And I save and continue
 
     When I navigate to the place event
     And I edit the place event

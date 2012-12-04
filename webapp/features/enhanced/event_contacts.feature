@@ -14,12 +14,12 @@ Feature: Managing contacts on events
 
     When I add an existing contact
     And I add a new contact
-    And I save the event
+    And I save and continue
     Then I should see all added contacts
 
     When I navigate to the assessment event edit page
     And I check a contact to remove
-    And I save the event
+    And I save and continue
     Then the removed contact should be struckthrough
 
   Scenario: Adding contacts to an assessment event in edit mode
@@ -34,7 +34,7 @@ Feature: Managing contacts on events
 
     When I add an existing contact
     And I add a new contact
-    And I save the event
+    And I save and continue
     Then I should see all added contacts
 
   Scenario: Adding and removing contacts to a morbidity event in new mode
@@ -48,12 +48,12 @@ Feature: Managing contacts on events
 
     When I add an existing contact
     And I add a new contact
-    And I save the event
+    And I save and continue
     Then I should see all added contacts
 
     When I navigate to the morbidity event edit page
     And I check a contact to remove
-    And I save the event
+    And I save and continue
     Then the removed contact should be struckthrough
 
   Scenario: Adding contacts to a morbidity event in edit mode
@@ -68,5 +68,5 @@ Feature: Managing contacts on events
 
     When I add an existing contact
     And I add a new contact
-    And I save the event
+    And I save and continue
     Then I should see all added contacts

@@ -18,7 +18,7 @@ Feature: Form fields for repeating core sections.
       | Allen Memorial Hospital   |
       | Alta View Hospital        |
       | American Fork Hospital    |
-    And I save the event
+    And I save and continue
     And I navigate to the morbidity event show page
     Then I should see the following in order:
       | Allen Memorial Hospital |
@@ -46,7 +46,7 @@ Feature: Form fields for repeating core sections.
       | Allen Memorial Hospital   |
       | Alta View Hospital        |
       | American Fork Hospital    |
-    And I save the event
+    And I save and continue
     And I navigate to the morbidity event edit page
     Then I should see all of the repeater core field config questions for each hospitalization
 
@@ -68,7 +68,7 @@ Feature: Form fields for repeating core sections.
       | Allen Memorial Hospital   |
       | Alta View Hospital        |
       | American Fork Hospital    |
-    And I save the event
+    And I save and continue
     And I navigate to the morbidity event show page
     Then I should see the following in order:
       | Allen Memorial Hospital |
@@ -141,7 +141,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see hospitalization save and discard buttons
     And  I should see a link to "Add a Hospitalization Facility"
 
-    When I save the event
+    When I save and continue
     And I navigate to the morbidity event show page
     Then I should see "Allen Memorial Hospital"
     And  I should see "entity before"
@@ -180,7 +180,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see hospitalization save and discard buttons
     And  I should see a link to "Add a Hospitalization Facility"
 
-    When I save the event
+    When I save and continue
     And I navigate to the morbidity event show page
  
     Then I should not see "Allen Memorial Hospital"
@@ -225,7 +225,7 @@ Feature: Form fields for repeating core sections.
     Then I should not see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
 
     When I change the disease to match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for addition
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -240,7 +240,7 @@ Feature: Form fields for repeating core sections.
     Then I should see a label "morbidity_event[hospitalization_facilities][hospitals_participation][admission_date] before?"
 
     When I change the disease to not match the published form
-    And  I save the event
+    And  I save and continue
     And  I check the form for removal
     And  I click and confirm the "Change Forms" button
     And  I navigate to the morbidity event edit page
@@ -256,7 +256,7 @@ Feature: Form fields for repeating core sections.
       | name                      |
       | Allen Memorial Hospital   |
     And I navigate to the Demographic tab
-    And  I save the event
+    And  I save and continue
     And  I navigate to the assessment event show page
     Then I should see "Allen Memorial Hospital"
 
@@ -292,12 +292,12 @@ Feature: Form fields for repeating core sections.
     When I enter the following hospitalizations: 
       | name                      |
       | Allen Memorial Hospital   |
-    And  I save the event
+    And  I save and continue
     Then I should see "Allen Memorial Hospital"
 
     When I navigate to the morbidity event edit page
     And  I fill in "morbidity_event[hospitalization_facilities][secondary_entity_id] before?" with "entity before"
-    And  I save the event 
+    And  I save and continue 
     Then I should see "entity before"
  
   Scenario: Editing a CMR with repeater core forms applied, save hospitalization with invalid data.
