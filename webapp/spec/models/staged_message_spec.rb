@@ -498,6 +498,18 @@ ARUP1
         @event = @staged_message.new_event_from
         @event.address.county.should == external_codes(:county_salt_lake)
       end
+
+      it "should fill in the person's address if it's not present" do
+        a = @event.address
+        pa = @event.interested_party.person_entity.canonical_address
+        pa.should_not be_blank
+        pa.street_number.should == a.street_number
+        pa.unit_number.should == a.unit_number
+        pa.street_name.should == a.street_name
+        pa.city.should == a.city
+        pa.state_id.should == a.state_id
+        pa.postal_code.should == a.postal_code
+      end
     end
 
     describe "with a record missing address and phone" do
