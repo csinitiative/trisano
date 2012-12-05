@@ -1060,12 +1060,50 @@
   code_name: yesno
   parent_key: contact_event[pregnancy_status_section]
 
+# Perhaps now invalid, a left over from before support for multiple
+# treatments
 - help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[treatments]
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
   parent_key: morbidity_event[treatments_section]
 
 - help_text:
@@ -1644,12 +1682,49 @@
   parent_key: morbidity_event[labs_section]
   required_for_section: true
 
+# Perhaps now invalid
 - help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: contact_event
   field_type: drop_down
   key: contact_event[treatments]
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
   parent_key: contact_event[treatments_section]
 
 - help_text:
@@ -2407,7 +2482,7 @@
   field_type: section
   event_type: assessment_event
   key: assessment_event[treatments_section]
-  
+
 - parent_key: assessment_event[clinical_tab]
   help_text: 
   fb_accessible: false
@@ -2823,6 +2898,7 @@
   field_type: single_line_text
   key: assessment_event[interested_party][risk_factor][risk_factors]
   
+# Perhaps now invalid
 - parent_key: assessment_event[treatments_section]
   help_text: 
   fb_accessible: true
@@ -2830,6 +2906,42 @@
   event_type: assessment_event
   field_type: drop_down
   key: assessment_event[treatments]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
   
 - parent_key: assessment_event[other_section]
   help_text: 
@@ -3486,6 +3598,42 @@
   field_type: section
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
   
 - parent_key: morbidity_and_assessment_event[clinical_tab]
   help_text: 

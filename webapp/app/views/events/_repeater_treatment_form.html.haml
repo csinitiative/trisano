@@ -1,0 +1,4 @@
+- fields_for @event, :builder => ExtendedFormBuilder do |event_form|
+  - event_form.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |interested_party|
+    - interested_party.fields_for(:treatments, @treatment, :child_index => @event.interested_party.treatments.length, :builder => ExtendedFormBuilder) do |treatment_form|
+      = render :partial => "events/treatment", :locals => { :f => treatment_form }

@@ -73,6 +73,11 @@ en:
         hospitalized_id: Hospitalized
       treatments: Treatments
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment given
+          treatment_id: Treatment
+          treatment_date: Date of treatment
+          stop_treatment_date: Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -225,6 +230,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment given
+          treatment_id: Treatment
+          treatment_date: Date of treatment
+          stop_treatment_date: Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -419,6 +429,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment given
+          treatment_id: Treatment
+          treatment_date: Date of treatment
+          stop_treatment_date: Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -613,6 +628,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment given
+          treatment_id: Treatment
+          treatment_date: Date of treatment
+          stop_treatment_date: Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors

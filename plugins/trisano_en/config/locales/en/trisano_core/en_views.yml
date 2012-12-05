@@ -459,6 +459,11 @@ en:
   phone: "Phone"
   clinicians: "Clinicians"
   no_clinicians_for_event: "No clinicians have been recorded for this event"
+  treatment_given_yn_id: "Treatment given"
+  treatment_name: "Treatment"
+  treatment_date: "Date of treatment"
+  stop_treatment_date: "Stop date of treatment" 
+  
 # health facilities
   no_hospitalized_health_facilities: "No hospitalized health facilities have been recorded for this event"
   hospitalized_health_facilities: "Hospitalized Health Facilities"

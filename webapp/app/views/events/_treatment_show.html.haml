@@ -1,0 +1,36 @@
+-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+-#
+-# This file is part of TriSano.
+-#
+-# TriSano is free software: you can redistribute it and/or modify it under the terms of the
+-# GNU Affero General Public License as published by the Free Software Foundation, either
+-# version 3 of the License, or (at your option) any later version.
+-#
+-# TriSano is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+-# See the GNU Affero General Public License for more details.
+-#
+-# You should have received a copy of the GNU Affero General Public License along with TriSano.
+-# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+
+%li{:class => 'treatment', :style => "clear: both;"}
+  %table
+    %tr
+      %td
+        %span{:class => "horiz"}
+          - core_element_show :treatment_given_yn_id, f, :horiz do
+            = f.label :treatment_given_yn_id
+            = h(f.object.safe_call_chain(:treatment_given_yn, :code_description))
+
+          - core_element_show :treatment_id, f, :horiz do
+            = f.label :treatment_name
+            = h(f.object.safe_call_chain(:treatment, :treatment_name))
+
+          - core_element_show :treatment_date, f, :horiz do
+            = f.label :treatment_date
+            = h(f.object.safe_call_chain(:treatment_date))
+
+          - core_element_show :stop_treatment_date, f, :horiz do
+            = f.label :stop_treatment_date
+            = h(f.object.safe_call_chain(:stop_treatment_date))
+  %hr

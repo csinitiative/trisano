@@ -13,14 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--core_section :treatments_section, f do
-  -unless @event.safe_call_chain(:disease_event, :disease, :treatment_lead_in).blank?
-    =h @event.disease_event.disease.treatment_lead_in
-
-  -core_element_show :treatments, f, 'vert-break' do
-    - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
-      - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
-        =render :partial => "events/treatment_show", :locals => { :f => treatment_form}
-
--if @event.supports_encounter_specific_treatments?
-  =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }
+-core_element_print :treatments, f, 'vert-break' do
+  - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
+    - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
+      =render :partial => "events/treatment_print.html.haml", :locals => { :f => treatment_form}

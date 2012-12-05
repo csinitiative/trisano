@@ -62,7 +62,7 @@ Given /^a (.+) event with with a form with repeating core fields and email addre
   And "a #{event_type} event with with a form with repeating core fields"
   And   "I navigate to the #{event_type} event edit page"
   add_email(@browser, {:email => "asdf@test.com"})
-  And   "I save the event"
+  And   "I save and exit"
 end
 
 Then /^I should see (\d+) blank email address form$/ do |count|
