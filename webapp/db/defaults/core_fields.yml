@@ -2174,6 +2174,42 @@
 - help_text:
   fb_accessible: true
   can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs]

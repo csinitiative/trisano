@@ -17,6 +17,14 @@
 
 class EncounterEvent < HumanEvent
 
+  before_create do |encounter|
+    # Autmoatic form assignment requires a disease event be present,
+    # but one is not available before creating, so we setup the object
+    # here for convience
+    parent_event = encounter.parent_event
+    encounter.disease_event = parent_event.disease_event if parent_event
+  end
+
   after_create do |encounter|
     parent_event = encounter.parent_event
     encounter.build_interested_party(parent_event.interested_party.attributes) unless parent_event.interested_party.nil?

@@ -484,7 +484,7 @@ class Event < ActiveRecord::Base
   end
 
   def can_receive_auto_assigned_forms?
-    if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil? || self.undergone_form_assignment
+    if self.undergone_form_assignment || self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
       return false
     else
       return true

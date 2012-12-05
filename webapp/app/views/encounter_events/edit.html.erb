@@ -17,6 +17,9 @@ You should have received a copy of the GNU Affero General Public License along
 with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 %>
 
+<%= javascript_include_tag 'events_highlight_error_tabs.js' %>
+<%= javascript_include_tag 'pages/cmrs/modified_tabs.js' %>
+
 <% content_for :title do %>
   <%= t('edit_thing', :name => t('encounter_event')) %>
 <% end %>
@@ -44,6 +47,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 <% form_for(setup_human_event_tree(@event), :url => encounter_event_path(@event), :builder => ExtendedFormBuilder, :html => { :onsubmit => "this.action = build_url_with_tab_index(this.action);" } ) do |event_form| %>
   <%  @event_form = event_form %>
+
+  <%= event_form.hidden_field :id, :id => "id" %>
 
   <% tabbed_content(encounter_event_tabs, @tab_index) do %>
     <% core_tab(:encounter_tab, event_form) do -%>

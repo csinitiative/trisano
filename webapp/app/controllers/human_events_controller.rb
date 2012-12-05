@@ -19,7 +19,7 @@ class HumanEventsController < EventsController
   before_filter :can_update?, :only => [:treatments, :patient_email_addresses, :patient_telephones, :hospitalization_facilities]
 
   def treatments
-    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event] || params[:encounter_event]
     raise "No event params posted" if event_params.nil?
 
 
