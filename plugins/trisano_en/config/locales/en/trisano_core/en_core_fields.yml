@@ -522,6 +522,12 @@ en:
           specimen_source: Lab results | Specimen source
       treatments_section: Treatments
       treatments: Encounter treatments
+      interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment given
+          treatment_id: Treatment
+          treatment_date: Date of treatment
+          stop_treatment_date: Date treatment stopped
       event_notes_section: Event Notes
       participations_encounter:
         user_id: Investigator
