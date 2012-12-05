@@ -379,16 +379,6 @@ module FormBuilderDslHelper
     question_style = question.style.blank? ? "vert" : question.style
     result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
-
-
-
-=begin
-    error_messages = error_messages_for(:answer_object, :header_message => "#{pluralize(answer_object.errors.count, "error")} prohibited this from being saved")
-    error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
-    error_messages.insert(0, "<br/>") if error_messages.present?
-    result << error_messages
-=end
-
     if !local_form_builder.nil? && local_form_builder.repeater_form?
       answer_object = collect_answer_object(question, local_form_builder)
       inner_prefix = answer_object.new_record? ? "new_repeater_answers" : "repeater_answers"
