@@ -77,10 +77,6 @@ class AssessmentEventsController < EventsController
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
           @event.add_note(@event.instance_eval(@event.states(@event.state).meta[:note_text]))
         end
-        @event.hospitalization_facilities.each do |hospital|
-          hospital.create_hospitals_participation unless hospital.hospitals_participation
-        end
-        @event.reload
         @event.create_form_answers_for_repeating_form_elements
         @event.try(:address).try(:establish_canonical_address)
         flash[:notice] = t("ae_created")
