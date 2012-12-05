@@ -77,7 +77,7 @@ Given /^a (.+) event with with a form with repeating core fields and hospitaliza
   And   "I navigate to the #{event_type} event edit page"
   hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name
   add_hospital(@browser, {:name => hospital_name})
-  And   "I save the event"
+  And   "I save and exit"
 end
 
 Then /^I should see (\d+) blank hospitalization form$/ do |count|

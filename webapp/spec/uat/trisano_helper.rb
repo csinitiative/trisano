@@ -720,10 +720,12 @@ module TrisanoHelper
   def add_treatment(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
     browser.click("link=Add a Treatment") unless index == 1
-    sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment_name]')]",    attributes[:treatment_name])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
+    treatment_given_id = browser.get_attribute "//li[@class='treatment'][#{index}]//label[text()='Treatment given']/@for"
+    browser.select(treatment_given_id, "label=#{attributes[:treatment_given]}")
+    treatment_name_id = browser.get_attribute "//li[@class='treatment'][#{index}]//label[text()='Treatment']/@for"
+    browser.select(treatment_name_id, "label=#{attributes[:treatment_name]}")
+    treatment_date_field_id = browser.get_attribute("//li[@class='treatment'][#{index}]//label[text()='Date of treatment']/@for")
+    browser.type(treatment_date_field_id, attributes[:treatment_date])
   end
 
   def add_clinician(browser, attributes, index = 1)

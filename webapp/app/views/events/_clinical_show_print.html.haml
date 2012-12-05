@@ -105,7 +105,7 @@
   %br
 
 - core_element_print :treatments, event_form, :vert do
-  = render :partial => 'events/treatments_list_print.html.haml', :locals => { :event => @event }
+  = render :partial => 'events/treatments_print.html.haml', :locals => { :f => event_form }
 
 %span.subsection-header=t 'clinicians'
 - core_element_print :clinicians, event_form, :vert do

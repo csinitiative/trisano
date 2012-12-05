@@ -16,7 +16,31 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEventsController < EventsController
-  before_filter :can_update?, :only => [:hospitalization_facilities, :patient_telephones, :patient_email_addresses]
+  before_filter :can_update?, :only => [:treatments, :patient_email_addresses, :patient_telephones, :hospitalization_facilities]
+
+  def treatments
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+    raise "No event params posted" if event_params.nil?
+
+
+    repeater_attr = event_params[:interested_party_attributes][:treatments_attributes]
+    raise "More than one repeater submitted: #{repeater_attr.inspect}" if repeater_attr.each_value.count != 1
+    # Because we only ever submit one repeater, it's ok to just take the first
+    repeater_attr = repeater_attr.each_value.first
+
+    @treatment = @event.interested_party.treatments.build(repeater_attr)
+
+    respond_to do |format|
+      if @treatment.save
+        redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
+        redis.delete_matched("views/events/#{@event.id}/edit/clinical_tab")
+        format.js   { render :partial => "events/repeater_treatment_form", :status => :ok }
+      else
+        format.js   { render :partial => "events/repeater_treatment_form", :status => :unprocessable_entity }
+      end
+    end    
+
+  end
 
   def patient_email_addresses
     event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]

@@ -62,7 +62,7 @@ Given /^a (.+) event with with a form with repeating core fields and telephones$
   And "a #{event_type} event with with a form with repeating core fields"
   And   "I navigate to the #{event_type} event edit page"
   add_telephone(@browser, {:type => "Work", "area code" => "555", :number => "555-5555"})
-  And   "I save the event"
+  And   "I save and exit"
 end
 
 Then /^I should see (\d+) blank telephone form$/ do |count|
