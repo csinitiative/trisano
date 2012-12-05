@@ -82,6 +82,11 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     codes = []
     html_options[:class] = "required" if question_element.is_required?
 
+    error_messages = @template.error_messages_for(:answer, :header_message => "#{@template.pluralize(@object.errors.count, "error")} prohibited this from being saved")
+    error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
+    error_messages.insert(0, "<br/>") if error_messages.present?
+    result += error_messages
+
     input_element = case question.data_type
     when :single_line_text
       unless (question.size.nil?)

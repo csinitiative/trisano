@@ -156,11 +156,17 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
       @template.stubs(:select).returns('')
       @template.stubs(:hidden_field_tag).returns('')
       @template.stubs(:content_tag).returns('')
+      @template.stubs(:pluralize).returns('')
+      @template.stubs(:error_messages_for).returns('')
+      errors = mock('errors') do
+        stubs(:count).returns(0)
+      end
       object = mock('answer') do
         stubs(:id).returns(1)
         stubs(:question_id).returns(1)
         stubs(:new_record?).returns(true)
         stubs(:text_answer).returns('some answer')
+        stubs(:errors).returns(errors)
       end
       question = mock('question') do
         stubs(:id).returns(1)
