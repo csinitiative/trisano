@@ -13,7 +13,6 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
--core_element_print :treatments, f, 'vert-break' do
-  - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
-    - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
-      =render :partial => "events/treatment_print.html.haml", :locals => { :f => treatment_form}
+- f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
+  - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
+    =render :partial => "events/treatment_print.html.haml", :locals => { :f => treatment_form}

@@ -20,7 +20,7 @@
   -core_element_show :treatments, f, 'vert-break' do
     - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
       - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
-        =render :partial => "events/treatment_show", :locals => { :f => treatment_form}
+        =render :partial => "events/treatment_show", :locals => { :f => treatment_form }
 
 -if @event.supports_encounter_specific_treatments?
   =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }
