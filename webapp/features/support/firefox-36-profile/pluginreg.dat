@@ -1,14 +1,27 @@
 Generated File. Do not edit.
 
 [HEADER]
-Version:0.11:$
+Version:0.15:$
+Arch:x86_64-gcc3:$
 
 [PLUGINS]
-libnullplugin.so:$
-/home/brianb/code/trisano/webapp/features/support/firefox-36/plugins/libnullplugin.so:$
-1.0.0.15:$
-1354563218000:1:5:$
-The default plugin handles plugin data for mimetypes and extensions that are not specified and facilitates downloading of new plugins.:$
-Default Plugin:$
+libnpgtpo3dautoplugin.so:$
+/opt/google/talkplugin/libnpgtpo3dautoplugin.so:$
+:$
+1351528763000:0:1:$
+Google Talk Plugin Video Accelerator version:0.1.44.23:$
+Google Talk Plugin Video Accelerator:$
 1
-0:*:All types:.*:$
+0:application/vnd.gtpo3d.auto:O3D MIME::$
+libnpgoogletalk.so:$
+/opt/google/talkplugin/libnpgoogletalk.so:$
+:$
+1351528762000:0:1:$
+Version: 3.10.2.0:$
+Google Talk Plugin:$
+1
+0:application/googletalk:Google Talk Plugin:googletalk:$
+
+[INVALID]
+/home/brianb/.mozilla/plugins/libnpjp2.so:$
+0:$
