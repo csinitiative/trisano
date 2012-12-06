@@ -631,8 +631,7 @@ module FormBuilderDslHelper
       result << "<label>#{question.question_text}&nbsp;"
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
-#      answer = form_elements_cache.answer(element, @event)
-      answer = collect_answer_object(question, f)
+      answer = collect_answer_object(question, local_form_builder)
       result << answer.text_answer unless answer.nil?
       result << "</div>"
 
@@ -797,7 +796,6 @@ module FormBuilderDslHelper
       question_style = question.style.blank? ? "vert" : question.style
       result = "<div id='question_investigate_#{element.id}' class='#{question_style}'>"
       result << "<span class='print-label'>#{question.question_text}:</span>&nbsp;"
-#      answer = form_elements_cache.answer(element, @event)
       answer = collect_answer_object(question, local_form_builder)
       result << "<span class='print-value'>#{answer.text_answer}</span>" unless answer.nil?
       result << "</div>"
