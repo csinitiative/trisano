@@ -468,7 +468,6 @@ class HumanEvent < Event
         proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id)
         raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
         self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
-        self.add_note note
         primary_changed = true
       end
 
@@ -490,6 +489,7 @@ class HumanEvent < Event
         self.add_forms(applicable_forms)
       end
 
+      self.add_note(note, :brief, :user => User.current_user) unless note.blank?
       reload # Any existing references to this object won't see these changes without this
     end
     return primary_changed

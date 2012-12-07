@@ -21,6 +21,7 @@ class UsersController < AdminController
     :shortcuts_edit,
     :shortcuts_update,
     :settings,
+    :brief_notes,
     :email_addresses,
     :create_email_address,
     :edit_email_address,
@@ -78,6 +79,17 @@ class UsersController < AdminController
         format.html { render :action => "new" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+
+  def brief_notes
+    @show_brief_note = (User.current_user.user_settings || {})[:show_brief_note]
+    if request.post?
+      User.current_user.user_settings ||= {}
+      User.current_user.user_settings[:show_brief_note] = params[:show_brief_note]
+      User.current_user.save
+      flash[:notice] = "Successfully saved."
+      redirect_to brief_notes_path
     end
   end
 

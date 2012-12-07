@@ -17,7 +17,6 @@
 - if @event.notes.empty?
   %b=t('new_record_no_notes')
 - else
-  %b=t 'earlier_notes'
   = render :partial => 'event_notes/filter_nav', :locals => { :notes => @event.notes, :mode => 'edit' }
 
   #existing-notes

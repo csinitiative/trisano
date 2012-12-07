@@ -179,6 +179,8 @@ en:
   clinical_notes: 'Clinical Notes'
   administrative_notes: 'Administrative Notes'
   administrative: 'Administrative'
+  brief_notes: 'Brief Notes'
+  brief: 'Brief'
   all: 'All'
   print: 'Print'
   close: 'Close'
@@ -940,6 +942,8 @@ en:
   keyboard_shortcuts: "Keyboard Shortcuts"
   update_shortcuts: "Update Shortcuts"
   general: "General"
+  manage_brief_notes: "Manage Brief Notes"
+  display_brief_note: "Display the latest Brief Note for a CMR in the Status column on the Events List"
   edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
   manage_email_addresses: "Manage E-Mail Addresses"
   current_email_addresses: "Current E-Mail Addresses"

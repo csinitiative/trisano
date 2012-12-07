@@ -85,7 +85,8 @@ module UsersHelper
   def settings_menu
     [[:general,
       [ link_to(t(:edit_keyboard_shortcuts), shortcuts_edit_path),
-        link_to(t(:manage_email_addresses), email_addresses_path) ]
+        link_to(t(:manage_email_addresses), email_addresses_path),
+        link_to(t(:manage_brief_notes), brief_notes_path)]
     ]]
   end
 

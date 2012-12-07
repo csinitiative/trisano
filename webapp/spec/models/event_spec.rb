@@ -289,6 +289,16 @@ describe MorbidityEvent do
         @event.jurisdiction.place_entity.should == @jurisdiction
         @event.current_state.name.should == :assigned_to_lhd
       end
+
+      it "should assign a brief note" do
+        @event.jurisdiction.stubs(:allows_current_user_to?).returns(true)
+        @event.assign_to_lhd(@jurisdiction, [], "TEST NOTE")
+        @event.save
+        @event.reload
+        @event.notes.size.should == 1
+        @event.notes.first.note.should == "TEST NOTE"
+        @event.notes.first.note_type.should == "brief"
+      end
     end
 
     describe "with bad parameters" do

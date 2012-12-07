@@ -55,7 +55,7 @@ class Event < ActiveRecord::Base
   has_many :forms, :through => :form_references
   has_many :answers, :autosave => true, :include => [:question]
   has_many :tasks, :order => 'due_date ASC'
-  has_many :notes, :order => 'created_at ASC', :dependent => :destroy
+  has_many :notes, :order => 'created_at DESC', :dependent => :destroy
   has_many :attachments, :order => 'updated_at DESC'
 
   has_many :participations
@@ -282,10 +282,14 @@ class Event < ActiveRecord::Base
 
   def add_note(message, *note_type_and_options)
     options = note_type_and_options.extract_options!
-    note_type = note_type_and_options.first || 'administrative'
+    note_type = note_type_and_options.first.blank? ? 'administrative' : note_type_and_options.first.to_s
     note = Note.new options.merge(:note => message, :note_type => note_type)
     self.notes << note
     note
+  end
+
+  def brief_notes
+    self.notes.select {|n| n.note_type == :brief.to_s}
   end
 
   def eager_load_answers
