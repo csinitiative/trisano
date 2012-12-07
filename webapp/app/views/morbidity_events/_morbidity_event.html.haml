@@ -44,7 +44,12 @@
           = h(morbidity_event.associated_jurisdictions.map { |j| j.short_name }.join(", "))
   %td
     %b= h(morbidity_event.state_description)
-
+    - if morbidity_event.brief_notes.size > 0 and User.current_user.show_brief_note?
+      %div{:id => 'brief_note'}
+        %small
+          =ct 'brief_note'
+          &nbsp;
+          %b= h(morbidity_event.brief_notes.first.note)
     - queue_name = (view_mode == :index) ? morbidity_event['queue_name'] : morbidity_event.try(:event_queue).try(:queue_name)
     - unless queue_name.blank?
       %div{:id => 'queue_info'}

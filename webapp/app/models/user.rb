@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   serialize :event_view_settings, Hash
   serialize :task_view_settings, Hash
   serialize :shortcut_settings, Hash
+  serialize :user_settings, Hash
 
   before_validation_on_create :set_initial_status
   after_validation :clear_base_error
@@ -226,6 +227,10 @@ class User < ActiveRecord::Base
 
   def self.current_user
     Thread.current[:user]
+  end
+
+  def show_brief_note?
+    (read_attribute(:user_settings) || {})[:show_brief_note]
   end
 
   def task_view_settings

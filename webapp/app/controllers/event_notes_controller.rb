@@ -24,10 +24,9 @@ class EventNotesController < ApplicationController
     @mode = params[:mode].blank? ? 'show' : params[:mode]
     conditions = ["event_id = ?", @event.id]
     unless params[:note_type].blank?
-      conditions[0] << " AND note_type = ?"
-      conditions << params[:note_type]
+      conditions[0] << " AND note_type IN (?)"
+      conditions << params[:note_type].split(", ")
     end
-    @notes = Note.find(:all, :conditions => conditions, :order => "created_at ASC")
+    @notes = Note.find(:all, :conditions => conditions, :order => "created_at DESC")
   end
-  
 end

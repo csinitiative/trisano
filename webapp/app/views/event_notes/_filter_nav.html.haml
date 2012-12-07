@@ -16,6 +16,8 @@
 &nbsp;&nbsp;&nbsp;
 = link_to_remote(t('all'), { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :mode => mode }, :method => :get }, { :id => 'all-notes' } )
 &nbsp;|&nbsp;
-= link_to_remote(t('administrative'), { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'administrative', :mode => mode }, :method => :get }, { :id => 'admin-notes' } )
+= link_to_remote(t('administrative'), { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'administrative, brief', :mode => mode }, :method => :get }, { :id => 'admin-notes' } )
 &nbsp;|&nbsp;
 = link_to_remote(t('clinical'), { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'clinical', :mode => mode }, :method => :get }, { :id => 'clinical-notes' } )
+&nbsp;|&nbsp;
+= link_to_remote(t('brief'), { :url => { :controller => "event_notes", :action => "index", :event_id => @event.id, :note_type => 'brief', :mode => mode }, :method => :get }, { :id => 'brief-notes' } )

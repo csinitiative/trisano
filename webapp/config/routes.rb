@@ -63,6 +63,8 @@ ActionController::Routing::Routes.draw do |map|
   map.shortcuts 'users/shortcuts', :controller => 'users', :action => 'shortcuts', :conditions => { :method => :get } #always your own user
   map.shortcuts 'users/shortcuts', :controller => 'users', :action => 'shortcuts_update', :conditions => { :method => :put }
   map.shortcuts_edit 'users/shortcuts/edit', :controller => 'users', :action => 'shortcuts_edit'
+  map.brief_notes 'users/brief_notes', :controller => 'users', :action => 'brief_notes', :conditions => { :method => :get }
+  map.brief_notes 'users/brief_notes', :controller => 'users', :action => 'brief_notes', :conditions => { :method => :post }
 
   map.email_addresses 'users/email_addresses', :controller => 'users', :action => 'create_email_address', :conditions => { :method => :post }
   map.email_addresses 'users/email_addresses', :controller => 'users', :action => 'email_addresses'

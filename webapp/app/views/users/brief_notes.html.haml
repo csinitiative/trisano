@@ -1,0 +1,11 @@
+%table.list
+  %tbody
+    %tr
+      %th.forminformation
+        =t 'brief_notes'
+- form_tag({:action => "brief_notes"}, :method => "post", :id => "brief_notes_form") do |f|
+  %table.list
+    %tr
+      =check_box_tag "show_brief_note", true, @show_brief_note
+      =t('display_brief_note')
+  = submit_tag
