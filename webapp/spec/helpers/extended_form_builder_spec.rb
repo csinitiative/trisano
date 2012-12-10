@@ -276,6 +276,20 @@ describe ExtendedFormBuilder::CorePath do
     end
   end
 
+  shared_examples_for "a compound core path" do
+    it "should generate the default (bracketed) form (for html names)" do
+      @core_path.to_s.should == 'morbidity_and_assessment_event[interested_party][person_entity]'
+    end
+
+    it "should generate an underscored form (for html ids)" do
+      @core_path.underscore.should == 'morbidity_and_assessment_event_interested_party_person_entity'
+    end
+
+    it "should return the first segment" do
+      @core_path.first.should == 'morbidity_and_assessment_event'
+    end
+  end
+
   shared_examples_for "a complex core path" do
     it "should generate the default (bracketed) form (for html names)" do
       @core_path.to_s.should == 'morbidity_event[interested_party][person_entity]'
@@ -306,4 +320,20 @@ describe ExtendedFormBuilder::CorePath do
     it_should_behave_like "a complex core path"
   end
 
+  describe "building a compound path" do
+    before do
+      @core_path = ExtendedFormBuilder::CorePath['morbidity_and_assessment_event']
+      @core_path << 'interested_party' << 'person_entity'
+    end
+
+    it_should_behave_like "a compound core path"
+  end
+
+  describe "starting w/ a compound base" do
+    before do
+      @core_path = ExtendedFormBuilder::CorePath['morbidity_and_assessment_event[interested_party][person_entity]']
+    end
+
+    it_should_behave_like "a compound core path"
+  end
 end

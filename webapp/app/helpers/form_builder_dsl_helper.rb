@@ -467,39 +467,16 @@ module FormBuilderDslHelper
     end
   end
 
-  def remove_event_type_from_core_path(core_path, event_type)
-    # sub event type with blank string, will leave ] at the begining
-    # so [1..-1]
-    core_path.sub(event_type,"")[1..-1]
-  end
-
-  def replace_square_brackets_with_dots(string)
-    # example: morbidity_event[disease][disease_name]
-    # remove all "]" chars  (example becomes morbidity_event[disease[disease_name)
-    # replace all "]" chars with "." (example becomes morbidity_event.diesase.disaese_name)
-    string.gsub(/\]/, "").gsub(/\[/, ".")
-  end
-
-  def core_path_with_dots(element)
-    new_path = element.core_path.clone
-    core_path_to_method_string(new_path, @event.class.name.underscore)
-  end
-
-  def core_path_to_method_string(path, event_type)
-    # Debt: Replace with shorter eval technique
-    path = remove_event_type_from_core_path(path, event_type) 
-    path = replace_square_brackets_with_dots(path)
-  end
- 
   def eval_core_path(options)
 
     object = options[:object]
-    method_array = options[:method_array]
+    core_path = options[:core_path]
+    core_path_array = options[:core_path_array] || ExtendedFormBuilder::CorePath[core_path]
 
-    method_array = method_array.split(".") if method_array.is_a?(String) and method_array.include?(".")
+    core_path_array.shift #remove event type from core_path
 
     core_value = object
-    method_array.each do |method|
+    core_path_array.each do |method|
       if core_value.is_a?(Array)
         core_value = core_value.collect { |cf| cf.try(:send, method) } 
         core_value.delete_if { |value| value.nil? }
@@ -512,23 +489,13 @@ module FormBuilderDslHelper
 
   end
 
-  def value_from_core_path(options)
-    element = options[:element]
-    slice = options[:path_slice]
-
-    method_array = core_path_with_dots(element).split(".")
-
-    eval_core_path(:object => options[:event],
-                      :method_array => method_array)
-  end
-
   def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
     begin
       result = ""
       include_children = false
 
       unless (ajax_render)
-        core_value = value_from_core_path(:event => @event, :element => element)
+        core_value = eval_core_path(:object => @event, :core_path => element.core_path)
 
         if (element.condition_match?(core_value.to_s))
           include_children = true
@@ -697,17 +664,7 @@ module FormBuilderDslHelper
       include_children = false
 
       unless (ajax_render)
-        # when the event has been promoted, attached forms will have
-        # core follow ups with core_paths which do match the current element's core path
-        #
-        core_value = @event
-        core_path_with_dots(element).split(".").each do |method|
-          begin
-            core_value = core_value.send(method)
-          rescue
-            break
-          end
-        end
+        core_value = eval_core_path(:object => @event, :core_path => element.core_path)
 
         if (element.condition_match?(core_value.to_s))
           include_children = true
@@ -853,14 +810,7 @@ module FormBuilderDslHelper
 
       include_children = false
 
-      core_value = @event
-      core_path_with_dots(element).split(".").each do |method|
-        begin
-          core_value = core_value.send(method)
-        rescue
-          break
-        end
-      end
+      core_value = eval_core_path(:object => @event, :core_path => element.core_path)
 
       if (element.condition_match?(core_value.to_s))
         questions = form_elements_cache.children(element)

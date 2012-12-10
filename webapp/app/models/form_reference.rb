@@ -37,10 +37,10 @@ class FormReference < ActiveRecord::Base
         repeater_form_elements.each do |repeater_form_element|
 
           repeater_form_object_key = repeater_form_element.core_field.key
-          method_array = core_path_to_method_string(repeater_form_object_key, event.class.name.underscore).split(".")
-          method_array.pop #take off the last element, so we get the class, not the field
+          core_path_array = ExtendedFormBuilder::CorePath[repeater_form_object_key]
+          core_path_array.pop #take off the last element, so we get the class/association, not the field
 
-          repeater_records = eval_core_path(:object => event, :method_array => method_array)
+          repeater_records = eval_core_path(:object => event, :core_path_array => core_path_array)
           # No need to create answers for records that don't exist!
           return nil if repeater_records.nil?
 
