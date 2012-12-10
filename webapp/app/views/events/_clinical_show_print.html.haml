@@ -55,21 +55,22 @@
   %b{ :style => 'font-size: 11px' }="No hospitalized health facilities have been recorded for this #{h(@event.class.name.underscore.humanize.downcase)}"
 - else
   - event_form.fields_for(:hospitalization_facilities, :builder => ExtendedFormBuilder) do |hf|
-    - core_element_print :secondary_entity_id, hf, :horiz do
+    - core_element_print :secondary_entity_id, hf, :vert do
       %span.print-label=ct 'hospitalized_health_facility'
       %span.print-value= h(hf.object.safe_call_chain(:place_entity, :place, :name))
     - hf.fields_for(:hospitals_participation, :builder => ExtendedFormBuilder) do |hp|
-      - core_element_print :admission_date, hp, :horiz do
+      - core_element_print :admission_date, hp, :vert do
         %span.print-label=ct 'admission_date'
         %span.print-value= h(hp.object.safe_call_chain(:admission_date))
-      - core_element_print :discharge_date, hp, :horiz do
+      - core_element_print :discharge_date, hp, :vert do
         %span.print-label=ct 'discharge_date'
         %span.print-value= h(hp.object.safe_call_chain(:discharge_date))
-      - core_element_print :medical_record_number, hp, :horiz do
+      - core_element_print :medical_record_number, hp, :vert do
         %span.print-label=ct 'medical_record_number'
         %span.print-value= h(hp.object.safe_call_chain(:medical_record_number))
+    %br
+    %br
 
-%br
 %span.subsection-header=t 'diagnosing_health_facilities'
 -core_element_print(:diagnostic_facilities, event_form, :vert) do
   - unless association_recorded?(@event.diagnostic_facilities)

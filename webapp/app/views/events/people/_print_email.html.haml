@@ -15,9 +15,10 @@
 
 
 -unless print_email.new_record?
-  -core_element_print(:email_address, f, :horiz) do
+  -core_element_print(:email_address, f, :vert) do
     %span.print-label
       = ct('email')
     %span.print-value
       =h(print_email.safe_call_chain(:email_address))
+  %br
   %br
