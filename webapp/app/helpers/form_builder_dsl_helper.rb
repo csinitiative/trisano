@@ -632,7 +632,7 @@ module FormBuilderDslHelper
       result << render_help_text(element) unless question.help_text.blank?
       result << "</label>"
       answer = collect_answer_object(question, local_form_builder)
-      result << answer.text_answer unless answer.nil?
+      result << answer.text_answer.to_s unless answer.nil?
       result << "</div>"
 
       unless answer.nil?
@@ -823,14 +823,16 @@ module FormBuilderDslHelper
     begin
       result = ""
 
-      return result if element.blank? or element.core_path.blank?
+      if element.respond_to?(:core_path) and !element.core_path.blank?
+        result << print_investigator_core_follow_up(form_elements_cache, element, f) 
+        return result
 
-      result << print_investigator_core_follow_up(form_elements_cache, element, f)
-      questions = form_elements_cache.children(element)
+        questions = form_elements_cache.children(element)
 
-      if questions.size > 0
-        questions.each do |child|
-          result << print_investigator_element(form_elements_cache, child, f)
+        if questions.size > 0
+          questions.each do |child|
+            result << print_investigator_element(form_elements_cache, child, f)
+          end
         end
       end
 
