@@ -61,6 +61,10 @@ class Question < ActiveRecord::Base
     end
   end
 
+  def repeater?
+    question_element.repeater?
+  end
+
   private
 
   def sanitize_short_name

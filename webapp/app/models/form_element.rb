@@ -349,6 +349,14 @@ class FormElement < ActiveRecord::Base
     FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
 
+  def repeater?
+    core_field.repeater? 
+  end
+
+  def core_field
+    CoreField.find_by_key(core_field_element.core_path)
+  end
+
   def core_path(event_type=nil)
     core_path ||= read_attribute(:core_path)
     if event_type
