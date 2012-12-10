@@ -350,9 +350,6 @@ class Event < ActiveRecord::Base
         if form_reference.nil?
           raise I18n.translate('missing_form_reference')
         else
-          question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
-          question_ids = question_elements.collect { |element| element.question.id}
-          Answer.delete_all(["event_id = ? and question_id in (?)", self.id, question_ids])
           form_reference.destroy
         end
       end
