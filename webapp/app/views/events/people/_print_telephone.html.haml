@@ -14,10 +14,8 @@
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 -unless print_telephone.new_record?
-  -core_element_print(:patient_telephone, f, :horiz) do
-    %span.print-label
-      = ct('phone')
-    %span.print-value
-      =h(print_telephone.safe_call_chain(:simple_format))
+  -core_element_print(:patient_telephone, f, :vert) do
+    %span.print-label= ct('phone')
+    %span.print-value=h(print_telephone.safe_call_chain(:simple_format))
   %br
-
+  %br
