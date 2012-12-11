@@ -464,7 +464,7 @@ class HumanEvent < Event
       # Handle the primary jurisdiction
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
-      unless jurisdiction_id == self.jurisdiction.secondary_entity_id
+      if jurisdiction_id != self.jurisdiction.secondary_entity_id or (self.is_a?(ContactEvent) and self.not_routed?)
         proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id)
         raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
         self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
