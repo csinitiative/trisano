@@ -366,7 +366,7 @@ module EventsHelper
             end
             form << "</div></div>"
 
-            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("routing[note]", '')}</div><br/>"
+            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("routing[note]", event.brief_notes.first ? h(event.brief_notes.first.note) : '')}</div><br/>"
             form << submit_tag(t(:route_event), :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
           end
         end

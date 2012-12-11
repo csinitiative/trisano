@@ -83,3 +83,24 @@ Feature: Event Routing Fail
       And I should see "Date diagnosed must be on or after"
       And I should see "There were problems with the following fields"
       And I should get a 400 response
+
+  Scenario: Displays the latest brief note when routing event
+   Given I am logged in as a super user
+   And a morbidity event exists in Bear River with the disease African Tick Bite Fever
+   And the event is routed to "Bear River"
+   And a brief note exists with text 'Latest note'
+
+   When I navigate to the event show page
+   And I click the "Route to Local Health Depts." link
+
+   Then I should see 'Latest note' in Brief Note textbox
+
+  Scenario: Displays the latest brief note in Status column
+   Given I am logged in as a super user
+   And a morbidity event exists in Bear River with the disease African Tick Bite Fever
+   And the event is routed to "Bear River"
+   And a brief note exists with text 'New note'
+
+   When I navigate to the event show page
+
+   Then I should see "New note"

@@ -77,6 +77,10 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
   @event = create_basic_event(event_type, get_unique_name(1), disease, jurisdiction)
 end
 
+Given(/^a brief note exists with text '(.+)'$/) do |note|
+  @event.notes << Note.create!(:note => note, :note_type => "brief")
+end
+
 Given(/^a (.+) event exists with a disease that matches the form$/) do |event_type|
   @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name, get_random_jurisdiction_by_short_name)
 end
@@ -222,4 +226,8 @@ end
 
 Given /^the event has a lab$/i do
   add_lab_to_event(@event, "ARUP")
+end
+
+Then(/^I should see '(.+)' in Brief Note textbox$/) do |text|
+  response.should have_xpath("//input[@value='#{text}']")
 end
