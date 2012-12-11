@@ -221,3 +221,6 @@ legend {
 .hidden {
   display: none;
 }
+.ajax-actions {
+  display: none;
+}

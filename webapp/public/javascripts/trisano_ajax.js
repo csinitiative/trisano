@@ -1,7 +1,7 @@
 document.observe('trisano:dom:loaded', function() {
   Trisano.Ajax.hookLiveSearchFields();
   Trisano.Ajax.hookUpdateLinks();
-  Trisano.Ajax.setupRepeaters();
+//  Trisano.Ajax.setupRepeaters();
 });
 
 Element.addMethods({

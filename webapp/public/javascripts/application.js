@@ -210,6 +210,8 @@ function post_form(form_id, should_return) {
 }
 
 function post_and_return(form_id) {
+      post_form(form_id, true);
+/*
     $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
 
     function(data) {
@@ -234,9 +236,12 @@ function post_and_return(form_id) {
       Trisano.Layout.navToFlashMessage();
       toggle_save_buttons("on");
     });
+*/
 }
 
 function post_and_exit(form_id) {
+      post_form(form_id, true);
+/*
     $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
 
     function(data) {
@@ -259,6 +264,7 @@ function post_and_exit(form_id) {
       Trisano.Layout.navToFlashMessage();
       toggle_save_buttons("on");
     });
+*/
 }
 
 function toggle_strike_through(element_id) {
