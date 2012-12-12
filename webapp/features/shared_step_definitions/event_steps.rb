@@ -37,6 +37,20 @@ Given /^a cmr exists$/ do
   @event = create_basic_event("morbidity", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
 end
 
+Given /^a basic contact event exists$/ do
+  @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @contact_event = create_basic_event("contact", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @contact_event.parent_event = @event
+  @contact_event.save 
+end
+
+Given /^a basic encounter event exists$/ do
+  @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @encounter_event = create_basic_event("encounter", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @encounter_event.parent_event = @event
+  @encounter_event.save 
+end
+
 Given(/^an assessment event exists with the disease (.+)$/) do |disease|
   @event = create_basic_event("assessment", get_unique_name(1), disease.strip, get_random_jurisdiction_by_short_name)
   @event.disease_event.disease_onset_date = Date.yesterday
@@ -300,5 +314,5 @@ Given /^the event has a lab$/i do
 end
 
 When /^I navigate to the (.+) tab$/ do |tab_name|
-  @browser.click("//a[@href='##{tab_name.downcase}_tab']")
+  @browser.click("//a[@href='##{TrisanoHelper::TAB_ELEMENT_IDS_BY_NAME[tab_name]}']")
 end

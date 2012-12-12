@@ -31,7 +31,11 @@ describe Profiles do
   end
 
   it "should merge w/ hashes" do
-    @profiles.to_yaml.should == @base_config.to_yaml
+    @profiles.each do |profile, command|
+      @base_config[profile].should == command
+    end
+
+    @profiles.count.should == @base_config.count
   end
 
   it "should return a profile by name" do

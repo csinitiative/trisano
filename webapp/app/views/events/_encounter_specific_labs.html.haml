@@ -19,7 +19,8 @@
     - for encounter in event.encounter_child_events
       - pe = encounter.participations_encounter
       %h4=t 'encounter_on', :date => ld(pe.encounter_date)
-      = render(:partial => 'events/labs', :locals => { :labs => encounter.labs })
+      - form_for(:encounter, encounter, :builder => ExtendedFormBuilder) do |encounter_form|
+        = render(:partial => 'events/labs', :locals => { :f => encounter_form })
 
   - else
     %h3=t 'no_encounters', :thing => 'event'

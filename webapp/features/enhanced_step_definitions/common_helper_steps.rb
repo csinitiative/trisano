@@ -43,6 +43,11 @@ When(/^I click the "(.+)" link and don't wait$/) do |link|
   @browser.click("link=#{link}")
 end
 
+When(/^I click the "(.+)" link and wait for ajax$/) do |link|
+  @browser.click("link=#{link}")
+  When "I wait for ajax"
+end
+
 When(/^I click the "(.+)" table header( (\d)+ times)?$/) do |th, ignore, times|
   (times || "1").to_i.times do
     @browser.click("xpath=//th[contains(text(), '#{th}')]")

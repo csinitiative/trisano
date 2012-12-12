@@ -35,7 +35,15 @@ end
 
 
 Given /^a basic (.+) event with the form's disease$/ do |event_type|
-  @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
+  if event_type.downcase == "encounter"
+      @encounter_event = create_basic_event("encounter", get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
+    @event = @encounter_event.parent_event
+  elsif event_type.downcase == "contact"
+      @contact_event = create_basic_event("contact", get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
+    @event = @contact_event.parent_event
+  else
+    @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name.strip,  Place.unassigned_jurisdiction.short_name)
+  end
 end
 
 When /^I navigate to the new morbidity event page and start a event with the form's disease$/ do
@@ -51,6 +59,11 @@ Given /^a (.+) event with with a form with repeating core fields$/ do |event_typ
   And   "a basic #{event_type} event with the form's disease"
 end
 
+Given /^a (.+) event with with a morbidity and assessment event form with repeating core fields$/ do |event_type|
+  Given "a published form with repeating core fields for a morbidity_and_assessment event"
+  And   "a basic #{event_type} event with the form's disease"
+end
+
 When /^I change the disease to (.+) the published form$/ do |match_not_match|
   click_core_tab(@browser, "Clinical")
   if match_not_match == "match"
@@ -61,7 +74,13 @@ When /^I change the disease to (.+) the published form$/ do |match_not_match|
   else
     raise "Unexpected syntax: #{match_not_match}"
   end
-  @browser.select("//select[@id='#{@event.type.underscore}_disease_event_attributes_disease_id']", disease_name)
+  
+  if @published_form.event_type.include?("morbidity_and_assessment_event")
+    key = @published_form.event_type.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
+  else
+    key = @published_form.event_type
+  end
+  @browser.select("//select[@id='#{key}_disease_event_attributes_disease_id']", disease_name)
 end
 
 When /^I print the event$/ do
@@ -83,3 +102,79 @@ end
 When /^the (.+) tab should be highlighted in red$/ do |tab|
   @browser.get_xpath_count("//a[@href='##{tab.downcase}_tab'][contains(@style,'color: red')]").should be_equal(1), "Expected #{tab} to be highlighted in red."
 end
+
+When /^I answer all core field config repeating questions$/ do
+  # Also fill in one address field so the address will show up in show mode
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
+  raise "No core fields found" if @core_fields.empty?
+  @core_fields.each do |core_field|
+    if core_field.key.include?("morbidity_and_assessment_event")
+      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
+    else
+      key = core_field.key
+    end
+    answer_investigator_question(@browser, "#{key} before?", "#{key} before answer", html_source).should be_true
+    answer_investigator_question(@browser, "#{key} after?", "#{key} after answer", html_source).should be_true
+  end
+
+  And  "I enter the following lab results for the \"Acme Lab\" lab:", table([
+    %w( test_type ),
+    %w( TriCorder )
+  ])
+end
+
+Then /^I should see all core field config repeating answers$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
+  raise "No core fields found" if @core_fields.empty?
+  @core_fields.each do |core_field|
+    if core_field.key.include?("morbidity_and_assessment_event")
+      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
+    else
+      key = core_field.key
+    end
+    raise "Could not find before answer for #{key}" if html_source.include?("#{key} before answer") == false
+    raise "Could not find after answer for #{key}" if html_source.include?("#{key} after answer") == false
+  end
+end
+
+Then /^I should not see any core field config repeating question$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
+  raise "No core fields found" if @core_fields.empty?
+  @core_fields.each do |core_field|
+    if core_field.key.include?("morbidity_and_assessment_event")
+      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
+    else
+      key = core_field.key
+    end
+    html_source.include?("#{key} before?").should be_false, "Didn't expect to see '#{key} before?'"
+    html_source.include?("#{key} after?").should be_false, "Didn't expect to see '#{key} after?'"
+  end
+
+end
+
+Given /^I have required repeater core field prerequisites$/ do
+  And "a lab named \"Acme Lab\""
+  And "a lab test type named \"TriCorder\""
+end
+
+When /^I navigate to the form's builder page$/ do
+  @browser.open "/trisano" + builder_path(@form)
+end
+
+Then /^I should see all of the repeater core field config questions$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
+  @core_fields.count.should_not be_equal(0), "Didn't find any lab core fields."
+  @core_fields.each do |core_field|
+    if core_field.key.include?("morbidity_and_assessment_event")
+      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
+    else
+      key = core_field.key
+    end
+    check_core_fields(key, html_source)
+  end
+end
+

@@ -33,7 +33,7 @@ class InterestedParty < Participation
   belongs_to :human_event, :foreign_key => :event_id
 
   accepts_nested_attributes_for :person_entity
-  accepts_nested_attributes_for :risk_factor, :treatments, :allow_destroy => true, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :risk_factor, :treatments, :allow_destroy => true, :reject_if => :nested_attributes_blank?
 
   def validate
     super

@@ -264,3 +264,4 @@ Feature: Form fields for repeating core sections.
     And  I click the Treatment Save link
     Then I should see "Date of treatment must be on or before"
     And  I should see "treatment repeaters work with errors too"
+    And  I should not see "successfully updated"

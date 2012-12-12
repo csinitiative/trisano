@@ -240,7 +240,7 @@ function post_and_return(form_id) {
 }
 
 function post_and_exit(form_id) {
-      post_form(form_id, true);
+      post_form(form_id, false);
 /*
     $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
 

@@ -37,6 +37,16 @@ module Trisano
         profiles_hash[name]
       end
 
+      def each(&block)
+        profiles_hash.each do |k,v|
+          yield k,v
+        end
+      end 
+
+      def count
+        profiles_hash.count
+      end
+
       def to_yaml
         profiles_hash.to_yaml
       end

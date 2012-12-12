@@ -20,9 +20,14 @@ class EmailAddress < ActiveRecord::Base
   before_validation :strip_whitespace
   belongs_to :owner, :polymorphic => true
 
-  validates_presence_of :email_address
+  
+  # We have commented this out because now we can accept nested attributes for this
+  # which may include form fields. Thus, we may want to record form data and not an email
+  #validates_presence_of :email_address
+  # The above also requires the inclusion of :allow_blank => true below
+  validates_format_of :email_address, :with => /@/, :message => I18n.t(:invalid_email_format), :allow_blank => true
+
   #validates_uniqueness_of :email_address, :case_sensitive => false
-  validates_format_of :email_address, :with => /@/, :message => I18n.t(:invalid_email_format)
 
   def xml_fields
     [:email_address]

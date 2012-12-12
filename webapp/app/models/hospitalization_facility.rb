@@ -20,7 +20,7 @@ class HospitalizationFacility < Participation
   belongs_to :place_entity,  :foreign_key => :secondary_entity_id
   has_one :hospitals_participation, :foreign_key => :participation_id, :dependent => :destroy
 
-  accepts_nested_attributes_for :hospitals_participation, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :hospitals_participation, :reject_if => :nested_attributes_blank?
 
   def validate
     super
