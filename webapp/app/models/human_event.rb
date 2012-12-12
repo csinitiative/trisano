@@ -62,7 +62,7 @@ class HumanEvent < Event
   accepts_nested_attributes_for :interested_party
   accepts_nested_attributes_for :hospitalization_facilities,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && attrs["hospitals_participation_attributes"].all? { |k, v| v.blank? } }
+    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && nested_attributes_blank?(attrs["hospitals_participation_attributes"]) }
   accepts_nested_attributes_for :clinicians,
     :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.has_key?("person_entity_attributes") && attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| if v == 'clinician' then true else v.blank? end } }
@@ -104,7 +104,7 @@ class HumanEvent < Event
     end
 
     def lab_result_attributes_blank?(attrs)
-      attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
+      attrs["lab_results_attributes"].all? { |index, lab_result_attrs| nested_attributes_blank?(lab_result_attrs) }
     end
 
     def rewrite_attributes_to_reuse_place_entities(attrs)

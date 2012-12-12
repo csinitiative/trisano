@@ -33,6 +33,7 @@ namespace :db do
         attributes.stringify_keys!
         if attributes['repeater'] and core_field = CoreField.find_by_key(attributes['key'])
           attributes.delete 'parent_key'
+          attributes['code_name'] = CodeName.find_by_code_name(attributes['code_name']) if attributes['code_name']
           outcome = core_field.update_attributes(attributes)
           puts "Updating #{attributes['key']}: #{outcome}"
         end

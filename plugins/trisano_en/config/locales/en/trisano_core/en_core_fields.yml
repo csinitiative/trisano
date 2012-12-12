@@ -74,10 +74,10 @@ en:
       treatments: Treatments
       interested_party:
         treatments:
-          treatment_given_yn_id: Treatment given
-          treatment_id: Treatment
-          treatment_date: Date of treatment
-          stop_treatment_date: Date treatment stopped
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -131,11 +131,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     assessment_event:
       name: Assessment Event
       demographic_tab: Demographic
@@ -231,10 +231,10 @@ en:
       workflow_state: Event status
       interested_party:
         treatments:
-          treatment_given_yn_id: Treatment given
-          treatment_id: Treatment
-          treatment_date: Date of treatment
-          stop_treatment_date: Date treatment stopped
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -290,11 +290,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -430,10 +430,10 @@ en:
       workflow_state: Event status
       interested_party:
         treatments:
-          treatment_given_yn_id: Treatment given
-          treatment_id: Treatment
-          treatment_date: Date of treatment
-          stop_treatment_date: Date treatment stopped
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -489,11 +489,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -524,10 +524,10 @@ en:
       treatments: Encounter treatments
       interested_party:
         treatments:
-          treatment_given_yn_id: Treatment given
-          treatment_id: Treatment
-          treatment_date: Date of treatment
-          stop_treatment_date: Date treatment stopped
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
       event_notes_section: Event Notes
       participations_encounter:
         user_id: Investigator
@@ -635,10 +635,10 @@ en:
       workflow_state: Event status
       interested_party:
         treatments:
-          treatment_given_yn_id: Treatment given
-          treatment_id: Treatment
-          treatment_date: Date of treatment
-          stop_treatment_date: Date treatment stopped
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -694,8 +694,8 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number

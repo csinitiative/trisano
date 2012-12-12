@@ -16,19 +16,24 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Lab < Participation
+  include Trisano::Repeater
   belongs_to :place_entity, :foreign_key => :secondary_entity_id
   has_many   :lab_results, :foreign_key => :participation_id, :order => 'position, created_at ASC', :dependent => :destroy
 
-  validates_presence_of :place_entity
+  validate :presence_of_lab
 
   accepts_nested_attributes_for :lab_results,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
+    :reject_if => :nested_attributes_blank? 
 
   accepts_nested_attributes_for :place_entity,
     :reject_if => proc { |attrs| attrs["place_attributes"].all? { |k, v| v.blank? } }
 
   def xml_fields
     [[:secondary_entity_id, {:rel => :lab}]]
+  end
+
+  def presence_of_lab
+    errors.add(:secondary_entity_id, :blank) if place_entity.nil?
   end
 end

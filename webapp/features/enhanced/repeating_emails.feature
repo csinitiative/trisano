@@ -274,3 +274,4 @@ Feature: Form fields for repeating core sections.
     And  I click the Email Save link
     Then I should see "Email address format is invalid"
     And  I should see "email address repeaters work with errors too"
+    And  I should not see "successfully updated"

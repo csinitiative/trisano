@@ -274,3 +274,4 @@ Feature: Form fields for repeating core sections.
     And  I click the Telephone Save link
     Then I should see "Phone number must not be blank and must be 7 digits with an optional dash"
     And  I should see "telephone repeaters work with errors too"
+    And  I should not see "successfully updated"

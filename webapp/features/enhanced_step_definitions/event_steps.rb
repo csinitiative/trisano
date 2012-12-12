@@ -85,6 +85,15 @@ When(/^I am on the contact event edit page$/) do
   @browser.wait_for_page_to_load
 end
 
+When /^I navigate to the contact event edit page$/ do
+  When "I am on the contact event edit page"
+end
+
+When /^I navigate to the encounter event edit page$/ do
+  @browser.open "/trisano/encounter_events/#{(@encounter_event).id}/edit"
+  @browser.wait_for_page_to_load
+end
+
 When /^I navigate to the contact named "(.+)"$/ do |last_name|
   @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
                                       :conditions => ['people.last_name = ?', last_name])

@@ -36,7 +36,7 @@ describe CommonTestType do
   end
 
   before do
-    @common_test_type = CommonTestType.create!(:common_name => 'Culture')
+    @common_test_type = CommonTestType.find_or_create_by_common_name('Culture')
   end
 
   it "should be able to bulk load from a csv format" do

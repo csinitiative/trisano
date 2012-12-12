@@ -1,7 +1,10 @@
 # Some common rejection methods for nested attributes
 require 'trisano/nested_attributes_helper'
 
-ActiveRecord::Base.class_eval do
+class ActiveRecord::Base
   private
-  include Trisano::NestedAttributesHelper
+
+  class << self
+    include Trisano::NestedAttributesHelper
+  end
 end

@@ -18,7 +18,7 @@
 
   -core_section :labs_section, f do
     -core_element_show(:labs, f, :horiz) do
-      = render(:partial => 'events/labs', :locals => { :labs => @event.labs })
+      = render(:partial => 'events/labs', :locals => { :f => f })
 
 - if @event.supports_encounter_specific_labs?
   = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }

@@ -103,6 +103,7 @@ def create_core_field_config(form, container, core_field)
 end
 
 def check_core_fields(core_field_key,html_source)
+  puts "Checking #{core_field_key} before and after questions are present."
   raise "Could not find before config for #{core_field_key}" if html_source.include?("#{core_field_key} before?") == false
   raise "Could not find after config for #{core_field_key}" if html_source.include?("#{core_field_key} after?") == false
 end

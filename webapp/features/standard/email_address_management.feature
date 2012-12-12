@@ -16,12 +16,6 @@ Feature: Managing user e-mail addresses
     Then I should be on the manage e-mail addresses page
     And I should see "user@example.com"
 
-  Scenario: Attempting to add a blank e-mail address
-    When I press "Add"
-    Then I should be on the manage e-mail addresses page
-    And I should see "Error adding e-mail address"
-    And I should see "Email address can't be blank"
-
   Scenario: Attempting to add an invalid e-mail address
     When I fill in "Add an Email Address" with "xyz"
     And I press "Add"

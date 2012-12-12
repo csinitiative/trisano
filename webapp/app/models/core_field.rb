@@ -70,6 +70,9 @@ class CoreField < ActiveRecord::Base
     end
 
     def load!(hashes)
+
+      verify_no_duplicate_keys!(hashes)
+
       reset_column_information
       acts_as_nested_set(:scope => :tree_id) if table_exists? && column_names.include?('tree_id')
 
@@ -86,6 +89,12 @@ class CoreField < ActiveRecord::Base
           end
         end
       end
+    end
+
+    def verify_no_duplicate_keys!(hashes)
+      keys = hashes.collect { |core_field_hash| core_field_hash["key"] }
+      duplicates = keys.detect { |v| keys.count(v) > 1 }
+      raise "Duplicate keys found in db/defaults/core_fields.yml: #{duplicates}" unless duplicates.blank?
     end
 
     def tabs_for(event_type)

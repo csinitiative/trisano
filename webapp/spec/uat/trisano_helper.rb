@@ -751,15 +751,17 @@ module TrisanoHelper
 
   def add_lab_result(browser, attributes, lab_index = 1, result_index = 1)
     click_core_tab(browser, LABORATORY)
-    browser.click("link=Add a new lab result") unless lab_index == 1
+    browser.click("link=Add a New Lab") unless lab_index == 1
+    browser.click("link=Add a new lab result to this lab") unless result_index == 1
     sleep(1)
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:lab_name]}") if attributes[:lab_name]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_state_id')]", "label=#{attributes[:sent_to_state]}") if attributes[:sent_to_state]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_test_type_id')]", "label=#{attributes[:test_type]}") if attributes[:test_type]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_state_id')]", "label=#{attributes[:sent_to_state]}") if attributes[:sent_to_state]
   end
 
   #
