@@ -211,60 +211,10 @@ function post_form(form_id, should_return) {
 
 function post_and_return(form_id) {
       post_form(form_id, true);
-/*
-    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
-
-    function(data) {
-      // All repeaters saved successfully
-
-      // Anything that wasn't saved, discard
-      // otherwise the new_repeater answers will get hit from
-      // lib/trisano/repeater.rb, which we DON'T WANT!
-      $j.each($j("a[class^=discard]"), function(i,e) {
-        $j(this).click();
-      });
-
-      post_form(form_id, true);
-    },
-    function(data) {
-      // One or more errors
-      // Fucntions added here will be fired as soon
-      // as the first deferred is rejected
-      Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Layout.setFlashMessage("Please review the errors in tabs highlighted red.");
-      Trisano.Layout.setFlashMessageClass("error-message")
-      Trisano.Layout.navToFlashMessage();
-      toggle_save_buttons("on");
-    });
-*/
 }
 
 function post_and_exit(form_id) {
       post_form(form_id, false);
-/*
-    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
-
-    function(data) {
-      // All repeaters saved successfully
-
-      // Anything that wasn't saved, discard
-      $j.each($j("a[class^=discard]"), function(i,e) {
-        $j(this).click();
-      });
-
-      post_form(form_id,false);
-    },
-    function(data) {
-      // One or more errors
-      // Fucntions added here will be fired as soon
-      // as the first deferred is rejected
-      Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Layout.setFlashMessage("Please review the errors in tabs highlighted red.");
-      Trisano.Layout.setFlashMessageClass("error-message")
-      Trisano.Layout.navToFlashMessage();
-      toggle_save_buttons("on");
-    });
-*/
 }
 
 function toggle_strike_through(element_id) {
