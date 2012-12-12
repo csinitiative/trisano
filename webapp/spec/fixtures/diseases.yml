@@ -39,7 +39,7 @@ no_forms_disease:
 
 syphilis:
   id: 9
-  disease_name: "Syphilis, primary"
+  disease_name: "710"
   cdc_code: "10311"
 
 pertussis:
