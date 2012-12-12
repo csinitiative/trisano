@@ -29,4 +29,11 @@ class EventNotesController < ApplicationController
     end
     @notes = Note.find(:all, :conditions => conditions, :order => "created_at DESC")
   end
+
+  def create
+    note = Note.new(params[:note])
+    note.save!
+    flash[:notice] = "Brief note successfully created."
+    redirect_to request.referer
+  end
 end
