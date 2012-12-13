@@ -1,6 +1,7 @@
 -# Hack.  This template is rendered from both the ordinary CMR form and via the live-search
 -# Ajax callback.  During the latter we do not have the proper namespace set up for form
 -# fields.  This does that.
+
 - lab_result_form = nil
 - if defined? f
   - lab_result_form = f
@@ -11,7 +12,6 @@
 
 -# get the lab result
 - lab_result = lab_result_form.object
-
 
 
 %li{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
