@@ -1810,6 +1810,16 @@
   can_follow_up: true
   repeater: true
   field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[labs][lab_results][specimen_source]
+  code_name: specimen
+  parent_key: morbidity_event[labs_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
+  field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_source]
   code_name: specimen

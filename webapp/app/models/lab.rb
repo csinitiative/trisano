@@ -16,7 +16,6 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Lab < Participation
-  include Trisano::Repeater
   belongs_to :place_entity, :foreign_key => :secondary_entity_id
   has_many   :lab_results, :foreign_key => :participation_id, :order => 'position, created_at ASC', :dependent => :destroy
 

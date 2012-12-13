@@ -1,17 +1,5 @@
 #!/bin/sh
 
-set -e
-
-target_tag="master"
-
-original_path="$PWD"
-
-local_ce_staging_path="/tmp/trisano.test"
-local_ee_staging_path="/tmp/trisano-ee.test"
-
-local_ce_code_path="$HOME/code/trisano"
-local_ee_code_path="$HOME/code/trisano-ee"
-
 
 echo "*************************************"
 read -r -p "Are you sure you are ready to run all tests for *$target_tag*? [Y/n] " response

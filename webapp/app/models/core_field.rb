@@ -34,7 +34,8 @@ class CoreField < ActiveRecord::Base
     { :conditions => {
         :event_type => event_type,
         :can_follow_up => true,
-        :disease_specific => false
+        :disease_specific => false,
+        :repeater => false
       }
     }
   }
