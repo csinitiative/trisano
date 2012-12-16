@@ -37,7 +37,7 @@
               %td
                 %b= h(lab.place_entity.place.name)
                 %br
-                = link_to(t('electronic_lab_report'), staged_message_path(lab_result.staged_message)) if lab_result.staged_message
+                = link_to t('electronic_lab_report'),  "#", :class => "hl7-link", :title => h(lab_result.staged_message.patient.patient_name), :data => h(lab_result.staged_message.hl7_message) if lab_result.staged_message
               %td
                 %b= h(lab_result.test_type.try(:common_name))
                 %br

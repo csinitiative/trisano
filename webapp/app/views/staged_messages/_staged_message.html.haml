@@ -74,4 +74,4 @@
                 %span= h(staged_message.note || t("none"))
               = " | "
               %b
-                = link_to(t('elr_hl7_message'), "#", :class => "hl7-link", :data => h(staged_message.hl7_message))
+                = link_to(t('elr_hl7_message'), "#", :class => "hl7-link", :title => h(staged_message.patient.patient_name), :data => h(staged_message.hl7_message))
