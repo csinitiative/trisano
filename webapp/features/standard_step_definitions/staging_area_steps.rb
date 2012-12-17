@@ -191,6 +191,10 @@ Then /^I should see a link back to the staged message$/ do
   response.should have_xpath("//a[@href='#{staged_message_path(@staged_message)}']")
 end
 
+Then /^I should see a link to HL7 popup$/ do
+  response.should have_xpath("//a[@class='hl7-link'][@title='#{@staged_message.patient.patient_name}']")
+end
+
 When /^I visit the editable event$/ do
   click_link 'Edit'
 end
