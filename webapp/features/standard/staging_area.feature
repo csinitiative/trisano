@@ -86,10 +86,10 @@
     When I visit the assigned-to event
     Then I should see the new lab result with 'Hep-B Ag'
     And  I should see a note for the assigned lab
-    And  I should see a link back to the staged message
+    And  I should see a link to HL7 popup
 
     When I navigate to the event edit page
-    Then I should see a link back to the staged message
+    Then I should see a link to HL7 popup
 
   Scenario: Assigning lab result to found contact event
     Given I am logged in as a user with manage_staged_message privs
@@ -112,7 +112,7 @@
     When I visit the assigned-to event
     Then I should see the new lab result with 'Hep-B Ag'
     And  I should see a note for the assigned lab
-    And  I should see a link back to the staged message
+    And  I should see a link to HL7 popup
 
   Scenario: Assigning lab result to new event
     Given I am logged in as a user with manage_staged_message privs
@@ -137,7 +137,7 @@
     Then I should see the patient information
     And I should see the new lab result with 'Hep-B Ag'
     And I should see a note for the assigned lab
-    And I should see a link back to the staged message
+    And I should see a link to HL7 popup
 
   Scenario: Assigning lab result to a new event with an existing person
     Given I am logged in as a user with manage_staged_message privs
