@@ -227,10 +227,10 @@ class MorbidityEvent < HumanEvent
 
   def generate_mmwr
     mmwr = Mmwr.new({
-        :onsetdate => disease.try(:disease_onset_date),
-        :diagnosisdate => disease.try(:date_diagnosed),
-        :labresultdate => definitive_lab_date,
-        :firstreportdate => self.first_reported_PH_date,
+        :onsetdate => disease.try(:disease_onset_date).blank? ? nil : disease.try(:disease_onset_date).to_date,
+        :diagnosisdate => disease.try(:date_diagnosed).blank? ? nil : disease.try(:date_diagnosed).to_date,
+        :labresultdate => definitive_lab_date.blank? ? nil : definitive_lab_date.to_date,
+        :firstreportdate => self.first_reported_PH_date.blank? ? nil : self.first_reported_PH_date.to_date,
         :event_created_date => new_record? ? Date.today : self.created_at.to_date
       })
 

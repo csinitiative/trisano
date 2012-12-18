@@ -141,18 +141,18 @@ class Mmwr
     count = 0
 
     if first_mmwr_week == :first_week
-      sunday = first_day_of_year - first_day_of_year.wday
-      saturday = sunday + 6
+      sunday = first_day_of_year - first_day_of_year.wday.days
+      saturday = sunday + 6.days
       count += 1
     elsif first_mmwr_week == :second_week
-      sunday = (first_day_of_year - first_day_of_year.wday) + 7
-      saturday = sunday + 6
+      sunday = (first_day_of_year - first_day_of_year.wday.days) + 7.days
+      saturday = sunday + 6.days
       count += 1
     end
 
     until saturday >= Date.new(first_day_of_year.year, 12, 31)
-      sunday += 7
-      saturday += 7
+      sunday += 7.days
+      saturday += 7.days
       count += 1
     end
 
@@ -188,20 +188,20 @@ class Mmwr
     sunday = nil
     saturday = nil
     if first_mmwr_week == :first_week
-      sunday = first_day_of_year - first_day_of_year.wday
-      saturday = sunday + 6
+      sunday = first_day_of_year - first_day_of_year.wday.days
+      saturday = sunday + 6.days
       date_ranges[1] = MmwrDateRange.new(sunday.year, "1", sunday, saturday)
     elsif first_mmwr_week == :second_week
       date_ranges[0] = last_mmwr_week_previous_year
-      sunday = (first_day_of_year - first_day_of_year.wday) + 7
-      saturday = sunday + 6
+      sunday = (first_day_of_year - first_day_of_year.wday.days) + 7.days
+      saturday = sunday + 6.days
       date_ranges[1] = MmwrDateRange.new(sunday.year, "1", sunday, saturday)
     end
 
     count = 1
     until saturday >= Date.new(first_day_of_year.year, 12, 31)
-      sunday += 7
-      saturday += 7
+      sunday += 7.days
+      saturday += 7.days
       count += 1
       date_ranges[count] = MmwrDateRange.new(sunday.year, count, sunday, saturday)
     end
@@ -212,8 +212,8 @@ class Mmwr
   # Returns a MmwrDateRange for the last week of the previous year
   def last_mmwr_week_previous_year
     prev_year = DateTime.new(@epi_date.year - 1, 12, 31)
-    sunday = prev_year - prev_year.wday
-    MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6)
+    sunday = prev_year - prev_year.wday.days
+    MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6.days)
   end
 
   private
