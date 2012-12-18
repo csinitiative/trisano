@@ -145,12 +145,13 @@ class StagedMessagesController < ApplicationController
       end
 
       event.reload
-
+      skipped_loinc_codes = event.unknown_or_unlinked_loinc_codes(staged_message)
     rescue Exception => e
       logger.error(e)
       flash[:error] = t("message_assignment_failed", :msg_string => msg_string, :message => $!)
     else
       flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :record_number => event.record_number, :note => staged_message.note)
+      flash[:error] = t("message_assignment_unknown_or_unlinked_loinc_codes", :loinc_codes => skipped_loinc_codes.join(", ")) unless skipped_loinc_codes.empty?
     end
     redirect_to(staged_message_path(staged_message))
   end

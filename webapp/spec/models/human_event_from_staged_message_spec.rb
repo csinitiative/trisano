@@ -447,6 +447,14 @@ describe HumanEvent, "adding from staged message" do
       end
     end
 
+    it "should detect unknown or unlinked LOINC codes" do
+      with_human_event do |event|
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:unlinked_loinc])).should == ["10000-1"]
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:unknown_loinc])).should == ["20000-0"]
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:ihc_1])).should == ["00000-0", "22025-1", "45403-3", "42347-5", "21612-7"]
+      end
+    end
+
     it "should reject a staged message if all its OBX segments are invalid" do
       with_human_event do |event|
         lambda do
