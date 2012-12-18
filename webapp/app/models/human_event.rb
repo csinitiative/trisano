@@ -520,6 +520,13 @@ class HumanEvent < Event
     self.update_attributes(attrs)
   end
 
+  def unknown_or_unlinked_loinc_codes(staged_message)
+    staged_message.observation_requests.map(&:tests).flatten.select { |obx|
+        set_loinc_scale_and_test_type obx
+        @scale_type.nil? or @common_test_type.nil?
+      }.map(&:loinc_code).uniq
+  end
+
   def add_labs_from_staged_message(staged_message)
     raise(ArgumentError, I18n.translate('not_a_valid_staged_message', :staged_message => staged_message.class)) unless staged_message.respond_to?('message_header')
 

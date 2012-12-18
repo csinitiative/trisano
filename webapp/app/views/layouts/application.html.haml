@@ -86,10 +86,10 @@
           - if flash[:notice]
             #flash-message.notice-message
               = flash[:notice]
-          - elsif flash[:error]
+          - if flash[:error]
             #flash-message.error-message
               = flash[:error]
-          - else
+          - if flash[:notice].blank? and flash[:error].blank?
             #flash-message
           .name
             = yield :name
