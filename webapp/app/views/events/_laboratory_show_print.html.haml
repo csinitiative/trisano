@@ -17,4 +17,4 @@
   = t 'laboratory_information'
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 -core_element_print(:labs, event_form, :vert) do
-  = render :partial => 'events/labs_list_print.html.haml', :locals => { :event => event_form.object }
+  = render :partial => 'events/labs_list_print.html.haml', :locals => { :f => event_form }

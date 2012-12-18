@@ -13,74 +13,51 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- ran = nil
-- unless association_recorded?(event.labs)
-  %b{ :style => 'font-size: 11px' }=t('no_labs', :thing => h(event.class.name.underscore.humanize.downcase))
-- else
-  - for lab in event.labs
-    - for lab_result in lab.lab_results
-      #lab
-        - unless ran.nil?
-          %br
-          %hr
-        .left
+#labs
+  - if f.object.labs.all? { |l| l.new_record? }
+    %b{ :style => 'font-size: 11px' }=t('no_labs', :thing => h(f.object.class.name.underscore.humanize.downcase))
+  - else
+    - f.fields_for(:labs, :builder => ExtendedFormBuilder) do |lab|
+      - lab.fields_for(:lab_results, :builder => ExtendedFormBuilder) do |lab_result|
+        - core_element_show(:secondary_entity_id, lab, :vert) do
           %span.print-label=ct('lab_name')
-          %span.print-value
-          = h(lab.place_entity.place.name)
-        .left
+          %span.print-value= h(lab.object.place_entity.place.name)
+        - core_element_print(:accession_no, lab_result, :vert) do
           %span.print-label=ct('accession_no')
-          %span.print-value
-            = lab_result.accession_no.blank? ? 'none' : h(lab_result.accession_no)
-        .three-valued-row
-          .left
-            %span.print-label=ct('test_type')
-            %span.print-value
-              = h(lab_result.test_type.try(:common_name))
-          .left
-            %span.print-label=ct('test_result')
-            %span.print-value
-              = h(l(lab_result.test_result))
-          .right
-            %span.print-label=ct('organism')
-            %span.print-value
-              = h(lab_result.organism.try(:organism_name))
-        .three-valued-row
-          .left
-            %span.print-label=ct('result_value')
-            %span.print-value
-              = h(lab_result.result_value)
-          .left
-            %span.print-label=ct('units')
-            %span.print-value
-              = h(lab_result.units)
-          .right
-            %span.print-label=ct('reference_range')
-            %span.print-value
-              = h(lab_result.reference_range)
-        .three-valued-row
-          .left
-            %span.print-label=ct('test_status')
-            %span.print-value
-              = h(l(lab_result.test_status))
-          .left
-            %span.print-label=ct('specimen_source')
-            %span.print-value
-              = h(l(lab_result.specimen_source))
-          .right
-            %span.print-label=ct('collection_date')
-            %span.print-value
-              = ld(lab_result.collection_date)
-        .three-valued-row
-          .left
-            %span.print-label=ct('specimen_sent_to_state_lab')
-            %span.print-value
-              = h(l(lab_result.specimen_sent_to_state))
-          .left
-            %span.print-label=ct('lab_test_date')
-            %span.print-value
-              = ld(lab_result.lab_test_date)
-          .right
-            %span.print-label=ct('comment')
-            %span.print-value
-              = h(lab_result.comment)
-    - ran = 1
+          %span.print-value= lab_result.object.accession_no.blank? ? 'none' : h(lab_result.accession_no)
+        - core_element_print(:test_type, lab_result, :vert) do
+          %span.print-label=ct('test_type')
+          %span.print-value= h(lab_result.object.test_type.try(:common_name))
+        - core_element_print(:test_result, lab_result, :vert) do
+          %span.print-label=ct('test_result')
+          %span.print-value= h(l(lab_result.object.test_result))
+        - core_element_print(:organism, lab_result, :vert) do
+          %span.print-label=ct('organism')
+          %span.print-value= h(lab_result.object.organism.try(:organism_name))
+        - core_element_print(:result_value, lab_result, :vert) do
+          %span.print-label=ct('result_value')
+          %span.print-value= h(lab_result.object.result_value)
+        - core_element_print(:units, lab_result, :vert) do
+          %span.print-label=ct('units')
+          %span.print-value= h(lab_result.object.units)
+        - core_element_print(:reference_range, lab_result, :vert) do
+          %span.print-label=ct('reference_range')
+          %span.print-value= h(lab_result.object.reference_range)
+        - core_element_print(:test_status, lab_result, :vert) do
+          %span.print-label=ct('test_status')
+          %span.print-value= h(l(lab_result.object.test_status))
+        - core_element_print(:specimen_source, lab_result, :vert) do
+          %span.print-label=ct('specimen_source')
+          %span.print-value= h(l(lab_result.object.specimen_source))
+        - core_element_print(:collection_date, lab_result, :vert) do
+          %span.print-label=ct('collection_date')
+          %span.print-value= ld(lab_result.object.collection_date)
+        - core_element_print(:specimen_sent_to_state, lab_result, :vert) do
+          %span.print-label=ct('specimen_sent_to_state_lab')
+          %span.print-value= h(l(lab_result.object.specimen_sent_to_state))
+        - core_element_print(:lab_test_date, lab_result, :vert) do 
+          %span.print-label=ct('lab_test_date')
+          %span.print-value= ld(lab_result.object.lab_test_date)
+        - core_element_print(:comment, lab_result, :vert) do
+          %span.print-label=ct('comment')
+          %span.print-value= h(lab_result.object.comment)
