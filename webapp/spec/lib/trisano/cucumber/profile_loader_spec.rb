@@ -16,7 +16,7 @@ describe ProfileLoader do
 
   it "should provide access to loaded profiles" do
     loader = ProfileLoader.new(@default_cuke_yml)
-    loader.profiles.map{|k,v| k }.sort.should == ['any_standard', 'benchmark', 'enhanced', 'standard']
+    loader.profiles.map{|k,v| k }.sort.should == ['any_standard', 'enhanced', 'standard']
   end
 
 end

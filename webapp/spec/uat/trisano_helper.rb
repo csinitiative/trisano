@@ -350,10 +350,14 @@ module TrisanoHelper
     return save_cmr(browser)
   end
 
-  def answer_investigator_question(browser, question_text, answer, html_source=nil)
-    answer_id = get_investigator_answer_id(browser, question_text, html_source)
+  def answer_investigator_question(browser, question_text, answer, html_source=nil, count=nil)
+    if count
+      answer_id = "xpath=(//input[@id='" + INVESTIGATOR_ANSWER_ID_PREFIX + get_investigator_answer_id(browser, question_text, html_source) + "'])[#{count.to_i + 1}]"
+    else
+      answer_id = INVESTIGATOR_ANSWER_ID_PREFIX + get_investigator_answer_id(browser, question_text, html_source)
+    end
     begin
-      browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
+      browser.type(answer_id, answer) == "OK"
     rescue
       return false
     end
