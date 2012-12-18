@@ -9,7 +9,7 @@ Feature: Form fields for repeating core sections.
 
 
   Scenario: All repeaters are availble.
-    Given   a encounter event with with a form with repeating core fields 
+    Given   a published form with repeating core fields for a encounter event
     
     When    I navigate to the form's builder page
     Then    I should see "Treatment | Treatment given"
@@ -32,27 +32,32 @@ Feature: Form fields for repeating core sections.
    
 
   Scenario: Empty repeaters are ignored.
-    Given   a encounter event with with a form with repeating core fields 
+    Given   a encounter event with a form with repeating core fields 
 
     When    I navigate to the encounter event edit page
-    Then    I should see all of the repeater core field config questions
+    Then    I should see 1 instances of the repeater core field config questions
     And     I save and exit
     And     I should see "successfully updated"
-    And     I should not see any core field config repeating question
+    Then    I should see 0 instances of the repeater core field config questions
 
 
-  Scenario: Answer all repeaters.
-    Given   a encounter event with with a form with repeating core fields 
+  Scenario: Answer multiple repeaters.
+    Given   a encounter event with a form with repeating core fields 
 
     When    I navigate to the encounter event edit page
-    And     I answer all core field config repeating questions
+    And     I create 1 new instances of all encounter event repeaters
+    Then    I should see 2 instances of the repeater core field config questions
+
+    When    I answer 2 instances of all repeater questions
     And     I save and continue
     Then    I should see "successfully updated"
-    And     I should see all core field config repeating answers
+    Then    I should see 2 instances of the repeater core field config questions
+    And     I should see 2 instances of answers to the repeating core field config questions
 
     When    I save and exit
     Then    I should see "successfully updated"
-    And     I should see all core field config repeating answers
+    Then    I should see 2 instances of the repeater core field config questions
+    And     I should see 2 instances of answers to the repeating core field config questions
 
 
   Scenario: Answer all repeaters after adding a form.
@@ -60,31 +65,43 @@ Feature: Form fields for repeating core sections.
     And     a published form with repeating core fields for a encounter event
 
     When    I navigate to the encounter event edit page
-    Then    I should not see any core field config repeating question
+    Then    I should see 0 instances of the repeater core field config questions
 
     When    I click the "Add/Remove forms for this event" link
     And     I check the form for addition
     And     I click the "Add Forms" button
     And     I navigate to the encounter event edit page
-    Then    I should see all of the repeater core field config questions
-    And     I answer all core field config repeating questions
+    Then    I should see 1 instances of the repeater core field config questions
+
+    When    I create 1 new instances of all encounter event repeaters
+    And     I answer 2 instances of all repeater questions
     And     I save and continue
     Then    I should see "successfully updated"
-    Then    I should see all core field config repeating answers
+    Then    I should see 2 instances of the repeater core field config questions
+    And     I should see 2 instances of answers to the repeating core field config questions
 
     When    I save and exit
     Then    I should see "successfully updated"
-    Then    I should see all core field config repeating answers
+    Then    I should see 2 instances of the repeater core field config questions
+    And     I should see 2 instances of answers to the repeating core field config questions
 
 
   Scenario: Removing forms removes repeater answers. 
-    Given   a encounter event with with a form with repeating core fields
+    Given   a encounter event with a form with repeating core fields
 
     When    I navigate to the encounter event edit page
-    Then    I should see all of the repeater core field config questions
+    Then    I should see 1 instances of the repeater core field config questions
+
+    When    I create 1 new instances of all encounter event repeaters
+    And     I answer 2 instances of all repeater questions
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 2 instances of the repeater core field config questions
+    And     I should see 2 instances of answers to the repeating core field config questions
 
     When    I click the "Add/Remove forms for this event" link
     And     I check the form for removal
     And     I click and confirm the "Remove Forms" button
     And     I navigate to the encounter event edit page
-    Then    I should not see any core field config repeating question
+    Then    I should see 0 instances of the repeater core field config questions
+    And     I should see 0 instances of answers to the repeating core field config questions
