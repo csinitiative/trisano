@@ -1903,6 +1903,7 @@ UPDATE people
 DELETE FROM notes
     USING dw_contact_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         dme.id = notes.event_id;
 
