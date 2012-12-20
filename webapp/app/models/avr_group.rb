@@ -3,6 +3,11 @@ class AvrGroup < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name
+  validate :name_is_not_trisano
+
+  def name_is_not_trisano
+    errors.add(:name, "cannot include 'TriSano'") if name.include?("TriSano")
+  end
 
 
   def self.std
