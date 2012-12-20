@@ -80,10 +80,13 @@ class CoreField < ActiveRecord::Base
       transaction do
         hashes.each do |attributes|
           attributes.stringify_keys!
-          unless self.find_by_key(attributes['key'])
-            if (code_name = attributes.delete('code_name'))
-              attributes['code_name'] = CodeName.find_by_code_name(code_name)
-            end
+          if (code_name = attributes.delete('code_name'))
+            attributes['code_name'] = CodeName.find_by_code_name(code_name)
+          end
+          if existing_core_field = self.find_by_key(attributes['key'])
+            attributes.delete("parent_key") # not needed for updates
+            existing_core_field.update_attributes(attributes)
+          else
             place_in_tree(attributes) do |attributes|
               CoreField.create!(attributes)
             end
