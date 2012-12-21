@@ -53,6 +53,7 @@ class EventFormsController < ApplicationController
 
     forms_to_remove = params[:forms_to_remove] || []
     forms_to_add = params[:forms_to_add] || []
+    forms_to_add = @event.available_forms if params[:auto_assign_forms]
     if forms_to_add.empty? and forms_to_remove.empty?
       flash[:error] = t("no_forms_were_selected")
     else

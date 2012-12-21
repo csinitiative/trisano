@@ -52,12 +52,12 @@ describe MorbidityEvent do
     event.jurisdiction.secondary_entity_id = chicken_pox_form.jurisdiction_id
     event.create_disease_event(:disease_id => disease.id)
 
-    event.available_form_references.length.should == 1
+    event.available_forms.length.should == 1
     event.should be_needs_forms_update
 
     event.save!
 
-    event.available_form_references.length.should == 0
+    event.available_forms.length.should == 0
     event.should be_needs_forms_update
   end
 
@@ -75,8 +75,7 @@ describe MorbidityEvent do
     event.save!
 
     event.disease_event.disease = diseases(:hep_a)
-    event.available_form_references.length.should == 1
-    event.invalid_form_references.length == 1
+    event.available_forms.length.should == 1
     event.should be_needs_forms_update
   end
 

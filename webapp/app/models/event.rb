@@ -660,24 +660,27 @@ class Event < ActiveRecord::Base
   end
 
   def needs_forms_update?
-    self.available_form_references.length > 0 or self.form_references.length > 0
+    self.available_forms.length > 0 or self.forms_to_remove.length > 0
   end
 
-  def available_form_references
-    return [] unless self.disease_event
+  def forms_to_remove
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-    template_ids = self.form_references.collect { |fr| fr.template_id }
-
-    # What is this doing? Comments please!
-    forms.delete_if {|f| template_ids.include?(f.template_id) }.map {|f| FormReference.new(:form_id => f.id, :template_id => f.template_id) }
+    template_ids = forms.map(&:template_id)
+    self.form_references.map(&:form).select {|f| !template_ids.include?(f.template_id) }
   end
 
-  def invalid_form_references
+  def common_forms
     return [] unless self.disease_event
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-    return [] if forms.empty?
-    form_ids = forms.map(&:id)
-    self.form_references.select {|f| !form_ids.include?(f.form_id) }
+    template_ids = forms.map(&:template_id)
+    self.form_references.map(&:form).select {|f| template_ids.include?(f.template_id) }
+  end
+
+  def available_forms
+    return [] unless self.disease_event
+    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    template_ids = self.form_references.map(&:template_id)
+    forms.select {|f| !template_ids.include?(f.template_id) }
   end
 
   def create_form_answers_for_repeating_form_elements

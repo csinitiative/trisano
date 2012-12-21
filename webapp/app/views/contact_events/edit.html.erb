@@ -60,6 +60,11 @@
   <% end %>
   <%= event_form.submit t('save_and_exit'), :style => "display: none", :onclick => "this.disabled=true;" %>
 <% end %>
+<% if params[:forms] and @event.needs_forms_update? %>
+    <div id="form-references-dialog" title="Form References Dialog">
+      <%= render :partial => 'events/form_references_form' %>
+    </div>
+  <% end %>
 <%= alert_if_changed(@event) %>
 
 <%= contact_edit_search_js %>

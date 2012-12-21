@@ -294,6 +294,9 @@ test:
   add_forms: 'xAdd Forms'
   remove_forms: 'xRemove Forms'
   add_to_event: 'xAdd to Event'
+  auto_add_to_event: 'Auto-Assign Forms for {{disease_name}}'
+  common_form_references: 'Common Forms'
+  forms_change_form: 'The new forms for the disease {{disease_name}} will be automatically added. You may additionally remove the previous disease forms.'
   search_existing_clinician: "xSearch for an existing clinician"
   add_clinician: "xAdd a clinician"
   search_existing_diagnostic_facility: "xSearch for an existing diagnostic facility"
