@@ -139,7 +139,10 @@ class StagedMessagesController < ApplicationController
         staged_message.assigned_event = event
         redis.delete_matched("views/events/#{event.id}/*")
       else
-        event = staged_message.new_event_from(params[:entity_id])
+        config = { :event_type => params[:type] }
+        config[:event_id] = params[:parent_id] if params[:parent_id]
+        config[:entity_id] = params[:entity_id] if params[:entity_id]
+        event = staged_message.new_event_from(config)
         msg_string = t("new")
         staged_message.assigned_event = event
       end

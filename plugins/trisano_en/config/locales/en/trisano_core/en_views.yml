@@ -1074,7 +1074,9 @@ en:
 #Staged messages
   staged_message_notes: "Notes"
   assign_new_cmr: "Assign to new CMR using this person"
+  assign_new_cmr_as_encounter: "Assign to new Encounter using this person"
   assign_lab_result: "Assign lab result"
+  assign_lab_result_as_encounter: "Assign lab result to Encounter"
 
   trisano:
     privileges:
