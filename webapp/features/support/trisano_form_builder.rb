@@ -80,26 +80,54 @@ def create_value_elements_in_value_set(value_set_element, values_table)
 end
 
 
-def create_core_field_config(form, container, core_field) 
-    core_field_config = CoreFieldElement.new
+def create_core_field_config(form, container, core_field, options={})
+  core_field_config = CoreFieldElement.new
 
-    core_field_config.core_path = core_field.key
-    core_field_config.parent_element_id = container.id
-    core_field_config.save_and_add_to_form
+  core_field_config.core_path = core_field.key
+  core_field_config.parent_element_id = container.id
+  core_field_config.save_and_add_to_form
 
-    # Add question to before config
+  before_question = create_question_on_form(form, {
+      :question_text => "#{core_field.key} before?",
+      :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
+    core_field_config.children[0]
+  )
+
+  after_question = create_question_on_form(form, { 
+      :question_text => "#{core_field.key} after?",
+      :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
+    core_field_config.children[1]
+  )
+
+  if options[:follow_up] == true
+    before_follow_up = create_form_question_follow_up(before_question)
     create_question_on_form(form, {
-        :question_text => "#{core_field.key} before?",
-        :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
-      core_field_config.children[0]
+        :question_text => "#{core_field.key} before follow up?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "before follow up") },
+      before_follow_up
     )
 
-    # Add question to after config
-    create_question_on_form(form, { 
-        :question_text => "#{core_field.key} after?",
-        :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
-      core_field_config.children[1]
+    after_follow_up = create_form_question_follow_up(after_question)
+    create_question_on_form(form, {
+        :question_text => "#{core_field.key} after follow up?",
+        :short_name => Digest::MD5::hexdigest(core_field.key + "after follow up") },
+      after_follow_up
     )
+
+  end
+end
+
+def create_form_question_follow_up(question_element)
+  follow_up_element = FollowUpElement.new
+  if question_element.question.data_type.to_s == "single_line_text" or question_element.question.data_type.to_s == "multi_line_text"
+    follow_up_element.condition = "YES"
+  else
+    raise "Question #{question.inspect} uses data type not yet supported by form follow ups. Implement it here!"
+  end
+
+  follow_up_element.parent_element_id = question_element.id
+  follow_up_element.save_and_add_to_form
+  follow_up_element
 end
 
 def check_core_fields(core_field_key,html_source)
