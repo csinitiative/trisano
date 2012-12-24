@@ -55,6 +55,7 @@ class FormElement < ActiveRecord::Base
           return true
         end
       rescue Exception => ex
+        Rails.logger.error "Unable to save form element #{self.inspect}: #{ex.message}.\n#{ex.backtrace.join('\n')}"
         return nil
       end
     end
