@@ -76,7 +76,7 @@ end
 # Question helpers
 #
 
-Given(/^that form has (.+) questions$/) do |number_of_questions|
+Given(/^that form has (\d+) questions$/) do |number_of_questions|
   number_of_questions.to_i.times do |question|
     create_question_on_form(@form, { :question_text => "#{get_unique_name(10)} #{question}" })
   end
@@ -143,8 +143,15 @@ Given /^that form has core view configs configured for all core views$/ do
 
     create_question_on_form(@form, { :question_text => "#{core_view[0]} question?", :short_name => Digest::MD5::hexdigest(core_view[0]) }, @core_view_element)
   end
-
 end
 
+Given /^that form has a repeating section configured in the default view with a question$/ do
+  @default_view = @form.investigator_view_elements_container.children[0]
+  @section_element = SectionElement.new
+  @section_element.parent_element_id = @default_view.id
+  @section_element.name = get_random_word 
+  @section_element.repeater = true
+  @section_element.save_and_add_to_form
 
-
+  create_question_on_form(@form, { :question_text => "#{@section_element.name} question?", :short_name => Digest::MD5::hexdigest(@section_element.name) }, @section_element)
+end

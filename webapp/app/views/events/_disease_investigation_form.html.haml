@@ -58,32 +58,7 @@
             %span{:class => 'investigator-form-title'}
               = h(form_reference.form.name)
             %br{:clear => 'all'}
-            - if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
-              - has_multiple_user_defined_tabs = true
-              %script{:type => "text/javascript"}
-                = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{h(form.id)}\");"
-              %div{:id => "user_defined_tabs_#{h(form.id)}", :class => "yui-navset"}
-                %ul{:id => "user_defined_tab_list_#{h(form.id)}", :class => "yui-nav"}
-                  -  view_count = 0
-                  - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
-                    - view_count += 1
-                    - if view_count == 1
-                      %li{:class => "selected"}
-                        %a{:href => "#ut_#{h(view.id)}"}
-                          %em
-                            = h(view.name)
-                    - else
-                      %li
-                        %a{:href => "#ut_#{h(view.id)}"}
-                          %em
-                            = h(view.name)
-                %div{:class => "yui-content"}
-                  - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
-                    %div{:id => "ut_#{h(view.id)}"}
-                      %fieldset
-                        = render_investigator_view(view, f, form)
-            - else
-              = render_investigator_view(form.investigator_view_elements_container.children[0], f, form)
+            = render :partial => "events/investigate_form", :locals => {:form_reference => form_reference, :form => form, :f => f}
 
             %br{:clear => "all"}
             %div{:align => "right"}

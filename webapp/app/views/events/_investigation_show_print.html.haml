@@ -17,6 +17,6 @@
   =t 'investigative_info'
   = render :partial => 'events/print_page_header.html.haml', :locals => { :entity_data => entity_data, :event_form => event_form }
 
-= render :partial => 'events/forms_print.html.haml', :locals => { :event => event_form.object }
+= render :partial => 'events/forms_print.html.haml', :locals => { :event => event_form.object, :f => event_form }
 
 

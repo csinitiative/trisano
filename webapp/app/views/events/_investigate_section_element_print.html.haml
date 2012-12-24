@@ -1,0 +1,13 @@
+- section_children = form_elements_cache.children(section)
+
+%div{:class => "print-section"}
+  %br= strip_tags(section.name)
+  %br
+  - unless section.description.blank?
+    %span{:class => "print-instructions"}
+      = section.description.gsub("\n", '<br/>')
+
+  %hr
+  - if section_children.size > 0
+    - section_children.each do |child|
+      = print_investigator_element(form_elements_cache, child, f, investigator_form)

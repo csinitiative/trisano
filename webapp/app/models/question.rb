@@ -62,7 +62,7 @@ class Question < ActiveRecord::Base
   end
 
   def repeater?
-    question_element.repeater?
+    question_element.core_field_repeater?
   end
 
   private

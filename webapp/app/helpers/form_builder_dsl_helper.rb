@@ -135,41 +135,59 @@ module FormBuilderDslHelper
     result
   end
 
-  def render_investigator_section(form_elements_cache, element, f)
-    begin
-      result = "<br/>"
-      section_id = "section_investigate_#{h(element.id)}";
-      hide_id = section_id + "_hide";
-      show_id = section_id + "_show"
-      result <<  "<fieldset class='form_section vert-break'>"
-      result << "<legend>#{h(strip_tags(element.name))} "
-
-      unless element.help_text.blank?
-        result << render_help_text(element)
-        result << "&nbsp;"
+  def investigator_section(partial, form_elements_cache, section_element, f)
+    if section_element.repeater?
+      result = ""
+      
+      f.fields_for(:investigator_form_sections) do |investigator_form|
+        result << render(:partial => partial, 
+               :locals => {:form_elements_cache => form_elements_cache, 
+                           :section => section_element, 
+                           :f => f, 
+                           :investigator_form => investigator_form})
       end
 
-      result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[#{t('hide')}]</span>"
-      result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[#{t('show')}]</span>"
-      result << "</legend>"
-      result << "<div id='#{section_id}'>"
-      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
+      result
+    else
 
-      section_children = form_elements_cache.children(element)
+      render(:partial => partial, 
+             :locals => {:form_elements_cache => form_elements_cache, 
+                         :section => section_element, 
+                         :f => f,
+                         :investigator_form => nil})
+    end
 
-      if section_children.size > 0
-        section_children.each do |child|
-          result << render_investigator_element(form_elements_cache, child, f)
+  end
+
+  def render_investigator_section(form_elements_cache, section_element, f)
+    begin
+      partial = "events/investigate_section_element.html.haml" 
+      result = investigator_section(partial, form_elements_cache, section_element, f)
+
+      if section_element.repeater?
+
+        result << content_tag(:div, nil, :id => "repeater_section_investigate_#{h(section_element.id)}")
+
+
+        f.fields_for(:investigator_form_sections, f.object.investigator_form_sections.build, :child_index => "NEW_RECORD") do |investigator_form|
+          result << content_tag(:p, :style => 'clear:both') do
+                            add_record_link(f, :answers, "Add another #{section_element.name} section", 
+                                          {:partial => partial, 
+                                           :locals => {:form_elements_cache => form_elements_cache, 
+                                                       :section => section_element, 
+                                                       :f => f,
+                                                       :investigator_form => investigator_form}, 
+                                           :insert => "repeater_section_investigate_#{h(section_element.id)}", 
+                                           :object => section_element})
+          end
         end
       end
 
-      result << "</div></fieldset><br/>"
-
-      return result
+      result
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))
-      return t(:could_not_render, :thing => t(:section_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:section_element), :id => section_element.id)
     end
   end
 
@@ -285,7 +303,7 @@ module FormBuilderDslHelper
       else
         result << method_ref.call(form_elements_cache, element, f, local_form_builder)
       end
-    end
+    end #form_elements_cache.children
 
     result
   end
@@ -293,7 +311,6 @@ module FormBuilderDslHelper
   def render_investigator_view(view, f, form=nil, local_form_builder=nil)
     investigator_view("render", view, form, f, local_form_builder)
   end
-
 
   def show_investigator_view(view, form=nil, f = nil, local_form_builder=nil)
     investigator_view("show", view, form, f, local_form_builder)
@@ -342,7 +359,7 @@ module FormBuilderDslHelper
 
     answerable = form_builder.object && form_builder.object.respond_to?(:answers)
     if answerable
-      if form_builder.respond_to?(:repeater_form?) and form_builder.repeater_form?
+      if (form_builder.respond_to?(:repeater_form?) and form_builder.repeater_form?) or (question.question_element.in_repeater_section?)
         # This is critical to use #base_class here because polymorphic with STI
         # requires use of base class!
         # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
@@ -379,7 +396,7 @@ module FormBuilderDslHelper
     question_style = question.style.blank? ? "vert" : question.style
     result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
-    if !local_form_builder.nil? && local_form_builder.repeater_form?
+    if (!local_form_builder.nil? && local_form_builder.repeater_form?) || (element.in_repeater_section?)
       answer_object = collect_answer_object(question, local_form_builder)
       inner_prefix = answer_object.new_record? ? "new_repeater_answers" : "repeater_answers"
       outer_prefix = local_form_builder.object_name
@@ -526,41 +543,13 @@ module FormBuilderDslHelper
   # Show mode counterpart to #render_investigator_section
   #
   # Debt? Dupliactes most of the render method. Consider consolidating.
-  def  show_investigator_section(form_elements_cache, element, f)
+  def  show_investigator_section(form_elements_cache, section_element, f)
     begin
-      result = "<br/>"
-      section_id = "section_investigate_#{element.id}";
-      hide_id = section_id + "_hide";
-      show_id = section_id + "_show"
-      result <<  "<fieldset class='form_section vert-break'>"
-      result << "<legend>#{strip_tags(element.name)} "
-
-      unless element.help_text.blank?
-        result << render_help_text(element)
-        result << "&nbsp;"
-      end
-
-      result << "<span id='#{hide_id}' onClick=\"Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">[#{t('hide')}]</span>"
-      result << "<span id='#{show_id}' onClick=\"Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;\" style='display: none;'>[#{t('show')}]</span>"
-      result << "</legend>"
-      result << "<div id='#{section_id}'>"
-      result << "<i>#{element.description.gsub("\n", '<br/>')}</i><br/><br/>" unless element.description.blank?
-
-      section_children = form_elements_cache.children(element)
-
-      if section_children.size > 0
-        section_children.each do |child|
-          result << show_investigator_element(form_elements_cache, child, f)
-        end
-      end
-
-      result << "</div></fieldset><br/>"
-
-      return result
+      investigator_section("events/investigate_section_element_show.html.haml", form_elements_cache, section_element, f)
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))
-      return t(:could_not_render, :thing => t(:section_element), :id => element.id)
+      return t(:could_not_render, :thing => t(:section_element), :id => section_element.id)
     end
   end
 
@@ -698,22 +687,7 @@ module FormBuilderDslHelper
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  print_investigator_section(form_elements_cache, element, f)
     begin
-      result = "<div class='print-section'>"
-      result << "<br/>#{strip_tags(element.name)}<br/>"
-      result << "<span class='print-instructions'>#{element.description.gsub("\n", '<br/>')}</span>" unless element.description.blank?
-      result << "<hr/>"
-
-      section_children = form_elements_cache.children(element)
-
-      if section_children.size > 0
-        section_children.each do |child|
-          result << print_investigator_element(form_elements_cache, child, f)
-        end
-      end
-
-      result << "</div>"
-
-      return result
+      investigator_section("events/investigate_section_element_print.html.haml", form_elements_cache, element, f)
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))

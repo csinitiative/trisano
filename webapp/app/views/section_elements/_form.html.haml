@@ -20,9 +20,14 @@
   =f.text_field :name
 
   %p
+    =f.label :repeater, "Repeating section?"
+    =f.check_box :repeater
+
+  %p
     =f.label :description
     =f.text_area :description, :rows => 10
 
   %p
     =f.label :help_text
     =f.text_area :help_text, :rows => 10
+

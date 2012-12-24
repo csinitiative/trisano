@@ -143,37 +143,6 @@ When /^I answer all core field config repeating questions$/ do
   ])
 end
 
-Then /^I should see all core field config repeating answers$/ do
-  html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
-  raise "No core fields found" if @core_fields.empty?
-  @core_fields.each do |core_field|
-    if core_field.key.include?("morbidity_and_assessment_event")
-      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
-    else
-      key = core_field.key
-    end
-    raise "Could not find before answer for #{key}" if html_source.include?("#{key} before answer") == false
-    raise "Could not find after answer for #{key}" if html_source.include?("#{key} after answer") == false
-  end
-end
-
-Then /^I should not see any core field config repeating question$/ do
-  html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
-  raise "No core fields found" if @core_fields.empty?
-  @core_fields.each do |core_field|
-    if core_field.key.include?("morbidity_and_assessment_event")
-      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
-    else
-      key = core_field.key
-    end
-    html_source.include?("#{key} before?").should be_false, "Didn't expect to see '#{key} before?'"
-    html_source.include?("#{key} after?").should be_false, "Didn't expect to see '#{key} after?'"
-  end
-
-end
-
 Given /^I have required repeater core field prerequisites$/ do
   And "a lab named \"Acme Lab\""
   And "a lab named \"LabCo Lab\""
@@ -218,20 +187,6 @@ Then /^I should see (\d+) instances of answers to the repeating core field confi
   end
 end
 
-Then /^I should see all of the repeater core field config questions$/ do
-  html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
-  @core_fields.count.should_not be_equal(0), "Didn't find any lab core fields."
-  @core_fields.each do |core_field|
-    if core_field.key.include?("morbidity_and_assessment_event")
-      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
-    else
-      key = core_field.key
-    end
-    check_core_fields(key, html_source)
-  end
-end
-
 When /^I create (\d+) new instances of all (.+) event repeaters$/ do |count, event_type|
     count.to_i.times do
       
@@ -266,9 +221,38 @@ When /^I answer (\d+) instances of all repeater questions$/ do |count|
       key = core_field.key
     end
     count.to_i.times do |i|
-      answer_investigator_question(@browser, "#{key} before?", "#{key} before answer", html_source, i)
-      answer_investigator_question(@browser, "#{key} after?", "#{key} after answer", html_source, i)
+      answer_investigator_question(@browser, "#{key} before?", "#{key} before answer #{i}", html_source, i)
+      answer_investigator_question(@browser, "#{key} after?", "#{key} after answer #{i}", html_source, i)
     end
   end
 end
 
+When /^I answer (\d+) instances of all repeater section questions$/ do |count|
+  html_source = @browser.get_html_source
+  count.to_i.times do |i|
+    answer_investigator_question(@browser, "#{@section_element.name} question?", "#{@section_element.name} answer #{i}", html_source, i)
+  end
+end
+
+When /^I create (\d+) new instances of all section repeaters$/ do |count|
+  count.to_i.times do
+    And  "I click the \"Add another #{@section_element.name} section\" link and don't wait"
+  end
+end
+
+Then /^I should see (\d+) instances of the repeater section questions$/ do |expected_count|
+  # We want to use body_text here because the JavaScript links contain template code
+  # which have the question text in them, which throws off the count...not that we want to 
+  # count templates anyway.
+  html_source = @browser.get_body_text
+  actual_count = html_source.scan("#{@section_element.name} question?").count
+  actual_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of '#{@section_element.name} question?', got #{actual_count}." 
+end
+
+Then /^I should see (\d+) instances of answers to the repeating section questions$/ do |count|
+  html_source = @browser.get_html_source
+  count.to_i.times do |i|
+    actual_count = html_source.scan("#{@section_element.name} answer #{i}").count
+    actual_count.should be_equal(1), "Expected 1 instances of '#{@section_element.name} answer #{i}', got #{actual_count}."
+  end
+end

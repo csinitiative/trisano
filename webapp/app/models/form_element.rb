@@ -350,7 +350,7 @@ class FormElement < ActiveRecord::Base
     FormElement.find_by_sql("SELECT nextval('tree_id_generator')").first.nextval.to_i
   end
 
-  def repeater?
+  def core_field_repeater?
     core_field.repeater? 
   end
 
@@ -367,15 +367,28 @@ class FormElement < ActiveRecord::Base
     end
   end
 
-  def core_field_element
-    if self.is_a?(CoreFieldElement)
+  def find_parent_of_type(klass)
+    if self.is_a?(klass)
       return self
-    elsif self.parent and self.parent.respond_to?(:core_field_element)
-      return self.parent.core_field_element
+    elsif self.parent and self.parent.respond_to?(klass.name.underscore)
+      return self.parent.send(klass.name.underscore)
     else
       return nil
     end
   end
+
+  def section_element
+    find_parent_of_type(SectionElement)
+  end
+
+  def core_field_element
+    find_parent_of_type(CoreFieldElement)
+  end
+
+  def in_repeater_section?
+    section_element.try(:repeater)
+  end
+
   protected
 
   # A little hack to make sure that questions get deleted when a

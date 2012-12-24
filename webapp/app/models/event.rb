@@ -142,23 +142,22 @@ class Event < ActiveRecord::Base
 
   belongs_to :parent_event, :class_name => 'Event', :foreign_key => 'parent_id'
 
-  accepts_nested_attributes_for :jurisdiction,
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? }
-  accepts_nested_attributes_for :disease_event,
-    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  has_many :investigator_form_sections, :dependent => :destroy
+
+  accepts_nested_attributes_for :jurisdiction, :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? }
+  accepts_nested_attributes_for :disease_event, :reject_if => :nested_attributes_blank?
   accepts_nested_attributes_for :contact_child_events,
-    :allow_destroy => true,
-    :reject_if => proc { |attrs| check_contact_attrs(attrs) }
-  accepts_nested_attributes_for :place_child_events,
-    :allow_destroy => true,
-    :reject_if => :place_exposure_blank?
+                                :allow_destroy => true,
+                                :reject_if => proc { |attrs| check_contact_attrs(attrs) }
+  accepts_nested_attributes_for :place_child_events, 
+                  			        :allow_destroy => true,
+                  			        :reject_if => :place_exposure_blank?
   accepts_nested_attributes_for :encounter_child_events,
-    :allow_destroy => true,
-    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
-  accepts_nested_attributes_for :notes,
-    :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
-  accepts_nested_attributes_for :address,
-    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+                                :allow_destroy => true,
+		 	                    	    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
+  accepts_nested_attributes_for :notes, :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
+  accepts_nested_attributes_for :address, :reject_if => :nested_attributes_blank? 
+  accepts_nested_attributes_for :investigator_form_sections, :reject_if => :nested_attributes_blank?
 
   def self.check_contact_attrs(attrs)
     # Contact is an existing entity chosen from search
