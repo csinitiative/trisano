@@ -74,8 +74,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       conditions = []
       follow_ups.each { |follow_up| conditions << "#{follow_up.condition},#{follow_up.id}"}
       conditions = conditions.join(",")
-      text_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
-      select_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
+      text_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}', '#{id}_spinner');"
+      select_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}', '#{id}_spinner');"
     end
 
     cdc_attributes = []

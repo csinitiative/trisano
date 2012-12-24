@@ -342,7 +342,7 @@ module FormBuilderDslHelper
 
     answerable = form_builder.object && form_builder.object.respond_to?(:answers)
     if answerable
-      if form_builder.repeater_form?
+      if form_builder.respond_to?(:repeater_form?) and form_builder.repeater_form?
         # This is critical to use #base_class here because polymorphic with STI
         # requires use of base class!
         # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
