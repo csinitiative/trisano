@@ -109,6 +109,7 @@ class AssessmentEventsController < EventsController
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.update_from_params(params[:assessment_event])
+    @disease_changed = @event.disease_changed?
 
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
@@ -126,7 +127,8 @@ class AssessmentEventsController < EventsController
 
         flash[:notice] = t("ae_updated")
         format.html {
-          if go_back
+          if go_back or @disease_changed
+            @query_params.merge!({:forms => true}) if @disease_changed
             redirect_to edit_ae_url(@event, @query_params)
           else
             url = params[:redirect_to]
