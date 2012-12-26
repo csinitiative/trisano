@@ -2,7 +2,7 @@
 
 USE_DEBUGGER=$1
 
-features/support/enhanced_support_stop.sh 
+script/enhanced_support_stop.sh 
 
 Xvfb :99 -ac -extension GLX > log/xvfb.log 2>&1 &
 
