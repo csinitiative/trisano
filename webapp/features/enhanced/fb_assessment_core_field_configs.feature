@@ -6,6 +6,7 @@ Feature: assessment event form core field configs
   Scenario: assessment event core field configs
     Given I am logged in as a super user
     And a lab named "Labby"
+    And a common test type named "Common Test Type"
     And a assessment event form exists
     And that form has core field configs configured for all core fields
     And that form is published

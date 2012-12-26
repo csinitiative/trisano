@@ -39,7 +39,7 @@ def create_basic_event(event_type, last_name=nil, disease=nil, jurisdiction=nil)
 
     event.first_reported_PH_date = Date.yesterday.to_s(:db) if event.respond_to?(:first_reported_PH_date)
 
-    if event_type.to_s.downcase=="encounter" or event_type.to_s.downcase == "contact"
+    if event_type.to_s.downcase=="encounter" or event_type.to_s.downcase == "contact" or event_type.to_s.downcase == "place"
       event.parent_event = create_basic_event("assessment", get_random_word, disease, jurisdiction)
     end
 
@@ -49,10 +49,26 @@ def create_basic_event(event_type, last_name=nil, disease=nil, jurisdiction=nil)
                                            :encounter_location_type => ParticipationsEncounter.valid_location_types.first)
     end
 
-    if last_name.nil?
-      event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
-    else
-      event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+    if event.respond_to?(:interested_party)
+      if last_name.nil?
+        event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
+      else
+        event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+      end
+    end
+
+    if event.respond_to?(:interested_place)
+      event.attributes = {"interested_place_attributes"=>{
+                            "place_entity_attributes"=>{
+                              "place_attributes"=>{
+                                "name"=> get_random_word 
+                              }
+                            }
+                          },
+                          "participations_place_attributes"=>{
+                            "date_of_exposure"=>""
+                          }
+                        }
     end
 
     event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease)) if disease

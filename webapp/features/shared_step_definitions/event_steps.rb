@@ -132,7 +132,19 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
 end
 
 Given(/^a (.+) event exists with a disease that matches the form$/) do |event_type|
-  @event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name, get_random_jurisdiction_by_short_name)
+  event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name, get_random_jurisdiction_by_short_name)
+  if event_type == "morbidity" or event_type == "assessment"
+    @event = event
+  elsif event_type == "place"
+    @place_event = event
+    @event = event.parent_event
+  elsif event_type == "contact"
+    @contact_event = event
+    @event = event.parent_event
+  elsif event_type == "encounter"
+    @encounter_event = event
+    @event = event.parent_event
+  end
 end
 
 Given /^a simple (.+) event in jurisdiction (.+) for last name (.+)$/ do |event_type, jurisdiction, last_name|

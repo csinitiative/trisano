@@ -1,4 +1,3 @@
 standard: features/standard -r features/support/env.rb -r features/support/standard.rb -r features/shared_step_definitions -r features/standard_step_definitions --tags ~@pending
-benchmark: features/benchmark -r features/support/env.rb -r features/support/benchmark.rb -r features/shared_step_definitions -r features/standard_step_definitions -r features/benchmark_step_definitions --tags ~@pending
 any_standard: features/standard -r features/support/env.rb -r features/support/standard.rb -r features/shared_step_definitions -r features/standard_step_definitions
 enhanced: features/enhanced -r features/support/env.rb -r features/support/enhanced.rb -r features/support/trisano -r features/support/trisano_form_builder -r features/shared_step_definitions -r features/enhanced_step_definitions

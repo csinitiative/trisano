@@ -132,8 +132,7 @@ Feature: Form fields for repeating core sections.
     And     I save and continue
     Then    I should see "successfully updated"
 
-    When    I check the form for addition
-    And     I click and confirm the "Change Forms" button
+    When    I click and confirm the "Change Forms" button
     Then    I should see "successfully updated"
     And     I should see 1 instances of the repeater core field config questions
 

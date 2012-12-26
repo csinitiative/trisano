@@ -90,8 +90,8 @@ When /^I print the (.+) event$/ do |event_type|
               @event
             when "contact"
               @contact_event
-            when "encounter"
-              raise "Printing is not supported for encounter events."
+            when "encounter", "place"
+              raise "Printing is not supported for #{event_type} events."
   end
 
   event_path = url_for({
@@ -121,28 +121,6 @@ When /^the (.+) tab should be highlighted in red$/ do |tab|
   @browser.get_xpath_count("//a[@href='##{tab.downcase}_tab'][contains(@style,'color: red')]").should be_equal(1), "Expected #{tab} to be highlighted in red."
 end
 
-When /^I answer all core field config repeating questions$/ do
-  # Also fill in one address field so the address will show up in show mode
-  html_source = @browser.get_html_source
-  @core_fields ||= CoreField.all(:conditions => ['event_type = ? AND fb_accessible = ? AND disease_specific = ? AND repeater = ?', @form.event_type, true, false, true])
-  raise "No core fields found" if @core_fields.empty?
-  @core_fields.each do |core_field|
-    if core_field.key.include?("morbidity_and_assessment_event")
-      key = core_field.key.gsub("morbidity_and_assessment_event", @event.class.name.underscore)
-    else
-      key = core_field.key
-    end
-    answer_investigator_question(@browser, "#{key} before?", "#{key} before answer", html_source).should be_true
-    answer_investigator_question(@browser, "#{key} after?", "#{key} after answer", html_source).should be_true
-  end
-
-  # A Lab and a Test type is a required field to save a lab so we must fill it out any time we answer all repeaters
-  And  "I enter the following lab results for the \"Acme Lab\" lab:", table([
-    %w( test_type ),
-    %w( TriCorder )
-  ])
-end
-
 Given /^I have required repeater core field prerequisites$/ do
   And "a lab named \"Acme Lab\""
   And "a lab named \"LabCo Lab\""
@@ -167,8 +145,11 @@ Then /^I should see (\d+) instances of the repeater core field config questions$
     else
       key = core_field.key
     end
-    html_source.scan("#{key} before?").count.should be_equal(expected_count.to_i), "Could not find #{expected_count} instances of before question for #{key}" 
-    html_source.scan("#{key} after?").count.should be_equal(expected_count.to_i), "Could not find #{expected_count} instances of after question for #{key}" 
+    before_count = html_source.scan("#{key} before?").count
+    before_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of before question for #{key}, got #{before_count}." 
+
+    after_count = html_source.scan("#{key} after?").count
+    after_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of after question for #{key}, got #{after_count}." 
   end
 end
 

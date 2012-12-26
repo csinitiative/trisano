@@ -52,8 +52,6 @@ When(/^I answer all of the core follow ups with a matching condition$/) do
 end
 
 Then /^I should see all of the core follow up questions$/ do
-  @browser.wait_for_ajax
-  sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
