@@ -506,8 +506,7 @@ FROM events
         SELECT
             a.event_id,
             trisano.hstoreagg(
-                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name) || '|' ||
-                    COALESCE(a.repeater_form_object_id || '|' || repeater_form_object_type, '|'),
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
                 a.text_answer
             ) AS newhstore
         FROM
@@ -517,7 +516,8 @@ FROM events
             q.form_element_id = fe.id AND
             a.question_id = q.id AND
             a.text_answer IS NOT NULL AND
-            a.text_answer != ''
+            a.text_answer != '' AND
+            a.repeater_form_object_id IS NULL
         GROUP BY a.event_id
     ) formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
@@ -1765,18 +1765,58 @@ SELECT
     area_code,
     phone_number,
     extension,
-    code_description AS phone_type
+    code_description AS phone_type,
+    hstores.newhstore AS telephone_formbuilder
 FROM
     telephones t
     LEFT JOIN external_codes e
-        ON (e.id = t.entity_location_type_id);
+        ON (e.id = t.entity_location_type_id)
+    LEFT JOIN (
+        SELECT
+            a.repeater_form_object_id,
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
+                a.text_answer
+            ) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type = 'Telephone'
+        GROUP BY a.repeater_form_object_id
+    ) hstores
+        ON (hstores.repeater_form_object_id = t.id);
 
 CREATE TABLE dw_email_addresses AS
 SELECT
     owner_id AS entity_id,
-    email_address
+    email_address,
+    hstores.newhstore AS emailaddress_formbuilder
 FROM
-    email_addresses e;
+    email_addresses e
+    LEFT JOIN (
+        SELECT
+            a.repeater_form_object_id,
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
+                a.text_answer
+            ) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type = 'EmailAddress'
+        GROUP BY a.repeater_form_object_id
+    ) hstores
+        ON (hstores.repeater_form_object_id = e.id);
 
 ALTER TABLE questions ADD form_short_name TEXT;
 
@@ -1867,6 +1907,7 @@ UPDATE people
 DELETE FROM notes
     USING dw_morbidity_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         dme.id = notes.event_id;
 

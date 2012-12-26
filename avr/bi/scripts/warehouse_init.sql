@@ -368,7 +368,7 @@ $$
     LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION trisano.hstoresafe(TEXT) RETURNS TEXT AS $$
-    SELECT regexp_replace($1, '\W', '_', 'g');
+    SELECT regexp_replace($1, E'\W', '_', 'g');
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION trisano.hstoreagg(trisano.hstore, text, text) RETURNS trisano.hstore AS $$

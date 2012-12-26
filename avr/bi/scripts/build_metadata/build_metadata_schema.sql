@@ -11,7 +11,9 @@ CREATE TABLE trisano.core_tables (
     target_table TEXT NOT NULL, -- The actual table name this should point at
     order_num INTEGER NOT NULL,
     make_category BOOLEAN DEFAULT true,
-    formbuilder_prefix TEXT
+    formbuilder_prefix TEXT,
+    disease_join_clause TEXT,
+    repeater_object_type TEXT DEFAULT NULL
 );
 
 DROP TABLE IF EXISTS trisano.core_columns;
@@ -25,47 +27,48 @@ CREATE TABLE trisano.core_columns (
     make_category_column BOOLEAN DEFAULT true
 );
 
-INSERT INTO trisano.core_tables (make_category, table_name, table_description, target_table, order_num, formbuilder_prefix) VALUES
-(true,  'dw_morbidity_events_view',                  'Morbidity Events',                  'trisano.dw_morbidity_events_view',                  1,  'Morbidity'),
-(true,  'dw_morbidity_clinicians_view',              'Morbidity Clinicians',              'trisano.dw_morbidity_clinicians_view',              2,  NULL),
-(true,  'dw_morbidity_diagnostic_facilities_view',   'Morbidity Diagnostic Facilities',   'trisano.dw_morbidity_diagnostic_facilities_view',   2,  NULL),
-(true,  'dw_morbidity_email_addresses_view',         'Morbidity Email Addresses',         'trisano.dw_morbidity_email_addresses_view',         2,  NULL),
-(true,  'dw_morbidity_hospitals_view',               'Morbidity Hospitals',               'trisano.dw_morbidity_hospitals_view',               2,  NULL),
-(true,  'dw_morbidity_lab_results_view',             'Morbidity Lab Results',             'trisano.dw_morbidity_lab_results_view',             2,  NULL),
-(true,  'dw_morbidity_patients_races_view',          'Morbidity Patients Races',          'trisano.dw_morbidity_patients_races_view',          2,  NULL),
-(true,  'dw_morbidity_secondary_jurisdictions_view', 'Morbidity Secondary Jurisdictions', 'trisano.dw_morbidity_secondary_jurisdictions_view', 2,  NULL),
-(true,  'dw_morbidity_telephones_view',              'Morbidity Telephone Numbers',       'trisano.dw_morbidity_telephones_view',              2,  NULL),
-(true,  'dw_morbidity_treatments_events_view',       'Morbidity Treatments Events',       'trisano.dw_morbidity_treatments_events_view',       2,  NULL),
-(true,  'dw_contact_events_view',                    'Contact Events',                    'trisano.dw_contact_events_view',                    3,  'Contact'),
-(true,  'dw_contact_clinicians_view',                'Contact Clinicians',                'trisano.dw_contact_clinicians_view',                4,  NULL),
-(true,  'dw_contact_diagnostic_facilities_view',     'Contact Diagnostic Facilities',     'trisano.dw_contact_diagnostic_facilities_view',     4,  NULL),
-(true,  'dw_contact_email_addresses_view',           'Contact Email Addresses',           'trisano.dw_contact_email_addresses_view',           4,  NULL),
-(true,  'dw_contact_hospitals_view',                 'Contact Hospitals',                 'trisano.dw_contact_hospitals_view',                 4,  NULL),
-(true,  'dw_contact_lab_results_view',               'Contact Lab Results',               'trisano.dw_contact_lab_results_view',               4,  NULL),
-(true,  'dw_contact_patients_races_view',            'Contact Patients Races',            'trisano.dw_contact_patients_races_view',            4,  NULL),
-(true,  'dw_contact_secondary_jurisdictions_view',   'Contact Secondary Jurisdictions',   'trisano.dw_contact_secondary_jurisdictions_view',   4,  NULL),
-(true,  'dw_contact_telephones_view',                'Contact Telephone Numbers',         'trisano.dw_contact_telephones_view',                4,  NULL),
-(true,  'dw_contact_treatments_events_view',         'Contact Treatments Events',         'trisano.dw_contact_treatments_events_view',         4,  NULL),
-(true,  'dw_assessment_events_view',                  'Assessment Events',                  'trisano.dw_assessment_events_view',                  1,  'Assessment'),
-(true,  'dw_assessment_clinicians_view',              'Assessment Clinicians',              'trisano.dw_assessment_clinicians_view',              2,  NULL),
-(true,  'dw_assessment_diagnostic_facilities_view',   'Assessment Diagnostic Facilities',   'trisano.dw_assessment_diagnostic_facilities_view',   2,  NULL),
-(true,  'dw_assessment_email_addresses_view',         'Assessment Email Addresses',         'trisano.dw_assessment_email_addresses_view',         2,  NULL),
-(true,  'dw_assessment_hospitals_view',               'Assessment Hospitals',               'trisano.dw_assessment_hospitals_view',               2,  NULL),
-(true,  'dw_assessment_lab_results_view',             'Assessment Lab Results',             'trisano.dw_assessment_lab_results_view',             2,  NULL),
-(true,  'dw_assessment_patients_races_view',          'Assessment Patients Races',          'trisano.dw_assessment_patients_races_view',          2,  NULL),
-(true,  'dw_assessment_secondary_jurisdictions_view', 'Assessment Secondary Jurisdictions', 'trisano.dw_assessment_secondary_jurisdictions_view', 2,  NULL),
-(true,  'dw_assessment_telephones_view',              'Assessment Telephone Numbers',       'trisano.dw_assessment_telephones_view',              2,  NULL),
-(true,  'dw_assessment_treatments_events_view',       'Assessment Treatments Events',       'trisano.dw_assessment_treatments_events_view',       2,  NULL),
-(true,  'dw_encounter_events_view',                  'Encounters',                        'trisano.dw_encounter_events_view',                  5,  'Encounter'),
-(true,  'dw_encounter_email_addresses_view',         'Encounter Email Addresses',         'trisano.dw_encounter_email_addresses_view',         6,  NULL),
-(true,  'dw_encounters_lab_results_view',            'Encounters Lab Results',            'trisano.dw_encounters_lab_results_view',            6,  NULL),
-(true,  'dw_encounter_patients_races_view',          'Encounter Patients Races',          'trisano.dw_encounter_patients_races_view',          6,  NULL),
-(true,  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',       'trisano.dw_encounter_telephones_view',              6,  NULL),
-(true,  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',      'trisano.dw_encounters_treatments_events_view',      6,  NULL),
-(true,  'dw_place_events_view',                      'Place Events',                      'trisano.dw_place_events_view',                      7,  'Place'),
-(true,  'etl_success',                               'Data Sync Status',                  'trisano.etl_success',                               9,  NULL),
-(true,  'avr_groups_view',                           'Disease Groups',                    'trisano.avr_groups_view',                           9,  NULL),
-(false, 'avr_groups_diseases_view',                  'avr_groups_diseases_view',          'trisano.avr_groups_diseases_view',                  9,  NULL);
+-- Note: disease_join_clause is the set of joins I'd have to go through to get from this table to an event table
+INSERT INTO trisano.core_tables (make_category, table_name, table_description,             target_table,                                  order_num,  formbuilder_prefix, disease_join_clause) VALUES
+(true,  'dw_morbidity_events_view',                  'Morbidity Events',                   'trisano.dw_morbidity_events_view',                     1, 'Morbidity', ''),
+(true,  'dw_morbidity_clinicians_view',              'Morbidity Clinicians',               'trisano.dw_morbidity_clinicians_view',                 2, NULL, ''),
+(true,  'dw_morbidity_diagnostic_facilities_view',   'Morbidity Diagnostic Facilities',    'trisano.dw_morbidity_diagnostic_facilities_view',      2, NULL, ''),
+(true,  'dw_morbidity_email_addresses_view',         'Morbidity Email Addresses',          'trisano.dw_morbidity_email_addresses_view',            2, 'EmailAddress', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_morbidity_events_view q ON (q.id = event_id) '),
+(true,  'dw_morbidity_hospitals_view',               'Morbidity Hospitals',                'trisano.dw_morbidity_hospitals_view',                  2, NULL, ''),
+(true,  'dw_morbidity_lab_results_view',             'Morbidity Lab Results',              'trisano.dw_morbidity_lab_results_view',                2, NULL, ''),
+(true,  'dw_morbidity_patients_races_view',          'Morbidity Patients Races',           'trisano.dw_morbidity_patients_races_view',             2, NULL, ''),
+(true,  'dw_morbidity_secondary_jurisdictions_view', 'Morbidity Secondary Jurisdictions',  'trisano.dw_morbidity_secondary_jurisdictions_view',    2, NULL, ''),
+(true,  'dw_morbidity_telephones_view',              'Morbidity Telephone Numbers',        'trisano.dw_morbidity_telephones_view',                 2, 'Telephone', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_morbidity_events_view q ON (q.id = event_id) '),
+(true,  'dw_morbidity_treatments_events_view',       'Morbidity Treatments Events',        'trisano.dw_morbidity_treatments_events_view',          2, NULL, ''),
+(true,  'dw_contact_events_view',                    'Contact Events',                     'trisano.dw_contact_events_view',                       3, 'Contact', ''),
+(true,  'dw_contact_clinicians_view',                'Contact Clinicians',                 'trisano.dw_contact_clinicians_view',                   4, NULL, ''),
+(true,  'dw_contact_diagnostic_facilities_view',     'Contact Diagnostic Facilities',      'trisano.dw_contact_diagnostic_facilities_view',        4, NULL, ''),
+(true,  'dw_contact_email_addresses_view',           'Contact Email Addresses',            'trisano.dw_contact_email_addresses_view',              4, 'EmailAddress', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_contact_events_view q ON (q.id = event_id) '),
+(true,  'dw_contact_hospitals_view',                 'Contact Hospitals',                  'trisano.dw_contact_hospitals_view',                    4, NULL, ''),
+(true,  'dw_contact_lab_results_view',               'Contact Lab Results',                'trisano.dw_contact_lab_results_view',                  4, NULL, ''),
+(true,  'dw_contact_patients_races_view',            'Contact Patients Races',             'trisano.dw_contact_patients_races_view',               4, NULL, ''),
+(true,  'dw_contact_secondary_jurisdictions_view',   'Contact Secondary Jurisdictions',    'trisano.dw_contact_secondary_jurisdictions_view',      4, NULL, ''),
+(true,  'dw_contact_telephones_view',                'Contact Telephone Numbers',          'trisano.dw_contact_telephones_view',                   4, 'Telephone', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_contact_events_view q ON (q.id = event_id) '),
+(true,  'dw_contact_treatments_events_view',         'Contact Treatments Events',          'trisano.dw_contact_treatments_events_view',            4, NULL, ''),
+(true,  'dw_assessment_events_view',                 'Assessment Events',                  'trisano.dw_assessment_events_view',                    1, 'Assessment', ''),
+(true,  'dw_assessment_clinicians_view',             'Assessment Clinicians',              'trisano.dw_assessment_clinicians_view',                2, NULL, ''),
+(true,  'dw_assessment_diagnostic_facilities_view',  'Assessment Diagnostic Facilities',   'trisano.dw_assessment_diagnostic_facilities_view',     2, NULL, ''),
+(true,  'dw_assessment_email_addresses_view',        'Assessment Email Addresses',         'trisano.dw_assessment_email_addresses_view',           2, 'EmailAddress', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_assessment_events_view q ON (q.id = event_id) '),
+(true,  'dw_assessment_hospitals_view',              'Assessment Hospitals',               'trisano.dw_assessment_hospitals_view',                 2, NULL, ''),
+(true,  'dw_assessment_lab_results_view',            'Assessment Lab Results',             'trisano.dw_assessment_lab_results_view',               2, NULL, ''),
+(true,  'dw_assessment_patients_races_view',         'Assessment Patients Races',          'trisano.dw_assessment_patients_races_view',            2, NULL, ''),
+(true,  'dw_assessment_secondary_jurisdictions_view','Assessment Secondary Jurisdictions', 'trisano.dw_assessment_secondary_jurisdictions_view',   2, NULL, ''),
+(true,  'dw_assessment_telephones_view',             'Assessment Telephone Numbers',       'trisano.dw_assessment_telephones_view',                2, 'Telephone', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_assessment_events_view q ON (q.id = event_id) '),
+(true,  'dw_assessment_treatments_events_view',      'Assessment Treatments Events',       'trisano.dw_assessment_treatments_events_view',         2, NULL, ''),
+(true,  'dw_encounter_events_view',                  'Encounters',                         'trisano.dw_encounter_events_view',                     5, 'Encounter', ''),
+(true,  'dw_encounter_email_addresses_view',         'Encounter Email Addresses',          'trisano.dw_encounter_email_addresses_view',            6, 'EmailAddress', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_encounter_events_view q ON (q.id = event_id) '),
+(true,  'dw_encounters_lab_results_view',            'Encounters Lab Results',             'trisano.dw_encounters_lab_results_view',               6, NULL, ''),
+(true,  'dw_encounter_patients_races_view',          'Encounter Patients Races',           'trisano.dw_encounter_patients_races_view',             6, NULL, ''),
+(true,  'dw_encounter_telephones_view',              'Encounter Telephone Numbers',        'trisano.dw_encounter_telephones_view',                 6, 'Telephone', 'JOIN trisano.participations_view ON (entity_id = primary_entity_id) JOIN trisano.dw_encounter_events_view q ON (q.id = event_id) '),
+(true,  'dw_encounters_treatments_events_view',      'Encounters Treatments Events',       'trisano.dw_encounters_treatments_events_view',         6, NULL, ''),
+(true,  'dw_place_events_view',                      'Place Events',                       'trisano.dw_place_events_view',                         7, 'Place', ''),
+(true,  'etl_success',                               'Data Sync Status',                   'trisano.etl_success',                                  9, NULL, ''),
+(true,  'avr_groups_view',                           'Disease Groups',                     'trisano.avr_groups_view',                              9, NULL, ''),
+(false, 'avr_groups_diseases_view',                  'avr_groups_diseases_view',           'trisano.avr_groups_diseases_view',                     9, NULL, '');
 
 INSERT INTO trisano.core_columns (target_table, target_column, column_name, column_description, make_category_column) VALUES
 ('trisano.dw_assessment_events_view',                  'active',                             'active',                             'AD Act',                    true),
@@ -680,8 +683,31 @@ INSERT INTO trisano.core_relationships (from_table, from_column, to_table, to_co
 ('dw_encounter_events_view'         , 'patient_entity_id'     , 'dw_encounter_telephones_view'              , 'entity_id'              , '0:N', 'Ce'),
 ('avr_groups_view'                  , 'id'                    , 'avr_groups_diseases_view'                  , 'avr_group_id'           , '0:N', default);
 
-INSERT INTO trisano.view_mods (table_name, addition) VALUES
-    ('dw_morbidity_events', 'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age'),
-    ('dw_contact_events',   'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age');
+COMMIT;
+
+BEGIN;
+-- Try adding stuff to view_mods, but if this isn't the first time we've run
+-- build_metadata_schema, these will already exist, so we need to handle it
+-- with savepoints
+
+DO $view_mods$
+BEGIN
+    BEGIN
+        INSERT INTO trisano.view_mods (table_name, addition) VALUES
+            ('dw_morbidity_events', 'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age');
+    EXCEPTION
+        WHEN unique_violation THEN
+            -- Just ignore the statement
+    END;
+
+    BEGIN
+        INSERT INTO trisano.view_mods (table_name, addition) VALUES
+            ('dw_contact_events', 'CURRENT_DATE - date_entered_into_system AS event_date_age, CURRENT_DATE - date_trunc(''day'', date_created)::date AS event_created_age');
+    EXCEPTION
+        WHEN unique_violation THEN
+            -- Just ignore the statement
+    END;
+END;
+$view_mods$;
 
 COMMIT;

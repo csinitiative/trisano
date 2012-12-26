@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU Affero General Public License 
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
+# Verbose output
+export VERBOSE="false"
+
 # Path to JAVA_HOME
 export JAVA_HOME=/usr/lib/jvm/jre-1.6.0-openjdk
 
@@ -33,6 +36,10 @@ export TRISANO_DB_DRIVER="org.postgresql.Driver"
 export TRISANO_DB_USER="josh"
 export TRISANO_DB_PASSWORD="password"
 
+# JAR files
+export JRUBY_JAR="/home/josh/devel/trisano/avr/bi/extensions/trisano/dist/jruby-complete-1.5.2.jar"
+export JDBC_DRIVER_JAR="postgresql-9.2-1002.jdbc4.jar"
+
 # JDBC connection information
 export TRISANO_DB_HOST='localhost'
 export TRISANO_DB_PORT='5432'
@@ -40,7 +47,7 @@ export TRISANO_DB_NAME='avr_db'
 export TRISANO_JDBC_URL="jdbc:postgresql://${TRISANO_DB_HOST}:${TRISANO_DB_PORT}/${TRISANO_DB_NAME}"
 
 # URL that the BI server can is running on (needed to publish updates)
-export BI_SERVER_URL="https://localhost:8080"
+export BI_SERVER_URL="http://localhost:8080"
 export BI_PUBLISH_URL="${BI_SERVER_URL}/pentaho/RepositoryFilePublisher"
 export BI_PUBLISH_PASSWORD="password"
 
@@ -55,7 +62,7 @@ export PENTAHO_SECURITY_FILE=
 # for some things.
 cd $BI_SERVER_PATH/pentaho-solutions/TriSano
 
-CLASSPATH=$CLASSPATH:/home/josh/devel/trisano/avr/bi/extensions/trisano/dist/jruby-complete-1.5.2.jar
+CLASSPATH=$CLASSPATH:$JDBC_DRIVER_JAR:$JRUBY_JAR
 
 for i in $BI_SERVER_PATH/tomcat/lib/*; do
     CLASSPATH=$CLASSPATH:$i
@@ -63,6 +70,7 @@ done
 
 $JAVA_HOME/bin/java \
         -cp $CLASSPATH org.jruby.Main \
-        $BI_SERVER_PATH/pentaho-solutions/TriSano/build_metadata.rb | grep -v DEBUG
+        $BI_SERVER_PATH/pentaho-solutions/TriSano/build_metadata.rb | \
+            grep -v DEBUG
         #-Djavax.net.ssl.trustStore=/opt/avr/biserver-ee/ssl/keystore \
         #-Djavax.net.ssl.trustStorePassword=changeit \

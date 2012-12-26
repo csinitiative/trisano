@@ -23,7 +23,7 @@
 
 SOURCE_DB_HOST=localhost
 SOURCE_DB_PORT=5432
-SOURCE_DB_NAME=trisano_development
+SOURCE_DB_NAME=edge
 SOURCE_DB_USER=trisano_user
 # NB!: Passwords must be handled automatically, i.e. with a .pgpass file
 # cf. http://www.postgresql.org/docs/current/static/libpq-pgpass.html
@@ -152,9 +152,9 @@ if [ "x$BUC" = "xbucardo" ]; then
         DIE "Problem copying Bucardo"
 fi
 
-echo "   Creating functions"
-$PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "CREATE FUNCTION show_trgm(text) RETURNS text[] LANGUAGE c IMMUTABLE STRICT AS '\$libdir/pg_trgm', 'show_trgm';"
-$PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "ALTER FUNCTION public.show_trgm(text) OWNER TO trisano_user;"
+#echo "   Creating functions"
+#$PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "CREATE OR REPLACE FUNCTION show_trgm(text) RETURNS text[] LANGUAGE c IMMUTABLE STRICT AS '\$libdir/pg_trgm', 'show_trgm';"
+#$PSQL $PSQL_FLAGS -h $DEST_DB_HOST -p $DEST_DB_PORT -U $DEST_DB_USER -d $DEST_DB_NAME -c "ALTER FUNCTION public.show_trgm(text) OWNER TO trisano_user;"
 
 echo "   Dumping main schema"
 $PGDUMP -T attachments -T logos -T db_files $PGDUMP_FLAGS -s -h $SOURCE_DB_HOST -p $SOURCE_DB_PORT -U $SOURCE_DB_USER \

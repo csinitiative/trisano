@@ -19,6 +19,10 @@ require 'java'
 require 'fileutils'
 require 'yaml'
 
+def verbose
+  ENV['VERBOSE'] && ENV['VERBOSE'] != 'false' ? true : false
+end
+
 def server_dir
   ENV['BI_SERVER_PATH'] || '/usr/local/pentaho/server/biserver-ce'
 end
@@ -182,10 +186,10 @@ def setup_security_reference(meta)
   secserv.setNonProxyHosts('')
   if pentaho_security_file.nil?
     secserv.serviceURL = bi_server_url + '/pentaho/ServiceAction?action=SecurityDetails&details=all'
-    puts "Getting Pentaho security from URL: " + secserv.serviceURL
+    puts "Getting Pentaho security from URL: " + secserv.serviceURL if verbose
   else
     secserv.setFilename pentaho_security_file
-    puts "Getting Pentaho security from file: " + secserv.filename
+    puts "Getting Pentaho security from file: " + secserv.filename if verbose
   end
 
   meta.setSecurityReference(secref)
@@ -227,7 +231,7 @@ def pentaho_roles(conn)
 end
 
 def setup_role_security(model, dg, meta, juris, conn)
-  puts "Setting up role-based security"
+  puts "Setting up role-based security" if verbose
   rbsm = model.rowLevelSecurity.getRoleBasedConstraintMap
 
   # Remove existing rule set
@@ -242,14 +246,14 @@ def setup_role_security(model, dg, meta, juris, conn)
   rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, 'Admin'), "1 = 1")
 
   pentaho_roles(conn).each do |rolename|
-    puts "Checking out pentaho role #{rolename}"
+    puts "Checking out pentaho role #{rolename}" if verbose
     if juris[rolename] != nil then
-      puts "  Found role match on #{rolename}"
+      puts "  Found role match on #{rolename}" if verbose
       rbsm.put(Java::OrgPentahoPmsSchemaSecurity::SecurityOwner.new(1, rolename), "OR([dw_morbidity_events_view_#{dg}.dw_morbidity_events_view_investigating_jurisdiction_#{dg}]=\"#{rolename}\" ;  [dw_morbidity_secondary_jurisdictions_view_#{dg}.dw_morbidity_secondary_jurisdictions_view_name_#{dg}] = \"#{rolename}\")")
     end
   end
   model.rowLevelSecurity.set_type(Java::OrgPentahoPmsSchemaSecurity::RowLevelSecurity::Type::ROLEBASED)
-  puts "Finished building row-level constraints"
+  puts "Finished building row-level constraints" if verbose
 end
 
 def jurisdiction_query
@@ -298,7 +302,7 @@ def add_single_business_column(bt, pt, pc, id, name, descr, category, make_cat)
     bc.business_table = bt
     bt.add_business_column bc
     if not category.nil? and make_cat == 'TRUE' then
-      puts " *** Adding business column #{name} to category #{category.get_name 'en_US'}"
+      puts " *** Adding business column #{name} to category #{category.get_name 'en_US'}" if verbose
       category.add_business_column bc
     end
     return bc
@@ -310,7 +314,9 @@ def add_business_columns(bt, meta, category, dg, conn)
   cols.each do |bcrow|
     pc = pt.find_physical_column "#{pt.get_id}_#{bcrow['name']}"
     if pc.nil?
-      pt.get_physical_columns.each do |a| puts a.get_id end
+      if verbose then
+        pt.get_physical_columns.each do |a| puts a.get_id end
+      end
       raise "Couldn't find physical column '#{pt.get_id}.#{bcrow['name']}' for new business column"
     end
     add_single_business_column bt, pt, pc, "#{pt.get_id}_#{bcrow['name']}_#{dg}", bcrow['name'], bcrow['description'], category, bcrow['make_category_column']
@@ -319,12 +325,18 @@ end
 
 def core_business_table_query(event_type)
   query = %{
-    SELECT order_num, table_name AS business_table_name, table_description, relname AS physical_table_name,
-    CASE
-        WHEN make_category THEN 'TRUE'
-        ELSE 'FALSE'
-    END AS make_category,
-    'FALSE', formbuilder_prefix
+    SELECT
+        order_num,
+        table_name AS business_table_name,
+        disease_join_clause AS join_clause,
+        table_description,
+        relname AS physical_table_name,
+        CASE
+            WHEN make_category THEN 'TRUE'
+            ELSE 'FALSE'
+        END AS make_category,
+        'FALSE',
+        formbuilder_prefix
     FROM trisano.core_tables c JOIN pg_class pgc
         ON (pgc.oid = c.target_table::regclass)
     WHERE table_name !~ '#{event_type == 'A' ? 'dw_morbidity' : 'dw_assessment'}'
@@ -332,7 +344,11 @@ def core_business_table_query(event_type)
   }
 end
 
-def formbuilder_hstore_query(name, prefix, dg)
+def formbuilder_hstore_query(name, prefix, dg, join_clause)
+    # The point is to get all formbuilder fields for this disease group that
+    # *aren't* associated to a repeating core field. Form fields attached to a
+    # repeating core field are part of the core table in the business model.
+    # XXX Next thing to do: get disease_id working in here somehow.
     return %{
         SELECT key, data_type, f_short, q_short FROM (
             SELECT
@@ -351,6 +367,7 @@ def formbuilder_hstore_query(name, prefix, dg)
                     FROM (
                         SELECT DISTINCT trisano.skeys(#{prefix}_formbuilder) AS key
                         FROM trisano.#{name}
+                            #{join_clause}
                         WHERE
                             '#{dg}' = 'All tables' OR
                             disease_id IN (
@@ -361,6 +378,9 @@ def formbuilder_hstore_query(name, prefix, dg)
                                         ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
                             )
                     ) f1
+                    WHERE
+                        split_part(key, '|', 3) IS NULL OR
+                        split_part(key, '|', 3) = ''
                 ) f2
                 LEFT JOIN trisano.questions_view qv
                     ON (trisano.hstoresafe(qv.short_name) = q_short AND trisano.hstoresafe(qv.form_short_name) = f_short)
@@ -370,7 +390,9 @@ def formbuilder_hstore_query(name, prefix, dg)
     }
 end
 
-def add_formbuilder_categories(prefix, sourcetable, pt, bt, dg, meta, formbuilder_categories, conn)
+def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, formbuilder_categories, conn)
+    # query = the query to run to get the form and question short names for
+    #       this model
     # prefix = String representing form type ('Morbidity', 'Contact', etc.)
     # pt = The PhysicalTable object associated with this hstore column
     # bt = The BusinessTable object associated with this hstore column
@@ -391,10 +413,11 @@ def add_formbuilder_categories(prefix, sourcetable, pt, bt, dg, meta, formbuilde
     last_table_name = ''
     category = nil
     category_name = nil
-    get_query_results(formbuilder_hstore_query(sourcetable, prefix, dg), conn).each do |fbkey|
+    get_query_results(query, conn).each do |fbkey|
+      puts "ADDING FORMBUILDER FIELD :" . fbkey.inspect if verbose
       tablename, colname = fbkey['key'].split '|', 2
       if category.nil? or category_name != "#{prefix} #{tablename}"
-        puts "Creating category '#{prefix} #{tablename}'"
+        puts "Creating category '#{prefix} #{tablename}'" if verbose
         category = BusinessCategory.new "#{prefix} #{tablename}"
         category.set_name 'en_US', "#{prefix} #{tablename}"
         category.set_root_category false
@@ -414,7 +437,30 @@ def add_formbuilder_categories(prefix, sourcetable, pt, bt, dg, meta, formbuilde
     end
 end
 
-def add_single_business_table(name, desc, disease_group, dg, x, y, make_cat, formbuilder_prefix, model, meta, conn, fb_cats)
+def core_formbuilder_query(type, group_name)
+    return %{
+        SELECT f.short_name AS form_short_name, q.short_name AS question_short_name
+        FROM trisano.answers_view a
+            JOIN trisano.questions_view q
+                ON (q.id = a.question_id)
+            JOIN trisano.form_elements_view fe
+                ON (fe.id = q.form_element_id)
+            JOIN trisano.forms_view f
+                ON (f.id = fe.form_id)
+            JOIN trisano.disease_events_view de
+                ON (de.event_id = a.event_id)
+            JOIN trisano.avr_groups_diseases_view agd
+                ON (de.disease_id = agd.disease_id)
+            JOIN trisano.avr_groups_view ag
+                ON (ag.id = agd.avr_group_id)
+        WHERE
+            repeater_form_object_type = '#{type}' AND 
+            ag.name = '#{group_name}'
+        GROUP BY 1, 2
+    }
+end
+
+def add_single_business_table(name, desc, join_clause, disease_group, dg, x, y, make_cat, formbuilder_prefix, model, meta, conn, fb_cats)
     # name = PhysicalTable name
     # desc = Friendly description users will see
     # disease_group = Text of disease group name
@@ -437,7 +483,7 @@ def add_single_business_table(name, desc, disease_group, dg, x, y, make_cat, for
 
     # Build business categories, too
     if make_cat == 'TRUE'
-      puts "Building business category for '#{desc}'"
+      puts "Building business category for '#{desc}'" if verbose
       bc = BusinessCategory.new "#{desc}_#{dg}"
       bc.set_name 'en_US', desc
       bc.set_root_category false
@@ -446,8 +492,11 @@ def add_single_business_table(name, desc, disease_group, dg, x, y, make_cat, for
     end
 
     add_business_columns bt, meta, bc, dg, conn
-    if disease_group != 'TriSano' and not formbuilder_prefix.nil? then
-      add_formbuilder_categories formbuilder_prefix, name, pt, bt, disease_group, meta, fb_cats, conn
+    if disease_group != 'TriSano' 
+      if not formbuilder_prefix.nil? then
+        query = formbuilder_hstore_query(name, formbuilder_prefix, disease_group, join_clause)
+        add_formbuilder_categories query, formbuilder_prefix, name, pt, bt, disease_group, meta, fb_cats, conn
+      end
     end
     model.add_business_table bt
     unless bc.nil?
@@ -468,7 +517,7 @@ def add_business_tables(model, event_type, meta, disease_group, dg, conn)
   y = 0
   fb_cats =[]
   get_query_results(core_business_table_query(event_type), conn).each do |btrow|
-    x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
+    x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], btrow['join_clause'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
   end
   fb_cats.each do |a|
     model.get_root_category.add_business_category a
@@ -492,7 +541,7 @@ def disease_groups(conn)
 end
 
 def create_models(dg, model_name_str, dg_id, event_type, meta, conn)
-  puts "Processing disease group #{dg} with event type #{event_type}"
+  puts "Processing disease group #{dg} with event type #{event_type}" if verbose
   model = BusinessModel.new model_name_str
   initialize_model model, meta
   root_bc = BusinessCategory.new
@@ -545,7 +594,7 @@ def columns_query(tablename, schemaname)
 end
 
 def add_single_physical_column(pt, id, desc, data_type, target_column, formula)
-    puts "     -- New physical column: #{id}"
+    puts "     -- New physical column: #{id}" #if verbose
     pc = PhysicalColumn.new id
     descr = (desc == '' ? id : desc)
     descr.gsub!(/^col_/, '') if pt.get_target_table =~ /^fb_/
@@ -593,7 +642,7 @@ def core_physical_table_query
 end
 
 def add_single_physical_table(tname, tid, tdesc, ttargtable, ttargnsp, meta, conn)
-    puts "Creating new physical table: #{tname}"
+    puts "Creating new physical table: #{tname}" if verbose
     pt = PhysicalTable.new tid
     pt.set_name 'en_US', tname
     pt.set_description 'en_US', tdesc
@@ -640,7 +689,7 @@ end
 def create_relationships(model, dg, event_type, conn)
   get_query_results(relationships_query(event_type), conn).each do |rel|
     r = Relationship.new
-    puts "Creating relationship for #{rel['fromtab']}.#{rel['fromcol']} to #{rel['totab']}.#{rel['tocol']}"
+    puts "Creating relationship for #{rel['fromtab']}.#{rel['fromcol']} to #{rel['totab']}.#{rel['tocol']}" if verbose
     r.table_from = model.find_business_table('en_US', rel['fromtab'])
     raise "Can't have a nil business table" if r.table_from.nil?
     r.field_from = r.table_from.find_business_column "#{rel['fromcol']}_#{dg}"
@@ -658,7 +707,7 @@ end
 def save_metadata(dg, meta, filename)
   cwm = CWM.get_instance(dg)
   CwmSchemaFactory.new.store_schema_meta(cwm, meta, nil)
-  puts "Writing out new XMI file #{filename}"
+  puts "Writing out new XMI file #{filename}" if verbose
   File.open(filename, 'w') do |io|
     io << cwm.getXMI
   end
@@ -686,13 +735,13 @@ if __FILE__ == $0
     init_etl_success conn
     # load plugins
     plugin_objects = []
-    puts "Trying to load plugins from #{plugin_directory}"
+    puts "Trying to load plugins from #{plugin_directory}" if verbose
     if File.directory?(plugin_directory) then
       Dir.glob(File.join(plugin_directory, '*')).each do |this_plugin|
-        puts "Testing #{this_plugin}"
+        puts "Testing #{this_plugin}" if verbose
         if File.directory? File.join(this_plugin, 'avr' ) and File.exist? File.join(this_plugin, 'avr', 'build_metadata.rb') then
           require File.join(this_plugin, 'avr', 'build_metadata.rb')
-          puts "Found plugin #{this_plugin}"
+          puts "Found plugin #{this_plugin}" if verbose
           # What else might I need to pass to the plugin?
           plugin_objects << TriSano_metadata_plugin.new(conn, lambda { |x, y| get_query_results(x, y) })
         end
@@ -709,7 +758,7 @@ if __FILE__ == $0
           create_models dg['name'], "#{dg['name']}#{ event_type == 'M' ? "" : " Assessments"}", dg['id'], event_type, meta, conn
           outfile = File.join(server_dir, 'metadata_storage', "dg#{i}_#{event_type}_metadata.out")
           xmifile = File.join(server_dir, 'metadata_storage', "dg#{i}_#{event_type}_metadata.xmi")
-          puts "Writing metadata for disease group '#{dg['name']}' and event type #{event_type} to #{xmifile}"
+          puts "Writing metadata for disease group '#{dg['name']}' and event type #{event_type} to #{xmifile}" if verbose
           save_metadata dg['name'], meta, outfile
           FileUtils.rm xmifile, :force => true
           FileUtils.mv(outfile, xmifile)
