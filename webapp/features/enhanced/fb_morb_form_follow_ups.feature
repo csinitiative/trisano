@@ -21,7 +21,6 @@ Feature: Morbidity event form form field follow ups
     And I should see all form field follow up answers
 
     When I am on the morbidity event edit page
-    And I remove read only entities from the event
     And I answer all of the form field follow ups with a non-matching condition
     Then I should not see any of the form field follow up questions
     And I should not see any follow up answers
