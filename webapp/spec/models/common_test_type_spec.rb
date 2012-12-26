@@ -18,7 +18,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe CommonTestType do
-  fixtures :external_codes
+  fixtures :external_codes, :common_test_types
 
   before :all do
     destroy_fixture_data

@@ -13,3 +13,9 @@ rpr:
 vdrl:
   id: 5
   common_name: VDRL (Venereal disease research laboratory)
+culture_test:
+  id: 6
+  common_name: Culture
+blood_lead_test:
+  id: 7
+  common_name: Blood lead test

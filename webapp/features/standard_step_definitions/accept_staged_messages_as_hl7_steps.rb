@@ -44,6 +44,16 @@ Given /^ELRs with the following test types:$/ do |table|
   end
 end
 
+Given /^I select '(.+)' state$/ do |state|
+  select state, :from => "message_state"
+end
+
+Given /^ELR in assigned state with no assigned event exists$/ do
+  @staged_message = StagedMessage.create! :hl7_message => unique_message(hl7_messages[:arup_1])
+  @staged_message.state = StagedMessage.states[:assigned]
+  @staged_message.save!
+end
+
 When /^I visit the staged message new page$/ do
   visit new_staged_message_path
 end

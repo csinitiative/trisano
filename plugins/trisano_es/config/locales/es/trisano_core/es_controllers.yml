@@ -250,7 +250,7 @@ es:
   staged_message_discarded: "Se descartó el mensaje de fases."
   existing: "existente(s)"
   new: "nuevo(s)"
-  message_assignment_successful: "Se asignó el mensaje de fases al evento {{msg_string}} con éxito. <br/>{{note}}"
+  message_assignment_successful: "Se asignó el mensaje de fases al evento {{msg_string}} con éxito, record number {{record_number}}. <br/>{{note}}"
   message_assignment_failed: "No se pudo asignar el mensaje al evento {{msg_string}}. {{message}}"
   staged_message_search failed: "Falló la búsqueda. Asegúrese de que sea válido el rango de fechas."
   no_manage_staged_message_privs: "Sin privilegios para administrar los mensajes de fases."

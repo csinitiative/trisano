@@ -282,7 +282,7 @@ en:
   country: "Country"
   abnormal_flags: "Abnormal flags"
   specimen_id: "Specimen ID"
-
+  specimen_source: "Specimen source"
   event_disease_set_to: "Event's disease set to {{disease_name}}"
   loinc_code_maps_to_multiple_diseases: "LOINC code(s) map to multiple diseases:"
   unmapped_language_code: "ELR language code {{lang_code}} not found among TriSano's external codes."

@@ -596,6 +596,10 @@ class HumanEvent < Event
         @per_request_comments += ", " unless @per_request_comments.blank?
         @per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
       end
+      unless obr.specimen_source_2_5_1.blank? and obr.specimen_source_2_3_1.blank?
+        @per_request_comments += ", " unless @per_request_comments.blank?
+        @per_request_comments += "#{I18n.translate :specimen_source}: #{obr.specimen_source_2_5_1 || obr.specimen_source_2_3_1}"
+      end
 
       obr.tests.each do |obx|
         set_loinc_scale_and_test_type obx
@@ -743,11 +747,13 @@ class HumanEvent < Event
 
   def add_lab_results(staged_message, obr, obx, i)
     comments = @per_request_comments.clone
-
     unless obx.abnormal_flags.blank?
       comments += ", " unless comments.blank?
       comments += "#{I18n.translate :abnormal_flags}: #{obx.abnormal_flags}"
     end
+
+    comments += ", " unless comments.blank?
+    comments += "Observation value: #{obx.obx_segment.observation_value}"
 
     result_hash = {}
 

@@ -136,17 +136,22 @@ class StagedMessagesController < ApplicationController
       if params[:event_id]
         event = Event.find(params[:event_id])
         msg_string = t("existing")
+        staged_message.assigned_event = event
+        redis.delete_matched("views/events/#{event.id}/*")
       else
         event = staged_message.new_event_from(params[:entity_id], params[:type])
+        staged_message.set_address_and_phone(event)
         msg_string = t("new")
+        staged_message.assigned_event = event
       end
 
-      staged_message.assigned_event = event
+      event.reload
+
     rescue Exception => e
       logger.error(e)
       flash[:error] = t("message_assignment_failed", :msg_string => msg_string, :message => $!)
     else
-      flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :note => staged_message.note)
+      flash[:notice] = t("message_assignment_successful", :msg_string => msg_string, :record_number => event.record_number, :note => staged_message.note)
     end
     redirect_to(staged_message_path(staged_message))
   end

@@ -153,3 +153,17 @@ hep_non_cdc_q:
   data_type: "radio_button"
   size:
   short_name: "hep_non_cdc_q"
+std_group_neuro:
+  id: "18"
+  form_element_id: 312
+  short_name: "neuro"
+  data_type: "drop_down"
+std_group_detected:
+  id: "19"
+  form_element_id: 313
+  short_name: "detected"
+  data_type: "drop_down"
+std_group_infosrce:
+  id: "20"
+  form_element_id: 314
+  short_name: "infosrce"

@@ -5,3 +5,7 @@ organism_1:
 organism_2:
   id: 2
   organism_name: organism_2
+bordetella_pertussis:
+  id: 3
+  organism_name: Bordetella pertussis
+
