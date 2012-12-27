@@ -677,8 +677,8 @@
   parent_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][first_name]
@@ -749,7 +749,7 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -774,7 +774,7 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -799,7 +799,7 @@
   parent_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -1851,8 +1851,8 @@
   parent_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][last_name]
@@ -2728,8 +2728,8 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: assessment_event
   field_type: single_line_text
   key: assessment_event[reporter][person_entity][person][first_name]
@@ -2763,7 +2763,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -2780,7 +2780,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -2797,7 +2797,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -3332,8 +3332,8 @@
 - parent_key: assessment_event[reporter_section]
   help_text: 
   required_for_section: true
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: assessment_event
   field_type: single_line_text
   key: assessment_event[reporter][person_entity][person][last_name]
@@ -3893,8 +3893,8 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: single_line_text
   key: morbidity_and_assessment_event[reporter][person_entity][person][first_name]
@@ -3928,7 +3928,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -3945,7 +3945,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -3962,7 +3962,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -4460,8 +4460,8 @@
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
   required_for_section: true
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: single_line_text
   key: morbidity_and_assessment_event[reporter][person_entity][person][last_name]

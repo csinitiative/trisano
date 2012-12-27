@@ -20,7 +20,7 @@ class PlaceEvent < Event
   belongs_to :participations_place
 
   accepts_nested_attributes_for :interested_place
-  accepts_nested_attributes_for :participations_place, :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  accepts_nested_attributes_for :participations_place, :reject_if => :nested_attributes_blank?
 
   before_create :direct_child_creation_initialization, :add_place_event_creation_note
   

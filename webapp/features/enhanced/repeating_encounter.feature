@@ -62,7 +62,7 @@ Feature: Form fields for repeating core sections.
 
   Scenario: Answer all repeaters after adding a form.
     Given   a basic encounter event exists
-    And     a published form with repeating core fields for a encounter event
+    And     a published form with repeating core fields for a encounter event with matching disease
 
     When    I navigate to the encounter event edit page
     Then    I should see 0 instances of the repeater core field config questions

@@ -24,6 +24,15 @@ Given /^a published form with repeating core fields for a (.+) event$/ do |event
   sleep 1
 end
 
+Given /^a published form with repeating core fields for a (.+) event with matching disease$/ do |event_type|
+  disease_name = @event.disease_name
+  @form = create_form(event_type, 'Already created', 'something_published', disease_name)
+  Given "that form has core field configs configured for all repeater core fields"
+  @published_form = @form.publish
+  @published_form.should_not be_nil, "Unable to publish form. See feature logs."
+  sleep 1
+end
+
 Given /^that form has core field configs configured for all repeater core fields$/ do
   @core_field_container = @form.core_field_elements_container
 
@@ -90,7 +99,7 @@ When /^I print the (.+) event$/ do |event_type|
               @event
             when "contact"
               @contact_event
-            when "encounter", "place"
+            when "encounter", "place", "outbreak"
               raise "Printing is not supported for #{event_type} events."
   end
 
@@ -163,8 +172,13 @@ Then /^I should see (\d+) instances of answers to the repeating core field confi
     else
       key = core_field.key
     end
-    html_source.scan("#{key} before answer").count.should be_equal(expected_count.to_i), "Could not find #{expected_count} instances of before answer for #{key}" 
-    html_source.scan("#{key} after answer").count.should be_equal(expected_count.to_i), "Could not find #{expected_count} instances of after answer for #{key}" 
+    expected_count.to_i.times do |i|
+      before_count = html_source.scan("#{key} before answer #{i}").count
+      before_count.should be_equal(1), "Expected 1 instance of '#{key} before answer #{i}', got #{before_count}." 
+
+      after_count = html_source.scan("#{key} after answer #{i}").count
+      after_count.should be_equal(1), "Expected 1 instance of '#{key} after answer #{i}', got #{after_count}." 
+    end
   end
 end
 
