@@ -1,29 +1,45 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
-var FormWatch = Class.create();
-FormWatch.prototype = {
-   initialize : function(form, options) {
-     this.submitted = false;
-     this.form = $(form);
-      // Let's serialize this.form and store it...
-     this.formcontents = $(form).serialize();
-      // Observe beforeunload event...
-     Event.observe(this.form, 'submit', function() {this.submitted = true; }.bind(this));
-     Event.observe(window, 'beforeunload', this.confirmExit.bind(this));
-   },
+function FormWatch(form) {
+  
+  this.submitted = false;
+  this.form = $j(form);
+ 
+  // Let's serialize this.form and store it...
+  this.formcontents = this.form.serialize();
+  
+  this.setSubmitted = function () {
+    this.submitted = true;
+  };
 
-  isDirty: function() {
-    var newcontents = this.form.serialize();
-    return this.formcontents != newcontents;
-  },
+  this.formChanged = function () {
+    this.newcontents = this.form.serialize();
+    return this.formcontents != this.newcontents
+  };
 
-  confirmExit : function(ev) {
-    if (this.isDirty() && !(this.submitted)) {
-      ev.returnValue = i18n.t('form_changed');
+  this.needsConfirmation = function () {
+    return this.formChanged() && !(this.submitted)
+  };
+ 
+  this.alertIfChanged = function () {
+    if (this.needsConfirmation()) {
+      return i18n.t('form_changed');
+    } else {
+      return null;
     }
-  }
-};
+  };
+ 
+  this.confirmUnload = function () {
+    if (this.needsConfirmation()) {
+      return confirm(i18n.t('form_changed'));
+    } else {
+      return true;
+    }
+  };
+ 
+  // 
+}
 
 function mark_for_destroy(element) {
   $(element).next('.should_destroy').value = 1;
@@ -186,8 +202,19 @@ function build_url_with_tab_index(url) {
 }
 
 function send_url_with_tab_index(url) {
-    url = build_url_with_tab_index(url);
-    location.href = url;
+    if(typeof formwatch === 'undefined' || !isAppleIOS()) {
+      url = build_url_with_tab_index(url);
+      location.href = url;
+      return true;
+    } else {
+      if($j.proxy(formwatch, 'confirmUnload')()){
+        url = build_url_with_tab_index(url);
+        location.href = url;
+        return true;
+      } else {
+        return false;
+      }
+    }
 }
 
 function add_tab_index_to_action(form) {
@@ -205,7 +232,7 @@ function post_form(form_id, should_return) {
       if(should_return) {
         form.action = form.action + "&return=true";
       }
-      formWatcher.submitted = true;
+      formwatch.submitted = true;
       form.submit();
 }
 
@@ -497,4 +524,20 @@ function moveMultiple(item, where) {
 
 function setMultiplesPositionAttributes(ul) {
   ul.find("li > input[name*='position']").each(function (index, element) { element.value = index+1; });
+}
+
+isIpad = function() {
+  return !!navigator.userAgent.match(/iPad/i);
+}
+ 
+isIphone = function () {
+  return !!navigator.userAgent.match(/iPhone/i);
+}
+ 
+isIpod = function () {
+  return !!navigator.userAgent.match(/iPod/i);
+}
+ 
+isAppleIOS = function () {
+  return (isIpad() || isIpod() || isIphone());
 }

@@ -9,17 +9,17 @@ $j(function() {
       buttons[i18n.t('save_and_exit')] = function() {
         cancelled = false;
         $j('#events_nav_spinner').show();
-        $j(formWatcher.form).append(redirectTo(
+        $j(formwatch.form).append(redirectTo(
                                       build_url_with_tab_index(
                                         selector.val())));
-        post_and_exit(formWatcher.form.attributes["id"].value);
+        post_and_exit(formwatch.form.attributes["id"].value);
         $j(this).dialog('close');
       };
 
       buttons[i18n.t('leave_without_saving')] = function() {
         cancelled = false;
         $j('#events_nav_spinner').show();
-        formWatcher.submitted = true;
+        formwatch.submitted = true;
         send_url_with_tab_index(selector.val());
         $j(this).dialog('close');
       };
@@ -32,10 +32,10 @@ $j(function() {
     };
 
     var formIsDirty = function() {
-      if (window.formWatcher === undefined) {
+      if (typeof(formwatch) === 'undefined') {
         return false;
       } else {
-        return formWatcher.isDirty();
+        return formwatch.needsConfirmation();
       }
     };
 

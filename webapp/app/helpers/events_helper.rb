@@ -668,7 +668,7 @@ module EventsHelper
     content_for(:javascript_includes) { javascript_include_tag 'events_nav' }
     partitioned_events = []
 
-    ['ContactEvent', 'PlaceEvent', 'MorbidityEvent'].each do |event_type|
+    ['ContactEvent', 'PlaceEvent', 'AssessmentEvent', 'MorbidityEvent'].each do |event_type|
       partitioned_events << events.collect { |event| event if event.class.name == event_type }.compact
     end
 
@@ -883,9 +883,15 @@ module EventsHelper
   def alert_if_changed(form)
     javascript_tag do
       <<-JS
-        var formWatcher;
+        var formwatch = new FormWatch("##{get_form_id(form)}");
         $j(function() {
-          formWatcher = new FormWatch('#{get_form_id(form)}');
+          $j("##{get_form_id(form)}").on('submit', $j.proxy(formwatch, 'setSubmitted'));
+          if(isAppleIOS()) {          
+            $j("a:not([href^='#'])[target!='_blank'][href!=null][href!='']").on('click', $j.proxy(formwatch, 'confirmUnload'));
+          } else {
+            $j("a:not([href^='#'])[target!='_blank'][href!=null][href!='']").on('click', $j.proxy(formwatch, 'confirmUnload'));
+            //$j(window).on('beforeunload', $j.proxy(formwatch, 'alertIfChanged'));
+          };
         });
       JS
     end
