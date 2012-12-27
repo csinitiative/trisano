@@ -51,7 +51,7 @@ end
 When /^I remove all of the diagnostic facilities$/ do
   script = %{selenium.browserbot.getCurrentWindow().$j('#diagnostic_facilities input[type="checkbox"]').click()}
   @browser.get_eval(script)
-  When %{I save the event and wait for the page to load}
+  When "I save and exit"
 end
 
 Then(/^I should not see the removed diagnostic facility$/) do

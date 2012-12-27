@@ -594,34 +594,21 @@ module Export
 
       def exp_specsite
         date, index = pg_closest_date(reference_date, pg_array(lab_test_dates))
-<<<<<<< HEAD
-        value = HumanEvent.trisano_specimen[HumanEvent.specimen_external_codes[pg_array(specimen)[index].to_i]] if pg_array(specimen)[index] and date
-=======
         value = HumanEvent.trisano_specimen[pg_array(specimen_values)[index]] if date and index > -1
->>>>>>> 3.5.10
         value ||= '  '
         [value, 85]
       end
 
       def exp_specsite_date
         date, index = pg_closest_date(reference_date, pg_array(lab_collection_dates))
-<<<<<<< HEAD
-        value = date.blank? ? '        ' : date.strftime('%y%m%d')
-=======
         value = date.blank? ? '        ' : date.strftime('%Y%m%d')
->>>>>>> 3.5.10
         [value, 87]
       end
 
       def exp_treatment_date
-<<<<<<< HEAD
-        date, index = pg_closest_date(reference_date, pg_array(treatment_dates))
-        value = date.blank? ? '        ' : date.strftime('%y%m%d')
-=======
         date, index = pg_same_or_after(date_diagnosed, pg_array(treatment_dates))
         date, index = pg_same_or_after(pg_earliest_date(lab_test_dates), pg_array(treatment_dates)) if date.blank?
         value = date.blank? ? '99999999' : date.strftime('%Y%m%d')
->>>>>>> 3.5.10
         [value, 130]
       end
 

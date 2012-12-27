@@ -272,9 +272,6 @@ describe CdcExport do
 
     it "should correctly display treatment fields" do
       with_cdc_records do |records|
-<<<<<<< HEAD
-        records[0].first.to_cdc[129..134].should == Date.yesterday.strftime('%y%m%d')
-=======
         records[0].first.to_cdc.length.should == 191
         records[0].first.to_cdc[129..136].should == 5.days.ago.to_date.strftime('%Y%m%d')
       end
@@ -288,35 +285,23 @@ describe CdcExport do
       with_cdc_records(e) do |records|
         records[0].first.to_cdc.length.should == 191
         records[0].first.to_cdc[113..120].should == Date.today.strftime('%Y%m%d')
->>>>>>> 3.5.10
       end
     end
 
     it "should correctly display specsite fields" do
       with_cdc_records do |records|
-<<<<<<< HEAD
-        #exp_specsite
-        records[0].first.to_cdc[84..85].should == Export::Cdc::HumanEvent.netss_specimen["Blood/Serum"]
-        #exp_specsite_date
-        records[0].first.to_cdc[86..91].should == 14.days.ago.to_date.strftime('%y%m%d')
-=======
         records[0].first.to_cdc.length.should == 191
         #exp_specsite
         records[0].first.to_cdc[84..85].should == Export::Cdc::HumanEvent.netss_specimen["Blood/Serum"]
         #exp_specsite_date
         records[0].first.to_cdc[86..93].should == 14.days.ago.to_date.strftime('%Y%m%d')
->>>>>>> 3.5.10
       end
     end
 
     it "should correctly display specsite field when specimen in blank" do
       with_cdc_records do |records|
         record = records[0].first
-<<<<<<< HEAD
-        record.specimen = "{NULL}"
-=======
         record.specimen_values = "{NULL}"
->>>>>>> 3.5.10
         record.to_cdc.length.should == 191
         record.exp_specsite.first.should == "  "
       end
@@ -331,8 +316,6 @@ describe CdcExport do
        end
     end
 
-<<<<<<< HEAD
-=======
     it "should correctly display same or after date" do
        with_cdc_records do |records|
          d = 10.days.ago.to_date.to_s(:db)
@@ -352,7 +335,6 @@ describe CdcExport do
        end
     end
 
->>>>>>> 3.5.10
     it "should display '49' (state id) for the state field" do
       with_cdc_records do |records|
         records[0].first.to_cdc[2..3].should == "20"

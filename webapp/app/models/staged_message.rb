@@ -261,7 +261,7 @@ class StagedMessage < ActiveRecord::Base
     event
   end
 
-  def new_event_from(entity_id=nil)
+  def new_event_from(entity_id=nil, type=nil)
 
     return nil if self.patient.patient_last_name.blank?
 

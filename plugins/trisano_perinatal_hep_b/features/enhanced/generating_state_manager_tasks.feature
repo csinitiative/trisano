@@ -17,7 +17,7 @@ Feature: Generating P Hep B tasks for that state manager
       And I search for an expected delivery facility
       And I select an expected delivery facility from the list
       And I fill in the expected delivery date
-      And I save the event
+      And I save and exit
      Then I should see "Hepatitis B Pregnancy Event: expected delivery date and hospital entered"
 
   @flush_core_fields_cache
@@ -31,6 +31,6 @@ Feature: Generating P Hep B tasks for that state manager
       And "Hepatitis B Pregnancy Event" has disease specific core fields
      When I am on the morbidity event edit page
       And I fill in "Expected delivery facility" with "Arkham"
-      And I save the event
+      And I save and exit
      Then I should see "Hepatitis B Pregnancy Event: expected delivery date and hospital entered"
 
