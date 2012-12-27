@@ -99,7 +99,7 @@ When /^I print the (.+) event$/ do |event_type|
               @event
             when "contact"
               @contact_event
-            when "encounter", "place"
+            when "encounter", "place", "outbreak"
               raise "Printing is not supported for #{event_type} events."
   end
 

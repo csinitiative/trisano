@@ -144,6 +144,8 @@ Given(/^a (.+) event exists with a disease that matches the form$/) do |event_ty
   elsif event_type == "encounter"
     @encounter_event = event
     @event = event.parent_event
+  elsif event_type == "outbreak"
+    @event = event
   end
 end
 

@@ -49,6 +49,10 @@ def create_basic_event(event_type, last_name=nil, disease=nil, jurisdiction=nil)
                                            :encounter_location_type => ParticipationsEncounter.valid_location_types.first)
     end
 
+    if event_type.to_s.downcase == "outbreak"
+      event.event_name = get_random_word
+    end
+
     if event.respond_to?(:interested_party)
       if last_name.nil?
         event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
