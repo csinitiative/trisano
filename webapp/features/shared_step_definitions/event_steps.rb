@@ -39,14 +39,14 @@ end
 
 Given /^a basic contact event exists$/ do
   @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
-  @contact_event = create_basic_event("contact", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @contact_event = create_basic_event("contact", get_unique_name(1), @event.disease_name, get_random_jurisdiction_by_short_name)
   @contact_event.parent_event = @event
   @contact_event.save 
 end
 
 Given /^a basic encounter event exists$/ do
   @event = create_basic_event("assessment", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
-  @encounter_event = create_basic_event("encounter", get_unique_name(1), get_random_disease, get_random_jurisdiction_by_short_name)
+  @encounter_event = create_basic_event("encounter", get_unique_name(1), @event.disease_name, get_random_jurisdiction_by_short_name)
   @encounter_event.parent_event = @event
   @encounter_event.save 
 end

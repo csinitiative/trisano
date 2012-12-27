@@ -104,17 +104,12 @@ Feature: Form fields for repeating core sections.
 
   Scenario: Answer all repeaters after adding a form.
     Given   a basic assessment event exists
-    And     a published form with repeating core fields for a morbidity and assessment event
+    And     a published form with repeating core fields for a morbidity and assessment event with matching disease
 
     When    I navigate to the assessment event edit page
     Then    I should see 0 instances of the repeater core field config questions
 
-    When    I change the disease to match the published form
-    And     I save and continue
-    Then    I should see "successfully updated"
-
-    When    I click the "Cancel" button
-    And     I click the "Add/Remove forms for this event" link
+    When    I click the "Add/Remove forms for this event" link
     And     I check the form for addition
     And     I click the "Add Forms" button
     And     I navigate to the assessment event edit page
