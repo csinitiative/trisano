@@ -157,7 +157,9 @@ class Event < ActiveRecord::Base
 		 	                    	    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
   accepts_nested_attributes_for :notes, :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
   accepts_nested_attributes_for :address, :reject_if => :nested_attributes_blank? 
-  accepts_nested_attributes_for :investigator_form_sections, :reject_if => :nested_attributes_blank?
+  accepts_nested_attributes_for :investigator_form_sections,
+                                :allow_destroy => true,
+                                :reject_if => :nested_attributes_blank?
 
   def self.check_contact_attrs(attrs)
     # Contact is an existing entity chosen from search

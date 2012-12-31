@@ -251,3 +251,19 @@ Then /^I should see (\d+) instances of answers to the repeating section question
     actual_count.should be_equal(1), "Expected 1 instances of '#{@section_element.name} answer #{i}', got #{actual_count}."
   end
 end
+
+When /^I mark all section repeaters for removal$/ do
+  event = @contact_event || @place_event || @encounter_event || @event
+  event.investigator_form_sections.count.times do |i|
+    @browser.check "//input[contains(@id, '_investigator_form_sections_attributes_#{i}__destroy')]"
+  end
+end
+
+Then /^the database should have (\d+) answers and investigator form questions for this event$/ do |expected_count|
+  event = @contact_event || @place_event || @encounter_event || @event
+  answer_count = event.answers.count
+  answer_count.should be_equal(expected_count.to_i), "Expected #{expected_count} answers, got #{answer_count}."
+
+  investigator_form_sections_count = event.investigator_form_sections.count
+  investigator_form_sections_count.should be_equal(expected_count.to_i), "Expected #{expected_count} investigator form questions, got #{investigator_form_sections_count}."
+end
