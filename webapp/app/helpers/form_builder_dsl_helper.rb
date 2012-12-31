@@ -362,7 +362,7 @@ module FormBuilderDslHelper
 
     answerable = form_builder.object && form_builder.object.respond_to?(:answers)
     if answerable
-      if (form_builder.respond_to?(:repeater_form?) and form_builder.repeater_form?) or (question.question_element.in_repeater_section?)
+      if form_builder.respond_to?(:repeater_form?) and form_builder.repeater_form?
         # This is critical to use #base_class here because polymorphic with STI
         # requires use of base class!
         # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html
@@ -399,7 +399,7 @@ module FormBuilderDslHelper
     question_style = question.style.blank? ? "vert" : question.style
     result = "<div id='question_investigate_#{h(question_element.id)}' class='#{h(question_style)}'>"
 
-    if (!local_form_builder.nil? && local_form_builder.repeater_form?) || (element.in_repeater_section?)
+    if !local_form_builder.nil? && local_form_builder.repeater_form?
       answer_object = collect_answer_object(question, local_form_builder)
       inner_prefix = answer_object.new_record? ? "new_repeater_answers" : "repeater_answers"
       outer_prefix = local_form_builder.object_name
