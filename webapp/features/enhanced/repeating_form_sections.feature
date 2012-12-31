@@ -25,7 +25,7 @@ Feature: Morbidity event form core view configs
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
 
-    When    I print the assessment event
+    When    I print the morbidity event
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
 
