@@ -162,7 +162,10 @@ module FormBuilderDslHelper
   def render_investigator_section(form_elements_cache, section_element, f)
     begin
       partial = "events/investigate_section_element.html.haml" 
-      result = investigator_section(partial, form_elements_cache, section_element, f)
+      result = render(:partial => "events/investigate_section_element_header.html.haml",
+                      :locals => { :section => section_element } )
+
+      result << investigator_section(partial, form_elements_cache, section_element, f)
 
       if section_element.repeater?
 
@@ -545,7 +548,9 @@ module FormBuilderDslHelper
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  show_investigator_section(form_elements_cache, section_element, f)
     begin
-      investigator_section("events/investigate_section_element_show.html.haml", form_elements_cache, section_element, f)
+      result = render(:partial => "events/investigate_section_element_header.html.haml", :locals => {:section => section_element})
+      result << investigator_section("events/investigate_section_element_show.html.haml", form_elements_cache, section_element, f)
+      result
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))
@@ -687,7 +692,10 @@ module FormBuilderDslHelper
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  print_investigator_section(form_elements_cache, element, f)
     begin
-      investigator_section("events/investigate_section_element_print.html.haml", form_elements_cache, element, f)
+      content_tag(:div, :class => "print-element") do
+        result = render(:partial => "events/investigate_section_element_header_print.html.haml", :locals => {:section => element})
+        result << investigator_section("events/investigate_section_element_print.html.haml", form_elements_cache, element, f)
+      end
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))
