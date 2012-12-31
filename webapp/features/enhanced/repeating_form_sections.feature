@@ -19,6 +19,7 @@ Feature: Morbidity event form core view configs
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 2 answers and investigator form questions for this event
 
     When    I save and exit
     Then    I should see "successfully updated"
@@ -28,6 +29,14 @@ Feature: Morbidity event form core view configs
     When    I print the morbidity event
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+
+    When    I am on the morbidity event edit page
+    And     I mark all section repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
 
 
   Scenario: Assessment event repeating sections
@@ -46,6 +55,7 @@ Feature: Morbidity event form core view configs
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 2 answers and investigator form questions for this event
 
     When    I save and exit
     Then    I should see "successfully updated"
@@ -55,6 +65,14 @@ Feature: Morbidity event form core view configs
     When    I print the assessment event
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+
+    When    I am on the assessment event edit page
+    And     I mark all section repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
 
 
   Scenario: Contact event repeating sections
@@ -73,6 +91,7 @@ Feature: Morbidity event form core view configs
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 2 answers and investigator form questions for this event
 
     When    I save and exit
     Then    I should see "successfully updated"
@@ -82,6 +101,14 @@ Feature: Morbidity event form core view configs
     When    I print the contact event
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+
+    When    I am on the contact event edit page
+    And     I mark all section repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
 
 
   Scenario: Place event repeating sections
@@ -100,11 +127,20 @@ Feature: Morbidity event form core view configs
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 2 answers and investigator form questions for this event
 
     When    I save and exit
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+
+    When    I am on the place event edit page
+    And     I mark all section repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
 
 
   Scenario: Encounter event repeating sections
@@ -123,8 +159,17 @@ Feature: Morbidity event form core view configs
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 2 answers and investigator form questions for this event
 
     When    I save and exit
     Then    I should see "successfully updated"
     And     I should see 2 instances of the repeater section questions
     And     I should see 2 instances of answers to the repeating section questions
+
+    When    I am on the encounter event edit page
+    And     I mark all section repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event

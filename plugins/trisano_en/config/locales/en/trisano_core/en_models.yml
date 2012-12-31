@@ -2,6 +2,9 @@ en:
 
   activerecord:
     attributes:
+      investigator_form_section:
+        _destroy: Remove
+        _delete: Remove
       event:
         parent_guardian: Parent/Guardian
         age_at_onset: Age at onset

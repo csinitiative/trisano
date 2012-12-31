@@ -1,5 +1,10 @@
 - section_children = form_elements_cache.children(section)
 - section_children.each do |child|
   = render_investigator_element(form_elements_cache, child, f, investigator_form)
+  - if investigator_form
+    %span.horiz
+      - if !investigator_form.object.new_record?
+        = investigator_form.label :_delete
+        = investigator_form.check_box :_destroy
 %hr
 
