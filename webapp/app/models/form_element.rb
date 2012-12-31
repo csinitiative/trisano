@@ -385,10 +385,6 @@ class FormElement < ActiveRecord::Base
     find_parent_of_type(CoreFieldElement)
   end
 
-  def in_repeater_section?
-    section_element.try(:repeater)
-  end
-
   protected
 
   # A little hack to make sure that questions get deleted when a
