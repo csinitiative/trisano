@@ -1,0 +1,6 @@
+%br= strip_tags(section.name)
+%br
+- unless section.description.blank?
+  %span{:class => "print-instructions"}
+  = section.description.gsub("\n", '<br/>')
+  %hr

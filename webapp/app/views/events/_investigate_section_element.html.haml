@@ -1,28 +1,5 @@
-%br
-- section_id = "section_investigate_#{h(section.id)}"
-- hide_id = section_id + "_hide"
-- show_id = section_id + "_show"
 - section_children = form_elements_cache.children(section)
-
-%fieldset{:class => 'form_section vert-break'}
-  %legend
-    = h(strip_tags(section.name))
-    - unless section.help_text.blank?
-      = render_help_text(section) + "&nbsp;"
-    %span{:id => hide_id, :onclick => "Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">"}
-      = "[" + t('hide') + "]"
-
-    %span{:id => show_id, :onclick => "Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;", :style => "display: none;"} 
-      = "[" + t('show') + "]"
-
-  %div{:id => section_id}
-    - unless section.description.blank?
-      %li
-        %i= section.description.gsub("\n", '<br/>')
-        %br
-        %br
-
-  - if section_children.size > 0
-    - section_children.each do |child|
-      = render_investigator_element(form_elements_cache, child, f, investigator_form)
+- section_children.each do |child|
+  = render_investigator_element(form_elements_cache, child, f, investigator_form)
 %hr
+
