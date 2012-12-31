@@ -145,13 +145,3 @@ Given /^that form has core view configs configured for all core views$/ do
   end
 end
 
-Given /^that form has a repeating section configured in the default view with a question$/ do
-  @default_view = @form.investigator_view_elements_container.children[0]
-  @section_element = SectionElement.new
-  @section_element.parent_element_id = @default_view.id
-  @section_element.name = get_random_word 
-  @section_element.repeater = true
-  @section_element.save_and_add_to_form
-
-  create_question_on_form(@form, { :question_text => "#{@section_element.name} question?", :short_name => Digest::MD5::hexdigest(@section_element.name) }, @section_element)
-end
