@@ -135,28 +135,11 @@ module FormBuilderDslHelper
     result
   end
 
-  def investigator_section(partial, form_elements_cache, section_element, f)
-    if section_element.repeater?
-      result = ""
-      
-      f.fields_for(:investigator_form_sections) do |investigator_form|
-        result << render(:partial => partial, 
-               :locals => {:form_elements_cache => form_elements_cache, 
-                           :section => section_element, 
-                           :f => f, 
-                           :investigator_form => investigator_form})
-      end
-
-      result
-    else
-
-      render(:partial => partial, 
-             :locals => {:form_elements_cache => form_elements_cache, 
-                         :section => section_element, 
-                         :f => f,
-                         :investigator_form => nil})
-    end
-
+  def investigator_section(partial, form_elements_cache, section_element, f, investigator_form=nil)
+    render(:partial => partial, :locals => {:form_elements_cache => form_elements_cache,
+                                            :section => section_element,
+                                            :f => f,
+                                            :investigator_form => investigator_form})
   end
 
   def render_investigator_section(form_elements_cache, section_element, f)
@@ -165,25 +148,36 @@ module FormBuilderDslHelper
       result = render(:partial => "events/investigate_section_element_header.html.haml",
                       :locals => { :section => section_element } )
 
-      result << investigator_section(partial, form_elements_cache, section_element, f)
 
       if section_element.repeater?
+        f.fields_for(:investigator_form_sections, :builder => ExtendedFormBuilder) do |investigator_form|
+          if (investigator_form.object.section_element_id == section_element.id) || investigator_form.object.new_record?
+            result << investigator_section(partial, form_elements_cache, section_element, f, investigator_form)
+          end
+        end
 
         result << content_tag(:div, nil, :id => "repeater_section_investigate_#{h(section_element.id)}")
 
+        f.fields_for(:investigator_form_sections,
+                     InvestigatorFormSection.new(:event_id => f.object.id, 
+                                                 :section_element_id => section_element.id), 
+                     :child_index => "NEW_RECORD",
+                     :builder => ExtendedFormBuilder) do |new_investigator_form|
 
-        f.fields_for(:investigator_form_sections, f.object.investigator_form_sections.build, :child_index => "NEW_RECORD") do |investigator_form|
           result << content_tag(:p, :style => 'clear:both') do
-                            add_record_link(f, :answers, "Add another #{section_element.name} section", 
+                             add_record_link(f, :answers, "Add another #{section_element.name} section", 
                                           {:partial => partial, 
                                            :locals => {:form_elements_cache => form_elements_cache, 
-                                                       :section => section_element, 
+                                                       :section => section_element,
                                                        :f => f,
-                                                       :investigator_form => investigator_form}, 
+                                                       :investigator_form => new_investigator_form}, 
                                            :insert => "repeater_section_investigate_#{h(section_element.id)}", 
                                            :object => section_element})
           end
         end
+
+      else
+        result << investigator_section(partial, form_elements_cache, section_element, f)
       end
 
       result
@@ -548,8 +542,18 @@ module FormBuilderDslHelper
   # Debt? Dupliactes most of the render method. Consider consolidating.
   def  show_investigator_section(form_elements_cache, section_element, f)
     begin
+      partial = "events/investigate_section_element_show.html.haml" 
       result = render(:partial => "events/investigate_section_element_header.html.haml", :locals => {:section => section_element})
-      result << investigator_section("events/investigate_section_element_show.html.haml", form_elements_cache, section_element, f)
+      if section_element.repeater?
+        f.fields_for(:investigator_form_sections, :builder => ExtendedFormBuilder) do |investigator_form|
+          if (investigator_form.object.section_element_id == section_element.id) || investigator_form.object.new_record?
+            result << investigator_section(partial, form_elements_cache, section_element, f, investigator_form)
+          end
+        end
+
+      else
+        result << investigator_section(partial, form_elements_cache, section_element, f)
+      end
       result
     rescue Exception => e
       logger.warn($!.message)
@@ -690,16 +694,26 @@ module FormBuilderDslHelper
   # Print mode counterpart to #render_investigator_section
   #
   # Debt? Dupliactes most of the render method. Consider consolidating.
-  def  print_investigator_section(form_elements_cache, element, f)
+  def  print_investigator_section(form_elements_cache, section_element, f)
     begin
+      partial = "events/investigate_section_element_print.html.haml" 
       content_tag(:div, :class => "print-element") do
-        result = render(:partial => "events/investigate_section_element_header_print.html.haml", :locals => {:section => element})
-        result << investigator_section("events/investigate_section_element_print.html.haml", form_elements_cache, element, f)
+        result = render(:partial => "events/investigate_section_element_header_print.html.haml", :locals => {:section => section_element})
+        if section_element.repeater?
+          f.fields_for(:investigator_form_sections, :builder => ExtendedFormBuilder) do |investigator_form|
+            if (investigator_form.object.section_element_id == section_element.id) || investigator_form.object.new_record?
+              result << investigator_section(partial, form_elements_cache, section_element, f, investigator_form)
+            end
+          end
+          result
+        else
+          result << investigator_section(partial, form_elements_cache, section_element, f)
+        end
       end
     rescue Exception => e
       logger.warn($!.message)
       logger.debug(e.backtrace.join("\n"))
-      return "Could not render section element (#{element.id})<br/>"
+      return "Could not render section element (#{section_element.id})<br/>"
     end
   end
 

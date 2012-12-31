@@ -225,13 +225,15 @@ end
 When /^I answer (\d+) instances of all repeater section questions$/ do |count|
   html_source = @browser.get_html_source
   count.to_i.times do |i|
-    answer_investigator_question(@browser, "#{@section_element.name} question?", "#{@section_element.name} answer #{i}", html_source, i)
+    answer_investigator_question(@browser, "#{@first_section_name} question?", "#{@first_section_name} answer #{i}", html_source, i)
+    answer_investigator_question(@browser, "#{@second_section_name} question?", "#{@second_section_name} answer #{i}", html_source, i)
   end
 end
 
 When /^I create (\d+) new instances of all section repeaters$/ do |count|
   count.to_i.times do
-    And  "I click the \"Add another #{@section_element.name} section\" link and don't wait"
+    And  "I click the \"Add another #{@first_section_name} section\" link and don't wait"
+    And  "I click the \"Add another #{@second_section_name} section\" link and don't wait"
   end
 end
 
@@ -240,22 +242,26 @@ Then /^I should see (\d+) instances of the repeater section questions$/ do |expe
   # which have the question text in them, which throws off the count...not that we want to 
   # count templates anyway.
   html_source = @browser.get_body_text
-  actual_count = html_source.scan("#{@section_element.name} question?").count
-  actual_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of '#{@section_element.name} question?', got #{actual_count}." 
+  actual_count = html_source.scan("#{@first_section_name} question?").count
+  actual_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of '#{@first_section_name} question?', got #{actual_count}." 
+  actual_count = html_source.scan("#{@second_section_name} question?").count
+  actual_count.should be_equal(expected_count.to_i), "Expected #{expected_count} instances of '#{@second_section_name} question?', got #{actual_count}." 
 end
 
 Then /^I should see (\d+) instances of answers to the repeating section questions$/ do |count|
   html_source = @browser.get_html_source
   count.to_i.times do |i|
-    actual_count = html_source.scan("#{@section_element.name} answer #{i}").count
-    actual_count.should be_equal(1), "Expected 1 instances of '#{@section_element.name} answer #{i}', got #{actual_count}."
+    actual_count = html_source.scan("#{@first_section_name} answer #{i}").count
+    actual_count.should be_equal(1), "Expected 1 instances of '#{@first_section_name} answer #{i}', got #{actual_count}."
+    actual_count = html_source.scan("#{@second_section_name} answer #{i}").count
+    actual_count.should be_equal(1), "Expected 1 instances of '#{@second_section_name} answer #{i}', got #{actual_count}."
   end
 end
 
 When /^I mark all section repeaters for removal$/ do
   event = @contact_event || @place_event || @encounter_event || @event
   event.investigator_form_sections.count.times do |i|
-    @browser.check "//input[contains(@id, '_investigator_form_sections_attributes_#{i}__destroy')]"
+    @browser.check "xpath=(//input[contains(@id, '_investigator_form_sections_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
   end
 end
 
@@ -266,4 +272,22 @@ Then /^the database should have (\d+) answers and investigator form questions fo
 
   investigator_form_sections_count = event.investigator_form_sections.count
   investigator_form_sections_count.should be_equal(expected_count.to_i), "Expected #{expected_count} investigator form questions, got #{investigator_form_sections_count}."
+end
+
+Given /^that form has two repeating sections configured in the default view with a question$/ do
+  Given "that form has a repeating section configured in the default view with a question"
+  @first_section_name = @section_element.name
+  Given "that form has a repeating section configured in the default view with a question"
+  @second_section_name = @section_element.name
+end
+
+Given /^that form has a repeating section configured in the default view with a question$/ do
+  @default_view = @form.investigator_view_elements_container.children[0]
+  @section_element = SectionElement.new
+  @section_element.parent_element_id = @default_view.id
+  @section_element.name = get_random_word 
+  @section_element.repeater = true
+  @section_element.save_and_add_to_form
+
+  create_question_on_form(@form, { :question_text => "#{@section_element.name} question?", :short_name => Digest::MD5::hexdigest(@section_element.name) }, @section_element)
 end

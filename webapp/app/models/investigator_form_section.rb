@@ -18,4 +18,5 @@
 class InvestigatorFormSection < ActiveRecord::Base
   include Trisano::Repeater
   belongs_to :event
+  belongs_to :section_element
 end
