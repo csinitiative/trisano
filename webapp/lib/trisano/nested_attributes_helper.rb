@@ -32,7 +32,10 @@ module Trisano::NestedAttributesHelper
     attrs = params.clone.delete_if { |k,v| k=="position" }
     new_repeater_checkboxes = attrs.delete "new_repeater_checkboxes"
     new_repeater_radio_buttons = attrs.delete  "new_repeater_radio_buttons"
+
+    # for investigator form sections, we want to also ignore section_element_id
     new_repeater_answers = attrs.delete "new_repeater_answers"
+    attrs.delete("section_element_id") if new_repeater_answers.present?
   
     return false if attrs_present?(attrs)
     

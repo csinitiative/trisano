@@ -223,3 +223,21 @@ Feature: Morbidity event form core view configs
     Then    I should see 0 instances of the repeater section questions
     And     I should see 0 instances of answers to the repeating section questions
     And     the database should have 0 answers and investigator form questions for this event
+
+
+  Scenario: Empty repeaters are ignored.
+    Given   I am logged in as a super user
+    And     a morbidity event form exists
+    And     that form has two repeating sections configured in the default view with a question
+    And     that form is published
+    And     a morbidity event exists with a disease that matches the form
+
+    When    I am on the morbidity event edit page
+    Then    I should see 1 instances of the repeater section questions
+    And     the database should have 0 answers and investigator form questions for this event
+
+    When    I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 1 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
