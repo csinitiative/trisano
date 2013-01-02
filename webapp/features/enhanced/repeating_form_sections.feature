@@ -241,3 +241,12 @@ Feature: Morbidity event form core view configs
     And     I should see 1 instances of the repeater section questions
     And     I should see 0 instances of answers to the repeating section questions
     And     the database should have 0 answers and investigator form questions for this event
+
+    When    I save and exit
+    Then    I should see "successfully updated"
+    And     I should see 0 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+
+    When    I print the morbidity event
+    And     I should see 0 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
