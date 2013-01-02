@@ -173,3 +173,53 @@ Feature: Morbidity event form core view configs
     And     I should see 1 instances of the repeater section questions
     And     I should see 0 instances of answers to the repeating section questions
     And     the database should have 0 answers and investigator form questions for this event
+
+
+  Scenario: Answer all repeaters after adding a form.
+    Given   a basic assessment event exists
+    And     a assessment event form exists with a matching disease
+    And     that form has two repeating sections configured in the default view with a question
+    And     that form is published
+
+    When    I navigate to the assessment event edit page
+    Then    I should see 0 instances of the repeater section questions
+
+    When    I click the "Add/Remove forms for this event" link
+    And     I check the form for addition
+    And     I click the "Add Forms" button
+    And     I navigate to the assessment event edit page
+    Then    I should see 1 instances of the repeater section questions
+
+    When    I create 1 new instances of all section repeaters
+    And     I answer 2 instances of all repeater section questions
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 2 instances of the repeater section questions
+    And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 4 answers and investigator form questions for this event
+
+
+  Scenario: Removing forms removes repeater answers. 
+    Given   a assessment event form exists
+    And     that form has two repeating sections configured in the default view with a question
+    And     that form is published
+    And     a assessment event exists with a disease that matches the form
+
+    When    I navigate to the assessment event edit page
+    Then    I should see 1 instances of the repeater section questions
+
+    When    I create 1 new instances of all section repeaters
+    And     I answer 2 instances of all repeater section questions
+    And     I save and continue
+    Then    I should see "successfully updated"
+    And     I should see 2 instances of the repeater section questions
+    And     I should see 2 instances of answers to the repeating section questions
+    And     the database should have 4 answers and investigator form questions for this event
+
+    When    I click the "Add/Remove forms for this event" link
+    And     I check the form for removal
+    And     I click and confirm the "Remove Forms" button
+    And     I navigate to the assessment event edit page
+    Then    I should see 0 instances of the repeater section questions
+    And     I should see 0 instances of answers to the repeating section questions
+    And     the database should have 0 answers and investigator form questions for this event
