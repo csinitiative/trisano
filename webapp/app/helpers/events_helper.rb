@@ -680,7 +680,6 @@ module EventsHelper
       result << event_navigation_options(partition)
     end
     result << "</select>"
-    result << "<div id=\"events_nav_dialog\" style=\"display: none\">#{t(:unsaved_changes)}</div>"
   end
 
   def event_navigation_options(events)
@@ -880,18 +879,15 @@ module EventsHelper
     Hash[*options.select {|k, v| allowed.include?(k)}.flatten]
   end
 
-  def alert_if_changed(form)
-    javascript_tag do
+  def alert_if_changed(event)
+    form_id = get_form_id(event)
+    result = render(:partial => "events/unsaved_changes")
+    result << javascript_tag do
       <<-JS
-        var formwatch = new FormWatch("##{get_form_id(form)}");
-        $j(function() {
-          $j("##{get_form_id(form)}").on('submit', $j.proxy(formwatch, 'setSubmitted'));
-          if(isAppleIOS()) {          
-            $j("a:not([href^='#'])[target!='_blank'][href!=null][href!='']").on('click', $j.proxy(formwatch, 'confirmUnload'));
-          } else {
-            $j("a:not([href^='#'])[target!='_blank'][href!=null][href!='']").on('click', $j.proxy(formwatch, 'confirmUnload'));
-            //$j(window).on('beforeunload', $j.proxy(formwatch, 'alertIfChanged'));
-          };
+        document.observe('trisano:dom:loaded', function() {
+          Trisano.FormWatcher.init('##{form_id}');
+          $j('##{form_id}').on('submit', Trisano.FormWatcher.setSubmitted);
+          $j("a:not([href^='#'])[target!='_blank'][href!=null][href!='']").on('click', Trisano.FormWatcher.confirmUnload);
         });
       JS
     end
