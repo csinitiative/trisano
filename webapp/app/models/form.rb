@@ -26,6 +26,7 @@ class Form < ActiveRecord::Base
 
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]
+  has_many :section_form_elements, :class_name => "FormElement", :conditions => "type = 'SectionElement'"
   has_many :published_versions, :class_name => "Form", :foreign_key => "template_id", :order => "created_at DESC"
   belongs_to :template, :class_name => "Form"
   has_many :form_references

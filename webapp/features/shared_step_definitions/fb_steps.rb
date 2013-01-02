@@ -27,6 +27,12 @@ Given(/^a (.+) event form exists$/) do |event_type|
   @form = create_form(event_type, unique_form_name, unique_form_name, get_random_disease)
 end
 
+Given(/^a (.+) event form exists with a matching disease$/) do |event_type|
+  event = @encounter_event || @outbreak_event || @contact_event || @place_event || @event 
+  unique_form_name = get_unique_name(10)
+  @form = create_form(event_type, unique_form_name, unique_form_name, event.disease_name)
+end
+
 Given(/^a (.+) event form exists for the disease (.+)$/) do |event_type, disease|
   unique_form_name = get_unique_name(10)
   @form = create_form(event_type, unique_form_name, unique_form_name, disease)

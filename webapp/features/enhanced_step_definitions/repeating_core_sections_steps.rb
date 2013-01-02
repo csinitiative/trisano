@@ -238,6 +238,8 @@ When /^I create (\d+) new instances of all section repeaters$/ do |count|
 end
 
 Then /^I should see (\d+) instances of the repeater section questions$/ do |expected_count|
+  @first_section_name.should_not be_nil, "First section name not defined."
+  @second_section_name.should_not be_nil, "Second section name not defined."
   # We want to use body_text here because the JavaScript links contain template code
   # which have the question text in them, which throws off the count...not that we want to 
   # count templates anyway.
@@ -249,6 +251,9 @@ Then /^I should see (\d+) instances of the repeater section questions$/ do |expe
 end
 
 Then /^I should see (\d+) instances of answers to the repeating section questions$/ do |count|
+  @first_section_name.should_not be_nil, "First section name not defined."
+  @second_section_name.should_not be_nil, "Second section name not defined."
+
   html_source = @browser.get_html_source
   count.to_i.times do |i|
     actual_count = html_source.scan("#{@first_section_name} answer #{i}").count
