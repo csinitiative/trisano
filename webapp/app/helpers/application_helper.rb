@@ -207,8 +207,8 @@ module ApplicationHelper
   def save_buttons(event)
     form_id = get_form_id(event)
     # The display: inline style is to get IE to render the two buttons side by side.
-    out =  button_to_function(t("save_and_continue"), "post_and_return('#{form_id}')", :id => "save_and_continue_btn", :onclick => "toggle_save_buttons('off');")
-    out += button_to_function(t("save_and_exit"), "post_and_exit('#{form_id}')", :id => "save_and_exit_btn", :onclick => "toggle_save_buttons('off');")
+    out =  button_to_function(t("save_and_continue"), "post_form('#{form_id}', true)", :id => "save_and_continue_btn")
+    out += button_to_function(t("save_and_exit"), "post_form('#{form_id}', false)", :id => "save_and_exit_btn")
     out += content_tag(:span, "Saving", :id => "save_indicator", :class => "title")
     out += image_tag("large_spinner.gif", :id => "save_indicator_img")
   end
