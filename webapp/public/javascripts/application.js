@@ -1,45 +1,6 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
-function FormWatch(form) {
-  
-  this.submitted = false;
-  this.form = $j(form);
- 
-  // Let's serialize this.form and store it...
-  this.formcontents = this.form.serialize();
-  
-  this.setSubmitted = function () {
-    this.submitted = true;
-  };
-
-  this.formChanged = function () {
-    this.newcontents = this.form.serialize();
-    return this.formcontents != this.newcontents
-  };
-
-  this.needsConfirmation = function () {
-    return this.formChanged() && !(this.submitted)
-  };
- 
-  this.alertIfChanged = function () {
-    if (this.needsConfirmation()) {
-      return i18n.t('form_changed');
-    } else {
-      return null;
-    }
-  };
- 
-  this.confirmUnload = function () {
-    if (this.needsConfirmation()) {
-      return confirm(i18n.t('form_changed'));
-    } else {
-      return true;
-    }
-  };
- 
-  // 
-}
 
 function mark_for_destroy(element) {
   $(element).next('.should_destroy').value = 1;
@@ -202,12 +163,12 @@ function build_url_with_tab_index(url) {
 }
 
 function send_url_with_tab_index(url) {
-    if(typeof formwatch === 'undefined' || !isAppleIOS()) {
+    if(typeof Trisano.FormWatcher === 'undefined') {
       url = build_url_with_tab_index(url);
       location.href = url;
       return true;
     } else {
-      if($j.proxy(formwatch, 'confirmUnload')()){
+      if(Trisano.FormWatcher.confirmUnload(url)){
         url = build_url_with_tab_index(url);
         location.href = url;
         return true;
@@ -232,7 +193,8 @@ function post_form(form_id, should_return) {
       if(should_return) {
         form.action = form.action + "&return=true";
       }
-      formwatch.submitted = true;
+      Trisano.FormWatcher.setSubmitted();
+      toggle_save_buttons('off');
       form.submit();
 }
 
@@ -524,20 +486,4 @@ function moveMultiple(item, where) {
 
 function setMultiplesPositionAttributes(ul) {
   ul.find("li > input[name*='position']").each(function (index, element) { element.value = index+1; });
-}
-
-isIpad = function() {
-  return !!navigator.userAgent.match(/iPad/i);
-}
- 
-isIphone = function () {
-  return !!navigator.userAgent.match(/iPhone/i);
-}
- 
-isIpod = function () {
-  return !!navigator.userAgent.match(/iPod/i);
-}
- 
-isAppleIOS = function () {
-  return (isIpad() || isIpod() || isIphone());
 }
