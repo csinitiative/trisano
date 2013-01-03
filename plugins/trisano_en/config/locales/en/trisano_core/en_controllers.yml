@@ -271,7 +271,7 @@ en:
   task_update_failed: "Could not update task"
 
   # Users
-  user_successfully_created: "User was successfully created."
+  user_successfully_created: "User was successfully created. Please remember to add roles."
   user_successfully_updated: "User was successfully updated."
   shortcuts_successfully_updated: "Shortcuts successfully updated"
   shortcuts_update_failed: "Shortcuts update failed"
