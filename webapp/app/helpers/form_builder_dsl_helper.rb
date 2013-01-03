@@ -150,8 +150,18 @@ module FormBuilderDslHelper
 
 
       if section_element.repeater?
+
+        current_section_ids = f.object.investigator_form_sections.map(&:section_element_id)
+        # If investigator form section exists, build one so user is shown a blank form entry
+        # it will be discarded if left empty by :reject_if => :nested_attributes_blank?
+        unless current_section_ids.include?(section_element.id)
+          f.object.investigator_form_sections.build(:section_element_id => section_element.id)
+        end
+
+        # TODO: This fields_for loop is inefficient. We shouldn't loop through each form section, hunting
+        # for the right one. Not sure how to better design this though.
         f.fields_for(:investigator_form_sections, :builder => ExtendedFormBuilder) do |investigator_form|
-          if (investigator_form.object.section_element_id == section_element.id) || investigator_form.object.new_record?
+          if investigator_form.object.section_element_id == section_element.id
             result << investigator_section(partial, form_elements_cache, section_element, f, investigator_form)
           end
         end
