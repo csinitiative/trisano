@@ -47,15 +47,3 @@
 
       %p
 
-%table.list
-  %tr
-    %th.forminformation
-      =t 'edit_roles'
-    %th
-  %tr#add_role_memberships
-    %td
-      .tools
-        = add_role_link t("add_role")
-    %td
-      &nbsp;
-  = render :partial => 'role', :collection => @user.role_memberships
