@@ -390,33 +390,36 @@ def formbuilder_hstore_query(name, prefix, dg, join_clause)
     }
 end
 
-def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, formbuilder_categories, conn)
+def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, formbuilder_categories, category, category_name, conn)
     # query = the query to run to get the form and question short names for
-    #       this model
+    #         this model
     # prefix = String representing form type ('Morbidity', 'Contact', etc.)
     # pt = The PhysicalTable object associated with this hstore column
     # bt = The BusinessTable object associated with this hstore column
     # dg = The name of the disease group
     # meta = The SchemaMeta object
-    # formbuilder_categories = An array of BusinessCategory objects to which we'll
-    #                          append the new categories we add here
+    # formbuilder_categories = An array of BusinessCategory objects to which
+    #                          we'll append the new categories we add here
     # conn = The database connection object
+    # category, category_name = Business category objects, when this is a form
+    #                           field attached to a repeating core field
 
     # Gotta add a physical column to the physical table
-    # Gotta create a business category
+    # Gotta create a business category unless this is a form tied to a
+    #   repeating core field, in which case it should just be put in the
+    #   existing core category
     # Also gotta add business columns to the business table and the category
 
     # Figure out a unique, small integer associated with this prefix for use in
     # ID values.
     type_num = $event_types.fetch(prefix) { |z| $event_types[z] = $event_types.size }
+    cat_was_nil = category.nil?
 
     last_table_name = ''
-    category = nil
-    category_name = nil
     get_query_results(query, conn).each do |fbkey|
-      puts "ADDING FORMBUILDER FIELD :" . fbkey.inspect if verbose
+      puts "Adding Formbuilder field : #{fbkey.inspect}" if verbose
       tablename, colname = fbkey['key'].split '|', 2
-      if category.nil? or category_name != "#{prefix} #{tablename}"
+      if cat_was_nil and (category.nil? or category_name != "#{prefix} #{tablename}")
         puts "Creating category '#{prefix} #{tablename}'" if verbose
         category = BusinessCategory.new "#{prefix} #{tablename}"
         category.set_name 'en_US', "#{prefix} #{tablename}"
@@ -424,6 +427,8 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
         category_name = "#{prefix} #{tablename}"
         secure category
         formbuilder_categories << category
+      else
+        puts "  (not creating new category #{category_name})" if verbose
       end
 
       if fbkey['data_type'].to_i == 2
@@ -495,7 +500,15 @@ def add_single_business_table(name, desc, join_clause, disease_group, dg, x, y, 
     if disease_group != 'TriSano' 
       if not formbuilder_prefix.nil? then
         query = formbuilder_hstore_query(name, formbuilder_prefix, disease_group, join_clause)
-        add_formbuilder_categories query, formbuilder_prefix, name, pt, bt, disease_group, meta, fb_cats, conn
+        c = nil
+        cn = nil
+
+        if (not join_clause.nil? and join_clause != '') then
+            # This is a core table with repeating form fields. Find the associated core table
+            c = bc
+            cn = desc
+        end
+        add_formbuilder_categories query, formbuilder_prefix, name, pt, bt, disease_group, meta, fb_cats, c, cn, conn
       end
     end
     model.add_business_table bt
@@ -536,7 +549,8 @@ end
 def disease_groups(conn)
   groups = get_query_results(disease_group_query, conn) #.map { |a| a['name'] }
   #groups <<= { 'id' => 0, 'name' => 'TriSano' }
-  groups <<= { 'id' => 0, 'name' => 'TriSano', 'morb' => '', 'asmt' => '' }
+  # This is added by dw.sql now
+  #groups <<= { 'id' => 0, 'name' => 'TriSano', 'morb' => '', 'asmt' => '' }
   return groups
 end
 
@@ -594,7 +608,7 @@ def columns_query(tablename, schemaname)
 end
 
 def add_single_physical_column(pt, id, desc, data_type, target_column, formula)
-    puts "     -- New physical column: #{id}" #if verbose
+    puts "     -- New physical column: #{id}" if verbose
     pc = PhysicalColumn.new id
     descr = (desc == '' ? id : desc)
     descr.gsub!(/^col_/, '') if pt.get_target_table =~ /^fb_/
