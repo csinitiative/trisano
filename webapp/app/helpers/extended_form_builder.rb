@@ -317,6 +317,15 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         path = core_path << attribute
         follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{path.to_s}")
 
+        if event.type == "MorbidityEvent" || event.type == "AssessmentEvent"
+          alternate_forms_core_path_prefix = core_path.clone
+          # replace root of core path with previous event type
+          alternate_forms_core_path_prefix[0] = "morbidity_and_assessment_event"
+
+          alternate_forms_core_path = (alternate_forms_core_path_prefix << attribute).to_s
+          follow_ups << fr.form.form_element_cache.all_follow_ups_by_core_path("#{alternate_forms_core_path}")
+        end
+
         #setup follow ups for previous event types
         event.event_type_transitions.each do |transition|
           historical_core_path_prefix = core_path.clone
