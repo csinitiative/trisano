@@ -18,5 +18,5 @@
   %div{ :id => "form_supplemental_#{_form.id}" }
     - for element in _form.core_view_elements_container.children do
       - if element.name == tab
-        = show_investigator_view(element, _form)
+        = show_investigator_view(element, _form, f)
         %br
