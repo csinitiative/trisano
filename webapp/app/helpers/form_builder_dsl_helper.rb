@@ -513,17 +513,14 @@ module FormBuilderDslHelper
 
   end
 
-  def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render =false)
+  def render_investigator_core_follow_up(form_elements_cache, element, f, ajax_render=false)
     begin
       result = ""
       include_children = false
 
       unless (ajax_render)
         core_value = eval_core_path(:object => @event, :core_path => element.core_path)
-
-        if (element.condition_match?(core_value.to_s))
-          include_children = true
-        end
+        include_children = true if element.condition_match?(core_value.to_s)
       end
 
       result << "<div id='follow_up_investigate_#{element.id}'>" unless ajax_render
