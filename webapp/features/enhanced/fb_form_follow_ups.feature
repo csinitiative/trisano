@@ -29,6 +29,58 @@ Feature: Form form field follow ups
     Then I should not see any of the form field follow up questions
     And I should not see any follow up answers
 
+  Scenario: Morbidity and assessment event form on morbidity event, form field follow ups
+    Given I am logged in as a super user
+    And a morbidity and assessment event form exists
+    And that form has follow ups configured for all configured form fields, with question text for a morbidity event
+    And that form is published
+    And a morbidity event exists with a disease that matches the form
+    And I am on the morbidity event edit page
+    And I should not see any of the form field follow up questions
+
+    When I answer all of the form field follow ups with a matching condition
+    Then I should see all of the form field follow up questions
+
+    When I answer all form field follow up questions
+    And I save and continue
+    Then I should see all of the form field follow up questions
+    And I should see all form field follow up answers
+
+    When I am on the morbidity event edit page
+    And I answer all of the form field follow ups with a non-matching condition
+    Then I should not see any of the form field follow up questions
+    And I should not see any follow up answers
+
+    When I save and continue
+    Then I should not see any of the form field follow up questions
+    And I should not see any follow up answers
+
+  Scenario: Morbidity and assessment event form on assessment event, form field follow ups
+    Given I am logged in as a super user
+    And a morbidity_and_assessment event form exists
+    And that form has follow ups configured for all configured form fields, with question text for a assessment event
+    And that form is published
+    And a assessment event exists with a disease that matches the form
+    And I am on the assessment event edit page
+    And I should not see any of the form field follow up questions
+
+    When I answer all of the form field follow ups with a matching condition
+    Then I should see all of the form field follow up questions
+
+    When I answer all form field follow up questions
+    And I save and continue
+    Then I should see all of the form field follow up questions
+    And I should see all form field follow up answers
+
+    When I am on the assessment event edit page
+    And I answer all of the form field follow ups with a non-matching condition
+    Then I should not see any of the form field follow up questions
+    And I should not see any follow up answers
+
+    When I save and continue
+    Then I should not see any of the form field follow up questions
+    And I should not see any follow up answers
+
   Scenario: Assessment event form field follow ups
     Given I am logged in as a super user
     And a assessment event form exists
