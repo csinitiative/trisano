@@ -1,37 +1,47 @@
 %div
   - form_tag(event_forms_path(@event, :return => edit_event_path(@event)), :method => "post", :id => "forms_change_form") do
+    = hidden_field_tag "auto_assign_forms", true
     %p.message
-    %p
-      = "You may add the new forms available for the current disease if present. "
-      = "You may additionally remove the old forms for the event if present."
+    %p=t 'forms_change_form', :disease_name => @event.disease_event.disease.disease_name
     %hr
     = hidden_field_tag "event_id", @event.id
     %div{:id => "forms_in_use"}
       %h3
         =t 'remove_from_event'
-      - if @event.form_references.empty?
+      - if @event.forms_to_remove.empty?
         %p
           %em=t 'none'
       - else
         %ul
-          - for form_reference in @event.form_references
+          - for form in @event.forms_to_remove
             %li
-              = check_box_tag "forms_to_remove[]", form_reference.form_id, false
-              = form_reference.form.name
+              = check_box_tag "forms_to_remove[]", form.id, false
+              = form.name
     %hr
     %div{:id => "forms_available"}
       %h3
-        =t 'add_to_event'
-      - if @event.available_form_references.empty?
+        =t 'auto_add_to_event', :disease_name => @event.disease_event.disease.disease_name
+      - if @event.available_forms.empty?
         %p
           %em=t 'none'
       - else
         %ul
-          - for form_reference in @event.available_form_references
+          - for form in @event.available_forms
             %li
-              = check_box_tag "forms_to_add[]", form_reference.form.id
-              = form_reference.form.name
+              = form.name
+    %hr
+    %div{:id => "forms_common"}
+      %h3
+        =t 'common_form_references'
+      - if @event.common_forms.empty?
+        %p
+          %em=t 'none'
+      - else
+        %ul
+          - for form in @event.common_forms
+            %li
+              = form.name
     %hr
     %div
-      = submit_tag "Change Forms", :id => "save_forms_button", :disabled => true
+      = submit_tag "Change Forms", :id => "save_forms_button", :disabled => @event.available_forms.empty?
       = submit_tag "Cancel", :id => "cancel_forms_button"

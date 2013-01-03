@@ -26,7 +26,7 @@
 %div{:class => 'lab', :style => "clear: both;"}
   = error_messages_for :object => lab_form.object
 
-  - core_element(:secondary_entity_id, lab_form, :horiz) do
+  - core_element(:secondary_entity_id, lab_form, :vert) do
     = lab_form.label :secondary_entity_id
     = lab_form.collection_select(:secondary_entity_id, PlaceEntity.labs.active, :id, :name, { :include_blank => true }, { :class => 'required_if_others' })
 
@@ -42,6 +42,6 @@
     %div{:id => "new_lab_result_holder_#{lab_id}"}
 
   %p{:style => "clear: both; margin-left: 20px"}
-    = add_lab_result_link t('add_new_lab_result'), lab_form.object_name, lab_id
+    = add_lab_result_link t('add_new_lab_result'), lab_form.object_name, lab_id, @event.id
 
   %hr{:style => "height: 2px; color: black; background-color: black"}

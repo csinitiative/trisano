@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class LabResult < ActiveRecord::Base
+  include Trisano::Repeater
   belongs_to :specimen_source, :class_name => 'ExternalCode'
   belongs_to :specimen_sent_to_state, :class_name => 'ExternalCode'
   belongs_to :test_result, :class_name => 'ExternalCode'

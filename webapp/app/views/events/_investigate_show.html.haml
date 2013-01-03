@@ -1,0 +1,29 @@
+- if (form.investigator_view_elements_container.children_count_by_type("ViewElement") > 1)
+  - has_multiple_user_defined_tabs = true
+  %script{:type => "text/javascript"}
+    = "var userDefinedTabs = new YAHOO.widget.TabView(\"user_defined_tabs_#{h(form.id)}\");"
+  %div{:id => "user_defined_tabs_#{h(form.id)}", :class => "yui-navset"}
+    %ul{:id => "user_defined_tab_list_#{h(form.id)}", :class => "yui-nav"}
+      -  view_count = 0
+      - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+        - view_count += 1
+        - if view_count == 1
+          %li{:class => "selected"}
+            %a{:href => "#ut_#{h(view.id)}"}
+              %em
+                = h(view.name)
+        - else
+          %li
+            %a{:href => "#ut_#{h(view.id)}"}
+              %em
+                = h(view.name)
+    %div{:class => "yui-content"}
+      - for view in form.investigator_view_elements_container.children_by_type("ViewElement")
+        %div{:id => "ut_#{h(view.id)}"}
+          %fieldset
+            = show_investigator_view(view, form, f)
+
+
+- else
+  = show_investigator_view(form.investigator_view_elements_container.children[0], form, f)
+

@@ -142,23 +142,22 @@ class Event < ActiveRecord::Base
 
   belongs_to :parent_event, :class_name => 'Event', :foreign_key => 'parent_id'
 
-  accepts_nested_attributes_for :jurisdiction,
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? }
-  accepts_nested_attributes_for :disease_event,
-    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+  has_many :investigator_form_sections, :dependent => :destroy
+
+  accepts_nested_attributes_for :jurisdiction, :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? }
+  accepts_nested_attributes_for :disease_event, :reject_if => :nested_attributes_blank?
   accepts_nested_attributes_for :contact_child_events,
-    :allow_destroy => true,
-    :reject_if => proc { |attrs| check_contact_attrs(attrs) }
-  accepts_nested_attributes_for :place_child_events,
-    :allow_destroy => true,
-    :reject_if => :place_exposure_blank?
+                                :allow_destroy => true,
+                                :reject_if => proc { |attrs| check_contact_attrs(attrs) }
+  accepts_nested_attributes_for :place_child_events, 
+                  			        :allow_destroy => true,
+                  			        :reject_if => :place_exposure_blank?
   accepts_nested_attributes_for :encounter_child_events,
-    :allow_destroy => true,
-    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
-  accepts_nested_attributes_for :notes,
-    :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
-  accepts_nested_attributes_for :address,
-    :reject_if => proc { |attrs| attrs.all? { |k, v| v.blank? } }
+                                :allow_destroy => true,
+		 	                    	    :reject_if => proc { |attrs| check_encounter_attrs(attrs) }
+  accepts_nested_attributes_for :notes, :reject_if => proc { |attrs| !attrs.has_key?('note') || attrs['note'].blank?}
+  accepts_nested_attributes_for :address, :reject_if => :nested_attributes_blank? 
+  accepts_nested_attributes_for :investigator_form_sections, :reject_if => :nested_attributes_blank?
 
   def self.check_contact_attrs(attrs)
     # Contact is an existing entity chosen from search
@@ -350,9 +349,6 @@ class Event < ActiveRecord::Base
         if form_reference.nil?
           raise I18n.translate('missing_form_reference')
         else
-          question_elements = FormElement.find_all_by_form_id_and_type(form_id, "QuestionElement", :include => [:question])
-          question_ids = question_elements.collect { |element| element.question.id}
-          Answer.delete_all(["event_id = ? and question_id in (?)", self.id, question_ids])
           form_reference.destroy
         end
       end
@@ -391,18 +387,6 @@ class Event < ActiveRecord::Base
 
   def new_answers=(attributes)
     answers.build(attributes)
-  end
-
-  def new_repeater_answer=(attributes)
-    # no op
-  end
-
-  def new_repeater_checkboxes=(attributes)
-    # no op
-  end
-
-  def new_repeater_radio_buttons=(attributes)
-    # no op
   end
 
   def new_checkboxes=(attributes)
@@ -496,7 +480,7 @@ class Event < ActiveRecord::Base
   end
 
   def can_receive_auto_assigned_forms?
-    if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil? || self.undergone_form_assignment
+    if self.undergone_form_assignment || self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
       return false
     else
       return true
@@ -660,24 +644,27 @@ class Event < ActiveRecord::Base
   end
 
   def needs_forms_update?
-    self.available_form_references.length > 0 or self.form_references.length > 0
+    self.available_forms.length > 0 or self.forms_to_remove.length > 0
   end
 
-  def available_form_references
-    return [] unless self.disease_event
+  def forms_to_remove
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-    template_ids = self.form_references.collect { |fr| fr.template_id }
-
-    # What is this doing? Comments please!
-    forms.delete_if {|f| template_ids.include?(f.template_id) }.map {|f| FormReference.new(:form_id => f.id, :template_id => f.template_id) }
+    template_ids = forms.map(&:template_id)
+    self.form_references.map(&:form).select {|f| !template_ids.include?(f.template_id) }
   end
 
-  def invalid_form_references
+  def common_forms
     return [] unless self.disease_event
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-    return [] if forms.empty?
-    form_ids = forms.map(&:id)
-    self.form_references.select {|f| !form_ids.include?(f.form_id) }
+    template_ids = forms.map(&:template_id)
+    self.form_references.map(&:form).select {|f| template_ids.include?(f.template_id) }
+  end
+
+  def available_forms
+    return [] unless self.disease_event
+    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    template_ids = self.form_references.map(&:template_id)
+    forms.select {|f| !template_ids.include?(f.template_id) }
   end
 
   def create_form_answers_for_repeating_form_elements

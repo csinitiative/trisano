@@ -74,13 +74,19 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       conditions = []
       follow_ups.each { |follow_up| conditions << "#{follow_up.condition},#{follow_up.id}"}
       conditions = conditions.join(",")
-      text_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
-      select_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}');"
+      text_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}', '#{id}_spinner');"
+      select_answer_event = "sendConditionRequest('#{process_condition_path}', this, '#{event.id}', '#{question_element.id}', '#{id}_spinner');"
     end
 
     cdc_attributes = []
     codes = []
     html_options[:class] = "required" if question_element.is_required?
+
+    error_messages = @template.error_messages_for(:answer, :header_message => "#{@template.pluralize(@object.errors.count, "error")} prohibited this from being saved")
+    error_messages.gsub!("There are unanswered required questions.", "'#{question.question_text}' is a required question.")
+    error_messages.insert(0, "<br/>") if error_messages.present?
+    result += error_messages
+
     input_element = case question.data_type
     when :single_line_text
       unless (question.size.nil?)
@@ -128,8 +134,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
-        if @object_name.include?("new_repeater_answer")
-          field_name += "[new_repeater_checkboxes]"
+        if @object_name.include?("new_repeater_answers")
+          field_name = @object_name.gsub("new_repeater_answers", "new_repeater_checkboxes")
         else
           field_name += "[new_checkboxes]"
         end
@@ -165,8 +171,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
 
       if @object.new_record?
         field_name = "#{@object_name[0...(@object_name.index("["))]}"
-        if @object_name.include?("new_repeater_answer")
-          field_name += "[new_repeater_radio_buttons]"
+        if @object_name.include?("new_repeater_answers")
+          field_name = @object_name.sub("new_repeater_answers", "new_repeater_radio_buttons")
         else
           field_name += "[new_radio_buttons]"
         end
@@ -213,10 +219,16 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       text_field(:text_answer, html_options) + "&nbsp;<small>#{I18n.t(:phone_answer_format_msg)}</small>"
     end
 
+    result += label(:text_answer, sanitize(question.question_text, :tags => %w(br)), :for => html_options[:id]) 
+
     if question.data_type == :check_box || question.data_type == :radio_button
-      result += @template.content_tag(:label, sanitize(question.question_text, :tags => %w(br))) + " " + input_element
+      result += " " + input_element
       result += "\n" + hidden_field(:question_id, :index => index) unless @object.new_record?
       result << code_js(codes, field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_code", question.data_type)
+
+      event_id_field_name = field_name + "[#{field_index}]" + '[event_id]'
+      event_id_field_id = field_name.gsub(/\[/, "_").gsub(/\]/, "") + "_#{field_index}_" + 'event_id'
+      result += "\n" + @template.hidden_field_tag(event_id_field_name, event.id, :id => event_id_field_id)
 
       unless question_element.export_column.blank?
         export_conv_field_name = field_name + "[#{field_index}]" + '[export_conversion_value_id]'
@@ -225,11 +237,9 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
         result += rb_export_js(cdc_attributes, export_conv_field_id)
       end
     else
-      result += @template.content_tag(:label, :for => html_options[:id]) do
-        sanitize(question.question_text, :tags => %w(br))
-      end
       result += input_element
       result += "\n" + hidden_field(:question_id, :index => index)
+      result += "\n" + hidden_field(:event_id, :index => index, :value => event.id)
       unless question_element.export_column.blank?
         if question.data_type == :drop_down
           export_conv_field_name = object_name + "[#{index}]" + '[export_conversion_value_id]'

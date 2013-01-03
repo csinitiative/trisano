@@ -13,10 +13,14 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano. 
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-%span.subsection-header
-  ="#{t('telephone')}/#{t('Email')}"
--core_element_print(:telephones, f, :horiz) do
-  =render :partial => 'events/people/print_telephone.html.haml', :collection => f.object.telephones
--core_element_print(:email_addresses, f, :horiz) do
-  =render :partial => 'events/people/print_email.html.haml', :collection => f.object.email_addresses
-
+%span.subsection-header="#{t('telephone')}/#{t('Email')}"
+-core_element_print(:telephones, f, :vert) do
+  %br
+  -f.fields_for(:telephones, :builder => ExtendedFormBuilder) do |telephone_form|
+    =render :partial => 'events/people/print_telephone.html.haml', :locals => {:print_telephone => telephone_form.object, :f => telephone_form}
+%br
+%hr
+-core_element_print(:email_addresses, f, :vert) do
+  %br
+  -f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
+    =render :partial => 'events/people/print_email.html.haml', :locals => {:print_email => email_form.object, :f => email_form}

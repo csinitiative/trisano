@@ -103,6 +103,16 @@ describe StagedMessage do
 
   it 'should use MSH-4 for lab name if OBX-23 is not present' do
     staged_message = StagedMessage.new :hl7_message => HL7MESSAGES[:arup_1]
+    staged_message.observation_requests.first.all_tests.should_not be_empty
+    staged_message.lab_name.should == staged_message.message_header.sending_facility
+  end
+
+  it 'should not fail if the first OBR segment does not have tests' do
+    msg = <<ARUP1
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42 HAPPY LN^^SALT LAKE CITY^UT^84444^^M||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\r
+ARUP1
+    staged_message = StagedMessage.new :hl7_message => msg
+    staged_message.observation_requests.first.all_tests.should be_empty
     staged_message.lab_name.should == staged_message.message_header.sending_facility
   end
 
@@ -195,6 +205,7 @@ describe StagedMessage do
       @bad_message_ack_header.recv_facility.should ==
         @bad_message.message_header.msh_segment.sending_facility
     end
+
 
     it 'should contain the TriSano OID in the MSH segment' do
       @good_message_ack_header.sending_app.should ==
@@ -428,8 +439,12 @@ describe StagedMessage do
         @event.should be_new_record
       end
 
+      it "should parse MSH-6 and assign as first reported date" do
+        @event.first_reported_PH_date.should == Time.parse("200903261645")
+      end
+
       it "should populate the event" do
-        @event.first_reported_PH_date.should == @staged_message.created_at
+        @event.first_reported_PH_date.should == @staged_message.message_header.time
 
         p = @event.interested_party.person_entity.person
         p.last_name.should == @staged_message.patient.patient_last_name
@@ -454,6 +469,24 @@ describe StagedMessage do
         t.entity_location_type_id.should == ExternalCode.find_by_code_name_and_the_code('telephonelocationtype', 'HT').id
 
         @event.jurisdiction.name.should == "Unassigned"
+      end
+
+      it "should parse the street number with -" do
+        msg =  <<ARUP1
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42-12 HAPPY LN^^SALT LAKE CITY^UT^84444^USA^^^Salt Lake||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
+ARUP1
+        @staged_message = StagedMessage.new(:hl7_message => msg)
+        @event = @staged_message.new_event_from
+        @event.address.street_number.should == "42-12"
+      end
+
+      it "should populate the county" do
+        msg =  <<ARUP1
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42 HAPPY LN^^SALT LAKE CITY^UT^84444^USA^^^Salt Lake||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
+ARUP1
+        @staged_message = StagedMessage.create(:hl7_message => unique_message(msg))
+        @event = @staged_message.new_event_from
+        @event.address.county.should == external_codes(:county_salt_lake)
       end
     end
 

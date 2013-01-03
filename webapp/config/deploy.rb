@@ -16,15 +16,13 @@ set :scm, :none
 set :deploy_via, :copy
 set :copy_exclude, [".git", "log"]
 set :copy_compression, :zip
-
+set :ssh_options, {:forward_agent => true}
 depend :remote, :command, "rake"
 depend :remote, :command, "bundle"
 
 after 'deploy:update_code', 'deploy:update_database_yml'
 after 'deploy:update_code', 'deploy:update_site_config_yml'
 
-before 'deploy:migrate', "deploy:dump_db"
-before "deploy:rollback",  "deploy:restore_db"
 
 namespace :deploy do
   task :start do ; end

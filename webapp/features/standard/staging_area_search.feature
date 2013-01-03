@@ -103,3 +103,10 @@ Feature: Searching the staged electronic messages
     Then I should not see "Hepatitis Be Antigen"
       And I should not see "SAT"
       And I should not see "ACT"
+
+  Scenario: Search staged messages with state assigned but nil assigned event
+    Given I am logged in as a super user
+      And ELR in assigned state with no assigned event exists
+    When I visit the staging area assigned page
+    Then I should see the matching result
+

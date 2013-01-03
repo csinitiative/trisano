@@ -57,7 +57,7 @@ Then /^I should see all of the core follow up questions$/ do
   html_source = @browser.get_html_source
   @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
   @core_fields.each do |core_field|
-    raise "Could not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == false
+    html_source.include?("#{core_field.key} follow up?").should be_true, "Expected to see '#{core_field.key} follow up?'"
   end
 end
 
@@ -135,3 +135,83 @@ Then /^I should not see any follow up answers$/ do
     raise "Should not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == true
   end
 end
+
+Given /^that form has follow ups configured for all configured form fields$/ do
+  @core_field_container = @form.core_field_elements_container
+
+  # Create a core field config for every core field
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+    create_core_field_config(@form, @core_field_container, core_field, :follow_up => true)
+  end
+end
+
+When /^I answer all of the form field follow ups with a matching condition$/ do
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    key = core_field.key
+    before_follow_up_question = key + " before?"
+    before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
+    @browser.type(before_follow_up_question_html_id, "YES")
+    after_follow_up_question = key + " after?"
+    after_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{after_follow_up_question}']@for")
+    @browser.type(after_follow_up_question_html_id, "YES")
+    sleep(1) # wait for ajax
+  end
+end
+
+Then /^I should see all of the form field follow up questions$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    raise "Should find #{core_field.key} before follow up" if html_source.include?("#{core_field.key} before follow up?") == false
+    raise "Should find #{core_field.key} after follow up" if html_source.include?("#{core_field.key} after follow up?") == false
+  end
+end
+
+When /^I answer all form field follow up questions$/ do
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    key = core_field.key
+    before_follow_up_question = key + " before follow up?"
+    before_follow_up_answer = key + " before follow up answer"
+    before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
+    @browser.type(before_follow_up_question_html_id, before_follow_up_answer)
+    after_follow_up_question = key + " after follow up?"
+    after_follow_up_answer = key + " after follow up answer"
+    after_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{after_follow_up_question}']@for")
+    @browser.type(after_follow_up_question_html_id, after_follow_up_answer)
+  end
+end
+
+Then /^I should see all form field follow up answers$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    raise "Should find #{core_field.key} before follow up answer" if html_source.include?("#{core_field.key} before follow up answer") == false
+    raise "Should find #{core_field.key} after follow up answer" if html_source.include?("#{core_field.key} after follow up answer") == false
+  end
+end
+
+When /^I answer all of the form field follow ups with a non\-matching condition$/ do
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    key = core_field.key
+    before_follow_up_question = key + " before?"
+    before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
+    @browser.type(before_follow_up_question_html_id, "NO")
+    after_follow_up_question = key + " after?"
+    after_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{after_follow_up_question}']@for")
+    @browser.type(after_follow_up_question_html_id, "NO")
+    sleep(1) # wait for ajax
+  end
+end
+
+Then /^I should not see any of the form field follow up questions$/ do
+  html_source = @browser.get_html_source
+  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
+  @core_fields.each do |core_field|
+    raise "Should not find #{core_field.key} before follow up" if html_source.include?("#{core_field.key} before follow up?") == true
+    raise "Should not find #{core_field.key} after follow up" if html_source.include?("#{core_field.key} after follow up?") == true
+  end
+end
+

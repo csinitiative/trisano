@@ -66,6 +66,10 @@ describe Message do
     it 'should return the sending facility (without noise)' do
       @hl7.message_header.sending_facility.should == 'ARUP LABORATORIES'
     end
+
+    it 'should return MSH-6 time segment' do
+      @hl7.message_header.time.should == Time.parse('200903261645')
+    end
   end
 
   describe 'patient identifier' do

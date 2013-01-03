@@ -27,7 +27,7 @@
             = f.dropdown_code_field(:treatment_given_yn_id, 'yesno', {})
 
           - core_element :treatment_id, f, :horiz do
-            = f.label :treatment_name
+            = f.label :treatment_id
             = f.core_dropdown_field(:treatment_id, @event.possible_treatments, :id, :treatment_name)
 
           - core_element :treatment_date, f, :horiz do
@@ -39,7 +39,12 @@
             = f.core_calendar_date_select(:stop_treatment_date, {:size => 20, :year_range => 100.years.ago..1.years.from_now})
 
           %span.horiz
-            - unless f.object.new_record?
+            - if !f.object.new_record?
               = f.label :_delete
               = f.check_box :_destroy
+            - elsif f.repeater_form?
+              %span.ajax-actions
+                %a{:href => "#", :class => "save-new-treatment"} Save
+                |
+                %a{:href => "#", :class => "discard-new-treatment"} Discard
   %hr

@@ -12,7 +12,7 @@ Feature: Persisting form builder value codes
     And I am on the morbidity event edit page
 
     When I answer all of the first questions with "No"
-    And I save the event
+    And I save and continue
     Then all answers answered "Yes" should have the code "1"
     And all answers answered "No" should have the code "2"
     And there should be 3 answers answered "No"
@@ -21,7 +21,7 @@ Feature: Persisting form builder value codes
     When I am on the morbidity event edit page
     And I answer all of the first questions with "Yes"
     And I answer all of the second questions with "No"
-    And I save the event
+    And I save and continue
     Then all answers answered "Yes" should have the code "1"
     And all answers answered "No" should have the code "2"
     And there should be 3 answers answered "Yes"
@@ -29,11 +29,11 @@ Feature: Persisting form builder value codes
 
     When I am on the morbidity event edit page
     And I check all check boxes
-    And I save the event
+    And I save and continue
     Then both check box questions should have all codes
 
     When I am on the morbidity event edit page
-    And I save the event
+    And I save and continue
     And there should be 4 answers answered "Yes"
     And there should be 4 answers answered "No"
     And there should be 2 answers answered "Unknown"

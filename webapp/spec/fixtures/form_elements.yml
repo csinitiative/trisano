@@ -677,3 +677,28 @@ core_field_container_for_hep_b_form:
   description:
   rgt: "23"
   parent_id: "300"
+std_group_neuro:
+  type: QuestionElement
+  id: "312"
+  export_column_id: "16"
+  form_id: "11"
+  tree_id: "1009"
+  lft: "1"
+  rgt: "2"
+std_group_detected:
+  name:
+  type: QuestionElement
+  id: "313"
+  form_id: "11"
+  export_column_id: "18"
+  tree_id: "1009"
+  lft: "3"
+  rgt: "4"
+std_group_infosrce:
+  type: QuestionElement
+  id: "314"
+  form_id: "11"
+  export_column_id: "17"
+  tree_id: "1009"
+  lft: "4"
+  rgt: "5"

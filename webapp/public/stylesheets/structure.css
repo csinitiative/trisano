@@ -239,3 +239,6 @@ legend {
     z-index: 1000;
 }
 
+.ajax-actions {
+  display: none;
+}

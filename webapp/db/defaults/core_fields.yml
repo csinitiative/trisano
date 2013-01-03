@@ -677,16 +677,17 @@
   parent_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][first_name]
   parent_key: morbidity_event[reporter_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_sent_to_state]
@@ -712,8 +713,9 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][collection_date]
@@ -747,7 +749,7 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -772,7 +774,7 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -797,7 +799,7 @@
   parent_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
@@ -837,8 +839,9 @@
   parent_key: contact_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][reference_range]
@@ -853,8 +856,9 @@
   parent_key: morbidity_event[disease_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][reference_range]
@@ -922,8 +926,9 @@
   required_for_section: true
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][collection_date]
@@ -954,7 +959,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -964,7 +968,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -974,7 +977,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -984,7 +986,6 @@
   field_type: date
   key: morbidity_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: morbidity_event[hospitalization_facilities]  
   parent_key: morbidity_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1064,12 +1065,50 @@
   code_name: yesno
   parent_key: contact_event[pregnancy_status_section]
 
+# Perhaps now invalid, a left over from before support for multiple
+# treatments
 - help_text:
   fb_accessible: true
   can_follow_up: false
   event_type: morbidity_event
   field_type: drop_down
   key: morbidity_event[treatments]
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: morbidity_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
   parent_key: morbidity_event[treatments_section]
 
 - help_text:
@@ -1141,8 +1180,9 @@
   required_for_event: true
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_result]
@@ -1150,16 +1190,18 @@
   parent_key: contact_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][organism]
   parent_key: contact_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_status]
@@ -1167,24 +1209,27 @@
   parent_key: contact_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][result_value]
   parent_key: contact_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][units]
   parent_key: contact_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][comment]
@@ -1326,8 +1371,9 @@
   parent_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: contact_event
   key: contact_event[labs][lab_results][lab_test_date]
@@ -1491,8 +1537,9 @@
   parent_key: contact_event[disease_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_sent_to_state]
@@ -1582,7 +1629,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1592,7 +1638,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1602,7 +1647,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1612,7 +1656,6 @@
   field_type: date
   key: contact_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: contact_event[hospitalization_facilities]  
   parent_key: contact_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -1633,8 +1676,9 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][accession_no]
@@ -1643,8 +1687,9 @@
   required_for_section: false
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_type]
@@ -1652,6 +1697,7 @@
   parent_key: morbidity_event[labs_section]
   required_for_section: true
 
+# Perhaps now invalid
 - help_text:
   fb_accessible: true
   can_follow_up: false
@@ -1661,8 +1707,45 @@
   parent_key: contact_event[treatments_section]
 
 - help_text:
-  fb_accessible: false
+  fb_accessible: true
   can_follow_up: false
+  field_type: drop_down
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: contact_event
+  key: contact_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: contact_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: date
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][lab_test_date]
@@ -1677,8 +1760,9 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[labs][lab_results][accession_no]
@@ -1687,8 +1771,9 @@
   required_for_section: false
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][test_type]
@@ -1721,8 +1806,9 @@
   parent_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][specimen_source]
@@ -1730,8 +1816,9 @@
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: contact_event
   key: contact_event[labs][lab_results][specimen_source]
@@ -1764,8 +1851,8 @@
   parent_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_event
   field_type: single_line_text
   key: morbidity_event[reporter][person_entity][person][last_name]
@@ -1773,8 +1860,9 @@
   required_for_section: true
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_result]
@@ -1782,16 +1870,18 @@
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][organism]
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][test_status]
@@ -1799,24 +1889,27 @@
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][result_value]
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][units]
   parent_key: morbidity_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[labs][lab_results][comment]
@@ -1903,7 +1996,6 @@
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_event[interested_party][person_entity][telephones] 
   parent_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1912,6 +2004,15 @@
   field_type: single_line_text
   event_type: morbidity_event
   key: morbidity_event[interested_party][person_entity][email_addresses]
+  parent_key: morbidity_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_event
+  key: morbidity_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
   parent_key: morbidity_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1978,7 +2079,6 @@
   event_type: contact_event
   key: contact_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: contact_event[interested_party][person_entity][telephones] 
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -1987,6 +2087,15 @@
   field_type: single_line_text
   event_type: contact_event
   key: contact_event[interested_party][person_entity][email_addresses]
+  parent_key: contact_event[interested_party][person_entity][phone_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: contact_event
+  key: contact_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
   parent_key: contact_event[interested_party][person_entity][phone_section]
 
 - help_text:
@@ -2091,6 +2200,42 @@
 - help_text:
   fb_accessible: true
   can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: encounter_event
+  key: encounter_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: encounter_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs]
@@ -2106,8 +2251,9 @@
   required_for_section: true
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs][lab_results][accession_no]
@@ -2116,8 +2262,9 @@
   required_for_section: false
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: encounter_event
   key: encounter_event[labs][lab_results][test_type]
@@ -2126,48 +2273,54 @@
   required_for_section: true
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  repeater: true
+  fb_accessible: true
+  can_follow_up: true
   field_type: drop_down
   event_type: encounter_event
   key: encounter_event[labs][lab_results][organism]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: encounter_event
   key: encounter_event[labs][lab_results][test_result]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs][lab_results][result_value]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs][lab_results][units]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: encounter_event
   key: encounter_event[labs][lab_results][reference_range]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: drop_down
   event_type: encounter_event
   code_name: test_status
@@ -2175,8 +2328,9 @@
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: encounter_event
   code_name: specimen
@@ -2184,24 +2338,27 @@
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: date
   event_type: encounter_event
   key: encounter_event[labs][lab_results][collection_date]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: date
   event_type: encounter_event
   key: encounter_event[labs][lab_results][lab_test_date]
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: encounter_event
   code_name: yesno
@@ -2209,8 +2366,9 @@
   parent_key: encounter_event[labs_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: multi_line_text
   event_type: encounter_event
   key: encounter_event[labs][lab_results][comment]
@@ -2399,7 +2557,7 @@
   field_type: section
   event_type: assessment_event
   key: assessment_event[treatments_section]
-  
+
 - parent_key: assessment_event[clinical_tab]
   help_text: 
   fb_accessible: false
@@ -2570,8 +2728,8 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: assessment_event
   field_type: single_line_text
   key: assessment_event[reporter][person_entity][person][first_name]
@@ -2605,7 +2763,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -2622,7 +2780,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -2639,7 +2797,7 @@
   
 - parent_key: assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: assessment_event
   field_type: drop_down
@@ -2671,8 +2829,9 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: assessment_event
   key: assessment_event[labs][lab_results][reference_range]
@@ -2705,8 +2864,9 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: assessment_event
   key: assessment_event[labs][lab_results][collection_date]
@@ -2736,7 +2896,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2746,7 +2905,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2756,7 +2914,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - help_text:
@@ -2766,7 +2923,6 @@
   field_type: date
   key: assessment_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: assessment_event[hospitalization_facilities]  
   parent_key: assessment_event[hospitalized_health_facilities_section]
 
 - parent_key: assessment_event[mortality_status_section]
@@ -2819,6 +2975,7 @@
   field_type: single_line_text
   key: assessment_event[interested_party][risk_factor][risk_factors]
   
+# Perhaps now invalid
 - parent_key: assessment_event[treatments_section]
   help_text: 
   fb_accessible: true
@@ -2826,6 +2983,42 @@
   event_type: assessment_event
   field_type: drop_down
   key: assessment_event[treatments]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: assessment_event
+  key: assessment_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: assessment_event[treatments_section]
   
 - parent_key: assessment_event[other_section]
   help_text: 
@@ -3003,8 +3196,9 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: yesno
   field_type: drop_down
   event_type: assessment_event
@@ -3056,8 +3250,9 @@
 - parent_key: assessment_event[labs_section]
   help_text: 
   required_for_section: false
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: lab_accession_no
   field_type: single_line_text
   event_type: assessment_event
@@ -3066,8 +3261,9 @@
 - parent_key: assessment_event[labs_section]
   help_text: 
   required_for_section: true
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: lab_test_type
   field_type: drop_down
   event_type: assessment_event
@@ -3075,8 +3271,9 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: assessment_event
   key: assessment_event[labs][lab_results][lab_test_date]
@@ -3099,8 +3296,9 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: specimen
   field_type: drop_down
   event_type: assessment_event
@@ -3134,16 +3332,17 @@
 - parent_key: assessment_event[reporter_section]
   help_text: 
   required_for_section: true
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: assessment_event
   field_type: single_line_text
   key: assessment_event[reporter][person_entity][person][last_name]
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: test_result
   field_type: drop_down
   event_type: assessment_event
@@ -3151,16 +3350,18 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: assessment_event
   key: assessment_event[labs][lab_results][organism]
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: test_status
   field_type: drop_down
   event_type: assessment_event
@@ -3168,24 +3369,27 @@
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: assessment_event
   key: assessment_event[labs][lab_results][result_value]
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: assessment_event
   key: assessment_event[labs][lab_results][units]
   
 - parent_key: assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: assessment_event
   key: assessment_event[labs][lab_results][comment]
@@ -3263,7 +3467,6 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: assessment_event[interested_party][person_entity][telephones] 
   parent_key: assessment_event[interested_party][person_entity][phone_section]
 
 - parent_key: assessment_event[interested_party][person_entity][phone_section]
@@ -3274,6 +3477,15 @@
   event_type: assessment_event
   key: assessment_event[interested_party][person_entity][email_addresses]
   
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: assessment_event
+  key: assessment_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
+  parent_key: assessment_event[interested_party][person_entity][phone_section]
+
 - parent_key: assessment_event[clinicians_section]
   help_text: 
   fb_accessible: true
@@ -3474,6 +3686,42 @@
   field_type: section
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_given_yn_id]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: drop_down
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_id]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][treatment_date]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
+
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: date
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][treatments][stop_treatment_date]
+  repeater: true
+  parent_key: morbidity_and_assessment_event[treatments_section]
   
 - parent_key: morbidity_and_assessment_event[clinical_tab]
   help_text: 
@@ -3645,8 +3893,8 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: single_line_text
   key: morbidity_and_assessment_event[reporter][person_entity][person][first_name]
@@ -3680,7 +3928,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -3697,7 +3945,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -3714,7 +3962,7 @@
   
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
-  fb_accessible: true
+  fb_accessible: false
   can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: drop_down
@@ -3746,8 +3994,9 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][reference_range]
@@ -3780,8 +4029,9 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: date
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][collection_date]
@@ -3811,7 +4061,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][secondary_entity_id]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3821,7 +4070,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][admission_date]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3831,7 +4079,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][discharge_date]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - help_text:
@@ -3841,7 +4088,6 @@
   field_type: date
   key: morbidity_and_assessment_event[hospitalization_facilities][hospitals_participation][medical_record_number]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[hospitalization_facilities]  
   parent_key: morbidity_and_assessment_event[hospitalized_health_facilities_section]
   
 - parent_key: morbidity_and_assessment_event[mortality_status_section]
@@ -4078,8 +4324,9 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: yesno
   field_type: drop_down
   event_type: morbidity_and_assessment_event
@@ -4131,8 +4378,9 @@
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
   required_for_section: false
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: lab_accession_no
   field_type: single_line_text
   event_type: morbidity_and_assessment_event
@@ -4141,8 +4389,9 @@
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
   required_for_section: true
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: lab_test_type
   field_type: drop_down
   event_type: morbidity_and_assessment_event
@@ -4150,8 +4399,9 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: date
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][lab_test_date]
@@ -4174,8 +4424,9 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: specimen
   field_type: drop_down
   event_type: morbidity_and_assessment_event
@@ -4209,16 +4460,17 @@
 - parent_key: morbidity_and_assessment_event[reporter_section]
   help_text: 
   required_for_section: true
-  fb_accessible: true
-  can_follow_up: true
+  fb_accessible: false
+  can_follow_up: false
   event_type: morbidity_and_assessment_event
   field_type: single_line_text
   key: morbidity_and_assessment_event[reporter][person_entity][person][last_name]
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   code_name: test_result
   field_type: drop_down
   event_type: morbidity_and_assessment_event
@@ -4226,16 +4478,18 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: drop_down
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][organism]
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   code_name: test_status
   field_type: drop_down
   event_type: morbidity_and_assessment_event
@@ -4243,24 +4497,27 @@
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  repeater: true
+  can_follow_up: true
   field_type: single_line_text
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][result_value]
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][units]
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
-  fb_accessible: false
-  can_follow_up: false
+  fb_accessible: true
+  can_follow_up: true
+  repeater: true
   field_type: single_line_text
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[labs][lab_results][comment]
@@ -4338,7 +4595,15 @@
   event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[interested_party][person_entity][telephones][patient_telephone]
   repeater: true
-  repeater_parent_key: morbidity_and_assessment_event[interested_party][person_entity][telephones] 
+  parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
+  
+- help_text:
+  fb_accessible: true
+  can_follow_up: false
+  field_type: single_line_text
+  event_type: morbidity_and_assessment_event
+  key: morbidity_and_assessment_event[interested_party][person_entity][email_addresses][email_address]
+  repeater: true
   parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]
   
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][phone_section]

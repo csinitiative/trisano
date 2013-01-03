@@ -14,12 +14,12 @@ Feature: Managing clinicians on events
 
     When I add an existing clinician
     And I add a new clinician
-    And I save the event
+    And I save and continue
     Then I should see all added clinicians
 
     When I navigate to the morbidity event edit page
     And I check a clinician to remove
-    And I save the event
+    And I save and continue
     Then I should not see the removed clinician
 
   Scenario: Adding clinicians in edit morbidity mode
@@ -30,7 +30,7 @@ Feature: Managing clinicians on events
     When I navigate to the morbidity event edit page
     And I add an existing clinician
     And I add a new clinician
-    And I save the event
+    And I save and continue
     Then I should see all added clinicians
 
   Scenario: Clinician search should not include deleted clinicians in morbidity events
@@ -53,12 +53,12 @@ Feature: Managing clinicians on events
 
     When I add an existing clinician
     And I add a new clinician
-    And I save the event
+    And I save and continue
     Then I should see all added clinicians
 
     When I navigate to the assessment event edit page
     And I check a clinician to remove
-    And I save the event
+    And I save and continue
     Then I should not see the removed clinician
 
   Scenario: Adding clinicians in edit assessment mode
@@ -69,7 +69,7 @@ Feature: Managing clinicians on events
     When I navigate to the assessment event edit page
     And I add an existing clinician
     And I add a new clinician
-    And I save the event
+    And I save and continue
     Then I should see all added clinicians
 
   Scenario: Clinician search should not include deleted clinicians in assessment

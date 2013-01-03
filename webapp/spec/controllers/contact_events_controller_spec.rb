@@ -255,7 +255,7 @@ describe ContactEventsController do
                                :postal_code   => '99999')
       @parent_event = Factory.build(:morbidity_event, :address => @address)
       @event = Factory.build(:contact_event, :parent_event => @parent_event)
-      ContactEvent.expects(:find).with('1').returns(@event)
+      Event.expects(:find).with('1').returns(@event)
     end
 
     def do_get

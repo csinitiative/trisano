@@ -350,10 +350,14 @@ module TrisanoHelper
     return save_cmr(browser)
   end
 
-  def answer_investigator_question(browser, question_text, answer, html_source=nil)
-    answer_id = get_investigator_answer_id(browser, question_text, html_source)
+  def answer_investigator_question(browser, question_text, answer, html_source=nil, count=nil)
+    if count
+      answer_id = "xpath=(//input[@id='" + INVESTIGATOR_ANSWER_ID_PREFIX + get_investigator_answer_id(browser, question_text, html_source) + "'])[#{count.to_i + 1}]"
+    else
+      answer_id = INVESTIGATOR_ANSWER_ID_PREFIX + get_investigator_answer_id(browser, question_text, html_source)
+    end
     begin
-      browser.type("#{INVESTIGATOR_ANSWER_ID_PREFIX}#{answer_id}", answer) == "OK"
+      browser.type(answer_id, answer) == "OK"
     rescue
       return false
     end
@@ -698,6 +702,13 @@ module TrisanoHelper
     browser.type("//div[@id='hospitalization_facilities']//div[@class='hospital'][#{index}]//input[contains(@id, '_medical_record_number')]", attributes[:medical_record_number]) if attributes[:medical_record_number]
   end
 
+  def add_email(browser, attributes, index = 1)
+    click_core_tab(browser, DEMOGRAPHICS)
+    browser.click "link=Add an Email Address" unless index == 1
+    field_id = @browser.get_attribute "//div[@id='email_addresses']//div[@class='email'][#{index}]//label[contains(text(), 'Email address')]/@for"
+    browser.type(field_id, attributes[:email])
+  end
+
   def add_telephone(browser, attributes, index = 1)
     click_core_tab(browser, DEMOGRAPHICS)
     browser.click "link=Add a Telephone" unless index == 1
@@ -713,10 +724,12 @@ module TrisanoHelper
   def add_treatment(browser, attributes, index = 1)
     click_core_tab(browser, CLINICAL)
     browser.click("link=Add a Treatment") unless index == 1
-    sleep(1)
-    browser.select("//div[@class='treatment'][#{index}]//select", attributes[:treatment_given])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, '[treatment_name]')]",    attributes[:treatment_name])
-    browser.type("//div[@class='treatment'][#{index}]//input[contains(@name, 'treatment_date')]", attributes[:treatment_date])
+    treatment_given_id = browser.get_attribute "//li[@class='treatment'][#{index}]//label[text()='Treatment given']/@for"
+    browser.select(treatment_given_id, "label=#{attributes[:treatment_given]}")
+    treatment_name_id = browser.get_attribute "//li[@class='treatment'][#{index}]//label[text()='Treatment']/@for"
+    browser.select(treatment_name_id, "label=#{attributes[:treatment_name]}")
+    treatment_date_field_id = browser.get_attribute("//li[@class='treatment'][#{index}]//label[text()='Date of treatment']/@for")
+    browser.type(treatment_date_field_id, attributes[:treatment_date])
   end
 
   def add_clinician(browser, attributes, index = 1)
@@ -742,15 +755,17 @@ module TrisanoHelper
 
   def add_lab_result(browser, attributes, lab_index = 1, result_index = 1)
     click_core_tab(browser, LABORATORY)
-    browser.click("link=Add a new lab result") unless lab_index == 1
+    browser.click("link=Add a New Lab") unless lab_index == 1
+    browser.click("link=Add a new lab result to this lab") unless result_index == 1
     sleep(1)
     browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//select[contains(@id, '_secondary_entity_id')]", "label=#{attributes[:lab_name]}") if attributes[:lab_name]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
-    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
-    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//div[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_state_id')]", "label=#{attributes[:sent_to_state]}") if attributes[:sent_to_state]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_test_type_id')]", "label=#{attributes[:test_type]}") if attributes[:test_type]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_result_text')]", attributes[:lab_result_text]) if attributes[:lab_result_text]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_interpretation_id')]", "label=#{attributes[:lab_interpretation]}") if attributes[:lab_interpretation]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_source_id')]", "label=#{attributes[:lab_specimen_source]}") if attributes[:lab_specimen_source]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_collection_date')]", attributes[:lab_collection_date]) if attributes[:lab_collection_date]
+    browser.type("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//input[contains(@id, '_lab_test_date')]", attributes[:lab_test_date]) if attributes[:lab_test_date]
+    browser.select("//div[@id='labs']//div[@class='lab'][#{lab_index}]//li[@class='lab_result'][#{result_index}]//select[contains(@id, '_specimen_sent_to_state_id')]", "label=#{attributes[:sent_to_state]}") if attributes[:sent_to_state]
   end
 
   #
@@ -961,7 +976,8 @@ module TrisanoHelper
     id_end_position = html_source.index("\"", id_start_position) -1
 
     # This is a kluge that will go hunting for quot; if the id looks too big. Needed for reporting agency at least.
-    id_end_position = html_source.index("quot;", id_start_position)-3 if (id_end_position-id_start_position > 10)
+    quote_position = html_source.index("quot;", id_start_position)
+    id_end_position = quote_position-3 if quote_position and (id_end_position-id_start_position > 21)
 
     html_source[id_start_position..id_end_position]
   end

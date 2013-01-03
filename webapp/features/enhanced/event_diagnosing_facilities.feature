@@ -13,7 +13,7 @@ Feature: Managing diagnosing facilities on events
 
     When I add an existing diagnosing facility
     And I add a new diagnosing facility
-    And I save the event
+    And I save and continue
     Then I should see all added diagnosing facilities
 
     When I navigate to the morbidity event edit page
@@ -31,7 +31,7 @@ Feature: Managing diagnosing facilities on events
 
     When I add an existing diagnosing facility
     And I add a new diagnosing facility
-    And I save the event
+    And I save and continue
     Then I should see all added diagnosing facilities
     
   Scenario: Adding and removing diagnosing facilities for a contact
@@ -43,7 +43,7 @@ Feature: Managing diagnosing facilities on events
     Then I should not see the diagnosing facility
     When I add an existing diagnosing facility
     And I add a new diagnosing facility
-    And I save the event
+    And I save and continue
     Then I should see all added diagnosing facilities
     When I am on the contact event edit page
     And I remove all of the diagnostic facilities

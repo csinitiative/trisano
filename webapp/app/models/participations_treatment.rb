@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class ParticipationsTreatment < ActiveRecord::Base
+  include Trisano::Repeater
   belongs_to :participation
   belongs_to :treatment
   belongs_to :treatment_given_yn, :class_name => 'ExternalCode'

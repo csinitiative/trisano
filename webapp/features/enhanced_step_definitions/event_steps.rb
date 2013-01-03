@@ -81,9 +81,24 @@ end
 
 
 When(/^I am on the contact event edit page$/) do
-  @browser.open "/trisano/contact_events/#{(@contact_event).id}/edit"
+  @browser.open "/trisano/contact_events/#{@contact_event.id}/edit"
   @browser.wait_for_page_to_load
 end
+
+When /^I navigate to the contact event edit page$/ do
+  When "I am on the contact event edit page"
+end
+
+When /^I navigate to the encounter event edit page$/ do
+  @browser.open "/trisano/encounter_events/#{(@encounter_event).id}/edit"
+  @browser.wait_for_page_to_load
+end
+
+
+When /^I am on the encounter event edit page$/ do
+  When "I navigate to the encounter event edit page"
+end
+
 
 When /^I navigate to the contact named "(.+)"$/ do |last_name|
   @contact_event = ContactEvent.first(:include => { :interested_party => { :person_entity => :person } },
@@ -138,32 +153,13 @@ When(/^I am on the place event edit page$/) do
   @browser.wait_for_page_to_load
 end
 
-When(/^I save the event$/) do
-  save_cmr(@browser).should be_true
-
-  # Try to establish a reference to the event if there isn't already one. This will enable
-  # steps like 'navigate to event show page' to work
-  if @event.nil?
-    begin
-      location = @browser.get_location
-      event_id_start = location.index("cmr") + 5
-      event_id_end = location.index("?")
-      event_id = location[event_id_start...event_id_end]
-      @event = Event.find event_id.to_i
-    rescue
-      # Well, we tried. We'll end up in here if we used this step on a non-morb event.
-    end
-
-  end
-end
-
-When /^I save the event and wait for the page to load$/ do
-  @browser.click("css=#save_and_exit_btn")
+When /^I save and continue$/ do
+  @browser.click("//*[@id='save_and_continue_btn']")
   @browser.wait_for_page_to_load
 end
 
-When /^I save and continue$/ do
-  @browser.click("//*[@id='save_and_continue_btn']")
+When /^I save and exit$/ do
+  @browser.click("//*[@id='save_and_exit_btn']")
   @browser.wait_for_page_to_load
 end
 

@@ -31,19 +31,7 @@ class EventFormsController < ApplicationController
     event_type = @event.class.name.underscore
 
     @forms_in_use = @event.form_references.collect { |ref| ref.form }
-    form_template_ids_in_use = @forms_in_use.map { |form| form.template_id }
-
-    if form_template_ids_in_use.empty?
-      @forms_available = Form.find(:all,
-        :conditions => ["status = ? AND event_type = ?", 'Live', event_type],
-        :order => "name ASC"
-      )
-    else
-      @forms_available = Form.find(:all,
-        :conditions => ["status = ? AND event_type = ? AND template_id NOT IN (?)", 'Live', event_type, form_template_ids_in_use],
-        :order => "name ASC"
-      )
-    end
+    @forms_available = @event.available_forms - @forms_in_use
   end
 
   def create
@@ -53,6 +41,7 @@ class EventFormsController < ApplicationController
 
     forms_to_remove = params[:forms_to_remove] || []
     forms_to_add = params[:forms_to_add] || []
+    forms_to_add = @event.available_forms if params[:auto_assign_forms]
     if forms_to_add.empty? and forms_to_remove.empty?
       flash[:error] = t("no_forms_were_selected")
     else

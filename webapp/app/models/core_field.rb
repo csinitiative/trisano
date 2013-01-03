@@ -34,7 +34,8 @@ class CoreField < ActiveRecord::Base
     { :conditions => {
         :event_type => event_type,
         :can_follow_up => true,
-        :disease_specific => false
+        :disease_specific => false,
+        :repeater => false
       }
     }
   }
@@ -70,22 +71,34 @@ class CoreField < ActiveRecord::Base
     end
 
     def load!(hashes)
+
+      verify_no_duplicate_keys!(hashes)
+
       reset_column_information
       acts_as_nested_set(:scope => :tree_id) if table_exists? && column_names.include?('tree_id')
 
       transaction do
         hashes.each do |attributes|
           attributes.stringify_keys!
-          unless self.find_by_key(attributes['key'])
-            if (code_name = attributes.delete('code_name'))
-              attributes['code_name'] = CodeName.find_by_code_name(code_name)
-            end
+          if (code_name = attributes.delete('code_name'))
+            attributes['code_name'] = CodeName.find_by_code_name(code_name)
+          end
+          if existing_core_field = self.find_by_key(attributes['key'])
+            attributes.delete("parent_key") # not needed for updates
+            existing_core_field.update_attributes(attributes)
+          else
             place_in_tree(attributes) do |attributes|
               CoreField.create!(attributes)
             end
           end
         end
       end
+    end
+
+    def verify_no_duplicate_keys!(hashes)
+      keys = hashes.collect { |core_field_hash| core_field_hash["key"] }
+      duplicates = keys.detect { |v| keys.count(v) > 1 }
+      raise "Duplicate keys found in db/defaults/core_fields.yml: #{duplicates}" unless duplicates.blank?
     end
 
     def tabs_for(event_type)

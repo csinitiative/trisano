@@ -43,6 +43,17 @@ class Answer < ActiveRecord::Base
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
   validates_date :date_answer, :if => :is_date, :allow_blank => true
 
+  # Because we always want to render onto the page a :text_answer,
+  # but we use validates_date helper on :date_answer,
+  # we need to move any errors so they will display to the user
+  after_validation :move_date_answer_errors_to_text_answer_errors
+  def move_date_answer_errors_to_text_answer_errors
+    # uses a customization added by
+    # config/initializers/active_record_error_move.rb
+    errors.move("date_answer", "text_answer") if errors.on("date_answer")
+  end
+
+
   def self.export_answers(*args)
     args = [:all] if args.empty?
     with_scope(:find => {:conditions => ['export_conversion_value_id is not null']}) do
@@ -98,7 +109,7 @@ class Answer < ActiveRecord::Base
   end
 
   def before_validation
-    if question.data_type == :phone
+    if question.data_type == :phone and text_answer.present?
       phone = text_answer.gsub(/[^0-9]/, '')
       if phone.length == 10
         phone = phone.insert(3, "-")

@@ -139,28 +139,28 @@ gender_female:
 pregnant_yes:
   id: 21
   export_column_id: 15
-  value_from: 'Y'
+  value_from: 'Yes'
   value_to: '1'
   sort_order: 10
 
 pregnant_no:
   id: 22
   export_column_id: 15
-  value_from: 'N'
+  value_from: 'No'
   value_to: '2'
   sort_order: 20
 
 pregnant_unk:
   id: 23
   export_column_id: 15
-  value_from: 'UNK'
+  value_from: 'Unknown'
   value_to: '9'
   sort_order: 30
 
 specimen_cervix:
   id: 24
   export_column_id: 36
-  value_from: 'Cervix/Endocervix'
+  value_from: 'Cervix'
   value_to: '01'
   sort_order: 1
 specimen_genital:
@@ -184,7 +184,7 @@ specimen_lymph:
 specimen_oropharynx:
   id: 28
   export_column_id: 36
-  value_from: 'Oropharynx'
+  value_from: 'Naso-Pharynx'
   value_to: '05'
   sort_order: 5
 specimen_ophthalmia:
@@ -253,3 +253,73 @@ specimen_unk:
   value_from: 'Unknown'
   value_to: '99'
   sort_order: 16
+neuro_confirmed:
+  id: 40
+  export_column_id: 16
+  value_from: "Yes"
+  value_to: "Y"
+  sort_order: 1
+detected_provider:
+  id: 41
+  export_column_id: 18
+  value_from: "Provider Referral"
+  value_to: "01"
+  sort_order: 1
+infosrce_hiv_counceling:
+  id: 42
+  export_column_id: 17
+  value_from: "HIV Counseling and Testing Site"
+  value_to: "01"
+  sort_order: 1
+race_aa_export_value:
+  id: 43
+
+  export_column_id: 33
+  value_from: 'AA'
+  value_to:   '1'
+
+race_b_export_value:
+  id: 44
+  export_column_id: 33
+  value_from: 'B'
+  value_to:   '3'
+race_a_export_value:
+  id: 45
+  export_column_id: 33
+  value_from: 'A'
+  value_to:   '2'
+race_ak_export_value:
+  id: 46
+  export_column_id: 33
+  value_from: 'AK'
+  value_to:   '1'
+race_unk_export_value:
+  id: 47
+  export_column_id: 33
+  value_from: 'UNK'
+  value_to:   '9'
+race_h_export_value:
+  id: 48
+  export_column_id: 33
+  value_from: 'H'
+  value_to:   '2'
+ethnicity_hispanic_value:
+  id: 49
+  export_column_id: 32
+  value_from: 'H'
+  value_to:   '1'
+ethnicity_unknown_value:
+  id: 50
+  export_column_id: 32
+  value_from: 'UNK'
+  value_to:   '9'
+ethnicity_other_value:
+  id: 51
+  export_column_id: 32
+  value_from: 'O'
+  value_to:   '2'
+ethnicity_u_value:
+  id: 52
+  export_column_id: 32
+  value_from: 'U'
+  value_to:   '9'

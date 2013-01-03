@@ -76,6 +76,14 @@ describe Answer do
     @answer.text_answer.should == '2009-01-21'
   end
 
+  it 'should move date_answer errors to text_answer' do
+    @answer.question.data_type = 'date'
+    @answer.text_answer = '111123412341234'
+    @answer.valid?
+    @answer.errors.on('date_answer').should be_nil
+    @answer.errors.on('text_answer').should_not be_nil
+  end
+
   describe "constraints" do
 
     it "should only allow one answer per question per event" do

@@ -197,9 +197,11 @@ class StagedMessage < ActiveRecord::Base
   end
 
   def lab_name
-    first_obx = observation_requests.first.all_tests.first.obx_segment
-    name = first_obx.performing_organization_name
-    name = name.split(first_obx.item_delim).first if name
+    unless observation_requests.first.all_tests.compact.empty?
+      first_obx = observation_requests.first.all_tests.first.obx_segment
+      name = first_obx.performing_organization_name
+      name = name.split(first_obx.item_delim).first if name
+    end
     name || message_header.sending_facility
   end
 
@@ -227,11 +229,43 @@ class StagedMessage < ActiveRecord::Base
     self.lab_results.first.try(:participation).try(:event)
   end
 
-  def new_event_from(entity_id = nil, type = nil)
+  def set_address_and_phone(event)
+    unless self.patient.address_empty? or event.address
+      event.build_address(:street_number => self.patient.address_street_no,
+                          :unit_number => self.patient.address_unit_no,
+                          :street_name => self.patient.address_street,
+                          :city => self.patient.address_city,
+                          :state_id => self.patient.address_trisano_state_id,
+                          :postal_code => self.patient.address_zip)
+      if self.patient.address_county
+        county = ExternalCode.find_by_code_name_and_code_description("county", self.patient.address_county)
+        event.address.county = county if county
+      end
+    end
+
+    unless self.patient.telephone_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_home.id}
+      area_code, number, extension = self.patient.telephone_home
+      event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                            :phone_number => number,
+                                                            :extension => extension,
+                                                            :entity_location_type_id => patient.telephone_type_home.id)
+    end
+
+    unless patient.telephone_work_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_work.id}
+      area_code, number, extension = patient.telephone_work
+      event.interested_party.person_entity.telephones.build(:area_code => area_code,
+                                                            :phone_number => number,
+                                                            :extension => extension,
+                                                            :entity_location_type_id => patient.telephone_type_work.id)
+    end
+    event
+  end
+
+  def new_event_from(entity_id=nil, type=nil)
 
     return nil if self.patient.patient_last_name.blank?
 
-    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at) if type.blank?
+    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.message_header.time || self.created_at)
     event = AssessmentEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.created_at) if type == "assessment_event"
 
     if entity_id
@@ -262,30 +296,7 @@ class StagedMessage < ActiveRecord::Base
         event.interested_party.person_entity.person.ethnicity_id = patient.trisano_ethnicity_id
       end
 
-      unless self.patient.address_empty?
-        event.build_address(:street_number => self.patient.address_street_no,
-                            :unit_number => self.patient.address_unit_no,
-                            :street_name => self.patient.address_street,
-                            :city => self.patient.address_city,
-                            :state_id => self.patient.address_trisano_state_id,
-                            :postal_code => self.patient.address_zip)
-      end
-
-      unless self.patient.telephone_empty?
-        area_code, number, extension = self.patient.telephone_home
-        event.interested_party.person_entity.telephones.build(:area_code => area_code,
-                                                              :phone_number => number,
-                                                              :extension => extension,
-                                                              :entity_location_type_id => patient.telephone_type_home.id)
-      end
-
-      unless patient.telephone_work_empty?
-        area_code, number, extension = patient.telephone_work
-        event.interested_party.person_entity.telephones.build(:area_code => area_code,
-                                                              :phone_number => number,
-                                                              :extension => extension,
-                                                              :entity_location_type_id => patient.telephone_type_work.id)
-      end
+      self.set_address_and_phone(event)
 
       unless patient.primary_language.nil? or patient.primary_language.id.nil?
         event.interested_party.person_entity.person.primary_language_id = patient.primary_language.id

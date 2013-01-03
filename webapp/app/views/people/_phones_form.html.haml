@@ -22,9 +22,8 @@
         =render :partial => 'people/telephone', :locals => { :f => telephone_form }
   %p{ :style => "clear:both" }= add_record_link f, :telephones, t("add_telephone"), :partial => 'people/telephone', :html_id => "add-patient-telephone"
 
-  %div#email_addresses.vert
-    -core_element(:email_addresses, f, :horiz) do
+  -core_element(:email_addresses, f, :horiz) do
+    %div#email_addresses.vert
       -f.fields_for(:email_addresses, :builder => ExtendedFormBuilder) do |email_form|
-        %div.data_email_addresses
-          =render :partial => 'people/email', :locals => { :f => email_form }
-      %p= add_record_link f, :email_addresses, t("add_an_email_address"), :partial => 'people/email'
+        =render :partial => 'people/email', :locals => { :f => email_form }
+  %p{ :style => "clear:both" }= add_record_link f, :email_addresses, t("add_an_email_address"), :partial => 'people/email', :html_id => "add-patient-email-address"

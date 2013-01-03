@@ -16,17 +16,16 @@ Feature: assessment event form core follow ups
     Then I should see all of the core follow up questions
 
     When I answer all core follow up questions
-    And I save the event
+    And I save and continue
     Then I should see all of the core follow up questions
     And I should see all follow up answers
 
     When I am on the assessment event edit page
-    And I remove read only entities from the event
     And I answer all of the core follow ups with a non-matching condition
     Then I should not see any of the core follow up questions
     And I should not see any follow up answers
 
-    When I save the event
+    When I save and continue
     Then I should not see any of the core follow up questions
     And I should not see any follow up answers
 

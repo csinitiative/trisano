@@ -185,7 +185,9 @@ ActionController::Routing::Routes.draw do |map|
     :controller => :human_events,
     :member => {
       :hospitalization_facilities => [:post],
-      :patient_telephones => [:post]
+      :patient_telephones => [:post],
+      :patient_email_addresses => [:post],
+      :treatments => [:post]
     }
 
   map.resources :contact_events,

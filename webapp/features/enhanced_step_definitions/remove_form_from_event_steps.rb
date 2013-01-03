@@ -21,11 +21,11 @@ When(/^I see the form and answers on the event$/) do
 end
 
 When(/^I check the form for removal$/) do
-  @browser.check("//div[@id='forms_in_use']//input[@value='#{@published_form.id}']")
+  @browser.click("//div[@id='forms_in_use']//input[@value='#{@published_form.id}']")
 end
 
 When(/^I check the form for addition$/) do
-  @browser.check("//div[@id='forms_available']//input[@value='#{@published_form.id}']")
+  @browser.click("//div[@id='forms_available']//input[@value='#{@published_form.id}']")
 end
 
 Then(/^I should no longer see the form on the event$/) do

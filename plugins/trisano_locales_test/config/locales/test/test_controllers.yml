@@ -257,7 +257,7 @@ test:
   staged_message_discarded: "xStaged message was discarded."
   existing: "xexisting"
   new: "xnew"
-  message_assignment_successful: "xStaged message was successfully assigned to {{msg_string}} event. <br/> {{note}}"
+  message_assignment_successful: "xStaged message was successfully assigned to {{msg_string}} event, record number {{record_number}}. <br/> {{note}}"
   message_assignment_failed: "xCould not assign message to {{msg_string}} event. {{message}}"
   staged_message_search_failed: "xSearch failed. Make sure the date range is valid."
   no_manage_staged_message_privs: "xYou do not have privileges to manage staged messages"

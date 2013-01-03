@@ -16,233 +16,98 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class HumanEventsController < EventsController
-  before_filter :can_update?, :only => [:hospitalization_facilities, :patient_telephones]
+  before_filter :can_update?, :only => [:treatments, :patient_email_addresses, :patient_telephones, :hospitalization_facilities]
 
+  def treatments
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event] || params[:encounter_event]
+    raise "No event params posted" if event_params.nil?
+
+
+    repeater_attr = event_params[:interested_party_attributes][:treatments_attributes]
+    raise "More than one repeater submitted: #{repeater_attr.inspect}" if repeater_attr.each_value.count != 1
+    # Because we only ever submit one repeater, it's ok to just take the first
+    repeater_attr = repeater_attr.each_value.first
+
+    @treatment = @event.interested_party.treatments.build(repeater_attr)
+
+    respond_to do |format|
+      if @treatment.save
+        redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
+        redis.delete_matched("views/events/#{@event.id}/edit/clinical_tab")
+        format.js   { render :partial => "events/repeater_treatment_form", :status => :ok }
+      else
+        format.js   { render :partial => "events/repeater_treatment_form", :status => :unprocessable_entity }
+      end
+    end    
+
+  end
+
+  def patient_email_addresses
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+    raise "No event params posted" if event_params.nil?
+
+
+    repeater_attr = event_params[:interested_party_attributes][:person_entity_attributes][:email_addresses_attributes]
+    raise "More than one repeater submitted: #{repeater_attr.inspect}" if repeater_attr.each_value.count != 1
+    # Because we only ever submit one repeater, it's ok to just take the first
+    repeater_attr = repeater_attr.each_value.first
+
+    @patient_email_address = @event.interested_party.person_entity.email_addresses.build(repeater_attr)
+
+    respond_to do |format|
+      if @patient_email_address.save
+        redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
+        redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
+        format.js   { render :partial => "people/repeater_patient_email_form", :status => :ok }
+      else
+        format.js   { render :partial => "people/repeater_patient_email_form", :status => :unprocessable_entity }
+      end
+    end    
+  end #patient email_address
 
   def patient_telephones
-    Person.transaction do
-      event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
-      raise "No event params posted" if event_params.nil?
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+    raise "No event params posted" if event_params.nil?
 
 
-      patient_tele_attr = event_params[:interested_party_attributes][:person_entity_attributes][:telephones_attributes]
-      raise "More than one patient telephone submitted: #{patient_tele_attr.inspect}" if patient_tele_attr.each_value.count != 1
-      # Because we only ever submit one repeater, it's ok to just take the first
-      patient_tele_attr = patient_tele_attr.each_value.first
+    patient_tele_attr = event_params[:interested_party_attributes][:person_entity_attributes][:telephones_attributes]
+    raise "More than one patient telephone submitted: #{patient_tele_attr.inspect}" if patient_tele_attr.each_value.count != 1
+    # Because we only ever submit one repeater, it's ok to just take the first
+    patient_tele_attr = patient_tele_attr.each_value.first
 
+    @patient_telephone = @event.interested_party.person_entity.telephones.build(patient_tele_attr)
 
-      # Remove repeater attributes because they shouldn't be handled by the regular model actions
-      # Will raise an error if posted, see app/model/event.rb
-      new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
-      new_checkbox_answer_attributes = event_params.delete(:new_repeater_checkboxes)
-      new_radio_button_answer_attributes = event_params.delete(:new_repeater_radio_buttons)
-      
-      # Need to include the entity to attach the phone to
-      patient_tele_attr.merge!({:entity_id => @event.interested_party.person_entity.id.to_s})
-
-
-      @patient_telephone = Telephone.new(patient_tele_attr)
-      if saved_successfully = @patient_telephone.save
-
-
-        # PARAMS PARSING
-        # ==============
-   
-        if patient_tele_attr[:_destroy] == "1"
-          # record was destroyed by @event.save
-
-
-        else # else from if patient_tele_attr[:_destory] == "1"
-          # saving a new/existing record
-
-          @event.interested_party.person_entity.telephones.reload
-
-
-          # We've either created a new repeater or
-          # determined which existing one to use.
-          # time to create an answer for it.
-          create_text_box_answers(new_text_box_answer_attributes, @patient_telephone, @event)
-          create_checkbox_answers(new_checkbox_answer_attributes, @patient_telephone, @event)
-          create_radio_button_answers(new_radio_button_answer_attributes, @patient_telephone, @event) 
-
-
-
-        end # if repeater_dependent destroyed == 1 
-      end #if saved_successfully
-
-      # Must include respond_to inside transaction to have scope for
-      # event_saved_successfully
-      respond_to do |format|
-        if saved_successfully
-          redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
-          redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
-          format.js   { render :partial => "people/ajax_patient_phone_form", :status => :ok }
-        else
-          logger.error @patient_telephone.errors.inspect
-          format.js   { render :partial => "people/ajax_patient_phone_form", :status => :unprocessable_entity }
-        end
-      end    
-    end #transaction
-  end #hospitalization_facilities
-
-
-  def create_radio_button_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |key, value|
-        answer = event.answers.build(
-          :question_id => key,
-          :radio_button_answer => value[:radio_button_answer],
-          :export_conversion_value_id => value[:export_conversion_value_id],
-          :code => value[:code],
-          :repeater_form_object_id => repeater_object.id,
-          :repeater_form_object_type => repeater_object.class.name
-        )
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
+    respond_to do |format|
+      if @patient_telephone.save
+        redis.delete_matched("views/events/#{@event.id}/edit/demographic_tab")
+        redis.delete_matched("views/events/#{@event.id}/show/demographic_tab")
+        format.js   { render :partial => "people/ajax_patient_phone_form", :status => :ok }
+      else
+        format.js   { render :partial => "people/ajax_patient_phone_form", :status => :unprocessable_entity }
       end
-    end
-  end
-
-  def create_checkbox_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |key, value|
-        answer = event.answers.build(
-          :question_id => key,
-          :check_box_answer => value[:check_box_answer],
-          :code => value[:code],
-          :repeater_form_object_id => repeater_object.id,
-          :repeater_form_object_type => repeater_object.class.name
-        )
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
-      end
-    end
-  end
-
-  def create_text_box_answers(attributes, repeater_object, event) 
-    unless attributes.nil?
-      raise "A repeater object is required to create a new answer." if repeater_object.nil?
-      attributes.each do |attributes|
-        answer = event.answers.build(attributes)         
-        answer.repeater_form_object_id = repeater_object.id
-        answer.repeater_form_object_type = repeater_object.class.name
-        raise "Unable to create text box Answer for #{repeater_object.inspect}:\n #{answer.errors.inspect}" unless answer.save
-      end
-    end
-  end
+    end    
+  end #patient telephone
 
 
   def hospitalization_facilities
-    HospitalsParticipation.transaction do
-      event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
-      raise "No event params posted" if event_params.nil?
+    event_params = params[:assessment_event] || params[:morbidity_event] || params[:contact_event]
+    raise "No event params posted" if event_params.nil?
 
-      # Remove repeater attributes because they shouldn't be handled by the regular model actions
-      # Will raise an error if posted, see app/model/event.rb
-      new_text_box_answer_attributes = event_params.delete(:new_repeater_answer)
-      new_checkbox_answer_attributes = event_params.delete(:new_repeater_checkboxes)
-      new_radio_button_answer_attributes = event_params.delete(:new_repeater_radio_buttons)
+    repeater = event_params[:hospitalization_facilities_attributes]
+    raise "More than one hospitalization facility submitted: #{repeater.inspect}" if repeater.each_value.count != 1
+    # Because we only ever submit one repeater, it's ok to just take the first
+    repeater = repeater.each_value.first
 
-      # Must take a clone here, otherwise we get a reference
-      # and lose the "point in time" record
-      pre_save_repeater_parents = @event.hospitalization_facilities.clone
+    @hospitalization_facility = @event.hospitalization_facilities.build(repeater)
 
-
-      # Existing answers won't be processed
-      # here, they'll be processed by Event#answers=
-      # If they've been created correctly here, then they'll be associated with the appropiate
-      # repeater object.
-      @event.update_from_params(event_params)
-      if event_saved_successfully = @event.save
-
-        post_save_repeater_parents = @event.hospitalization_facilities.reload
-
-
-
-
-        # PARAMS PARSING
-        # ==============
-   
-        hospitalization_facility_attr = event_params[:hospitalization_facilities_attributes]
-        raise "More than one hospitalization faclity submitted: #{hospitalization_facility_attr.inspect}" if hospitalization_facility_attr.each_value.count != 1
-        # Because we only ever submit one repeater, it's ok to just take the first
-        hospitalization_facility_attr = hospitalization_facility_attr.each_value.first
-
-
-
-
-
-
-        if hospitalization_facility_attr[:_destroy] == "1"
-          # record was destroyed by @event.save
-
-          # Nothing to do when deleting a parent repeater (hospitlization facilities).
-          # The answer handled by the the cascading :dependent => :destroy from
-          # hospitalization_facility > hospitals_participation > answer
-
-
-        else # else from if hospitalization_facility_attr[:_destory] == "1"
-          # saving a new/existing record
-
-          if repeater_id = hospitalization_facility_attr[:id]
-            # existing repeater
-            @hospitalization_facility = HospitalizationFacility.find(repeater_id)
-
-
-          else # from hospitalization_facility_attr[:id]
-
-            # new repeater
-
-
-            # new repeater created, must determine which what was created:
-            @hospitalization_facility = post_save_repeater_parents - pre_save_repeater_parents
-            if @hospitalization_facility.length != 1
-              raise "More than one hospitalization facilities created:\n
-                     post_save_repeaters: #{post_save_repeater_parents.inspect}\n
-                     pre_save_repeaters: #{pre_save_repeater_parents.inspect}\n\n
-                     If more than one hospitalization facilities created, we cannot determine which repeater to save."
-            else
-              @hospitalization_facility = @hospitalization_facility.first
-            end #@hospitalization_facility == [], create one
-          
-              
-
-
-
-            if @hospitalization_facility.new_record?
-              raise "Cannot save HospitalizationFacility: #{@hospitalization_facility.errors.inspect}" unless @hospitalization_facility.save
-              @event.hospitalization_facilities.reload
-            end
-
-
-
-          end # if hospitalization_facility_attr[:id] (new or existing record?)
-
-
-
-
-          # Now that we have our new/existing hospitalization facility
-          # we can save the repeater answers
-          create_text_box_answers(new_text_box_answer_attributes, @hospitalization_facility, @event)
-          create_checkbox_answers(new_checkbox_answer_attributes, @hospitalization_facility, @event)
-          create_radio_button_answers(new_radio_button_answer_attributes, @hospitalization_facility, @event) 
-
-
-        end # if repeater_dependent destroyed == 1 
+    respond_to do |format|
+      if @hospitalization_facility.save
+        redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
+        redis.delete_matched("views/events/#{@event.id}/edit/clinical_tab")
+        format.js   { render :partial => "events/ajax_hospital", :status => :ok }
       else
-        @hospitalization_facility = @event.hospitalization_facilities.detect { |hf| !hf.valid? }
-      end #if event_saved_successfully
-
-      # Must include respond_to inside transaction to have scope for
-      # event_saved_successfully
-      respond_to do |format|
-        if event_saved_successfully
-          redis.delete_matched("views/events/#{@event.id}/show/clinical_tab")
-          format.js   { render :partial => "events/ajax_hospital", :status => :ok }
-        else
-          format.js   { render :partial => "events/ajax_hospital", :status => :unprocessable_entity }
-        end
-      end    
-    end #transaction
+        format.js   { render :partial => "events/ajax_hospital", :status => :unprocessable_entity }
+      end
+    end    
   end #hospitalization_facilities
 end #class

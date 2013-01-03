@@ -342,6 +342,9 @@ en:
   add_forms: 'Add Forms'
   remove_forms: 'Remove Forms'
   add_to_event: 'Add to Event'
+  auto_add_to_event: 'Auto-Assign Forms for {{disease_name}}'
+  common_form_references: 'Common Forms'
+  forms_change_form: 'The new forms for the disease {{disease_name}} will be automatically added. You may additionally remove the previous disease forms.'
   add_existing_clinician: "Add an existing clinician"
   add_clinician: "Add a clinician"
   add_existing_reporter: "Add an existing reporter"
@@ -456,6 +459,11 @@ en:
   phone: "Phone"
   clinicians: "Clinicians"
   no_clinicians_for_event: "No clinicians have been recorded for this event"
+  treatment_given_yn_id: "Treatment given"
+  treatment_name: "Treatment"
+  treatment_date: "Date of treatment"
+  stop_treatment_date: "Stop date of treatment" 
+  
 # health facilities
   no_hospitalized_health_facilities: "No hospitalized health facilities have been recorded for this event"
   hospitalized_health_facilities: "Hospitalized Health Facilities"
@@ -529,7 +537,7 @@ en:
   comment: "Comment"
   original_report: "Original report"
   electronic_lab_report: "Electronic lab report"
-  add_new_lab: "Add a new lab"
+  add_new_lab: "Add a New Lab"
 
 #event admin
   admin_info: "Administrative Information"

@@ -23,12 +23,12 @@
 # generated names and diseases will do.
 
 Given(/^a (.+) event form exists$/) do |event_type|
-  unique_form_name = get_unique_name(3)
+  unique_form_name = get_unique_name(10)
   @form = create_form(event_type, unique_form_name, unique_form_name, get_random_disease)
 end
 
 Given(/^a (.+) event form exists for the disease (.+)$/) do |event_type, disease|
-  unique_form_name = get_unique_name(3)
+  unique_form_name = get_unique_name(10)
   @form = create_form(event_type, unique_form_name, unique_form_name, disease)
 end
 
@@ -76,14 +76,14 @@ end
 # Question helpers
 #
 
-Given(/^that form has (.+) questions$/) do |number_of_questions|
+Given(/^that form has (\d+) questions$/) do |number_of_questions|
   number_of_questions.to_i.times do |question|
-    create_question_on_form(@form, { :question_text => "#{get_unique_name(3)} #{question}" })
+    create_question_on_form(@form, { :question_text => "#{get_unique_name(10)} #{question}" })
   end
 end
 
 Given(/^that form has one question on the default view$/) do
-  @question_element = create_question_on_form(@form, { :question_text => get_unique_name(3) })
+  @question_element = create_question_on_form(@form, { :question_text => get_unique_name(10) })
 end
 
 Given(/^that form has a question with the short name \"(.+)\"$/) do |short_name|
@@ -131,24 +131,6 @@ Given /^that form has core follow ups configured for all core fields$/ do
   end.compact
 end
 
-Given /^that form has core field configs configured for all repeater core fields$/ do
-  @core_field_container = @form.core_field_elements_container
-
-  # Create a core field config for every core field
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true and repeater = true', @form.event_type]).each do |core_field|
-    create_core_field_config(@form, @core_field_container, core_field)
-  end
-end
-
-Given /^that form has core field configs configured for all core fields$/ do
-  @core_field_container = @form.core_field_elements_container
-
-  # Create a core field config for every core field
-  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
-    create_core_field_config(@form, @core_field_container, core_field)
-  end
-end
-
 Given /^that form has core view configs configured for all core views$/ do
   @core_view_container = @form.core_view_elements_container
 
@@ -161,8 +143,15 @@ Given /^that form has core view configs configured for all core views$/ do
 
     create_question_on_form(@form, { :question_text => "#{core_view[0]} question?", :short_name => Digest::MD5::hexdigest(core_view[0]) }, @core_view_element)
   end
-
 end
 
+Given /^that form has a repeating section configured in the default view with a question$/ do
+  @default_view = @form.investigator_view_elements_container.children[0]
+  @section_element = SectionElement.new
+  @section_element.parent_element_id = @default_view.id
+  @section_element.name = get_random_word 
+  @section_element.repeater = true
+  @section_element.save_and_add_to_form
 
-
+  create_question_on_form(@form, { :question_text => "#{@section_element.name} question?", :short_name => Digest::MD5::hexdigest(@section_element.name) }, @section_element)
+end

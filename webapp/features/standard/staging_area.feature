@@ -81,6 +81,7 @@
       And I click "Assign lab result"
     Then I should remain on the staged message show page
       And I should see a 'success' message
+      And I should see a matching 'record number \d{10}' text
 
     When I visit the assigned-to event
     Then I should see the new lab result with 'Hep-B Ag'
@@ -128,6 +129,7 @@
     And I click 'Create a CMR from this message'
     Then I should remain on the staged message show page
     And I should see a 'success' message
+    And I should see a matching 'record number \d{10}' text
     And I should not see the 'Similar Events' link
     And I should not see the 'Discard' link
 

@@ -156,11 +156,17 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
       @template.stubs(:select).returns('')
       @template.stubs(:hidden_field_tag).returns('')
       @template.stubs(:content_tag).returns('')
+      @template.stubs(:pluralize).returns('')
+      @template.stubs(:error_messages_for).returns('')
+      errors = mock('errors') do
+        stubs(:count).returns(0)
+      end
       object = mock('answer') do
         stubs(:id).returns(1)
         stubs(:question_id).returns(1)
         stubs(:new_record?).returns(true)
         stubs(:text_answer).returns('some answer')
+        stubs(:errors).returns(errors)
       end
       question = mock('question') do
         stubs(:id).returns(1)
@@ -171,7 +177,10 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
       question_element = mock('question_element') do
         stubs(:question).returns(question)
         stubs(:export_column).returns(nil)
-	stubs(:is_required?).returns(false)
+      	stubs(:is_required?).returns(false)
+      end
+      event = mock('event') do
+        stubs(:id).returns(1)
       end
       form_elements_cache = mock('form_elements_cache') do
         stubs(:children).returns([Object.new])
@@ -182,13 +191,14 @@ describe ExtendedFormBuilder, "rendering a dynamic question" do
                         {:value => 2,   :export_conversion_value_id => 201}]
       form_builder = ExtendedFormBuilder.new('object_name', object, @template, nil, nil)
       form_builder.stubs(:hidden_field).returns('')
+      form_builder.stubs(:label).returns('')
       form_builder.stubs(:get_values).returns(select_options)
       form_builder.stubs(:follow_up_spinner_for).returns('')
       lambda do
         form_builder.send(:dynamic_question,
                           form_elements_cache,
                           question_element,
-                          nil,
+                          event,
                           nil)
       end.should_not raise_error
     end
@@ -266,6 +276,20 @@ describe ExtendedFormBuilder::CorePath do
     end
   end
 
+  shared_examples_for "a compound core path" do
+    it "should generate the default (bracketed) form (for html names)" do
+      @core_path.to_s.should == 'morbidity_and_assessment_event[interested_party][person_entity]'
+    end
+
+    it "should generate an underscored form (for html ids)" do
+      @core_path.underscore.should == 'morbidity_and_assessment_event_interested_party_person_entity'
+    end
+
+    it "should return the first segment" do
+      @core_path.first.should == 'morbidity_and_assessment_event'
+    end
+  end
+
   shared_examples_for "a complex core path" do
     it "should generate the default (bracketed) form (for html names)" do
       @core_path.to_s.should == 'morbidity_event[interested_party][person_entity]'
@@ -296,4 +320,20 @@ describe ExtendedFormBuilder::CorePath do
     it_should_behave_like "a complex core path"
   end
 
+  describe "building a compound path" do
+    before do
+      @core_path = ExtendedFormBuilder::CorePath['morbidity_and_assessment_event']
+      @core_path << 'interested_party' << 'person_entity'
+    end
+
+    it_should_behave_like "a compound core path"
+  end
+
+  describe "starting w/ a compound base" do
+    before do
+      @core_path = ExtendedFormBuilder::CorePath['morbidity_and_assessment_event[interested_party][person_entity]']
+    end
+
+    it_should_behave_like "a compound core path"
+  end
 end

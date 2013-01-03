@@ -43,6 +43,20 @@ require 'selenium'
 # "before all"
 browser = Selenium::SeleniumDriver.new("localhost", 4444, "*firefox #{RAILS_ROOT}/features/support/firefox-36/firefox-bin", "http://localhost:8080", 15000)
 
+# Allow profiling of cucumber features
+if ENV['RUBY_PROF'].present?
+  require 'ruby-prof'
+  RubyProf.start
+
+  at_exit do
+    results = RubyProf.stop
+    puts ARGV.inspect
+    File.open "#{RAILS_ROOT}/tmp/cucumber_#{Time.now}", 'w' do |file|
+      RubyProf::CallTreePrinter.new(results).print(file)
+    end
+  end 
+
+end
 Before do
   @browser = browser
   @browser.start

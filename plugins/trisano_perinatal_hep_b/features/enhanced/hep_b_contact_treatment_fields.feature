@@ -9,12 +9,12 @@ Feature: Hep B specific contact treatment fields
     When I am on the contact event edit page
       And I add a p-hep-b treatment "HBIG" on with a date 5 days ago
       And I add a 2nd p-hep-b treatment "Hepatitis B Dose 1" on with a date 4 days ago
-      And I save the event
+      And I save and exit
     Then I should see the treatment "HBIG" on with a date 5 days ago
       And I should see the treatment "Hepatitis B Dose 1" on with a date 4 days ago
     When I am on the contact event edit page
       And I remove the 1st treatment
-      And I save the event
+      And I save and exit
     Then I should not see the treatment "HBIG" on with a date 5 days ago
      
     

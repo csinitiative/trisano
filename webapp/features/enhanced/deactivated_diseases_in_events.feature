@@ -6,7 +6,7 @@ Features: Working with events with a deactivated disease
     When I am on the morbidity event edit page
       Then the deactivated disease should be selected in the disease select list
     When I fill in "Last name" with "Newlast"
-      And I save the event
+      And I save and continue
     Then the deactivated disease should still be set on the event
       And I should see "Newlast"
 

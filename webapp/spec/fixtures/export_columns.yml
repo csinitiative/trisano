@@ -79,6 +79,30 @@ imported_export_column:
   start_position: 54
   length_to_output: 1
 
+std_neuro:
+  id: 16
+  export_column_name: 'NEURO'
+  type_data: 'FORM'
+  start_position: '95'
+  length_to_output: '1'
+  export_disease_group_id: 2
+
+std_infosrce:
+  id: 17
+  export_column_name: 'INFOSRCE'
+  type_data: 'FORM'
+  start_position: '61'
+  length_to_output: '2'
+  export_disease_group_id: 2
+
+std_detected:
+  id: 18
+  export_column_name: 'DETECTED'
+  type_data: 'FORM'
+  start_position: '63'
+  length_to_output: '2'
+  export_disease_group_id: 2
+
 hep_jaundiced:
    id: 2
    export_name_id: 1

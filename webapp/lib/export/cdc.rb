@@ -101,42 +101,33 @@ module Export
         @@netss_specimen
       end
 
-      def self.specimen_external_codes
-        @@specimen_external_codes = nil
-        unless @@specimen_external_codes
-          values = ExternalCode.find_all_by_code_name("specimen")
-          @@specimen_external_codes = Hash[values.map(&:id).zip(values.map(&:the_code))]
-        end
-        @@specimen_external_codes
-      end
-
       def self.trisano_specimen
         {
-          "AB" => netss_specimen["Oropharynx"],
+          "AB" => netss_specimen["Not Applicable"],
           "AH" => netss_specimen["Not Applicable"],
           "BD" => netss_specimen["Blood/Serum"],
-          "BS" => netss_specimen["Other Aspirate"],
-          "BT" => netss_specimen["Other Aspirate"],
-          "BW" => netss_specimen["Other Aspirate"],
-          "CS" => netss_specimen["Cervix/Endocervix"],
+          "BS" => netss_specimen["Not Applicable"],
+          "BT" => netss_specimen["Not Applicable"],
+          "BW" => netss_specimen["Not Applicable"],
+          "CS" => netss_specimen["Cervix"],
           "CSF"=> netss_specimen["Cerebrospinal fluid (CSF)"],
-          "CSFB" => netss_specimen["Blood/Serum"],
+          "CSFB" => netss_specimen["Not Applicable"],
           "EYE" => netss_specimen["Ophthalmia/Conjunctiva"],
-          "GT" => netss_specimen["Lesion-Genital"],
-          "LA" => netss_specimen["Other Aspirate"],
+          "GT" => netss_specimen["Not Applicable"],
+          "LA" => netss_specimen["Not Applicable"],
           "LN" => netss_specimen["Lymph Node Aspirate"],
-          "LS" => netss_specimen["Lesion-Extra Genital"],
-          "NA" => netss_specimen["Other Aspirate"],
-          "NS" => netss_specimen["Oropharynx"],
+          "LS" => netss_specimen["Lesion-Genital"],
+          "NA" => netss_specimen["Not Applicable"],
+          "NS" => netss_specimen["Not Applicable"],
           "OT" => netss_specimen["Other"],
-          "PF" => netss_specimen["Other Aspirate"],
+          "PF" => netss_specimen["Not Applicable"],
           "RS" => netss_specimen["Rectum"],
-          "SK" => netss_specimen["Other Aspirate"],
-          "SP" => netss_specimen["Oropharynx"],
-          "ST" => netss_specimen["Rectum"],
-          "TI" => netss_specimen["Other Aspirate"],
-          "TS" => netss_specimen["Oropharynx"],
-          "TW" => netss_specimen["Oropharynx"],
+          "SK" => netss_specimen["Not Applicable"],
+          "SP" => netss_specimen["Not Applicable"],
+          "ST" => netss_specimen["Not Applicable"],
+          "TI" => netss_specimen["Not Applicable"],
+          "TS" => netss_specimen["Naso-Pharynx"],
+          "TW" => netss_specimen["Not Applicable"],
           "UNK" => netss_specimen["Unknown"],
           "UR" => netss_specimen["Urine"],
           "US" => netss_specimen["Urethra"],
@@ -433,6 +424,15 @@ module Export
         [closest_date, array.index(closest_date)]
       end
 
+      def pg_same_or_after(event_date, array)
+        return [nil, -1] if array.blank? or event_date.blank?
+        array = array.map {|d| d.to_date  }
+        dates = Hash[array.map {|d| (d - event_date.to_date).to_i }.zip(array) ]
+
+        same_or_after = dates[dates.keys.select {|k| k >= 0 }.sort.first]
+        [same_or_after, array.index(same_or_after)]
+      end
+
       private
       def write_answers_to(result)
         return if text_answers.blank?
@@ -501,8 +501,13 @@ module Export
         cdc_export_fields.inject('') { |memo, field|
           begin
             value, pos = send field
-            memo = memo.ljust(pos - 1) if pos
-            memo << value
+            if pos
+              memo = memo.ljust(pos - 1)
+              memo[pos - 1...pos - 1 + value.length] = value
+            else
+              memo << value
+            end
+            memo
           rescue Exception => e
             raise "Failed to export event #{self.id} on field named #{field}. #{e.message}"
           end
@@ -533,6 +538,8 @@ module Export
              exp_outbreak
              future
              disease_specific_records
+             exp_zip
+             exp_pregnant
              exp_city
              exp_pid
              exp_origin
@@ -550,11 +557,28 @@ module Export
              exp_raceref
              exp_raceunk
              exp_hisplat
+             exp_initial_exam_date
+             exp_first_reported_to_public_health_date
              exp_treatment_date
              exp_syphtest
              exp_syphtiter
              netss_version
           )
+      end
+
+      def exp_first_reported_to_public_health_date
+        value = first_reported_PH_date.blank? ? "99999999" : first_reported_PH_date.strftime('%Y%m%d')
+        [value, 122]
+      end
+
+      def exp_pregnant
+        value = pregnant.blank? ? "9" : pregnant
+        [value, 75]
+      end
+
+      def exp_zip
+        value = zip.blank? ? "99999" : zip
+        [value, 65]
       end
 
       def reference_date
@@ -563,22 +587,28 @@ module Export
         date ||=  created_at
       end
 
+      def exp_initial_exam_date
+        value = date_diagnosed.blank? ? '99999999' : date_diagnosed.to_date.strftime('%Y%m%d')
+        [value, 114]
+      end
+
       def exp_specsite
         date, index = pg_closest_date(reference_date, pg_array(lab_test_dates))
-        value = HumanEvent.trisano_specimen[HumanEvent.specimen_external_codes[pg_array(specimen)[index].to_i]] if pg_array(specimen)[index] and date
+        value = HumanEvent.trisano_specimen[pg_array(specimen_values)[index]] if date and index > -1
         value ||= '  '
         [value, 85]
       end
 
       def exp_specsite_date
         date, index = pg_closest_date(reference_date, pg_array(lab_collection_dates))
-        value = date.blank? ? '        ' : date.strftime('%y%m%d')
+        value = date.blank? ? '        ' : date.strftime('%Y%m%d')
         [value, 87]
       end
 
       def exp_treatment_date
-        date, index = pg_closest_date(reference_date, pg_array(treatment_dates))
-        value = date.blank? ? '        ' : date.strftime('%y%m%d')
+        date, index = pg_same_or_after(date_diagnosed, pg_array(treatment_dates))
+        date, index = pg_same_or_after(pg_earliest_date(lab_test_dates), pg_array(treatment_dates)) if date.blank?
+        value = date.blank? ? '99999999' : date.strftime('%Y%m%d')
         [value, 130]
       end
 
@@ -654,23 +684,23 @@ module Export
       end
 
       def exp_amind
-        [pg_array(races).first == '1' ? 'Y' : ' ', 98]
+        [pg_array(races).include?('1') ? 'Y' : ' ', 98]
       end
 
       def exp_asian
-        [pg_array(races).first == '2' ? 'Y' : ' ', 99]
+        [pg_array(race_codes).include?('A') ? 'Y' : ' ', 99]
       end
 
       def exp_black
-        [pg_array(races).first == '3' ? 'Y' : ' ', 100]
+        [pg_array(races).include?('3') ? 'Y' : ' ', 100]
       end
 
       def exp_nahaw
-        [pg_array(races).first == '2' ? 'Y' : ' ', 101]
+        [pg_array(race_codes).include?('H') ? 'Y' : ' ', 101]
       end
 
       def exp_white
-        [pg_array(races).first == '5' ? 'Y' : ' ', 102]
+        [pg_array(races).include?('5') ? 'Y' : ' ', 102]
       end
 
       def exp_raceoth
@@ -678,7 +708,7 @@ module Export
       end
 
       def exp_raceunk
-        [pg_array(races).first == '9' ? 'Y' : ' ', 105]
+        [pg_array(races).include?('9') ? 'Y' : ' ', 105]
       end
 
       def exp_raceref

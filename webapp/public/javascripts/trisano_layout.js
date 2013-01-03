@@ -58,5 +58,24 @@ Trisano.Layout = {
         event.preventDefault();
       }
     });
+  },
+
+  clearFlashMessage: function() {
+    $j("#flash-message").html();
+  },
+
+  setFlashMessage: function(message) {
+    $j("#flash-message").html(message);
+    Trisano.Layout.setMainContentPosition();
+  },
+
+  setFlashMessageClass: function(class_name) {
+    $j("#flash-message").attr('class', class_name);
+
+  },
+
+  navToFlashMessage: function() {
+    var position = $j('#flash-message').offset().top - $j("#head").height();
+    $j(window).scrollTop(position);    
   }
 };

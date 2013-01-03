@@ -101,6 +101,10 @@ module StagedMessages
       "Could not be determined"
     end
 
+    def time
+      Time.parse(msh_segment.time) unless msh_segment.time.blank?
+    end
+
     # Should be '2.5.1' or something similar for other versions.
     def version_id
       msh_segment.version_id
@@ -197,7 +201,7 @@ module StagedMessages
 
     def trisano_race_id
       race, race_id = nil, nil
-      elr_race_code = pid_segment.race.split(pid_segment.item_delim)[0]
+      elr_race_code = (pid_segment.race || "U").split(pid_segment.item_delim)[0]
       if race_md = /^[WBAIHKU]$/.match(elr_race_code)
         race = race_md[0]
         race = case race
@@ -265,7 +269,7 @@ module StagedMessages
     end
 
     def address_street_no
-      if unit_md = /^\w+ /.match(addr_components[0])
+      if unit_md = /^[\w-]+ /.match(addr_components[0])
         unit_md[0].strip
       else
         unit_md
@@ -273,7 +277,7 @@ module StagedMessages
     end
 
     def address_unit_no
-      addr_components[1].titleize
+      (addr_components[1] || "").titleize
     end
 
     def address_street
@@ -285,7 +289,7 @@ module StagedMessages
     end
 
     def address_city
-      addr_components[2].titleize
+      (addr_components[2] || "").titleize
     end
 
     def address_trisano_state_id
@@ -310,6 +314,10 @@ module StagedMessages
     # returns a string for use in the lab notes
     def address_country
       addr_components[5] if addr_components
+    end
+
+    def address_county
+      addr_components[8] if addr_components
     end
 
     def telephone_type_home
@@ -510,7 +518,7 @@ module StagedMessages
     end
 
     def facility_address_city
-      facility_addr_components[2].titleize
+      (facility_addr_components[2] || "").titleize
     end
 
     def facility_address_trisano_state_id
@@ -572,6 +580,25 @@ module StagedMessages
           ).try(:id)
         end
       end
+    end
+
+    # Take the specimen source from SPM-4
+    # Returns +nil+ if no SPM segment.
+    def specimen_source_2_5_1
+      return nil unless spm_segment
+
+      specimen_source = spm_segment.specimen_source_site
+      specimen_source = spm_segment.specimen_type if specimen_source.blank?
+
+      return nil if specimen_source.blank?
+
+      # The second delimited field is the name of the specimen
+      specimen_source.split(spm_segment.item_delim).second
+    end
+
+    # Take the specimen source from OBR-15
+    def specimen_source_2_3_1
+      obr_segment.specimen_source.split(obr_segment.item_delim).join(', ')
     end
 
     def collection_date
@@ -677,25 +704,6 @@ module StagedMessages
 
     def clinician_phone_components
       obr_segment.order_callback_phone_number.split(obr_segment.item_delim)
-    end
-
-    # Take the specimen source from SPM-4
-    # Returns +nil+ if no SPM segment.
-    def specimen_source_2_5_1
-      return nil unless spm_segment
-
-      specimen_source = spm_segment.specimen_source_site
-      specimen_source = spm_segment.specimen_type if specimen_source.blank?
-
-      return nil if specimen_source.blank?
-
-      # The second delimited field is the name of the specimen
-      specimen_source.split(spm_segment.item_delim).second
-    end
-
-    # Take the specimen source from OBR-15
-    def specimen_source_2_3_1
-      obr_segment.specimen_source.split(obr_segment.item_delim).join(', ')
     end
   end
 

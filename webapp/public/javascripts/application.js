@@ -210,33 +210,11 @@ function post_form(form_id, should_return) {
 }
 
 function post_and_return(form_id) {
-    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
-
-    function(data) {
-      // All repeaters saved successfully
       post_form(form_id, true);
-    },
-    function(data) {
-      // One or more errors
-      Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Tabs.navigateToError();
-      toggle_save_buttons("on");
-    });
 }
 
 function post_and_exit(form_id) {
-    $j.when.apply($j, Trisano.Ajax.saveRepeaters()).then(
-
-    function(data) {
-      // All repeaters saved successfully
-      post_form(form_id,false);
-    },
-    function(data) {
-      // One or more errors
-      Trisano.Tabs.highlightTabsWithErrors();
-      Trisano.Tabs.navigateToError();
-      toggle_save_buttons("on");
-    });
+      post_form(form_id, false);
 }
 
 function toggle_strike_through(element_id) {

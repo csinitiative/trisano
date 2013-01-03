@@ -182,7 +182,8 @@ class Form < ActiveRecord::Base
         return published_form
       end
     rescue Exception => ex
-      logger.error ex
+      Rails.logger.error "Unable to publish form: #{ex.message}."
+      Rails.logger.error ex.backtrace.join("\n")
       return nil
     end
   end
@@ -584,6 +585,7 @@ class Form < ActiveRecord::Base
       values[:export_column_id] = null_safe_sanitize(e.export_column_id)
       values[:export_conversion_value_id] = null_safe_sanitize(e.export_conversion_value_id)
       values[:code] = null_safe_sanitize(e.code)
+      values[:repeater] = null_safe_sanitize(e.repeater)
 
       result = insert_element(values)
       parent_id_map[e.id] = result
@@ -665,6 +667,7 @@ class Form < ActiveRecord::Base
       values[:help_text] = null_safe_sanitize(e["help_text"])
       values[:is_condition_code] = null_safe_sanitize(e["is_condition_code"])
       values[:code] = null_safe_sanitize(e["code"])
+      values[:repeater] = null_safe_sanitize(e["repeater"])
 
       # Debt: Break these out into methods. They do the lookups for codes and export values to get the correct
       # IDs for the system receiving the form import.
@@ -752,12 +755,12 @@ class Form < ActiveRecord::Base
     sql = "INSERT INTO form_elements "
     sql << "(form_id, type, name, description, parent_id, lft, rgt, is_template, template_id, "
     sql << "is_active, tree_id, condition, core_path, is_condition_code, help_text, export_column_id, "
-    sql << "export_conversion_value_id, code, created_at, updated_at, is_required) "
+    sql << "export_conversion_value_id, code, created_at, updated_at, is_required, repeater) "
     sql << "VALUES (#{ values[:form_id]}, #{values[:type]} , #{values[:name]}, #{values[:description]}, "
     sql << "#{values[:parent_id]}, #{values[:lft]}, #{values[:rgt]}, false, null, #{values[:is_active]}, "
     sql << "#{values[:tree_id]}, #{ values[:condition]}, #{values[:core_path]}, #{values[:is_condition_code]}, "
     sql << "#{values[:help_text]}, #{values[:export_column_id]}, #{values[:export_conversion_value_id]}, "
-    sql << "#{values[:code]}, now(), now(), #{values[:is_required]})"
+    sql << "#{values[:code]}, now(), now(), #{values[:is_required]}, #{values[:repeater]})"
     ActiveRecord::Base.connection.insert(sql)
   end
 

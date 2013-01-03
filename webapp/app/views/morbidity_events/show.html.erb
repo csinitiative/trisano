@@ -115,7 +115,7 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
     <% cache_event_fragment @event, "events/#{@event.id}/show/investigation_tab" do %>
         <% core_tab :investigation_tab, event_form do -%>
-          <%= render :partial => "events/investigation_show_tab" %>
+          <%= render :partial => "events/investigation_show_tab", :locals => {:f => event_form} %>
         <% end -%>
     <% end %>
 

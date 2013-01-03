@@ -73,6 +73,11 @@ en:
         hospitalized_id: Hospitalized
       treatments: Treatments
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -90,8 +95,10 @@ en:
           phone_section: Telephones/Email
           telephones: 
             name: All contact telephones
-            patient_telephone: Patient telephone
-          email_addresses: Contact email addresses
+            patient_telephone: Contact telephone
+          email_addresses: 
+            name: All Contact email addresses
+            email_address: Contact email address
           race_ids: Contact races
           person:
             date_of_death: Contact date of death
@@ -124,11 +131,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     assessment_event:
       name: Assessment Event
       demographic_tab: Demographic
@@ -223,6 +230,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -241,7 +253,9 @@ en:
             name: All patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death
@@ -276,11 +290,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -415,6 +429,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -433,7 +452,9 @@ en:
             name: All patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death
@@ -468,11 +489,11 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number
     encounter_event:
       name: Encounter Event
       encounter_tab: Encounter
@@ -501,6 +522,12 @@ en:
           specimen_source: Lab results | Specimen source
       treatments_section: Treatments
       treatments: Encounter treatments
+      interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
       event_notes_section: Event Notes
       participations_encounter:
         user_id: Investigator
@@ -607,6 +634,11 @@ en:
       contacts: Contacts
       workflow_state: Event status
       interested_party:
+        treatments:
+          treatment_given_yn_id: Treatment | Treatment given
+          treatment_id: Treatment | Treatment name
+          treatment_date: Treatment | Date of treatment
+          stop_treatment_date: Treatment | Date treatment stopped
         risk_factor:
           occupation: Occupation
           risk_factors: Risk factors
@@ -625,7 +657,9 @@ en:
             name: Patient telephones
             patient_telephone: Patient telephones
           demographics_section: Demographics
-          email_addresses: Patient email addresses
+          email_addresses: 
+            name: All patient email addresses
+            email_address: Patient email address
           race_ids: Patient race
           person:
             date_of_death: Patient date of death
@@ -660,8 +694,8 @@ en:
       imported_from_id: Imported from
       hospitalization_facilities:
         name: Hospitalized health facilities
-        secondary_entity_id: Health facility 
+        secondary_entity_id: Hospitalization | Health facility 
         hospitals_participation:
-          admission_date: Admission date 
-          discharge_date: Discharge date
-          medical_record_number: Medical record number
+          admission_date: Hospitalization | Admission date 
+          discharge_date: Hospitalization | Discharge date
+          medical_record_number: Hospitalization | Medical record number

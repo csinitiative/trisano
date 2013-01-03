@@ -1,6 +1,7 @@
 -# Hack.  This template is rendered from both the ordinary CMR form and via the live-search
 -# Ajax callback.  During the latter we do not have the proper namespace set up for form
 -# fields.  This does that.
+
 - lab_result_form = nil
 - if defined? f
   - lab_result_form = f
@@ -11,7 +12,6 @@
 
 -# get the lab result
 - lab_result = lab_result_form.object
-
 
 
 %li{:class => "lab_result", :style => "clear: both; margin-left: 20px;"}
@@ -33,7 +33,7 @@
           = lab_result_form.text_field(:accession_no, :size => 20, :maxlength => 20)
 
         - core_element("test_type", lab_result_form, :horiz) do
-          = lab_result_form.label(:test_type)
+          = lab_result_form.label(:test_type_id)
           = lab_result_form.collection_select(:test_type_id, test_type_options(@event, disease, lab_result), :id, :common_name, {:include_blank => true}, {:class => 'required_if_others', :onchange => "getLabOptions(this, '#{url_for(:action => 'test_type_options', :controller => 'events')}');"})
 
         - core_element("organism", lab_result_form, :horiz) do

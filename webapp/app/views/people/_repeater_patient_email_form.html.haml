@@ -1,0 +1,5 @@
+- fields_for @event, :builder => ExtendedFormBuilder do |event_form|
+  - event_form.fields_for :interested_party, @event.interested_party, :builder => ExtendedFormBuilder do |ip|
+    - ip.fields_for :person_entity, @event.interested_party.person_entity, :builder => ExtendedFormBuilder do |pe|
+      - pe.fields_for(:email_addresses, @patient_email_address, :child_index => @event.interested_party.person_entity.email_addresses.length, :builder => ExtendedFormBuilder) do |patient_email|
+        = render :partial => "people/email", :locals => { :f => patient_email }

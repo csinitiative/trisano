@@ -18,7 +18,12 @@
     =h @event.disease_event.disease.treatment_lead_in
 
   -core_element_show :treatments, f, 'vert-break' do
-    =render :partial => "events/treatments_list", :locals => { :event => @event}
+    - f.fields_for(:interested_party, :builder => ExtendedFormBuilder) do |current_patient|
+      - if @event.interested_party.treatment_ids.compact.empty?
+        %h3=t 'no_treatments', :thing => 'event'
+      - else
+        - current_patient.fields_for(:treatments, :builder => ExtendedFormBuilder) do |treatment_form| 
+          =render :partial => "events/treatment_show", :locals => { :f => treatment_form }
 
 -if @event.supports_encounter_specific_treatments?
   =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }

@@ -32,15 +32,49 @@ def log_in_as(user)
 end
 
 def create_basic_event(event_type, last_name=nil, disease=nil, jurisdiction=nil)
+
   # notes need a user, so set to default if current user is nil
   User.current_user ||= User.find_by_uid('default')
   returning Kernel.const_get(event_type.capitalize + "Event").new do |event|
+
     event.first_reported_PH_date = Date.yesterday.to_s(:db) if event.respond_to?(:first_reported_PH_date)
-    if last_name.nil?
-      event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
-    else
-      event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+
+    if event_type.to_s.downcase=="encounter" or event_type.to_s.downcase == "contact" or event_type.to_s.downcase == "place"
+      event.parent_event = create_basic_event("assessment", get_random_word, disease, jurisdiction)
     end
+
+    if event_type.to_s.downcase=="encounter" 
+      event.build_participations_encounter(:user => User.current_user,
+                                           :encounter_date => event.first_reported_PH_date, 
+                                           :encounter_location_type => ParticipationsEncounter.valid_location_types.first)
+    end
+
+    if event_type.to_s.downcase == "outbreak"
+      event.event_name = get_random_word
+    end
+
+    if event.respond_to?(:interested_party)
+      if last_name.nil?
+        event.interested_party = InterestedParty.create(:primary_entity_id => @person.id)
+      else
+        event.attributes = { :interested_party_attributes => { :person_entity_attributes => { :person_attributes => { :last_name => last_name } } } }
+      end
+    end
+
+    if event.respond_to?(:interested_place)
+      event.attributes = {"interested_place_attributes"=>{
+                            "place_entity_attributes"=>{
+                              "place_attributes"=>{
+                                "name"=> get_random_word 
+                              }
+                            }
+                          },
+                          "participations_place_attributes"=>{
+                            "date_of_exposure"=>""
+                          }
+                        }
+    end
+
     event.build_disease_event(:disease => Disease.find_or_create_by_disease_name(:active => true, :disease_name => disease)) if disease
     event.build_jurisdiction(:secondary_entity_id => Place.all_by_name_and_types(jurisdiction || "Unassigned", 'J', true).first.entity_id)
     event.add_note("Dummy Note")

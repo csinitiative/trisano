@@ -45,9 +45,8 @@ namespace :cache do
 end
 
 def request_url(url)
-  cmd = "wget #{url} -O /dev/null --max-redirect=0 --no-check-certificate 2>&1"
-  output = Open3.popen3(cmd)
-  puts "ERROR retreving #{url}\n#{output.readlines.join('\n')}" if $?.exitstatus != 0
+  `wget #{url} --max-redirect=0 --no-check-certificate 2>&1`
+  puts "ERROR retrieving #{url}" if $?.exitstatus != 0
 end
 
 def ask message

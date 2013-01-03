@@ -62,7 +62,7 @@ class HumanEvent < Event
   accepts_nested_attributes_for :interested_party
   accepts_nested_attributes_for :hospitalization_facilities,
     :allow_destroy => true,
-    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && attrs["hospitals_participation_attributes"].all? { |k, v| v.blank? } }
+    :reject_if => proc { |attrs| attrs["secondary_entity_id"].blank? && nested_attributes_blank?(attrs["hospitals_participation_attributes"]) }
   accepts_nested_attributes_for :clinicians,
     :allow_destroy => true,
     :reject_if => proc { |attrs| attrs.has_key?("person_entity_attributes") && attrs["person_entity_attributes"]["person_attributes"].all? { |k, v| if v == 'clinician' then true else v.blank? end } }
@@ -104,7 +104,7 @@ class HumanEvent < Event
     end
 
     def lab_result_attributes_blank?(attrs)
-      attrs["lab_results_attributes"].all? { |k, v| v.reject{ |k, v| k == "position" }.all? { |k, v| v.blank? } }
+      attrs["lab_results_attributes"].all? { |index, lab_result_attrs| nested_attributes_blank?(lab_result_attrs) }
     end
 
     def rewrite_attributes_to_reuse_place_entities(attrs)
@@ -596,6 +596,10 @@ class HumanEvent < Event
         @per_request_comments += ", " unless @per_request_comments.blank?
         @per_request_comments += "#{I18n.translate :specimen_id}: #{obr.specimen_id}"
       end
+      unless obr.specimen_source_2_5_1.blank? and obr.specimen_source_2_3_1.blank?
+        @per_request_comments += ", " unless @per_request_comments.blank?
+        @per_request_comments += "#{I18n.translate :specimen_source}: #{obr.specimen_source_2_5_1 || obr.specimen_source_2_3_1}"
+      end
 
       obr.tests.each do |obx|
         set_loinc_scale_and_test_type obx
@@ -743,11 +747,13 @@ class HumanEvent < Event
 
   def add_lab_results(staged_message, obr, obx, i)
     comments = @per_request_comments.clone
-
     unless obx.abnormal_flags.blank?
       comments += ", " unless comments.blank?
       comments += "#{I18n.translate :abnormal_flags}: #{obx.abnormal_flags}"
     end
+
+    comments += ", " unless comments.blank?
+    comments += "Observation value: #{obx.obx_segment.observation_value}"
 
     result_hash = {}
 

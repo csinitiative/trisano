@@ -21,15 +21,19 @@ When /^I fill in enough (.+) data to enable all core fields to show up in show m
   # Street number to get the address
   @browser.type("#{event_type}[address_attributes][street_number]", "12")
 
-  # Lab name and type for contact and morbidity events
   if event_type == "morbidity_event" || event_type == "contact_event" || event_type == "assessment_event"
-    common_test_type = CommonTestType.find_or_create_by_common_name("Common Test Type")
+    common_test_type = CommonTestType.find_by_common_name("Common Test Type")
     lab_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "L"})).first.place.name 
     hospital_name = PlaceEntity.by_name_and_participation_type(PlacesSearchForm.new({:place_type => "H"})).first.place.name 
-    add_lab_result(@browser, { :lab_name => lab_name, :lab_test_type => common_test_type.common_name })
-    add_hospital(@browser, {:name => hospital_name, :admission_date => Date.today.to_formatted_s(:long)})
+    add_lab_result(@browser, { :lab_name => lab_name, :test_type => common_test_type.common_name })
+    add_email(@browser, { :email => "test@test.com" })
+    add_hospital(@browser, {:name => hospital_name, :admission_date => Date.today.to_formatted_s})
     add_telephone(@browser, {:type => "Work", "area code" => "555", :number => "555-5555"})
   end
+end
+
+Given /^a common test type named "(.+)"$/ do |common_name|
+  common_test_type = CommonTestType.find_or_create_by_common_name("Common Test Type")
 end
 
 Then /^I should see help text for all (.+) core fields in (.+) mode$/ do |event_type, mode|

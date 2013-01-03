@@ -16,11 +16,11 @@ Feature: Forms remain attached when assessments are promoted to morbidity events
 
     When I am on the assessment event edit page
      And I fill in enough assessment event data to enable all core fields to show up in show mode
-     And I save the event
+     And I save and continue
      And I am on the assessment event edit page
 
      And I answer all core field config questions
-     And I save the event
+     And I save and continue
      And I promote the assessment to a morbidity event
      And I am on the morbidity event edit page
 
@@ -35,10 +35,10 @@ Feature: Forms remain attached when assessments are promoted to morbidity events
     And a assessment event exists with a disease that matches the form
     And I am on the assessment event edit page
    When I answer all of the core follow ups with a matching condition
-    And I save the event
+    And I save and continue
     And I am on the assessment event edit page
     And I answer all core follow up questions
-    And I save the event
+    And I save and continue
     And I promote the assessment to a morbidity event
     And I am on the morbidity event edit page
 

@@ -10,10 +10,11 @@ Feature: Contact event, viewing core field help text
     And a basic morbidity event exists
     And there is a contact on the event named Contacto
     And a lab named "Labby"
+    And a common test type named "Common Test Type"
 
     When I am on the contact event edit page
     Then I should see help text for all contact event core fields in edit mode
 
     When I fill in enough contact event data to enable all core fields to show up in show mode
-    And I save the event
+    And I save and continue
     Then I should see help text for all contact event core fields in show mode

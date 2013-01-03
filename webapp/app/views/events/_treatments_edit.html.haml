@@ -31,7 +31,7 @@
             =render :partial => "events/treatment", :locals => { :f => treatment_form }
 
       %p{ :style => "clear: both;" }
-        =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment', :insert => 'treatment-list')
+        =add_record_link(person_form, :treatments, t('add_treatment'), :partial => 'events/treatment', :insert => 'treatment-list', :html_id => "add-treatment")
 
 -if @event.supports_encounter_specific_treatments?
   =render :partial => "events/encounter_specific_treatments", :locals => { :event => @event, :f => f }

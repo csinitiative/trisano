@@ -19,7 +19,13 @@ require 'spec_helper'
 
 describe EmailAddress do
   context 'general' do
-    it { should validate_presence_of(:email_address) }
+  # We have commented this out because now we can accept nested attributes for this
+  # which may include form fields. Thus, we may want to record form data and not an email
+  #  it { should validate_presence_of(:email_address) }
+  #  it 'should not allow a blank e-mail address' do
+  #    lambda { Factory :email_address, :email_address => '' }.should raise_error
+  #  end
+
 
 # Email addresses don't actually have to be unique
 #    it 'should not allow duplicate e-mail addresses' do
@@ -40,10 +46,6 @@ describe EmailAddress do
 #      end.should raise_error
 #      Factory.build(:email_address, :email_address => ' user@example.com ').should_not be_valid
 #    end
-
-    it 'should not allow a blank e-mail address' do
-      lambda { Factory :email_address, :email_address => '' }.should raise_error
-    end
 
     it 'should not allow an invalid e-mail address' do
       lambda { Factory :email_address, :email_address => 'xyz' }.should raise_error

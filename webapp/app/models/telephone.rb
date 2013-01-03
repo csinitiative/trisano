@@ -16,6 +16,7 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 class Telephone < ActiveRecord::Base
+  include Trisano::Repeater
   belongs_to :entity
   belongs_to :entity_location_type, :class_name => 'ExternalCode'
 
@@ -137,9 +138,4 @@ class Telephone < ActiveRecord::Base
   def format(field)
     self.class.format(field)
   end
-
-  def repeater_parent
-    self
-  end
-
 end

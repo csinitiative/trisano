@@ -72,7 +72,7 @@ module EventsHelper
     link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
   end
 
-  def add_lab_result_link(name, prefix, lab_id)
+  def add_lab_result_link(name, prefix, lab_id, event_id)
     event_type = /^.+_event/.match(prefix)[0]
     #DEBT
     url = case event_type
@@ -87,7 +87,12 @@ module EventsHelper
     end
 
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
-    link_to_remote(name, :update => "new_lab_result_holder_#{lab_id}", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
+    link_to_remote name, 
+                   :update => "new_lab_result_holder_#{lab_id}", 
+                   :position => :before, 
+                   :url => url, 
+                   :method => :get, 
+                   :with => "'disease_id=' + $F('#{disease_field}') + '&event_id=#{event_id}'"
   end
 
   def add_reporting_agency_link(name, form, options={})
