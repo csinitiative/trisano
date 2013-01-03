@@ -83,34 +83,36 @@ end
 def create_core_field_config(form, container, core_field, options={})
   core_field_config = CoreFieldElement.new
 
-  core_field_config.core_path = core_field.key
+  key = core_field.key
+  key.gsub!(form.event_type, options[:event_type].gsub(" ","_")) if options[:event_type]
+  core_field_config.core_path = key
   core_field_config.parent_element_id = container.id
   core_field_config.save_and_add_to_form
 
   before_question = create_question_on_form(form, {
-      :question_text => "#{core_field.key} before?",
-      :short_name => Digest::MD5::hexdigest(core_field.key + "before") },
+      :question_text => "#{key} before?",
+      :short_name => Digest::MD5::hexdigest(key + "before") },
     core_field_config.children[0]
   )
 
   after_question = create_question_on_form(form, { 
-      :question_text => "#{core_field.key} after?",
-      :short_name => Digest::MD5::hexdigest(core_field.key + "after") },
+      :question_text => "#{key} after?",
+      :short_name => Digest::MD5::hexdigest(key + "after") },
     core_field_config.children[1]
   )
 
   if options[:follow_up] == true
     before_follow_up = create_form_question_follow_up(before_question)
     create_question_on_form(form, {
-        :question_text => "#{core_field.key} before follow up?",
-        :short_name => Digest::MD5::hexdigest(core_field.key + "before follow up") },
+        :question_text => "#{key} before follow up?",
+        :short_name => Digest::MD5::hexdigest(key + "before follow up") },
       before_follow_up
     )
 
     after_follow_up = create_form_question_follow_up(after_question)
     create_question_on_form(form, {
-        :question_text => "#{core_field.key} after follow up?",
-        :short_name => Digest::MD5::hexdigest(core_field.key + "after follow up") },
+        :question_text => "#{key} after follow up?",
+        :short_name => Digest::MD5::hexdigest(key + "after follow up") },
       after_follow_up
     )
 

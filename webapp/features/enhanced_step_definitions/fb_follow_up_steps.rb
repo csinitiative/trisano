@@ -17,16 +17,19 @@
 
 Given /^I don\'t see any of the core follow up questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should not not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should not not find #{key}" if html_source.include?("#{key} follow up?") == true
   end
 end
 
 When(/^I answer all of the core follow ups with a matching condition$/) do
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
     key = railsify_core_field_key(core_field.key)
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
 
     if core_field.code_name
       # For now, all core condition follow ups are drop downs. Later, we might have to
@@ -55,18 +58,22 @@ Then /^I should see all of the core follow up questions$/ do
   @browser.wait_for_ajax
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    html_source.include?("#{core_field.key} follow up?").should be_true, "Expected to see '#{core_field.key} follow up?'"
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    html_source.include?("#{key} follow up?").should be_true, "Expected to see '#{key} follow up?'"
   end
 end
 
 When /^I answer all core follow up questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    answer_investigator_question(@browser, "#{core_field.key} follow up?", "#{core_field.key} answer", html_source)
-    puts "answering core follow up question #{core_field.key}"
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    answer_investigator_question(@browser, "#{key} follow up?", "#{key} answer", html_source)
+    puts "answering core follow up question #{key}"
   end
 end
 
@@ -74,16 +81,19 @@ Then /^I should see all follow up answers$/ do
   @browser.wait_for_ajax
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Could not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == false
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Could not find #{key} answer" if html_source.include?("#{key} answer") == false
   end
 end
 
 When /^I answer all of the core follow ups with a non\-matching condition$/ do
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
     key = railsify_core_field_key(core_field.key)
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
 
     if core_field.code_name
 
@@ -120,9 +130,11 @@ Then /^I should not see any of the core follow up questions$/ do
   @browser.wait_for_ajax
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should not find #{core_field.key}" if html_source.include?("#{core_field.key} follow up?") == true
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should not find #{key}" if html_source.include?("#{key} follow up?") == true
   end
 end
 
@@ -130,9 +142,11 @@ Then /^I should not see any follow up answers$/ do
   @browser.wait_for_ajax
   sleep 3 # Wait a sec or three for all of the core follow ups to show up
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should not find #{core_field.key} answer" if html_source.include?("#{core_field.key} answer") == true
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should not find #{key} answer" if html_source.include?("#{key} answer") == true
   end
 end
 
@@ -145,10 +159,20 @@ Given /^that form has follow ups configured for all configured form fields$/ do
   end
 end
 
+Given /^that form has follow ups configured for all configured form fields, with question text for a (.+)$/ do |event_type|
+  @core_field_container = @form.core_field_elements_container
+
+  # Create a core field config for every core field
+  CoreField.all(:conditions => ['event_type = ? and fb_accessible = true and disease_specific != true', @form.event_type]).each do |core_field|
+    create_core_field_config(@form, @core_field_container, core_field, :follow_up => true, :event_type => event_type)
+  end
+end
+
 When /^I answer all of the form field follow ups with a matching condition$/ do
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
     key = core_field.key
+    key.gsub!("morbidity_and_assessment_event",@event.type.underscore)
     before_follow_up_question = key + " before?"
     before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
     @browser.type(before_follow_up_question_html_id, "YES")
@@ -161,17 +185,20 @@ end
 
 Then /^I should see all of the form field follow up questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should find #{core_field.key} before follow up" if html_source.include?("#{core_field.key} before follow up?") == false
-    raise "Should find #{core_field.key} after follow up" if html_source.include?("#{core_field.key} after follow up?") == false
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should find #{key} before follow up" if html_source.include?("#{key} before follow up?") == false
+    raise "Should find #{key} after follow up" if html_source.include?("#{key} after follow up?") == false
   end
 end
 
 When /^I answer all form field follow up questions$/ do
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
     key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
     before_follow_up_question = key + " before follow up?"
     before_follow_up_answer = key + " before follow up answer"
     before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
@@ -185,17 +212,20 @@ end
 
 Then /^I should see all form field follow up answers$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should find #{core_field.key} before follow up answer" if html_source.include?("#{core_field.key} before follow up answer") == false
-    raise "Should find #{core_field.key} after follow up answer" if html_source.include?("#{core_field.key} after follow up answer") == false
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should find #{key} before follow up answer" if html_source.include?("#{key} before follow up answer") == false
+    raise "Should find #{key} after follow up answer" if html_source.include?("#{key} after follow up answer") == false
   end
 end
 
 When /^I answer all of the form field follow ups with a non\-matching condition$/ do
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
     key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
     before_follow_up_question = key + " before?"
     before_follow_up_question_html_id = @browser.get_attribute("//label[text()='#{before_follow_up_question}']@for")
     @browser.type(before_follow_up_question_html_id, "NO")
@@ -208,10 +238,12 @@ end
 
 Then /^I should not see any of the form field follow up questions$/ do
   html_source = @browser.get_html_source
-  @core_fields ||= CoreField.default_follow_up_core_fields_for(@form.event_type)
-  @core_fields.each do |core_field|
-    raise "Should not find #{core_field.key} before follow up" if html_source.include?("#{core_field.key} before follow up?") == true
-    raise "Should not find #{core_field.key} after follow up" if html_source.include?("#{core_field.key} after follow up?") == true
+  core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
+  core_fields.each do |core_field|
+    key = core_field.key
+    key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
+    raise "Should not find #{key} before follow up" if html_source.include?("#{key} before follow up?") == true
+    raise "Should not find #{key} after follow up" if html_source.include?("#{key} after follow up?") == true
   end
 end
 
