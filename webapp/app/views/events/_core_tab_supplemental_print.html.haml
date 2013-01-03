@@ -16,5 +16,5 @@
 - for form_reference in @event.form_references
   - for element in form_reference.form.core_view_elements_container.children do
     - if element.name == tab
-      = print_investigator_view(element, form_reference.form)
+      = print_investigator_view(element, form_reference.form, f)
       %br
