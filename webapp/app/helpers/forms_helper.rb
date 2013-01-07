@@ -595,7 +595,7 @@ module FormsHelper
   end
 
   def add_follow_up_link(element, trailing_text = "", core_data = false)
-    if element.try(:core_field_element).try(:core_field).try(:repeater?)
+    if element.try(:core_field_element).try(:core_field).try(:repeater?) or element.try(:section_element).try(:repeater?)
       ""
     else
       options = fb_html_options(:add, 'follow-up', element).merge(:name => 'add-follow-up')
