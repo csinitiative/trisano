@@ -18,6 +18,7 @@ require 'ostruct'
 
 class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::SanitizeHelper
+  include ActionView::Helpers::JavaScriptHelper
   include ActionController::UrlWriter
   extend  ActionView::Helpers::SanitizeHelper::ClassMethods
 
