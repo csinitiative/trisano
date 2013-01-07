@@ -401,14 +401,6 @@
   can_follow_up: false
   field_type: section
   event_type: morbidity_event
-  key: morbidity_event[reporter_section]
-  parent_key: morbidity_event[reporting_tab]
-
-- help_text:
-  fb_accessible: false
-  can_follow_up: false
-  field_type: section
-  event_type: morbidity_event
   key: morbidity_event[reported_dates_section]
   parent_key: morbidity_event[reporting_tab]
 
@@ -677,14 +669,6 @@
   parent_key: morbidity_event[interested_party][person_entity][name_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_event
-  field_type: single_line_text
-  key: morbidity_event[reporter][person_entity][person][first_name]
-  parent_key: morbidity_event[reporter_section]
-
-- help_text:
   fb_accessible: true
   can_follow_up: true
   repeater: true
@@ -749,14 +733,6 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_event
-  field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones][area_code]
-  parent_key: morbidity_event[reporter_section]
-
-- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
@@ -774,14 +750,6 @@
   parent_key: contact_event[address_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_event
-  field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones][phone_number]
-  parent_key: morbidity_event[reporter_section]
-
-- help_text:
   fb_accessible: true
   can_follow_up: true
   event_type: morbidity_event
@@ -797,14 +765,6 @@
   field_type: date
   key: contact_event[interested_party][person_entity][person][birth_date]
   parent_key: contact_event[interested_party][person_entity][age_section]
-
-- help_text:
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_event
-  field_type: drop_down
-  key: morbidity_event[reporter][person_entity][telephones][extension]
-  parent_key: morbidity_event[reporter_section]
 
 - help_text:
   fb_accessible: true
@@ -1851,15 +1811,6 @@
   parent_key: morbidity_event[interested_party][person_entity][age_section]
 
 - help_text:
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_event
-  field_type: single_line_text
-  key: morbidity_event[reporter][person_entity][person][last_name]
-  parent_key: morbidity_event[reporter_section]
-  required_for_section: true
-
-- help_text:
   fb_accessible: true
   can_follow_up: true
   repeater: true
@@ -2660,14 +2611,6 @@
   can_follow_up: false
   field_type: section
   event_type: assessment_event
-  key: assessment_event[reporter_section]
-  
-- parent_key: assessment_event[reporting_tab]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: section
-  event_type: assessment_event
   key: assessment_event[reported_dates_section]
   
 - parent_key: assessment_event[notes_tab]
@@ -2726,14 +2669,6 @@
   field_type: single_line_text
   key: assessment_event[interested_party][person_entity][person][first_name]
   
-- parent_key: assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: assessment_event
-  field_type: single_line_text
-  key: assessment_event[reporter][person_entity][person][first_name]
-  
 - parent_key: assessment_event[interested_party][person_entity][demographics_section]
   help_text: 
   fb_accessible: true
@@ -2761,14 +2696,6 @@
   field_type: multi_select
   key: assessment_event[interested_party][person_entity][race_ids]
   
-- parent_key: assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: assessment_event
-  field_type: drop_down
-  key: assessment_event[reporter][person_entity][telephones][area_code]
-  
 - parent_key: assessment_event[interested_party][person_entity][demographics_section]
   help_text: 
   fb_accessible: true
@@ -2778,14 +2705,6 @@
   field_type: drop_down
   key: assessment_event[interested_party][person_entity][person][primary_language_id]
   
-- parent_key: assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: assessment_event
-  field_type: drop_down
-  key: assessment_event[reporter][person_entity][telephones][phone_number]
-  
 - parent_key: assessment_event[pregnancy_status_section]
   help_text: 
   fb_accessible: true
@@ -2794,14 +2713,6 @@
   event_type: assessment_event
   field_type: drop_down
   key: assessment_event[interested_party][risk_factor][pregnant_id]
-  
-- parent_key: assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: assessment_event
-  field_type: drop_down
-  key: assessment_event[reporter][person_entity][telephones][extension]
   
 - parent_key: assessment_event[pregnancy_status_section]
   help_text: 
@@ -3329,15 +3240,6 @@
   field_type: numeric
   key: assessment_event[interested_party][person_entity][person][age_at_onset]
   
-- parent_key: assessment_event[reporter_section]
-  help_text: 
-  required_for_section: true
-  fb_accessible: false
-  can_follow_up: false
-  event_type: assessment_event
-  field_type: single_line_text
-  key: assessment_event[reporter][person_entity][person][last_name]
-  
 - parent_key: assessment_event[labs_section]
   help_text: 
   fb_accessible: true
@@ -3825,14 +3727,6 @@
   can_follow_up: false
   field_type: section
   event_type: morbidity_and_assessment_event
-  key: morbidity_and_assessment_event[reporter_section]
-  
-- parent_key: morbidity_and_assessment_event[reporting_tab]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  field_type: section
-  event_type: morbidity_and_assessment_event
   key: morbidity_and_assessment_event[reported_dates_section]
   
 - parent_key: morbidity_and_assessment_event[notes_tab]
@@ -3891,14 +3785,6 @@
   field_type: single_line_text
   key: morbidity_and_assessment_event[interested_party][person_entity][person][first_name]
   
-- parent_key: morbidity_and_assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_and_assessment_event
-  field_type: single_line_text
-  key: morbidity_and_assessment_event[reporter][person_entity][person][first_name]
-  
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][demographics_section]
   help_text: 
   fb_accessible: true
@@ -3926,14 +3812,6 @@
   field_type: multi_select
   key: morbidity_and_assessment_event[interested_party][person_entity][race_ids]
   
-- parent_key: morbidity_and_assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_and_assessment_event
-  field_type: drop_down
-  key: morbidity_and_assessment_event[reporter][person_entity][telephones][area_code]
-  
 - parent_key: morbidity_and_assessment_event[interested_party][person_entity][demographics_section]
   help_text: 
   fb_accessible: true
@@ -3943,14 +3821,6 @@
   field_type: drop_down
   key: morbidity_and_assessment_event[interested_party][person_entity][person][primary_language_id]
   
-- parent_key: morbidity_and_assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_and_assessment_event
-  field_type: drop_down
-  key: morbidity_and_assessment_event[reporter][person_entity][telephones][phone_number]
-  
 - parent_key: morbidity_and_assessment_event[pregnancy_status_section]
   help_text: 
   fb_accessible: true
@@ -3959,14 +3829,6 @@
   event_type: morbidity_and_assessment_event
   field_type: drop_down
   key: morbidity_and_assessment_event[interested_party][risk_factor][pregnant_id]
-  
-- parent_key: morbidity_and_assessment_event[reporter_section]
-  help_text: 
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_and_assessment_event
-  field_type: drop_down
-  key: morbidity_and_assessment_event[reporter][person_entity][telephones][extension]
   
 - parent_key: morbidity_and_assessment_event[pregnancy_status_section]
   help_text: 
@@ -4456,15 +4318,6 @@
   event_type: morbidity_and_assessment_event
   field_type: numeric
   key: morbidity_and_assessment_event[interested_party][person_entity][person][age_at_onset]
-  
-- parent_key: morbidity_and_assessment_event[reporter_section]
-  help_text: 
-  required_for_section: true
-  fb_accessible: false
-  can_follow_up: false
-  event_type: morbidity_and_assessment_event
-  field_type: single_line_text
-  key: morbidity_and_assessment_event[reporter][person_entity][person][last_name]
   
 - parent_key: morbidity_and_assessment_event[labs_section]
   help_text: 
