@@ -69,7 +69,7 @@
                 = h(result['disease_name'])
               - else
                 =t 'private'
-          %td
+          %td{:class => "no-strike-through"}
             - if includes_event
               - view_path = result['event_type'] == 'MorbidityEvent' ? cmr_path(result['event_id']) : contact_event_path(result['event_id'])
               = link_to t(:show), view_path
