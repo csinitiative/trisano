@@ -253,6 +253,19 @@ module Export
 
       def event_answers(event)
         answers = []
+
+        #Export historical states
+        event.event_type_transitions.each do |event_type_transition|
+          exportable_questions[event_type_transition.was.underscore.to_sym].each do |question|
+            answer = event.answers.detect { |answer| answer.short_name == question.short_name }
+            text_answer = answer.nil? ? "" : answer.text_answer
+            escaped_answer = text_answer.blank? ? "" : text_answer.gsub(/'/, "\\\\'")
+            column_name = exporting_using_short_names? ? question.short_name : "disease_specific_#{question.short_name}"
+            answers << [column_name, "'#{escaped_answer}'"]
+          end
+        end
+
+        # Handle current state
         exportable_questions[event.class.name.underscore.to_sym].each do |question|
           answer = event.answers.detect { |answer| answer.short_name == question.short_name }
           text_answer = answer.nil? ? "" : answer.text_answer
