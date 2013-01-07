@@ -38,6 +38,7 @@ class HumanEvent < Event
     :foreign_key => "event_id",
     :order => 'created_at ASC',
     :dependent => :destroy
+  has_many :lab_results, :through => :labs
 
   has_many :hospitalization_facilities,
     :foreign_key => "event_id",
@@ -340,18 +341,6 @@ class HumanEvent < Event
       raise ex
     end
 
-  end
-
-  def lab_results
-    @results ||= (
-      results = []
-      labs.each do |lab|
-        lab.lab_results.each do |lab_result|
-          results << lab_result
-        end
-      end
-      results
-    )
   end
 
   def definitive_lab_date
