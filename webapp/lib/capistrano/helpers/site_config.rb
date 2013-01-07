@@ -84,6 +84,7 @@ module Capistrano::Helpers
         telephone_config.delete(k) if v.nil?
       end.empty?
       config['answer'] = { 'phone' => form_builder_phone } if exists? :form_builder_phone
+      config['answer'] = { 'numeric' => form_builder_numeric } if exists? :form_builder_numeric
       config
     end
 
