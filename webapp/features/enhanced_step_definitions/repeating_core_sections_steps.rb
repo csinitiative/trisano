@@ -270,6 +270,25 @@ When /^I mark all section repeaters for removal$/ do
   end
 end
 
+When /^I mark all core repeaters for removal$/ do
+  event = @contact_event || @place_event || @encounter_event || @event
+  event.interested_party.person_entity.telephones.count.times do |i|
+    @browser.check "xpath=(//input[contains(@id, '_interested_party_attributes_person_entity_attributes_telephones_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
+  end
+  event.interested_party.person_entity.email_addresses.count.times do |i|
+    @browser.check "xpath=(//input[contains(@id, '_interested_party_attributes_person_entity_attributes_email_addresses_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
+  end
+  event.hospitalization_facilities.count.times do |i|
+    @browser.check "xpath=(//input[contains(@id, '_hospitalization_facilities_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
+  end
+  event.interested_party.treatments.count.times do |i|
+    @browser.check "xpath=(//input[contains(@id, '_interested_party_attributes_treatments_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
+  end
+  event.lab_results.count.times do |i|
+    @browser.check "xpath=(//input[contains(@id, '_lab_results_attributes_')][contains(@id, '__destroy')])[#{i+1}]"
+  end
+end
+
 Then /^the database should have (\d+) answers and investigator form questions for this event$/ do |expected_count|
   event = @contact_event || @place_event || @encounter_event || @event
   answer_count = event.answers.count

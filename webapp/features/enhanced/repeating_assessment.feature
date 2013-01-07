@@ -51,7 +51,10 @@ Feature: Form fields for repeating core sections.
     Given   a assessment event with a form with repeating core fields 
 
     When    I navigate to the assessment event edit page
-    And     I create 1 new instances of all assessment event repeaters
+    Then    I should see 1 instances of the repeater core field config questions
+    And     I should see 0 instances of answers to the repeating core field config questions
+
+    When    I create 1 new instances of all assessment event repeaters
     Then    I should see 2 instances of the repeater core field config questions
 
     When    I answer 2 instances of all repeater questions
@@ -68,6 +71,14 @@ Feature: Form fields for repeating core sections.
     When    I print the assessment event
     And     I should see 2 instances of the repeater core field config questions
     And     I should see 2 instances of answers to the repeating core field config questions
+
+    When    I am on the assessment event edit page
+    And     I mark all core repeaters for removal
+    And     I save and continue
+    Then    I should see "successfully updated"
+    Then    I should see 1 instances of the repeater core field config questions
+    And     I should see 0 instances of answers to the repeating core field config questions
+
 
 
   Scenario: Answer all repeaters after adding a form.
