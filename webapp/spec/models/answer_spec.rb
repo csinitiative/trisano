@@ -97,6 +97,163 @@ describe Answer do
       duplicate_answer.errors.on(:question_id).should == "has already been taken"
     end
 
+    describe 'of numeric question' do
+      before do
+        @answer.question.update_attribute(:data_type, "numeric")  
+      end
+      it "allows decimal points in the begining" do
+        @answer.text_answer = ".12"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "allows decimal points in the middle" do
+        @answer.text_answer = "1.2"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "allows decimal points at the end" do
+        @answer.text_answer = "12."
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+        
+      it "does not allow commas" do
+        @answer.text_answer = "1,200"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+        
+
+      it "does not allow alpha characters in the middle" do
+        @answer.text_answer = "1d2"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+      it "does not allow alpha characters at the begining" do
+        @answer.text_answer = "d12"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+      it "does not allow alpha characters at the end" do
+        @answer.text_answer = "12d"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+
+
+
+
+      it "does not allow special characters at the end" do
+        @answer.text_answer = "12!"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+      it "does not allow special characters at the middle" do
+        @answer.text_answer = "1!2"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+      it "does not allow special characters at the begining" do
+        @answer.text_answer = "!12"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+      end
+
+
+
+
+      it "honors numeric_min when set with a integer" do
+        @answer.question.update_attribute(:numeric_min, "3")
+        @answer.text_answer = "2"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3"
+      end
+      it "honors numeric_min when set with a integer" do
+        @answer.question.update_attribute(:numeric_min, "3")
+        @answer.text_answer = ".2"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3"
+      end
+      it "honors numeric_min when set with a float" do
+        @answer.question.update_attribute(:numeric_min, "3.1")
+        @answer.text_answer = "2"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1"
+      end
+      it "honors numeric_min when answer is set with a float" do
+        @answer.question.update_attribute(:numeric_min, "3.1")
+        @answer.text_answer = "2.1"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1"
+      end
+      it "honors numeric_min when set with an equal value" do
+        @answer.question.update_attribute(:numeric_min, "3.1")
+        @answer.text_answer = "3.1"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "honors numeric_min when set with an equal value" do
+        @answer.question.update_attribute(:numeric_min, "3")
+        @answer.text_answer = "3"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+
+
+      it "honors numeric_max when set with a integer" do
+        @answer.question.update_attribute(:numeric_max, "3")
+        @answer.text_answer = "4."
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3"
+      end
+      it "honors numeric_max when set with a integer" do
+        @answer.question.update_attribute(:numeric_max, "3")
+        @answer.text_answer = "4.1"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3"
+      end
+      it "honors numeric_max when set with a float" do
+        @answer.question.update_attribute(:numeric_max, "3.1")
+        @answer.text_answer = "4"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1"
+      end
+      it "honors numeric_max when answer is set with a float" do
+        @answer.question.update_attribute(:numeric_max, "3.1")
+        @answer.text_answer = "4.1"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1"
+      end
+      it "honors numeric_max when set with an equal value" do
+        @answer.question.update_attribute(:numeric_max, "3.1")
+        @answer.text_answer = "3.1"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "honors numeric_max when set with an equal value" do
+        @answer.question.update_attribute(:numeric_max, "3")
+        @answer.text_answer = "3"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+    end
+
+
   end
 
 end

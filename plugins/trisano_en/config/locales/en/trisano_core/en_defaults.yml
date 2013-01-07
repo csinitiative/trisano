@@ -183,6 +183,7 @@ en:
     check_box: Checkboxes
     date: Date
     phone: Phone Number
+    numeric: Numeric
 
   question_styles:
     horizontal: Horizontal

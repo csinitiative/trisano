@@ -28,7 +28,8 @@ class Question < ActiveRecord::Base
         [I18n.t('question_data_types.radio_button'), "radio_button"],
         [I18n.t('question_data_types.check_box'), "check_box"],
         [I18n.t('question_data_types.date'), "date"],
-        [I18n.t('question_data_types.phone'), "phone"]
+        [I18n.t('question_data_types.phone'), "phone"],
+        [I18n.t('question_data_types.numeric'), "numeric"]
       ]
     end
 
@@ -48,6 +49,18 @@ class Question < ActiveRecord::Base
 
   def data_type
     read_attribute("data_type").to_sym unless read_attribute("data_type").blank?
+  end
+
+  def numeric?
+    self.data_type == :numeric
+  end
+
+  def min_set?
+    numeric? && self.numeric_min.present?
+  end
+
+  def max_set?
+    numeric? && self.numeric_max.present?
   end
 
   def is_multi_valued?
