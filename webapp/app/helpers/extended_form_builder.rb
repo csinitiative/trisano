@@ -88,7 +88,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     result += error_messages
 
     input_element = case question.data_type
-    when :single_line_text
+    when :single_line_text, :numeric
       unless (question.size.nil?)
         html_options[:maxlength] = question.size
         html_options[:size] = question.size
@@ -217,6 +217,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       html_options[:size] = 14
       html_options[:onchange] = text_answer_event if follow_ups
       text_field(:text_answer, html_options) + "&nbsp;<small>#{I18n.t(:phone_answer_format_msg)}</small>"
+    else
+      raise "Unsupported data type"
     end
 
     result += label(:text_answer, sanitize(question.question_text, :tags => %w(br)), :for => html_options[:id]) 

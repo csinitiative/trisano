@@ -620,7 +620,9 @@ class Form < ActiveRecord::Base
         :core_data_attr => template_question.core_data_attr,
         :size => template_question.size,
         :is_required => template_question.is_required,
-        :style => template_question.style
+        :style => template_question.style,
+        :numeric_min => template_question.numeric_min,
+        :numeric_max => template_question.numeric_max
       })
 
     question_to_publish.save

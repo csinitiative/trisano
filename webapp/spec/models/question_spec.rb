@@ -65,6 +65,32 @@ describe Question do
     end
   end
 
+  it "should determine if it is numeric" do
+    @question.data_type = "single_line_text"
+    @question.numeric?.should be_false
+
+    @question.data_type = "multi_line_text"
+    @question.numeric?.should be_false
+
+    @question.data_type = "drop_down"
+    @question.numeric?.should be_false
+
+    @question.data_type = "radio_button"
+    @question.numeric?.should be_false
+
+    @question.data_type = "check_box"
+    @question.numeric?.should be_false
+
+    @question.data_type = "date"
+    @question.numeric?.should be_false
+
+    @question.data_type = "phone"
+    @question.numeric?.should be_false
+
+    @question.data_type = "numeric"
+    @question.numeric?.should be_true
+  end
+
   it "should determine if it is multi-valued" do
     @question.data_type = "single_line_text"
     @question.is_multi_valued?.should be_false
@@ -85,6 +111,9 @@ describe Question do
     @question.is_multi_valued?.should be_false
 
     @question.data_type = "phone"
+    @question.is_multi_valued?.should be_false
+
+    @question.data_type = "numeric"
     @question.is_multi_valued?.should be_false
   end
 
