@@ -41,7 +41,30 @@ class Answer < ActiveRecord::Base
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
+  validates_format_of :text_answer, :with => regexp(:numeric), :allow_blank => true, :if => :numeric_question, :message => "accepts only integers (0-9) and one optional decimal point"
+  validate :numeric_min, :if => :numeric_min_set
+  validate :numeric_max, :if => :numeric_max_set
   validates_date :date_answer, :if => :is_date, :allow_blank => true
+
+  def numeric_question
+    question.numeric?
+  end
+
+  def numeric_max_set
+    question.max_set?
+  end
+
+  def numeric_min_set
+    question.min_set?
+  end
+
+  def numeric_min
+    errors.add(:text_answer, "is below minimum value of #{question.numeric_min}") unless text_answer.to_f >= question.numeric_min.to_f
+  end
+
+  def numeric_max
+    errors.add(:text_answer, "is above maximum value of #{question.numeric_max}") unless text_answer.to_f <= question.numeric_max.to_f
+  end
 
   # Because we always want to render onto the page a :text_answer,
   # but we use validates_date helper on :date_answer,
