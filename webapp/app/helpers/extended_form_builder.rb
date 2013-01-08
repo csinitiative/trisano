@@ -400,7 +400,7 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
       radio_buttons.collect do |radio_button|
         <<-JS
             $('#{radio_button[:id]}').observe('click', function() {
-              $('#{id}').writeAttribute('value', '#{escape_javascript(radio_button[:code])}')
+              $('#{id}').writeAttribute('value', '#{escape_javascript(radio_button[:code].to_s)}')
             });
         JS
       end.join
@@ -434,8 +434,8 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     @template.on_loaded_or_eval do
       script = "$('#{id}').observe('change', function() {\n"
       options.each do |option|
-        script << "  if (this.value == '#{escape_javascript(option[:value])}') { "
-        script << "$('#{hidden_field}').writeAttribute('value', '#{escape_javascript(option[:code])}') }\n"
+        script << "  if (this.value == '#{escape_javascript(option[:value].to_s)}') { "
+        script << "$('#{hidden_field}').writeAttribute('value', '#{escape_javascript(option[:code].to_s)}') }\n"
       end
       script << "});"
       script
