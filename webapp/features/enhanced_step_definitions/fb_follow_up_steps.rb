@@ -60,6 +60,7 @@ Then /^I should see all of the core follow up questions$/ do
   html_source = @browser.get_html_source
   core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
   core_fields.each do |core_field|
+    next if skip_core_field?(core_field, html_source)
     key = core_field.key
     key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
     html_source.include?("#{key} follow up?").should be_true, "Expected to see '#{key} follow up?'"
@@ -70,6 +71,7 @@ When /^I answer all core follow up questions$/ do
   html_source = @browser.get_html_source
   core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
   core_fields.each do |core_field|
+    next if skip_core_field?(core_field, html_source)
     key = core_field.key
     key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
     answer_investigator_question(@browser, "#{key} follow up?", "#{key} answer", html_source)
@@ -83,6 +85,7 @@ Then /^I should see all follow up answers$/ do
   html_source = @browser.get_html_source
   core_fields = CoreField.default_follow_up_core_fields_for(@form.event_type)
   core_fields.each do |core_field|
+    next if skip_core_field?(core_field, html_source)
     key = core_field.key
     key.gsub!("morbidity_and_assessment_event", @event.type.underscore)
     raise "Could not find #{key} answer" if html_source.include?("#{key} answer") == false

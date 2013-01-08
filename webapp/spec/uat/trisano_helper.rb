@@ -1070,4 +1070,10 @@ module TrisanoHelper
     index_end = source.index('</span>', index_start)
     source[index_start...index_end].strip
   end
+
+  def skip_core_field?(core_field, html_source)
+    # When the EE Outbreak plugin is installed the outbreak name field is hidden and does not allow use of 
+    # traditional follow ups. Skip this core field in this case.
+    @ee_outbreak_plugin_installed ||= core_field.key.include?("outbreak_name") and html_source.include?("href=\"/trisano/outbreak_events\"")
+  end
 end
