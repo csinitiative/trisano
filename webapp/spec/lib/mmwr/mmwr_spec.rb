@@ -198,9 +198,16 @@ describe Mmwr do
     it 'should return comparison value of weeks if years are equal' do
       (Mmwr.week(14) <=> Mmwr.week(2)).should == 1
     end
+
+    it 'should correctly compare dates spanning over two years' do
+      start_mmwr = Mmwr.new(Date.parse("2013-01-02") - 7)
+      end_mmwr = Mmwr.new(Date.parse("2013-01-02"))
+      (end_mmwr <=> start_mmwr).should == 1
+    end
   end
 
   describe '#succ' do
+
     it 'should increment return the next mmwr week' do
       mmwr = Mmwr.week(14, :for_year => 2009).succ
       mmwr.mmwr_week.should == 15

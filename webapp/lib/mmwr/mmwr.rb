@@ -33,7 +33,6 @@ class Mmwr
       t = Time.now
       @epi_date = Date.new(t.year, t.month, t.day)
     when 1
-      # could be a Hash or a DateTime
       arg0 = args[0]
       if !arg0.is_a?(Hash) && !arg0.is_a?(Date)
         raise ArgumentError, "Mmwr initialize only handles Hash or Date"
@@ -41,14 +40,12 @@ class Mmwr
 
       if arg0.is_a?(Hash)
         @epi_dates = arg0
-
         if @epi_dates[epi_date_used]
           @epi_date = @epi_dates[epi_date_used]
         elsif
           t = Time.now
           @epi_date = Date.new(t.year, t.month, t.day)
         end
-
       end
 
       if arg0.is_a?(Date)
@@ -95,7 +92,6 @@ class Mmwr
   def mmwr_week_range
     mmwr_date_range = nil
     @ranges.sort.each do | k, range |
-      #puts "#{range.to_s} epi_date: #{@epi_date} in_range: #{range.in_range(@epi_date)}"
       if range.in_range(@epi_date)
         mmwr_date_range = range
       end
@@ -120,13 +116,7 @@ class Mmwr
   end
 
   def succ
-    return Mmwr.new(mmwr_week_range.end_date + 1)
-    week_candidate = mmwr_week + 1
-    if @ranges[week_candidate]
-      Mmwr.week week_candidate
-    else
-      Mmwr.week(1, :for_year => mmwr_year + 1)
-    end
+    Mmwr.new(mmwr_week_range.end_date + 1)
   end
 
   private
@@ -141,22 +131,22 @@ class Mmwr
     count = 0
 
     if first_mmwr_week == :first_week
-      sunday = first_day_of_year - first_day_of_year.wday
-      saturday = sunday + 6
+      sunday = first_day_of_year - first_day_of_year.wday.days
+      saturday = sunday + 6.days
       count += 1
     elsif first_mmwr_week == :second_week
-      sunday = (first_day_of_year - first_day_of_year.wday) + 7
-      saturday = sunday + 6
+      sunday = (first_day_of_year - first_day_of_year.wday.days) + 7.days
+      saturday = sunday + 6.days
       count += 1
     end
 
     until saturday >= Date.new(first_day_of_year.year, 12, 31)
-      sunday += 7
-      saturday += 7
+      sunday += 7.days
+      saturday += 7.days
       count += 1
     end
 
-    return count
+    count
   end
 
   # Returns a symbol indicating whether the MMWR week starts the first week
@@ -172,11 +162,7 @@ class Mmwr
       raise ArgumentError, "This method takes 0 or 1 arguments."
     end
 
-    if year.wday <= 3
-      return :first_week
-    else
-      return :second_week
-    end
+    year.wday <= 3 ? :first_week : :second_week
   end
 
   # Creates a DateRange for each MMWR for the year.
@@ -188,32 +174,32 @@ class Mmwr
     sunday = nil
     saturday = nil
     if first_mmwr_week == :first_week
-      sunday = first_day_of_year - first_day_of_year.wday
-      saturday = sunday + 6
-      date_ranges[1] = MmwrDateRange.new(sunday.year, "1", sunday, saturday)
+      sunday = first_day_of_year - first_day_of_year.wday.days
+      saturday = sunday + 6.days
+      date_ranges[1] = MmwrDateRange.new(saturday.year, "1", sunday, saturday)
     elsif first_mmwr_week == :second_week
       date_ranges[0] = last_mmwr_week_previous_year
-      sunday = (first_day_of_year - first_day_of_year.wday) + 7
-      saturday = sunday + 6
+      sunday = (first_day_of_year - first_day_of_year.wday.days) + 7.days
+      saturday = sunday + 6.days
       date_ranges[1] = MmwrDateRange.new(sunday.year, "1", sunday, saturday)
     end
 
     count = 1
     until saturday >= Date.new(first_day_of_year.year, 12, 31)
-      sunday += 7
-      saturday += 7
+      sunday += 7.days
+      saturday += 7.days
       count += 1
       date_ranges[count] = MmwrDateRange.new(sunday.year, count, sunday, saturday)
     end
 
-    return date_ranges
+    date_ranges
   end
 
   # Returns a MmwrDateRange for the last week of the previous year
   def last_mmwr_week_previous_year
     prev_year = DateTime.new(@epi_date.year - 1, 12, 31)
-    sunday = prev_year - prev_year.wday
-    MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6)
+    sunday = prev_year - prev_year.wday.days
+    MmwrDateRange.new(prev_year.year, mmwr_weeks(prev_year), sunday, sunday + 6.days)
   end
 
   private
@@ -224,7 +210,6 @@ class Mmwr
 
 end
 
-# Contains details on MMWR Week.
 class MmwrDateRange
   attr_accessor :mmwr_year, :mmwr_week, :start_date, :end_date
   def initialize(mmwr_year, mmwr_week, start_date, end_date)
@@ -234,13 +219,8 @@ class MmwrDateRange
     @end_date = end_date
   end
 
-  # Checks if provided date is in range of start_date and end_date.
   def in_range(calc_date)
-    if calc_date >= start_date && calc_date <= end_date
-      return true
-    else
-      return false
-    end
+    calc_date >= start_date and calc_date <= end_date
   end
 
   def to_s

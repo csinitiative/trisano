@@ -73,7 +73,6 @@ describe CdcExport do
 
   def with_cdc_records(event = nil)
     event = event || create_cdc_event
-
     start_mmwr = Mmwr.new(Date.today - 7)
     end_mmwr = Mmwr.new
 
