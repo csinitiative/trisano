@@ -260,7 +260,7 @@ describe CdcExport do
 
         before do
           @event_date_calculation_test = create_cdc_event
-          @disease_onset_date = 10.days.ago.to_date
+          @disease_onset_date = 1.days.ago.to_date
           @event_date_calculation_test.disease_event.update_attributes(:disease_onset_date => @disease_onset_date)
          @event_date_calculation_test.save!
         end
@@ -343,8 +343,8 @@ describe CdcExport do
 
             context "and multiple lab test dates are present" do
               before do
-                @earliest_lab_test_date = 9.days.ago.to_date
-                @later_lab_test_date = 8.days.ago.to_date
+                @earliest_lab_test_date = 2.days.ago.to_date
+                @later_lab_test_date = 1.days.ago.to_date
                 lab = Factory(:lab)
                 lab.lab_results.first.update_attributes(:lab_test_date => @earliest_lab_test_date)
                 lab.lab_results << Factory(:lab_result, :lab_test_date => @later_lab_test_date)
