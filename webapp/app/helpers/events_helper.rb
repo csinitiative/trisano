@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -665,7 +665,7 @@ module EventsHelper
   def event_navigation(events)
     return nil if events.blank?
 
-    content_for(:javascript_includes) { javascript_include_tag 'events_nav' }
+    content_for(:javascript_includes) { javascript_include_tag 'trisano/trisano_events_nav' }
     partitioned_events = []
 
     ['ContactEvent', 'PlaceEvent', 'AssessmentEvent', 'MorbidityEvent'].each do |event_type|

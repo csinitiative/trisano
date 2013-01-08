@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -89,7 +89,7 @@ module DiseasesHelper
 
   def apply_to_diseases_javascript_content
     content_for :javascript_includes do
-      javascript_include_tag 'diseases'
+      javascript_include_tag 'trisano/trisano_diseases'
     end
   end
 
