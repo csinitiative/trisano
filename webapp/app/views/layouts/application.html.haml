@@ -30,26 +30,25 @@
     = stylesheet_link_tag 'tabview'
     = stylesheet_link_tag 'calendar/trisano/style'
 
-    = javascript_include_tag 'prototype', 'effects', 'dragdrop', 'controls'
-    = javascript_include_tag 'jquery/jquery-1.7.2.min', 'jquery/jquery-ui-1.8.20.custom.min', 'jquery/jquery.tmpl.min'
-    = javascript_include_tag 'jquery/jquery.metadata', 'jquery/jquery.tablesorter.custom', 'jquery/jquery.livequery'
+    = javascript_include_tag 'vendor/prototype/prototype', 'vendor/prototype/effects', 'vendor/prototype/dragdrop', 'vendor/prototype/controls'
+    = javascript_include_tag 'vendor/jquery/jquery-1.7.2.min', 'vendor/jquery/jquery-ui-1.8.20.custom.min', 'vendor/jquery/jquery.tmpl.min'
+    = javascript_include_tag 'vendor/jquery/jquery.metadata', 'vendor/jquery/jquery.tablesorter.custom', 'vendor/jquery/jquery.livequery'
     %script{:type => "text/javascript"}
       var $j = jQuery.noConflict();
 
-    = javascript_include_tag 'trisano_i18n'
+    = javascript_include_tag 'trisano/trisano_i18n'
     = translations_js
-    = javascript_include_tag 'application'
-    = javascript_include_tag 'trisano_layout'
-    = javascript_include_tag 'sniffer'
-    = javascript_include_tag 'yui/yahoo-dom-event'
-    = javascript_include_tag 'shortcut'
-    = javascript_include_tag 'keycode'
-    = javascript_include_tag 'keymap'
-    = javascript_include_tag 'element-beta-min'
-    = javascript_include_tag 'tabview-min'
-    = javascript_include_tag 'patch_inplaceeditor_1-8-1'
-    = javascript_include_tag 'trisano_ajax', 'trisano_lazy_load', 'trisano_form_watcher'
-    = javascript_include_tag 'sortable'
+    = javascript_include_tag 'trisano/trisano'
+    = javascript_include_tag 'trisano/trisano_layout'
+    = javascript_include_tag 'vendor/sniffer'
+    = javascript_include_tag 'vendor/yui/yahoo-dom-event'
+    = javascript_include_tag 'vendor/shortcut'
+    = javascript_include_tag 'vendor/keycode'
+    = javascript_include_tag 'trisano/trisano_keymap'
+    = javascript_include_tag 'vendor/element-beta-min'
+    = javascript_include_tag 'vendor/tabview-min'
+    = javascript_include_tag 'vendor/patch_inplaceeditor_1-8-1'
+    = javascript_include_tag 'trisano/trisano_ajax', 'trisano/trisano_lazy_load', 'trisano/trisano_form_watcher', 'trisano/trisano_sortable'
     - javascript_include_renderers.each do |js|
       = javascript_include_tag js[:path]
     = embedded_javascripts
@@ -71,7 +70,7 @@
         = "Trisano.Layout.toggleLogoMenu();"
       - dom_loaded_javascripts.each do |js|
         = js
-    = javascript_include_tag 'wz_tooltip'
+    = javascript_include_tag 'vendor/wz_tooltip'
     #head
       .container
         .horiz#logo-container

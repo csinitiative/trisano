@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008, 2009 TheCollaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013 The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
@@ -13,7 +13,7 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.#
+# along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 require 'csv'
 
