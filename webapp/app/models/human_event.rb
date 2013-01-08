@@ -486,14 +486,11 @@ class HumanEvent < Event
         associated_jurisdictions.create(:secondary_entity_id => id_to_add)
       end
 
-      if self.disease
-        applicable_forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-        self.add_forms(applicable_forms)
-      end
+      self.add_forms(self.available_forms) if self.can_receive_auto_assigned_forms?
 
       reload # Any existing references to this object won't see these changes without this
     end
-    return primary_changed
+    primary_changed
   end
 
   # transitions that are allowed to be rendered by this user

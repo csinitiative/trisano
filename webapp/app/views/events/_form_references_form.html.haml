@@ -1,6 +1,5 @@
 %div
   - form_tag(event_forms_path(@event, :return => edit_event_path(@event)), :method => "post", :id => "forms_change_form") do
-    = hidden_field_tag "auto_assign_forms", true
     %p.message
     %p=t 'forms_change_form', :disease_name => @event.disease_event.disease.disease_name
     %hr
@@ -21,27 +20,27 @@
     %div{:id => "forms_available"}
       %h3
         =t 'auto_add_to_event', :disease_name => @event.disease_event.disease.disease_name
-      - if @event.available_forms.empty?
+      - if session[:available_forms].empty?
         %p
           %em=t 'none'
       - else
         %ul
-          - for form in @event.available_forms
+          - for form in session[:available_forms]
             %li
               = form.name
     %hr
     %div{:id => "forms_common"}
       %h3
         =t 'common_form_references'
-      - if @event.common_forms.empty?
+      - if session[:common_forms].empty?
         %p
           %em=t 'none'
       - else
         %ul
-          - for form in @event.common_forms
+          - for form in session[:common_forms]
             %li
               = form.name
     %hr
     %div
-      = submit_tag "Change Forms", :id => "save_forms_button", :disabled => @event.available_forms.empty?
+      = submit_tag "Remove Forms", :id => "save_forms_button", :disabled => true
       = submit_tag "Cancel", :id => "cancel_forms_button"

@@ -6,6 +6,7 @@ Feature: Managing forms on events
         | disease_name  |
         | Anthrax       |
         | AIDS          |
+    And a morbidity event live form for Anthrax in unassigned jurisdiction exists
     And a morbidity event live form for AIDS in unassigned jurisdiction exists
     And a basic morbidity event in unassigned jurisdiction with disease Anthrax exists
     When I navigate to the morbidity event edit page

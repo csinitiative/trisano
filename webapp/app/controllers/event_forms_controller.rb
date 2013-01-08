@@ -28,8 +28,6 @@ class EventFormsController < ApplicationController
       render :partial => "events/permission_denied", :locals => { :reason => t("no_add_remove_forms_privs"), :event => nil }, :layout => true, :status => 403 and return
     end
 
-    event_type = @event.class.name.underscore
-
     @forms_in_use = @event.form_references.collect { |ref| ref.form }
     @forms_available = @event.available_forms - @forms_in_use
   end
@@ -41,7 +39,6 @@ class EventFormsController < ApplicationController
 
     forms_to_remove = params[:forms_to_remove] || []
     forms_to_add = params[:forms_to_add] || []
-    forms_to_add = @event.available_forms if params[:auto_assign_forms]
     if forms_to_add.empty? and forms_to_remove.empty?
       flash[:error] = t("no_forms_were_selected")
     else

@@ -21,8 +21,8 @@ class Event < ActiveRecord::Base
   include EventSearch
   include Export::Cdc::EventRules
 
-  before_update :attempt_form_assignment_on_update
-  after_create :attempt_form_assignment_on_create
+  after_create :auto_assign_forms_on_create
+  before_update :auto_assign_forms_on_update, :if => :disease_changed?
 
   if RAILS_ENV == "production"
     attr_protected :workflow_state
@@ -463,32 +463,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def attempt_form_assignment_on_create
-    return unless can_receive_auto_assigned_forms?
-    create_form_references
-    if (self.form_references.size > 0)
-      self.form_references.each do |ref|
-        ref.event_id = self.id
-        ref.save
-      end
-    end
-    self.update_attribute(:undergone_form_assignment, true)
-  end
-
-  def attempt_form_assignment_on_update
-    return unless can_receive_auto_assigned_forms?
-    create_form_references
-    self.update_attribute(:undergone_form_assignment, true)
-  end
-
-  def can_receive_auto_assigned_forms?
-    if self.undergone_form_assignment || self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
-      return false
-    else
-      return true
-    end
-  end
-
   def events_quick_list(reload=false)
     if reload or @events_quick_list.nil?
       @events_quick_list = self.class.find_by_sql([<<-SQL, self.id, self.id])
@@ -645,8 +619,30 @@ class Event < ActiveRecord::Base
     self.disease_event and self.disease_event.disease_id_changed?
   end
 
+  def can_receive_auto_assigned_forms?
+    self.disease_event and self.disease_event.disease_id and self.jurisdiction
+  end
+
+  def auto_assign_forms_on_create
+    return unless can_receive_auto_assigned_forms?
+    create_form_references
+    if (self.form_references.size > 0)
+      self.form_references.each do |ref|
+        ref.event_id = self.id
+        ref.save
+      end
+    end
+    self.update_attribute(:undergone_form_assignment, true)
+  end
+
+  def auto_assign_forms_on_update
+    return unless can_receive_auto_assigned_forms?
+    add_forms(available_forms)
+    self.undergone_form_assignment = true
+  end
+
   def needs_forms_update?
-    self.available_forms.length > 0 or self.forms_to_remove.length > 0
+    self.forms_to_remove.length > 0
   end
 
   def forms_to_remove
@@ -655,11 +651,8 @@ class Event < ActiveRecord::Base
     self.form_references.map(&:form).select {|f| !template_ids.include?(f.template_id) }
   end
 
-  def common_forms
-    return [] unless self.disease_event
-    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
-    template_ids = forms.map(&:template_id)
-    self.form_references.map(&:form).select {|f| template_ids.include?(f.template_id) }
+  def forms_in_use
+    self.form_references.map(&:form)
   end
 
   def available_forms

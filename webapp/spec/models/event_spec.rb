@@ -1188,9 +1188,9 @@ describe MorbidityEvent do
         @event.disease_event.disease_id = @disease_id
         @event.save!
         @event.reload
-        @event.form_references.size.should == 0 # Changing disease doesn't trigger forms assignment
+        @event.form_references.size.should == 1
         @event.route_to_jurisdiction(@jurisdiction_id)
-        @event.form_references.size.should == 1 # Pick up the new form through routing
+        @event.form_references.size.should == 1
       end
     end
   end

@@ -53,7 +53,7 @@ Trisano.Layout = {
     });
 
     $j("#save_forms_button").click(function(event){
-      if (!window.confirm("Are you sure you want to change the forms? Removing a form will also remove all answers to questions on that form.")) {
+      if (!window.confirm("Are you sure you want to remove the forms? Removing a form will also remove all answers to questions on that form.")) {
         event.stopPropagation();
         event.preventDefault();
       }
