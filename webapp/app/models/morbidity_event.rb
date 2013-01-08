@@ -288,6 +288,6 @@ class MorbidityEvent < HumanEvent
   def disease_onset_date_valid?
     return true if first_reported_PH_date.blank?
     return true if disease_event.try(:disease_onset_date).blank?
-    return disease_event.disease_onset_date <= first_reported_PH_date
+    disease_event.disease_onset_date <= first_reported_PH_date
   end
 end

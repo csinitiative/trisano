@@ -391,7 +391,9 @@ describe HumanEvent, 'adding staged messages' do
     it 'should set comments from PID-11.6, OBR-3, SPM-2 and OBX-8' do
       with_human_event do |event|
         event.add_labs_from_staged_message StagedMessage.new(:hl7_message => HL7MESSAGES[:realm_cj_abnormal_flags])
-        event.labs.first.lab_results.first.comment.should == "Country: USA, Specimen ID: 23456, Abnormal flags: H"
+        event.labs.first.lab_results.first.comment.include?("Country: USA")
+        event.labs.first.lab_results.first.comment.include?("Specimen ID: 23456")
+        event.labs.first.lab_results.first.comment.include?("Abnormal flags: H")
       end
     end
 
