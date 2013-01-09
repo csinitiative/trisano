@@ -102,13 +102,11 @@ class MorbidityEventsController < EventsController
 
     # Do this assign and a save rather than update_attributes in order to get the contacts array (at least) properly built
     @event.update_from_params(params[:morbidity_event])
-    @disease_changed = @event.disease_changed?
-
-    previous_forms = Form.get_published_investigation_forms(@event.disease.disease_id_was, @event.jurisdiction.secondary_entity_id, @event.class.name.underscore)
-    forms = Form.get_published_investigation_forms(@event.disease.disease_id, @event.jurisdiction.secondary_entity_id, @event.class.name.underscore)
-    session[:common_forms] = forms.select {|f| previous_forms.map(&:id).include?(f.id) }
-    session[:available_forms] = @event.available_forms
-
+    @disease_changed = (@event.disease_changed? and @event.needs_forms_update?)
+    if @disease_changed
+      session[:common_forms] = @event.common_forms
+      session[:available_forms] = @event.available_forms
+    end
     # Assume that "save & exits" represent a 'significant' update
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 

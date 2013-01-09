@@ -642,13 +642,18 @@ class Event < ActiveRecord::Base
   end
 
   def needs_forms_update?
-    self.forms_to_remove.length > 0
+    self.available_forms.length > 0 or  self.forms_to_remove.length > 0
   end
 
   def forms_to_remove
     forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
     template_ids = forms.map(&:template_id)
     self.form_references.map(&:form).select {|f| !template_ids.include?(f.template_id) }
+  end
+
+  def common_forms
+    forms = Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    forms.select {|f| self.forms_in_use.map(&:id).include?(f.id) }
   end
 
   def forms_in_use

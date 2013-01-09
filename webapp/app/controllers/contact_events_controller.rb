@@ -85,12 +85,11 @@ class ContactEventsController < EventsController
     @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
     respond_to do |format|
       @event.attributes = params[:contact_event]
-      @disease_changed = @event.disease_changed?
-      previous_forms = Form.get_published_investigation_forms(@event.disease.disease_id_was, @event.jurisdiction.secondary_entity_id, @event.class.name.underscore)
-      forms = Form.get_published_investigation_forms(@event.disease.disease_id, @event.jurisdiction.secondary_entity_id, @event.class.name.underscore)
-      session[:common_forms] = forms.select {|f| previous_forms.map(&:id).include?(f.id) }
-      session[:available_forms] = @event.available_forms
-
+      @disease_changed = (@event.disease_changed? and @event.needs_forms_update?)
+      if @disease_changed
+        session[:common_forms] = @event.common_forms
+        session[:available_forms] = @event.available_forms
+      end
       if @event.save
         redis.delete_matched("views/events/#{@event.parent_id}/edit/contacts_tab*")
         redis.delete_matched("views/events/#{@event.parent_id}/show/contacts_tab*")

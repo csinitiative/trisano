@@ -53,12 +53,14 @@ describe MorbidityEvent do
     event.create_disease_event(:disease_id => disease.id)
 
     event.available_forms.length.should == 1
+    event.forms_to_remove.length.should == 0
     event.should be_needs_forms_update
 
     event.save!
 
     event.available_forms.length.should == 0
-    event.should be_needs_forms_update
+    event.forms_to_remove.length.should == 0
+    event.should_not be_needs_forms_update
   end
 
   it 'should correctly detect the invalid forms' do
