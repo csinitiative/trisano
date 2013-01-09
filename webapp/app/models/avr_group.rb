@@ -22,7 +22,7 @@ class AvrGroup < ActiveRecord::Base
   validate :name_is_not_trisano
 
   def name_is_not_trisano
-    errors.add(:name, "cannot include 'TriSano'") if name.include?("TriSano")
+    errors.add(:name, "cannot be 'TriSano'") if name == "TriSano"
   end
 
 
