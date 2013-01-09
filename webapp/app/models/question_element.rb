@@ -193,7 +193,7 @@ class QuestionElement < FormElement
 
     existing_question_elements = FormElement.find(:all, :conditions => conditions)
 
-    if (existing_question_elements.detect { |element| element.question.short_name == self.question.short_name })
+    if (existing_question_elements.detect { |element| element.question.short_name.downcase == self.question.short_name.downcase })
       self.errors.add(:base, :short_name_taken)
     end
   end
