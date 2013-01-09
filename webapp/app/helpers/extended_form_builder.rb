@@ -294,7 +294,10 @@ class ExtendedFormBuilder < ActionView::Helpers::FormBuilder
     if core_field
       core_field
     else
-      Rails.logger.error "***************\nMissing Core Field:\nattribute: #{attribute}\ncore_path: #{core_path}\n*****************"
+      # Nothing bad here, just means that no core field has been defined for this attribute
+      # This is often the case with entities such as places or people
+      # or telephone numbers. We don't really want core fields attached to these items
+      # because they aren't directly releated to events usually.
       CoreField::MissingCoreField.new(cp.to_s, true)
     end
   end
