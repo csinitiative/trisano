@@ -159,7 +159,7 @@ describe QuestionElement do
     end
 
 
-    it 'should ensure that the short name is unique across the form' do
+    it 'should ensure that the short name is case insensitively unique across the form' do
       question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
           :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
@@ -169,7 +169,7 @@ describe QuestionElement do
 
       second_question_element = QuestionElement.new({
           :parent_element_id => @section_element.id,
-          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "fishy"}
+          :question_attributes => {:question_text => "Did you eat the fish?", :data_type => "single_line_text", :short_name => "Fishy"}
         })
 
       second_question_element.save_and_add_to_form.should be_nil
@@ -223,22 +223,22 @@ describe QuestionElement do
       @question_element.destroy_and_validate.should be_nil
     end
 
-    it 'should succeed if the short name is still unique after the edit' do
+    it 'should succeed if the short name is still case insensitively unique after the edit' do
       @question_element.update_and_validate(:question_attributes => {
           :question_text => "Did you eat the fish?",
           :data_type => "single_line_text",
-          :short_name => "fishy_still_unique"}
+          :short_name => "Fishy_Still_Unique"}
       ).should_not be_nil
 
-      @question_element.question.short_name.should eql("fishy_still_unique")
+      @question_element.question.short_name.should eql("Fishy_Still_Unique")
       @question_element.errors.should be_empty
     end
 
-    it 'should fail if the new short name is not unique to the form' do
+    it 'should fail if the new short name is not case insensitively unique to the form' do
       @question_element.update_and_validate(:question_attributes => {
           :question_text => "Did you eat the fish?",
           :data_type => "single_line_text",
-          :short_name => "sure"}
+          :short_name => "Sure"}
       ).should be_nil
 
       @question_element.errors.on(:base).should == "The short name entered is already in use on this form. Please choose another."
@@ -744,8 +744,8 @@ describe QuestionElement do
       end.should raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "checks short name uniqueness in nested questions" do
-      @nested_question_element.question.update_attributes!(:short_name => @form_question.question.short_name)
+    it "checks short name case insensitively unique in nested questions" do
+      @nested_question_element.question.update_attributes!(:short_name => @form_question.question.short_name.upcase)
       lambda do
         @form_question.parent.copy_from_library(@root_question_element)
       end.should raise_error(ActiveRecord::RecordInvalid)
