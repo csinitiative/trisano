@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
-#!/usr/bin/env ruby
+
 unless $0 =~ /runner/
   system("#{File.dirname(__FILE__)}/runner", *ARGV.unshift(__FILE__))
   exit 0
