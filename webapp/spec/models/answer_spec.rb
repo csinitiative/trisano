@@ -121,7 +121,7 @@ describe Answer do
         @answer.text_answer = "1,200"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
         
 
@@ -129,19 +129,19 @@ describe Answer do
         @answer.text_answer = "1d2"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
       it "does not allow alpha characters at the begining" do
         @answer.text_answer = "d12"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
       it "does not allow alpha characters at the end" do
         @answer.text_answer = "12d"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
 
 
@@ -151,21 +151,50 @@ describe Answer do
         @answer.text_answer = "12!"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
       it "does not allow special characters at the middle" do
         @answer.text_answer = "1!2"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
       it "does not allow special characters at the begining" do
         @answer.text_answer = "!12"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "accepts only integers (0-9) and one optional decimal point"
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
       end
 
+
+      it "allows negative numbers" do
+        @answer.text_answer = "-4.1"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "allows negative numbers" do
+        @answer.text_answer = "-4"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "doesn't allow negative signs anywhere but the begining" do
+        @answer.text_answer = "4-"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
+      end
+      it "doesn't allow negative signs anywhere but the begining" do
+        @answer.text_answer = "4-.0"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
+      end
+      it "doesn't allow negative signs anywhere but the begining" do
+        @answer.text_answer = "4.0-"
+        @answer.save.should be_false
+        @answer.errors.count.should be_equal(1)
+        @answer.errors[:text_answer].to_s.should == "accepts only positive or negative integers (0-9) and one optional decimal point"
+      end
 
 
 

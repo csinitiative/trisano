@@ -41,7 +41,7 @@ class Answer < ActiveRecord::Base
   validates_length_of   :text_answer, :maximum => 2000, :allow_blank => true
   validates_presence_of :text_answer, :if => :required, :message => "^There are unanswered required questions."
   validates_format_of :text_answer, :with => regexp(:phone), :allow_blank => true, :if => :is_phone
-  validates_format_of :text_answer, :with => regexp(:numeric), :allow_blank => true, :if => :numeric_question, :message => "accepts only integers (0-9) and one optional decimal point"
+  validates_format_of :text_answer, :with => regexp(:numeric), :allow_blank => true, :if => :numeric_question, :message => "accepts only positive or negative integers (0-9) and one optional decimal point"
   validate :numeric_min, :if => :numeric_min_set
   validate :numeric_max, :if => :numeric_max_set
   validates_date :date_answer, :if => :is_date, :allow_blank => true
