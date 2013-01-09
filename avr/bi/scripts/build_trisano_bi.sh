@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Copyright (C) 2007, 2008, 2009, 2010, 2011 The Collaborative Software Foundation
+# Copyright (C) 2007, 2008, 2009, 2010, 2011, 2012, 2013
+# The Collaborative Software Foundation
 #
 # This file is part of TriSano.
 #
