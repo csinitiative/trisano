@@ -101,6 +101,13 @@ describe Answer do
       before do
         @answer.question.update_attribute(:data_type, "numeric")  
       end
+
+      it "allows blanks" do
+        @answer.text_answer = ""
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+
       it "allows decimal points in the begining" do
         @answer.text_answer = ".12"
         @answer.save.should be_true
@@ -203,28 +210,28 @@ describe Answer do
         @answer.text_answer = "2"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3"
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3 for the question ''"
       end
       it "honors numeric_min when set with a integer" do
         @answer.question.update_attribute(:numeric_min, "3")
         @answer.text_answer = ".2"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3"
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3 for the question ''"
       end
       it "honors numeric_min when set with a float" do
         @answer.question.update_attribute(:numeric_min, "3.1")
         @answer.text_answer = "2"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1"
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1 for the question ''"
       end
       it "honors numeric_min when answer is set with a float" do
         @answer.question.update_attribute(:numeric_min, "3.1")
         @answer.text_answer = "2.1"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1"
+        @answer.errors[:text_answer].to_s.should == "is below minimum value of 3.1 for the question ''"
       end
       it "honors numeric_min when set with an equal value" do
         @answer.question.update_attribute(:numeric_min, "3.1")
@@ -235,6 +242,14 @@ describe Answer do
       it "honors numeric_min when set with an equal value" do
         @answer.question.update_attribute(:numeric_min, "3")
         @answer.text_answer = "3"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+
+      it "works with negative numbers" do
+        @answer.question.update_attribute(:numeric_min, "-500")
+        @answer.question.update_attribute(:numeric_max, "1000")
+        @answer.text_answer = "-400"
         @answer.save.should be_true
         @answer.errors.count.should be_equal(0)
       end
@@ -245,28 +260,28 @@ describe Answer do
         @answer.text_answer = "4."
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3"
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3 for the question ''"
       end
       it "honors numeric_max when set with a integer" do
         @answer.question.update_attribute(:numeric_max, "3")
         @answer.text_answer = "4.1"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3"
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3 for the question ''"
       end
       it "honors numeric_max when set with a float" do
         @answer.question.update_attribute(:numeric_max, "3.1")
         @answer.text_answer = "4"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1"
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1 for the question ''"
       end
       it "honors numeric_max when answer is set with a float" do
         @answer.question.update_attribute(:numeric_max, "3.1")
         @answer.text_answer = "4.1"
         @answer.save.should be_false
         @answer.errors.count.should be_equal(1)
-        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1"
+        @answer.errors[:text_answer].to_s.should == "is above maximum value of 3.1 for the question ''"
       end
       it "honors numeric_max when set with an equal value" do
         @answer.question.update_attribute(:numeric_max, "3.1")
@@ -277,6 +292,21 @@ describe Answer do
       it "honors numeric_max when set with an equal value" do
         @answer.question.update_attribute(:numeric_max, "3")
         @answer.text_answer = "3"
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+
+
+
+      it "allows blanks when a maximum is set" do
+        @answer.question.update_attribute(:numeric_max, "-3")
+        @answer.text_answer = ""
+        @answer.save.should be_true
+        @answer.errors.count.should be_equal(0)
+      end
+      it "allows blanks when a minimum is set" do
+        @answer.question.update_attribute(:numeric_min, "3")
+        @answer.text_answer = ""
         @answer.save.should be_true
         @answer.errors.count.should be_equal(0)
       end

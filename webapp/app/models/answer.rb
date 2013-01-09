@@ -59,11 +59,15 @@ class Answer < ActiveRecord::Base
   end
 
   def numeric_min
-    errors.add(:text_answer, "is below minimum value of #{question.numeric_min}") unless text_answer.to_f >= question.numeric_min.to_f
+    if text_answer.present?
+      errors.add(:text_answer, "is below minimum value of #{question.numeric_min} for the question '#{question.question_text}'") unless text_answer.to_f >= question.numeric_min.to_f
+    end
   end
 
   def numeric_max
-    errors.add(:text_answer, "is above maximum value of #{question.numeric_max}") unless text_answer.to_f <= question.numeric_max.to_f
+    if text_answer.present?
+      errors.add(:text_answer, "is above maximum value of #{question.numeric_max} for the question '#{question.question_text}'") unless text_answer.to_f <= question.numeric_max.to_f
+    end
   end
 
   # Because we always want to render onto the page a :text_answer,
