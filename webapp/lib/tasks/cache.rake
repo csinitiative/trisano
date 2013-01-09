@@ -45,7 +45,10 @@ namespace :cache do
 end
 
 def request_url(url)
-  `wget #{url} --max-redirect=0 --no-check-certificate 2>&1`
+  puts "Retrieving #{url}"
+  execute_with_benchmark do
+    `wget #{url} --max-redirect=0 --no-check-certificate`
+  end
   puts "ERROR retrieving #{url}" if $?.exitstatus != 0
 end
 

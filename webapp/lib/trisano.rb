@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 module Trisano
-  VERSION = %w(4 0 0 RC1).freeze
+  VERSION = %w(4 0 0 RC2).freeze
 end
 
 require 'trisano/application'
