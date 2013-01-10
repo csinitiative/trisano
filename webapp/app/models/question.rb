@@ -43,9 +43,16 @@ class Question < ActiveRecord::Base
   validates_presence_of :core_data_attr, :if => :core_data
   validates_length_of :question_text, :maximum => 1000, :allow_blank => true
   validates_length_of :help_text, :maximum => 1000, :allow_blank => true
+  validate :numeric_range, :if => :numeric?
 
   before_validation :sanitize_short_name
   before_update :short_name_filter
+
+  def numeric_range
+    if min_set? && max_set?
+      errors.add(:numeric_min, "must be less than numeric max") if numeric_min.to_f >= numeric_max.to_f
+    end
+  end
 
   def data_type
     read_attribute("data_type").to_sym unless read_attribute("data_type").blank?

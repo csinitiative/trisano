@@ -117,6 +117,36 @@ describe Question do
     @question.is_multi_valued?.should be_false
   end
 
+  it 'numeric min cannot be greater than numeric max' do
+    @question.data_type = "numeric"
+    @question.numeric_min = "50"
+    @question.numeric_max = "5"
+    @question.save.should be_false
+    @question.errors.count.should be_equal(1)
+    @question.errors[:numeric_min].should == "must be less than numeric max"
+  end
+  it 'numeric min cannot be equal to numeric max' do
+    @question.data_type = "numeric"
+    @question.numeric_min = "50"
+    @question.numeric_max = "50"
+    @question.save.should be_false
+    @question.errors.count.should be_equal(1)
+    @question.errors[:numeric_min].should == "must be less than numeric max"
+  end
+  it "allows only minimum of the range to be set" do
+    @question.data_type = "numeric"
+    @question.numeric_min = "50"
+    @question.save.should be_true
+    @question.errors.count.should be_equal(0)
+  end
+  it "allows only maximum of the range to be set" do
+    @question.data_type = "numeric"
+    @question.numeric_max = "50"
+    @question.save.should be_true
+    @question.errors.count.should be_equal(0)
+  end
+
+
   it 'should strip extra whitespace from short names' do
     @question.short_name = "   shorty    "
     @question.save!
