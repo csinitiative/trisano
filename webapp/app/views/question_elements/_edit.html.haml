@@ -19,6 +19,8 @@
 
   - remote_form_for(question_element, {}, :loading => "$('edit_question_submit_#{@question_element.id}').disabled = 'disabled';" ) do |f|
     = render :partial => 'form', :locals => { :f => f, :export_columns => @export_columns }
+    - f.fields_for(:question)  do |q|
+      = render :partial => 'numeric_range', :locals => { :f => q, :question => @question_element.question }
     %p
       = f.submit(t("update"), :id => "edit_question_submit_#{@question_element.id}")
       &nbsp;&nbsp;

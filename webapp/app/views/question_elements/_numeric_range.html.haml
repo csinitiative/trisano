@@ -1,0 +1,13 @@
+-# I don't like this either....
+-if question.data_type.to_s == "numeric"
+  %div{:class => "numeric-questions"}
+    =f.label :numeric_min
+    =f.text_field :numeric_min
+    =f.label :numeric_max
+    =f.text_field :numeric_max
+-else
+  %div{:class => "numeric-questions", :style => "display:none"}
+    =f.label :numeric_min
+    =f.text_field :numeric_min
+    =f.label :numeric_max
+    =f.text_field :numeric_max

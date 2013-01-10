@@ -48,11 +48,3 @@
   %p
     = q.label(:help_text)
     = q.text_area :help_text, :rows => 10
-
-  -if q.object.data_type.to_s == "numeric"
-    %p
-      =q.label :numeric_min
-      =q.text_field :numeric_min
-
-      =q.label :numeric_max
-      =q.text_field :numeric_max

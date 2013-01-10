@@ -31,12 +31,9 @@
         =q.label :data_type
         =q.select(:data_type, options_for_question_data_type, {:include_blank => true}, {:onchange => "Trisano.FormBuilder.showRelevantQuestionDataTypeFields(this);"})
 
-        %div{:class => "numeric-questions", :style => "display:none"}
-          =q.label :numeric_min
-          =q.text_field :numeric_min
 
-          =q.label :numeric_max
-          =q.text_field :numeric_max
+        = render :partial => 'numeric_range', :locals => { :f => q, :question => @question_element.question }
+
       %p
         = f.submit(t("create"), :id => "create_question_submit_#{@reference_element.id}")
         &nbsp;&nbsp;
