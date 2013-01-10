@@ -81,8 +81,6 @@ class ContactEventsController < EventsController
 
     go_back = params.delete(:return)
 
-    # Assume that "save & exits" represent a 'significant' update
-    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
     respond_to do |format|
       @event.attributes = params[:contact_event]
       @disease_changed = (@event.disease_changed? and @event.needs_forms_update?)
@@ -94,6 +92,9 @@ class ContactEventsController < EventsController
         redis.delete_matched("views/events/#{@event.parent_id}/edit/contacts_tab*")
         redis.delete_matched("views/events/#{@event.parent_id}/show/contacts_tab*")
         redis.delete_matched("views/events/#{@event.parent_id}/showedit/contacts_tab*")
+
+        # Assume that "save & exits" represent a 'significant' update
+        @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
         flash[:notice] = t("contact_event_successfully_updated")
         format.html do

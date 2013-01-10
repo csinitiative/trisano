@@ -56,8 +56,6 @@ class MorbidityEventsController < EventsController
       components = params[:event_components]
       org_event.copy_event(@event, components || []) # Copy instead of clone to make sure contacts become morbs
 
-      # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
-      @event.add_note(t("system_notes.event_derived_from", :locale => I18n.default_locale, :link => ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) ))) if components && !components.empty?
     elsif params[:from_person]
       person = PersonEntity.find(params[:from_person])
       @event.copy_from_person(person)
@@ -70,6 +68,10 @@ class MorbidityEventsController < EventsController
 
     respond_to do |format|
       if @event.save
+
+        # A little DEBT:  Better to add a column to events that points at the 'parent,' and generate this reference in the view
+        @event.add_note(t("system_notes.event_derived_from", :locale => I18n.default_locale, :link => ActionView::Base.new.link_to("Event #{org_event.record_number}", cmr_path(org_event) ))) if components && !components.empty?
+
         # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
         Event.transaction do
           [@event, @event.contact_child_events].flatten.all? { |event| event.set_primary_entity_on_secondary_participations }
@@ -107,14 +109,15 @@ class MorbidityEventsController < EventsController
       session[:common_forms] = @event.common_forms
       session[:available_forms] = @event.available_forms
     end
-    # Assume that "save & exits" represent a 'significant' update
-    @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
     # Eager load answers that already exist so questions won't need to be retrieved 1-by-1
     # during validation on answers on the save
     @event.eager_load_answers
     respond_to do |format|
       if @event.save
+
+        # Assume that "save & exits" represent a 'significant' update
+        @event.add_note(I18n.translate("system_notes.event_edited", :locale => I18n.default_locale)) unless go_back
 
         # Debt:  There's gotta be a better place for this.  Doesn't work on after_save of events.
         Event.transaction do

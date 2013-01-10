@@ -294,7 +294,7 @@ class Event < ActiveRecord::Base
     options = note_type_and_options.extract_options!
     note_type = note_type_and_options.first || 'administrative'
     note = Note.new options.merge(:note => message, :note_type => note_type)
-    self.notes << note
+    self.notes << note # this will save the note
     note
   end
 
