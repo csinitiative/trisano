@@ -143,7 +143,7 @@ Feature: Form fields for repeating core sections.
     And     I save and continue
     Then    I should see "successfully updated"
 
-    And     I click and confirm the "Change Forms" button
+    And     I click the "Cancel" button
     Then    I should see "successfully updated"
     Then    I should see 1 instances of the repeater core field config questions
 
@@ -180,7 +180,7 @@ Feature: Form fields for repeating core sections.
     And     I should see 2 instances of answers to the repeating core field config questions
 
     When    I check the form for removal
-    And     I click and confirm the "Change Forms" button
+    And     I click and confirm the "Remove Forms" button
     Then    I should see "successfully updated"
     And     I should see 0 instances of the repeater core field config questions
     And     I should see 0 instances of answers to the repeating core field config questions
