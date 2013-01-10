@@ -143,6 +143,11 @@ module Capistrano::Helpers
       generate_site_config['answer']['phone'].should == 'some regex'
     end
 
+    it "sets the numeric format for form builder answers" do
+      set :form_builder_numeric, 'some numeric regex'
+      generate_site_config['answer']['numeric'].should == 'some numeric regex'
+    end
+
     it "turns the locale witching on" do
       set :locale_switching, true
       generate_site_config['locale']['allow_switching'].should == true

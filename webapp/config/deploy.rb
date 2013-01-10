@@ -74,6 +74,12 @@ namespace :deploy do
     put site_config.to_yaml, "#{release_path}/config/site_config.yml"
   end
 
+  task :refresh_site_config_yml, :roles => :app do
+    rails_env = fetch :rails_env, 'production'
+    site_config = { rails_env => generate_site_config }
+    put site_config.to_yaml, "#{current_path}/config/site_config.yml"
+  end
+
   desc <<-DESC
     Deploys a new, fresh install of the application. Assumes a running \
     application server and database server, but no previously deployed \
