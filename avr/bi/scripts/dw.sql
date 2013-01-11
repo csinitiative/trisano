@@ -1258,7 +1258,8 @@ SELECT
     upsert_date(hpart.admission_date) AS admission_date,
     upsert_date(hpart.discharge_date) AS discharge_date,
     hpart.medical_record_number,
-    hpart.hospital_record_number
+    hpart.hospital_record_number,
+    hstores.newhstore AS hospitalization_formbuilder
 FROM
     events
     JOIN participations p
@@ -1269,6 +1270,25 @@ FROM
         ON (hpart.participation_id = p.id)
 --    RIGHT JOIN events
 --        ON (p.event_id = events.id)
+    LEFT JOIN (
+        SELECT
+            a.event_id,
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
+                a.text_answer
+            ) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type IN ('HospitalsParticipation', 'Participation')
+        GROUP BY a.event_id
+    ) hstores
+        ON (hstores.event_id = events.id)
 WHERE
     p.type = 'HospitalizationFacility' AND
     events.deleted_at IS NULL
@@ -1328,7 +1348,8 @@ SELECT
     org.organism_name,
     org.snomed_id,
     org.snomed_code,
-    org.snomed_name
+    org.snomed_name,
+    hstores.newhstore AS labresults_formbuilder
 FROM
     lab_results lr
     LEFT JOIN staged_messages sm
@@ -1369,6 +1390,26 @@ FROM
 --        ON (c.id = pt.type_id AND c.deleted_at IS NULL)
     LEFT JOIN organisms org
         ON (org.id = lr.organism_id)
+    LEFT JOIN (
+        SELECT
+            a.repeater_form_object_id,
+            a.event_id,
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
+                a.text_answer
+            ) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type = 'LabResult'
+        GROUP BY a.repeater_form_object_id, a.event_id
+    ) hstores
+        ON (hstores.event_id = events.id)
 ;
 
 --ALTER TABLE dw_lab_results
