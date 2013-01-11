@@ -857,7 +857,8 @@ class HumanEvent < Event
       :first_name  => first_name,
       :person_type => 'clinician'
     }
-    person = Person.first :conditions => person_attributes
+    person = Person.first :conditions => ["entities.deleted_at IS NULL AND LOWER(people.last_name) = ? AND LOWER(people.first_name) = ? AND LOWER(people.person_type) = ?", last_name.downcase, first_name.downcase, "clinician" ],
+                          :include => :person_entity
     if person
       person_entity_id = person.person_entity.id
       @clinician = clinicians.to_a.find do |c|
