@@ -1423,7 +1423,8 @@ SELECT
     tgec.code_description AS treatment_given,
     upsert_date(pt.treatment_date) AS date_of_treatment,
     t.treatment_name,
-    pt.stop_treatment_date
+    pt.stop_treatment_date,
+    hstores.newhstore AS treatment_formbuilder
 FROM
     participations_treatments pt
     LEFT JOIN participations p
@@ -1434,6 +1435,25 @@ FROM
         ON (tgec.id = pt.treatment_given_yn_id AND tgec.deleted_at IS NULL)
     JOIN treatments t
         ON (t.id = pt.treatment_id)
+    LEFT JOIN (
+        SELECT
+            a.repeater_form_object_id,
+            trisano.hstoreagg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
+                a.text_answer
+            ) AS newhstore
+        FROM
+            forms f, form_elements fe, questions q, answers a
+        WHERE
+            fe.form_id = f.id AND
+            q.form_element_id = fe.id AND
+            a.question_id = q.id AND
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type = 'ParticipationsTreatment'
+        GROUP BY a.repeater_form_object_id
+    ) hstores
+        ON (hstores.repeater_form_object_id = pt.id);
 ;
 
 ALTER TABLE dw_events_treatments
