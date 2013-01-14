@@ -83,7 +83,7 @@ Rails::Initializer.run do |config|
   config.action_controller.session_store = :cookie_store
   config.action_controller.session = {
     :key => '_trisano_session',
-    :secret      => 'aec289bfea4950e50e37af2854f59c2a7a96c0a8d24ef218517b08a5790a272ae2b2ee0c2fe5aa18217a599b20b322c5596fd3983a42240aef4ce71a37102d41'
+    :secret => YAML.load(IO.read(Rails.root.join("config", "site_config.yml")))["base"]["secret_session_token"]
   }
 
   # Use the database for sessions instead of the cookie-based default,
@@ -112,6 +112,12 @@ Rails::Initializer.run do |config|
   # For datetime validation plugin to switch to U.S. format (month/day/year)
   # http://svn.viney.net.nz/things/rails/plugins/validates_date_time/README
   config.after_initialize do
+    session_token = config.action_controller.session[:secret]
+    if session_token.nil? or session_token == ""
+      puts "Please configure config/site_config.yml with a secret_session_token. You can generate one using 'rake secret'. Be sure to add it to the 'base' section of site_config.yml."
+      Kernel::exit
+    end
+
     require 'rails_inheritable_attributes_manager'
     require 'validates_timeliness_formats'
     require "active_record/errors"

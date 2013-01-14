@@ -148,6 +148,11 @@ module Capistrano::Helpers
       generate_site_config['answer']['numeric'].should == 'some numeric regex'
     end
 
+    it "sets the session secret" do
+      set :session_secret_token, 'secret'
+      generate_site_config['session_secret_token'].should == 'secret'
+    end
+
     it "turns the locale witching on" do
       set :locale_switching, true
       generate_site_config['locale']['allow_switching'].should == true
