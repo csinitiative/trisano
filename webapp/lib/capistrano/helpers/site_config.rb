@@ -27,11 +27,26 @@ module Capistrano::Helpers
       config = config.merge mailer_config
       config = config.merge redis_config
       config = config.merge cdc_config
+      config = config.merge form_builder_config
+      config = config.merge session_secret_config
       config.each { |key, value| config.delete(key) if value.nil? }
       config
     end
 
     private
+
+    def session_secret_config
+      config = {}
+      config['session_secret_token'] = safe_fetch :session_secret_token
+      config
+    end
+
+    def form_builder_config
+      config = {}
+      config['answer'] = { 'phone' => form_builder_phone } if exists? :form_builder_phone
+      config['answer'] = { 'numeric' => form_builder_numeric } if exists? :form_builder_numeric
+      config
+    end
 
     def cdc_config
       config = {}
@@ -99,8 +114,6 @@ module Capistrano::Helpers
       config['telephone'] = telephone_config unless telephone_config.each do |k, v|
         telephone_config.delete(k) if v.nil?
       end.empty?
-      config['answer'] = { 'phone' => form_builder_phone } if exists? :form_builder_phone
-      config['answer'] = { 'numeric' => form_builder_numeric } if exists? :form_builder_numeric
       config
     end
 
