@@ -55,7 +55,7 @@ module EventsHelper
     end
   end
 
-  def add_lab_link(name, prefix)
+  def add_lab_link(name, prefix, event_id)
     event_type = /^.+_event/.match(prefix)[0]
     #DEBT
     url = case event_type
@@ -69,7 +69,12 @@ module EventsHelper
       lab_form_new_ae_path(:prefix => prefix)
     end
     disease_field = "#{event_type}_disease_event_attributes_disease_id"  # Yeah, I don't like this any more than you do
-    link_to_remote(name, :update => "new_lab_holder", :position => :before, :url => url, :method => :get, :with => "'disease_id=' + $F('#{disease_field}')")
+    link_to_remote name,
+                   :update => "new_lab_holder", 
+                   :position => :before, 
+                   :url => url,
+                   :method => :get,
+                   :with => "'disease_id=' + $F('#{disease_field}') + '&event_id=#{event_id}'"
   end
 
   def add_lab_result_link(name, prefix, lab_id, event_id)

@@ -200,6 +200,9 @@ class EventsController < ApplicationController
     lab.lab_results.build
 
     @disease = params[:disease_id].blank? ? nil : Disease.find(params[:disease_id])
+    # Need the event to collect @event.form_referneces for repeaters
+    # nil is ok for unsaved events
+    @event = Event.find_by_id(params[:event_id])
     render :partial => 'events/lab', :object => lab, :locals => {:prefix => params[:prefix] }
   end
 

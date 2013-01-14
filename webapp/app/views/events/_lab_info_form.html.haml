@@ -27,11 +27,11 @@
           - f.fields_for(:labs, :builder => ExtendedFormBuilder) do |lab_fields|
             = render :partial => "events/lab", :locals => { :f => lab_fields }
 
-      #new_lab_holder
+        #new_lab_holder
 
-      %p
-        = add_lab_link t('add_new_lab'), f.object_name
+        %p
+          = add_lab_link t('add_new_lab'), f.object_name, @event.id
 
-    - if @event.supports_encounter_specific_labs?
-      = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }
+      - if @event.supports_encounter_specific_labs?
+        = render :partial => "events/encounter_specific_labs", :locals => { :event => @event, :f => f }
 
