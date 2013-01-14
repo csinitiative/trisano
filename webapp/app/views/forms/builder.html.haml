@@ -35,6 +35,7 @@
       %th=t 'jurisdiction'
       %th=t 'event_type'
       %th=t 'short_name'
+      %th=t 'disable_auto_assign'
       %tr
         %td.forminformation
           .formname
@@ -73,6 +74,8 @@
               = publish_form_button
         %td
           = h @form.short_name
+        %td
+          = check_box_tag 'disable_auto_assign', "1", @form.disable_auto_assign, :disabled => true
 #rot
   - if @form.errors.empty?
     %ul.horizontal

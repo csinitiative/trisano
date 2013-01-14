@@ -26,6 +26,7 @@ describe "/forms/_form.html.haml" do
     @f = mock
     @f.stubs(:label)
     @f.stubs(:text_field)
+    @f.stubs(:check_box)
     @f.stubs(:select)
     @f.stubs(:collection_select)
     @f.stubs(:object).returns(@form)

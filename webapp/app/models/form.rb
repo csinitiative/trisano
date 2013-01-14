@@ -117,8 +117,6 @@ class Form < ActiveRecord::Base
   def publish
     raise(I18n.translate('cannot_publish_already_published_version')) unless self.is_template
 
-    published_form = nil;
-
     return if not valid?
 
     begin
@@ -142,6 +140,7 @@ class Form < ActiveRecord::Base
 
         published_form = Form.create({:name => self.name,
             :event_type => self.event_type,
+            :disable_auto_assign => self.disable_auto_assign,
             :short_name => self.short_name,
             :description => self.description,
             :jurisdiction => self.jurisdiction,
@@ -442,11 +441,15 @@ class Form < ActiveRecord::Base
     Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
   end
 
+  def self.auto_assignable_forms(disease_id, jurisdiction_id, event_type)
+    self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type).reject {|f| f.disable_auto_assign }
+  end
+
   def self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type)
     event_type = event_type.to_s
     Form.find(:all,
       :include => :diseases,
-      :conditions => ["event_type = ? and diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
+      :conditions => ["event_type = ? AND diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
         event_type, disease_id, jurisdiction_id ],
       :order => "forms.created_at ASC"
     )

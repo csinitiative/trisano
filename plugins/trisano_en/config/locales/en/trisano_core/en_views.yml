@@ -327,6 +327,7 @@ en:
   event_forms: 'Event Forms'
   forms_in_use: 'Forms in Use'
   form_information: 'Form Information'
+  disable_auto_assign: 'Automatic Assignment Disabled'
   event_type: 'Event Type'
   remove_from_event: 'Remove from event'
   confirm_remove_form: "Are you sure? Removing a form will also remove all answers to questions on that form."

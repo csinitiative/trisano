@@ -222,6 +222,18 @@ describe Form do
       @published_morb_form_all_jurisdictions = @morb_form_all_jurisdictions.publish
     end
 
+    it "should return auto assignable forms only on request" do
+      form = Factory(:form, :event_type => "morbidity_event", :disable_auto_assign => true)
+      form.diseases << @disease
+      form.jurisdiction = @jurisdiction
+      form.save_and_initialize_form_elements
+      form = form.publish
+      form.reload
+      forms = Form.auto_assignable_forms(@disease.id, @jurisdiction.id, :morbidity_event)
+      forms.length.should == 2
+      forms.map(&:id).include?(form.id).should_not == true
+    end
+
     it "should return only forms for the specified disease and jurisdiction" do
       forms = Form.get_published_investigation_forms(@disease.id, @jurisdiction.id, :morbidity_event)
       forms.length.should == 2
