@@ -123,7 +123,7 @@ Rails::Initializer.run do |config|
   config.after_initialize do
     session_token = config.action_controller.session[:secret]
     if session_token.nil? or session_token == ""
-      puts "Please configure config/site_config.yml with a secret_session_token. You can generate one using 'rake secret'. Be sure to add it to the 'base' section of site_config.yml."
+      puts "Please configure config/site_config.yml with a session_secret_token. You can generate one using 'rake secret'. Be sure to add it to the 'base' section of site_config.yml."
       Kernel::exit
     end
 
