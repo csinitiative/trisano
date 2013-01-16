@@ -40,7 +40,7 @@ es:
       reporting_tab: "Reporte"
       investigation_tab: Investigación
       notes_tab: 'Apuntes'
-      event_info: Event Info (EN)
+      event_info: Event Information (EN)
       address:
         city: Ciudad de contacto
         postal_code: Código postal de contacto

@@ -337,7 +337,7 @@ test:
   person_info: 'xPerson Information'
   telephone: 'xTelephone'
   Email: 'xEmail'
-  event_info: 'xEvent Info'
+  event_info: 'xEvent Information'
   demographics: 'xDemographics'
   birth_gender: 'xBirth gender'
   primary_language: 'xPrimary language'
