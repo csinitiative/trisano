@@ -19,7 +19,8 @@
 $j(function() {
   $j('a.hide, a.display').live('click', function(event) {
     event.preventDefault();
-    var url = $j(this).attr('href');
+    // We want the format.js renderer
+    var url = $j(this).attr('href') + '.js';
     var rendered = $j(this).hasClass('display');
     $j(this).siblings('img').show();
     $j(this).hide();
@@ -34,7 +35,8 @@ $j(function() {
           }
         }
       },
-      dataType: 'script',
+      // And we just want to insert HTML, no scripting
+      dataType: 'html',
       type: 'POST',
       success: function(data, status, xhr) {
         $j(this).replaceWith(data);
