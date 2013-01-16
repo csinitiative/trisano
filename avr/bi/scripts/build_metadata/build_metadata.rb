@@ -379,7 +379,7 @@ def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
             GROUP BY 1, 2, 3
         ), }}
         dg_filtered_keys AS (
-            SELECT * FROM (
+            SELECT key, repeater FROM (
                 SELECT * FROM core_keys
 
                 #{ ! repeat ? '' : 'UNION SELECT * FROM repeater_keys' }
@@ -392,6 +392,7 @@ def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
                         JOIN trisano.avr_groups_view a
                             ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
                 )
+            GROUP BY 1, 2
         ),
         split_keys AS (
             SELECT
