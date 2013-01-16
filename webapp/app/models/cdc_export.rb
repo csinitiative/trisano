@@ -44,16 +44,17 @@ class CdcExport < ActiveRecord::Base
 
     def cdc_deletes(start_mmwr, end_mmwr)
       where = [ "sent_to_cdc=true AND ((events.deleted_at BETWEEN #{sanitize_sql_for_conditions(["'%s'", start_mmwr.mmwr_week_range.start_date]).untaint} AND #{sanitize_sql_for_conditions(["'%s'", end_mmwr.mmwr_week_range.end_date]).untaint})" ]
+
+      year_deleted_clause = "(EXTRACT(YEAR from events.deleted_at) BETWEEN #{sanitize_sql_for_conditions(["%d", start_mmwr.mmwr_year]).untaint} AND #{sanitize_sql_for_conditions(["%d", end_mmwr.mmwr_year]).untaint})"
       diseases = Disease.with_no_export_status
-      unless  diseases.empty?
-        unless  diseases.empty?
-          where << "OR (disease_id IN (#{diseases.collect(&:id).collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint }.join(',')}))"
-        end
-        invalid_case_status = Disease.with_invalid_case_status_clause
-        unless invalid_case_status.blank?
-          where << "OR #{invalid_case_status}"
-        end
+      unless diseases.empty?
+        where << "OR (#{year_deleted_clause} AND disease_id IN (#{diseases.collect(&:id).collect { |id| sanitize_sql_for_conditions(["%d", id]).untaint }.join(',')}))"
       end
+      invalid_case_status_clause = Disease.with_invalid_case_status_clause
+      unless invalid_case_status_clause.blank?
+        where << "OR (#{year_deleted_clause} AND (#{invalid_case_status_clause}))"
+      end
+
       where << ")"
       events = get_cdc_events(where.join(' '))
       events.map!{ |event| event.extend(Export::Cdc::DeleteRecord) }
