@@ -118,6 +118,7 @@ WHERE
     schemaname = 'staging' AND
     tablename IN (
         'dw_morbidity_events',
+        'dw_morbidity_repeaters',
         'dw_entity_telephones',
         'dw_contact_events',
         'dw_outbreak_events',
@@ -225,6 +226,60 @@ CREATE TABLE dw_prf2 AS
 CREATE UNIQUE INDEX prf_participation_id_ix ON dw_prf2 (participation_id);
 
 CREATE TABLE dw_morbidity_events AS
+WITH form_question_names AS (
+    SELECT
+        q.id AS q_id,
+        f.short_name AS form_name,
+        q.short_name AS question_name
+    FROM
+        questions q
+        JOIN form_elements fe
+            ON (q.form_element_id = fe.id)
+        JOIN forms f
+            ON (f.id = fe.form_id)
+),
+formbuilder_hstores AS (
+    SELECT
+        a.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(a.text_answer)) AS fb_hstore
+--            trisano.hstoreagg(
+--                CASE
+--                    WHEN a.repeater_form_object_type IS NOT NULL THEN NULL
+--                    ELSE trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)
+--                END,
+--                a.text_answer
+--            ) AS newhstore,
+    FROM
+        answers a
+        JOIN form_question_names qn
+            ON (qn.q_id = a.question_id)
+    WHERE
+        a.text_answer IS NOT NULL AND
+        a.text_answer != '' AND
+        a.repeater_form_object_type IS NULL
+    GROUP BY a.event_id
+),
+repeater_hstores AS (
+    SELECT
+        ag.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
+    FROM (
+        SELECT
+            a.event_id,
+            a.question_id,
+            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
+        FROM
+            answers a
+        WHERE
+            a.text_answer IS NOT NULL AND
+            a.text_answer != '' AND
+            a.repeater_form_object_type = 'InvestigatorFormSection'
+        GROUP BY 1, 2
+    ) ag
+        JOIN form_question_names qn
+            ON (qn.q_id = ag.question_id)
+    GROUP BY ag.event_id
+)
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
@@ -410,7 +465,8 @@ SELECT
         WHEN events.workflow_state = 'under_investigation'      THEN 'Under Investigation'
         ELSE ''
     END AS public_health_status,
-    newhstore AS morbidity_formbuilder,
+    fb_hstore AS morbidity_formbuilder,
+    rep_hstore AS morbidity_repeaters,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
@@ -503,25 +559,10 @@ FROM events
         ON (repagpt.place_id = repagpl.id)
 --    LEFT JOIN codes repagc
 --        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
-    LEFT JOIN (
-        SELECT
-            a.event_id,
-            trisano.hstoreagg(
-                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
-                a.text_answer
-            ) AS newhstore
-        FROM
-            forms f, form_elements fe, questions q, answers a
-        WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_id IS NULL
-        GROUP BY a.event_id
-    ) formbuilder_hstores
+    LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
+    LEFT JOIN repeater_hstores
+        ON (events.id = repeater_hstores.event_id)
     LEFT JOIN events outbrk
         ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
@@ -571,6 +612,31 @@ CREATE INDEX dw_morbidity_events_parent_id_ix
     ON dw_morbidity_events (parent_id);
 
 CREATE TABLE dw_assessment_events AS
+WITH form_question_names AS (
+    SELECT
+        q.id AS q_id,
+        f.short_name AS form_name,
+        q.short_name AS question_name
+    FROM
+        questions q
+        JOIN form_elements fe
+            ON (q.form_element_id = fe.id)
+        JOIN forms f
+            ON (f.id = fe.form_id)
+),
+formbuilder_hstores AS (
+    SELECT
+        a.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(a.text_answer)) AS newhstore
+    FROM
+        answers a
+        JOIN form_question_names fqn
+            ON (a.question_id = fqn.q_id)
+    WHERE
+        a.text_answer IS NOT NULL AND
+        a.text_answer != ''
+    GROUP BY a.event_id
+)
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
@@ -849,20 +915,7 @@ FROM events
         ON (repagpt.place_id = repagpl.id)
 --    LEFT JOIN codes repagc
 --        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
-    LEFT JOIN (
-        SELECT
-            a.event_id,
-            trisano.hstoreagg(trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name), a.text_answer) AS newhstore
-        FROM
-            forms f, form_elements fe, questions q, answers a
-        WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != ''
-        GROUP BY a.event_id
-    ) formbuilder_hstores
+    LEFT JOIN  formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
     LEFT JOIN events outbrk
         ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
@@ -913,6 +966,31 @@ CREATE INDEX dw_assessment_events_parent_id_ix
     ON dw_assessment_events (parent_id);
 
 CREATE TABLE dw_contact_events AS
+WITH form_question_names AS (
+    SELECT
+        q.id AS q_id,
+        f.short_name AS form_name,
+        q.short_name AS question_name
+    FROM
+        questions q
+        JOIN form_elements fe
+            ON (q.form_element_id = fe.id)
+        JOIN forms f
+            ON (f.id = fe.form_id)
+),
+formbuilder_hstores AS (
+    SELECT
+        a.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(a.text_answer)) AS newhstore
+    FROM
+        answers a
+        JOIN form_question_names fqn
+            ON (a.question_id = fqn.q_id)
+    WHERE
+        a.text_answer IS NOT NULL AND
+        a.text_answer != ''
+    GROUP BY a.event_id
+)
 SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
@@ -1127,20 +1205,7 @@ FROM events
         ON (partcon.disposition_id = partcon_disp_ec.id)
     LEFT JOIN external_codes partcon_cont_ec
         ON (partcon.contact_type_id = partcon_cont_ec.id)
-    LEFT JOIN (
-        SELECT
-            a.event_id,
-            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
-        FROM
-            forms f, form_elements fe, questions q, answers a
-        WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != ''
-        GROUP BY a.event_id
-    ) formbuilder_hstores
+    LEFT JOIN  formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
 WHERE
     (
@@ -1646,6 +1711,31 @@ CREATE INDEX dw_events_diag_fac_place_id_ix
     ON dw_events_diagnostic_facilities (place_id);
 
 CREATE TABLE dw_place_events AS
+WITH form_question_names AS (
+    SELECT
+        q.id AS q_id,
+        f.short_name AS form_name,
+        q.short_name AS question_name
+    FROM
+        questions q
+        JOIN form_elements fe
+            ON (q.form_element_id = fe.id)
+        JOIN forms f
+            ON (f.id = fe.form_id)
+),
+formbuilder_hstores AS (
+    SELECT
+        a.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(a.text_answer)) AS newhstore
+    FROM
+        answers a
+        JOIN form_question_names fqn
+            ON (a.question_id = fqn.q_id)
+    WHERE
+        a.text_answer IS NOT NULL AND
+        a.text_answer != ''
+    GROUP BY a.event_id
+)
 SELECT
     events.id,
     events.parent_id AS dw_morbidity_events_id,
@@ -1694,20 +1784,7 @@ FROM
         ON (prtpl.id = events.participations_place_id)
     LEFT JOIN disease_events disev
         ON (disev.event_id = events.id)
-    LEFT JOIN (
-        SELECT
-            a.event_id,
-            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
-        FROM
-            forms f, form_elements fe, questions q, answers a
-        WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != ''
-        GROUP BY a.event_id
-    ) formbuilder_hstores
+    LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
 WHERE
     events.type = 'PlaceEvent' AND
@@ -1729,6 +1806,31 @@ ALTER TABLE dw_place_events
 CREATE INDEX dw_place_events_parent ON dw_place_events (dw_morbidity_events_id);
 
 CREATE TABLE dw_encounter_events AS
+WITH form_question_names AS (
+    SELECT
+        q.id AS q_id,
+        f.short_name AS form_name,
+        q.short_name AS question_name
+    FROM
+        questions q
+        JOIN form_elements fe
+            ON (q.form_element_id = fe.id)
+        JOIN forms f
+            ON (f.id = fe.form_id)
+),
+formbuilder_hstores AS (
+    SELECT
+        a.event_id,
+        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(a.text_answer)) AS newhstore
+    FROM
+        answers a
+        JOIN form_question_names fqn
+            ON (a.question_id = fqn.q_id)
+    WHERE
+        a.text_answer IS NOT NULL AND
+        a.text_answer != ''
+    GROUP BY a.event_id
+)
 SELECT
     events.id,
     events.parent_id AS dw_morbidity_events_id,
@@ -1777,20 +1879,7 @@ FROM
         ON (ethnicity_ec.id = people.ethnicity_id)
     LEFT JOIN external_codes primary_language_ec
         ON (primary_language_ec.id = people.primary_language_id)
-    LEFT JOIN (
-        SELECT
-            a.event_id,
-            trisano.hstoreagg(f.short_name || '|' || q.short_name, a.text_answer) AS newhstore
-        FROM
-            forms f, form_elements fe, questions q, answers a
-        WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != ''
-        GROUP BY a.event_id
-    ) formbuilder_hstores
+    LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
 WHERE
     pplpart.type = 'InterestedParty'

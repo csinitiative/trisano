@@ -329,6 +329,7 @@ def core_business_table_query(event_type)
     SELECT
         order_num,
         table_name AS business_table_name,
+        CASE WHEN has_repeater THEN 1 ELSE 0 END AS repeat,
         disease_join_clause AS join_clause,
         table_description,
         relname AS physical_table_name,
@@ -341,53 +342,82 @@ def core_business_table_query(event_type)
     FROM trisano.core_tables c JOIN pg_class pgc
         ON (pgc.oid = c.target_table::regclass)
     WHERE table_name !~ '#{event_type == 'A' ? 'dw_morbidity' : 'dw_assessment'}'
+    AND table_name IS NOT NULL
     ORDER BY order_num, business_table_name
   }
 end
 
-def formbuilder_hstore_query(name, prefix, dg, join_clause)
+def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
+    # name: The name of the table with the hstore field we want
+    # prefix: the prefix of the hstore field we want
+    # repeat: true if there's a repeater formbuilder hstore on this table
+    # dg: the disease group name
+    # join_clause: any SQL join clause that may be necessary to associate a
+    #    disease_id with rows in this table
+
     # The point is to get all formbuilder fields for this disease group that
-    # *aren't* associated to a repeating core field. Form fields attached to a
-    # repeating core field are part of the core table in the business model.
-    # XXX Next thing to do: get disease_id working in here somehow.
+    # *aren't* associated with a repeating core field. Form fields attached to
+    # a repeating core field are part of the core table in the business model.
+
     return %{
-        SELECT key, data_type, f_short, q_short FROM (
+        WITH core_keys AS (
             SELECT
-                key,
-                -- If a field has had multiple data types, one of which was a date type, 
-                -- assume the field is a date field
-                MAX(CASE WHEN qv.data_type = 'date' THEN 2 ELSE 1 END) AS data_type,
-                f_short,
-                q_short
+                disease_id,
+                skeys(#{prefix}_formbuilder) AS key,
+                'F'::BOOLEAN AS repeater
+            FROM trisano.#{name}
+                #{join_clause}
+            GROUP BY 1, 2, 3
+        ),
+        #{ ! repeat ? '' : %{
+        repeater_keys AS (
+            SELECT
+                disease_id,
+                skeys(#{prefix}_repeaters) AS key,
+                'T'::BOOLEAN AS repeater
+            FROM trisano.#{name}
+            GROUP BY 1, 2, 3
+        ), }}
+        dg_filtered_keys AS (
+            SELECT * FROM (
+                SELECT * FROM core_keys
+
+                #{ ! repeat ? '' : 'UNION SELECT * FROM repeater_keys' }
+            ) key_dis_source
+            WHERE '#{dg}' = 'All tables' OR
+                disease_id IN (
+                    SELECT DISTINCT disease_id
+                    FROM
+                        trisano.avr_groups_diseases_view agd
+                        JOIN trisano.avr_groups_view a
+                            ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
+                )
+        ),
+        split_keys AS (
+            SELECT
+                *,
+                split_part(key, '|', 1) AS form_name,
+                split_part(key, '|', 2) AS question_name
+            FROM dg_filtered_keys
+        ),
+        data_types AS (
+            SELECT
+                MAX(CASE WHEN q.data_type = 'date' THEN 2 ELSE 1 END) AS data_type,
+                trisano.hstoresafe(q.form_short_name) AS form_name,
+                trisano.hstoresafe(q.short_name) AS question_name
             FROM
-                (
-                    SELECT
-                        key,
-                        split_part(key, '|', 1) AS f_short,
-                        split_part(key, '|', 2) AS q_short
-                    FROM (
-                        SELECT DISTINCT trisano.skeys(#{prefix}_formbuilder) AS key
-                        FROM trisano.#{name}
-                            #{join_clause}
-                        WHERE
-                            '#{dg}' = 'All tables' OR
-                            disease_id IN (
-                                SELECT DISTINCT disease_id
-                                FROM
-                                    trisano.avr_groups_diseases_view agd
-                                    JOIN trisano.avr_groups_view a
-                                        ON (a.name = '#{dg}' AND agd.avr_group_id = a.id)
-                            )
-                    ) f1
-                    WHERE
-                        split_part(key, '|', 3) IS NULL OR
-                        split_part(key, '|', 3) = ''
-                ) f2
-                LEFT JOIN trisano.questions_view qv
-                    ON (trisano.hstoresafe(qv.short_name) = q_short AND trisano.hstoresafe(qv.form_short_name) = f_short)
-                GROUP BY key, f_short, q_short
-        ) f3
-        ORDER BY substring(key, 1, strpos(key, '|')-1), key
+                trisano.questions_view q
+            GROUP BY 2, 3
+        )
+
+        SELECT
+            key, form_name, question_name, repeater, data_type
+        FROM
+            split_keys
+            JOIN data_types
+                USING (form_name, question_name)
+        ORDER BY form_name, question_name
+        ;
     }
 end
 
@@ -432,10 +462,14 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
         puts "  (not creating new category #{category_name})" if verbose
       end
 
-      if fbkey['data_type'].to_i == 2
-        formula = "trisano.format_date(trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text))"
+      if fbkey['repeater'] then
+        formula = "unnest(xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{fbkey['key'].gsub(/'/, "''")}'::text))))::text"
       else
-        formula = "trisano.fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
+        formula = "fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
+      end
+
+      if fbkey['data_type'].to_i == 2
+        formula = "trisano.format_date(#{formula})"
       end
 
       pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}", colname, fbkey['data_type'].to_i, nil, formula
@@ -443,6 +477,7 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
     end
 end
 
+# Get formbuilder keys for repeating core fields
 def core_formbuilder_query(type, group_name)
     return %{
         SELECT f.short_name AS form_short_name, q.short_name AS question_short_name
@@ -466,9 +501,10 @@ def core_formbuilder_query(type, group_name)
     }
 end
 
-def add_single_business_table(name, desc, join_clause, disease_group, dg, x, y, make_cat, formbuilder_prefix, model, meta, conn, fb_cats)
+def add_single_business_table(name, desc, repeat, join_clause, disease_group, dg, x, y, make_cat, formbuilder_prefix, model, meta, conn, fb_cats)
     # name = PhysicalTable name
     # desc = Friendly description users will see
+    # repeat = True if this table has a repeater field
     # disease_group = Text of disease group name
     # dg = Shortened, numbered disease group identifier. These can probably be factored out
     # x, y = Pixel location of this table, used for table display in metadata editor
@@ -500,7 +536,7 @@ def add_single_business_table(name, desc, join_clause, disease_group, dg, x, y, 
     add_business_columns bt, meta, bc, dg, conn
     if disease_group != 'TriSano' 
       if not formbuilder_prefix.nil? then
-        query = formbuilder_hstore_query(name, formbuilder_prefix, disease_group, join_clause)
+        query = formbuilder_hstore_query(name, formbuilder_prefix, repeat, disease_group, join_clause)
         c = nil
         cn = nil
 
@@ -531,7 +567,7 @@ def add_business_tables(model, event_type, meta, disease_group, dg, conn)
   y = 0
   fb_cats =[]
   get_query_results(core_business_table_query(event_type), conn).each do |btrow|
-    x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], btrow['join_clause'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
+    x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], (btrow['repeat'] == '1'), btrow['join_clause'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
   end
   fb_cats.each do |a|
     model.get_root_category.add_business_category a
