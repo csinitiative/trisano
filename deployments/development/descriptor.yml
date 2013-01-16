@@ -1,7 +1,15 @@
+# Plugins listed here are based on path names
+# relative to $TRISANO_ROOT/plugins OR
+# the path given to script/prepare_plugins
 plugins:
 - trisano_locales_test
 - trisano_locales
 - trisano_en
 - trisano_perinatal_hep_b
 
-cap_deploy: webapp/config/ce-deploy
+# This is the path which will be symlinked
+# into webapp/config/deploy and should contain
+# the delopment script and capistrano reciepe
+# This path is relative to $TRISANO_ROOT or the
+# path given to script/prepare_plugins
+cap_deploy: deployments/development/deploy
