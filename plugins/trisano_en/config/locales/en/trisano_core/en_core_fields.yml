@@ -36,7 +36,7 @@ en:
       reporting_tab: Reporting
       investigation_tab: Investigation
       notes_tab: Notes
-      event_info: Event Info
+      event_info: Event Information
       disease_section: Disease
       hospitalized_health_facilities_section: Hospitalized Health Facilities
       mortality_status_section: Mortality Status
@@ -71,7 +71,7 @@ en:
         died_id: Died
         disease_id: Disease
         hospitalized_id: Hospitalized
-      treatments: Treatments
+      treatments: "Section | Treatments"
       interested_party:
         treatments:
           treatment_given_yn_id: Treatment | Treatment given
@@ -112,7 +112,7 @@ en:
             first_name: Contact first name
             middle_name: Contact middle name
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           comment: Lab results | Comment
@@ -226,7 +226,7 @@ en:
       event_name: Event name
       lhd_case_status_id: LHD case status
       outbreak_associated_id: Outbreak associated
-      treatments: Treatments
+      treatments: "Section | Treatments"
       contacts: Contacts
       workflow_state: Event status
       interested_party:
@@ -250,11 +250,11 @@ en:
           age_section: Age
           phone_section: Telephones/Email
           telephones:
-            name: All patient telephones
+            name: "Section | Patient telephones"
             patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: 
-            name: All patient email addresses
+            name: "Section | Patient email addresses"
             email_address: Patient email address
           race_ids: Patient race
           person:
@@ -271,7 +271,7 @@ en:
       investigation_started_date: Date investigation started
       state_case_status_id: State case status
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
@@ -305,7 +305,7 @@ en:
       encounter_section: Encounter
       labs_section: Labs
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
@@ -425,7 +425,7 @@ en:
       event_name: Event name
       lhd_case_status_id: LHD case status
       outbreak_associated_id: Outbreak associated
-      treatments: Treatments
+      treatments: "Section | Treatments"
       contacts: Contacts
       workflow_state: Event status
       interested_party:
@@ -449,11 +449,11 @@ en:
           age_section: Age
           phone_section: Telephones/Email
           telephones: 
-            name: All patient telephones
+            name: "Section | Patient telephones"
             patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: 
-            name: All patient email addresses
+            name: "Section | Patient email addresses"
             email_address: Patient email address
           race_ids: Patient race
           person:
@@ -470,7 +470,7 @@ en:
       investigation_started_date: Date investigation started
       state_case_status_id: State case status
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
@@ -504,7 +504,7 @@ en:
       encounter_section: Encounter
       labs_section: Labs
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
@@ -630,7 +630,7 @@ en:
       event_name: Event name
       lhd_case_status_id: LHD case status
       outbreak_associated_id: Outbreak associated
-      treatments: Treatments
+      treatments: "Section | Treatments"
       contacts: Contacts
       workflow_state: Event status
       interested_party:
@@ -658,7 +658,7 @@ en:
             patient_telephone: Patient telephones
           demographics_section: Demographics
           email_addresses: 
-            name: All patient email addresses
+            name: "Section | Patient email addresses"
             email_address: Patient email address
           race_ids: Patient race
           person:
@@ -675,7 +675,7 @@ en:
       investigation_started_date: Date investigation started
       state_case_status_id: State case status
       labs:
-        name: Labs
+        name: "Section | Labs"
         secondary_entity_id: Lab results | Lab
         lab_results:
           organism: Lab results | Organism
