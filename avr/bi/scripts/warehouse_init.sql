@@ -106,7 +106,7 @@ $$
     LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION trisano.hstoresafe(TEXT) RETURNS TEXT AS $$
-    SELECT regexp_replace($1, E'\W', '_', 'g');
+    SELECT regexp_replace($1, '[^[:alnum:]]', '_', 'g');
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION trisano.hstoreagg(hstore, text, text) RETURNS hstore AS $$
