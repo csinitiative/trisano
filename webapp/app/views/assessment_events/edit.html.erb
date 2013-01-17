@@ -20,10 +20,8 @@ with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 <%= javascript_include_tag 'trisano/trisano_events_highlight_error_tabs.js' %>
 <%= javascript_include_tag 'trisano/trisano_modified_tabs.js' %>
 
-<% patient_name = "#{@event.interested_party.person_entity.person.first_name} #{@event.interested_party.person_entity.person.last_name}" %>
-
 <% content_for :title do %>
-  <%= t 'edit_assessment_event_of', :name => h(patient_name) %>
+  <%= t 'edit_assessment_event' %>
 <% end %>
 
 <% content_for :tools_two do %>
