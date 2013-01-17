@@ -1,1 +1,2 @@
 BISERVER-7765-DevPatch2.zip -- Patch for Pentaho 3.8, to fix NULL / NOT NULL constraints on dates.
+pentaho-reporting-engine-classic-core-3.8-SNAPSHOT.jar -- Patch for Pentaho 3.8 to make exports of counts from Pentaho into Excel not format as Excel dates
