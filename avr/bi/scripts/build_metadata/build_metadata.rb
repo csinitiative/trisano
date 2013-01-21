@@ -460,11 +460,22 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
         secure category
         formbuilder_categories << category
       else
+        colname = "#{tablename}:#{colname}" if !cat_was_nil
         puts "  (not creating new category #{category_name})" if verbose
       end
 
-      if fbkey['repeater'] then
-        formula = "unnest(xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{fbkey['key'].gsub(/'/, "''")}'::text))))::text"
+      puts "#{fbkey['repeater']} #{tablename} #{colname}"
+      if fbkey['repeater'] != 'f' then
+          key = fbkey['key'].gsub(/'/, "''")
+          formula = %{
+            unnest(
+                coalesce(
+                    xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{key}'::text)))::text[]
+                    ,array[NULL]::text[]
+                )
+            )::text
+          }
+        #formula = "unnest(coalesce(xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{fbkey['key'].gsub(/'/, "''")}'::text))),ARRAY[NULL])::text"
       else
         formula = "fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       end
@@ -581,7 +592,8 @@ def disease_group_query
       DISTINCT id, name, morbidity_folder_number AS morb, assessment_folder_number AS asmt
       FROM trisano.avr_groups_view
         JOIN trisano.disease_group_numbers USING (name)
-      WHERE name != 'TriSano' ORDER BY name DESC}
+      WHERE name != 'TriSano'
+      ORDER BY name DESC}
 end
 
 def disease_groups(conn)

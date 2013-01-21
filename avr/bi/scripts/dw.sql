@@ -634,7 +634,8 @@ formbuilder_hstores AS (
             ON (a.question_id = fqn.q_id)
     WHERE
         a.text_answer IS NOT NULL AND
-        a.text_answer != ''
+        a.text_answer != '' AND
+        a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
 ),
 repeater_hstores AS (
@@ -1012,7 +1013,8 @@ formbuilder_hstores AS (
             ON (a.question_id = fqn.q_id)
     WHERE
         a.text_answer IS NOT NULL AND
-        a.text_answer != ''
+        a.text_answer != '' AND
+        a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
 ),
 repeater_hstores AS (
@@ -1385,23 +1387,39 @@ FROM
 --        ON (p.event_id = events.id)
     LEFT JOIN (
         SELECT
-            a.event_id,
-            trisano.hstoreagg(
-                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name),
-                a.text_answer
+            hpart_id,
+            hstore(
+                array_agg(trisano.hstoresafe(f.short_name) || '|' ||
+                    trisano.hstoresafe(q.short_name)),
+                array_agg(a.text_answer)
             ) AS newhstore
         FROM
-            forms f, form_elements fe, questions q, answers a
+            (
+                SELECT question_id, repeater_form_object_id AS hpart_id, text_answer
+                FROM answers
+                WHERE  
+                    text_answer IS NOT NULL AND
+                    text_answer != '' AND
+                    repeater_form_object_type = 'HospitalsParticipation'
+                    
+                    UNION
+                                                    
+                SELECT question_id, h.id, text_answer        
+                FROM answers a JOIN hospitals_participations h
+                    ON (a.repeater_form_object_id = h.participation_id)
+                WHERE
+                    text_answer IS NOT NULL AND
+                    text_answer != '' AND
+                    repeater_form_object_type = 'Participation'
+            ) a,
+            questions q, form_elements fe, forms f
         WHERE
-            fe.form_id = f.id AND
-            q.form_element_id = fe.id AND
-            a.question_id = q.id AND
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type IN ('HospitalsParticipation', 'Participation')
-        GROUP BY a.event_id
+            q.id = a.question_id AND
+            fe.id = q.form_element_id AND
+            f.id = fe.form_id
+        GROUP BY hpart_id
     ) hstores
-        ON (hstores.event_id = events.id)
+        ON (hstores.hpart_id = hpart.id)
 WHERE
     p.type = 'HospitalizationFacility' AND
     events.deleted_at IS NULL
@@ -1522,7 +1540,7 @@ FROM
             a.repeater_form_object_type = 'LabResult'
         GROUP BY a.repeater_form_object_id, a.event_id
     ) hstores
-        ON (hstores.event_id = events.id)
+        ON (hstores.repeater_form_object_id = lr.id)
 ;
 
 --ALTER TABLE dw_lab_results
@@ -1781,7 +1799,8 @@ formbuilder_hstores AS (
             ON (a.question_id = fqn.q_id)
     WHERE
         a.text_answer IS NOT NULL AND
-        a.text_answer != ''
+        a.text_answer != '' AND
+        a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
 ),
 repeater_hstores AS (
@@ -1900,7 +1919,8 @@ formbuilder_hstores AS (
             ON (a.question_id = fqn.q_id)
     WHERE
         a.text_answer IS NOT NULL AND
-        a.text_answer != ''
+        a.text_answer != '' AND
+        a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
 ),
 repeater_hstores AS (
