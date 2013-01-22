@@ -29,7 +29,7 @@ remote_deployment_target_path="/opt/trisano"
 
 # In order for the cache warming script to execute, the live url
 # of the site is given here, along with ports and proxied paths.
-live_url="http://ec2-184-72-206-80.compute-1.amazonaws.com/"
+live_url="https://ec2-184-72-206-80.compute-1.amazonaws.com:3000/trisano"
 
 # After the deployment is done, return us back here.
 original_path=$PWD

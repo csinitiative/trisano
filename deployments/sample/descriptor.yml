@@ -6,11 +6,10 @@ plugins:
 - trisano_locales
 - trisano_en
 - trisano_perinatal_hep_b
-- trisano_auth
 
 # This is the path which will be symlinked
 # into webapp/config/deploy and should contain
 # the delopment script and capistrano reciepe
 # This path is relative to $TRISANO_ROOT or the
 # path given to script/prepare_plugins
-cap_deploy: deployments/production/deploy
+cap_deploy: deployments/sample/deploy

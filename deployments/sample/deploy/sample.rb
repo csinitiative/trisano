@@ -17,19 +17,18 @@ set :rvm_type, :user
 set :bi_server_url               , "https://ondemand.trisano.com/pentaho-edge/Login"
 set :help_url                    , "https://wiki.csinitiative.com/display/tri35/Help"
 set :mailer                      , "smtp"
-set :mailer_host                 , 'ondemand.trisano.com/edge'
-set :mailer_address              , 'smtp.gmail.com'
+set :mailer_host                 , 'app.mycompany.com/trisano'
+set :mailer_address              , 'smtp.mycompany.com'
 set :mailer_port                 , 587
-set :mailer_domain               , 'csinitiative.com'
-set :mailer_user_name            , 'noreply@csinitiative.com'
-set :mailer_password             , 'm3S6j6No7IXC2DbpEsB4'
+set :mailer_domain               , 'mycompany.com'
+set :mailer_user_name            , 'noreply@mycompany.com'
+set :mailer_password             , 'password'
 set :mailer_authentication       , 'plain'
 set :mailer_enable_starttls_auto , true
-set :cdc_state                   , '49'
 
-## google api support
-set :google_channel, 'edge'
-set :google_client_id, 'gme-collabsw'
+
+
+set :cdc_state                   , '49'
 
 ##  hl7 configuration
 set :recv_facility, "CSI Dept. of TriSano, Bureau of Informatics^2.16.840.9.886571.2.99.8^ISO"
@@ -59,7 +58,7 @@ set :extension, '^(\d{1,6})$'
 set :form_builder_phone, '^\d{3}-\d{3}-\d{4}$'
 set :form_builder_numeric, "^([0-9]*|\d*\.\d*|-[0-9]*|-\d*\.\d*)$" #Accept only positive or negative (0-9) integers and one optional decimal point.
 
-set :session_secret_token, "bfe63c96c19ff756ceac09294fb5bd141ed9212cbb9c9ed4ae31997420d2bc1965764df8d2610c53cf7cee8b2d6a3c9eb194177ef10016611d87a9d20421c021"
+set :session_secret_token, ""
 
 ## Locale configuration
 set :locale_switching, false
