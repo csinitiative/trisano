@@ -106,4 +106,11 @@ namespace :deploy do
     run "cd #{latest_release} && bundle exec rake db:restore RAILS_ENV=#{rails_env}"
   end
 
+  desc "Reloads Core Field data"
+  task :core_fields do
+    rails_env = fetch :rails_env, 'production'
+    run "cd #{latest_release} && bundle exec rake db:load_core_fields RAILS_ENV=#{rails_env}"
+  end
+
+
 end
