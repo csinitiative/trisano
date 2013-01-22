@@ -37,6 +37,7 @@ group :development do
   gem "ci_reporter", "1.6.2"
   gem "hirb", "0.3.4"
   gem "capistrano", "2.5.19"
+  gem "rvm-capistrano", "1.2.7"
   gem "capistrano-ext", "1.2.1"
   gem "ruby-debug", "0.10.4"
 #  gem "rails-footnotes", '3.6.7'
