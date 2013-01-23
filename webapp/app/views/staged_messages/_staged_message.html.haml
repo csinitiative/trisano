@@ -63,6 +63,7 @@
             = ct('state')
             - if staged_message.state == StagedMessage.states[:assigned] and staged_message.assigned_event
               - event = staged_message.assigned_event
+              - event = event.parent_event if event.is_a?(EncounterEvent)
               - event_path = event.is_a?(MorbidityEvent) ? cmr_path(event) : contact_event_path(event)
               = link_to(t("staging_area_states.#{staged_message.state.downcase}"), event_path)
             - else

@@ -78,12 +78,24 @@
                 - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_#{result['event_id']}") do
                   = hidden_field_tag('event_id', result['event_id'])
                   = link_to_function(t(:assign_lab_result), "this.parentNode.submit()")
+                |
+                - form_tag(event_staged_message_path(@staged_message), :style => "display: inline") do
+                  = hidden_field_tag('parent_id', result['event_id'])
+                  = hidden_field_tag('type', 'encounter_event')
+                  = link_to_function(t(:assign_lab_result_as_encounter), "this.parentNode.submit()")
           %td
             - if output_name
               - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_to_new_with_person_#{current_entity_id}") do
                 = hidden_field_tag('entity_id', current_entity_id)
                 = link_to_function(t(:assign_new_cmr), "this.parentNode.submit()")
-
+              |
+              - form_tag(event_staged_message_path(@staged_message), :style => "display: inline") do
+                = hidden_field_tag('entity_id', current_entity_id)
+                = hidden_field_tag('type', 'encounter_event')
+                = link_to_function(t(:assign_new_cmr_as_encounter), "this.parentNode.submit()")
   %br
   - form_tag(event_staged_message_path(@staged_message), :id => "assign_to_new") do
     = link_to_function(t("create_cmr_from_message"), "this.parentNode.submit()")
+  - form_tag(event_staged_message_path(@staged_message), :id => "assign_to_new_with_encounter") do
+    = hidden_field_tag('type', 'encounter_event')
+    = link_to_function(t("create_cmr_with_encounter_from_message"), "this.parentNode.submit()")
