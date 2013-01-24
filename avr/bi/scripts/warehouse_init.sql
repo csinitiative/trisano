@@ -1713,6 +1713,36 @@ BEGIN
     -- Create a whole bunch of event-type-specific views. This helps Pentaho
     -- not have cycles in its graph of the schema
     EXECUTE
+        'CREATE VIEW trisano.dw_morbidity_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_morbidity_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_contact_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_contact_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_encounter_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_encounter_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_assessment_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_assessment_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_outbreak_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_outbreak_events_id IS NOT NULL';
+
+    EXECUTE
+        'CREATE VIEW trisano.dw_place_repeaters_view AS
+            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            WHERE dw_place_events_id IS NOT NULL';
+
+    EXECUTE
         'CREATE VIEW trisano.dw_morbidity_patients_races_view AS
             SELECT pr.* FROM ' || new_schema || '.dw_patients_races pr
             WHERE EXISTS (

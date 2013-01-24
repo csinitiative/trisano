@@ -118,7 +118,7 @@ WHERE
     schemaname = 'staging' AND
     tablename IN (
         'dw_morbidity_events',
-        'dw_morbidity_repeaters',
+        'dw_event_repeaters',
         'dw_entity_telephones',
         'dw_contact_events',
         'dw_outbreak_events',
@@ -258,27 +258,6 @@ formbuilder_hstores AS (
         a.text_answer != '' AND
         a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
-),
-repeater_hstores AS (
-    SELECT
-        ag.event_id,
-        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
-    FROM (
-        SELECT
-            a.event_id,
-            a.question_id,
-            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
-        FROM
-            answers a
-        WHERE
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type = 'InvestigatorFormSection'
-        GROUP BY 1, 2
-    ) ag
-        JOIN form_question_names qn
-            ON (qn.q_id = ag.question_id)
-    GROUP BY ag.event_id
 )
 SELECT
     events.id,
@@ -466,7 +445,7 @@ SELECT
         ELSE ''
     END AS public_health_status,
     fb_hstore AS morbidity_formbuilder,
-    rep_hstore AS morbidity_repeaters,
+--    rep_hstore AS morbidity_repeaters,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
@@ -561,8 +540,8 @@ FROM events
 --        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
     LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
-    LEFT JOIN repeater_hstores
-        ON (events.id = repeater_hstores.event_id)
+--    LEFT JOIN repeater_hstores
+--        ON (events.id = repeater_hstores.event_id)
     LEFT JOIN events outbrk
         ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
@@ -611,6 +590,52 @@ CREATE INDEX dw_morbidity_events_date_created_ix
 CREATE INDEX dw_morbidity_events_parent_id_ix
     ON dw_morbidity_events (parent_id);
 
+CREATE TABLE dw_event_repeaters AS
+    SELECT
+        a.event_id,
+        CASE
+            WHEN events.type = 'MorbidityEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_morbidity_events_id,
+        CASE
+            WHEN events.type = 'AssessmentEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_assessment_events_id,
+        CASE
+            WHEN events.type = 'ContactEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_contact_events_id,
+        CASE
+            WHEN events.type = 'EncounterEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_encounter_events_id,
+        CASE
+            WHEN events.type = 'OutbreakEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_outbreak_events_id,
+        CASE
+            WHEN events.type = 'PlaceEvent' THEN a.event_id
+            ELSE NULL::INTEGER
+        END AS dw_place_events_id,
+        hstore(
+            array_agg(
+                trisano.hstoresafe(f.short_name) || '|' || trisano.hstoresafe(q.short_name)
+            ),
+            array_agg(text_answer)
+        ) AS repeater_hstore
+    FROM
+        answers a, questions q, form_elements fe, forms f, events
+    WHERE
+        events.id = a.event_id AND
+        a.question_id = q.id AND
+        q.form_element_id = fe.id AND
+        f.id = fe.form_id AND
+        a.text_answer IS NOT NULL AND
+        a.text_answer != '' AND
+        a.repeater_form_object_type = 'InvestigatorFormSection'
+    GROUP BY a.event_id, events.type
+;
+
 CREATE TABLE dw_assessment_events AS
 WITH form_question_names AS (
     SELECT
@@ -637,27 +662,6 @@ formbuilder_hstores AS (
         a.text_answer != '' AND
         a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
-),
-repeater_hstores AS (
-    SELECT
-        ag.event_id,
-        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
-    FROM (
-        SELECT
-            a.event_id,
-            a.question_id,
-            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
-        FROM
-            answers a
-        WHERE
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type = 'InvestigatorFormSection'
-        GROUP BY 1, 2
-    ) ag
-        JOIN form_question_names qn
-            ON (qn.q_id = ag.question_id)
-    GROUP BY ag.event_id
 )
 SELECT
     events.id,
@@ -845,7 +849,6 @@ SELECT
         ELSE ''
     END AS public_health_status,
     newhstore AS assessment_formbuilder,
-    rep_hstore AS assessment_repeaters,
 
     1::integer AS always_one     -- This column joins against the population.population_years view
                                  -- to associate every event with every population year, and keep
@@ -938,10 +941,8 @@ FROM events
         ON (repagpt.place_id = repagpl.id)
 --    LEFT JOIN codes repagc
 --        ON (repagc.id = repagpt.type_id AND repagc.deleted_at IS NULL)
-    LEFT JOIN  formbuilder_hstores
+    LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
-    LEFT JOIN repeater_hstores
-        ON (events.id = repeater_hstores.event_id)
     LEFT JOIN events outbrk
         ON (outbrk.type = 'OutbreakEvent' AND outbrk.id = events.outbreak_event_id)
 WHERE
@@ -1016,27 +1017,6 @@ formbuilder_hstores AS (
         a.text_answer != '' AND
         a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
-),
-repeater_hstores AS (
-    SELECT
-        ag.event_id,
-        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
-    FROM (
-        SELECT
-            a.event_id,
-            a.question_id,
-            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
-        FROM
-            answers a
-        WHERE
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type = 'InvestigatorFormSection'
-        GROUP BY 1, 2
-    ) ag
-        JOIN form_question_names qn
-            ON (qn.q_id = ag.question_id)
-    GROUP BY ag.event_id
 )
 SELECT
     events.id,
@@ -1185,7 +1165,6 @@ SELECT
         ELSE ''
     END AS public_health_status,
     newhstore AS contact_formbuilder,
-    rep_hstore AS contact_repeaters,
 
     1::integer AS always_one
 FROM events
@@ -1255,8 +1234,6 @@ FROM events
         ON (partcon.contact_type_id = partcon_cont_ec.id)
     LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
-    LEFT JOIN repeater_hstores
-        ON (events.id = repeater_hstores.event_id)
 WHERE
     (
         events.type = 'ContactEvent' OR
@@ -1802,27 +1779,6 @@ formbuilder_hstores AS (
         a.text_answer != '' AND
         a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
-),
-repeater_hstores AS (
-    SELECT
-        ag.event_id,
-        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
-    FROM (
-        SELECT
-            a.event_id,
-            a.question_id,
-            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
-        FROM
-            answers a
-        WHERE
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type = 'InvestigatorFormSection'
-        GROUP BY 1, 2
-    ) ag
-        JOIN form_question_names qn
-            ON (qn.q_id = ag.question_id)
-    GROUP BY ag.event_id
 )
 SELECT
     events.id,
@@ -1839,8 +1795,7 @@ SELECT
     county_ec.code_description AS county,
     ad.postal_code,
     disev.disease_id,
-    newhstore AS place_formbuilder,
-    rep_hstore AS place_repeaters
+    newhstore AS place_formbuilder
 FROM
     events
     LEFT JOIN addresses ad
@@ -1875,8 +1830,6 @@ FROM
         ON (disev.event_id = events.id)
     LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
-    LEFT JOIN repeater_hstores
-        ON (events.id = repeater_hstores.event_id)
 WHERE
     events.type = 'PlaceEvent' AND
     events.deleted_at IS NULL
@@ -1922,27 +1875,6 @@ formbuilder_hstores AS (
         a.text_answer != '' AND
         a.repeater_form_object_type IS NULL
     GROUP BY a.event_id
-),
-repeater_hstores AS (
-    SELECT
-        ag.event_id,
-        hstore(array_agg(trisano.hstoresafe(form_name) || '|' || trisano.hstoresafe(question_name)), array_agg(answers_xml::TEXT)) AS rep_hstore
-    FROM (
-        SELECT
-            a.event_id,
-            a.question_id,
-            xmlelement(name b, xmlagg(xmlelement(name a, a.text_answer))) AS answers_xml
-        FROM
-            answers a
-        WHERE
-            a.text_answer IS NOT NULL AND
-            a.text_answer != '' AND
-            a.repeater_form_object_type = 'InvestigatorFormSection'
-        GROUP BY 1, 2
-    ) ag
-        JOIN form_question_names qn
-            ON (qn.q_id = ag.question_id)
-    GROUP BY ag.event_id
 )
 SELECT
     events.id,
@@ -1969,8 +1901,7 @@ SELECT
     ds.treatment_lead_in,
     ds.active,
     ds.cdc_code,
-    newhstore AS encounter_formbuilder,
-    rep_hstore AS encounter_repeaters
+    newhstore AS encounter_formbuilder
 FROM
     participations_encounters pe
     JOIN events
@@ -1995,8 +1926,6 @@ FROM
         ON (primary_language_ec.id = people.primary_language_id)
     LEFT JOIN formbuilder_hstores
         ON (events.id = formbuilder_hstores.event_id)
-    LEFT JOIN repeater_hstores
-        ON (events.id = repeater_hstores.event_id)
 WHERE
     pplpart.type = 'InterestedParty'
 ;

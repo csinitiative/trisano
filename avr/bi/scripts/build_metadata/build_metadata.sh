@@ -19,13 +19,13 @@
 # along with TriSano. If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
 # Verbose output
-export VERBOSE="false"
+export VERBOSE="true"
 
 # Path to JAVA_HOME
-export JAVA_HOME=/usr/lib/jvm/jre-1.6.0-openjdk
+export JAVA_HOME=/etc/alternatives/java_sdk
 
 # Path on the file system where the BI server was installed
-export BI_SERVER_PATH=/home/josh/space/pentaho-3.8/server/biserver-ee
+export BI_SERVER_PATH=/home/josh/space/pentaho-4.5-ce/biserver-ce/
 
 # Path for plugins
 export TRISANO_PLUGIN_DIRECTORY=/opt/avr/etl/plugins/

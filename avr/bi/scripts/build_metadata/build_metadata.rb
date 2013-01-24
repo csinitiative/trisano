@@ -305,11 +305,14 @@ def add_single_business_column(bt, pt, pc, id, name, descr, category, make_cat)
     if not category.nil? and make_cat == 'TRUE' then
       puts " *** Adding business column #{name} to category #{category.get_name 'en_US'}" if verbose
       category.add_business_column bc
+    else
+      puts " --- not adding business column #{name} to cateogry (#{make_cat}, category is #{category.nil? ? "nil" : "not nill"})" if verbose
     end
     return bc
 end
 
 def add_business_columns(bt, meta, category, dg, conn)
+  puts "Adding business columns for table #{bt.id}" if verbose
   pt = bt.get_physical_table
   cols = get_query_results(columns_query(pt.get_target_table, pt.get_target_schema), conn).sort { |a,b| a['description'] <=> b['description'] }
   cols.each do |bcrow|
@@ -361,6 +364,7 @@ def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
 
     return %{
         WITH core_keys AS (
+            #{ ! repeat ? %{
             SELECT
                 disease_id,
                 skeys(#{prefix}_formbuilder) AS key,
@@ -368,21 +372,19 @@ def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
             FROM trisano.#{name}
                 #{join_clause}
             GROUP BY 1, 2, 3
-        ),
-        #{ ! repeat ? '' : %{
-        repeater_keys AS (
+            } : %{
             SELECT
                 disease_id,
-                skeys(#{prefix}_repeaters) AS key,
+                skeys(repeater_hstore) AS key,
                 'T'::BOOLEAN AS repeater
-            FROM trisano.#{name}
-            GROUP BY 1, 2, 3
-        ), }}
+            FROM trisano.dw_#{prefix}_repeaters_view a
+                JOIN trisano.dw_#{prefix}_events_view b
+                    ON (a.dw_#{prefix}_events_id = b.id)
+            GROUP BY 1, 2 }}
+        ),
         dg_filtered_keys AS (
             SELECT key, repeater FROM (
                 SELECT * FROM core_keys
-
-                #{ ! repeat ? '' : 'UNION SELECT * FROM repeater_keys' }
             ) key_dis_source
             WHERE '#{dg}' = 'All tables' OR
                 disease_id IN (
@@ -436,12 +438,6 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
     # category, category_name = Business category objects, when this is a form
     #                           field attached to a repeating core field
 
-    # Gotta add a physical column to the physical table
-    # Gotta create a business category unless this is a form tied to a
-    #   repeating core field, in which case it should just be put in the
-    #   existing core category
-    # Also gotta add business columns to the business table and the category
-
     # Figure out a unique, small integer associated with this prefix for use in
     # ID values.
     type_num = $event_types.fetch(prefix) { |z| $event_types[z] = $event_types.size }
@@ -451,12 +447,13 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
     get_query_results(query, conn).each do |fbkey|
       puts "Adding Formbuilder field : #{fbkey.inspect}" if verbose
       tablename, colname = fbkey['key'].split '|', 2
-      if cat_was_nil and (category.nil? or category_name != "#{prefix} #{tablename}")
-        puts "Creating category '#{prefix} #{tablename}'" if verbose
-        category = BusinessCategory.new "#{prefix} #{tablename}"
-        category.set_name 'en_US', "#{prefix} #{tablename}"
+      catname = "#{prefix} #{ fbkey['repeater'] == 't' ? '*' : '' }#{tablename}"
+      if cat_was_nil and (category.nil? or category_name != catname) then
+        puts "Creating category '#{catname}'" if verbose
+        category = BusinessCategory.new catname
+        category.set_name 'en_US', catname
         category.set_root_category false
-        category_name = "#{prefix} #{tablename}"
+        category_name = catname
         secure category
         formbuilder_categories << category
       else
@@ -464,18 +461,9 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
         puts "  (not creating new category #{category_name})" if verbose
       end
 
-      puts "#{fbkey['repeater']} #{tablename} #{colname}"
+      #puts "#{fbkey['repeater']} #{tablename} #{colname}"
       if fbkey['repeater'] != 'f' then
-          key = fbkey['key'].gsub(/'/, "''")
-          formula = %{
-            unnest(
-                coalesce(
-                    xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{key}'::text)))::text[]
-                    ,array[NULL]::text[]
-                )
-            )::text
-          }
-        #formula = "unnest(coalesce(xpath('//a/text()', xml(fetchval(#{prefix}_repeaters, '#{fbkey['key'].gsub(/'/, "''")}'::text))),ARRAY[NULL])::text"
+        formula = "fetchval(repeater_hstore, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       else
         formula = "fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       end
@@ -485,6 +473,7 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
       end
 
       pc = add_single_physical_column pt, "#{tablename}_#{colname}_#{type_num}", colname, fbkey['data_type'].to_i, nil, formula
+      puts "Category is nil!" if fbkey['repeater'] != 'f' and category.nil?
       bc = add_single_business_column(bt, pt, pc, "#{fbkey['key']}_#{type_num}", fbkey['key'], colname, category, 'TRUE')
     end
 end
@@ -516,7 +505,7 @@ end
 def add_single_business_table(name, desc, repeat, join_clause, disease_group, dg, x, y, make_cat, formbuilder_prefix, model, meta, conn, fb_cats)
     # name = PhysicalTable name
     # desc = Friendly description users will see
-    # repeat = True if this table has a repeater field
+    # repeat = True if this table is a repeater table
     # disease_group = Text of disease group name
     # dg = Shortened, numbered disease group identifier. These can probably be factored out
     # x, y = Pixel location of this table, used for table display in metadata editor
@@ -547,7 +536,7 @@ def add_single_business_table(name, desc, repeat, join_clause, disease_group, dg
 
     add_business_columns bt, meta, bc, dg, conn
     if disease_group != 'TriSano' 
-      if not formbuilder_prefix.nil? then
+      if repeat or not formbuilder_prefix.nil? then
         query = formbuilder_hstore_query(name, formbuilder_prefix, repeat, disease_group, join_clause)
         c = nil
         cn = nil
@@ -582,7 +571,11 @@ def add_business_tables(model, event_type, meta, disease_group, dg, conn)
     x, y = add_single_business_table btrow['physical_table_name'], btrow['table_description'], (btrow['repeat'] == '1'), btrow['join_clause'], disease_group, dg, x, y, btrow['make_category'], btrow['formbuilder_prefix'], model, meta, conn, fb_cats
   end
   fb_cats.each do |a|
-    model.get_root_category.add_business_category a
+    begin
+      model.get_root_category.add_business_category a
+    rescue NativeException
+      p 'here'
+    end
   end
 end
 
@@ -593,6 +586,9 @@ def disease_group_query
       FROM trisano.avr_groups_view
         JOIN trisano.disease_group_numbers USING (name)
       WHERE name != 'TriSano'
+-- XXX
+        AND name ~ 'test group'
+-- XXX
       ORDER BY name DESC}
 end
 
