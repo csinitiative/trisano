@@ -586,9 +586,6 @@ def disease_group_query
       FROM trisano.avr_groups_view
         JOIN trisano.disease_group_numbers USING (name)
       WHERE name != 'TriSano'
--- XXX
-        AND name ~ 'test group'
--- XXX
       ORDER BY name DESC}
 end
 
