@@ -29,8 +29,8 @@
       - previous_entity_id = nil
       - for result in @results do
         - includes_event = !result['event_id'].blank?
-        - active = (result['workflow_state'] != "closed" and result['deleted_at'].blank?)
-        - result_class = active ? 'search-active tabular' : 'search-inactive tabular'
+
+        - result_class = "#{search_result_class(result)} tabular"
         - current_entity_id = result['entity_id']
         - if previous_entity_id != current_entity_id
           - output_name = true
@@ -73,7 +73,7 @@
             - if includes_event
               - view_path = result['event_type'] == 'MorbidityEvent' ? cmr_path(result['event_id']) : contact_event_path(result['event_id'])
               = link_to t(:show), view_path
-              - if active
+              - if result['deleted_at'].nil?
                 |
                 - form_tag(event_staged_message_path(@staged_message), :style => "display: inline", :id => "assign_#{result['event_id']}") do
                   = hidden_field_tag('event_id', result['event_id'])
