@@ -200,19 +200,19 @@ describe Form do
       @morb_form_matching_jurisdiction = Factory.build(:form, :event_type => "morbidity_event")
       @morb_form_matching_jurisdiction.diseases << @disease
       @morb_form_matching_jurisdiction.diseases << @second_disease_for_form
-      @morb_form_matching_jurisdiction.jurisdiction = @jurisdiction
+      @morb_form_matching_jurisdiction.jurisdictions << @jurisdiction
       @morb_form_matching_jurisdiction.save_and_initialize_form_elements
       @published_morb_form_matching_jurisdiction = @morb_form_matching_jurisdiction.publish
 
       @morb_form_non_matching_disease = Factory.build(:form, :event_type => "morbidity_event")
       @morb_form_non_matching_disease.diseases << @non_matching_disease
-      @morb_form_non_matching_disease.jurisdiction = @jurisdiction
+      @morb_form_non_matching_disease.jurisdictions << @jurisdiction
       @morb_form_non_matching_disease.save_and_initialize_form_elements
       @published_morb_form_non_matching_disease = @morb_form_non_matching_disease.publish
 
       @morb_form_non_matching_jurisdiction = Factory.build(:form, :event_type => "morbidity_event")
       @morb_form_non_matching_jurisdiction.diseases << @disease
-      @morb_form_non_matching_jurisdiction.jurisdiction = @non_matching_jurisdiction
+      @morb_form_non_matching_jurisdiction.jurisdictions << @non_matching_jurisdiction
       @morb_form_non_matching_jurisdiction.save_and_initialize_form_elements
       @published_morb_form_non_matching_jurisdiction = @morb_form_non_matching_jurisdiction.publish
 
@@ -225,14 +225,14 @@ describe Form do
     it "should return auto assignable forms only on request" do
       form = Factory(:form, :event_type => "morbidity_event")
       form.diseases_forms.build(:disease_id => @disease.id, :auto_assign => false)
-      form.jurisdiction = @jurisdiction
+      form.jurisdictions << @jurisdiction
       form.save_and_initialize_form_elements
       form = form.publish
       form.reload
 
       form = Factory(:form, :event_type => "morbidity_event")
       form.diseases_forms.build(:disease_id => @disease.id, :auto_assign => true)
-      form.jurisdiction = @jurisdiction
+      form.jurisdictions << @jurisdiction
       form.save_and_initialize_form_elements
       form = form.publish
       form.reload
@@ -247,14 +247,13 @@ describe Form do
       forms.length.should == 2
       forms.each do |form|
         form.disease_ids.should == [@disease.id]
-        form.jurisdiction_id.should == @jurisdiction.id unless form.jurisdiction_id.nil?
       end
     end
 
     it "should return forms applicable to all jurisdictions even if given jurisdiction is not found" do
       form = Form.get_published_investigation_forms(@disease.id, 99999, :morbidity_event)
       form.length.should == 1
-      form.each { |d| d.jurisdiction_id.should == nil }
+      form.each { |d| d.jurisdictions.size.should == 0 }
     end
 
     it "should return no form if the disease is not found" do
@@ -738,6 +737,7 @@ describe Form do
 
     before :each do
       @original_form = Form.find(1, :include => :diseases)
+      @original_form.jurisdictions << Factory(:place_entity)
       @copied_form = @original_form.copy
     end
 
@@ -790,7 +790,7 @@ describe Form do
     end
 
     it 'should have the same jurusdiction as the original' do
-      @copied_form.jurisdiction.should eql(@original_form.jurisdiction)
+      @copied_form.jurisdictions.first.id.should == @original_form.jurisdictions.first.id
     end
 
     it 'should copy the form elements' do
@@ -1021,7 +1021,7 @@ describe Form do
     end
 
     it 'should have no jurisdiction' do
-      @imported_form.jurisdiction.should be_nil
+      @imported_form.jurisdictions.size.should == 0
     end
 
     it 'should import the form elements' do
@@ -1182,7 +1182,7 @@ describe Form do
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
         "diseases_forms_attributes"=> [{:disease_id => diseases(:form_push_disease).id, :auto_assign => true}],
-        "jurisdiction_id"=>""
+        "jurisdiction_ids"=>""
       }
     end
 

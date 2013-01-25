@@ -50,7 +50,12 @@
                     %li.diseaselist
                       = h disease.disease_name
               %td
-                = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
+                - if form.jurisdictions.empty?
+                  = h t("all")
+                - else
+                  %ul
+                    - form.jurisdictions.each do |j|
+                      %li.diseaselist= h j.place.name
               %td
                 = h t(form.event_type)
               - if can_remove
@@ -94,7 +99,12 @@
                       %li.diseaselist
                         = h disease.disease_name
                 %td
-                  = h form.jurisdiction.nil? ? t('all') : form.jurisdiction.place.name
+                  - if form.jurisdictions.empty?
+                    = h t("all")
+                  - else
+                    %ul
+                    - form.jurisdictions.each do |j|
+                      %li.diseaselist= h j.place.name
                 %td
                   = h(t(form.event_type.underscore))
                 - if can_add

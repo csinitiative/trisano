@@ -3,6 +3,19 @@ document.observe('trisano:dom:loaded', function() {
   Trisano.Ajax.hookUpdateLinks();
 });
 
+$j(function() {
+  $j('#jurisdiction_select input[type=checkbox]').click(function() {
+    var id = $j(this).attr('id');
+    if (id == "All Jurisdictions" && $j(this).attr('checked')) {
+      $j('#jurisdiction_select input[type=checkbox]').filter(function() {
+        return $j(this).attr('id') != id;
+      }).removeAttr('checked');
+    } else {
+      $j('#jurisdiction_select input[id=All Jurisdictions]').removeAttr('checked');
+    }
+  });
+});
+
 Element.addMethods({
   associatedSpinner: function(element) {
     var spinnerId = element.identify() + "_spinner";
