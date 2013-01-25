@@ -31,7 +31,18 @@
       %div{:style => 'width: 50em; border-left:1px solid #808080; border-top:1px solid #808080; border-bottom:1px solid #fff; border-right:1px solid #fff; overflow: auto;'}
         %div{:style => 'background:#fff; overflow:auto;height: 12em;border-left:1px solid #404040;border-top:1px solid #404040;border-bottom:1px solid #d4d0c8;border-right:1px solid #d4d0c8;'}
           - for disease in Disease.find(:all, :order => "disease_name asc")
-            = "<label>" + check_box_tag("form[disease_ids][]", disease.id, @form.diseases.include?(disease), :id => disease.disease_name.tr(" ", "_")) + h(disease.disease_name) + "</label>"
+            - disease_form = @form.diseases_forms.detect {|form| form.disease_id == disease.id }
+            %label
+              = check_box_tag("form[diseases_forms_attributes][][disease_id]", disease.id, !disease_form.nil?, :class => "disease-checkbox", :id => disease.disease_name.tr(" ", "_"))
+              = h(disease.disease_name)
+            %span{:style => "display:#{disease_form ? 'block' : 'none'}"}
+              = hidden_field_tag("form[diseases_forms_attributes][][id]", disease_form ? disease_form.id : "", :disabled => !disease_form)
+              %label
+                = h("Auto assign?")
+                - if disease_form
+                  = check_box_tag("form[diseases_forms_attributes][][auto_assign]", 1, disease_form.auto_assign?)
+                - else
+                  = check_box_tag("form[diseases_forms_attributes][][auto_assign]", 1, true, :disabled => true)
       %p
       = f.label :jurisdiction_id
       = f.collection_select(:jurisdiction_id, Place.jurisdictions, :entity_id, :name, :include_blank => t("all_jurisdictions"))

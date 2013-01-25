@@ -59,8 +59,10 @@
             = link_to t('deactivate'), deactivate_form_path(@form), :method => :post
       %td
         %ul
-          - @form.diseases.each do |disease|
-            %li.diseaselist= h disease.disease_name
+          - @form.diseases_forms.each do |d|
+            %li.diseaselist
+              = h d.disease.disease_name
+              = "(Auto-assigned)" if d.auto_assign?
       %td
         = h @form.jurisdiction.nil? ? t("all") : @form.jurisdiction.place.name
       %td

@@ -88,7 +88,8 @@ class FormsController < AdminController
   end
 
   def update
-    params[:form][:disease_ids] ||= []
+    params[:form][:diseases_forms_attributes]  ||= []
+    params[:form][:diseases_forms_attributes].each {|f| f[:auto_assign] ||= false }
     @form = Form.find(params[:id])
 
     respond_to do |format|

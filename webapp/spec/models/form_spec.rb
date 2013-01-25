@@ -222,6 +222,26 @@ describe Form do
       @published_morb_form_all_jurisdictions = @morb_form_all_jurisdictions.publish
     end
 
+    it "should return auto assignable forms only on request" do
+      form = Factory(:form, :event_type => "morbidity_event")
+      form.diseases_forms.build(:disease_id => @disease.id, :auto_assign => false)
+      form.jurisdiction = @jurisdiction
+      form.save_and_initialize_form_elements
+      form = form.publish
+      form.reload
+
+      form = Factory(:form, :event_type => "morbidity_event")
+      form.diseases_forms.build(:disease_id => @disease.id, :auto_assign => true)
+      form.jurisdiction = @jurisdiction
+      form.save_and_initialize_form_elements
+      form = form.publish
+      form.reload
+
+      forms = Form.auto_assignable_forms(@disease.id, @jurisdiction.id, :morbidity_event)
+      forms.length.should == 1
+      forms.map(&:id).include?(form.id).should == true
+    end
+
     it "should return only forms for the specified disease and jurisdiction" do
       forms = Form.get_published_investigation_forms(@disease.id, @jurisdiction.id, :morbidity_event)
       forms.length.should == 2
@@ -365,7 +385,7 @@ describe Form do
     fixtures :forms, :form_elements, :questions, :diseases_forms, :diseases, :export_columns
 
     before(:each) do
-      @form_to_publish = Form.find(1)
+      @form_to_publish = Form.find(1, :include => :diseases)
       @published_form = @form_to_publish.publish
     end
 
@@ -586,7 +606,7 @@ describe Form do
     fixtures :forms, :form_elements, :questions, :export_disease_groups, :export_columns, :export_conversion_values
 
     before(:each) do
-      @form_to_publish = Form.find(forms(:hep_b_form).id)
+      @form_to_publish = Form.find(forms(:hep_b_form).id, :include => :diseases)
       @published_form = @form_to_publish.publish
     end
 
@@ -717,7 +737,7 @@ describe Form do
     fixtures :forms, :form_elements, :questions, :diseases, :diseases_forms, :export_columns
 
     before :each do
-      @original_form = Form.find(1)
+      @original_form = Form.find(1, :include => :diseases)
       @copied_form = @original_form.copy
     end
 
@@ -745,6 +765,8 @@ describe Form do
 
     it 'should have same diseases and the original form' do
       @copied_form.diseases.size.should == @original_form.diseases.size
+      @copied_form.diseases_forms.size.should == @original_form.diseases_forms.size
+      @copied_form.diseases_forms.first.auto_assign.should == @original_form.diseases_forms.first.auto_assign
     end
 
     it 'should not have the same created_at date as the oringal form' do
@@ -1159,7 +1181,7 @@ describe Form do
         "name"=>"Form Push Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[diseases(:form_push_disease).id],
+        "diseases_forms_attributes"=> [{:disease_id => diseases(:form_push_disease).id, :auto_assign => true}],
         "jurisdiction_id"=>""
       }
     end
@@ -1185,7 +1207,7 @@ describe Form do
       event.form_references.size.should == 0
 
       with_form(@form_hash) do |form|
-        form.diseases.clear
+        form.diseases_forms.clear
         form.publish
         result = form.push
         result.should be_nil
@@ -1202,9 +1224,9 @@ describe Form do
       event.form_references.size.should == 0
 
       with_form(@form_hash) do |form|
+
         published_form = form.publish
-        result = form.push
-        result.should eql(1)
+        form.push
         form.errors.should be_empty
         event.reload
         event.form_references.size.should == 1

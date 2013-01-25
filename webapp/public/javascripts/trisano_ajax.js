@@ -100,3 +100,16 @@ $j('a.ajaxy.delete').livequery(function() {
     }
   });
 });
+
+$j(function() {
+ $j(".disease-checkbox").click(function (event){
+   var checked = $j(this).attr("checked");
+   var span = $j(this).parents("label").next("span");
+   span.toggle(checked);
+   if (checked) {
+     span.find("input").removeAttr('disabled');
+   } else {
+     span.find("input").attr('disabled', 'disabled');
+   }
+ });
+});
