@@ -593,6 +593,7 @@ CREATE INDEX dw_morbidity_events_parent_id_ix
 CREATE TABLE dw_event_repeaters AS
     SELECT
         a.event_id,
+        repeater_form_object_id,
         CASE
             WHEN events.type = 'MorbidityEvent' THEN a.event_id
             ELSE NULL::INTEGER
@@ -633,7 +634,7 @@ CREATE TABLE dw_event_repeaters AS
         a.text_answer IS NOT NULL AND
         a.text_answer != '' AND
         a.repeater_form_object_type = 'InvestigatorFormSection'
-    GROUP BY a.event_id, events.type
+    GROUP BY a.event_id, events.type, repeater_form_object_id
 ;
 
 CREATE TABLE dw_assessment_events AS
