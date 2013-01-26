@@ -375,7 +375,7 @@ def formbuilder_hstore_query(name, prefix, repeat, dg, join_clause)
             } : %{
             SELECT
                 disease_id,
-                skeys(repeater_hstore) AS key,
+                skeys(#{prefix}_repeater_hstore) AS key,
                 'T'::BOOLEAN AS repeater
             FROM trisano.dw_#{prefix}_repeaters_view a
                 JOIN trisano.dw_#{prefix}_events_view b
@@ -463,7 +463,7 @@ def add_formbuilder_categories(query, prefix, sourcetable, pt, bt, dg, meta, for
 
       #puts "#{fbkey['repeater']} #{tablename} #{colname}"
       if fbkey['repeater'] != 'f' then
-        formula = "fetchval(repeater_hstore, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
+        formula = "fetchval(#{prefix}_repeater_hstore, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       else
         formula = "fetchval(#{prefix}_formbuilder, '#{fbkey['key'].gsub(/'/, "''")}'::text)"
       end

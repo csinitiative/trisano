@@ -637,6 +637,26 @@ CREATE TABLE dw_event_repeaters AS
     GROUP BY a.event_id, events.type, repeater_form_object_id
 ;
 
+CREATE INDEX repeater_event_id ON dw_event_repeaters (event_id);
+CREATE INDEX repeaters_dw_morbidity_events_id
+    ON dw_event_repeaters (dw_morbidity_events_id)
+    WHERE dw_morbidity_events_id IS NOT NULL;
+CREATE INDEX repeaters_dw_assessment_events_id
+    ON dw_event_repeaters (dw_assessment_events_id)
+    WHERE dw_assessment_events_id IS NOT NULL;
+CREATE INDEX repeaters_dw_contact_events_id
+    ON dw_event_repeaters (dw_contact_events_id)
+    WHERE dw_contact_events_id IS NOT NULL;
+CREATE INDEX repeaters_dw_encounter_events_id
+    ON dw_event_repeaters (dw_encounter_events_id)
+    WHERE dw_encounter_events_id IS NOT NULL;
+CREATE INDEX repeaters_dw_outbreak_events_id
+    ON dw_event_repeaters (dw_outbreak_events_id)
+    WHERE dw_outbreak_events_id IS NOT NULL;
+CREATE INDEX repeaters_dw_place_events_id
+    ON dw_event_repeaters (dw_place_events_id)
+    WHERE dw_place_events_id IS NOT NULL;
+
 CREATE TABLE dw_assessment_events AS
 WITH form_question_names AS (
     SELECT

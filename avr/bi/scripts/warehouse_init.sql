@@ -1714,32 +1714,38 @@ BEGIN
     -- not have cycles in its graph of the schema
     EXECUTE
         'CREATE VIEW trisano.dw_morbidity_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_morbidity_events_id, repeater_hstore AS morbidity_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_morbidity_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_contact_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_contact_events_id, repeater_hstore AS contact_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_contact_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_encounter_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_encounter_events_id, repeater_hstore AS encounter_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_encounter_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_assessment_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_assessment_events_id, repeater_hstore AS assessment_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_assessment_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_outbreak_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_outbreak_events_id, repeater_hstore AS outbreak_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_outbreak_events_id IS NOT NULL';
 
     EXECUTE
         'CREATE VIEW trisano.dw_place_repeaters_view AS
-            SELECT * FROM ' || new_schema || '.dw_event_repeaters
+            SELECT dw_place_events_id, repeater_hstore AS place_repeater_hstore
+            FROM ' || new_schema || '.dw_event_repeaters
             WHERE dw_place_events_id IS NOT NULL';
 
     EXECUTE
