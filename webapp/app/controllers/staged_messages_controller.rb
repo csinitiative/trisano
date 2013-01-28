@@ -137,7 +137,6 @@ class StagedMessagesController < ApplicationController
         event = Event.find(params[:event_id])
         msg_string = t("existing")
         staged_message.assigned_event = event
-        redis.delete_matched("views/events/#{event.id}/*")
       else
         config = { :event_type => params[:type] }
         config[:event_id] = params[:parent_id] if params[:parent_id]
@@ -146,7 +145,7 @@ class StagedMessagesController < ApplicationController
         msg_string = t("new")
         staged_message.assigned_event = event
       end
-
+      redis.delete_matched("views/events/#{params[:event_id] || params[:parent_id]}/*") if (params[:event_id] or params[:parent_id])
       event.reload
       skipped_loinc_codes = event.unknown_or_unlinked_loinc_codes(staged_message)
     rescue Exception => e
