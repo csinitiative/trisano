@@ -1,6 +1,9 @@
 source "http://gems.github.com"
 source "http://rubygems.org"
-gem "rails", "2.3.5"
+
+# Includes security patches
+#gem "rails", "2.3.5"
+gem "rails_csi", "2.3.5.p7"
 
 platforms :jruby do
   gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.kofnopre1"
@@ -18,7 +21,7 @@ gem "haml", "2.0.7"
 gem "validates_timeliness", "2.3.1"
 gem "mislav-will_paginate", "2.3.11"
 gem "rubyzip", "0.9.4"
-gem "delayed_job", '~>2.0.7'
+gem "delayed_job_csi", '~>2.0.7'
 
 gem 'redis-store', '= 1.0.0.beta2'
 gem 'SystemTimer', "1.2.3"
