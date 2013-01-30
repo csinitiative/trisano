@@ -18,12 +18,12 @@ fi
 if [ "$USE_DEBUGGER" = "debug" ]
 then
   echo "Loading web server on 8080 with debugger detached"
-  bundle exec script/server -e feature -p 8080 -P /trisano --debugger -d
+  bundle exec script/server -e feature -p 8080 -P /trisano --debugger > /dev/null &
 elif [ "$USE_DEBUGGER" = "debugger" ]
 then
   echo "Loading web server on 8080 with debugger"
   bundle exec script/server -e feature -p 8080 -P /trisano --debugger 
 else
   echo "Loading web server on 8080 without debugger"
-  bundle exec script/server -e feature -p 8080 -P /trisano -d
+  bundle exec script/server -e feature -p 8080 -P /trisano > /dev/null &
 fi
