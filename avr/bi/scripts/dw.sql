@@ -330,7 +330,7 @@ SELECT
     events.event_queue_id,
     events.acuity,
 
-    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE pataddr.id END AS pataddr_id,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
@@ -755,7 +755,7 @@ SELECT
     events.event_queue_id,
     events.acuity,
 
-    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE pataddr.id END AS pataddr_id,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
@@ -1043,7 +1043,7 @@ SELECT
     events.id,
     events.parent_id,               -- Reporting tool might provide a field "was_a_contact" == parent_id IS NOT NULL
     events.record_number AS record_number,
-    CASE WHEN ds.sensitive THEN -100 ELSE ppl.id END AS dw_patients_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE ppl.id END AS dw_patients_id,
     ppl.entity_id,            -- Keeping this just in case
     birth_gender_ec.code_description AS birth_gender,            -- code_description?
     ethnicity_ec.code_description AS ethnicity,                -- code_description?
@@ -1091,7 +1091,7 @@ SELECT
     COALESCE(inv.first_name || ' ' || inv.last_name, '') AS investigator,
     events.event_queue_id,                    -- do something w/ event queues?
 
-    CASE WHEN ds.sensitive THEN -100 ELSE pataddr.id END AS pataddr_id,
+    CASE WHEN ds.sensitive AND :obfuscate THEN -100 ELSE pataddr.id END AS pataddr_id,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_number END AS street_number,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.street_name END AS street_name,
     CASE WHEN ds.sensitive AND :obfuscate THEN '(Obfuscated)' ELSE pataddr.unit_number END AS unit_number,
@@ -2143,6 +2143,7 @@ UPDATE people
 DELETE FROM notes
     USING dw_assessment_events dme
     WHERE
+        :obfuscate AND
         dme.sensitive_disease AND
         dme.id = notes.event_id;
 
@@ -2165,9 +2166,9 @@ DELETE FROM notes
         dme.sensitive_disease AND
         dme.id = notes.event_id;
 
-UPDATE dw_morbidity_events SET patient_entity_id = -100 WHERE sensitive_disease;
-UPDATE dw_assessment_events SET patient_entity_id = -100 WHERE sensitive_disease;
-UPDATE dw_contact_events SET patient_entity_id = -100 WHERE sensitive_disease;
+UPDATE dw_morbidity_events SET patient_entity_id = -100 WHERE :obfuscate AND sensitive_disease;
+UPDATE dw_assessment_events SET patient_entity_id = -100 WHERE :obfuscate AND sensitive_disease;
+UPDATE dw_contact_events SET patient_entity_id = -100 WHERE :obfuscate AND sensitive_disease;
 
 INSERT INTO trisano.disease_group_numbers
     SELECT
