@@ -3,7 +3,7 @@ source "http://rubygems.org"
 
 # Includes security patches
 #gem "rails", "2.3.5"
-gem "rails_csi", "2.3.5.p7"
+gem "rails_csi", "2.3.5.p8"
 
 platforms :jruby do
   gem "activerecord-jdbcpostgresql-adapter", "= 1.0.0.kofnopre1"
