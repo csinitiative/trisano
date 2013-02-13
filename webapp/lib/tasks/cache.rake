@@ -50,7 +50,7 @@ end
 def request_url(url)
   puts "Retrieving #{url}"
   execute_with_benchmark do
-    `wget #{url} --max-redirect=0 --no-check-certificate`
+    `wget #{url} --max-redirect=0 --no-check-certificate --output-document=/dev/null`
   end
   puts "ERROR retrieving #{url}" if $?.exitstatus != 0
 end
