@@ -8,13 +8,14 @@ namespace :cache do
       default_url_options[:host] = args[:host] || raise("Must supply host as first argument")
       default_url_options[:protocol] = "https"
 
-      limit = args[:limit].to_i || 1000
+      limit = args[:limit].to_i || 300
 
       begin
 
       super_user = User.find_or_create_by_uid_and_user_name("system-super", "system-super")
       super_role = Role.find_or_create_by_role_name("system-super")
       super_role.privileges = Privilege.all
+      super_user.update_attribute(:status, "active")
       Place.jurisdictions.each do |jurisdiction|
         RoleMembership.create(:jurisdiction => jurisdiction.entity, :user => super_user, :role => super_role)
       end
@@ -32,11 +33,13 @@ namespace :cache do
         request_url url_for(:controller => "morbidity_events", :action => "edit", :id => event, :api_key => api_key, :only_path => false)
       end
 
+      super_user.update_attribute(:status, "disabled")
       super_user.destroy unless super_user.nil?
       super_role.destroy unless super_role.nil?
 
       rescue Exception => e
         puts e.message
+        super_user.update_attribute(:status, "disabled")
         super_user.destroy unless super_user.nil?
         super_role.destroy unless super_role.nil?
       end
