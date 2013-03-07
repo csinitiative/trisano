@@ -75,6 +75,7 @@ module NameAndBirthdateSearch
       fields << "sec_juris.secondary_jurisdiction_entity_ids AS secondary_jurisdictions"
       fields << "events.deleted_at"
       fields << "people.middle_name"
+      fields << "events.workflow_state"
     end
   end
 

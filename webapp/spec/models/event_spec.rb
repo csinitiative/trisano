@@ -289,6 +289,16 @@ describe MorbidityEvent do
         @event.jurisdiction.place_entity.should == @jurisdiction
         @event.current_state.name.should == :assigned_to_lhd
       end
+
+      it "should assign a brief note" do
+        @event.jurisdiction.stubs(:allows_current_user_to?).returns(true)
+        @event.assign_to_lhd(@jurisdiction, [], "TEST NOTE")
+        @event.save
+        @event.reload
+        @event.notes.size.should == 1
+        @event.notes.first.note.should == "TEST NOTE"
+        @event.notes.first.note_type.should == "brief"
+      end
     end
 
     describe "with bad parameters" do
@@ -1022,7 +1032,7 @@ describe MorbidityEvent do
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[@disease_id],
+        "diseases_forms_attributes"=>[{:disease_id => @disease_id, :auto_assign => true}],
         "jurisdiction_id"=>""
       }
       @jurisdiction_id = create_jurisdiction_entity.id
@@ -1104,16 +1114,14 @@ describe MorbidityEvent do
         },
         "jurisdiction_attributes" => { "secondary_entity_id" => @jurisdiction_id }
       }
-
       @disease_id = Factory(:disease).id
       @form_hash = {
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[@disease_id],
+        "diseases_forms_attributes"=>[{:disease_id => @disease_id, :auto_assign => true}],
         "jurisdiction_id"=>""
       }
-
     end
 
     it 'should assign available forms at update time when the event has a jurisdiction and a disease and has not previously gone through form assignment' do
@@ -1122,8 +1130,10 @@ describe MorbidityEvent do
         @event.save!
         @event.reload
         @event.form_references.size.should == 0
+
         @event.undergone_form_assignment.should be_false
-        @event.update_attributes("disease_event_attributes" => { "disease_id" => @disease_id })
+        @event.build_disease_event(:disease_id =>  @disease_id)
+        @event.save!
         @event.reload
         @event.form_references.size.should == 1
         @event.undergone_form_assignment.should be_true
@@ -1308,7 +1318,7 @@ describe MorbidityEvent do
         "name"=>"Form Assignment Form",
         "short_name"=> Digest::MD5::hexdigest(DateTime.now.to_s),
         "event_type"=>"morbidity_event",
-        "disease_ids"=>[@disease_id],
+        "diseases_forms_attributes"=>[{:disease_id => @disease_id, :auto_assign => true}],
         "jurisdiction_id"=>""
       }
     end
@@ -1803,7 +1813,7 @@ describe Event, 'cloning an event' do
       form.event_type = "morbidity_event"
       form.name = "AIDS Form"
       form.short_name = 'event_spec_aids'
-      form.disease_ids = [disease_id]
+      form.diseases_forms.build(:disease_id => disease_id, :auto_assign => true)
       form.save_and_initialize_form_elements.should_not be_nil
       form.form_base_element.children_count.should == 3
       question_element = QuestionElement.new(

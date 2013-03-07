@@ -56,7 +56,7 @@ class Event < ActiveRecord::Base
   has_many :forms, :through => :form_references
   has_many :answers, :autosave => true, :include => [:question]
   has_many :tasks, :order => 'due_date ASC'
-  has_many :notes, :order => 'created_at ASC', :dependent => :destroy
+  has_many :notes, :order => 'created_at DESC', :dependent => :destroy
   has_many :attachments, :order => 'updated_at DESC'
 
   has_many :participations
@@ -292,10 +292,14 @@ class Event < ActiveRecord::Base
 
   def add_note(message, *note_type_and_options)
     options = note_type_and_options.extract_options!
-    note_type = note_type_and_options.first || 'administrative'
+    note_type = note_type_and_options.first.blank? ? 'administrative' : note_type_and_options.first.to_s
     note = Note.new options.merge(:note => message, :note_type => note_type)
     self.notes << note # this will save the note
     note
+  end
+
+  def brief_notes
+    self.notes.select {|n| n.note_type == :brief.to_s}
   end
 
   def eager_load_answers
@@ -675,14 +679,13 @@ class Event < ActiveRecord::Base
   def create_form_references
     return [] if self.disease_event.nil? || self.disease_event.disease_id.blank? || self.jurisdiction.nil?
 
-    # In the case of a deep copy it's possible for an event to have forms associated with it even if it hasn't undergone form assigment formally.
-    template_ids = self.form_references.collect { |fr| fr.template_id }
-    i = self.form_references.size - 1
-    Form.get_published_investigation_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore).each do |form|
-      next if template_ids.include?(form.template_id)
-      self.form_references[i += 1] = FormReference.new(:form_id => form.id, :template_id => form.template_id)
+    auto_assignable_forms = Form.auto_assignable_forms(self.disease_event.disease_id, self.jurisdiction.secondary_entity_id, self.class.name.underscore)
+    template_ids = self.form_references.map(&:template_id)
+    auto_assignable_forms.each do |f|
+      next if template_ids.include?(f.template_id)
+      self.form_references << FormReference.new(:form_id => f.id, :template_id => f.template_id)
     end
-    return true
+    true
   end
 
 

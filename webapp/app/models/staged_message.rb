@@ -243,6 +243,10 @@ class StagedMessage < ActiveRecord::Base
       end
     end
 
+    if event.address and event.interested_party.person_entity.canonical_address.nil?
+      event.interested_party.person_entity.build_canonical_address(event.address.attributes.merge(:event_id => nil))
+    end
+
     unless self.patient.telephone_empty? or event.interested_party.person_entity.telephones.any? {|t| t.entity_location_type_id == self.patient.telephone_type_home.id}
       area_code, number, extension = self.patient.telephone_home
       event.interested_party.person_entity.telephones.build(:area_code => area_code,

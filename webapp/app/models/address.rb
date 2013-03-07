@@ -28,7 +28,7 @@ class Address < ActiveRecord::Base
   validates_length_of :street_name, :maximum => 50, :allow_blank => true
   validates_length_of :postal_code, :maximum => 10, :allow_blank => true
   validates_length_of :city, :maximum => 255, :allow_blank => true
-  validates_length_of :unit_number, :maximum => 10, :allow_blank => true
+  validates_length_of :unit_number, :maximum => 60, :allow_blank => true
 
   def xml_fields
     [['state_id',  {:rel => :state}],

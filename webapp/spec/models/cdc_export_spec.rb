@@ -52,17 +52,10 @@ describe CdcExport do
     yield records if block_given?
   end
 
-  def delete_a_record(event_hash = @event_hash)
-    with_sent_events do |events|
-      events[0].disease_event.disease_id = diseases(:chicken_pox).id
-      events[0].save!
-      events[0].reload
-    end
-  end
 
-  def soft_delete_a_record(event_hash = @event_hash)
+  def soft_delete_a_record(event_hash = @event_hash, date = Date.today)
     with_sent_events do |events|
-      event_hash['deleted_at'] = Date.today
+      event_hash['deleted_at'] = date
       events[0].update_attributes(event_hash)
     end
   end
@@ -658,11 +651,40 @@ describe CdcExport do
     fixtures :events, :disease_events, :diseases, :cdc_disease_export_statuses, :export_columns, :export_conversion_values, :entities, :addresses, :people_races, :places, :places_types
 
     before(:each)do
-      delete_a_record
+      soft_delete_a_record
+
       start_mmwr = Mmwr.new(Date.today - 7)
       end_mmwr = Mmwr.new
       @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
     end
+
+    it 'should return records with no export disease status for the year deleted range only' do
+      event = create_cdc_event
+      event.sent_to_cdc = true
+      event.disease_event.disease = Disease.with_no_export_status.first
+      event.deleted_at = Date.parse("2012-01-01")
+      event.save!
+
+      start_mmwr = Mmwr.new(Date.parse("2012-12-20") - 7)
+      end_mmwr = Mmwr.new(Date.parse("2012-12-20"))
+      @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
+      @deletes.length.should == 1
+      @deletes.first.id.should == event.id
+
+      start_mmwr = Mmwr.new(Date.today - 7)
+      end_mmwr = Mmwr.new
+      @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
+      @deletes.length.should == 1
+      @deletes.first.id.should_not == event.id
+    end
+
+    it 'should return deleted records for the current year only' do
+      start_mmwr = Mmwr.new(Date.parse("2012-12-20") - 7)
+      end_mmwr = Mmwr.new(Date.parse("2012-12-20"))
+      @deletes = CdcExport.cdc_deletes(start_mmwr, end_mmwr)
+      @deletes.length.should == 0
+    end
+
 
     it 'should return deleted records' do
       @deletes.length.should == 1

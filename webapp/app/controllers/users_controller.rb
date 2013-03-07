@@ -22,6 +22,7 @@ class UsersController < AdminController
     :shortcuts_update,
     :event_settings,
     :settings,
+    :brief_notes,
     :email_addresses,
     :create_email_address,
     :edit_email_address,

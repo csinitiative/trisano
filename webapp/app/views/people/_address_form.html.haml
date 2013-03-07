@@ -35,7 +35,7 @@
         -core_element :unit_number, a, :horiz do
           =a.label(:unit_number)
           %span.data_unit_number
-            =a.core_text_field(:unit_number, {:size => 10, :maxlength=> 10}, event)
+            =a.core_text_field(:unit_number, {:size => 20, :maxlength=> 60}, event)
 
       %fieldset.vert
         -core_element :city, a, :horiz do

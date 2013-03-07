@@ -77,7 +77,7 @@
         - if lab_result.try(:staged_message)
           %span.horiz
             %label=t 'original_report'
-            = link_to t('electronic_lab_report'), staged_message_path(lab_result.staged_message)
+            = link_to t('electronic_lab_report'), "#", :class => "hl7-link", :title => h(lab_result.staged_message.patient.patient_name), :data => h(lab_result.staged_message.hl7_message)
 
         - if defined?(f) && !f.object.new_record?
           %span.vert

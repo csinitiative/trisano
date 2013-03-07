@@ -137,7 +137,7 @@ module Export
       end
 
       def syphilis?
-        disease_name.include? "Syphilis"
+        ["700", "710", "720", "730", "740", "745", "790"].include?(disease_name)
       end
 
       def export?
@@ -593,7 +593,7 @@ module Export
       end
 
       def exp_specsite
-        date, index = pg_closest_date(reference_date, pg_array(lab_test_dates))
+        date, index = pg_closest_date(reference_date, lab_results_array.map {|r| r[:date]})
         value = HumanEvent.trisano_specimen[pg_array(specimen_values)[index]] if date and index > -1
         value ||= '  '
         [value, 85]
@@ -613,7 +613,8 @@ module Export
       end
 
       def lab_results_array
-        dates = pg_array(lab_test_dates)
+        dates = pg_array(lab_test_dates).compact
+        dates = pg_array(lab_collection_dates).compact if dates.empty?
         types = pg_array(lab_test_types)
         titers = pg_array(lab_result_values)
         array = []

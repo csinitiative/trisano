@@ -398,6 +398,16 @@ ARUP1
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
     end
 
+    it 'should create labs for encounter events' do
+      e = @staged_message.new_event_from({:event_type => "encounter_event"})
+      e.save!
+      @staged_message.assigned_event = e
+      e.labs[0].lab_results.size.should == 1
+      @staged_message.lab_results.size.should == 1
+      @staged_message.lab_results[0].should eql(e.labs[0].lab_results[0])
+    end
+
+
     it 'should create a lab result and link to it' do
       m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
@@ -439,6 +449,14 @@ ARUP1
         @event.should be_new_record
       end
 
+      it "should return a valid encounter event" do
+        @event = @staged_message.new_event_from({:event_type => "encounter_event"})
+        @event.class.should == EncounterEvent
+        @event.should be_valid
+        @event.should be_new_record
+        @event.parent_event.class.should == MorbidityEvent
+      end
+      
       it "should parse MSH-6 and assign as first reported date" do
         @event.first_reported_PH_date.should == Time.parse("200903261645")
       end
@@ -471,6 +489,15 @@ ARUP1
         @event.jurisdiction.name.should == "Unassigned"
       end
 
+      it "should not fail if address is not set" do
+        msg =  <<ARUP1
+MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19560711000000|F \rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
+ARUP1
+        @staged_message = StagedMessage.new(:hl7_message => msg)
+        @event = @staged_message.new_event_from
+        @event.address.should == nil
+      end
+
       it "should parse the street number with -" do
         msg =  <<ARUP1
 MSH|^~\&|ARUP|ARUP LABORATORIES^46D0523979^CLIA|UTDOH|UT|200903261645||ORU^R01|200903261645128667|P|2.3.1|1\rPID|1||17744418^^^^MR||ZHANG^GEORGE^^^^^L||19830922|M||U^Unknown^HL70005|42-12 HAPPY LN^^SALT LAKE CITY^UT^84444^USA^^^Salt Lake||^^PH^^^801^5552346|||||||||U^Unknown^HL70189\rORC||||||||||||^FARNSWORTH^MABEL^W|||||||||University Hospital UT|50 North Medical Drive^^Salt Lake City^UT^84132^USA^B||^^^^^USA^B\rOBR|1||09078102377|13954-3^Hepatitis Be Antigen^LN|||200903191011|||||||200903191011|BLOOD|^FARNSWORTH^MABEL^W||||||200903191011|||F||||||9^Unknown\rOBX|1|ST|13954-3^Hepatitis Be Antigen^LN|1|Positive|Metric Ton|Negative||||F|||200903210007\r
@@ -478,6 +505,7 @@ ARUP1
         @staged_message = StagedMessage.new(:hl7_message => msg)
         @event = @staged_message.new_event_from
         @event.address.street_number.should == "42-12"
+        @event.address.street_name.should == "Happy Ln"
       end
 
       it "should populate the county" do
@@ -487,6 +515,18 @@ ARUP1
         @staged_message = StagedMessage.create(:hl7_message => unique_message(msg))
         @event = @staged_message.new_event_from
         @event.address.county.should == external_codes(:county_salt_lake)
+      end
+
+      it "should fill in the person's address if it's not present" do
+        a = @event.address
+        pa = @event.interested_party.person_entity.canonical_address
+        pa.should_not be_blank
+        pa.street_number.should == a.street_number
+        pa.unit_number.should == a.unit_number
+        pa.street_name.should == a.street_name
+        pa.city.should == a.city
+        pa.state_id.should == a.state_id
+        pa.postal_code.should == a.postal_code
       end
     end
 

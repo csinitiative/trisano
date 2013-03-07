@@ -447,6 +447,14 @@ describe HumanEvent, "adding from staged message" do
       end
     end
 
+    it "should detect unknown or unlinked LOINC codes" do
+      with_human_event do |event|
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:unlinked_loinc])).should == ["10000-1"]
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:unknown_loinc])).should == ["20000-0"]
+        event.unknown_or_unlinked_loinc_codes(StagedMessage.new(:hl7_message => HL7MESSAGES[:ihc_1])).should == ["00000-0", "22025-1", "45403-3", "42347-5", "21612-7"]
+      end
+    end
+
     it "should reject a staged message if all its OBX segments are invalid" do
       with_human_event do |event|
         lambda do
@@ -523,6 +531,26 @@ describe HumanEvent, "adding from staged message" do
         telephone.phone_number.should == '5551212'
         telephone.extension.should be_blank
       end
+    end
+
+    it "should look for the existing non-deleted clinician either original or merged" do
+      deleted_clinician = Factory(:person, :first_name => "Alan", :last_name => "Admit", :person_type => "clinician")
+      active_clinician = Factory(:person, :first_name => "Alan", :last_name => "Admit", :person_type => "clinician")
+      PersonEntity.create!(:person => deleted_clinician, :deleted_at => 1.month.ago.to_date)
+      @clinician_entity = PersonEntity.create!(:person => active_clinician)
+
+      e1 = HumanEvent.new
+
+      s1 = StagedMessage.new :hl7_message => HL7MESSAGES[:realm_campylobacter_jejuni]
+
+      e1.add_labs_from_staged_message s1
+      e1.save!
+
+      e1.should be_valid
+
+      e1.clinicians.size.should == 1
+      e1.clinicians.first.person_entity.id.should == @clinician_entity.id
+      e1.clinicians.first.person_entity.deleted_at.should == nil
     end
 
     it 'should assign the same PersonEntity as a clinician to multiple events' do

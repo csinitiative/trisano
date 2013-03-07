@@ -236,7 +236,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tasks, :path_prefix => '/users/:user_id',   :name_prefix => 'user_',  :controller => 'user_tasks',  :only => [:index, :update]
 
   # These are the notes in use with and available to an event
-  map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index]
+  map.resources :notes, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_notes', :only => [:index, :create]
 
   # An event's attachments
   map.resources :attachments, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_attachments', :except => [:edit]

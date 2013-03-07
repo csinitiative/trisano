@@ -32,7 +32,7 @@
       %th.forminformation
         =t 'form_information'
       %th=t 'diseases'
-      %th=t 'jurisdiction'
+      %th=t 'jurisdictions'
       %th=t 'event_type'
       %th=t 'short_name'
     %tr
@@ -51,17 +51,23 @@
             = link_to t('edit'), edit_form_path(@form)
       %td
         %ul
-          - @form.diseases.each do |disease|
-            %li.diseaselist= h disease.disease_name
+          - @form.diseases_forms.each do |d|
+            %li.diseaselist
+              = h d.disease.disease_name
+              = "(Auto-assigned)" if d.auto_assign?
       %td
-        = h @form.jurisdiction.nil? ? t("all") : @form.jurisdiction.place.name
+        - if @form.jurisdictions.empty?
+          = h t("all")
+        - else
+          %ul
+          - @form.jurisdictions.each do |j|
+            %li.diseaselist= h j.place.name
       %td
         =t(@form.event_type.underscore)
         .status
           =t("form_statuses.#{@form.status.downcase.gsub(" ", "_")}")
       %td
         = h @form.short_name
-
 #rot
   %p
     = admin_master_info(@form)

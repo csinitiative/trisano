@@ -64,10 +64,10 @@ describe Note do
       User.current_user=(@another_user)
       @event.add_note("Note by a second user")
 
-      @event.notes[0].user.id.should == @user.id
+      @event.notes.first.user.id.should == @another_user.id
       @event.notes[1].user.id.should == @user.id
       @event.notes[2].user.id.should == @user.id
-      @event.notes[3].user.id.should == @another_user.id
+      @event.notes[3].user.id.should == @user.id
     end
 
   end

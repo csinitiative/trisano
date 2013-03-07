@@ -261,7 +261,8 @@ describe CdcExport do
       with_cdc_records do |records|
         record = records[0].first
         record.lab_test_dates = nil
-        record.disease_name = "Syphilis"
+        record.lab_collection_dates = nil
+        record.disease_name = "710"
 
         record.to_cdc.length.should == 191
         record.exp_specsite.first.should == "  "

@@ -131,6 +131,10 @@ Given(/^a (.+) event exists in (.+) with the disease (.+)$/) do |event_type, jur
   @event = create_basic_event(event_type, get_unique_name(1), disease, jurisdiction)
 end
 
+Given(/^a brief note exists with text '(.+)'$/) do |note|
+  @event.notes << Note.create!(:note => note, :note_type => "brief")
+end
+
 Given(/^a (.+) event exists with a disease that matches the form$/) do |event_type|
   event = create_basic_event(event_type, get_unique_name(1), @form.diseases.first.disease_name, get_random_jurisdiction_by_short_name)
   if event_type == "morbidity" or event_type == "assessment"

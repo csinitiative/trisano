@@ -465,11 +465,10 @@ class HumanEvent < Event
       # Handle the primary jurisdiction
       #
       # Do nothing if the passed-in jurisdiction is the current jurisdiction
-      unless jurisdiction_id == self.jurisdiction.secondary_entity_id
+      if jurisdiction_id != self.jurisdiction.secondary_entity_id or (self.is_a?(ContactEvent) and self.not_routed?)
         proposed_jurisdiction = PlaceEntity.jurisdictions.find(jurisdiction_id)
         raise(I18n.translate('new_jurisdiction_is_not_jurisdiction')) unless proposed_jurisdiction
         self.jurisdiction.update_attribute(:place_entity, proposed_jurisdiction)
-        self.add_note note
         primary_changed = true
       end
 
@@ -488,6 +487,7 @@ class HumanEvent < Event
 
       self.add_forms(self.available_forms) if self.can_receive_auto_assigned_forms?
 
+      self.add_note(note, :brief, :user => User.current_user) unless note.blank?
       reload # Any existing references to this object won't see these changes without this
     end
     primary_changed
@@ -516,6 +516,13 @@ class HumanEvent < Event
     end
 
     self.update_attributes(attrs)
+  end
+
+  def unknown_or_unlinked_loinc_codes(staged_message)
+    staged_message.observation_requests.map(&:tests).flatten.select { |obx|
+        set_loinc_scale_and_test_type obx
+        @scale_type.nil? or @common_test_type.nil?
+      }.map(&:loinc_code).uniq
   end
 
   def add_labs_from_staged_message(staged_message)
@@ -848,7 +855,8 @@ class HumanEvent < Event
       :first_name  => first_name,
       :person_type => 'clinician'
     }
-    person = Person.first :conditions => person_attributes
+    person = Person.first :conditions => ["entities.deleted_at IS NULL AND LOWER(people.last_name) = ? AND LOWER(people.first_name) = ? AND LOWER(people.person_type) = ?", last_name.downcase, first_name.downcase, "clinician" ],
+                          :include => :person_entity
     if person
       person_entity_id = person.person_entity.id
       @clinician = clinicians.to_a.find do |c|

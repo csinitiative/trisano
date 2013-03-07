@@ -85,6 +85,20 @@ class EncounterEvent < HumanEvent
     end
   end
 
+  def self.new_event_from(staged_message, options = {})
+
+    return nil if staged_message.patient.patient_last_name.blank?
+
+    event = EncounterEvent.new
+    event.parent_event = options[:event_id] ? MorbidityEvent.find(options[:event_id]) : MorbidityEvent.new_event_from(staged_message, options)
+    event.build_participations_encounter
+    event.participations_encounter.user_id = User.current_user
+    event.participations_encounter.encounter_date = Date.today
+    event.participations_encounter.description = "Electronic Laboratory Report"
+    event.participations_encounter.encounter_location_type = ParticipationsEncounter.location_type_array.last.last
+    event
+  end
+
   # If you're wondering why calling #destroy on a contact event isn't deleting the record, this is why.
   # Override destroy to soft-delete record instead.  This makes it easier to work with :autosave.
   def destroy

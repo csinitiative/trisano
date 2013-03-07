@@ -2,44 +2,55 @@
 
 anthrax_form_1:
   disease_id: 3
+  auto_assign: true
   form_id: 1
 
 anthrax_form_2:
   disease_id: 3
+  auto_assign: true
   form_id: 2
 
 anthrax_form_3:
   disease_id: 3
+  auto_assign: true
   form_id: 3
 
 anthrax_form_4:
   disease_id: 3
+  auto_assign: true
   form_id: 4
 
 anthrax_form_5:
   disease_id: 3
+  auto_assign: true
   form_id: 5
 
 aids_form_6:
   disease_id: 4
+  auto_assign: true
   form_id: 6
 
 chicken_pox_form_7:
   disease_id: 1
+  auto_assign: true
   form_id: 7
 
 tuberculosis_form_7:
   disease_id: 2
+  auto_assign: true
   form_id: 7
 
 follow_up_element_test_form:
   disease_id: 1
+  auto_assign: true
   form_id: 1
   
 hep_a_form:
   disease_id: 5
+  auto_assign: true
   form_id: 8
 
 anthrax_form_for_contact_event:
   disease_id: 3
+  auto_assign: true
   form_id: 9

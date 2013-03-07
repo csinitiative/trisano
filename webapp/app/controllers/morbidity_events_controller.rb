@@ -164,8 +164,10 @@ class MorbidityEventsController < EventsController
 
     if @search_form.valid?
       if @search_form.has_search_criteria?
-        logger.debug "S@search_form.to_hash = #{@search_form.to_hash.inspect}"
-        @results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash).paginate(:page => params[:page], :per_page => params[:per_page] || 25)
+        logger.debug "@search_form.to_hash = #{@search_form.to_hash.inspect}"
+        results = HumanEvent.find_by_name_and_bdate(@search_form.to_hash)
+        result_ids = results.map(&:event_id).compact.uniq
+        @results = results.select {|r| result_ids.include?(r['event_id'])}.paginate(:page => params[:page], :per_page => params[:per_page] || 25)
       end
       render :template => 'search/event_search'
     else

@@ -224,10 +224,16 @@ module EventsHelper
       if action_controls.blank? && routing_controls.blank?
         controls << "<span style='color: gray'>#{t(:insufficient_privs_transition)}</span>" if action_controls.blank?
       else
+        controls << form_tag(event_notes_path(event),  :method => :post)
+        controls <<  hidden_field_tag("note[note_type]", "brief")
+        controls <<  hidden_field_tag("note[note]", "", :class => "brief-note-text")
+        controls <<  hidden_field_tag("note[event_id]", event.id)
+        controls <<  hidden_field_tag("note[user_id]", User.current_user.id)
+        controls << "</form>"
         controls << routing_form_tag(:state, event, :id => "state_change") do
           returning "" do |form|
             form << hidden_field_tag("morbidity_event[workflow_action]", '')
-            form << "#{ct(:brief_note)} #{text_field_tag("morbidity_event[note]", '')}"
+            form << "#{ct(:brief_note)} #{text_field_tag("morbidity_event[note]", '', :class => "brief-note-text")} #{submit_tag("Save", :class => "save-brief-note-button")}"
             form << "<br/> #{ct(:action_required)} #{action_controls} <br/>" unless action_controls.blank?
             form << routing_controls
           end
@@ -246,6 +252,13 @@ module EventsHelper
         controls << "<div style='background-color: #fff; border: solid 2px; padding: 15px; border-color: #000'>"
 
         jurisdictions = Place.jurisdictions
+        controls << form_tag(event_notes_path(event),  :method => :post)
+        controls << hidden_field_tag("note[note_type]", "brief")
+        controls << hidden_field_tag("note[note]", "", :class => "brief-note-text")
+        controls << hidden_field_tag("note[event_id]", event.id)
+        controls << hidden_field_tag("note[user_id]", User.current_user.id)
+        controls << "</form>"
+
         controls << routing_form_tag(:jurisdiction, event) do
           returning "" do |form|
             form << "<span>#{ct(:investigating_jurisdiction)} &nbsp;</span>"
@@ -268,11 +281,10 @@ module EventsHelper
             end
             form << "</div></div>"
 
-            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("routing[note]", '')}</div><br/>"
+            form << "<div style='position: absolute; right: 15px'>#{ct(:brief_note)} #{text_field_tag("routing[note]", event.brief_notes.first ? h(event.brief_notes.first.note) : '', :class => "brief-note-text")} #{submit_tag("Save", :class => "save-brief-note-button")}</div><br/>"
             form << submit_tag(t(:route_event), :id => "route_event_btn", :style => "position: absolute; right: 15px; bottom: 5px")
           end
         end
-
         controls << link_to_function(t("close"), "Effect.Fade('routing_controls_#{h(event.id)}', { duration: 0.2 })")
         controls << "</div>"
         controls << "</div>"

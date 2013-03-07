@@ -184,6 +184,8 @@ en:
   clinical_notes: 'Clinical Notes'
   administrative_notes: 'Administrative Notes'
   administrative: 'Administrative'
+  brief_notes: 'Brief Notes'
+  brief: 'Brief'
   all: 'All'
   print: 'Print'
   close: 'Close'
@@ -333,6 +335,7 @@ en:
   forms_in_use: 'Forms in Use'
   forms_available: 'Available Forms'
   form_information: 'Form Information'
+  disable_auto_assign: 'Automatic Assignment Disabled'
   event_type: 'Event Type'
   remove_from_event: 'Remove from event'
   confirm_remove_form: "Are you sure? Removing a form will also remove all answers to questions on that form."
@@ -930,6 +933,7 @@ en:
   similar_events: "Similar Events"
   discard: "Discard"
   raw: "Raw"
+  elr_hl7_message: "ELR HL7 message"
   create_cmr_from_message: "Create a CMR from this message"
   create_ae_from_message: "Create an AE from this message"
   dob: "DOB"
@@ -975,6 +979,8 @@ en:
   keyboard_shortcuts: "Keyboard Shortcuts"
   update_shortcuts: "Update Shortcuts"
   general: "General"
+  manage_brief_notes: "Manage Brief Notes"
+  display_brief_note: "Display the latest Brief Note for a CMR in the Status column on the Events List"
   edit_keyboard_shortcuts: "Edit Keyboard Shortcuts"
   manage_email_addresses: "Manage E-Mail Addresses"
   current_email_addresses: "Current E-Mail Addresses"
@@ -1111,6 +1117,7 @@ en:
   assign_new_cmr: "Assign to new CMR using this person"
   assign_new_ae: "Assign to new AE using this person"
   assign_lab_result: "Assign lab result"
+  assign_lab_result_as_encounter: "Assign lab result to Encounter"
 
   trisano:
     privileges:

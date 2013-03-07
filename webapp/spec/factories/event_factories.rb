@@ -86,6 +86,7 @@ Factory.define :form do |f|
   f.short_name { Factory.next(:short_name) }
   f.name       { Factory.next(:long_name) }
   f.event_type 'contact_event'
+  f.disable_auto_assign false
 end
 
 Factory.define :form_reference do |fr|

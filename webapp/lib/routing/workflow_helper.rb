@@ -64,8 +64,8 @@ module Routing
         add_note(I18n.translate("system_notes.workflow_accepted_by",
             :jurisdiction_name => self.jurisdiction.try(:name),
             :note => note,
-            :locale => I18n.default_locale)
-        )
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -76,9 +76,9 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_rejected_by",
             :jurisdiction_name => self.jurisdiction.try(:name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -89,9 +89,9 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_approved_at",
             :jurisdiction_name => self.jurisdiction.try(:name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -102,9 +102,9 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_routed_to_queue",
             :name => self.event_queue.try(:queue_name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -115,9 +115,9 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_routed_to_investigator",
             :name => self.investigator.try(:best_name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -126,11 +126,11 @@ module Routing
         unless self.jurisdiction.allows_current_user_to? :accept_event_for_investigation
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
-        add_note(I18n.translate("system_notes.workflow_accepted_by_investigator",
-            :note => note,
+        add_note(I18n.translate("system_notes.workflow_routed_to_investigator",
             :name => self.investigator.try(:best_name),
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -140,9 +140,9 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_rejected_for_investigation",
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -152,9 +152,9 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_completed_investigation",
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -164,9 +164,9 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_investigator_closed_investigation",
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -177,9 +177,9 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_reopened_by",
             :jurisdiction_name => self.jurisdiction.try(:name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -189,9 +189,9 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_reopened_by_state",
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
 
@@ -201,9 +201,9 @@ module Routing
           halt!(I18n.translate("insufficient_privileges_for_change"))
         end
         add_note(I18n.translate("system_notes.workflow_approved_by_state",
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
         self.review_completed_by_state_date = Date.today
       end
     end
@@ -215,12 +215,11 @@ module Routing
         end
         add_note(I18n.translate("system_notes.workflow_approved_at",
             :jurisdiction_name => self.jurisdiction.try(:name),
-            :note => note,
-            :locale => I18n.default_locale)
-        )
+            :note => "",
+            :locale => I18n.default_locale))
+        add_note(note, :brief) unless note.blank?
       end
     end
-
   end
 end
 

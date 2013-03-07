@@ -260,6 +260,7 @@ en:
   existing: "existing"
   new: "new"
   message_assignment_successful: "Staged message was successfully assigned to {{msg_string}} event, record number {{record_number}}. <br/> {{note}}"
+  message_assignment_unknown_or_unlinked_loinc_codes: "LOINC code(s) {{loinc_codes}} in the message unknown or unlinked."
   message_assignment_failed: "Could not assign message to {{msg_string}} event. {{message}}"
   staged_message_search_failed: "Search failed. Make sure the date range is valid."
   no_manage_staged_message_privs: "You do not have privileges to manage staged messages"

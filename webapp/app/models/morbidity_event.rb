@@ -230,15 +230,51 @@ class MorbidityEvent < HumanEvent
 
   def generate_mmwr
     mmwr = Mmwr.new({
-        :onsetdate => disease.try(:disease_onset_date),
-        :diagnosisdate => disease.try(:date_diagnosed),
-        :labresultdate => definitive_lab_date,
-        :firstreportdate => self.first_reported_PH_date,
+        :onsetdate => disease.try(:disease_onset_date).blank? ? nil : disease.try(:disease_onset_date).to_date,
+        :diagnosisdate => disease.try(:date_diagnosed).blank? ? nil : disease.try(:date_diagnosed).to_date,
+        :labresultdate => definitive_lab_date.blank? ? nil : definitive_lab_date.to_date,
+        :firstreportdate => self.first_reported_PH_date.blank? ? nil : self.first_reported_PH_date.to_date,
         :event_created_date => new_record? ? Date.today : self.created_at.to_date
       })
 
     self.MMWR_week = mmwr.mmwr_week
     self.MMWR_year = mmwr.mmwr_year
+  end
+
+  def self.new_event_from(staged_message, options = {})
+
+    return if staged_message.patient.patient_last_name.blank?
+    entity_id = options[:entity_id]
+    event = self.new(:workflow_state => 'new', :first_reported_PH_date => staged_message.message_header.time || staged_message.created_at)
+
+    if entity_id
+      person = PersonEntity.find(entity_id.to_i)
+      event.copy_from_person(person)
+    else
+      event.build_interested_party
+      event.interested_party.build_person_entity :race_ids => [staged_message.patient.trisano_race_id].flatten
+      event.interested_party.person_entity.build_person( :last_name => staged_message.patient.patient_last_name,
+                                                         :first_name => staged_message.patient.patient_first_name,
+                                                         :middle_name => staged_message.patient.patient_middle_name,
+                                                         :birth_date => staged_message.patient.birth_date,
+                                                         :birth_gender_id => staged_message.patient.trisano_sex_id)
+
+      unless staged_message.patient.death_date.blank?
+        event.interested_party.person_entity.person.date_of_death = staged_message.patient.death_date
+      end
+
+      unless staged_message.patient.trisano_ethnicity_id.nil?
+        event.interested_party.person_entity.person.ethnicity_id = staged_message.patient.trisano_ethnicity_id
+      end
+
+      unless staged_message.patient.primary_language.nil? or staged_message.patient.primary_language.id.nil?
+        event.interested_party.person_entity.person.primary_language_id = staged_message.patient.primary_language.id
+      end
+    end
+    staged_message.set_address_and_phone(event)
+    event.build_jurisdiction unless event.jurisdiction
+    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
+    event
   end
 
   def validate
