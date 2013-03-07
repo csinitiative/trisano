@@ -34,7 +34,7 @@
       - pe.fields_for(:canonical_address) do |address|
         - address.core_text :street_number, :horiz, :size => 10, :maxlength => 10
         - address.core_text :street_name, :horiz, :size => 50, :maxlength => 50
-        - address.core_text :unit_number, :horiz, :size => 10, :maXlength => 10
+        - address.core_text :unit_number, :horiz, :size => 20, :maXlength => 60
         - address.core_text :city, :horiz, :size => 30, :maxlength => 255
         - address.code_field :state_id, :state, :horiz, :include_blank => true
         - address.code_field :county_id, :county, :horiz, :include_blank => true

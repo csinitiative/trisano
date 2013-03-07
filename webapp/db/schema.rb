@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(:version => 156) do
     t.integer  "state_id"
     t.string   "street_number", :limit => 10
     t.string   "street_name",   :limit => 50
-    t.string   "unit_number",   :limit => 10
+    t.string   "unit_number",   :limit => 60
     t.string   "postal_code",   :limit => 10
     t.datetime "created_at"
     t.datetime "updated_at"

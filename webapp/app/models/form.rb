@@ -21,9 +21,11 @@ require 'zip/zipfilesystem'
 class Form < ActiveRecord::Base
   before_validation :replace_spaces_in_short_name
 
-  has_and_belongs_to_many :diseases, :order => "disease_id"
-  belongs_to :jurisdiction, :class_name => "PlaceEntity", :foreign_key => "jurisdiction_id"
-
+  has_many :diseases, :order => "disease_id", :through => :diseases_forms
+  has_many :diseases_forms, :dependent => :destroy
+  accepts_nested_attributes_for :diseases_forms, :allow_destroy => true
+  has_and_belongs_to_many :jurisdictions, :join_table => "forms_jurisdictions", :class_name => "PlaceEntity", :association_foreign_key  => "jurisdiction_id"
+ 
   has_one :form_base_element, :class_name => "FormElement", :conditions => "parent_id is null"
   has_many :form_elements, :include => [:question]
   has_many :published_versions, :class_name => "Form", :foreign_key => "template_id", :order => "created_at DESC"
@@ -117,8 +119,6 @@ class Form < ActiveRecord::Base
   def publish
     raise(I18n.translate('cannot_publish_already_published_version')) unless self.is_template
 
-    published_form = nil;
-
     return if not valid?
 
     begin
@@ -142,9 +142,9 @@ class Form < ActiveRecord::Base
 
         published_form = Form.create({:name => self.name,
             :event_type => self.event_type,
+            :disable_auto_assign => self.disable_auto_assign,
             :short_name => self.short_name,
             :description => self.description,
-            :jurisdiction => self.jurisdiction,
             :version => new_version_number,
             :status => 'Live',
             :is_template => false,
@@ -159,7 +159,8 @@ class Form < ActiveRecord::Base
         end
 
         # Associate newly published form with the same diseases as current form
-        self.diseases.each { | disease | published_form.diseases << disease }
+        self.jurisdictions.each {|j| published_form.jurisdictions << j }
+        self.diseases_forms.each { | disease | published_form.diseases_forms.create(:disease_id => disease.disease_id, :auto_assign => disease.auto_assign) }
 
         # Note: Errors in the published form's structure are added to the form that's being published
         published_form_structural_errors = published_form.structural_errors
@@ -212,8 +213,11 @@ class Form < ActiveRecord::Base
         copied_form.status = 'Not Published'
         copied_form.is_template = true
         copied_form.save!
-        self.diseases.each do |disease|
-          copied_form.diseases << disease
+        self.diseases_forms.each do |disease|
+          copied_form.diseases_forms << disease
+        end
+        self.jurisdictions.each do |j|
+          copied_form.jurisdictions << j
         end
         Form.copy_form_elements(self, copied_form)
       end
@@ -261,8 +265,8 @@ class Form < ActiveRecord::Base
         Form.copy_form_elements(most_recent_form, rolled_back_form)
 
         # Associate newly copied form with the same diseases as current form
-        self.diseases.each { | disease | rolled_back_form.diseases << disease }
-
+        self.diseases_forms.each { | disease | rolled_back_form.diseases_forms << disease }
+        self.jurisdictions.each { | j | rolled_back_form.jurisdictions << j }
         # Note: Errors in the rolled back form's structure are added to the form that's being rolled back
         rolled_back_form_structural_errors = rolled_back_form.structural_errors
         unless rolled_back_form_structural_errors.empty?
@@ -283,7 +287,7 @@ class Form < ActiveRecord::Base
   end
 
   def push
-    if self.diseases.empty?
+    if self.diseases_forms.empty?
       self.errors.add_to_base(:no_diseases)
       return nil
     end
@@ -292,7 +296,7 @@ class Form < ActiveRecord::Base
       most_recent_form = most_recent_version
       return nil if most_recent_form.nil?
       push_count = 0
-      jurisdiction_ids = self.jurisdiction_id.nil? ? jurisdiction_ids = Place.jurisdictions.collect {|place| place.id } : jurisdiction_ids = self.jurisdiction_id
+      jurisdiction_ids = self.jurisdictions.empty? ? Place.jurisdictions.collect {|place| place.id } : self.jurisdictions
       conditions_array = []
       
       conditions_array[0] = "events.type = ? "
@@ -305,7 +309,7 @@ class Form < ActiveRecord::Base
       conditions_array << jurisdiction_ids
 
       conditions_array[0] << " AND disease_events.disease_id IN (?)"
-      conditions_array << self.disease_ids
+      conditions_array << self.diseases_forms.map(&:disease_id)
 
       joins = "INNER JOIN participations ON participations.event_id = events.id "
       joins << "INNER JOIN disease_events ON disease_events.event_id = events.id"
@@ -437,19 +441,26 @@ class Form < ActiveRecord::Base
     end
   end
 
+  def auto_assign?(disease_id)
+    self.diseases_forms.detect {|d| d.disease_id == disease_id}.auto_assign
+  end
+
   def most_recent_version(form_id = nil)
     form_id = form_id.nil? ? self.id : form_id
     Form.find(:first, :conditions => {:template_id => form_id, :is_template => false}, :order => "version DESC")
   end
 
+  def self.auto_assignable_forms(disease_id, jurisdiction_id, event_type)
+    self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type).reject {|f| !f.auto_assign?(disease_id) }
+  end
+
   def self.get_published_investigation_forms(disease_id, jurisdiction_id, event_type)
     event_type = event_type.to_s
     Form.find(:all,
-      :include => :diseases,
-      :conditions => ["event_type = ? and diseases_forms.disease_id = ?  AND ( jurisdiction_id = ? OR jurisdiction_id IS NULL ) AND status = 'Live'",
-        event_type, disease_id, jurisdiction_id ],
-      :order => "forms.created_at ASC"
-    )
+      :include => [:diseases, :jurisdictions],
+      :conditions => ["event_type = ? AND diseases_forms.disease_id = ?  AND status = 'Live'",
+        event_type, disease_id ],
+      :order => "forms.created_at ASC").select {|f| f.jurisdictions.empty? or f.jurisdictions.map(&:id).include?(jurisdiction_id) }
   end
 
   # Calls checks the form element structure and adds errors to the
@@ -613,7 +624,6 @@ class Form < ActiveRecord::Base
         form = Form.new(ActiveSupport::JSON.decode(form_import_string))
         form.rolled_back_from_id = nil
         form.template_id = nil
-        form.jurisdiction_id = nil
         form.status = "Not Published"
         form.save!
         import_elements(elements_import_string, form.id)

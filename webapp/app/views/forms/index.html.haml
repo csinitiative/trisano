@@ -27,16 +27,20 @@
       %td
         = button_to(t("upload"), {}, { :type => "submit" })
   %br
-
 #rot
   %table.list
     %tr
+      - query_params = request.query_parameters
+      - query_params.delete('commit')
       %th.forminformation
         =t 'form_information'
-      %th=t 'diseases'
-      %th=t 'jurisdiction'
-      %th=t 'event_type'
-      %th=t 'short_name'
+      %th=link_to(t('diseases'), forms_path(merge_sort_params(query_params, 'diseases')))
+      %th=link_to(t('jurisdictions'), forms_path(merge_sort_params(query_params, 'jurisdictions')))
+      %th
+        =link_to(t('event_type'), forms_path(merge_sort_params(query_params, 'event_type')))
+        %br
+        =link_to(t('status'), forms_path(merge_sort_params(query_params, 'status')))
+      %th=link_to(t('short_name'), forms_path(merge_sort_params(query_params, 'short_name')))
     - for form in @forms
       %tr.roll
         %td.forminformation
@@ -62,14 +66,22 @@
               = link_to t('deactivate'), deactivate_form_path(form), :method => :post
         %td
           %ul
-            - form.diseases.each do |disease|
+            - form.diseases_forms.each do |d|
               %li.diseaselist
-                = h disease.disease_name
+                = h d.disease.disease_name
+                = "(Auto-assigned)" if d.auto_assign?
         %td
-          = h form.jurisdiction.nil? ? t("all") : form.jurisdiction.place.name
+          - if form.jurisdictions.empty?
+            = h t("all")
+          - else
+            %ul
+            - form.jurisdictions.each do |j|
+              %li.diseaselist= h j.place.name
         %td
           = t(h(form.event_type.underscore))
           .status
             = h(t("form_statuses.#{form.status.downcase.gsub(" ", "_")}"))
         %td
           = h form.short_name
+  %br
+    = will_paginate @forms

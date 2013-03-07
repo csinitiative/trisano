@@ -265,40 +265,9 @@ class StagedMessage < ActiveRecord::Base
     event
   end
 
-  def new_event_from(entity_id=nil)
-
-    return nil if self.patient.patient_last_name.blank?
-
-    event = MorbidityEvent.new(:workflow_state => 'new', :first_reported_PH_date => self.message_header.time || self.created_at)
-
-    if entity_id
-      person = PersonEntity.find(entity_id.to_i)
-      event.copy_from_person(person)
-    else
-      trisano_race_ids =  patient.trisano_race_id.is_a?(Array) ? patient.trisano_race_id :  [ patient.trisano_race_id ]
-      event.build_interested_party
-      event.interested_party.build_person_entity :race_ids => trisano_race_ids
-      event.interested_party.person_entity.build_person( :last_name => self.patient.patient_last_name,
-                                                         :first_name => self.patient.patient_first_name,
-                                                         :middle_name => self.patient.patient_middle_name,
-                                                         :birth_date => self.patient.birth_date,
-                                                         :birth_gender_id => self.patient.trisano_sex_id)
-      unless patient.death_date.blank?
-        event.interested_party.person_entity.person.date_of_death = patient.death_date
-      end
-
-      unless patient.trisano_ethnicity_id.nil?
-        event.interested_party.person_entity.person.ethnicity_id = patient.trisano_ethnicity_id
-      end
-
-      unless patient.primary_language.nil? or patient.primary_language.id.nil?
-        event.interested_party.person_entity.person.primary_language_id = patient.primary_language.id
-      end
-    end
-    self.set_address_and_phone(event)
-    event.build_jurisdiction unless event.jurisdiction
-    event.jurisdiction.secondary_entity = (User.current_user.jurisdictions_for_privilege(:create_event).first || Place.unassigned_jurisdiction).entity
-    event
+  def new_event_from(options = {})
+    event_type = options.delete(:event_type) || "morbidity_event"
+    event_type.classify.constantize.new_event_from(self, options)
   end
 
   def discard

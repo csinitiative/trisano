@@ -398,6 +398,16 @@ ARUP1
       lambda{@staged_message.assigned_event=MorbidityEvent.new}.should raise_error(StagedMessage::UnknownLoincCode)
     end
 
+    it 'should create labs for encounter events' do
+      e = @staged_message.new_event_from({:event_type => "encounter_event"})
+      e.save!
+      @staged_message.assigned_event = e
+      e.labs[0].lab_results.size.should == 1
+      @staged_message.lab_results.size.should == 1
+      @staged_message.lab_results[0].should eql(e.labs[0].lab_results[0])
+    end
+
+
     it 'should create a lab result and link to it' do
       m = MorbidityEvent.new("first_reported_PH_date" => Date.yesterday.to_s(:db), "interested_party_attributes" => { "person_entity_attributes" => { "person_attributes" => { "last_name"=>"Biel" } } } )
       @staged_message.assigned_event = m
@@ -439,6 +449,14 @@ ARUP1
         @event.should be_new_record
       end
 
+      it "should return a valid encounter event" do
+        @event = @staged_message.new_event_from({:event_type => "encounter_event"})
+        @event.class.should == EncounterEvent
+        @event.should be_valid
+        @event.should be_new_record
+        @event.parent_event.class.should == MorbidityEvent
+      end
+      
       it "should parse MSH-6 and assign as first reported date" do
         @event.first_reported_PH_date.should == Time.parse("200903261645")
       end

@@ -18,11 +18,37 @@
 class FormsController < AdminController
 
   def index
-    @forms = Form.find(:all, :conditions => {:is_template => true}, :order => "name ASC")
+     order_direction = params[:sort_direction]
+     order = case params[:sort_order]
+      when "short_name"
+        "forms.short_name #{order_direction}, diseases.disease_name, places.short_name, event_type, disable_auto_assign, status"
+      when 'diseases'
+        "diseases.disease_name #{order_direction}, forms.short_name, places.short_name, event_type, disable_auto_assign, status"
+      when 'jurisdictions'
+        "places.short_name #{order_direction}, forms.short_name, diseases.disease_name, event_type, disable_auto_assign, status"
+      when 'status'
+        "status #{order_direction}, forms.short_name, diseases.disease_name, places.short_name, event_type, disable_auto_assign"
+      when 'event_type'
+        "event_type #{order_direction}, forms.short_name, diseases.disease_name, places.short_name, disable_auto_assign, status"
+      when 'disable_auto_assign'
+        "disable_auto_assign #{order_direction}, forms.short_name, diseases.disease_name, places.short_name, event_type, status"
+      else
+        "forms.name ASC"
+      end
+
 
     respond_to do |format|
-      format.html
-      format.xml  { render :xml => @forms }
+     format.html {
+             @forms = Form.paginate(:page => params[:page],
+               :per_page => params[:per_page],
+               :include => [{:jurisdictions => :place}, :diseases],
+               :conditions =>  {:is_template => true},
+               :order => order)
+      }
+      format.xml  {
+        @forms = Form.find(:all, :conditions => {:is_template => true}, :order => "name ASC")
+
+        render :xml => @forms }
     end
   end
 
@@ -88,7 +114,9 @@ class FormsController < AdminController
   end
 
   def update
-    params[:form][:disease_ids] ||= []
+    params[:form][:jurisdiction_ids] ||= []
+    params[:form][:diseases_forms_attributes]  ||= []
+    params[:form][:diseases_forms_attributes].each {|f| f[:auto_assign] ||= false }
     @form = Form.find(params[:id])
 
     respond_to do |format|

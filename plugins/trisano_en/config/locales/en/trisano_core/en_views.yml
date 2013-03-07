@@ -327,6 +327,7 @@ en:
   event_forms: 'Event Forms'
   forms_in_use: 'Forms in Use'
   form_information: 'Form Information'
+  disable_auto_assign: 'Automatic Assignment Disabled'
   event_type: 'Event Type'
   remove_from_event: 'Remove from event'
   confirm_remove_form: "Are you sure? Removing a form will also remove all answers to questions on that form."
@@ -900,6 +901,7 @@ en:
   raw: "Raw"
   elr_hl7_message: "ELR HL7 message"
   create_cmr_from_message: "Create a CMR from this message"
+  create_cmr_with_encounter_from_message: "Create CMR with Lab in Encounter from this message"
   dob: "DOB"
   event_search_using_staged_message: "Event Search using staged message"
   staging_area_states:
@@ -1074,7 +1076,9 @@ en:
 #Staged messages
   staged_message_notes: "Notes"
   assign_new_cmr: "Assign to new CMR using this person"
+  assign_new_cmr_as_encounter: "Assign to new Encounter using this person"
   assign_lab_result: "Assign lab result"
+  assign_lab_result_as_encounter: "Assign lab result to Encounter"
 
   trisano:
     privileges:

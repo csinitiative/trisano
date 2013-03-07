@@ -23,7 +23,7 @@ describe "/forms/index.html.haml" do
     @forms = [Factory.build(:form), Factory.build(:form)]
     @forms.each(&:save_and_initialize_form_elements)
     @forms[0].publish
-    assigns[:forms] = @forms
+    assigns[:forms] = Form.paginate(:page => 1, :per_page => 5)
   end
 
   it "renders" do

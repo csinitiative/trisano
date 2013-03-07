@@ -140,7 +140,7 @@ class Disease < ActiveRecord::Base
 
   def live_forms(event_type = "MorbidityEvent")
     Form.find(:all,
-      :joins => "INNER JOIN diseases_forms df ON df.form_id = id",
+      :joins => "INNER JOIN diseases_forms df ON df.form_id = forms.id",
       :conditions => ["df.disease_id = ? AND status = ? AND event_type = ?",  self.id, 'Live', event_type.underscore]
     )
   end

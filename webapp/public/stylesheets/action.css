@@ -1,3 +1,20 @@
+.multi-select {
+  width: 50em;
+  border-left:1px solid #808080;
+  border-top:1px solid #808080;
+  border-bottom:1px solid #fff;
+  border-right:1px solid #fff;
+  overflow: auto;
+}
+.multi-select .inner {
+  background:#fff;
+  overflow:auto;
+  height: 12em;
+  border-left:1px solid #404040;
+  border-top:1px solid #404040;
+  border-bottom:1px solid #d4d0c8;
+  border-right:1px solid #d4d0c8;
+}
 .search-active td {
   border: 1px solid #C1DAD7;
   background: #fff;
