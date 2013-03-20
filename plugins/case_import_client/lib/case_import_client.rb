@@ -168,15 +168,30 @@ class CaseImportClient
     if cases.empty?
       msg = "No records to export."
     else
-      client = Savon::Client.new do
-        wsdl.document = "https://apptrain.dhss.mo.gov/Xsentinel/surveillance/caseimportservice.svc/RS"
-        http.headers = {
-         "VsDebuggerCausalityData" => "uIDPoybVzgv4BJRAkI5qW2coL7QAAAAAdUasL934UkG0ahs2uDb+sFlsOQTmBBtFpJ4qjCt37vwACQAA"}
+      Savon.configure do |c|
+        c.env_namespace = :s
       end
+      client = Savon::Client.new do
+        wsdl.endpoint = "https://apptrain.dhss.mo.gov/Xsentinel/surveillance/caseimportservice.svc"
+        wsdl.namespace = "http://www.stchome.com/marc/services/CaseImportService"
+        http.headers["Content-Type"] = "application/soap+xml; charset=utf-8"
+      end
+      client.http.headers["Content-Type"] = "application/soap+xml; charset=utf-8"
+      client.http.headers["SOAPAction"] = '"ImportPHCasesRequest"'
       response = client.request "ImportPHCases" do
+        soap.version = 2
+        soap.namespaces['xmlns:s'] = 'http://www.w3.org/2003/05/soap-envelope'
+        soap.namespaces['xmlns:a'] = 'http://www.w3.org/2005/08/addressing'
         soap.input = ["ImportPHCases", { "xmlns" => "http://www.stchome.com/marc/services/CaseImportService" } ]
         soap.element_form_default = :unqualified
-        http.headers["SOAPAction"] = '"ImportPHCasesRequest"'
+        soap.header = {
+          "a:Action" => "ImportPHCasesRequest",
+          "a:MessageID" => "urn:uuid:ebd2c2f5-c5ec-47ad-a471-c8b158a4bb81",
+          "a:ReplyTo" => { "a:Address" => "http://www.w3.org/2005/08/addressing/anonymous" },
+          "a:To" => "https://apptrain.dhss.mo.gov/xsentinel/Surveillance/CaseImportService.svc",
+          :attributes! => { "a:Action" => {"s:mustUnderstand" => "1"}, "a:To" => {"s:mustUnderstand" => "1"}}
+        }
+
         soap.body do |xml|
           xml.tag! "source", "MOHSIS"
           xml.tag! "phCases", "xmlns:a" => "urn:Stchome:Marc:Wcf:CaseImportService:Data:v1", "xmlns:i" => "http://www.w3.org/2001/XMLSchema-instance" do |list|
@@ -209,7 +224,7 @@ class CaseImportClient
                 node.tag! "a:LabratoryName", nil
                 node.tag! "a:MMWRWeek", c.mmwr_week
                 node.tag! "a:MMWRYear", c.mmwr_year
-                node.tag! "a:OnsetDate", c.disease_onset_date
+                node.tag! "a:OnsetDate", c.disease_onset_date  if c.disease_onset_date
                 node.tag! "a:OrganismName", nil
                 node.tag! "a:OrganismSpecies", nil
                 node.tag! "a:OtherStatePattern1", c.othr_st_pattern_1
