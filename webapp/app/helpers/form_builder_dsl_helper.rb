@@ -552,8 +552,8 @@ module FormBuilderDslHelper
       partial = "events/investigate_section_element_show.html.haml" 
       result = render(:partial => "events/investigate_section_element_header.html.haml", :locals => {:section => section_element})
       
-      if f.object.investigator_form_sections.map(&:section_element_id).include?(section_element.id)
-        if section_element.repeater?
+      if section_element.repeater?
+        if f.object.investigator_form_sections.map(&:section_element_id).include?(section_element.id)
           f.fields_for(:investigator_form_sections, :builder => ExtendedFormBuilder) do |investigator_form|
             if (investigator_form.object.section_element_id == section_element.id) || investigator_form.object.new_record?
               result << investigator_section(partial, form_elements_cache, section_element, f, investigator_form)
@@ -561,11 +561,11 @@ module FormBuilderDslHelper
           end
 
         else
-          result << investigator_section(partial, form_elements_cache, section_element, f)
+          result << "No #{section_element.name} have been recorded for this #{f.object.class.name.underscore.humanize.downcase}"
         end
 
       else
-        result << "No #{section_element.name} have been recorded for this #{f.object.class.name.underscore.humanize.downcase}"
+        result << investigator_section(partial, form_elements_cache, section_element, f)
       end
       result
     rescue Exception => e
