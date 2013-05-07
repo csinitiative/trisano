@@ -8,11 +8,15 @@
     = h(strip_tags(section.name))
     - unless section.help_text.blank?
       = render_help_text(section) + "&nbsp;"
-    %span{:id => hide_id, :onclick => "Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;\">"}
-      = "[" + t('hide') + "]"
 
-    %span{:id => show_id, :onclick => "Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;", :style => "display: none;"} 
-      = "[" + t('show') + "]"
+    / Because of the way the investigator section elements are rendered
+    / using form_builder_dsl.rb, it's not easy to show and hide sections
+
+    /%span{:id => hide_id, :onclick => "Element.hide('#{section_id}'); Element.hide('#{hide_id}'); Element.show('#{show_id}'); return false;"}
+    /  = "[" + t('hide') + "]"
+
+    /%span{:id => show_id, :onclick => "Element.show('#{section_id}'); Element.hide('#{show_id }'); Element.show('#{hide_id}'); return false;", :style => "display: none;"} 
+    /  = "[" + t('show') + "]"
 
   %div{:id => section_id}
     - unless section.description.blank?
