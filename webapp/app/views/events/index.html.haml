@@ -24,7 +24,7 @@
   = link_to_function(t('change_view'), nil) do |page|
     - page[:change_view].visual_effect :slide_down
 
-= render :partial => "export_options", :locals => { :path => export_cmrs_path(:format => 'csv') }
+= render :partial => "export_options", :locals => { :path => export_events_path(:format => 'csv') }
 
 #change_view{:style => "display: none"}
   - form_tag(events_path, :method => :get) do

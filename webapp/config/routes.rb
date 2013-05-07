@@ -224,7 +224,11 @@ ActionController::Routing::Routes.draw do |map|
     :export => :post
   }
 
-  map.resources :events, :only => [:index]
+  map.resources :events, 
+    :only => [:index],
+    :collection => {
+      :export => :post  # Don't want to do this, but IE can't handle URLs > 2k
+  }
 
   # These are the forms in use with and available to an event
   map.resources :forms, :path_prefix => '/events/:event_id', :name_prefix => 'event_', :controller => 'event_forms', :only => [:index, :create, :destroy]

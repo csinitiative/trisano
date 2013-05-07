@@ -27,7 +27,7 @@ class EventsController < ApplicationController
   before_filter :update_last_modified_date, :only => [:update]
   before_filter :find_or_build_event, :only => [ :reporters_search_selection, :reporting_agencies_search, :reporting_agency_search_selection ]
   before_filter :can_promote?, :only => :event_type
-  before_filter :load_event_queues, :only => [:index]
+  before_filter :load_event_queues, :only => [:index, :export]
   before_filter :reject_if_wrong_type, :only => [:show, :export_single, :edit, :update, :destroy, :soft_delete, :event_type]
 
   def index
@@ -37,6 +37,13 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html
       format.xml  { render :xml => @events }
+    end
+  end
+
+  def export
+    return unless index_processing
+
+    respond_to do |format|
       format.csv
     end
   end
