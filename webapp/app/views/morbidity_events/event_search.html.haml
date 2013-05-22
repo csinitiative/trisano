@@ -1,8 +1,7 @@
 =error_messages_for(:search_form, :header_message => t(:invalid_search_criteria))
 
 %h3=t('before_create')
-- form_tag event_search_cmrs_path, :method => :post do
-
+- form_tag event_search_cmrs_path, :method => :post, :id => "search_form" do
   %span.horiz
     = label_tag :last_name, t('last_name')
     = text_field_tag(:last_name, @search_form.last_name)
@@ -51,7 +50,7 @@
 
     %p
       =page_entries_info @results, :entry_name => "result"
-      =will_paginate @results
+      =will_paginate @results, :renderer => FormLinkRenderer, :form => "search_form"
 
     %table.list
       %tr
@@ -68,7 +67,7 @@
 
     %p
       =page_entries_info @results, :entry_name => "result"
-      =will_paginate @results
+      =will_paginate @results, :renderer => FormLinkRenderer, :form => "search_form"
 
 
     - if (defined? @people or defined? @results) and User.current_user.is_entitled_to?(:create_event)

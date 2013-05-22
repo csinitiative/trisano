@@ -16,7 +16,7 @@
 - content_for :title do
   =t 'event_search'
 
-- form_tag(search_cmrs_path, :method => :get) do
+- form_tag(search_cmrs_path, :method => :post, :id => "search_form") do
 
   - if !flash[:error].blank?
     %span{ :style => "color:red" }= flash[:error]
@@ -76,7 +76,7 @@
   %br
   %p
     =page_entries_info @cmrs, :entry_name => "result"
-    =will_paginate @cmrs
+    =will_paginate @cmrs, :renderer => FormLinkRenderer, :form => "search_form"
   
   %table{:style => "table-layout: fixed", :id => 'search_results' }
     %tr{:style => "text-align: left"}

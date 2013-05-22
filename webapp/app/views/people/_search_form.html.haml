@@ -13,7 +13,7 @@
 -# You should have received a copy of the GNU Affero General Public License along with TriSano.
 -# If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
 
-- form_tag search_people_path, :method => :post do
+- form_tag search_people_path, :method => :post, :id => "search_form" do
   %span.horiz
     = label_tag :last_name, t("last_name")
     = text_field_tag :last_name, params[:last_name]
