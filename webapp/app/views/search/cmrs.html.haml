@@ -16,7 +16,7 @@
 - content_for :title do
   =t 'event_search'
 
-- form_tag(search_cmrs_path, :method => :post) do
+- form_tag(search_cmrs_path, :method => :get) do
 
   - if !flash[:error].blank?
     %span{ :style => "color:red" }= flash[:error]
@@ -99,7 +99,7 @@
       %th
         =t 'onset_date'
       - for cmr in @cmrs
-        %tr{:class => search_result_class(cmr)}
+        %tr{:class =>search_result_class(cmr)}
           %td
             =link_to_search_result_event("#{h(cmr.record_number)}", cmr)
             %small=t(cmr.type.underscore, :scope => :event_search_results)
