@@ -126,7 +126,7 @@
   %br
   %p
     =page_entries_info @cmrs, :entry_name => "result"
-    =will_paginate @cmrs
+    =will_paginate @cmrs, :renderer => FormLinkRenderer, :form => "search_form"
   
   =render_extensions :search_extensions
 
